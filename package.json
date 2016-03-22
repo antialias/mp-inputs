@@ -1,0 +1,55 @@
+{
+  "name": "panel-foundation",
+  "version": "0.1.0",
+  "description": "a starting point for Panel apps",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "git checkout master && npm run production-build && git add . && git commit -m rebuild && git push origin master",
+    "lint": "./node_modules/.bin/eslint src",
+    "production-build": "npm run lint && rm -rf dist && NODE_ENV=production ./node_modules/.bin/webpack",
+    "revert": "git checkout master && git revert && git push origin master",
+    "start": "./node_modules/.bin/webpack --progress --colors --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/mixpanel-platform/panel-foundation.git"
+  },
+  "keywords": [
+    "mixpanel"
+  ],
+  "author": "dev@mixpanel.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mixpanel-platform/panel-foundation/issues"
+  },
+  "homepage": "https://github.com/mixpanel-platform/panel-foundation#readme",
+  "dependencies": {
+    "framesg": "^0.1.2",
+    "keymaster": "^1.6.2",
+    "lodash": "^4.0.0",
+    "mixpanel-browser": "^2.7.2",
+    "moment": "^2.11.2",
+    "panel": "0.2.0",
+    "virtual-dom": "^2.1.1"
+  },
+  "devDependencies": {
+    "autoprefixer-loader": "^3.1.0",
+    "babel-core": "^6.3.17",
+    "babel-loader": "^6.2.0",
+    "babel-preset-es2015": "^6.3.13",
+    "css-loader": "^0.23.1",
+    "eslint": "^2.2.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.8.5",
+    "html-webpack-plugin": "^2.8.1",
+    "js-beautify": "^1.5.10",
+    "style-loader": "^0.13.0",
+    "stylus": "^0.53.0",
+    "stylus-loader": "^1.4.3",
+    "url-loader": "^0.5.7",
+    "virtual-jade": "^0.2.2",
+    "virtual-jade-loader": "^0.2.2",
+    "webpack": "^1.12.9"
+  }
+}

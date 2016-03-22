@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Interactive Report Builder</title>
+    <!-- CSS bundle goes here -->
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js?a=1"></script>
+    <script type="text/javascript">
+      // shim HTMLElement if necessary
+      // Safari breaks when attempting to inherit from HTMLElement
+      // Babel marked as wontfix: https://phabricator.babeljs.io/T1548
+      (function() {
+        if (typeof HTMLElement !== 'function') {
+          var _HTMLElement = function() {};
+          _HTMLElement.prototype = HTMLElement.prototype;
+          HTMLElement = _HTMLElement;
+        }
+      })();
+    </script>
+    <script src="vendor/webcomponents-lite.min.js"></script>
+    <!-- JS bundle goes here -->
+  </body>
+</html>
