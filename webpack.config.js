@@ -33,7 +33,10 @@ var webpackConfig = {
     ],
   },
   plugins: [
-    new webpack.DefinePlugin({APP_ENV: JSON.stringify(process.env.NODE_ENV)}),
+    new webpack.DefinePlugin({
+      APP_ENV: JSON.stringify(process.env.NODE_ENV),
+      ROLLBAR_TOKEN: JSON.stringify('<your Rollbar project access token>'),
+    }),
     new HtmlWebpackPlugin({template: 'index.template.html'}),
   ],
   resolveLoader: {
@@ -50,6 +53,9 @@ if (process.env.NODE_ENV === 'development') {
       pathinfo: true,
     },
     plugins: webpackConfig.plugins.concat([
+      new webpack.DefinePlugin({ // Project 132990 Mixpanel Dev
+        MIXPANEL_TOKEN: JSON.stringify('9c4e9a6caf9f429a7e3821141fc769b7'),
+      }),
       new ExtractTextPlugin('build/bundle.css'),
     ]),
   });
@@ -59,6 +65,9 @@ if (process.env.NODE_ENV === 'development') {
       filename: 'dist/bundle.[hash].min.js',
     },
     plugins: webpackConfig.plugins.concat([
+      new webpack.DefinePlugin({
+        MIXPANEL_TOKEN: JSON.stringify('<your production Mixpanel project token>'),
+      }),
       new ExtractTextPlugin('dist/bundle.[hash].min.css'),
       new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
     ]),
