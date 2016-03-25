@@ -2,6 +2,7 @@ import Framesg from 'framesg';
 
 import PanelApp from './app';
 import Panel from './models/panel';
+import { mixpanel } from './tracking';
 
 import './stylesheets/index.styl';
 

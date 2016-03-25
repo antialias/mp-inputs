@@ -31,6 +31,7 @@
     "mixpanel-browser": "^2.7.2",
     "moment": "^2.11.2",
     "panel": "0.2.0",
+    "rollbar-browser": "^1.8.4",
     "virtual-dom": "^2.1.1"
   },
   "devDependencies": {
