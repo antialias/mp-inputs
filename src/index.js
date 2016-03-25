@@ -7,26 +7,32 @@ import { mixpanel } from './tracking';
 
 import './stylesheets/index.styl';
 
-function initialize(attrs={}) {
-    let panel = new Panel();
+const IS_WITHIN_MP_PLATFORM_IFRAME = (
+    window.parent &&
+    window.parent.mixpanel &&
+    window.parent !== window
+);
 
-    const initialState = {
-      $screen: 'list',
-      panel,
-      panels: {[panel.id]: panel},
-    };
+function createApp(attrs={}) {
+  let panel = new Panel();
 
-    return new PanelApp('app', initialState, attrs);
+  const initialState = {
+    $screen: 'list',
+    panel,
+    panels: {[panel.id]: panel},
+  };
+
+  return new PanelApp('app', initialState, attrs);
 }
 
-if (window.parent === window) { // the app is running outside of an iframe
-    initialize().update();
-} else { // the app is running inside an iframe (within Mixpanel Platform)
-    const parentFrame = new Framesg(window.parent, 'panel-foundation', {
-      startApp: parentData => {
-        panelApp = initialize({parentFrame});
-        window.history.replaceState(null, null, parentData.hash.replace(/^#*/, '#'));
-        panelApp.update();
-      },
-    });
+if (IS_WITHIN_MP_PLATFORM_IFRAME) {
+  const parentFrame = new Framesg(window.parent, 'panel-foundation', {
+    startApp: parentData => {
+      let panelApp = createApp({parentFrame});
+      window.history.replaceState(null, null, parentData.hash.replace(/^#*/, '#'));
+      panelApp.update();
+    },
+  });
+} else {
+  createApp().update();
 }
