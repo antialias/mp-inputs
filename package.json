@@ -9,6 +9,7 @@
     "production-build": "npm run lint && rm -rf dist && NODE_ENV=production ./node_modules/.bin/webpack",
     "revert": "git checkout master && git revert && git push origin master",
     "start": "./node_modules/.bin/webpack --progress --colors --watch",
+    "serve": "./node_modules/.bin/webpack-dev-server --inline",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -50,6 +51,7 @@
     "url-loader": "^0.5.7",
     "virtual-jade": "^0.2.2",
     "virtual-jade-loader": "^0.2.2",
-    "webpack": "^1.12.9"
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.1"
   }
 }
