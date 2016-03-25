@@ -7,10 +7,6 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var webpackConfig = {
   entry: './src/index.js',
-  devtool: 'source-maps',
-  output: {
-    filename: 'build/bundle.js',
-  },
   module: {
     loaders: [
       {
@@ -37,22 +33,36 @@ var webpackConfig = {
     ],
   },
   plugins: [
-    new ExtractTextPlugin('build/bundle.css'),
     new webpack.DefinePlugin({APP_ENV: JSON.stringify(process.env.NODE_ENV)}),
+    new HtmlWebpackPlugin({template: 'index.template.html'}),
   ],
   resolveLoader: {
     root: path.join(__dirname, 'node_modules'),
   },
 };
 
-if (process.env.NODE_ENV === 'production') {
-  webpackConfig.output.filename = 'dist/bundle.[hash].min.js';
-  webpackConfig.plugins = [
-    new ExtractTextPlugin('dist/bundle.[hash].min.css'),
-    new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
-    new HtmlWebpackPlugin({template: 'index.template.html'}),
-    new webpack.DefinePlugin({APP_ENV: JSON.stringify('production')}),
-  ];
+if (process.env.NODE_ENV === 'development') {
+  webpackConfig = Object.assign({}, webpackConfig, {
+    debug: true,
+    devtool: 'sourcemap',
+    output: {
+      filename: 'build/bundle.js',
+      pathinfo: true,
+    },
+    plugins: webpackConfig.plugins.concat([
+      new ExtractTextPlugin('build/bundle.css'),
+    ]),
+  });
+} else if (process.env.NODE_ENV === 'production') {
+  webpackConfig = Object.assign({}, webpackConfig, {
+    output: {
+      filename: 'dist/bundle.[hash].min.js',
+    },
+    plugins: webpackConfig.plugins.concat([
+      new ExtractTextPlugin('dist/bundle.[hash].min.css'),
+      new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
+    ]),
+  });
 }
 
 module.exports = webpackConfig;
