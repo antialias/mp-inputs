@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import Framesg from 'framesg';
 
 import PanelApp from './app';

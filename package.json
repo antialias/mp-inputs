@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/mixpanel-platform/panel-foundation#readme",
   "dependencies": {
+    "babel-polyfill": "^6.7.4",
     "framesg": "^0.1.2",
     "keymaster": "^1.6.2",
     "lodash": "^4.0.0",
