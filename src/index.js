@@ -7,9 +7,13 @@ import { mixpanel } from './tracking';
 
 import './stylesheets/index.styl';
 
-const IS_WITHIN_MP_PLATFORM_IFRAME = window.parent !== window && window.parent.mixpanel;
+const IS_WITHIN_MP_PLATFORM_IFRAME = (
+    window.parent &&
+    window.parent.mixpanel &&
+    window.parent !== window
+);
 
-function initialize(attrs={}) {
+function createApp(attrs={}) {
   let panel = new Panel();
 
   const initialState = {
@@ -24,11 +28,11 @@ function initialize(attrs={}) {
 if (IS_WITHIN_MP_PLATFORM_IFRAME) {
   const parentFrame = new Framesg(window.parent, 'panel-foundation', {
     startApp: parentData => {
-      panelApp = initialize({parentFrame});
+      let panelApp = createApp({parentFrame});
       window.history.replaceState(null, null, parentData.hash.replace(/^#*/, '#'));
       panelApp.update();
     },
   });
 } else {
-  initialize().update();
+  createApp().update();
 }
