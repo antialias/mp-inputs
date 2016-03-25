@@ -13,8 +13,10 @@ export default class PanelApp extends App {
     super(...arguments);
 
     // initialize frame communication
-    this.parentFrame = attrs.parentFrame;
-    mirrorLocationHash(this.parentFrame);
+    if (attrs.parentFrame) {
+      this.parentFrame = attrs.parentFrame;
+      mirrorLocationHash(this.parentFrame);
+    }
   }
 
   get ROUTES() {

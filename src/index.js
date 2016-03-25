@@ -5,8 +5,7 @@ import Panel from './models/panel';
 
 import './stylesheets/index.styl';
 
-const parentFrame = new Framesg(window.parent, 'panel-foundation', {
-  startApp: parentData => {
+function initialize(attrs={}) {
     let panel = new Panel();
 
     const initialState = {
@@ -15,8 +14,17 @@ const parentFrame = new Framesg(window.parent, 'panel-foundation', {
       panels: {[panel.id]: panel},
     };
 
-    const panelApp = new PanelApp('app', initialState, {parentFrame});
-    window.history.replaceState(null, null, parentData.hash.replace(/^#*/, '#'));
-    panelApp.update();
-  },
-});
+    return new PanelApp('app', initialState, attrs);
+}
+
+if (window.parent === window) { // the app is running outside of an iframe
+    initialize().update();
+} else { // the app is running inside an iframe (within Mixpanel Platform)
+    const parentFrame = new Framesg(window.parent, 'panel-foundation', {
+      startApp: parentData => {
+        panelApp = initialize({parentFrame});
+        window.history.replaceState(null, null, parentData.hash.replace(/^#*/, '#'));
+        panelApp.update();
+      },
+    });
+}
