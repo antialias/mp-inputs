@@ -1,7 +1,2 @@
-.panel-header
-  button(ev-click=handlers.clickNew) Create new panel
-  button(ev-click=handlers.clickList) View all panels
-  if $screen == 'mix'
-    h1= panel.name
-  else
-    h1 Your panels
+.header-view
+  auto-sizing-input(value=reportName ev-change=handlers.updateReportName)

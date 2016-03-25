@@ -1,10 +1,10 @@
 export function register() {
-  document.registerElement('panel-name-input', PanelNameInput);
+  document.registerElement('auto-sizing-input', AutoSizingInput);
 }
 
 const CHANGE_EVENTS = ['blur', 'change', 'focusout', 'input', 'keypress'];
 
-class PanelNameInput extends HTMLElement {
+class AutoSizingInput extends HTMLElement {
   createdCallback() {
     this.inputEl = document.createElement('input');
     this.inputEl.type = 'text';

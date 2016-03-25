@@ -1,9 +1,0 @@
-.panel-list
-  div= views.header(state)
-  ul
-    each panelId in Object.keys(panels)
-      li
-        button(
-            ev-click=handlers.clickPanelName
-            attributes={'data-panel-id': panelId}
-        )= panels[panelId].name
