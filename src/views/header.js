@@ -1,7 +1,10 @@
 import { View } from 'panel';
 
-import template from '../templates/header.jade';
-import '../stylesheets/header.styl';
+import template from './templates/header.jade';
+import './stylesheets/header.styl';
+
+import { register as registerAutoSizingInput } from '../elements/auto-sizing-input';
+registerAutoSizingInput();
 
 export default class HeaderView extends View {
   get TEMPLATE() {
@@ -10,8 +13,7 @@ export default class HeaderView extends View {
 
   get templateHandlers() {
     return {
-      clickNew: () => this.app.navigate('mix'),
-      clickList: () => this.app.navigate('list'),
+      updateReportName: ev => this.app.update({reportName: ev.target.value}),
     };
   }
 }

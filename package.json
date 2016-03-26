@@ -1,7 +1,7 @@
 {
-  "name": "panel-foundation",
+  "name": "irb",
   "version": "0.1.0",
-  "description": "a starting point for Panel apps",
+  "description": "Interactive report builder",
   "main": "index.js",
   "scripts": {
     "deploy": "git checkout master && npm run production-build && git add . && git commit -m rebuild && git push origin master",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/mixpanel-platform/panel-foundation.git"
+    "url": "git+ssh://git@github.com/irb/irb.git"
   },
   "keywords": [
     "mixpanel"
@@ -22,9 +22,9 @@
   "author": "dev@mixpanel.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mixpanel-platform/panel-foundation/issues"
+    "url": "https://github.com/irb/irb/issues"
   },
-  "homepage": "https://github.com/mixpanel-platform/panel-foundation#readme",
+  "homepage": "https://github.com/irb/irb#readme",
   "dependencies": {
     "babel-polyfill": "^6.7.4",
     "framesg": "^0.1.2",
