@@ -1,9 +1,9 @@
 import { View } from 'panel';
 
-import template from './templates/result.jade';
-import './stylesheets/result.styl';
+import template from '../templates/builder/group.jade';
+import '../stylesheets/builder/group.styl';
 
-export default class ResultView extends View {
+export default class GroupView extends View {
   get TEMPLATE() {
     return template;
   }

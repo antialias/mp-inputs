@@ -1,11 +1,11 @@
 import { View } from 'panel';
 
 import HeaderView from './header';
-import BuilderView from './builder';
+import BuilderView from './builder/builder';
 import ResultView from './result';
 
-import template from '../templates/irb.jade';
-import '../stylesheets/irb.styl';
+import template from './templates/irb.jade';
+import './stylesheets/irb.styl';
 
 export default class IrbView extends View {
   get TEMPLATE() {

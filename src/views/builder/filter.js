@@ -1,9 +1,9 @@
 import { View } from 'panel';
 
-import template from '../templates/builder.jade';
-import '../stylesheets/builder.styl';
+import template from '../templates/builder/filter.jade';
+import '../stylesheets/builder/filter.styl';
 
-export default class BuilderView extends View {
+export default class FilterView extends View {
   get TEMPLATE() {
     return template;
   }

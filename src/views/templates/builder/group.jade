@@ -1,0 +1,17 @@
+.irb-group-view
+  .leading-text
+    span.connector by
+  .control
+    if !groups.length
+      .group
+        h3 Group
+        button Group
+    else
+      for group, index in groups
+        .group
+          h3= 'Group' + (groups.length === 1 ? '' : ' ' + (index + 1))
+          if index
+            span.connector and by
+          button
+            span= group.value
+      button Group

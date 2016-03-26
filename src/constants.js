@@ -5,9 +5,6 @@ export const IS_WITHIN_MP_PLATFORM_IFRAME = (
 );
 
 export const SCREEN_MAIN = 'main';
-export const SCREEN_TYPES = {
-  SCREEN_MAIN,
-};
 
 export const RESOURCE_EVENTS = 'events';
 export const RESOURCE_PEOPLE = 'people';

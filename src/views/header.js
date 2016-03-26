@@ -1,7 +1,7 @@
 import { View } from 'panel';
 
-import template from '../templates/header.jade';
-import '../stylesheets/header.styl';
+import template from './templates/header.jade';
+import './stylesheets/header.styl';
 
 import { register as registerAutoSizingInput } from '../elements/auto-sizing-input';
 registerAutoSizingInput();

@@ -9,7 +9,8 @@ import {
   MATH_TOTAL,
   RESOURCE_EVENTS,
   RESOURCE_VALUE_ALL,
-  SCREEN_MAIN
+  SCREEN_MAIN,
+  TIME_UNIT_HOUR,
 } from './constants';
 
 import './stylesheets/index.styl';
@@ -18,18 +19,20 @@ function createApp(attrs={}) {
   const initialState = {
     $screen: SCREEN_MAIN,
     reportName: 'Untitled report',
-    show: [{
-      filter: '',
+    comparisons: [{
       math: MATH_TOTAL,
-      resource_type: RESOURCE_EVENTS,
-      resource_value: RESOURCE_VALUE_ALL,
+      type: RESOURCE_EVENTS,
+      value: RESOURCE_VALUE_ALL,
+      filter: '',
     }],
     time: {
       unit: TIME_UNIT_HOUR,
       start: -96,
-      end: 0,
+      end: null,
     },
-    group: [],
+    groups: [],
+    filters: [],
+    editing_builder_section: null,
   };
 
   return new IrbApp('app', initialState, attrs);

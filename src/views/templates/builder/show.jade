@@ -1,0 +1,20 @@
+.irb-show-view
+  .control
+    if !comparisons.length
+      .comparison
+        h3 Show
+        button Compare
+    else
+      for comparison, index in comparisons
+        .comparison
+          h3= 'Show' + (comparisons.length === 1 ? '' : ' ' + (index + 1))
+          if index
+            span.connector vs
+          button
+            span= helpers.formatMath(comparison)
+            span=' '
+            span.connector of
+            span=' '
+            span= helpers.formatValue(comparison)
+          if index === comparisons.length - 1
+            button Compare
