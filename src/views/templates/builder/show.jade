@@ -1,20 +1,19 @@
-.irb-show-view
-  .control
-    if !comparisons.length
-      .comparison
-        h3 Show
-        button.verb.add Compare
-    else
-      for comparison, index in comparisons
-        .comparison
-          h3= 'Show' + (comparisons.length === 1 ? '' : ' ' + (index + 1))
-          if index
-            span.preposition vs
-          button.noun
-            span= helpers.formatMath(comparison)
-            span=' '
-            span.preposition of
-            span=' '
-            span= helpers.formatValue(comparison)
-          if index === comparisons.length - 1
-            button.verb.add Compare
+.control.irb-show-view
+  if !comparisons.length
+    .subject.comparison
+      h3
+      button.verb.add Compare
+  else
+    for comparison, index in comparisons
+      if index
+        .preposition and
+      .subject.comparison
+        h3= 'Show' + (comparisons.length === 1 ? '' : ' ' + (index + 1))
+        button.noun
+          span= helpers.formatMath(comparison)
+          span=' '
+          span.preposition of
+          span=' '
+          span= helpers.formatValue(comparison)
+        if index === comparisons.length - 1
+          button.verb.add Compare

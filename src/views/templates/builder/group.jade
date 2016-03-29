@@ -1,18 +1,14 @@
-.irb-group-view
-  .leading-text
-    span.preposition by
-  .control
-    if !groups.length
-      .group
-        h3 Group
-        button.verb.add Group
-    else
-      for group, index in groups
-        .group
-          h3= 'Group' + (groups.length === 1 ? '' : ' ' + (index + 1))
-          if index
-            span.preposition and by
-          button.noun
-            span= group.value
-          if index == groups.length - 1
-            button.verb.add Group
+.control.irb-group-view
+  if !groups.length
+    .subject.group
+      h3
+      button.verb.add Group
+  else
+    for group, index in groups
+      .preposition= index ? 'and by' : 'by'
+      .subject.group
+        h3= 'Group' + (groups.length === 1 ? '' : ' ' + (index + 1))
+        button.noun
+          span= group.value
+        if index == groups.length - 1
+          button.verb.add Group

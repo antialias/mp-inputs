@@ -23,7 +23,7 @@ function createApp(attrs={}) {
       math: MATH_TOTAL,
       type: RESOURCE_EVENTS,
       value: RESOURCE_VALUE_ALL,
-      filter: '',
+      search: '',
     }],
     time: {
       unit: TIME_UNIT_HOUR,
