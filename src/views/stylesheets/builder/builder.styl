@@ -3,22 +3,27 @@
 .irb-builder
   clearfix()
   font-size 16px
+  font-weight 500
+  padding 16px
 
   h3
-    color lightgrey
+    color light-grey
     font-size 12px
-    font-weight 400
+    font-weight 500
     margin-bottom 8px
     text-transform uppercase
+
+  .preposition
+    color light-gray
 
   .leading-text, .control
     float left
 
   .leading-text
-    margin-top 33px
+    margin-top 41px
 
   .control
-    padding 8px
+    padding 12px
 
     >
       div, button
@@ -29,12 +34,38 @@
       height 100%
 
     button
-      border 1px solid grey
-      border-radius 2px
+      background transparent
+      border 1px solid light-gray
+      color dark-gray
       font-size 16px
+      font-weight 500
+      padding 8px 10px
 
       + button
-        margin-left 8px
+        margin-left 12px
+
+      &:hover
+        color darken(dark-gray, 30%)
+        border-color medium-gray
+
+      &.noun
+        border-width 0
+        border-bottom-width 1px
+        padding 8px 0
+
+      &.verb
+        border-radius 2px
+        font-size 14px
+
+        &.add::before
+          color light-gray
+          content '+'
+          display inline-block
+          font-size 18px
+          font-weight 600
+          margin-right 4px
+          margin-top -4px
+
 
   .query
     clearfix()
@@ -42,4 +73,4 @@
       float left
 
   .filters
-    margin-left 8px
+    margin-left 16px

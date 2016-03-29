@@ -3,18 +3,18 @@
     if !comparisons.length
       .comparison
         h3 Show
-        button Compare
+        button.verb.add Compare
     else
       for comparison, index in comparisons
         .comparison
           h3= 'Show' + (comparisons.length === 1 ? '' : ' ' + (index + 1))
           if index
-            span.connector vs
-          button
+            span.preposition vs
+          button.noun
             span= helpers.formatMath(comparison)
             span=' '
-            span.connector of
+            span.preposition of
             span=' '
             span= helpers.formatValue(comparison)
           if index === comparisons.length - 1
-            button.add Compare
+            button.verb.add Compare

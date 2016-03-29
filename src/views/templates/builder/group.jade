@@ -1,18 +1,18 @@
 .irb-group-view
   .leading-text
-    span.connector by
+    span.preposition by
   .control
     if !groups.length
       .group
         h3 Group
-        button Group
+        button.verb.add Group
     else
       for group, index in groups
         .group
           h3= 'Group' + (groups.length === 1 ? '' : ' ' + (index + 1))
           if index
-            span.connector and by
-          button
+            span.preposition and by
+          button.noun
             span= group.value
           if index == groups.length - 1
-            button Group
+            button.verb.add Group
