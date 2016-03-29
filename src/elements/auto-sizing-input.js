@@ -20,7 +20,7 @@ class AutoSizingInput extends HTMLElement {
     // autosize to text
     this.inputSizer = document.createElement('div');
     this.inputSizer.style.fontFamily = '\'Helvetica Neue\', Helvetica, Arial, sans-serif';
-    this.inputSizer.style.fontSize = '14px';
+    this.inputSizer.style.fontSize = '20px';
     this.inputSizer.style.fontWeight = '600';
     this.inputSizer.style.height = 'auto';
     this.inputSizer.style.letterSpacing = '0.03em';
