@@ -1,5 +1,7 @@
 import { View } from 'panel';
 
+import PaneView from './pane';
+
 import { capitalize } from '../../util';
 import { RESOURCE_VALUE_ALL } from '../../constants';
 
@@ -13,6 +15,7 @@ export default class ShowView extends View {
 
   get VIEWS() {
     return {
+      addPane: new PaneView(this),
     };
   }
 

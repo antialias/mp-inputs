@@ -1,14 +1,14 @@
 .control.irb-group-view
-  if !groups.length
+  if !groupSection.length
     .subject.group
       h3
       button.verb.add Group
   else
-    for group, index in groups
+    for group, index in groupSection
       .preposition= index ? 'and by' : 'by'
       .subject.group
-        h3= 'Group' + (groups.length === 1 ? '' : ' ' + (index + 1))
+        h3= 'Group' + (groupSection.length === 1 ? '' : ' ' + (index + 1))
         button.noun
           span= group.value
-        if index == groups.length - 1
+        if index == groupSection.length - 1
           button.verb.add Group

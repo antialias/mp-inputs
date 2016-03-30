@@ -1,19 +1,21 @@
+mixin add()
+  button.verb.add Compare
+    div= views.addPane(state)
+
 .control.irb-show-view
-  if !comparisons.length
+  if !showSection.length
     .subject.comparison
       h3
-      button.verb.add Compare
+      +add()
   else
-    for comparison, index in comparisons
+    for comparison, index in showSection
       if index
         .preposition and
       .subject.comparison
-        h3= 'Show' + (comparisons.length === 1 ? '' : ' ' + (index + 1))
+        h3= 'Show' + (showSection.length === 1 ? '' : ' ' + (index + 1))
         button.noun
           span= helpers.formatMath(comparison)
-          span=' '
-          span.preposition of
-          span=' '
+          span.preposition= ' of '
           span= helpers.formatValue(comparison)
-        if index === comparisons.length - 1
-          button.verb.add Compare
+        if index === showSection.length - 1
+          +add()

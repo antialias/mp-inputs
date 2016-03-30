@@ -21,12 +21,16 @@ export default class TimeView extends View {
   get templateHelpers() {
     return {
       formatText: () => {
-        const { unit, start, end } = this.app.state.time;
+        if (this.app.state.timeSection.length === 1) {
+          const { unit, start, end } = this.app.state.timeSection[0];
 
-        if (start < 0 && end === null) {
-          return `last ${Math.abs(start)} ${unit}s`;
+          if (start < 0 && end === null) {
+            return `last ${Math.abs(start)} ${unit}s`;
+          } else {
+            throw new Error('Date range formatting not yet implemented.');
+          }
         } else {
-          throw new Error('Date range formatting not yet implemented.');
+          return '';
         }
       }
     }

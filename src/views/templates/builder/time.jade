@@ -1,5 +1,6 @@
 .control.irb-time-view
-  .preposition in the
-  .subject.time
-    h3 Time
-    button.noun= helpers.formatText()
+  if state.timeSection.length
+    .preposition in the
+    .subject.time
+      h3 Time
+      button.noun= helpers.formatText()
