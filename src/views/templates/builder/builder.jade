@@ -1,6 +1,6 @@
 .irb-builder
-    .query
-        div= views.show(state)
-        div= views.time(state)
-        div= views.group(state)
-    .filters= views.filter(state)
+  .query
+    .section-container= views.show(state)
+    .section-container= views.time(state)
+    .section-container= views.group(state)
+  .filters= views.filter(state)

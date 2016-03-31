@@ -1,6 +1,6 @@
-.control.irb-time-view
+.section.irb-time-view
   if state.timeSection.length
     .preposition in the
-    .subject.time
+    .clause.time
       h3 Time
-      button.noun= helpers.formatText()
+      .control-container= views.editControl(state)

@@ -41,8 +41,6 @@ export default class IrbApp extends App {
   constructor(elID, initialState=INITIAL_STATE, attrs={}) {
     super(elID, INITIAL_STATE, attrs);
 
-    this.editSection(BUILDER_SECTION_SHOW, 0);
-
     // initialize frame communication
     if (attrs.parentFrame) {
       this.parentFrame = attrs.parentFrame;
@@ -114,5 +112,13 @@ export default class IrbApp extends App {
     }
 
     this.update(update);
+  }
+
+  isAddingToSection(section) {
+    return this.state.editing.section === section && this.state.editing.index === null;
+  }
+
+  isEditingSection(section, index) {
+    return this.state.editing.section === section && this.state.editing.index === index;
   }
 }

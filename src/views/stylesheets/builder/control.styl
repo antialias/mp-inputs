@@ -1,0 +1,39 @@
+@import "../../../stylesheets/common"
+
+.irb-control
+  button
+    background transparent
+    border 1px solid light-gray
+    color dark-gray
+    font-size 16px
+    font-weight 500
+    margin-top -1px
+    outline none
+    padding 8px 10px
+
+    &:hover
+      color darken(dark-gray, 30%)
+      border-color medium-gray
+
+  &.noun button
+    border-width 0
+    border-bottom-width 1px
+    padding 8px 0
+
+  &.verb button
+    border-radius 2px
+    font-size 14px
+    margin-top -2px
+
+    &::before
+      color light-gray
+      content '+'
+      display inline-block
+      font-size 18px
+      font-weight 600
+      margin-right 4px
+      margin-top -4px
+
+  &.noun, &.verb
+    float left
+    position relative
