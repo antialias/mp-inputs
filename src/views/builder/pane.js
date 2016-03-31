@@ -1,25 +1,16 @@
-import { View } from 'panel';
+import BaseView from '../base';
 
 import template from '../templates/builder/pane.jade';
 import '../stylesheets/builder/pane.styl';
 
-export default class PaneView extends View {
+export default class PaneView extends BaseView {
   get TEMPLATE() {
     return template;
   }
 
-  get VIEWS() {
+  get templateConstants() {
     return {
-    };
-  }
-
-  get templateHandlers() {
-    return {
-    };
-  }
-
-  get templateHelpers() {
-    return {
+      search: true,
     };
   }
 }

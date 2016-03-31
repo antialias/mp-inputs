@@ -1,17 +1,35 @@
-import { View } from 'panel';
-
+import BaseView from '../base';
 import PaneView from './pane';
 import ControlView from './control';
 import {
   BUILDER_SECTION_SHOW,
   RESOURCE_VALUE_ALL,
+
 } from '../../constants';
 import { extend, capitalize } from '../../util';
 
 import template from '../templates/builder/show.jade';
+import showPaneContentTemplate from '../templates/builder/show_pane.jade'
 import '../stylesheets/builder/show.styl';
 
+class ShowPaneContentView extends BaseView {
+  get TEMPLATE() {
+    return showPaneContentTemplate;
+  }
+}
+
 class ShowPaneView extends PaneView {
+  get templateConstants() {
+    return extend(super.templateConstants, {
+      header: 'Show',
+    });
+  }
+
+  get VIEWS() {
+    return {
+      content: new ShowPaneContentView(this),
+    };
+  }
 }
 
 class ShowControlView extends ControlView {
@@ -23,39 +41,46 @@ class ShowControlView extends ControlView {
 }
 
 class AddControlView extends ShowControlView {
+  get templateConstants() {
+    return extend(super.templateConstants, {
+      class: 'verb',
+      label: 'Compare',
+    });
+  }
+
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isOpen: () => this.app.isAddingToSection(BUILDER_SECTION_SHOW),
-      getClass: () => 'verb',
-      getLabel: () => 'Compare',
+      isPaneOpen: () => this.app.isAddingToSection(BUILDER_SECTION_SHOW),
+      openPane: () => this.app.addToSection(BUILDER_SECTION_SHOW),
     });
   }
 }
 
 class EditControlView extends ShowControlView {
-  render(state, index) {
-    this.index = index;
-    return super.render(state);
+  get templateConstants() {
+    return extend(super.templateConstants, {
+      class: 'noun',
+      labelConnector: ' of ',
+    });
   }
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isOpen: () => this.app.isEditingSection(BUILDER_SECTION_SHOW, this.index),
-      getClass: () => 'noun',
-      getLabel: () => {
-        let comparison = this.app.state[BUILDER_SECTION_SHOW][this.index];
+      isPaneOpen: props => this.app.isEditingSection(BUILDER_SECTION_SHOW, props.index),
+      openPane: props => this.app.editSection(BUILDER_SECTION_SHOW, props.index),
+      getLabel: props => {
+        let comparison = this.app.state[BUILDER_SECTION_SHOW][props.index];
         let math = capitalize(comparison.math);
         let value = comparison.value === RESOURCE_VALUE_ALL ?
-          capitalize(comparison.type) : comparison.value;
+          `All ${capitalize(comparison.type)}` : comparison.value;
 
         return [math, value];
       },
-      getLabelConnector: () => ' of ',
     });
   }
 }
 
-export default class ShowView extends View {
+export default class ShowView extends BaseView {
   get TEMPLATE() {
     return template;
   }

@@ -1,9 +1,9 @@
-import { View } from 'panel';
+import BaseView from '../base';
 
 import template from '../templates/builder/filter.jade';
 import '../stylesheets/builder/filter.styl';
 
-export default class FilterView extends View {
+export default class FilterView extends BaseView {
   get TEMPLATE() {
     return template;
   }

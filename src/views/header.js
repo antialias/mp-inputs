@@ -1,4 +1,4 @@
-import { View } from 'panel';
+import BaseView from './base';
 
 import template from './templates/header.jade';
 import './stylesheets/header.styl';
@@ -6,7 +6,7 @@ import './stylesheets/header.styl';
 import { register as registerAutoSizingInput } from '../elements/auto-sizing-input';
 registerAutoSizingInput();
 
-export default class HeaderView extends View {
+export default class HeaderView extends BaseView {
   get TEMPLATE() {
     return template;
   }

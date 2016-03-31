@@ -1,18 +1,29 @@
-import { View } from 'panel';
-
+import BaseView from '../base';
 import PaneView from './pane';
 import ControlView from './control';
 import {
   BUILDER_SECTION_TIME,
 } from '../../constants';
+import { extend } from '../../util';
 
 import template from '../templates/builder/time.jade';
 import '../stylesheets/builder/time.styl';
 
 class TimePaneView extends PaneView {
+  get templateConstants() {
+    return extend(super.templateConstants, {
+      header: 'Time',
+    });
+  }
 }
 
 class EditControlView extends ControlView {
+  get templateConstants() {
+    return extend(super.templateConstants, {
+      class: 'noun',
+    });
+  }
+
   get VIEWS() {
     return {
       pane: new TimePaneView(this),
@@ -21,8 +32,8 @@ class EditControlView extends ControlView {
 
   get templateHelpers() {
     return {
-      isOpen: () => this.app.isEditingSection(BUILDER_SECTION_TIME, 0),
-      getClass: () => 'noun',
+      isPaneOpen: () => this.app.isEditingSection(BUILDER_SECTION_TIME, 0),
+      openPane: () => this.app.editSection(BUILDER_SECTION_TIME, 0),
       getLabel: () => {
         const timeSectionData = this.app.state[BUILDER_SECTION_TIME];
 
@@ -42,7 +53,7 @@ class EditControlView extends ControlView {
   }
 }
 
-export default class TimeView extends View {
+export default class TimeView extends BaseView {
   get TEMPLATE() {
     return template;
   }

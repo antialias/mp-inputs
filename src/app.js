@@ -81,7 +81,7 @@ export default class IrbApp extends App {
     }
   }
 
-  addSection(section) {
+  addToSection(section) {
     this.editSection(section);
   }
 

@@ -1,10 +1,10 @@
-- let label = helpers.getLabel();
+- let label = constants.label || helpers.getLabel(props);
 - label = typeof label === 'string' ? [label] : label;
 
-.irb-control(class=helpers.getClass())
-  button(ev-click=helpers.clickHandler)
+.irb-control(class=constants.class || helpers.getClass())
+  button(ev-click=() => helpers.openPane(props))
     for part, i in label
       span= part
       if i < label.length - 1
-        span.preposition= helpers.getLabelConnector()
-  div(class=helpers.isOpen() ? 'visible' : 'hidden')= views.pane(state)
+        span.preposition= constants.labelConnector || helpers.getLabelConnector(props)
+  .pane-container(class=helpers.isPaneOpen(props) ? 'visible' : 'hidden')= views.pane(state)

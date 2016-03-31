@@ -1,5 +1,4 @@
-import { View } from 'panel';
-
+import BaseView from '../base';
 import PaneView from './pane';
 import ControlView from './control';
 import {
@@ -11,6 +10,11 @@ import template from '../templates/builder/group.jade';
 import '../stylesheets/builder/group.styl';
 
 class GroupPaneView extends PaneView {
+  get templateConstants() {
+    return extend(super.templateConstants, {
+      header: 'Properties',
+    });
+  }
 }
 
 class GroupControlView extends ControlView {
@@ -22,31 +26,38 @@ class GroupControlView extends ControlView {
 }
 
 class AddControlView extends GroupControlView {
+  get templateConstants() {
+    return extend(super.templateConstants, {
+      class: 'verb',
+      label: 'Group',
+    });
+  }
+
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isOpen: () => this.app.isAddingToSection(BUILDER_SECTION_GROUP),
-      getClass: () => 'verb',
-      getLabel: () => 'Group',
-    })
+      isPaneOpen: () => this.app.isAddingToSection(BUILDER_SECTION_GROUP),
+      openPane: () => this.app.addToSection(BUILDER_SECTION_GROUP),
+    });
   }
 }
 
 class EditControlView extends GroupControlView {
-  render(state, index) {
-    this.index = index;
-    super.render(state);
+  get templateConstants() {
+    return extend(super.templateConstants, {
+      class: 'noun',
+    });
   }
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isOpen: () => this.app.isEditingSection(BUILDER_SECTION_GROUP, this.index),
-      getClass: () => 'noun',
-      getLabel: () => this.app.state[BUILDER_SECTION_GROUP][this.index].value,
+      isPaneOpen: props => this.app.isEditingSection(BUILDER_SECTION_GROUP, props.index),
+      openPane: props => this.app.editSection(BUILDER_SECTION_GROUP, props.index),
+      getLabel: props => this.app.state[BUILDER_SECTION_GROUP][props.index].value,
     })
   }
 }
 
-export default class GroupView extends View {
+export default class GroupView extends BaseView {
   get TEMPLATE() {
     return template;
   }

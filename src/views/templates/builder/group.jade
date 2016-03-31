@@ -1,13 +1,13 @@
 .section.irb-group-view
-  if !groupSection.length
+  if !state.groupSection.length
     .clause.group
       h3
       .control-container= views.addControl(state)
   else
-    for group, index in groupSection
+    for group, index in state.groupSection
       .preposition= index ? 'and by' : 'by'
       .clause.group
-        h3= 'Group' + (groupSection.length === 1 ? '' : ' ' + (index + 1))
-        .control-container= views.editControl(state, index)
-        if index == groupSection.length - 1
+        h3= 'Group' + (state.groupSection.length === 1 ? '' : ' ' + (index + 1))
+        .control-container= views.editControl(state, {index})
+        if index == state.groupSection.length - 1
           .control-container= views.addControl(state)

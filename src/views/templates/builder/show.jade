@@ -1,14 +1,14 @@
 .section.irb-show-view.section
-  if !showSection.length
+  if !state.showSection.length
     .clause.comparison
       h3
       .control-container= views.addControl(state)
   else
-    for comparison, index in showSection
+    for comparison, index in state.showSection
       if index
         .preposition and
       .clause.comparison
-        h3= 'Show' + (showSection.length === 1 ? '' : ' ' + (index + 1))
-        .control-container= views.editControl(state, index)
-        if index === showSection.length - 1
+        h3= 'Show' + (state.showSection.length === 1 ? '' : ' ' + (index + 1))
+        .control-container= views.editControl(state, {index})
+        if index === state.showSection.length - 1
           .control-container= views.addControl(state)

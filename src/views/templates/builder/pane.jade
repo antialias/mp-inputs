@@ -1,7 +1,12 @@
 .irb-pane
-  .header
-  .pre-search
-  .search
-    input(type='text')
-  .body
-  .footer
+  if constants.header || helpers.getHeader
+    .header= constants.header || helpers.getHeader()
+  if views.preSearch
+    .pre-search= views.preSearch(state)
+  if constants.search
+    .search
+      input(type='text')
+  if views.content
+    .body= views.content(state)
+  if views.footer
+    .footer= views.footer(state)
