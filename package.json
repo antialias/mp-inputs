@@ -27,6 +27,7 @@
   "homepage": "https://github.com/irb/irb#readme",
   "dependencies": {
     "babel-polyfill": "^6.7.4",
+    "fetch": "^1.0.1",
     "framesg": "^0.1.2",
     "keymaster": "^1.6.2",
     "lodash": "^4.0.0",

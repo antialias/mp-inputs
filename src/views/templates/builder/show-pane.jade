@@ -1,5 +1,6 @@
 - let selectedMathIndex = state.editing && constants.mathChoices.indexOf(state.editing.math);
 - let selectedTypeIndex = state.editing && constants.resourceTypeChoices.indexOf(state.editing.type);
+- let selectedValueIndex = state.editing && state.events.indexOf(state.editing.value);
 
 div(class=className)
   ul.column.math
@@ -15,4 +16,8 @@ div(class=className)
         ev-click=() => helpers.updateSection({type}),
       )= helpers.capitalize(type)
   ul.column.resourceValue
-    li All
+    for value, i in state.events
+      li(
+        class=selectedValueIndex === i ? 'selected' : '',
+        ev-click=() => helpers.updateSection({value}),
+      )= helpers.renameEvent(value)

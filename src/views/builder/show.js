@@ -7,7 +7,11 @@ import {
   RESOURCE_TYPES,
   MATH_TYPES,
 } from '../../constants';
-import { capitalize, extend } from '../../util';
+import {
+  capitalize,
+  extend,
+  renameEvent,
+} from '../../util';
 
 import template from '../templates/builder/show.jade';
 import showPaneContentTemplate from '../templates/builder/show-pane.jade'
@@ -28,6 +32,7 @@ class ShowPaneContentView extends BaseView {
   get templateHelpers() {
     return {
       capitalize,
+      renameEvent,
       updateSection: data => this.app.updateSection(data),
     };
   }
@@ -89,7 +94,7 @@ class EditControlView extends ShowControlView {
         let value = comparison.value === RESOURCE_VALUE_ALL ?
           `All ${capitalize(comparison.type)}` : comparison.value;
 
-        return [math, value];
+        return [math, renameEvent(value)];
       },
     });
   }

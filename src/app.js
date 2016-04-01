@@ -1,4 +1,5 @@
 import { App } from 'panel';
+import _ from 'lodash';
 import { mirrorLocationHash } from './mp-common/parent-frame';
 
 import IrbView from './views/irb';
@@ -61,7 +62,8 @@ const INITIAL_STATE = {
   [SECTION_TIME]: [createNewClause(SECTION_TIME)],
   [SECTION_GROUP]: [],
   [SECTION_FILTER]: [],
-
+  events: [],
+  properties: [],
 };
 
 export default class IrbApp extends App {
@@ -77,6 +79,22 @@ export default class IrbApp extends App {
     }
 
     this.initClickOutside();
+
+
+    window.MP.api.topEvents().done(results =>
+      this.update({events: Object.values(results.values())})
+    );
+
+    window.MP.api.topProperties().done(results =>
+      this.update({
+        properties:
+          _(results.values())
+            .toPairs()
+            .sortBy(pair => -pair[1])
+            .map(pair => pair[0])
+            .value()
+      })
+    );
   }
 
   get SCREENS() {

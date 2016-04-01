@@ -5,7 +5,11 @@ import {
   SECTION_GROUP,
   RESOURCE_TYPES,
 } from '../../constants';
-import { capitalize, extend } from '../../util';
+import {
+  capitalize,
+  extend,
+  renameProperty,
+} from '../../util';
 
 import template from '../templates/builder/group.jade';
 import groupPaneContentTemplate from '../templates/builder/group-pane.jade'
@@ -25,6 +29,7 @@ class GroupPaneContentView extends BaseView {
   get templateHelpers() {
     return {
       capitalize,
+      renameProperty,
       updateSection: data => this.app.updateSection(data),
     };
   }
@@ -79,7 +84,7 @@ class EditControlView extends GroupControlView {
     return extend(super.templateHelpers, {
       isPaneOpen: props => this.app.isEditingClause(SECTION_GROUP, props.index),
       openPane: props => this.app.startEditingClause(SECTION_GROUP, props.index),
-      getLabel: props => this.app.clauseAt(SECTION_GROUP, props.index).value,
+      getLabel: props => renameProperty(this.app.clauseAt(SECTION_GROUP, props.index).value),
     })
   }
 }
