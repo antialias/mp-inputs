@@ -2,18 +2,45 @@ import BaseView from '../base';
 import PaneView from './pane';
 import ControlView from './control';
 import {
-  BUILDER_SECTION_GROUP,
+  SECTION_GROUP,
+  RESOURCE_TYPES,
 } from '../../constants';
-import { extend } from '../../util';
+import { capitalize, extend } from '../../util';
 
 import template from '../templates/builder/group.jade';
+import groupPaneContentTemplate from '../templates/builder/group_pane.jade'
 import '../stylesheets/builder/group.styl';
+
+class GroupPaneContentView extends BaseView {
+  get TEMPLATE() {
+    return groupPaneContentTemplate;
+  }
+
+  get templateConstants() {
+    return {
+      resourceTypeChoices: Object.values(RESOURCE_TYPES),
+    };
+  }
+
+  get templateHelpers() {
+    return {
+      capitalize,
+      updateSection: data => this.app.updateSection(data),
+    };
+  }
+}
 
 class GroupPaneView extends PaneView {
   get templateConstants() {
     return extend(super.templateConstants, {
       header: 'Properties',
     });
+  }
+
+  get VIEWS() {
+    return {
+      content: new GroupPaneContentView(this),
+    };
   }
 }
 
@@ -35,8 +62,8 @@ class AddControlView extends GroupControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isPaneOpen: () => this.app.isAddingToSection(BUILDER_SECTION_GROUP),
-      openPane: () => this.app.addToSection(BUILDER_SECTION_GROUP),
+      isPaneOpen: () => this.app.isAddingSectionClause(SECTION_GROUP),
+      openPane: () => this.app.startAddingSectionClause(SECTION_GROUP),
     });
   }
 }
@@ -50,9 +77,9 @@ class EditControlView extends GroupControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isPaneOpen: props => this.app.isEditingSection(BUILDER_SECTION_GROUP, props.index),
-      openPane: props => this.app.editSection(BUILDER_SECTION_GROUP, props.index),
-      getLabel: props => this.app.state[BUILDER_SECTION_GROUP][props.index].value,
+      isPaneOpen: props => this.app.isEditingSectionClause(SECTION_GROUP, props.index),
+      openPane: props => this.app.startEditingSectionClause(SECTION_GROUP, props.index),
+      getLabel: props => this.app.sectionClauseAt(SECTION_GROUP, props.index).value,
     })
   }
 }

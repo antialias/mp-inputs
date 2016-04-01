@@ -6,15 +6,15 @@ export const IS_WITHIN_MP_PLATFORM_IFRAME = (
 
 export const SCREEN_MAIN = 'main';
 
-export const BUILDER_SECTION_SHOW = 'showSection';
-export const BUILDER_SECTION_GROUP = 'groupSection';
-export const BUILDER_SECTION_TIME = 'timeSection';
-export const BUILDER_SECTION_FILTER = 'filterSection';
-export const BUILDER_SECTION_TYPES = {
-  BUILDER_SECTION_SHOW,
-  BUILDER_SECTION_GROUP,
-  BUILDER_SECTION_TIME,
-  BUILDER_SECTION_FILTER,
+export const SECTION_SHOW = 'showSection';
+export const SECTION_GROUP = 'groupSection';
+export const SECTION_TIME = 'timeSection';
+export const SECTION_FILTER = 'filterSection';
+export const SECTION_TYPES = {
+  SECTION_SHOW,
+  SECTION_GROUP,
+  SECTION_TIME,
+  SECTION_FILTER,
 };
 
 export const RESOURCE_EVENTS = 'events';

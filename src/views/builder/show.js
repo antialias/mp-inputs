@@ -2,11 +2,12 @@ import BaseView from '../base';
 import PaneView from './pane';
 import ControlView from './control';
 import {
-  BUILDER_SECTION_SHOW,
+  SECTION_SHOW,
   RESOURCE_VALUE_ALL,
-
+  RESOURCE_TYPES,
+  MATH_TYPES,
 } from '../../constants';
-import { extend, capitalize } from '../../util';
+import { capitalize, extend } from '../../util';
 
 import template from '../templates/builder/show.jade';
 import showPaneContentTemplate from '../templates/builder/show_pane.jade'
@@ -15,6 +16,20 @@ import '../stylesheets/builder/show.styl';
 class ShowPaneContentView extends BaseView {
   get TEMPLATE() {
     return showPaneContentTemplate;
+  }
+
+  get templateConstants() {
+    return {
+      mathChoices: Object.values(MATH_TYPES),
+      resourceTypeChoices: Object.values(RESOURCE_TYPES),
+    };
+  }
+
+  get templateHelpers() {
+    return {
+      capitalize,
+      updateSection: data => this.app.updateSection(data),
+    };
   }
 }
 
@@ -50,8 +65,8 @@ class AddControlView extends ShowControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isPaneOpen: () => this.app.isAddingToSection(BUILDER_SECTION_SHOW),
-      openPane: () => this.app.addToSection(BUILDER_SECTION_SHOW),
+      isPaneOpen: () => this.app.isAddingSectionClause(SECTION_SHOW),
+      openPane: () => this.app.startAddingSectionClause(SECTION_SHOW),
     });
   }
 }
@@ -66,10 +81,10 @@ class EditControlView extends ShowControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isPaneOpen: props => this.app.isEditingSection(BUILDER_SECTION_SHOW, props.index),
-      openPane: props => this.app.editSection(BUILDER_SECTION_SHOW, props.index),
+      isPaneOpen: props => this.app.isEditingSectionClause(SECTION_SHOW, props.index),
+      openPane: props => this.app.startEditingSectionClause(SECTION_SHOW, props.index),
       getLabel: props => {
-        let comparison = this.app.state[BUILDER_SECTION_SHOW][props.index];
+        let comparison = this.app.sectionClauseAt(SECTION_SHOW, props.index);
         let math = capitalize(comparison.math);
         let value = comparison.value === RESOURCE_VALUE_ALL ?
           `All ${capitalize(comparison.type)}` : comparison.value;

@@ -20,17 +20,37 @@
     border-radius 3px 3px 0 0
     color white
 
-  .footer
-    background background-gray
-    border-radius 0 0 3px 3px
-
-  .body
-    height 250px
-
-  input
+  .search input
     background lighten(background-gray, 50%)
     border none
     height 32px
     margin 0
     padding 0
     width 100%
+
+  .content
+    height 250px
+
+    > div
+      height 100%
+
+    ul
+      float left
+      height 100%
+      padding-top 4px
+
+      &:not(:last-child)
+        border-right 1px solid light-gray
+
+      li
+        cursor pointer
+        padding 4px 12px
+        text-align right
+
+        &.selected, &:hover
+          color dark-gray
+
+  .footer
+    background background-gray
+    border-radius 0 0 3px 3px
+

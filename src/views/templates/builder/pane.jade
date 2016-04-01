@@ -1,12 +1,12 @@
 .irb-pane
   if constants.header || helpers.getHeader
-    .header= constants.header || helpers.getHeader()
+    .header= constants.header || helpers.getHeader(props)
   if views.preSearch
-    .pre-search= views.preSearch(state)
+    .pre-search= views.preSearch(state, props)
   if constants.search
     .search
       input(type='text')
   if views.content
-    .body= views.content(state)
+    .content= views.content(state, props)
   if views.footer
-    .footer= views.footer(state)
+    .footer= views.footer(state, props)

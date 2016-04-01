@@ -2,7 +2,7 @@ import BaseView from '../base';
 import PaneView from './pane';
 import ControlView from './control';
 import {
-  BUILDER_SECTION_TIME,
+  SECTION_TIME,
 } from '../../constants';
 import { extend } from '../../util';
 
@@ -32,21 +32,15 @@ class EditControlView extends ControlView {
 
   get templateHelpers() {
     return {
-      isPaneOpen: () => this.app.isEditingSection(BUILDER_SECTION_TIME, 0),
-      openPane: () => this.app.editSection(BUILDER_SECTION_TIME, 0),
+      isPaneOpen: () => this.app.isEditingSectionClause(SECTION_TIME, 0),
+      openPane: () => this.app.startEditingSectionClause(SECTION_TIME, 0),
       getLabel: () => {
-        const timeSectionData = this.app.state[BUILDER_SECTION_TIME];
+        const { unit, start, end } = this.app.sectionClauseAt(SECTION_TIME, 0);
 
-        if (timeSectionData.length === 1) {
-          const { unit, start, end } = timeSectionData[0];
-
-          if (start < 0 && end === null) {
-            return `last ${Math.abs(start)} ${unit}s`;
-          } else {
-            throw new Error('Date range formatting not yet implemented.');
-          }
+        if (start < 0 && end === null) {
+          return `last ${Math.abs(start)} ${unit}s`;
         } else {
-          return '';
+          throw new Error('Date range formatting not yet implemented.');
         }
       },
     }

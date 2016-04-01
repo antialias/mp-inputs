@@ -7,4 +7,4 @@
       span= part
       if i < label.length - 1
         span.preposition= constants.labelConnector || helpers.getLabelConnector(props)
-  .pane-container(class=helpers.isPaneOpen(props) ? 'visible' : 'hidden')= views.pane(state)
+  .pane-container(class=helpers.isPaneOpen(props) ? 'visible' : 'hidden')= views.pane(state, props)
