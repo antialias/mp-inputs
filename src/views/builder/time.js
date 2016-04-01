@@ -32,10 +32,10 @@ class EditControlView extends ControlView {
 
   get templateHelpers() {
     return {
-      isPaneOpen: () => this.app.isEditingSectionClause(SECTION_TIME, 0),
-      openPane: () => this.app.startEditingSectionClause(SECTION_TIME, 0),
+      isPaneOpen: () => this.app.isEditingClause(SECTION_TIME, 0),
+      openPane: () => this.app.startEditingClause(SECTION_TIME, 0),
       getLabel: () => {
-        const { unit, start, end } = this.app.sectionClauseAt(SECTION_TIME, 0);
+        const { unit, start, end } = this.app.clauseAt(SECTION_TIME, 0);
 
         if (start < 0 && end === null) {
           return `last ${Math.abs(start)} ${unit}s`;

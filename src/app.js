@@ -17,35 +17,48 @@ import {
 
 import './stylesheets/app.styl';
 
-function getNewSectionClause(sectionType) {
-  return {
-    [SECTION_SHOW]: {
+function createNewClause(section) {
+  switch(section) {
+    case SECTION_SHOW: return {
       section: SECTION_SHOW,
       math: MATH_TOTAL,
       type: RESOURCE_EVENTS,
       value: RESOURCE_VALUE_ALL,
       search: '',
-    },
-    [SECTION_TIME]: {
+    };
+    case SECTION_TIME: return {
       section: SECTION_TIME,
       unit: TIME_UNIT_HOUR,
       start: -96,
       end: null,
-    },
-    [SECTION_GROUP]: {
+    };
+    case SECTION_GROUP: return {
       section: SECTION_GROUP,
       type: RESOURCE_EVENTS,
       value: null,
       search: '',
-    }
-  }[sectionType];
-};
+    };
+  }
+}
+
+function validateClause(clause) {
+  if (clause.section === SECTION_GROUP && !clause.value) {
+    throw new Error('invalid group clause: no value present')
+  }
+}
+
+function validateSection(section) {
+  if (section.length > 1 && section[0].section === SECTION_TIME) {
+    throw new Error('invalid time section: number of clauses cannot exceed 1');
+  }
+}
+
 
 const INITIAL_STATE = {
   $screen: SCREEN_MAIN,
   reportName: 'Untitled report',
-  [SECTION_SHOW]: [getNewSectionClause(SECTION_SHOW)],
-  [SECTION_TIME]: [getNewSectionClause(SECTION_TIME)],
+  [SECTION_SHOW]: [createNewClause(SECTION_SHOW)],
+  [SECTION_TIME]: [createNewClause(SECTION_TIME)],
   [SECTION_GROUP]: [],
   [SECTION_FILTER]: [],
 
@@ -73,40 +86,21 @@ export default class IrbApp extends App {
   }
 
   update(stateUpdate={}) {
-    this.validateUpdate(stateUpdate);
     super.update(...arguments);
     console.log(this.state);
   }
 
-  validateUpdate(stateUpdate) {
-    if (
-      stateUpdate.editing &&
-      stateUpdate.editing.section === SECTION_TIME &&
-      stateUpdate.editing.index !== null &&
-      stateUpdate.editing.index > 0
-    ) {
-      throw new Error('Invalid time section edit attempted.');
-    }
-
-    if (
-      stateUpdate[SECTION_TIME] &&
-      stateUpdate[SECTION_TIME].length > 1
-    ) {
-      throw new Error('Invalid time section update attempted.');
-    }
-  }
-
   // State helpers
 
-  sectionClauseAt(sectionType, index) {
+  clauseAt(sectionType, index) {
     return this.state[sectionType][index];
   }
 
-  isAddingSectionClause(sectionType) {
-    return this.isEditingSectionClause(sectionType, -1);
+  isAddingClause(sectionType) {
+    return this.isEditingClause(sectionType, -1);
   }
 
-  isEditingSectionClause(sectionType, index) {
+  isEditingClause(sectionType, index) {
     return (
       this.state.editing &&
       this.state.editing.section === sectionType &&
@@ -114,42 +108,55 @@ export default class IrbApp extends App {
     );
   }
 
-  isSectionClauseValid(sectionClauseData) {
-    switch(sectionClauseData.section) {
-      case SECTION_SHOW:
-        return true;
-      case SECTION_GROUP:
-        return !!sectionClauseData.value;
-      case SECTION_TIME:
-        return true;
-      case SECTION_FILTER:
-        return true;
+  isClauseValid(clause) {
+    try {
+      validateClause(clause);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  isSectionValid(section) {
+    try {
+      validateSection(section);
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
     }
   }
 
   // State modifiers
 
-  startAddingSectionClause(sectionType) {
-    this.update({editing: getNewSectionClause(sectionType)});
+  startAddingClause(sectionType) {
+    this.update({editing: createNewClause(sectionType)});
   }
 
-  startEditingSectionClause(sectionType, index) {
-    this.update({editing: this.state[sectionType][index]});
+  startEditingClause(sectionType, index) {
+    this.update({editing: this.clauseAt(sectionType, index)});
   }
 
-  updateSection(sectionClauseData) {
+  updateSection(clauseData) {
     let editing = this.state.editing;
-    let section = this.state[editing.section];
+    let sectionType = editing.section;
+    let section = this.state[sectionType];
     let editingIndex = section.indexOf(editing);
 
-    let newSectionClause = extend(editing, sectionClauseData);
-    let newState = {editing: newSectionClause};
+    let newClause = extend(editing, clauseData);
+    let newState = {editing: newClause};
 
-    if (this.isSectionClauseValid(editing)) {
+    if (this.isClauseValid(newClause)) {
+      let newSection;
+
       if (editingIndex === -1) {
-        newState[editing.section] = section.concat([newSectionClause]);
+        newSection = section.concat([newClause]);
       } else {
-        newState[editing.section] = replaceAtIndex(section, editingIndex, newSectionClause);
+        newSection = replaceAtIndex(section, editingIndex, newClause);
+      }
+
+      if (this.isSectionValid(newSection)) {
+        newState[sectionType] = newSection;
       }
     }
 

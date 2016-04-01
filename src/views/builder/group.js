@@ -62,8 +62,8 @@ class AddControlView extends GroupControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isPaneOpen: () => this.app.isAddingSectionClause(SECTION_GROUP),
-      openPane: () => this.app.startAddingSectionClause(SECTION_GROUP),
+      isPaneOpen: () => this.app.isAddingClause(SECTION_GROUP),
+      openPane: () => this.app.startAddingClause(SECTION_GROUP),
     });
   }
 }
@@ -77,9 +77,9 @@ class EditControlView extends GroupControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isPaneOpen: props => this.app.isEditingSectionClause(SECTION_GROUP, props.index),
-      openPane: props => this.app.startEditingSectionClause(SECTION_GROUP, props.index),
-      getLabel: props => this.app.sectionClauseAt(SECTION_GROUP, props.index).value,
+      isPaneOpen: props => this.app.isEditingClause(SECTION_GROUP, props.index),
+      openPane: props => this.app.startEditingClause(SECTION_GROUP, props.index),
+      getLabel: props => this.app.clauseAt(SECTION_GROUP, props.index).value,
     })
   }
 }

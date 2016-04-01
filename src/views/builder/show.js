@@ -65,8 +65,8 @@ class AddControlView extends ShowControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isPaneOpen: () => this.app.isAddingSectionClause(SECTION_SHOW),
-      openPane: () => this.app.startAddingSectionClause(SECTION_SHOW),
+      isPaneOpen: () => this.app.isAddingClause(SECTION_SHOW),
+      openPane: () => this.app.startAddingClause(SECTION_SHOW),
     });
   }
 }
@@ -81,10 +81,10 @@ class EditControlView extends ShowControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isPaneOpen: props => this.app.isEditingSectionClause(SECTION_SHOW, props.index),
-      openPane: props => this.app.startEditingSectionClause(SECTION_SHOW, props.index),
+      isPaneOpen: props => this.app.isEditingClause(SECTION_SHOW, props.index),
+      openPane: props => this.app.startEditingClause(SECTION_SHOW, props.index),
       getLabel: props => {
-        let comparison = this.app.sectionClauseAt(SECTION_SHOW, props.index);
+        let comparison = this.app.clauseAt(SECTION_SHOW, props.index);
         let math = capitalize(comparison.math);
         let value = comparison.value === RESOURCE_VALUE_ALL ?
           `All ${capitalize(comparison.type)}` : comparison.value;
