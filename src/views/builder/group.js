@@ -8,7 +8,7 @@ import {
 import { capitalize, extend } from '../../util';
 
 import template from '../templates/builder/group.jade';
-import groupPaneContentTemplate from '../templates/builder/group_pane.jade'
+import groupPaneContentTemplate from '../templates/builder/group-pane.jade'
 import '../stylesheets/builder/group.styl';
 
 class GroupPaneContentView extends BaseView {

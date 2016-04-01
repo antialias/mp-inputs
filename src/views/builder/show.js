@@ -10,7 +10,7 @@ import {
 import { capitalize, extend } from '../../util';
 
 import template from '../templates/builder/show.jade';
-import showPaneContentTemplate from '../templates/builder/show_pane.jade'
+import showPaneContentTemplate from '../templates/builder/show-pane.jade'
 import '../stylesheets/builder/show.styl';
 
 class ShowPaneContentView extends BaseView {

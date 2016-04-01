@@ -1,7 +1,7 @@
 - let label = constants.label || helpers.getLabel(props);
 - label = typeof label === 'string' ? [label] : label;
 
-.irb-control(class=constants.class || helpers.getClass())
+div(class=[className, constants.class || helpers.getClass()])
   button(ev-click=() => helpers.openPane(props))
     for part, i in label
       span= part
