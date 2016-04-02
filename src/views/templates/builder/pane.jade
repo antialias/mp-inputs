@@ -5,7 +5,7 @@ div(class=className)
     .pre-search= views.preSearch(state, props)
   if constants.search
     .search
-      input(type='text')
+      input(type='text' ev-input=handlers.updateSearch)
   if views.content
     .content= views.content(state, props)
   if views.footer

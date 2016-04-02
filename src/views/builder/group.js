@@ -1,6 +1,7 @@
 import BaseView from '../base';
 import PaneView from './pane';
 import ControlView from './control';
+import PaneContentView from './pane-content';
 import {
   SECTION_GROUP,
   RESOURCE_TYPES,
@@ -15,7 +16,7 @@ import template from '../templates/builder/group.jade';
 import groupPaneContentTemplate from '../templates/builder/group-pane.jade'
 import '../stylesheets/builder/group.styl';
 
-class GroupPaneContentView extends BaseView {
+class GroupPaneContentView extends PaneContentView {
   get TEMPLATE() {
     return groupPaneContentTemplate;
   }
@@ -27,11 +28,11 @@ class GroupPaneContentView extends BaseView {
   }
 
   get templateHelpers() {
-    return {
+    return extend(super.templateHelpers, {
       capitalize,
       renameProperty,
       updateSection: data => this.app.updateSection(data),
-    };
+    });
   }
 }
 

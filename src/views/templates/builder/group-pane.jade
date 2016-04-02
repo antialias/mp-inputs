@@ -10,7 +10,8 @@ div(class=className)
       )= helpers.capitalize(type)
   ul.column.resourceValue
     for value, i in state.properties
-      li(
-        class=selectedValueIndex === i ? 'selected' : '',
-        ev-click=() => helpers.updateSection({value}),
-      )= helpers.renameProperty(value)
+      if helpers.matchesSearch(helpers.renameProperty(value))
+        li(
+          class=selectedValueIndex === i ? 'selected' : '',
+          ev-click=() => helpers.updateSection({value}),
+        )= helpers.renameProperty(value)

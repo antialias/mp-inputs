@@ -169,21 +169,24 @@ export default class IrbApp extends App {
     let sectionType = editing.section;
     let section = this.state[sectionType];
     let editingIndex = section.indexOf(editing);
+    let addingIncompleteClause = this.isAddingClause(sectionType) && !_.has(clauseData, 'value');
 
     let newClause = extend(editing, clauseData);
     let newState = {editing: newClause};
 
-    if (this.isClauseValid(newClause)) {
-      let newSection;
+    if (!addingIncompleteClause) {
+      if (this.isClauseValid(newClause)) {
+        let newSection;
 
-      if (editingIndex === -1) {
-        newSection = section.concat([newClause]);
-      } else {
-        newSection = replaceAtIndex(section, editingIndex, newClause);
-      }
+        if (editingIndex === -1) {
+          newSection = section.concat([newClause]);
+        } else {
+          newSection = replaceAtIndex(section, editingIndex, newClause);
+        }
 
-      if (this.isSectionValid(newSection)) {
-        newState[sectionType] = newSection;
+        if (this.isSectionValid(newSection)) {
+          newState[sectionType] = newSection;
+        }
       }
     }
 

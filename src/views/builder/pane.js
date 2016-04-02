@@ -13,4 +13,10 @@ export default class PaneView extends BaseView {
       search: true,
     };
   }
+
+  get templateHandlers() {
+    return {
+      updateSearch: event => this.app.updateSection({search: event.target.value}),
+    }
+  }
 }

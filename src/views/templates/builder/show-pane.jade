@@ -17,7 +17,8 @@ div(class=className)
       )= helpers.capitalize(type)
   ul.column.resourceValue
     for value, i in state.events
-      li(
-        class=selectedValueIndex === i ? 'selected' : '',
-        ev-click=() => helpers.updateSection({value}),
-      )= helpers.renameEvent(value)
+      if helpers.matchesSearch(helpers.renameEvent(value))
+        li(
+          class=selectedValueIndex === i ? 'selected' : '',
+          ev-click=() => helpers.updateSection({value}),
+        )= helpers.renameEvent(value)

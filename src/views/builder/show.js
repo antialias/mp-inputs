@@ -1,6 +1,7 @@
 import BaseView from '../base';
-import PaneView from './pane';
 import ControlView from './control';
+import PaneView from './pane';
+import PaneContentView from './pane-content';
 import {
   SECTION_SHOW,
   RESOURCE_VALUE_ALL,
@@ -17,7 +18,7 @@ import template from '../templates/builder/show.jade';
 import showPaneContentTemplate from '../templates/builder/show-pane.jade'
 import '../stylesheets/builder/show.styl';
 
-class ShowPaneContentView extends BaseView {
+class ShowPaneContentView extends PaneContentView {
   get TEMPLATE() {
     return showPaneContentTemplate;
   }
@@ -30,11 +31,11 @@ class ShowPaneContentView extends BaseView {
   }
 
   get templateHelpers() {
-    return {
+    return extend(super.templateHelpers, {
       capitalize,
       renameEvent,
       updateSection: data => this.app.updateSection(data),
-    };
+    });
   }
 }
 
