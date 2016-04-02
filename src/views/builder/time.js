@@ -1,5 +1,6 @@
 import BaseView from '../base';
 import PaneView from './pane';
+import PaneContentView from './pane-content';
 import ControlView from './control';
 import {
   SECTION_TIME,
@@ -7,13 +8,38 @@ import {
 import { extend } from '../../util';
 
 import template from '../templates/builder/time.jade';
+import timePaneContentTemplate from '../templates/builder/time-pane.jade'
 import '../stylesheets/builder/time.styl';
+
+class TimePaneContentView extends PaneContentView {
+  get TEMPLATE() {
+    return timePaneContentTemplate;
+  }
+
+  get templateHelpers() {
+    return extend(super.templateHelpers, {
+      updateSection: data => this.app.updateSection(data),
+    });
+  }
+
+  render() {
+    return super.render(...arguments);
+    //$(`.${this.className} .date-picker`).MPDatepicker();
+  }
+}
 
 class TimePaneView extends PaneView {
   get templateConstants() {
     return extend(super.templateConstants, {
       header: 'Time',
+      search: false,
     });
+  }
+
+  get VIEWS() {
+    return {
+      content: new TimePaneContentView(this),
+    };
   }
 }
 
