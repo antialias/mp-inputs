@@ -21,7 +21,7 @@ function createNewClause(section) {
       section: SECTION_SHOW,
       math: MATH_TOTAL,
       type: RESOURCE_EVENTS,
-      value: RESOURCE_VALUE_ALL,
+      value: 'Viewed report', // RESOURCE_VALUE_ALL, <-- need to implement 'all events' querying
       search: '',
     };
     case SECTION_TIME:
@@ -93,6 +93,8 @@ export default class IrbApp extends BaseApp {
       let props = results.values();
       this.update({properties: Object.keys(props).sort((a, b) => props[b] - props[a])})
     });
+
+    this.query();
   }
 
   get SCREENS() {
@@ -177,5 +179,39 @@ export default class IrbApp extends BaseApp {
     }
 
     this.update(newState);
+    this.query();
+  }
+
+  query() {
+    let show = this.state[SECTION_SHOW][0];
+    let time = this.state[SECTION_TIME][0];
+    let group = this.state[SECTION_GROUP][0];
+
+    if (!show) {
+      return null;
+    }
+
+    let query = {};
+    query.event = show.value;
+    query.segment = group ? group.value : null;
+    query.params = {
+      unit: time.unit,
+      from: time.range.from,
+      to: time.range.to,
+    };
+
+    if (
+      !this.state.query ||
+      this.state.query.event !== query.event ||
+      this.state.query.segment !== query.segment ||
+      this.state.query.params.unit !== query.params.unit ||
+      this.state.query.params.from !== query.params.from ||
+      this.state.query.params.to !== query.params.to
+    ) {
+      window.MP.api.segment(query.event, query.segment, query.params)
+        .done(results => console.log(results, results.values()) || this.update({query, result: results.values()}));
+    }
+
+    return query;
   }
 }

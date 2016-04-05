@@ -1,5 +1,5 @@
 export function register() {
-  document.registerElement('date-picker', DatePicker);
+  document.registerElement('irb-date-picker', DatePicker);
 }
 
 class DatePicker extends HTMLElement {
