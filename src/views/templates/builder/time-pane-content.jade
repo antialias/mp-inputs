@@ -1,0 +1,5 @@
+div(class=className)
+  date-picker(
+    value=helpers.rangeToString()
+    ev-change=event => helpers.updateSection({range: event.target.value})
+  )

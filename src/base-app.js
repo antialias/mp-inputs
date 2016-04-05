@@ -18,7 +18,6 @@ export default class BaseApp extends App {
   update(stateUpdate={}) {
     super.update(...arguments);
     console.log(this.state);
-    // this._screens.forEach(screen => screen.postRender());
   }
 
   // DOM helpers

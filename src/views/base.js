@@ -15,7 +15,7 @@ export default class BaseView extends View {
 
   postRender() {
     this.onRendered && this.onRendered();
-    this._views.forEach(view => view.postRender());
+    Object.values(this._views).forEach(view => view.postRender());
   }
 
   get templateConstants() {

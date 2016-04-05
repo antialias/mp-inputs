@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 import BaseApp from './base-app.js';
 import IrbView from './views/irb';
 import { extend, replaceAtIndex } from './util';
@@ -26,12 +24,20 @@ function createNewClause(section) {
       value: RESOURCE_VALUE_ALL,
       search: '',
     };
-    case SECTION_TIME: return {
-      section: SECTION_TIME,
-      unit: TIME_UNIT_HOUR,
-      start: -96,
-      end: null,
-    };
+    case SECTION_TIME:
+      let to = new Date();
+      let from = new Date();
+
+      from.setHours(to.getHours() - 96);
+
+      return {
+        section: SECTION_TIME,
+        unit: TIME_UNIT_HOUR,
+        range: {
+          from,
+          to,
+        },
+      };
     case SECTION_GROUP: return {
       section: SECTION_GROUP,
       type: RESOURCE_EVENTS,
@@ -43,7 +49,17 @@ function createNewClause(section) {
 
 function validateClause(clause) {
   if (clause.section === SECTION_GROUP && !clause.value) {
-    throw new Error('invalid group clause: no value present')
+    throw new Error('invalid group clause: no value present');
+  } else if (clause.section === SECTION_TIME) {
+    if (!clause.unit) {
+      throw new Error('invalid time clause: no unit present');
+    } else if (!(
+      clause.range &&
+      clause.range.from instanceof Date &&
+      clause.range.to instanceof Date
+    )) {
+      throw new Error('invalid time clause: range does not contain both a to and from Date');
+    }
   }
 }
 
@@ -73,16 +89,10 @@ export default class IrbApp extends BaseApp {
       this.update({events: Object.values(results.values())})
     );
 
-    window.MP.api.topProperties().done(results =>
-      this.update({
-        properties:
-          _(results.values())
-            .toPairs()
-            .sortBy(pair => -pair[1])
-            .map(pair => pair[0])
-            .value()
-      })
-    );
+    window.MP.api.topProperties().done(results => {
+      let props = results.values();
+      this.update({properties: Object.keys(props).sort((a, b) => props[b] - props[a])})
+    });
   }
 
   get SCREENS() {
@@ -143,33 +153,26 @@ export default class IrbApp extends BaseApp {
   }
 
   stopEditingClause() {
-    console.log('stopping edit')
     this.update({editing: null});
   }
 
-  updateSection(clauseData) {
-    let editing = this.state.editing;
-    let sectionType = editing.section;
+  updateSection(sectionType, index, clauseData) {
     let section = this.state[sectionType];
-    let editingIndex = section.indexOf(editing);
-    let addingIncompleteClause = this.isAddingClause(sectionType) && !_.has(clauseData, 'value');
-
-    let newClause = extend(editing, clauseData);
+    let clause = section[index];
+    let newClause = extend(clause || this.state.editing || {}, clauseData);
     let newState = {editing: newClause};
 
-    if (!addingIncompleteClause) {
-      if (this.isClauseValid(newClause)) {
-        let newSection;
+    if (this.isClauseValid(newClause)) {
+      let newSection;
 
-        if (editingIndex === -1) {
-          newSection = section.concat([newClause]);
-        } else {
-          newSection = replaceAtIndex(section, editingIndex, newClause);
-        }
+      if (clause) {
+        newSection = replaceAtIndex(section, index, newClause);
+      } else {
+        newSection = section.concat([newClause]);
+      }
 
-        if (this.isSectionValid(newSection)) {
-          newState[sectionType] = newSection;
-        }
+      if (this.isSectionValid(newSection)) {
+        newState[sectionType] = newSection;
       }
     }
 

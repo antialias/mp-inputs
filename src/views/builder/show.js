@@ -15,8 +15,9 @@ import {
 } from '../../util';
 
 import template from '../templates/builder/show.jade';
-import showPaneContentTemplate from '../templates/builder/show-pane.jade'
+import showPaneContentTemplate from '../templates/builder/show-pane-content.jade'
 import '../stylesheets/builder/show.styl';
+import '../stylesheets/builder/show-pane-content.styl';
 
 class ShowPaneContentView extends PaneContentView {
   get TEMPLATE() {
@@ -34,7 +35,7 @@ class ShowPaneContentView extends PaneContentView {
     return extend(super.templateHelpers, {
       capitalize,
       renameEvent,
-      updateSection: data => this.app.updateSection(data),
+      updateSection: (index, data) => this.app.updateSection(SECTION_SHOW, index, data),
     });
   }
 }

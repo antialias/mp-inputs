@@ -1,6 +1,6 @@
 import BaseView from '../base';
-import PaneView from './pane';
 import ControlView from './control';
+import PaneView from './pane';
 import PaneContentView from './pane-content';
 import {
   SECTION_GROUP,
@@ -13,8 +13,9 @@ import {
 } from '../../util';
 
 import template from '../templates/builder/group.jade';
-import groupPaneContentTemplate from '../templates/builder/group-pane.jade'
+import groupPaneContentTemplate from '../templates/builder/group-pane-content.jade'
 import '../stylesheets/builder/group.styl';
+import '../stylesheets/builder/group-pane-content.styl';
 
 class GroupPaneContentView extends PaneContentView {
   get TEMPLATE() {
@@ -31,7 +32,7 @@ class GroupPaneContentView extends PaneContentView {
     return extend(super.templateHelpers, {
       capitalize,
       renameProperty,
-      updateSection: data => this.app.updateSection(data),
+      updateSection: (index, data) => this.app.updateSection(SECTION_GROUP, index, data),
     });
   }
 }
