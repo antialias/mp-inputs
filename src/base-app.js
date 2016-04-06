@@ -8,7 +8,7 @@ export default class BaseApp extends App {
 
     // initialize frame communication
     if (options.parentFrame) {
-      this.parentFrame = attrs.parentFrame;
+      this.parentFrame = options.parentFrame;
       mirrorLocationHash(this.parentFrame);
     }
 

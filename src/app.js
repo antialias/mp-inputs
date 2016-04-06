@@ -84,8 +84,8 @@ const INITIAL_STATE = {
 };
 
 export default class IrbApp extends BaseApp {
-  constructor(elID, initialState=INITIAL_STATE, attrs={}) {
-    super(elID, INITIAL_STATE, attrs);
+  constructor(elID, initialState=INITIAL_STATE, options={}) {
+    super(elID, INITIAL_STATE, options);
 
     window.MP.api.topEvents().done(results =>
       this.update({events: [RESOURCE_VALUE_TOP_EVENTS].concat(Object.values(results.values()))})

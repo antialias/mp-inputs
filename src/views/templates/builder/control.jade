@@ -3,6 +3,6 @@ div(class=[className, constants.class || helpers.getClass()])
     - let labelParts = helpers.getLabelParts(props)
     for part, i in labelParts
       span= part
-      if i < LabelParts.length - 1
+      if i < labelParts.length - 1
         span.preposition= constants.labelConnector || helpers.getLabelConnector(props)
   .pane-container(class=helpers.isPaneOpen(props) ? 'visible' : 'hidden')= views.pane(state, props)
