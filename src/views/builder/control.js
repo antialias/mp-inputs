@@ -6,7 +6,7 @@ import '../stylesheets/builder/control.styl';
 export default class ControlView extends BaseView {
   setApp() {
     super.setApp(...arguments);
-    this.app.onClickOutside(this.className, () => this.app.stopEditingClause());
+    this.app.onClickOutside(this.className, 'stopEditingClause');
   }
 
   get TEMPLATE() {

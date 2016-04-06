@@ -30,25 +30,31 @@ export default class BaseApp extends App {
     }
   }
 
-  onClickOutside(elementClass, handler) {
-    this.clickOutsideClasses = (this.clickOutsideClasses || []).concat([elementClass]);
-    this.clickOutsideHandlers = (this.clickOutsideHandlers || []).concat([handler]);
+  onClickOutside(elementClass, appMethodName) {
+    this.clickOutsideHandlers = this.clickOutsideHandlers || {};
+    this.clickOutsideHandlers[appMethodName] = this.clickOutsideHandlers[appMethodName] || [];
+
+    if (this.clickOutsideHandlers[appMethodName].indexOf(elementClass) === -1) {
+      this.clickOutsideHandlers[appMethodName].push(elementClass);
+    }
   }
 
   clickOutsideHandler(event) {
     let el = event.target;
 
-    do {
-      for (let i = 0; i < this.clickOutsideClasses.length; i++) {
-        if (el.classList.contains(this.clickOutsideClasses[i])) {
-          return;
-        }
-      }
-    } while (el = el.parentElement);
+    Object.keys(this.clickOutsideHandlers).forEach(appMethodName => {
+      let classes = this.clickOutsideHandlers[appMethodName];
 
-    for (let i = 0; i < this.clickOutsideHandlers.length; i++) {
-      this.clickOutsideHandlers[i](event);
-    }
+      do {
+        for (let i = 0; i < classes.length; i++) {
+          if (el.classList.contains(classes[i])) {
+            return;
+          }
+        }
+      } while (el = el.parentElement);
+
+      this[appMethodName](event);
+    });
   }
 }
 
