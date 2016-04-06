@@ -8,7 +8,11 @@ class Chart extends HTMLElement {
   }
 
   attachedCallback() {
-    this.$el.MPChart({chartType: 'line'});
+    this.$el
+      .MPChart({chartType: 'line'})
+      .MPChart('setData', JSON.parse(this._data_string || {}));
+
+    this._chart_initialized = true;
   }
 
   get data() {
@@ -18,7 +22,10 @@ class Chart extends HTMLElement {
   set data(data) {
     if (this._data_string !== data) {
       this._data_string = data;
-      this.$el.MPChart('setData', JSON.parse(data));
+
+      if (this._chart_initialized) {
+        this.$el.MPChart('setData', JSON.parse(data));
+      }
     }
   }
 }

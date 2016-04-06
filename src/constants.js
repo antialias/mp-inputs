@@ -24,7 +24,7 @@ export const RESOURCE_TYPES = {
   RESOURCE_PEOPLE,
 };
 
-export const RESOURCE_VALUE_ALL = 'all';
+export const RESOURCE_VALUE_TOP_EVENTS = '$top_events';
 
 export const MATH_TOTAL = 'total';
 export const MATH_UNIQUE = 'unique';

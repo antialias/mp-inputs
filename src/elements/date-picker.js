@@ -8,7 +8,8 @@ class DatePicker extends HTMLElement {
   }
 
   attachedCallback() {
-    this.$el.MPDatepicker()
+    this.$el
+      .MPDatepicker()
       .on('change', () => this.dispatchEvent(new Event('change')));
   }
 

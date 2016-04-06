@@ -8,7 +8,7 @@ import {
   SECTION_FILTER,
   MATH_TOTAL,
   RESOURCE_EVENTS,
-  RESOURCE_VALUE_ALL,
+  RESOURCE_VALUE_TOP_EVENTS,
   SCREEN_MAIN,
   TIME_UNIT_HOUR,
 } from './constants';
@@ -21,7 +21,7 @@ function createNewClause(section) {
       section: SECTION_SHOW,
       math: MATH_TOTAL,
       type: RESOURCE_EVENTS,
-      value: 'Viewed report', // RESOURCE_VALUE_ALL, <-- need to implement 'all events' querying
+      value: RESOURCE_VALUE_TOP_EVENTS,
       search: '',
     };
     case SECTION_TIME:
@@ -79,6 +79,8 @@ const INITIAL_STATE = {
   [SECTION_FILTER]: [],
   events: [],
   properties: [],
+  query: {},
+  result: {},
 };
 
 export default class IrbApp extends BaseApp {
@@ -86,7 +88,7 @@ export default class IrbApp extends BaseApp {
     super(elID, INITIAL_STATE, attrs);
 
     window.MP.api.topEvents().done(results =>
-      this.update({events: Object.values(results.values())})
+      this.update({events: [RESOURCE_VALUE_TOP_EVENTS].concat(Object.values(results.values()))})
     );
 
     window.MP.api.topProperties().done(results => {
@@ -105,6 +107,11 @@ export default class IrbApp extends BaseApp {
 
   main(state={}) {
     this.update({$screen: SCREEN_MAIN});
+  }
+
+  update() {
+    super.update(...arguments);
+    this.query();
   }
 
   // State helpers
@@ -179,37 +186,41 @@ export default class IrbApp extends BaseApp {
     }
 
     this.update(newState);
-    this.query();
   }
 
   query() {
-    let show = this.state[SECTION_SHOW][0];
-    let time = this.state[SECTION_TIME][0];
-    let group = this.state[SECTION_GROUP][0];
+    const time = this.state[SECTION_TIME][0];
 
-    if (!show) {
-      return null;
-    }
-
-    let query = {};
-    query.event = show.value;
-    query.segment = group ? group.value : null;
-    query.params = {
+    const query = {
+      events: this.state[SECTION_SHOW].map(clause => clause.value),
+      segments: this.state[SECTION_GROUP].map(clause => clause.value),
       unit: time.unit,
       from: time.range.from,
       to: time.range.to,
     };
 
-    if (
-      !this.state.query ||
-      this.state.query.event !== query.event ||
-      this.state.query.segment !== query.segment ||
-      this.state.query.params.unit !== query.params.unit ||
-      this.state.query.params.from !== query.params.from ||
-      this.state.query.params.to !== query.params.to
-    ) {
-      window.MP.api.segment(query.event, query.segment, query.params)
-        .done(results => console.log(results, results.values()) || this.update({query, result: results.values()}));
+    if (query.events.indexOf(RESOURCE_VALUE_TOP_EVENTS) !== -1) {
+      query.events = this.state.events.slice(1); // omit $top_events from events list
+    }
+
+    if (Object.keys(query).some(key => JSON.stringify(query[key]) !== JSON.stringify(this.state.query[key]))) {
+      this.update({query});
+
+      let { events, segments, unit, from, to } = query;
+
+      if (events.length) {
+        let endpoint = 'events';
+        let params = {unit, from, to, event: events};
+
+        if (segments.length && events.length === 1) {
+          endpoint = 'segmentation';
+          params.event = events[0];
+          params.on = `properties["${segments[0]}"]`;
+        }
+
+        window.MP.api.query(`api/2.0/${endpoint}`, params)
+          .done(results => this.update({result: results.data.values}));
+      }
     }
 
     return query;

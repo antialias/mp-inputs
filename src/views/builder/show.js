@@ -4,7 +4,7 @@ import PaneView from './pane';
 import PaneContentView from './pane-content';
 import {
   SECTION_SHOW,
-  RESOURCE_VALUE_ALL,
+  RESOURCE_VALUE_TOP_EVENTS,
   RESOURCE_TYPES,
   MATH_TYPES,
 } from '../../constants';
@@ -93,8 +93,8 @@ class EditControlView extends ShowControlView {
       getLabel: props => {
         let comparison = this.app.clauseAt(SECTION_SHOW, props.index);
         let math = capitalize(comparison.math);
-        let value = comparison.value === RESOURCE_VALUE_ALL ?
-          `All ${capitalize(comparison.type)}` : comparison.value;
+        let value = comparison.value === RESOURCE_VALUE_TOP_EVENTS ?
+          `Top ${capitalize(comparison.type)}` : comparison.value;
 
         return [math, renameEvent(value)];
       },
