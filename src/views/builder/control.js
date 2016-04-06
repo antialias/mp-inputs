@@ -12,4 +12,13 @@ export default class ControlView extends BaseView {
   get TEMPLATE() {
     return template;
   }
+
+  get templateHelpers() {
+    return {
+      getLabelParts: props => {
+        let label = this.templateConstants.label || this.templateHelpers.getLabel(props);
+        return typeof label === 'string' ? [label] : label;
+      }
+    }
+  }
 }

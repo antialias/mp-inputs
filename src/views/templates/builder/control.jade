@@ -1,10 +1,8 @@
-- let label = constants.label || helpers.getLabel(props);
-- label = typeof label === 'string' ? [label] : label;
-
 div(class=[className, constants.class || helpers.getClass()])
   button(ev-click=() => helpers.openPane(props))
-    for part, i in label
+    - let labelParts = helpers.getLabelParts(props)
+    for part, i in labelParts
       span= part
-      if i < label.length - 1
+      if i < LabelParts.length - 1
         span.preposition= constants.labelConnector || helpers.getLabelConnector(props)
   .pane-container(class=helpers.isPaneOpen(props) ? 'visible' : 'hidden')= views.pane(state, props)

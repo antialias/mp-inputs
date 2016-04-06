@@ -58,7 +58,7 @@ class EditControlView extends ControlView {
   }
 
   get templateHelpers() {
-    return {
+    return extend(super.templateHelpers, {
       isPaneOpen: () => this.app.isEditingClause(SECTION_TIME, 0),
       openPane: () => this.app.startEditingClause(SECTION_TIME, 0),
       getLabel: () => {
@@ -84,7 +84,7 @@ class EditControlView extends ControlView {
 
         return fromFormatted === toFormatted ? fromFormatted : `${fromFormatted} - ${toFormatted}`;
       },
-    }
+    });
   }
 }
 

@@ -69,7 +69,7 @@ if (process.env.NODE_ENV === 'development') {
         MIXPANEL_TOKEN: JSON.stringify('<IRB production Mixpanel project token>'),
       }),
       new ExtractTextPlugin('dist/bundle.[hash].min.css'),
-      new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
+      //new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
     ]),
   });
 }
