@@ -8,6 +8,6 @@
       .preposition= index ? 'and by' : 'by'
       .clause.group
         h3= 'Group' + (state.groupSection.length === 1 ? '' : ' ' + (index + 1))
-        .control-container= views.editControl(helpers.extend(state, {index}))
+        .control-container= views.editControl(util.extend(state, {index}))
         if index == state.groupSection.length - 1
           .control-container= views.addControl(state)

@@ -8,17 +8,17 @@ div(class=className)
       li(
         class=selectedMathIndex === i ? 'selected' : '',
         ev-click=() => helpers.updateSection(state.index, {math}),
-      )= helpers.capitalize(math)
+      )= util.capitalize(math)
   ul.column.resourceType
     for type, i in constants.resourceTypeChoices
       li(
         class=selectedTypeIndex === i ? 'selected' : '',
         ev-click=() => helpers.updateSection(state.index, {type}),
-      )= helpers.capitalize(type)
+      )= util.capitalize(type)
   ul.column.resourceValue
     for value, i in state.events
-      if helpers.matchesSearch(helpers.renameEvent(value))
+      if helpers.matchesSearch(util.renameEvent(value))
         li(
           class=selectedValueIndex === i ? 'selected' : '',
           ev-click=() => helpers.updateSection(state.index, {value}),
-        )= helpers.renameEvent(value)
+        )= util.renameEvent(value)

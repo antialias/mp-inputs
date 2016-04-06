@@ -7,7 +7,6 @@ import {
   RESOURCE_TYPES,
 } from '../../constants';
 import {
-  capitalize,
   extend,
   renameProperty,
 } from '../../util';
@@ -30,8 +29,6 @@ class GroupPaneContentView extends PaneContentView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      capitalize,
-      renameProperty,
       updateSection: (index, data) => this.app.updateSection(SECTION_GROUP, index, data),
     });
   }
@@ -107,9 +104,5 @@ export default class GroupView extends BaseView {
       addControl: new AddControlView(this),
       editControl: new EditControlView(this),
     };
-  }
-
-  get templateHelpers() {
-    return extend(super.templateHelpers, {extend});
   }
 }

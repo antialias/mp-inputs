@@ -33,8 +33,6 @@ class ShowPaneContentView extends PaneContentView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      capitalize,
-      renameEvent,
       updateSection: (index, data) => this.app.updateSection(SECTION_SHOW, index, data),
     });
   }
@@ -118,9 +116,5 @@ export default class ShowView extends BaseView {
       addControl: new AddControlView(this),
       editControl: new EditControlView(this),
     };
-  }
-
-  get templateHelpers() {
-    return extend(super.templateHelpers, {extend});
   }
 }
