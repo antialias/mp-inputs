@@ -1,8 +1,4 @@
-export const IS_WITHIN_MP_PLATFORM_IFRAME = (
-  window.parent &&
-  window.parent.mixpanel &&
-  window.parent !== window
-);
+export const IS_WITHIN_MP_PLATFORM_IFRAME = window.parent !== window;
 
 export const SCREEN_MAIN = 'main';
 
