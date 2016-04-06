@@ -1,6 +1,6 @@
 import BaseApp from './base-app.js';
 import IrbView from './views/irb';
-import { extend, replaceAtIndex } from './util';
+import { extend, replaceAtIndex, removeAtIndex } from './util';
 import {
   SECTION_SHOW,
   SECTION_TIME,
@@ -190,7 +190,6 @@ export default class IrbApp extends BaseApp {
 
   query() {
     const time = this.state[SECTION_TIME][0];
-
     const query = {
       events: this.state[SECTION_SHOW].map(clause => clause.value),
       segments: this.state[SECTION_GROUP].map(clause => clause.value),
@@ -200,7 +199,7 @@ export default class IrbApp extends BaseApp {
     };
 
     if (query.events.indexOf(RESOURCE_VALUE_TOP_EVENTS) !== -1) {
-      query.events = this.state.events.slice(1); // omit $top_events from events list
+      query.events = removeAtIndex(this.state.events, this.state.events.indexOf(RESOURCE_VALUE_TOP_EVENTS));
     }
 
     if (Object.keys(query).some(key => JSON.stringify(query[key]) !== JSON.stringify(this.state.query[key]))) {
@@ -212,10 +211,17 @@ export default class IrbApp extends BaseApp {
         let endpoint = 'events';
         let params = {unit, from, to, event: events};
 
-        if (segments.length && events.length === 1) {
-          endpoint = 'segmentation';
+        if (events.length === 1 && segments.length) {
           params.event = events[0];
-          params.on = `properties["${segments[0]}"]`;
+
+          if (segments.length === 1) {
+            endpoint = 'segmentation';
+            params.on = `properties["${segments[0]}"]`;
+          } else {
+            endpoint = 'segmentation/multiseg';
+            params.outer = `properties["${segments[0]}"]`;
+            params.inner = `properties["${segments[1]}"]`;
+          }
         }
 
         window.MP.api.query(`api/2.0/${endpoint}`, params)

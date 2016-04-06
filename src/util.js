@@ -6,6 +6,14 @@ export function replaceAtIndex(array, index, value) {
   return array.slice(0, index).concat([value]).concat(array.slice(index + 1));
 }
 
+export function removeAtIndex(array, index) {
+  if (index >= 0 && index < array.length) {
+    return array.slice(0, index).concat(array.slice(index + 1));
+  } else {
+    return array;
+  }
+}
+
 export function capitalize(string) {
   return string && string.charAt(0).toUpperCase() + string.slice(1);
 }
