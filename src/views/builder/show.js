@@ -52,6 +52,12 @@ class ShowPaneView extends PaneView {
       content: new ShowPaneContentView(this),
     };
   }
+
+  get templateHandlers() {
+    return {
+      updateSearch: (index, search) => this.app.updateSection(SECTION_SHOW, index, {search}),
+    }
+  }
 }
 
 class ShowControlView extends ControlView {
@@ -88,10 +94,10 @@ class EditControlView extends ShowControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isPaneOpen: props => this.app.isEditingClause(SECTION_SHOW, props.index),
-      openPane: props => this.app.startEditingClause(SECTION_SHOW, props.index),
-      getLabel: props => {
-        let comparison = this.app.clauseAt(SECTION_SHOW, props.index);
+      isPaneOpen: index => this.app.isEditingClause(SECTION_SHOW, index),
+      openPane: index => this.app.startEditingClause(SECTION_SHOW, index),
+      getLabel: index => {
+        let comparison = this.app.clauseAt(SECTION_SHOW, index);
         let math = capitalize(comparison.math);
         let value = comparison.value === RESOURCE_VALUE_TOP_EVENTS ?
           `Top ${capitalize(comparison.type)}` : comparison.value;
@@ -112,5 +118,9 @@ export default class ShowView extends BaseView {
       addControl: new AddControlView(this),
       editControl: new EditControlView(this),
     };
+  }
+
+  get templateHelpers() {
+    return extend(super.templateHelpers, {extend});
   }
 }

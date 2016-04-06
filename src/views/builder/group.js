@@ -49,6 +49,12 @@ class GroupPaneView extends PaneView {
       content: new GroupPaneContentView(this),
     };
   }
+
+  get templateHandlers() {
+    return {
+      updateSearch: (index, search) => this.app.updateSection(SECTION_GROUP, index, {search}),
+    }
+  }
 }
 
 class GroupControlView extends ControlView {
@@ -84,9 +90,9 @@ class EditControlView extends GroupControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isPaneOpen: props => this.app.isEditingClause(SECTION_GROUP, props.index),
-      openPane: props => this.app.startEditingClause(SECTION_GROUP, props.index),
-      getLabel: props => renameProperty(this.app.clauseAt(SECTION_GROUP, props.index).value),
+      isPaneOpen: index => this.app.isEditingClause(SECTION_GROUP, index),
+      openPane: index => this.app.startEditingClause(SECTION_GROUP, index),
+      getLabel: index => renameProperty(this.app.clauseAt(SECTION_GROUP, index).value),
     })
   }
 }
@@ -101,5 +107,9 @@ export default class GroupView extends BaseView {
       addControl: new AddControlView(this),
       editControl: new EditControlView(this),
     };
+  }
+
+  get templateHelpers() {
+    return extend(super.templateHelpers, {extend});
   }
 }

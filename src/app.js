@@ -15,42 +15,42 @@ import {
 
 import './stylesheets/app.styl';
 
-function createNewClause(section) {
+function createNewClause(section, data) {
   switch(section) {
-    case SECTION_SHOW: return {
-      section: SECTION_SHOW,
-      math: MATH_TOTAL,
-      type: RESOURCE_EVENTS,
-      value: RESOURCE_VALUE_TOP_EVENTS,
-      search: '',
-    };
+    case SECTION_SHOW:
+      return extend({
+        section: SECTION_SHOW,
+        math: MATH_TOTAL,
+        type: RESOURCE_EVENTS,
+        value: null,
+        search: '',
+      }, data);
     case SECTION_TIME:
       let to = new Date();
       let from = new Date();
 
       from.setHours(to.getHours() - 96);
 
-      return {
+      return extend({
         section: SECTION_TIME,
         unit: TIME_UNIT_HOUR,
         range: {
           from,
           to,
         },
-      };
-    case SECTION_GROUP: return {
-      section: SECTION_GROUP,
-      type: RESOURCE_EVENTS,
-      value: null,
-      search: '',
-    };
+      }, data);
+    case SECTION_GROUP:
+      return extend({
+        section: SECTION_GROUP,
+        type: RESOURCE_EVENTS,
+        value: null,
+        search: '',
+      }, data);
   }
 }
 
 function validateClause(clause) {
-  if (clause.section === SECTION_GROUP && !clause.value) {
-    throw new Error('invalid group clause: no value present');
-  } else if (clause.section === SECTION_TIME) {
+  if (clause.section === SECTION_TIME) {
     if (!clause.unit) {
       throw new Error('invalid time clause: no unit present');
     } else if (!(
@@ -60,6 +60,8 @@ function validateClause(clause) {
     )) {
       throw new Error('invalid time clause: range does not contain both a to and from Date');
     }
+  } else if (!clause.value) {
+    throw new Error('invalid group clause: no value present');
   }
 }
 
@@ -73,7 +75,7 @@ function validateSection(section) {
 const INITIAL_STATE = {
   $screen: SCREEN_MAIN,
   reportName: 'Untitled report',
-  [SECTION_SHOW]: [createNewClause(SECTION_SHOW)],
+  [SECTION_SHOW]: [createNewClause(SECTION_SHOW, {value: RESOURCE_VALUE_TOP_EVENTS})],
   [SECTION_TIME]: [createNewClause(SECTION_TIME)],
   [SECTION_GROUP]: [],
   [SECTION_FILTER]: [],

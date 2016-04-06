@@ -1,12 +1,12 @@
 div(class=className)
   if constants.header || helpers.getHeader
-    .header= constants.header || helpers.getHeader(props)
+    .header= constants.header || helpers.getHeader(state)
   if views.preSearch
-    .pre-search= views.preSearch(state, props)
+    .pre-search= views.preSearch(state)
   if constants.search
     .search
-      input(type='text' ev-input=handlers.updateSearch)
+      input(type='text' ev-input=event => handlers.updateSearch(state.index, event.target.value))
   if views.content
-    .content= views.content(state, props)
+    .content= views.content(state)
   if views.footer
-    .footer= views.footer(state, props)
+    .footer= views.footer(state)
