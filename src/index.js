@@ -15,11 +15,9 @@ import './stylesheets/index.styl';
 //}
 
 if (IS_WITHIN_MP_PLATFORM_IFRAME) {
-  const parentFrame = new Framesg(window.parent, 'irb', {
+  const parentFrame = new Framesg(window.parent, 'interactive-report-builder', {
     startApp: parentData => {
-      let app = new IrbApp('app', null, {parentFrame});
-      window.history.replaceState(null, null, parentData.hash.replace(/^#*/, '#'));
-      app.update();
+      new IrbApp('app', null, {parentFrame}).update();
     },
   });
 } else {
