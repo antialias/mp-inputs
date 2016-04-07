@@ -1,5 +1,5 @@
 import BaseView from '../base';
-import ControlView from './control';
+import { AddControlView, EditControlView } from './control';
 import PaneView from './pane';
 import PaneContentView from './pane-content';
 import {
@@ -54,41 +54,37 @@ class GroupPaneView extends PaneView {
   }
 }
 
-class GroupControlView extends ControlView {
+class GroupAddControlView extends AddControlView {
+  get section() {
+    return SECTION_GROUP;
+  }
+
   get VIEWS() {
     return {
       pane: new GroupPaneView(this),
     };
   }
-}
 
-class AddControlView extends GroupControlView {
   get templateConstants() {
     return extend(super.templateConstants, {
-      class: 'verb',
       label: 'Group',
     });
   }
-
-  get templateHelpers() {
-    return extend(super.templateHelpers, {
-      isPaneOpen: () => this.app.isAddingClause(SECTION_GROUP),
-      openPane: () => this.app.startAddingClause(SECTION_GROUP),
-    });
-  }
 }
 
-class EditControlView extends GroupControlView {
-  get templateConstants() {
-    return extend(super.templateConstants, {
-      class: 'noun',
-    });
+class GroupEditControlView extends EditControlView {
+  get section() {
+    return SECTION_GROUP;
+  }
+
+  get VIEWS() {
+    return {
+      pane: new GroupPaneView(this),
+    };
   }
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isPaneOpen: index => this.app.isEditingClause(SECTION_GROUP, index),
-      openPane: index => this.app.startEditingClause(SECTION_GROUP, index),
       getLabel: index => renameProperty(this.app.clauseAt(SECTION_GROUP, index).value),
     })
   }
@@ -101,8 +97,8 @@ export default class GroupView extends BaseView {
 
   get VIEWS() {
     return {
-      addControl: new AddControlView(this),
-      editControl: new EditControlView(this),
+      addControl: new GroupAddControlView(this),
+      editControl: new GroupEditControlView(this),
     };
   }
 }

@@ -1,7 +1,7 @@
 import BaseView from '../base';
+import { EditControlView } from './control';
 import PaneView from './pane';
 import PaneContentView from './pane-content';
-import ControlView from './control';
 import {
   SECTION_TIME,
 } from '../../constants';
@@ -44,10 +44,14 @@ class TimePaneView extends PaneView {
   }
 }
 
-class EditControlView extends ControlView {
+class TimeEditControlView extends EditControlView {
+  get section () {
+    return SECTION_TIME;
+  }
+
   get templateConstants() {
     return extend(super.templateConstants, {
-      class: 'noun',
+      showRemove: false,
     });
   }
 
@@ -59,8 +63,6 @@ class EditControlView extends ControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isPaneOpen: () => this.app.isEditingClause(SECTION_TIME, 0),
-      openPane: () => this.app.startEditingClause(SECTION_TIME, 0),
       getLabel: () => {
         const { unit, range } = this.app.clauseAt(SECTION_TIME, 0);
         const { from, to } = range;
@@ -95,7 +97,7 @@ export default class TimeView extends BaseView {
 
   get VIEWS() {
     return {
-      editControl: new EditControlView(this),
+      editControl: new TimeEditControlView(this),
     };
   }
 }

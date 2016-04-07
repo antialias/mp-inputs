@@ -191,6 +191,12 @@ export default class IrbApp extends BaseApp {
     this.update(newState);
   }
 
+  removeClause(sectionType, index) {
+    this.update({
+      [sectionType]: removeAtIndex(this.state[sectionType], index),
+    });
+  }
+
   query() {
     const time = this.state[SECTION_TIME][0];
     const query = {

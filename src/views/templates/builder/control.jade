@@ -1,10 +1,12 @@
 div(class=[className, constants.class || helpers.getClass()])
-  button(ev-click=event => helpers.updatePosition(event) && helpers.openPane(state.index))
+  button.modify(ev-click=event => helpers.updatePosition(event) && helpers.openPane(state.index))
     - let labelParts = helpers.getLabelParts(state.index)
     for part, i in labelParts
       span= part
       if i < labelParts.length - 1
         span.preposition= constants.labelConnector || helpers.getLabelConnector(state.index)
+  if constants.showRemove
+    button.remove(ev-click=() => helpers.removeClause(state.index))
   .pane-container(
     class=helpers.isPaneOpen(state.index) ? 'visible' : 'hidden',
     style={

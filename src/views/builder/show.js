@@ -1,5 +1,5 @@
 import BaseView from '../base';
-import ControlView from './control';
+import { AddControlView, EditControlView } from './control';
 import PaneView from './pane';
 import PaneContentView from './pane-content';
 import {
@@ -58,42 +58,43 @@ class ShowPaneView extends PaneView {
   }
 }
 
-class ShowControlView extends ControlView {
+class ShowAddControlView extends AddControlView {
+  get section() {
+    return SECTION_SHOW;
+  }
+
   get VIEWS() {
     return {
       pane: new ShowPaneView(this),
     };
   }
-}
 
-class AddControlView extends ShowControlView {
   get templateConstants() {
     return extend(super.templateConstants, {
-      class: 'verb',
       label: 'Compare',
     });
   }
-
-  get templateHelpers() {
-    return extend(super.templateHelpers, {
-      isPaneOpen: () => this.app.isAddingClause(SECTION_SHOW),
-      openPane: () => this.app.startAddingClause(SECTION_SHOW),
-    });
-  }
 }
 
-class EditControlView extends ShowControlView {
+class ShowEditControlView extends EditControlView {
+  get section() {
+    return SECTION_SHOW;
+  }
+
+  get VIEWS() {
+    return {
+      pane: new ShowPaneView(this),
+    };
+  }
+
   get templateConstants() {
     return extend(super.templateConstants, {
-      class: 'noun',
       labelConnector: ' of ',
     });
   }
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      isPaneOpen: index => this.app.isEditingClause(SECTION_SHOW, index),
-      openPane: index => this.app.startEditingClause(SECTION_SHOW, index),
       getLabel: index => {
         let comparison = this.app.clauseAt(SECTION_SHOW, index);
         let math = capitalize(comparison.math);
@@ -113,8 +114,8 @@ export default class ShowView extends BaseView {
 
   get VIEWS() {
     return {
-      addControl: new AddControlView(this),
-      editControl: new EditControlView(this),
+      addControl: new ShowAddControlView(this),
+      editControl: new ShowEditControlView(this),
     };
   }
 }

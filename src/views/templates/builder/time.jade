@@ -3,4 +3,4 @@
     .preposition in the
     .clause.time
       h3 Time
-      .control-container= views.editControl(state)
+      .control-container= views.editControl(util.extend(state, {index: 0}))

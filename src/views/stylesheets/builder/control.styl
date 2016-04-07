@@ -1,26 +1,31 @@
 @import "../../../stylesheets/common"
 
-.add-control-view, .edit-control-view
-  button
+.show-add-control-view,
+.show-edit-control-view,
+.time-edit-control-view,
+.group-add-control-view,
+.group-edit-control-view,
+.filter-add-control-view,
+.filter-edit-control-view
+  button.modify
     background transparent
     border 1px solid light-gray
     color dark-gray
     font-size 16px
     font-weight 500
     margin-top -1px
-    outline none
     padding 8px 10px
 
     &:hover
       color darken(dark-gray, 30%)
       border-color medium-gray
 
-  &.noun button
+  &.noun button.modify
     border-width 0
     border-bottom-width 1px
     padding 8px 0
 
-  &.verb button
+  &.verb button.modify
     border-radius 2px
     font-size 14px
     margin-top -2px
@@ -38,6 +43,21 @@
     float left
     position relative
 
+  button.remove
+    background none
+    border none
+    color light-gray
+    font-weight 600
+    position absolute
+    right -6px
+    top -24px
+
+    &::after
+      content '✕'
+
+    &:hover
+      color dark-gray
+
   .pane-container
     position absolute
     top 40px
@@ -49,3 +69,9 @@
 
     &.visible
       opacity 1
+
+.show-edit-control-view
+  min-width 60px
+
+.group-edit-control-view
+  min-width 65px
