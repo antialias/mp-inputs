@@ -5,6 +5,7 @@ var webpack = require('webpack');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
+var babelLoader = 'babel?presets[]=es2015';
 var webpackConfig = {
   entry: './src/index.js',
   module: {
@@ -13,15 +14,12 @@ var webpackConfig = {
       {
         test: /\.jade$/,
         exclude: /node_modules/,
-        loader: 'virtual-jade',
+        loader: babelLoader + '!virtual-jade',
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel',
-        query: {
-            presets: ['es2015'],
-        },
+        loader: babelLoader,
       },
       {
         test: /\.(png|svg)$/,
