@@ -8,6 +8,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 var webpackConfig = {
   entry: './src/index.js',
   module: {
+    devtool: 'sourcemap',
     loaders: [
       {
         test: /\.jade$/,
@@ -47,7 +48,6 @@ var webpackConfig = {
 if (process.env.NODE_ENV === 'development') {
   webpackConfig = Object.assign({}, webpackConfig, {
     debug: true,
-    devtool: 'sourcemap',
     output: {
       filename: 'build/bundle.js',
       pathinfo: true,

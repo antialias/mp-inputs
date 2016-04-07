@@ -7,6 +7,7 @@
     "deploy": "git checkout master && npm run production-build && git add . && git commit -m rebuild && git push origin master",
     "lint": "./node_modules/.bin/eslint src",
     "production-build": "npm run lint && rm -rf dist && NODE_ENV=production ./node_modules/.bin/webpack",
+    "development-build": "NODE_ENV=development ./node_modules/.bin/webpack",
     "revert": "git checkout master && git revert && git push origin master",
     "start": "./node_modules/.bin/webpack --progress --colors --watch",
     "serve": "./node_modules/.bin/webpack-dev-server --inline",
