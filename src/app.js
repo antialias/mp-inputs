@@ -179,6 +179,7 @@ export default class IrbApp extends BaseApp {
       if (clause) {
         newSection = replaceAtIndex(section, index, newClause);
       } else {
+        newState.editing = null; // don't keep the pane open if we're adding a new clause
         newSection = section.concat([newClause]);
       }
 

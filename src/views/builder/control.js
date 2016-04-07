@@ -13,12 +13,20 @@ export default class ControlView extends BaseView {
     return template;
   }
 
+  get templateConstants() {
+    return {
+      paneWidth: 400,
+    };
+  }
+
   get templateHelpers() {
     return {
       getLabelParts: props => {
         let label = this.templateConstants.label || this.templateHelpers.getLabel(props);
         return typeof label === 'string' ? [label] : label;
-      }
-    }
+      },
+      updatePosition: event => this.position = event.target.parentNode.getBoundingClientRect(),
+      getPaneLeft: () => !this.position ? 0 : Math.min(0, (window.innerWidth - this.position.left) - this.templateConstants.paneWidth),
+    };
   }
 }

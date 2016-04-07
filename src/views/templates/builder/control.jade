@@ -1,8 +1,14 @@
 div(class=[className, constants.class || helpers.getClass()])
-  button(ev-click=() => helpers.openPane(state.index))
+  button(ev-click=event => helpers.updatePosition(event) && helpers.openPane(state.index))
     - let labelParts = helpers.getLabelParts(state.index)
     for part, i in labelParts
       span= part
       if i < labelParts.length - 1
         span.preposition= constants.labelConnector || helpers.getLabelConnector(state.index)
-  .pane-container(class=helpers.isPaneOpen(state.index) ? 'visible' : 'hidden')= views.pane(state)
+  .pane-container(
+    class=helpers.isPaneOpen(state.index) ? 'visible' : 'hidden',
+    style={
+      'width': constants.paneWidth + 'px',
+      'left': helpers.getPaneLeft() + 'px'
+    }
+  )= views.pane(state)
