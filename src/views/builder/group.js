@@ -15,8 +15,8 @@ import {
 
 import template from '../templates/builder/group.jade';
 import groupPaneContentTemplate from '../templates/builder/group-pane-content.jade';
+
 import '../stylesheets/builder/group.styl';
-import '../stylesheets/builder/group-pane-content.styl';
 
 class GroupPaneContentView extends PaneContentView {
   get section() {

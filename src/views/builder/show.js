@@ -16,8 +16,8 @@ import {
 
 import template from '../templates/builder/show.jade';
 import showPaneContentTemplate from '../templates/builder/show-pane-content.jade';
+
 import '../stylesheets/builder/show.styl';
-import '../stylesheets/builder/show-pane-content.styl';
 
 class ShowPaneContentView extends PaneContentView {
   get section() {

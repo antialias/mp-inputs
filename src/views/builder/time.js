@@ -10,9 +10,8 @@ import { register as registerDatePicker } from '../../elements/date-picker';
 
 import template from '../templates/builder/time.jade';
 import timePaneContentTemplate from '../templates/builder/time-pane-content.jade';
+
 import '../stylesheets/builder/time.styl';
-import '../stylesheets/builder/time-pane.styl';
-import '../stylesheets/builder/time-pane-content.styl';
 
 registerDatePicker();
 

@@ -13,8 +13,8 @@ import {
 
 import template from '../templates/builder/filter.jade';
 import filterPaneContentTemplate from '../templates/builder/filter-pane-content.jade';
+
 import '../stylesheets/builder/filter.styl';
-import '../stylesheets/builder/filter-pane-content.styl';
 
 class FilterPaneContentView extends PaneContentView {
   get section() {
