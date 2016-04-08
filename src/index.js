@@ -15,7 +15,7 @@ import './stylesheets/index.styl';
 //}
 
 if (IS_WITHIN_MP_PLATFORM_IFRAME) {
-  const parentFrame = new Framesg(window.parent, 'interactive-report-builder', {
+  const parentFrame = new Framesg(window.parent, 'mp-app', {
     startApp: parentData => {
       new IrbApp('app', null, {parentFrame}).update();
     },
