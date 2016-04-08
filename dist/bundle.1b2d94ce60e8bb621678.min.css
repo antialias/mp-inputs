@@ -9,36 +9,60 @@
   font-size: 20px;
   outline: none;
 }
-.add-control-view button,
-.edit-control-view button {
+.show-add-control-view button.modify,
+.show-edit-control-view button.modify,
+.time-edit-control-view button.modify,
+.group-add-control-view button.modify,
+.group-edit-control-view button.modify,
+.filter-add-control-view button.modify,
+.filter-edit-control-view button.modify {
   background: transparent;
   border: 1px solid #c4c8d6;
   color: #646670;
   font-size: 16px;
   font-weight: 500;
   margin-top: -1px;
-  outline: none;
   padding: 8px 10px;
 }
-.add-control-view button:hover,
-.edit-control-view button:hover {
+.show-add-control-view button.modify:hover,
+.show-edit-control-view button.modify:hover,
+.time-edit-control-view button.modify:hover,
+.group-add-control-view button.modify:hover,
+.group-edit-control-view button.modify:hover,
+.filter-add-control-view button.modify:hover,
+.filter-edit-control-view button.modify:hover {
   color: #46474e;
   border-color: #92949d;
 }
-.add-control-view.noun button,
-.edit-control-view.noun button {
+.show-add-control-view.noun button.modify,
+.show-edit-control-view.noun button.modify,
+.time-edit-control-view.noun button.modify,
+.group-add-control-view.noun button.modify,
+.group-edit-control-view.noun button.modify,
+.filter-add-control-view.noun button.modify,
+.filter-edit-control-view.noun button.modify {
   border-width: 0;
   border-bottom-width: 1px;
   padding: 8px 0;
 }
-.add-control-view.verb button,
-.edit-control-view.verb button {
+.show-add-control-view.verb button.modify,
+.show-edit-control-view.verb button.modify,
+.time-edit-control-view.verb button.modify,
+.group-add-control-view.verb button.modify,
+.group-edit-control-view.verb button.modify,
+.filter-add-control-view.verb button.modify,
+.filter-edit-control-view.verb button.modify {
   border-radius: 2px;
   font-size: 14px;
   margin-top: -2px;
 }
-.add-control-view.verb button::before,
-.edit-control-view.verb button::before {
+.show-add-control-view.verb button.modify::before,
+.show-edit-control-view.verb button.modify::before,
+.time-edit-control-view.verb button.modify::before,
+.group-add-control-view.verb button.modify::before,
+.group-edit-control-view.verb button.modify::before,
+.filter-add-control-view.verb button.modify::before,
+.filter-edit-control-view.verb button.modify::before {
   color: #c4c8d6;
   content: '+';
   display: inline-block;
@@ -47,21 +71,91 @@
   margin-right: 4px;
   margin-top: -4px;
 }
-.add-control-view.noun,
-.edit-control-view.noun,
-.add-control-view.verb,
-.edit-control-view.verb {
+.show-add-control-view.noun,
+.show-edit-control-view.noun,
+.time-edit-control-view.noun,
+.group-add-control-view.noun,
+.group-edit-control-view.noun,
+.filter-add-control-view.noun,
+.filter-edit-control-view.noun,
+.show-add-control-view.verb,
+.show-edit-control-view.verb,
+.time-edit-control-view.verb,
+.group-add-control-view.verb,
+.group-edit-control-view.verb,
+.filter-add-control-view.verb,
+.filter-edit-control-view.verb {
   float: left;
   position: relative;
 }
-.add-control-view .pane-container.hidden,
-.edit-control-view .pane-container.hidden {
+.show-add-control-view button.remove,
+.show-edit-control-view button.remove,
+.time-edit-control-view button.remove,
+.group-add-control-view button.remove,
+.group-edit-control-view button.remove,
+.filter-add-control-view button.remove,
+.filter-edit-control-view button.remove {
+  background: none;
+  border: none;
+  color: #c4c8d6;
+  font-weight: 600;
+  position: absolute;
+  right: -6px;
+  top: -24px;
+}
+.show-add-control-view button.remove::after,
+.show-edit-control-view button.remove::after,
+.time-edit-control-view button.remove::after,
+.group-add-control-view button.remove::after,
+.group-edit-control-view button.remove::after,
+.filter-add-control-view button.remove::after,
+.filter-edit-control-view button.remove::after {
+  content: '\2715';
+}
+.show-add-control-view button.remove:hover,
+.show-edit-control-view button.remove:hover,
+.time-edit-control-view button.remove:hover,
+.group-add-control-view button.remove:hover,
+.group-edit-control-view button.remove:hover,
+.filter-add-control-view button.remove:hover,
+.filter-edit-control-view button.remove:hover {
+  color: #646670;
+}
+.show-add-control-view .pane-container,
+.show-edit-control-view .pane-container,
+.time-edit-control-view .pane-container,
+.group-add-control-view .pane-container,
+.group-edit-control-view .pane-container,
+.filter-add-control-view .pane-container,
+.filter-edit-control-view .pane-container {
+  position: absolute;
+  top: 40px;
+  z-index: 2;
+}
+.show-add-control-view .pane-container.hidden,
+.show-edit-control-view .pane-container.hidden,
+.time-edit-control-view .pane-container.hidden,
+.group-add-control-view .pane-container.hidden,
+.group-edit-control-view .pane-container.hidden,
+.filter-add-control-view .pane-container.hidden,
+.filter-edit-control-view .pane-container.hidden {
   opacity: 0;
   pointer-events: none;
 }
-.add-control-view .pane-container.visible,
-.edit-control-view .pane-container.visible {
+.show-add-control-view .pane-container.visible,
+.show-edit-control-view .pane-container.visible,
+.time-edit-control-view .pane-container.visible,
+.group-add-control-view .pane-container.visible,
+.group-edit-control-view .pane-container.visible,
+.filter-add-control-view .pane-container.visible,
+.filter-edit-control-view .pane-container.visible {
   opacity: 1;
+}
+.show-edit-control-view {
+  min-width: 60px;
+}
+.group-edit-control-view {
+  min-width: 65px;
 }
 .show-pane-view,
 .time-pane-view,
@@ -69,11 +163,7 @@
   background: #fff;
   border-radius: 3px;
   box-shadow: 0px 3px 10px -4px #000;
-  left: -1px;
-  position: absolute;
-  top: 40px;
-  width: 400px;
-  z-index: 2;
+  width: 100%;
 }
 .show-pane-view .header,
 .time-pane-view .header,
@@ -218,7 +308,7 @@
   clear: both;
 }
 .builder-view h3 {
-  color: light-grey;
+  color: #c4c8d6;
   font-size: 12px;
   font-weight: 500;
   height: 15px;
@@ -349,4 +439,9 @@ body {
 }
 button {
   cursor: pointer;
+  outline: none;
+}
+.disabled {
+  opacity: 0.3;
+  pointer-events: none;
 }
