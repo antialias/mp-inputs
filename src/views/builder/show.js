@@ -20,6 +20,10 @@ import '../stylesheets/builder/show.styl';
 import '../stylesheets/builder/show-pane-content.styl';
 
 class ShowPaneContentView extends PaneContentView {
+  get section() {
+    return SECTION_SHOW;
+  }
+
   get TEMPLATE() {
     return showPaneContentTemplate;
   }
@@ -30,15 +34,13 @@ class ShowPaneContentView extends PaneContentView {
       resourceTypeChoices: Object.values(RESOURCE_TYPES),
     });
   }
-
-  get templateHelpers() {
-    return extend(super.templateHelpers, {
-      updateSection: (index, data) => this.app.updateSection(SECTION_SHOW, index, data),
-    });
-  }
 }
 
 class ShowPaneView extends PaneView {
+  get section() {
+    return SECTION_SHOW;
+  }
+
   get templateConstants() {
     return extend(super.templateConstants, {
       header: 'Show',
@@ -48,12 +50,6 @@ class ShowPaneView extends PaneView {
   get VIEWS() {
     return {
       content: new ShowPaneContentView(this),
-    };
-  }
-
-  get templateHandlers() {
-    return {
-      updateSearch: (index, search) => this.app.updateSection(SECTION_SHOW, index, {search}),
     };
   }
 }

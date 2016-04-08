@@ -1,0 +1,17 @@
+- let selectedTypeIndex = state.editing && constants.resourceTypeChoices.indexOf(state.editing.type);
+- let selectedValueIndex = state.editing && state.properties.indexOf(state.editing.value);
+
+div(class=className)
+  ul.column.resourceType
+    for type, i in constants.resourceTypeChoices
+      li(
+        class=selectedTypeIndex === i ? 'selected' : '',
+        ev-click=() => helpers.updateSection(state.index, {type}),
+      )= util.capitalize(type)
+  ul.column.resourceValue
+    for value, i in state.properties
+      if helpers.matchesSearch(util.renameProperty(value))
+        li(
+          class=selectedValueIndex === i ? 'selected' : '',
+          ev-click=() => helpers.updateSection(state.index, {value}),
+        )= util.renameProperty(value)

@@ -5,7 +5,7 @@ div(class=className)
     .pre-search= views.preSearch(state)
   if constants.search
     .search
-      input(type='text' ev-input=event => handlers.updateSearch(state.index, event.target.value))
+      input(type='text' ev-input=event => helpers.updateSearch(state.index, event.target.value))
   if views.content
     .content= views.content(state)
   if views.footer

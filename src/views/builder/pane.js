@@ -13,4 +13,10 @@ export default class PaneView extends BaseView {
       search: true,
     };
   }
+
+  get templateHelpers() {
+    return {
+      updateSearch: (index, search) => this.app.updateSection(this.section, index, {search}),
+    };
+  }
 }

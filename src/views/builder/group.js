@@ -19,6 +19,10 @@ import '../stylesheets/builder/group.styl';
 import '../stylesheets/builder/group-pane-content.styl';
 
 class GroupPaneContentView extends PaneContentView {
+  get section() {
+    return SECTION_GROUP;
+  }
+
   get TEMPLATE() {
     return groupPaneContentTemplate;
   }
@@ -28,15 +32,13 @@ class GroupPaneContentView extends PaneContentView {
       resourceTypeChoices: Object.values(RESOURCE_TYPES),
     });
   }
-
-  get templateHelpers() {
-    return extend(super.templateHelpers, {
-      updateSection: (index, data) => this.app.updateSection(SECTION_GROUP, index, data),
-    });
-  }
 }
 
 class GroupPaneView extends PaneView {
+  get section() {
+    return SECTION_GROUP;
+  }
+
   get templateConstants() {
     return extend(super.templateConstants, {
       header: 'Properties',
@@ -46,12 +48,6 @@ class GroupPaneView extends PaneView {
   get VIEWS() {
     return {
       content: new GroupPaneContentView(this),
-    };
-  }
-
-  get templateHandlers() {
-    return {
-      updateSearch: (index, search) => this.app.updateSection(SECTION_GROUP, index, {search}),
     };
   }
 }
