@@ -14,7 +14,7 @@ import {
 } from '../../util';
 
 import template from '../templates/builder/group.jade';
-import groupPaneContentTemplate from '../templates/builder/group-pane-content.jade'
+import groupPaneContentTemplate from '../templates/builder/group-pane-content.jade';
 import '../stylesheets/builder/group.styl';
 import '../stylesheets/builder/group-pane-content.styl';
 
@@ -24,9 +24,9 @@ class GroupPaneContentView extends PaneContentView {
   }
 
   get templateConstants() {
-    return {
+    return extend(super.templateConstants, {
       resourceTypeChoices: Object.values(RESOURCE_TYPES),
-    };
+    });
   }
 
   get templateHelpers() {
@@ -52,7 +52,7 @@ class GroupPaneView extends PaneView {
   get templateHandlers() {
     return {
       updateSearch: (index, search) => this.app.updateSection(SECTION_GROUP, index, {search}),
-    }
+    };
   }
 }
 
@@ -88,7 +88,7 @@ class GroupEditControlView extends EditControlView {
   get templateHelpers() {
     return extend(super.templateHelpers, {
       getLabel: index => renameProperty(this.app.clauseAt(SECTION_GROUP, index).value),
-    })
+    });
   }
 }
 

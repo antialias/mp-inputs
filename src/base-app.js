@@ -4,7 +4,7 @@ import { mirrorLocationHash } from './mp-common/parent-frame';
 
 export default class BaseApp extends App {
   constructor(elID, initialState={}, options={}) {
-    super(...arguments)
+    super(...arguments);
 
     // initialize frame communication
     if (options.parentFrame) {
@@ -57,4 +57,3 @@ export default class BaseApp extends App {
     });
   }
 }
-

@@ -46,6 +46,14 @@ function createNewClause(section, data) {
         value: null,
         search: '',
       }, data);
+    case SECTION_FILTER:
+      return extend({
+        section: SECTION_FILTER,
+        type: RESOURCE_EVENTS,
+        property: null,
+        value: null,
+        search: '',
+      }, data);
   }
 }
 
@@ -95,7 +103,7 @@ export default class IrbApp extends BaseApp {
 
     window.MP.api.topProperties().done(results => {
       let props = results.values();
-      this.update({properties: Object.keys(props).sort((a, b) => props[b] - props[a])})
+      this.update({properties: Object.keys(props).sort((a, b) => props[b] - props[a])});
     });
 
     this.query();

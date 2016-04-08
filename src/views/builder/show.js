@@ -15,7 +15,7 @@ import {
 } from '../../util';
 
 import template from '../templates/builder/show.jade';
-import showPaneContentTemplate from '../templates/builder/show-pane-content.jade'
+import showPaneContentTemplate from '../templates/builder/show-pane-content.jade';
 import '../stylesheets/builder/show.styl';
 import '../stylesheets/builder/show-pane-content.styl';
 
@@ -25,10 +25,10 @@ class ShowPaneContentView extends PaneContentView {
   }
 
   get templateConstants() {
-    return {
+    return extend(super.templateConstants, {
       mathChoices: Object.values(MATH_TYPES),
       resourceTypeChoices: Object.values(RESOURCE_TYPES),
-    };
+    });
   }
 
   get templateHelpers() {
@@ -54,7 +54,7 @@ class ShowPaneView extends PaneView {
   get templateHandlers() {
     return {
       updateSearch: (index, search) => this.app.updateSection(SECTION_SHOW, index, {search}),
-    }
+    };
   }
 }
 
