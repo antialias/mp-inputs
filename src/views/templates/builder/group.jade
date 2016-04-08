@@ -1,4 +1,4 @@
-.section(class=className)
+.section(class=[className, helpers.isDisabled() ? 'disabled' : ''])
   if !state.groupSection.length
     .clause.group
       h3
@@ -9,5 +9,5 @@
       .clause.group
         h3= 'Group' + (state.groupSection.length === 1 ? '' : ' ' + (index + 1))
         .control-container= views.editControl(util.extend(state, {index}))
-        if index == state.groupSection.length - 1
+        if state.groupSection.length < 2 && index == state.groupSection.length - 1
           .control-container= views.addControl(state)

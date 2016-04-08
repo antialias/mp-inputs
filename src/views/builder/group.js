@@ -3,8 +3,10 @@ import { AddControlView, EditControlView } from './control';
 import PaneView from './pane';
 import PaneContentView from './pane-content';
 import {
-  SECTION_GROUP,
   RESOURCE_TYPES,
+  RESOURCE_VALUE_TOP_EVENTS,
+  SECTION_GROUP,
+  SECTION_SHOW,
 } from '../../constants';
 import {
   extend,
@@ -99,6 +101,15 @@ export default class GroupView extends BaseView {
     return {
       addControl: new GroupAddControlView(this),
       editControl: new GroupEditControlView(this),
+    };
+  }
+
+  get templateHelpers() {
+    return {
+      isDisabled: () => {
+        let showValues = this.app.state[SECTION_SHOW].map(clause => clause.value);
+        return showValues.length > 1 || showValues.indexOf(RESOURCE_VALUE_TOP_EVENTS) !== -1;
+      },
     };
   }
 }
