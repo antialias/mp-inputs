@@ -297,6 +297,11 @@
   overflow: hidden;
   white-space: nowrap;
 }
+.group-pane-content-view {
+  height: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
 .builder-view {
   font-size: 16px;
   font-weight: 500;
@@ -343,6 +348,10 @@
 }
 .builder-view .filters {
   margin: 0 24px;
+}
+.builder-view .section.disabled {
+  opacity: 0.3;
+  pointer-events: none;
 }
 .result-view {
   padding: 24px;
@@ -440,8 +449,4 @@ body {
 button {
   cursor: pointer;
   outline: none;
-}
-.disabled {
-  opacity: 0.3;
-  pointer-events: none;
 }
