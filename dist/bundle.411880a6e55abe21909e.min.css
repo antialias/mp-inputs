@@ -284,13 +284,18 @@
 }
 .time-pane-content-view {
   text-align: center;
-  margin: 16px 0;
+  padding: 16px 0 13px 0;
 }
 .time-pane-content-view irb-date-picker {
   display: inline-block;
 }
 .time-pane-content-view irb-date-picker .date_dropdown {
   position: relative;
+}
+.group-pane-content-view {
+  height: 100%;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .group-pane-content-view {
   height: 100%;
