@@ -1,11 +1,11 @@
-.section(class=[className, helpers.isDisabled() ? 'disabled' : ''])
+.section(class=[elementClass, helpers.isDisabled() ? 'disabled' : ''])
   if !state.groupSection.length
     .clause.group
       h3
       .control-container= views.addControl(state)
   else
     for group, index in state.groupSection
-      .preposition= index ? 'and by' : 'by'
+      .preposition= index ? 'and' : 'by'
       .clause.group
         h3= 'Group' + (state.groupSection.length === 1 ? '' : ' ' + (index + 1))
         .control-container= views.editControl(util.extend(state, {index}))

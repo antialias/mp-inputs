@@ -1,4 +1,4 @@
-div(class=[className, constants.class || helpers.getClass()])
+div(class=[elementClass, constants.class || helpers.getClass()])
   button.modify(ev-click=event => helpers.updatePosition(event) && helpers.openPane(state.index))
     - let labelParts = helpers.getLabelParts(state.index)
     for part, i in labelParts

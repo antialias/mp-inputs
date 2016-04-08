@@ -2,7 +2,7 @@
 - let selectedTypeIndex = state.editing && constants.resourceTypeChoices.indexOf(state.editing.type);
 - let selectedValueIndex = state.editing && state.events.indexOf(state.editing.value);
 
-div(class=className)
+div(class=elementClass)
   ul.column.math
     for math, i in constants.mathChoices
       li(

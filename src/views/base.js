@@ -6,7 +6,7 @@ export default class BaseView extends View {
     return this._template({
       state,
       util,
-      className: this.className,
+      elementClass: this.elementClass,
       constants: this.templateConstants,
       handlers: this.templateHandlers,
       helpers: this.templateHelpers,
@@ -18,7 +18,7 @@ export default class BaseView extends View {
     return {};
   }
 
-  get className() {
+  get elementClass() {
     return this.constructor.name.split(/(?=[A-Z])/)
       .map(word => word.toLowerCase())
       .join('-');
