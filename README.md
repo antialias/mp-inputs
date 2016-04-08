@@ -1,6 +1,5 @@
-Panel Foundation
-===============
-A starting point for panel apps
+Interactive Report Builder
+==========================
 
 install deps:
 `npm install`
