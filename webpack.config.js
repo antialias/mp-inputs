@@ -10,11 +10,30 @@ var webpackConfig = {
   entry: './src/index.js',
   module: {
     devtool: 'sourcemap',
+    preLoaders: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'eslint',
+        query: {
+          extends: 'eslint:recommended',
+          parser: 'babel-eslint',
+          rules: {
+            'no-console': [1, {allow: ['warn', 'error']}],
+            'no-debugger': 1,
+            'no-use-before-define': 2,
+            'eol-last': 2,
+            'quotes': [2, 'single'],
+            'comma-dangle': [2, 'only-multiline'],
+          },
+        },
+      },
+    ],
     loaders: [
       {
         test: /\.jade$/,
         exclude: /node_modules/,
-        loader: babelLoader + '!virtual-jade',
+        loaders: [babelLoader, 'virtual-jade'],
       },
       {
         test: /\.js$/,
@@ -69,6 +88,10 @@ if (process.env.NODE_ENV === 'development') {
       new ExtractTextPlugin('dist/bundle.[hash].min.css'),
       //new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
     ]),
+    eslint: {
+      failOnWarning: false,
+      failOnError: true,
+    },
   });
 }
 

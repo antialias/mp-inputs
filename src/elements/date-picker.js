@@ -1,7 +1,3 @@
-export function register() {
-  document.registerElement('irb-date-picker', DatePicker);
-}
-
 class DatePicker extends HTMLElement {
   createdCallback() {
     this.$el = $('<div>').appendTo(this);
@@ -25,4 +21,8 @@ class DatePicker extends HTMLElement {
       this.$el.val(formattedValue);
     }
   }
+}
+
+export function register() {
+  document.registerElement('irb-date-picker', DatePicker);
 }

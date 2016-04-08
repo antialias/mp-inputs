@@ -1,7 +1,3 @@
-export function register() {
-  document.registerElement('auto-sizing-input', AutoSizingInput);
-}
-
 const CHANGE_EVENTS = ['blur', 'change', 'focusout', 'input', 'keypress'];
 
 class AutoSizingInput extends HTMLElement {
@@ -62,4 +58,8 @@ class AutoSizingInput extends HTMLElement {
       this.resize();
     }
   }
+}
+
+export function register() {
+  document.registerElement('auto-sizing-input', AutoSizingInput);
 }

@@ -1,7 +1,3 @@
-export function register() {
-  document.registerElement('irb-chart', Chart);
-}
-
 class Chart extends HTMLElement {
   createdCallback() {
     this.$el = $('<div>').appendTo(this);
@@ -28,4 +24,8 @@ class Chart extends HTMLElement {
       }
     }
   }
+}
+
+export function register() {
+  document.registerElement('irb-chart', Chart);
 }
