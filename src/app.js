@@ -98,7 +98,7 @@ export default class IrbApp extends BaseApp {
     super(elID, INITIAL_STATE, options);
 
     window.MP.api.topEvents().done(results =>
-      this.update({events: [RESOURCE_VALUE_TOP_EVENTS].concat(Object.values(results.values()))})
+      this.update({events: [RESOURCE_VALUE_TOP_EVENTS, ...Object.values(results.values())]})
     );
 
     window.MP.api.topProperties().done(results => {
@@ -188,7 +188,7 @@ export default class IrbApp extends BaseApp {
         newSection = replaceAtIndex(section, index, newClause);
       } else {
         newState.editing = null; // don't keep the pane open if we're adding a new clause
-        newSection = section.concat([newClause]);
+        newSection = [...section, newClause];
       }
 
       if (this.isSectionValid(newSection)) {

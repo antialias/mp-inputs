@@ -1,14 +1,14 @@
 export function extend() {
-  return Object.assign(...[{}].concat(Array.prototype.slice.call(arguments)));
+  return Object.assign(...[{}, ...Array.prototype.slice.call(arguments)]);
 }
 
 export function replaceAtIndex(array, index, value) {
-  return array.slice(0, index).concat([value]).concat(array.slice(index + 1));
+  return [...array.slice(0, index), value, ...array.slice(index + 1)];
 }
 
 export function removeAtIndex(array, index) {
   if (index >= 0 && index < array.length) {
-    return array.slice(0, index).concat(array.slice(index + 1));
+    return [...array.slice(0, index), ...array.slice(index + 1)];
   } else {
     return array;
   }
