@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/irb/irb.git"
+    "url": "git+ssh://git@github.com/mixpanel-platform/irb.git"
   },
   "keywords": [
     "mixpanel"
@@ -27,17 +27,11 @@
   "homepage": "https://github.com/irb/irb#readme",
   "dependencies": {
     "babel-polyfill": "^6.7.4",
-    "eslint": "^2.6.0",
-    "fetch": "^1.0.1",
     "framesg": "^0.1.2",
-    "html-webpack-plugin": "^2.15.0",
-    "keymaster": "^1.6.2",
     "lodash": "^4.7.0",
     "mixpanel-browser": "^2.7.2",
-    "moment": "^2.11.2",
     "panel": "^0.4.1",
     "rollbar-browser": "^1.8.5",
-    "stylus-loader": "^1.6.1",
     "virtual-dom": "^2.1.1"
   },
   "devDependencies": {
@@ -51,11 +45,11 @@
     "eslint-loader": "^1.3.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
-    "html-webpack-plugin": "^2.8.1",
+    "html-webpack-plugin": "^2.15.0",
     "js-beautify": "^1.5.10",
     "style-loader": "^0.13.0",
     "stylus": "^0.53.0",
-    "stylus-loader": "^1.4.3",
+    "stylus-loader": "^1.6.1",
     "url-loader": "^0.5.7",
     "virtual-jade": "^0.2.2",
     "virtual-jade-loader": "^0.2.2",
