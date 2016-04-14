@@ -313,7 +313,7 @@ export default class IRBApp extends BaseApp {
               case FILTER_EQUALS       : return format(property, '==', value);
               case FILTER_NOT_EQUALS   : return format(property, '!=', value);
               case FILTER_CONTAINS     : return format(value, 'in', property);
-              case FILTER_NOT_CONTAINS : return format(value, 'not in', property);
+              case FILTER_NOT_CONTAINS : return format('not', value, 'in', property);
               case FILTER_SET          : return format('defined', property);
               case FILTER_NOT_SET      : return format('not defined', property);
             }
