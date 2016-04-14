@@ -7,7 +7,7 @@ import ResultView from './result';
 import template from './templates/irb.jade';
 import './stylesheets/irb.styl';
 
-export default class IrbView extends BaseView {
+export default class IRBView extends BaseView {
   get TEMPLATE() {
     return template;
   }

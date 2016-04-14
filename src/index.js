@@ -3,7 +3,7 @@
 import 'babel-polyfill';
 import Framesg from 'framesg';
 
-import IrbApp from './app';
+import IRBApp from './app';
 import { extend } from './util';
 import { mixpanel } from './tracking';
 import { IS_WITHIN_MP_PLATFORM_IFRAME } from './constants';
@@ -17,9 +17,9 @@ import './stylesheets/index.styl';
 if (IS_WITHIN_MP_PLATFORM_IFRAME) {
   const parentFrame = new Framesg(window.parent, 'mp-app', {
     startApp: parentData => {
-      new IrbApp('app', null, {parentFrame}).update();
+      new IRBApp('app', null, {parentFrame}).update();
     },
   });
 } else {
-  new IrbApp('app').update();
+  new IRBApp('app').update();
 }

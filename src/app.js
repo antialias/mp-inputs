@@ -1,5 +1,5 @@
 import BaseApp from './base-app.js';
-import IrbView from './views/irb';
+import IRBView from './views/irb';
 import { extend, replaceAtIndex, removeAtIndex } from './util';
 import {
   FILTER_CONTAINS,
@@ -117,7 +117,7 @@ const INITIAL_STATE = {
   result: {},
 };
 
-export default class IrbApp extends BaseApp {
+export default class IRBApp extends BaseApp {
   constructor(elID, initialState=INITIAL_STATE, options={}) {
     super(elID, INITIAL_STATE, options);
 
@@ -134,7 +134,7 @@ export default class IrbApp extends BaseApp {
 
   get SCREENS() {
     return {
-      [SCREEN_MAIN]: new IrbView(),
+      [SCREEN_MAIN]: new IRBView(),
     };
   }
 
