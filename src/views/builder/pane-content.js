@@ -13,7 +13,7 @@ export default class PaneContentView extends BaseView {
           value.toLowerCase().indexOf(this.app.state.editing.search.toLowerCase()) === 0
         )
       ),
-      updateSection: (index, data) => this.app.updateSection(this.section, index, data),
+      updateSection: (clauseIndex, data) => this.app.updateSection(this.section, clauseIndex, data),
     };
   }
 }

@@ -1,12 +1,26 @@
-div(class=elementClass)
-  if constants.header || helpers.getHeader
-    .header= constants.header || helpers.getHeader(state)
-  if views.preSearch
-    .pre-search= views.preSearch(state)
+mixin pane(paneViews, paneIndex)
+  - let header = constants.header || helpers.getHeader(paneIndex)
+  if header
+    .header
+      span= header
+      if paneIndex
+        button.back(ev-click=() => helpers.updatePaneIndex(state.clauseIndex, paneIndex - 1))
+  if paneViews.preSearch
+    .pre-search= paneViews.preSearch(state)
   if constants.search
     .search
-      input(type='text' ev-input=event => helpers.updateSearch(state.index, event.target.value))
-  if views.content
-    .content= views.content(state)
-  if views.footer
-    .footer= views.footer(state)
+      input(type='text' ev-input=event => helpers.updateSearch(state.clauseIndex, event.target.value))
+  if paneViews.content
+    .content= paneViews.content(util.extend(state, {paneIndex}))
+  if paneViews.footer
+    .footer= paneViews.footer(state)
+
+div(class=elementClass)
+  if views.panes 
+    - let activeIndex = helpers.getPaneIndex(state.clauseIndex);
+    for paneViews, paneIndex in views.panes
+      .pane(style={transform: `translateX(${(paneIndex - activeIndex) * 400}px)`})
+        +pane(paneViews, paneIndex)
+  else
+    .pane.active
+        +pane(views)

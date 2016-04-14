@@ -1,4 +1,11 @@
-.section.filter-view.disabled
-  .clause.filter
-    .filter-add-control-view.verb
-      button.modify Filter
+.section(class=elementClass)
+  if !state.filterSection.length
+    .clause.filter
+      .control-container= views.addControl(state)
+  else
+    for filter, clauseIndex in state.filterSection
+      .preposition= clauseIndex ? 'and' : 'where'
+      .clause.filter
+        .control-container= views.editControl(util.extend(state, {clauseIndex}))
+        if clauseIndex == state.filterSection.length - 1
+          .control-container= views.addControl(state)

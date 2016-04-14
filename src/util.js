@@ -113,6 +113,4 @@ export function renameProperty(property) {
   }
 
   return property;
-};
-
-
+}

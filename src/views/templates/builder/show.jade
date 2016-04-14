@@ -4,11 +4,11 @@
       h3
       .control-container= views.addControl(state)
   else
-    for comparison, index in state.showSection
-      if index
+    for comparison, clauseIndex in state.showSection
+      if clauseIndex
         .preposition and
       .clause.comparison
-        h3= 'Show' + (state.showSection.length === 1 ? '' : ' ' + (index + 1))
-        .control-container= views.editControl(util.extend(state, {index}))
-        if index === state.showSection.length - 1
+        h3= 'Show' + (state.showSection.length === 1 ? '' : ' ' + (clauseIndex + 1))
+        .control-container= views.editControl(util.extend(state, {clauseIndex}))
+        if clauseIndex === state.showSection.length - 1
           .control-container= views.addControl(state)

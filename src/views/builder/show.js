@@ -91,8 +91,8 @@ class ShowEditControlView extends EditControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      getLabel: index => {
-        let comparison = this.app.clauseAt(SECTION_SHOW, index);
+      getLabel: clauseIndex => {
+        let comparison = this.app.clauseAt(SECTION_SHOW, clauseIndex);
         let math = capitalize(comparison.math);
         let value = comparison.value === RESOURCE_VALUE_TOP_EVENTS ?
           `Top ${capitalize(comparison.type)}` : comparison.value;

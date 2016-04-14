@@ -45,3 +45,18 @@ export const TIME_UNIT_TYPES = {
   TIME_UNIT_QUARTER,
   TIME_UNIT_YEAR,
 };
+
+export const FILTER_EQUALS = 'equals';
+export const FILTER_NOT_EQUALS = 'does not equal';
+export const FILTER_CONTAINS = 'contains';
+export const FILTER_NOT_CONTAINS = 'does not contain';
+export const FILTER_SET = 'is set';
+export const FILTER_NOT_SET = 'is not set';
+export const FILTER_TYPES = {
+  FILTER_EQUALS,
+  FILTER_NOT_EQUALS,
+  FILTER_CONTAINS,
+  FILTER_NOT_CONTAINS,
+  FILTER_SET,
+  FILTER_NOT_SET,
+};

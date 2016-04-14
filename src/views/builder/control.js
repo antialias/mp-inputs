@@ -17,13 +17,14 @@ class ControlView extends BaseView {
   get templateConstants() {
     return {
       paneWidth: 400,
+      paneHeight: 300,
     };
   }
 
   get templateHelpers() {
     return {
-      getLabelParts: index => {
-        let label = this.templateConstants.label || this.templateHelpers.getLabel(index);
+      getLabelParts: clauseIndex => {
+        let label = this.templateConstants.label || this.templateHelpers.getLabel(clauseIndex);
         return typeof label === 'string' ? [label] : label;
       },
       updatePosition: event => this.position = event.target.parentNode.getBoundingClientRect(),
@@ -58,9 +59,9 @@ export class EditControlView extends ControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      removeClause: index => this.app.removeClause(this.section, index),
-      isPaneOpen: index => this.app.isEditingClause(this.section, index),
-      openPane: index => this.app.startEditingClause(this.section, index),
+      removeClause: clauseIndex => this.app.removeClause(this.section, clauseIndex),
+      isPaneOpen: clauseIndex => this.app.isEditingClause(this.section, clauseIndex),
+      openPane: clauseIndex => this.app.startEditingClause(this.section, clauseIndex),
     });
   }
 }

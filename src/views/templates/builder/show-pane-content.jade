@@ -1,24 +1,24 @@
 - let selectedMathIndex = state.editing && constants.mathChoices.indexOf(state.editing.math);
 - let selectedTypeIndex = state.editing && constants.resourceTypeChoices.indexOf(state.editing.type);
-- let selectedValueIndex = state.editing && state.events.indexOf(state.editing.value);
+- let selectedValueIndex = state.editing && state.topEvents.indexOf(state.editing.value);
 
 div(class=elementClass)
   ul.column.math
     for math, i in constants.mathChoices
       li(
         class=selectedMathIndex === i ? 'selected' : '',
-        ev-click=() => helpers.updateSection(state.index, {math}),
+        ev-click=() => helpers.updateSection(state.clauseIndex, {math}),
       )= util.capitalize(math)
   ul.column.resourceType
     for type, i in constants.resourceTypeChoices
       li(
         class=selectedTypeIndex === i ? 'selected' : '',
-        ev-click=() => helpers.updateSection(state.index, {type}),
+        ev-click=() => helpers.updateSection(state.clauseIndex, {type}),
       )= util.capitalize(type)
   ul.column.resourceValue
-    for value, i in state.events
+    for value, i in state.topEvents
       if helpers.matchesSearch(util.renameEvent(value))
         li(
           class=selectedValueIndex === i ? 'selected' : '',
-          ev-click=() => helpers.updateSection(state.index, {value}),
+          ev-click=() => helpers.updateSection(state.clauseIndex, {value}),
         )= util.renameEvent(value)

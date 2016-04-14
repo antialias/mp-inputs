@@ -83,7 +83,7 @@ class GroupEditControlView extends EditControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      getLabel: index => renameProperty(this.app.clauseAt(SECTION_GROUP, index).value),
+      getLabel: clauseIndex => renameProperty(this.app.clauseAt(SECTION_GROUP, clauseIndex).value),
     });
   }
 }

@@ -4,10 +4,10 @@
       h3
       .control-container= views.addControl(state)
   else
-    for group, index in state.groupSection
-      .preposition= index ? 'and' : 'by'
+    for group, clauseIndex in state.groupSection
+      .preposition= clauseIndex ? 'and' : 'by'
       .clause.group
-        h3= 'Group' + (state.groupSection.length === 1 ? '' : ' ' + (index + 1))
-        .control-container= views.editControl(util.extend(state, {index}))
-        if state.groupSection.length < 2 && index == state.groupSection.length - 1
+        h3= 'Group' + (state.groupSection.length === 1 ? '' : ' ' + (clauseIndex + 1))
+        .control-container= views.editControl(util.extend(state, {clauseIndex}))
+        if state.groupSection.length < 2 && clauseIndex == state.groupSection.length - 1
           .control-container= views.addControl(state)

@@ -3,8 +3,11 @@ import { AddControlView, EditControlView } from './control';
 import PaneView from './pane';
 import PaneContentView from './pane-content';
 import {
-  SECTION_FILTER,
+  FILTER_NOT_SET,
+  FILTER_SET,
+  FILTER_TYPES,
   RESOURCE_TYPES,
+  SECTION_FILTER,
 } from '../../constants';
 import {
   extend,
@@ -12,22 +15,63 @@ import {
 } from '../../util';
 
 import template from '../templates/builder/filter.jade';
-import filterPaneContentTemplate from '../templates/builder/filter-pane-content.jade';
+import filterPropertyPaneContentTemplate from '../templates/builder/filter-property-pane-content.jade';
+import filterPropertyValuePaneContentTemplate from '../templates/builder/filter-property-value-pane-content.jade';
 
 import '../stylesheets/builder/filter.styl';
 
-class FilterPaneContentView extends PaneContentView {
+class FilterPropertyPaneContentView extends PaneContentView {
   get section() {
     return SECTION_FILTER;
   }
 
   get TEMPLATE() {
-    return filterPaneContentTemplate;
+    return filterPropertyPaneContentTemplate;
   }
 
   get templateConstants() {
     return extend(super.templateConstants, {
       resourceTypeChoices: Object.values(RESOURCE_TYPES),
+    });
+  }
+
+  get templateHelpers() {
+    return extend(super.templateHelpers, {
+      selectProperty: (clauseIndex, value) => {
+        this.templateHelpers.updateSection(clauseIndex, {value});
+
+        // when a property is selected, switch to the property value inner pane
+        // - the timeout allows the add pane to be re-rendered as an edit pane,
+        //   and still show the css animation sliding to the new pane
+        setTimeout(() => {
+          let clauseIndex = this.app.state[SECTION_FILTER].indexOf(this.app.state.editing);
+          this.templateHelpers.updateSection(clauseIndex, {paneIndex: 1});
+        }, 0);
+      },
+    });
+  }
+}
+
+class FilterPropertyValuePaneContentView extends PaneContentView {
+  get section() {
+    return SECTION_FILTER;
+  }
+
+  get TEMPLATE() {
+    return filterPropertyValuePaneContentTemplate;
+  }
+
+  get templateConstants() {
+    return extend(super.templateConstants, {
+      filterTypeChoices: Object.values(FILTER_TYPES),
+    });
+  }
+
+  get templateHelpers() {
+    return extend(super.templateHelpers, {
+      showPropertyValues: () => this.app.state.editing &&
+        this.app.state.editing.filterType !== FILTER_SET &&
+        this.app.state.editing.filterType !== FILTER_NOT_SET,
     });
   }
 }
@@ -37,16 +81,27 @@ class FilterPaneView extends PaneView {
     return SECTION_FILTER;
   }
 
-  get templateConstants() {
-    return extend(super.templateConstants, {
-      header: 'Properties',
-    });
-  }
-
   get VIEWS() {
     return {
-      content: new FilterPaneContentView(this),
+      panes: [
+        {content: new FilterPropertyPaneContentView(this)},
+        {content: new FilterPropertyValuePaneContentView(this)},
+      ],
     };
+  }
+
+  getPaneIndex(clauseIndex) {
+    const clause = this.app.clauseAt(SECTION_FILTER, clauseIndex);
+    return clause ? clause.paneIndex : 0;
+  }
+
+  get templateHelpers() {
+    return extend(super.templateHelpers, {
+      getHeader: paneIndex => paneIndex ? 'Property values' : 'Properties',
+      getPaneIndex: clauseIndex => this.getPaneIndex(clauseIndex),
+      updatePaneIndex: (clauseIndex, paneIndex) =>
+        this.app.updateSection(SECTION_FILTER, clauseIndex, {paneIndex}),
+    });
   }
 }
 
@@ -82,7 +137,11 @@ class FilterEditControlView extends EditControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      getLabel: index => renameProperty(this.app.clauseAt(SECTION_FILTER, index).value),
+      getLabel: clauseIndex => {
+        const clause = this.app.clauseAt(SECTION_FILTER, clauseIndex);
+        return [renameProperty(clause.value), clause.filterValue];
+      },
+      getLabelConnector: clauseIndex => ` ${this.app.clauseAt(SECTION_FILTER, clauseIndex).filterType} `,
     });
   }
 }

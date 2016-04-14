@@ -1,10 +1,26 @@
 @import "../../../stylesheets/common"
 
-.show-pane-view, .time-pane-view, .group-pane-view
+.show-pane-view,
+.time-pane-view,
+.group-pane-view,
+.filter-pane-view
   background white
   border-radius 3px
-  box-shadow 0px 3px 10px -4px black
+  height 100%
+  overflow hidden
+  position relative
   width 100%
+
+  &::before // header background color
+    content ''
+    background medium-gray
+    height 36px
+    width 100%
+    position absolute
+
+  .pane
+    position absolute
+    width 400px
 
   .header, .footer
     line-height 36px
@@ -12,9 +28,21 @@
     width 100%
 
   .header
-    background medium-gray
-    border-radius 3px 3px 0 0
     color white
+    position relative
+
+    .back
+      background none
+      border none
+      left 0
+      padding 6px 8px
+      position absolute
+      transform scaleX(-1)
+
+      &::before
+        color white
+        content '➔'
+        font-size 20px
 
   .search
     position relative
@@ -52,7 +80,7 @@
       width 100%
 
   .content
-    height 250px
+    height 264px
 
     ul
       display inline-block
@@ -78,5 +106,10 @@
 
   .footer
     background background-gray
-    border-radius 0 0 3px 3px
+
+.time-pane-view
+  overflow visible
+
+.pane-container.visible .pane
+  transition transform 0.2s
 

@@ -1,0 +1,21 @@
+- let property = state.editing && state.editing.value;
+- let propertyValues = (state.editing && state.topPropertyValues[property]) || [];
+
+- let selectedTypeIndex = state.editing && constants.filterTypeChoices.indexOf(state.editing.filterType);
+- let selectedValueIndex = state.editing && propertyValues.indexOf(state.editing.filterValue);
+
+div(class=elementClass)
+  ul.column
+    for filterType, i in constants.filterTypeChoices
+      li(
+        class=selectedTypeIndex === i ? 'selected' : '',
+        ev-click=() => helpers.updateSection(state.clauseIndex, {filterType}),
+      )= util.capitalize(filterType.replace('_', ' '))
+  ul.column
+    if helpers.showPropertyValues()
+      for filterValue, i in propertyValues
+        if helpers.matchesSearch(filterValue)
+          li(
+            class=selectedValueIndex === i ? 'selected' : '',
+            ev-click=() => helpers.updateSection(state.clauseIndex, {filterValue}),
+          )= filterValue

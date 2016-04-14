@@ -2,14 +2,17 @@ import BaseApp from './base-app.js';
 import IrbView from './views/irb';
 import { extend, replaceAtIndex, removeAtIndex } from './util';
 import {
-  SECTION_SHOW,
-  SECTION_TIME,
-  SECTION_GROUP,
-  SECTION_FILTER,
+  FILTER_EQUALS,
+  FILTER_SET,
+  FILTER_NOT_SET,
   MATH_TOTAL,
   RESOURCE_EVENTS,
   RESOURCE_VALUE_TOP_EVENTS,
   SCREEN_MAIN,
+  SECTION_FILTER,
+  SECTION_GROUP,
+  SECTION_SHOW,
+  SECTION_TIME,
   TIME_UNIT_HOUR,
 } from './constants';
 
@@ -50,26 +53,43 @@ function createNewClause(section, data) {
       return extend({
         section: SECTION_FILTER,
         type: RESOURCE_EVENTS,
-        property: null,
         value: null,
+        filterType: FILTER_EQUALS,
+        filterValue: null,
+        paneIndex: 0,
         search: '',
       }, data);
   }
 }
 
 function validateClause(clause) {
-  if (clause.section === SECTION_TIME) {
-    if (!clause.unit) {
-      throw new Error('invalid time clause: no unit present');
-    } else if (!(
-      clause.range &&
-      clause.range.from instanceof Date &&
-      clause.range.to instanceof Date
-    )) {
-      throw new Error('invalid time clause: range does not contain both a to and from Date');
-    }
-  } else if (!clause.value) {
-    throw new Error('invalid group clause: no value present');
+  switch (clause.section) {
+    case SECTION_SHOW:
+      if (!clause.value) {
+        throw new Error('invalid show clause: no value present');
+      }
+      break;
+    case SECTION_TIME:
+      if (!clause.unit) {
+        throw new Error('invalid time clause: no unit present');
+      } else if (!(
+        clause.range &&
+        clause.range.from instanceof Date &&
+        clause.range.to instanceof Date
+      )) {
+        throw new Error('invalid time clause: range does not contain both a to and from Date');
+      }
+      break;
+    case SECTION_GROUP:
+      if (!clause.value) {
+        throw new Error('invalid group clause: no value present');
+      }
+      break;
+    case SECTION_FILTER:
+      if (!(clause.value)) {
+        throw new Error('invalid filter clause: no property present');
+      }
+      break;
   }
 }
 
@@ -87,8 +107,9 @@ const INITIAL_STATE = {
   [SECTION_TIME]: [createNewClause(SECTION_TIME)],
   [SECTION_GROUP]: [],
   [SECTION_FILTER]: [],
-  events: [],
-  properties: [],
+  topEvents: [],
+  topProperties: [],
+  topPropertyValues: {},
   query: {},
   result: {},
 };
@@ -98,12 +119,11 @@ export default class IrbApp extends BaseApp {
     super(elID, INITIAL_STATE, options);
 
     window.MP.api.topEvents().done(results =>
-      this.update({events: [RESOURCE_VALUE_TOP_EVENTS, ...Object.values(results.values())]})
-    );
+      this.update({topEvents: [RESOURCE_VALUE_TOP_EVENTS, ...Object.values(results.values())]}));
 
     window.MP.api.topProperties().done(results => {
       let props = results.values();
-      this.update({properties: Object.keys(props).sort((a, b) => props[b] - props[a])});
+      this.update({topProperties: Object.keys(props).sort((a, b) => props[b] - props[a])});
     });
 
     this.query();
@@ -122,6 +142,7 @@ export default class IrbApp extends BaseApp {
   update() {
     super.update(...arguments);
     this.query();
+    this.queryPropertyValues();
   }
 
   // State helpers
@@ -181,14 +202,34 @@ export default class IrbApp extends BaseApp {
     let newClause = extend(clause || this.state.editing || {}, clauseData);
     let newState = {editing: newClause};
 
+    if ( // clear filter value if filter type is set or not set
+      clauseData.filterType === FILTER_SET ||
+      clauseData.filterType === FILTER_NOT_SET
+    ) {
+      newClause.filterValue = null;
+    }
+
     if (this.isClauseValid(newClause)) {
       let newSection;
 
       if (clause) {
         newSection = replaceAtIndex(section, index, newClause);
+
+        if ( // don't keep the pane open if we're completing a filter clause
+          newClause.section === SECTION_FILTER &&
+          clauseData.filterType === FILTER_SET ||
+          clauseData.filterType === FILTER_NOT_SET ||
+          (newClause.value && !clause.filterValue && clauseData.filterValue)
+        ) {
+          newState.editing = null;
+        }
       } else {
-        newState.editing = null; // don't keep the pane open if we're adding a new clause
         newSection = [...section, newClause];
+
+        // don't keep the pane open if we're adding a new non-filter clause
+        if (newClause.section !== SECTION_FILTER) {
+          newState.editing = null;
+        }
       }
 
       if (this.isSectionValid(newSection)) {
@@ -197,6 +238,10 @@ export default class IrbApp extends BaseApp {
     }
 
     this.update(newState);
+  }
+
+  updatePaneIndex(sectionType, paneIndex) {
+    this.updateSection(sectionType, this.state[sectionType].indexOf(this.state.editing), {paneIndex});
   }
 
   removeClause(sectionType, index) {
@@ -210,19 +255,23 @@ export default class IrbApp extends BaseApp {
     const query = {
       events: this.state[SECTION_SHOW].map(clause => clause.value),
       segments: this.state[SECTION_GROUP].map(clause => clause.value),
+      filters: this.state[SECTION_FILTER].map(clause => [clause.value, clause.filterType, clause.filterValue]),
       unit: time.unit,
       from: time.range.from,
       to: time.range.to,
     };
 
     if (query.events.indexOf(RESOURCE_VALUE_TOP_EVENTS) !== -1) {
-      query.events = removeAtIndex(this.state.events, this.state.events.indexOf(RESOURCE_VALUE_TOP_EVENTS));
+      query.events = removeAtIndex(this.state.topEvents, this.state.topEvents.indexOf(RESOURCE_VALUE_TOP_EVENTS));
     }
 
-    if (Object.keys(query).some(key => JSON.stringify(query[key]) !== JSON.stringify(this.state.query[key]))) {
+    const matchesState = key =>
+      JSON.stringify(query[key]) === JSON.stringify(this.state.query[key]);
+
+    if (!Object.keys(query).every(matchesState)) {
       this.update({query});
 
-      let { events, segments, unit, from, to } = query;
+      const { events, segments, filters, unit, from, to } = query;
 
       if (events.length) {
         let endpoint = 'events';
@@ -241,11 +290,50 @@ export default class IrbApp extends BaseApp {
           }
         }
 
+        if (filters.length) {
+          function format() {
+            return `(${Array.prototype.slice.call(arguments).join(' ')})`;
+          }
+
+          params.where = filters.map(filter => {
+            let [ property, type, value ] = filter;
+            const isValid = property && (value || type === FILTER_SET || type === FILTER_NOT_SET);
+
+            if (!isValid) {
+              return null;
+            }
+
+            property = `properties["${property}"]`;
+            value = `"${value}"`;
+
+            switch (type) {
+              case FILTER_EQUALS       : return format(property, '==', value);
+              case FILTER_NOT_EQUALS   : return format(property, '!=', value);
+              case FILTER_CONTAINS     : return format(value, 'in', property);
+              case FILTER_NOT_CONTAINS : return format(value, 'not in', property);
+              case FILTER_SET          : return format('defined', property);
+              case FILTER_NOT_SET      : return format('not defined', property);
+            }
+          }).filter(filter => filter).join(' and ');
+        }
+
         window.MP.api.query(`api/2.0/${endpoint}`, params)
           .done(results => this.update({result: results.data.values}));
       }
     }
 
     return query;
+  }
+
+  queryPropertyValues() {
+    if (this.state.editing && this.state.editing.section === SECTION_FILTER) {
+      const name = this.state.editing.value;
+
+      if (name && !this.state.topPropertyValues[name]) {
+        window.MP.api.query('api/2.0/events/properties/values', {name}).done(results => this.update({
+          topPropertyValues: extend(this.state.topPropertyValues, {[name]: results.sort()}),
+        }));
+      }
+    }
   }
 }
