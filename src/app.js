@@ -2,9 +2,12 @@ import BaseApp from './base-app.js';
 import IrbView from './views/irb';
 import { extend, replaceAtIndex, removeAtIndex } from './util';
 import {
+  FILTER_CONTAINS,
   FILTER_EQUALS,
-  FILTER_SET,
+  FILTER_NOT_CONTAINS,
+  FILTER_NOT_EQUALS,
   FILTER_NOT_SET,
+  FILTER_SET,
   MATH_TOTAL,
   RESOURCE_EVENTS,
   RESOURCE_VALUE_TOP_EVENTS,
@@ -297,13 +300,13 @@ export default class IrbApp extends BaseApp {
 
           params.where = filters.map(filter => {
             let [ property, type, value ] = filter;
-            const isValid = property && (value || type === FILTER_SET || type === FILTER_NOT_SET);
+            const isValid = !!(property && (value || type === FILTER_SET || type === FILTER_NOT_SET));
 
             if (!isValid) {
               return null;
             }
 
-            property = `properties["${property}"]`;
+            property = `(properties["${property}"])`;
             value = `"${value}"`;
 
             switch (type) {
