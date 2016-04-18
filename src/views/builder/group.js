@@ -103,7 +103,7 @@ export default class GroupView extends BaseView {
   get templateHelpers() {
     return {
       isDisabled: () => {
-        let showValues = this.app.state[SECTION_SHOW].map(clause => clause.value);
+        let showValues = this.app.state.sections[SECTION_SHOW].map(clause => clause.value);
         return showValues.length > 1 || showValues.indexOf(RESOURCE_VALUE_TOP_EVENTS) !== -1;
       },
     };

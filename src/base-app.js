@@ -16,8 +16,9 @@ export default class BaseApp extends App {
   }
 
   update(stateUpdate={}) {
+    console.log('applying update ->', stateUpdate);
     super.update(...arguments);
-    console.log(this.state);
+    console.log('      new state ->', this.state);
   }
 
   // DOM helpers

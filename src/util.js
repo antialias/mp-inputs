@@ -2,16 +2,20 @@ export function extend() {
   return Object.assign(...[{}, ...Array.prototype.slice.call(arguments)]);
 }
 
-export function replaceAtIndex(array, index, value) {
+export function replaceIndex(array, index, value) {
   return [...array.slice(0, index), value, ...array.slice(index + 1)];
 }
 
-export function removeAtIndex(array, index) {
+export function removeIndex(array, index) {
   if (index >= 0 && index < array.length) {
     return [...array.slice(0, index), ...array.slice(index + 1)];
   } else {
     return array;
   }
+}
+
+export function removeValue(array, value) {
+  return removeIndex(array, array.indexOf(value));
 }
 
 export function capitalize(string) {

@@ -38,14 +38,14 @@ class FilterPropertyPaneContentView extends PaneContentView {
   get templateHelpers() {
     return extend(super.templateHelpers, {
       selectProperty: (clauseIndex, value) => {
-        this.templateHelpers.updateSection(clauseIndex, {value});
+        this.templateHelpers.updateClause(clauseIndex, {value});
 
         // when a property is selected, switch to the property value inner pane
         // - the timeout allows the add pane to be re-rendered as an edit pane,
         //   and still show the css animation sliding to the new pane
         setTimeout(() => {
-          let clauseIndex = this.app.state[SECTION_FILTER].indexOf(this.app.state.editing);
-          this.templateHelpers.updateSection(clauseIndex, {paneIndex: 1});
+          let clauseIndex = this.app.state.sections[SECTION_FILTER].indexOf(this.app.state.editing);
+          this.templateHelpers.updateClause(clauseIndex, {paneIndex: 1});
         }, 0);
       },
     });
@@ -100,7 +100,7 @@ class FilterPaneView extends PaneView {
       getHeader: paneIndex => paneIndex ? 'Property values' : 'Properties',
       getPaneIndex: clauseIndex => this.getPaneIndex(clauseIndex),
       updatePaneIndex: (clauseIndex, paneIndex) =>
-        this.app.updateSection(SECTION_FILTER, clauseIndex, {paneIndex}),
+        this.app.updateClause(SECTION_FILTER, clauseIndex, {paneIndex}),
     });
   }
 }
@@ -139,7 +139,8 @@ class FilterEditControlView extends EditControlView {
     return extend(super.templateHelpers, {
       getLabel: clauseIndex => {
         const clause = this.app.clauseAt(SECTION_FILTER, clauseIndex);
-        return [renameProperty(clause.value), clause.filterValue];
+        const showValue = clause.filterType !== FILTER_SET && clause.filterType !== FILTER_NOT_SET;
+        return [renameProperty(clause.value), showValue ? clause.filterValue : ''];
       },
       getLabelConnector: clauseIndex => ` ${this.app.clauseAt(SECTION_FILTER, clauseIndex).filterType} `,
     });

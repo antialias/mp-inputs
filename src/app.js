@@ -1,6 +1,6 @@
 import BaseApp from './base-app.js';
 import IRBView from './views/irb';
-import { extend, replaceAtIndex, removeAtIndex } from './util';
+import { extend, replaceIndex, removeIndex } from './util';
 import {
   FILTER_CONTAINS,
   FILTER_EQUALS,
@@ -18,11 +18,15 @@ import {
   SECTION_TIME,
   TIME_UNIT_HOUR,
 } from './constants';
+import TopEventsQuery from './queries/top-events';
+import TopPropertiesQuery from './queries/top-properties';
+import TopPropertyValuesQuery from './queries/top-property-values';
+import SegmentationQuery from './queries/segmentation';
 
 import './stylesheets/app.styl';
 
-function createNewClause(section, data) {
-  switch(section) {
+function createNewClause(sectionType, data) {
+  switch(sectionType) {
     case SECTION_SHOW:
       return extend({
         section: SECTION_SHOW,
@@ -102,18 +106,18 @@ function validateSection(section) {
   }
 }
 
-
 const INITIAL_STATE = {
   $screen: SCREEN_MAIN,
-  reportName: 'Untitled report',
-  [SECTION_SHOW]: [createNewClause(SECTION_SHOW, {value: RESOURCE_VALUE_TOP_EVENTS})],
-  [SECTION_TIME]: [createNewClause(SECTION_TIME)],
-  [SECTION_GROUP]: [],
-  [SECTION_FILTER]: [],
+  name: 'Untitled report',
+  sections: {
+    show: [createNewClause(SECTION_SHOW, {value: RESOURCE_VALUE_TOP_EVENTS})],
+    group: [],
+    time: [createNewClause(SECTION_TIME)],
+    filter: [],
+  },
   topEvents: [],
   topProperties: [],
-  topPropertyValues: {},
-  query: {},
+  topPropertyValues: [],
   result: {},
 };
 
@@ -121,15 +125,22 @@ export default class IRBApp extends BaseApp {
   constructor(elID, initialState=INITIAL_STATE, options={}) {
     super(elID, INITIAL_STATE, options);
 
-    window.MP.api.topEvents().done(results =>
-      this.update({topEvents: [RESOURCE_VALUE_TOP_EVENTS, ...Object.values(results.values())]}));
+    this.queries = {
+      topEvents: new TopEventsQuery(),
+      topProperties: new TopPropertiesQuery(),
+      topPropertyValues: new TopPropertyValuesQuery(),
+      segmentation: new SegmentationQuery(),
+    };
 
-    window.MP.api.topProperties().done(results => {
-      let props = results.values();
-      this.update({topProperties: Object.keys(props).sort((a, b) => props[b] - props[a])});
-    });
+    this.queries.topProperties.run(this.state)
+      .then(topProperties => this.update({topProperties}));
 
-    this.query();
+    this.queries.topEvents.run(this.state)
+      .then(topEvents => {
+        this.update({topEvents});
+        this.queries.segmentation.run(this.state)
+          .then(result => this.update({result}));
+      });
   }
 
   get SCREENS() {
@@ -142,27 +153,21 @@ export default class IRBApp extends BaseApp {
     this.update({$screen: SCREEN_MAIN});
   }
 
-  update() {
-    super.update(...arguments);
-    this.query();
-    this.queryPropertyValues();
-  }
-
   // State helpers
 
-  clauseAt(sectionType, index) {
-    return this.state[sectionType][index];
+  clauseAt(sectionType, clauseIndex) {
+    return this.state.sections[sectionType][clauseIndex];
   }
 
   isAddingClause(sectionType) {
     return this.isEditingClause(sectionType, -1);
   }
 
-  isEditingClause(sectionType, index) {
+  isEditingClause(sectionType, clauseIndex) {
     return (
       this.state.editing &&
       this.state.editing.section === sectionType &&
-      this.state[sectionType].indexOf(this.state.editing) === index
+      this.state.sections[sectionType].indexOf(this.state.editing) === clauseIndex
     );
   }
 
@@ -199,24 +204,23 @@ export default class IRBApp extends BaseApp {
     this.update({editing: null});
   }
 
-  updateSection(sectionType, index, clauseData) {
-    let section = this.state[sectionType];
-    let clause = section[index];
+  updatePaneIndex(sectionType, paneIndex) {
+    let clauseIndex = this.state.sections[sectionType].indexOf(this.state.editing);
+    this.updateClause(sectionType, clauseIndex, {paneIndex});
+  }
+
+  updateClause(sectionType, clauseIndex, clauseData) {
+    console.log('updating section', clauseData)
+    let section = this.state.sections[sectionType];
+    let clause = section[clauseIndex];
     let newClause = extend(clause || this.state.editing || {}, clauseData);
     let newState = {editing: newClause};
-
-    if ( // clear filter value if filter type is set or not set
-      clauseData.filterType === FILTER_SET ||
-      clauseData.filterType === FILTER_NOT_SET
-    ) {
-      newClause.filterValue = null;
-    }
 
     if (this.isClauseValid(newClause)) {
       let newSection;
 
       if (clause) {
-        newSection = replaceAtIndex(section, index, newClause);
+        newSection = replaceIndex(section, clauseIndex, newClause);
 
         if ( // don't keep the pane open if we're completing a filter clause
           newClause.section === SECTION_FILTER &&
@@ -236,107 +240,29 @@ export default class IRBApp extends BaseApp {
       }
 
       if (this.isSectionValid(newSection)) {
-        newState[sectionType] = newSection;
+        newState.sections = extend(this.state.sections, {[sectionType]: newSection});
       }
     }
 
     this.update(newState);
+    this.queries.segmentation.run(this.state)
+      .then(result => this.update({result}));
+
+    // query new property values if we're setting a new filter property
+    if (sectionType === SECTION_FILTER && clauseData.value) {
+      this.queries.topPropertyValues.run(this.state)
+        .then(topPropertyValues => this.update({topPropertyValues}));
+    }
   }
 
-  updatePaneIndex(sectionType, paneIndex) {
-    this.updateSection(sectionType, this.state[sectionType].indexOf(this.state.editing), {paneIndex});
-  }
-
-  removeClause(sectionType, index) {
+  removeClause(sectionType, clauseIndex) {
     this.update({
-      [sectionType]: removeAtIndex(this.state[sectionType], index),
+      sections: extend(this.state.sections, {
+        [sectionType]: removeIndex(this.state.sections[sectionType], clauseIndex)
+      }),
     });
-  }
 
-  query() {
-    const time = this.state[SECTION_TIME][0];
-    const query = {
-      events: this.state[SECTION_SHOW].map(clause => clause.value),
-      segments: this.state[SECTION_GROUP].map(clause => clause.value),
-      filters: this.state[SECTION_FILTER].map(clause => [clause.value, clause.filterType, clause.filterValue]),
-      unit: time.unit,
-      from: time.range.from,
-      to: time.range.to,
-    };
-
-    if (query.events.indexOf(RESOURCE_VALUE_TOP_EVENTS) !== -1) {
-      query.events = removeAtIndex(this.state.topEvents, this.state.topEvents.indexOf(RESOURCE_VALUE_TOP_EVENTS));
-    }
-
-    const matchesState = key =>
-      JSON.stringify(query[key]) === JSON.stringify(this.state.query[key]);
-
-    if (!Object.keys(query).every(matchesState)) {
-      this.update({query});
-
-      const { events, segments, filters, unit, from, to } = query;
-
-      if (events.length) {
-        let endpoint = 'events';
-        let params = {unit, from, to, event: events};
-
-        if (events.length === 1 && segments.length) {
-          params.event = events[0];
-
-          if (segments.length === 1) {
-            endpoint = 'segmentation';
-            params.on = `properties["${segments[0]}"]`;
-          } else {
-            endpoint = 'segmentation/multiseg';
-            params.outer = `properties["${segments[0]}"]`;
-            params.inner = `properties["${segments[1]}"]`;
-          }
-        }
-
-        if (filters.length) {
-          function format() {
-            return `(${Array.prototype.slice.call(arguments).join(' ')})`;
-          }
-
-          params.where = filters.map(filter => {
-            let [ property, type, value ] = filter;
-            const isValid = !!(property && (value || type === FILTER_SET || type === FILTER_NOT_SET));
-
-            if (!isValid) {
-              return null;
-            }
-
-            property = `(properties["${property}"])`;
-            value = `"${value}"`;
-
-            switch (type) {
-              case FILTER_EQUALS       : return format(property, '==', value);
-              case FILTER_NOT_EQUALS   : return format(property, '!=', value);
-              case FILTER_CONTAINS     : return format(value, 'in', property);
-              case FILTER_NOT_CONTAINS : return format('not', value, 'in', property);
-              case FILTER_SET          : return format('defined', property);
-              case FILTER_NOT_SET      : return format('not defined', property);
-            }
-          }).filter(filter => filter).join(' and ');
-        }
-
-        window.MP.api.query(`api/2.0/${endpoint}`, params)
-          .done(results => this.update({result: results.data.values}));
-      }
-    }
-
-    return query;
-  }
-
-  queryPropertyValues() {
-    if (this.state.editing && this.state.editing.section === SECTION_FILTER) {
-      const name = this.state.editing.value;
-
-      if (name && !this.state.topPropertyValues[name]) {
-        window.MP.api.query('api/2.0/events/properties/values', {name}).done(results => this.update({
-          topPropertyValues: extend(this.state.topPropertyValues, {[name]: results.sort()}),
-        }));
-      }
-    }
+    this.queries.segmentation.run(this.state)
+      .then(result => this.update({result}));
   }
 }

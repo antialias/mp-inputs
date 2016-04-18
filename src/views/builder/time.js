@@ -22,7 +22,7 @@ class TimePaneContentView extends PaneContentView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      updateSection: data => this.app.updateSection(SECTION_TIME, 0, data),
+      updateClause: data => this.app.updateClause(SECTION_TIME, 0, data),
       rangeToString: () => JSON.stringify(this.app.clauseAt(SECTION_TIME, 0).range),
     });
   }

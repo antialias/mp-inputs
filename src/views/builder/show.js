@@ -32,6 +32,7 @@ class ShowPaneContentView extends PaneContentView {
     return extend(super.templateConstants, {
       mathChoices: Object.values(MATH_TYPES),
       resourceTypeChoices: Object.values(RESOURCE_TYPES),
+      eventChoices: [RESOURCE_VALUE_TOP_EVENTS, ...this.app.state.topEvents],
     });
   }
 }

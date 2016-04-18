@@ -2,10 +2,10 @@ export const IS_WITHIN_MP_PLATFORM_IFRAME = window.parent !== window;
 
 export const SCREEN_MAIN = 'main';
 
-export const SECTION_SHOW = 'showSection';
-export const SECTION_GROUP = 'groupSection';
-export const SECTION_TIME = 'timeSection';
-export const SECTION_FILTER = 'filterSection';
+export const SECTION_SHOW = 'show';
+export const SECTION_GROUP = 'group';
+export const SECTION_TIME = 'time';
+export const SECTION_FILTER = 'filter';
 export const SECTION_TYPES = {
   SECTION_SHOW,
   SECTION_GROUP,

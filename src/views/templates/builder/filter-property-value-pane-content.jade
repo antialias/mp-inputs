@@ -1,5 +1,5 @@
 - let property = state.editing && state.editing.value;
-- let propertyValues = (state.editing && state.topPropertyValues[property]) || [];
+- let propertyValues = state.editing && state.topPropertyValues;
 
 - let selectedTypeIndex = state.editing && constants.filterTypeChoices.indexOf(state.editing.filterType);
 - let selectedValueIndex = state.editing && propertyValues.indexOf(state.editing.filterValue);
@@ -9,7 +9,7 @@ div(class=elementClass)
     for filterType, i in constants.filterTypeChoices
       li(
         class=selectedTypeIndex === i ? 'selected' : '',
-        ev-click=() => helpers.updateSection(state.clauseIndex, {filterType}),
+        ev-click=() => helpers.updateClause(state.clauseIndex, {filterType}),
       )= util.capitalize(filterType.replace('_', ' '))
   ul.column
     if helpers.showPropertyValues()
@@ -17,5 +17,5 @@ div(class=elementClass)
         if helpers.matchesSearch(filterValue)
           li(
             class=selectedValueIndex === i ? 'selected' : '',
-            ev-click=() => helpers.updateSection(state.clauseIndex, {filterValue}),
+            ev-click=() => helpers.updateClause(state.clauseIndex, {filterValue}),
           )= filterValue

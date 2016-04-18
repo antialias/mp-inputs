@@ -6,7 +6,7 @@ div(class=elementClass)
     for type, i in constants.resourceTypeChoices
       li(
         class=selectedTypeIndex === i ? 'selected' : '',
-        ev-click=() => helpers.updateSection(state.clauseIndex, {type}),
+        ev-click=() => helpers.updateClause(state.clauseIndex, {type}),
       )= util.capitalize(type)
   ul.column
     for value, i in state.topProperties

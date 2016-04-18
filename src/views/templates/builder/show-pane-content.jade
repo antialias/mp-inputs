@@ -7,18 +7,18 @@ div(class=elementClass)
     for math, i in constants.mathChoices
       li(
         class=selectedMathIndex === i ? 'selected' : '',
-        ev-click=() => helpers.updateSection(state.clauseIndex, {math}),
+        ev-click=() => helpers.updateClause(state.clauseIndex, {math}),
       )= util.capitalize(math)
   ul.column.resourceType
     for type, i in constants.resourceTypeChoices
       li(
         class=selectedTypeIndex === i ? 'selected' : '',
-        ev-click=() => helpers.updateSection(state.clauseIndex, {type}),
+        ev-click=() => helpers.updateClause(state.clauseIndex, {type}),
       )= util.capitalize(type)
   ul.column.resourceValue
-    for value, i in state.topEvents
+    for value, i in constants.eventChoices
       if helpers.matchesSearch(util.renameEvent(value))
         li(
           class=selectedValueIndex === i ? 'selected' : '',
-          ev-click=() => helpers.updateSection(state.clauseIndex, {value}),
+          ev-click=() => helpers.updateClause(state.clauseIndex, {value}),
         )= util.renameEvent(value)
