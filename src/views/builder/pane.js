@@ -16,7 +16,8 @@ export default class PaneView extends BaseView {
 
   get templateHelpers() {
     return {
-      updateSearch: (clauseIndex, search) => this.app.updateClause(this.section, clauseIndex, {search}),
+      updateClause: (clauseIndex, data) =>
+        this.app.updateClause(this.section, clauseIndex, data),
     };
   }
 }

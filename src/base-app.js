@@ -16,9 +16,15 @@ export default class BaseApp extends App {
   }
 
   update(stateUpdate={}) {
-    console.log('applying update ->', stateUpdate);
+    if (APP_ENV === 'development') {
+      console.info('applying update ->', stateUpdate);
+    }
+
     super.update(...arguments);
-    console.log('      new state ->', this.state);
+
+    if (APP_ENV === 'development') {
+      console.info('      new state ->', this.state);
+    }
   }
 
   // DOM helpers

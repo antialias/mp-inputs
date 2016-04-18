@@ -3,16 +3,12 @@ import { AddControlView, EditControlView } from './control';
 import PaneView from './pane';
 import PaneContentView from './pane-content';
 import {
-  SECTION_SHOW,
-  RESOURCE_VALUE_TOP_EVENTS,
-  RESOURCE_TYPES,
-  MATH_TYPES,
-} from '../../constants';
-import {
   capitalize,
   extend,
   renameEvent,
 } from '../../util';
+
+import { Clause, ShowClause } from '../../models/clause';
 
 import template from '../templates/builder/show.jade';
 import showPaneContentTemplate from '../templates/builder/show-pane-content.jade';
@@ -21,7 +17,7 @@ import '../stylesheets/builder/show.styl';
 
 class ShowPaneContentView extends PaneContentView {
   get section() {
-    return SECTION_SHOW;
+    return 'show';
   }
 
   get TEMPLATE() {
@@ -30,16 +26,16 @@ class ShowPaneContentView extends PaneContentView {
 
   get templateConstants() {
     return extend(super.templateConstants, {
-      mathChoices: Object.values(MATH_TYPES),
-      resourceTypeChoices: Object.values(RESOURCE_TYPES),
-      eventChoices: [RESOURCE_VALUE_TOP_EVENTS, ...this.app.state.topEvents],
+      mathChoices: ShowClause.MATH_TYPES,
+      resourceTypeChoices: Clause.RESOURCE_TYPES,
+      eventChoices: [ShowClause.TOP_EVENTS, ...this.app.state.topEvents],
     });
   }
 }
 
 class ShowPaneView extends PaneView {
   get section() {
-    return SECTION_SHOW;
+    return 'show';
   }
 
   get templateConstants() {
@@ -57,7 +53,7 @@ class ShowPaneView extends PaneView {
 
 class ShowAddControlView extends AddControlView {
   get section() {
-    return SECTION_SHOW;
+    return 'show';
   }
 
   get VIEWS() {
@@ -75,7 +71,7 @@ class ShowAddControlView extends AddControlView {
 
 class ShowEditControlView extends EditControlView {
   get section() {
-    return SECTION_SHOW;
+    return 'show';
   }
 
   get VIEWS() {
@@ -84,21 +80,15 @@ class ShowEditControlView extends EditControlView {
     };
   }
 
-  get templateConstants() {
-    return extend(super.templateConstants, {
-      labelConnector: ' of ',
-    });
-  }
-
   get templateHelpers() {
     return extend(super.templateHelpers, {
       getLabel: clauseIndex => {
-        let comparison = this.app.clauseAt(SECTION_SHOW, clauseIndex);
-        let math = capitalize(comparison.math);
-        let value = comparison.value === RESOURCE_VALUE_TOP_EVENTS ?
-          `Top ${capitalize(comparison.type)}` : comparison.value;
+        let clause = this.app.state.sections.getClause('show', clauseIndex);
+        let math = capitalize(clause.math);
+        let value = clause.value === ShowClause.TOP_EVENTS ?
+          `Top ${capitalize(clause.resourceType)}` : clause.value;
 
-        return [math, renameEvent(value)];
+        return [math, ' of ', renameEvent(value)];
       },
     });
   }

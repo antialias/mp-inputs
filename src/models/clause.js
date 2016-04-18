@@ -1,0 +1,142 @@
+import { extend } from '../util';
+
+export class Clause {
+  constructor(attrs={}) {
+    this.paneIndex = attrs.paneIndex || 0;
+  }
+
+  get attrs() {
+    let { paneIndex } = this;
+    return {paneIndex};
+  }
+
+  get valid() {
+    return typeof this.paneIndex === 'number' && this.paneIndex >= 0;
+  }
+
+  validate(newClause) {
+    const valid = newClause.valid;
+
+    if (APP_ENV === 'development' && !valid) {
+      console.warn(`${this.TYPE} clause invalid:`, newClause);
+    }
+
+    return valid ? newClause : this;
+  }
+
+  extend(attrs) {
+    return this.validate(Clause.create(this.TYPE, extend(this.attrs, attrs)));
+  }
+}
+Clause.create = Clause.prototype.create = (sectionType, attrs) => {
+  switch (sectionType) {
+    case 'show': return new ShowClause(attrs);
+    case 'group': return new GroupClause(attrs);
+    case 'filter': return new FilterClause(attrs);
+    case 'time': return new TimeClause(attrs);
+  }
+};
+Clause.RESOURCE_TYPES = Clause.prototype.RESOURCE_TYPES = ['events', 'people'];
+
+export class EventsPropertiesClause extends Clause {
+  constructor(attrs={}) {
+    super(...arguments);
+    this.value = attrs.value || null;
+    this.resourceType = attrs.resourceType || 'events';
+    this.search = attrs.search || '';
+  }
+
+  get attrs() {
+    let { value, resourceType, search } = this;
+    return extend(super.attrs, {value, resourceType, search});
+  }
+
+  get valid() {
+    return (
+      super.valid &&
+      !!this.value &&
+      this.RESOURCE_TYPES.indexOf(this.resourceType) !== -1 &&
+      typeof this.search === 'string'
+    );
+  }
+}
+
+export class ShowClause extends EventsPropertiesClause {
+  constructor(attrs={}) {
+    super(...arguments);
+    this.math = attrs.math || 'total';
+    this.value = this.value || null;
+  }
+
+  get attrs() {
+    let { math } = this;
+    return extend(super.attrs, {math});
+  }
+
+  get valid() {
+    return super.valid && this.MATH_TYPES.indexOf(this.math) !== -1;
+  }
+}
+ShowClause.TYPE = ShowClause.prototype.TYPE = 'show';
+ShowClause.TOP_EVENTS = ShowClause.prototype.TOP_EVENTS = '$top_events';
+ShowClause.MATH_TYPES = ShowClause.prototype.MATH_TYPES = [
+  'total', 'unique', 'average', 'sum', 'median'
+];
+
+export class GroupClause extends EventsPropertiesClause {}
+GroupClause.prototype.TYPE = 'group';
+
+export class FilterClause extends EventsPropertiesClause {
+  constructor(attrs={}) {
+    super(...arguments);
+    this.filterType = attrs.filterType || 'equals';
+    this.filterValue = attrs.filterValue || null;
+  }
+
+  get attrs() {
+    let { filterType, filterValue } = this;
+    return extend(super.attrs, {filterType, filterValue});
+  }
+
+  get valid() {
+    return super.valid && this.FILTER_TYPES.indexOf(this.filterType) !== -1;
+  }
+
+  get filterTypeIsSetOrNotSet() {
+    return this.filterType === 'is set' || this.filterType === 'is not set';
+  }
+}
+FilterClause.TYPE = FilterClause.prototype.TYPE = 'filter';
+FilterClause.FILTER_TYPES = FilterClause.prototype.FILTER_TYPES = [
+  'equals',   'does not equal',
+  'contains', 'does not contain',
+  'is set',   'is not set',
+];
+
+export class TimeClause extends Clause {
+  constructor(attrs={}) {
+    super(...arguments);
+
+    let to = new Date();
+    let from = new Date();
+    from.setHours(to.getHours() - 96);
+
+    this.unit = attrs.unit || 'hour';
+    this.from = attrs.from || from;
+    this.to = attrs.to || to;
+  }
+
+  get attrs() {
+    let { unit, from, to } = this;
+    return {unit, from, to};
+  }
+
+  get valid() {
+    return this.UNIT_TYPES.indexOf(this.unit) !== -1 &&
+      this.to instanceof Date && this.from instanceof Date;
+  }
+}
+TimeClause.TYPE = TimeClause.prototype.TYPE = 'time';
+TimeClause.UNIT_TYPES = TimeClause.prototype.UNIT_TYPES = [
+  'hour', 'day', 'week', 'month', 'quarter', 'year'
+];

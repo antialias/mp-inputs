@@ -13,7 +13,7 @@ export default class HeaderView extends BaseView {
 
   get templateHandlers() {
     return {
-      updateReportName: ev => this.app.update({name: ev.target.value}),
+      updateReportName: ev => this.app.update({reportName: ev.target.value}),
     };
   }
 }

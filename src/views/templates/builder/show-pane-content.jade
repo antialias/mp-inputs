@@ -1,6 +1,6 @@
-- let selectedMathIndex = state.editing && constants.mathChoices.indexOf(state.editing.math);
-- let selectedTypeIndex = state.editing && constants.resourceTypeChoices.indexOf(state.editing.type);
-- let selectedValueIndex = state.editing && state.topEvents.indexOf(state.editing.value);
+- let selectedMathIndex = state.editingClause && constants.mathChoices.indexOf(state.editingClause.math);
+- let selectedTypeIndex = state.editingClause && constants.resourceTypeChoices.indexOf(state.editingClause.resourceType);
+- let selectedValueIndex = state.editingClause && constants.eventChoices.indexOf(state.editingClause.value);
 
 div(class=elementClass)
   ul.column.math

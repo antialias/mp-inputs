@@ -3,15 +3,11 @@ import { AddControlView, EditControlView } from './control';
 import PaneView from './pane';
 import PaneContentView from './pane-content';
 import {
-  RESOURCE_TYPES,
-  RESOURCE_VALUE_TOP_EVENTS,
-  SECTION_GROUP,
-  SECTION_SHOW,
-} from '../../constants';
-import {
   extend,
   renameProperty,
 } from '../../util';
+
+import { Clause, GroupClause, ShowClause } from '../../models/clause';
 
 import template from '../templates/builder/group.jade';
 import groupPaneContentTemplate from '../templates/builder/group-pane-content.jade';
@@ -20,7 +16,7 @@ import '../stylesheets/builder/group.styl';
 
 class GroupPaneContentView extends PaneContentView {
   get section() {
-    return SECTION_GROUP;
+    return 'group';
   }
 
   get TEMPLATE() {
@@ -29,14 +25,14 @@ class GroupPaneContentView extends PaneContentView {
 
   get templateConstants() {
     return extend(super.templateConstants, {
-      resourceTypeChoices: Object.values(RESOURCE_TYPES),
+      resourceTypeChoices: Clause.RESOURCE_TYPES,
     });
   }
 }
 
 class GroupPaneView extends PaneView {
   get section() {
-    return SECTION_GROUP;
+    return 'group';
   }
 
   get templateConstants() {
@@ -54,7 +50,7 @@ class GroupPaneView extends PaneView {
 
 class GroupAddControlView extends AddControlView {
   get section() {
-    return SECTION_GROUP;
+    return 'group';
   }
 
   get VIEWS() {
@@ -72,7 +68,7 @@ class GroupAddControlView extends AddControlView {
 
 class GroupEditControlView extends EditControlView {
   get section() {
-    return SECTION_GROUP;
+    return 'group';
   }
 
   get VIEWS() {
@@ -83,7 +79,7 @@ class GroupEditControlView extends EditControlView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      getLabel: clauseIndex => renameProperty(this.app.clauseAt(SECTION_GROUP, clauseIndex).value),
+      getLabel: clauseIndex => renameProperty(this.app.state.sections.getClause('group', clauseIndex).value),
     });
   }
 }
@@ -103,8 +99,8 @@ export default class GroupView extends BaseView {
   get templateHelpers() {
     return {
       isDisabled: () => {
-        let showValues = this.app.state.sections[SECTION_SHOW].map(clause => clause.value);
-        return showValues.length > 1 || showValues.indexOf(RESOURCE_VALUE_TOP_EVENTS) !== -1;
+        let showValues = this.app.state.sections.show.clauses.map(clause => clause.value);
+        return showValues.length > 1 || showValues.indexOf(ShowClause.TOP_EVENTS) !== -1;
       },
     };
   }

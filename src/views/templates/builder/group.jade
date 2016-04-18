@@ -1,13 +1,13 @@
 .section(class=[elementClass, helpers.isDisabled() ? 'disabled' : ''])
-  if !state.sections.group.length
+  if !state.sections.group.clauses.length
     .clause.group
       h3
       .control-container= views.addControl(state)
   else
-    for group, clauseIndex in state.sections.group
+    for clause, clauseIndex in state.sections.group.clauses
       .preposition= clauseIndex ? 'and' : 'by'
       .clause.group
-        h3= 'Group' + (state.sections.group.length === 1 ? '' : ' ' + (clauseIndex + 1))
+        h3= 'Group' + (state.sections.group.clauses.length === 1 ? '' : ' ' + (clauseIndex + 1))
         .control-container= views.editControl(util.extend(state, {clauseIndex}))
-        if state.sections.group.length < 2 && clauseIndex == state.sections.group.length - 1
+        if state.sections.group.clauses.length < 2 && clauseIndex == state.sections.group.clauses.length - 1
           .control-container= views.addControl(state)

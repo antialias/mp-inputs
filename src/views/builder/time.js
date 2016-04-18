@@ -2,9 +2,6 @@ import BaseView from '../base';
 import { EditControlView } from './control';
 import PaneView from './pane';
 import PaneContentView from './pane-content';
-import {
-  SECTION_TIME,
-} from '../../constants';
 import { extend } from '../../util';
 import { register as registerDatePicker } from '../../elements/date-picker';
 
@@ -16,19 +13,30 @@ import '../stylesheets/builder/time.styl';
 registerDatePicker();
 
 class TimePaneContentView extends PaneContentView {
+  get section() {
+    return 'time';
+  }
+
   get TEMPLATE() {
     return timePaneContentTemplate;
   }
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      updateClause: data => this.app.updateClause(SECTION_TIME, 0, data),
-      rangeToString: () => JSON.stringify(this.app.clauseAt(SECTION_TIME, 0).range),
+      updateClause: data => this.app.updateClause('time', 0, data),
+      rangeToString: () => {
+        let { from, to } = this.app.state.sections.getClause('time', 0);
+        return JSON.stringify({from, to});
+      },
     });
   }
 }
 
 class TimePaneView extends PaneView {
+  get section() {
+    return 'time';
+  }
+
   get templateConstants() {
     return extend(super.templateConstants, {
       header: 'Time',
@@ -44,8 +52,8 @@ class TimePaneView extends PaneView {
 }
 
 class TimeEditControlView extends EditControlView {
-  get section () {
-    return SECTION_TIME;
+  get section() {
+    return 'time';
   }
 
   get templateConstants() {
@@ -63,8 +71,7 @@ class TimeEditControlView extends EditControlView {
   get templateHelpers() {
     return extend(super.templateHelpers, {
       getLabel: () => {
-        const { unit, range } = this.app.clauseAt(SECTION_TIME, 0);
-        const { from, to } = range;
+        const { unit, from, to } = this.app.state.sections.getClause('time', 0);
         const now = new Date();
         const startOfToday = new Date().setHours(0, 0, 0, 0);
         const hoursFromNow = Math.round(Math.abs(now - from) / (60 * 60 * 1000));

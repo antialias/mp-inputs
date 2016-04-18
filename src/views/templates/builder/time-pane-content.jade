@@ -1,5 +1,5 @@
 div(class=elementClass)
   irb-date-picker(
     value=helpers.rangeToString()
-    ev-change=event => helpers.updateClause({range: event.target.value})
+    ev-change=event => helpers.updateClause(event.target.value)
   )

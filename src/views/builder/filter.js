@@ -3,16 +3,11 @@ import { AddControlView, EditControlView } from './control';
 import PaneView from './pane';
 import PaneContentView from './pane-content';
 import {
-  FILTER_NOT_SET,
-  FILTER_SET,
-  FILTER_TYPES,
-  RESOURCE_TYPES,
-  SECTION_FILTER,
-} from '../../constants';
-import {
   extend,
   renameProperty,
 } from '../../util';
+
+import { Clause, FilterClause } from '../../models/clause';
 
 import template from '../templates/builder/filter.jade';
 import filterPropertyPaneContentTemplate from '../templates/builder/filter-property-pane-content.jade';
@@ -22,7 +17,7 @@ import '../stylesheets/builder/filter.styl';
 
 class FilterPropertyPaneContentView extends PaneContentView {
   get section() {
-    return SECTION_FILTER;
+    return 'filter';
   }
 
   get TEMPLATE() {
@@ -31,7 +26,7 @@ class FilterPropertyPaneContentView extends PaneContentView {
 
   get templateConstants() {
     return extend(super.templateConstants, {
-      resourceTypeChoices: Object.values(RESOURCE_TYPES),
+      resourceTypeChoices: Clause.RESOURCE_TYPES,
     });
   }
 
@@ -41,12 +36,11 @@ class FilterPropertyPaneContentView extends PaneContentView {
         this.templateHelpers.updateClause(clauseIndex, {value});
 
         // when a property is selected, switch to the property value inner pane
-        // - the timeout allows the add pane to be re-rendered as an edit pane,
-        //   and still show the css animation sliding to the new pane
-        setTimeout(() => {
-          let clauseIndex = this.app.state.sections[SECTION_FILTER].indexOf(this.app.state.editing);
-          this.templateHelpers.updateClause(clauseIndex, {paneIndex: 1});
-        }, 0);
+        // - requestAnimationFrame allows the add pane to be re-rendered as an
+        //   edit pane, and still show the css animation sliding to the new pane
+        window.requestAnimationFrame(() =>
+          this.templateHelpers.updateClause(this.app.editingClauseIndex, {paneIndex: 1})
+        );
       },
     });
   }
@@ -54,7 +48,7 @@ class FilterPropertyPaneContentView extends PaneContentView {
 
 class FilterPropertyValuePaneContentView extends PaneContentView {
   get section() {
-    return SECTION_FILTER;
+    return 'filter';
   }
 
   get TEMPLATE() {
@@ -63,22 +57,20 @@ class FilterPropertyValuePaneContentView extends PaneContentView {
 
   get templateConstants() {
     return extend(super.templateConstants, {
-      filterTypeChoices: Object.values(FILTER_TYPES),
+      filterTypeChoices: FilterClause.FILTER_TYPES,
     });
   }
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      showPropertyValues: () => this.app.state.editing &&
-        this.app.state.editing.filterType !== FILTER_SET &&
-        this.app.state.editing.filterType !== FILTER_NOT_SET,
+      showPropertyValues: () => this.app.state.editingClause && !this.app.state.editingClause.filterTypeIsSetOrNotSet,
     });
   }
 }
 
 class FilterPaneView extends PaneView {
   get section() {
-    return SECTION_FILTER;
+    return 'filter';
   }
 
   get VIEWS() {
@@ -91,7 +83,7 @@ class FilterPaneView extends PaneView {
   }
 
   getPaneIndex(clauseIndex) {
-    const clause = this.app.clauseAt(SECTION_FILTER, clauseIndex);
+    const clause = this.app.state.sections.getClause('filter', clauseIndex) || this.app.state.editingClause;
     return clause ? clause.paneIndex : 0;
   }
 
@@ -99,15 +91,13 @@ class FilterPaneView extends PaneView {
     return extend(super.templateHelpers, {
       getHeader: paneIndex => paneIndex ? 'Property values' : 'Properties',
       getPaneIndex: clauseIndex => this.getPaneIndex(clauseIndex),
-      updatePaneIndex: (clauseIndex, paneIndex) =>
-        this.app.updateClause(SECTION_FILTER, clauseIndex, {paneIndex}),
     });
   }
 }
 
 class FilterAddControlView extends AddControlView {
   get section() {
-    return SECTION_FILTER;
+    return 'filter';
   }
 
   get VIEWS() {
@@ -126,7 +116,7 @@ class FilterAddControlView extends AddControlView {
 
 class FilterEditControlView extends EditControlView {
   get section() {
-    return SECTION_FILTER;
+    return 'filter';
   }
 
   get VIEWS() {
@@ -138,11 +128,13 @@ class FilterEditControlView extends EditControlView {
   get templateHelpers() {
     return extend(super.templateHelpers, {
       getLabel: clauseIndex => {
-        const clause = this.app.clauseAt(SECTION_FILTER, clauseIndex);
-        const showValue = clause.filterType !== FILTER_SET && clause.filterType !== FILTER_NOT_SET;
-        return [renameProperty(clause.value), showValue ? clause.filterValue : ''];
+        const clause = this.app.state.sections.getClause('filter', clauseIndex);
+        const property = renameProperty(clause.value);
+        const connector = this.app.state.sections.getClause('filter', clauseIndex).filterType;
+        const propertyValue = clause.filterTypeIsSetOrNotSet ? '' : clause.filterValue
+
+        return [property, connector, propertyValue];
       },
-      getLabelConnector: clauseIndex => ` ${this.app.clauseAt(SECTION_FILTER, clauseIndex).filterType} `,
     });
   }
 }

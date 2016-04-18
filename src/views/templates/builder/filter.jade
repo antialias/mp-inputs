@@ -1,11 +1,11 @@
 .section(class=elementClass)
-  if !state.sections.filter.length
+  if !state.sections.filter.clauses.length
     .clause.filter
       .control-container= views.addControl(state)
   else
-    for filter, clauseIndex in state.sections.filter
+    for clause, clauseIndex in state.sections.filter.clauses
       .preposition= clauseIndex ? 'and' : 'where'
       .clause.filter
         .control-container= views.editControl(util.extend(state, {clauseIndex}))
-        if clauseIndex == state.sections.filter.length - 1
+        if clauseIndex == state.sections.filter.clauses.length - 1
           .control-container= views.addControl(state)

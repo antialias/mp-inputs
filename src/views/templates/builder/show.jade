@@ -1,14 +1,14 @@
 .section(class=elementClass)
-  if !state.sections.show.length
+  if !state.sections.show.clauses.length
     .clause.comparison
       h3
       .control-container= views.addControl(state)
   else
-    for comparison, clauseIndex in state.sections.show
+    for clause, clauseIndex in state.sections.show.clauses
       if clauseIndex
         .preposition and
       .clause.comparison
-        h3= 'Show' + (state.sections.show.length === 1 ? '' : ' ' + (clauseIndex + 1))
+        h3= 'Show' + (state.sections.show.clauses.length === 1 ? '' : ' ' + (clauseIndex + 1))
         .control-container= views.editControl(util.extend(state, {clauseIndex}))
-        if clauseIndex === state.sections.show.length - 1
+        if clauseIndex === state.sections.show.clauses.length - 1
           .control-container= views.addControl(state)

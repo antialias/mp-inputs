@@ -1,8 +1,8 @@
-- let property = state.editing && state.editing.value;
-- let propertyValues = state.editing && state.topPropertyValues;
+- let property = state.editingClause && state.editingClause.value;
+- let propertyValues = state.editingClause && state.topPropertyValues;
 
-- let selectedTypeIndex = state.editing && constants.filterTypeChoices.indexOf(state.editing.filterType);
-- let selectedValueIndex = state.editing && propertyValues.indexOf(state.editing.filterValue);
+- let selectedTypeIndex = state.editingClause && constants.filterTypeChoices.indexOf(state.editingClause.filterType);
+- let selectedValueIndex = state.editingClause && propertyValues.indexOf(state.editingClause.filterValue);
 
 div(class=elementClass)
   ul.column
