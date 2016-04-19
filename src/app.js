@@ -10,6 +10,7 @@ import TopEventsQuery from './models/queries/top-events';
 import TopPropertiesQuery from './models/queries/top-properties';
 import TopPropertyValuesQuery from './models/queries/top-property-values';
 import SegmentationQuery from './models/queries/segmentation';
+import QueryCache from './models/queries/cache';
 
 import './stylesheets/app.styl';
 
@@ -35,18 +36,19 @@ export default class IRBApp extends BaseApp {
       topEvents: new TopEventsQuery(),
       topProperties: new TopPropertiesQuery(),
       topPropertyValues: new TopPropertyValuesQuery(),
+      topPropertyValuesCache: new QueryCache(),
       segmentation: new SegmentationQuery(),
+      segmentationCache: new QueryCache(),
     };
 
-    this.queries.topProperties.run(this.state)
-      .then(topProperties => this.update({topProperties}));
+    this.queries.topProperties.run(this.state).then(topProperties => {
+      this.update({topProperties});
+    });
 
-    this.queries.topEvents.run(this.state)
-      .then(topEvents => {
-        this.update({topEvents});
-        this.queries.segmentation.run(this.state)
-          .then(result => this.update({result}));
-      });
+    this.queries.topEvents.run(this.state).then(topEvents => {
+      this.update({topEvents});
+      this.query(this.state);
+    });
   }
 
   get SCREENS() {
@@ -88,7 +90,7 @@ export default class IRBApp extends BaseApp {
   }
 
   startEditingClause(sectionType, clauseIndex) {
-    let { section, clause } = this.state.sections.get(sectionType, clauseIndex);
+    const { section, clause } = this.state.sections.get(sectionType, clauseIndex);
     this.update({editingClause: clause});
   }
 
@@ -97,16 +99,37 @@ export default class IRBApp extends BaseApp {
   }
 
   updateClause(sectionType, clauseIndex, clauseData) {
-    let { section, clause } = this.state.sections.get(sectionType, clauseIndex);
-    let editingExistingClause = !!clause;
+    const { section, clause } = this.state.sections.get(sectionType, clauseIndex);
+    const editingExistingClause = !!clause;
 
-    let oldClause = clause || this.state.editingClause;
-    let newClause = Clause.create(sectionType, extend(oldClause ? oldClause.attrs : {}, clauseData));
-    let newSection = editingExistingClause ? section.replaceClause(clauseIndex, newClause) : section.addClause(newClause);
-    let newState = {editingClause: newClause};
+    const oldClause = clause || this.state.editingClause;
+    const newClause = Clause.create(sectionType, extend(oldClause ? oldClause.attrs : {}, clauseData));
+    const newSection = editingExistingClause ? section.replaceClause(clauseIndex, newClause) : section.addClause(newClause);
+    const newState = extend(this.state, {editingClause: newClause});
+
+    // query new property values if we're setting a new filter property
+    if (sectionType === 'filter' && clauseData.value) {
+      const query = this.queries.topPropertyValues.build(newState);
+      const cachedResult = this.queries.topPropertyValuesCache.get(query);
+
+      if (cachedResult) {
+        newState.topPropertyValues = cachedResult;
+      } else {
+        this.queries.topPropertyValues.run().then(topPropertyValues => {
+          this.queries.topPropertyValuesCache.set(query, topPropertyValues);
+          this.update({topPropertyValues});
+        });
+      }
+    }
 
     if (newClause.valid) {
       newState.sections = this.state.sections.replaceSection(sectionType, newSection);
+
+      // re-query since we updated sections
+      const cachedQueryResult = this.query(newState);
+      if (cachedQueryResult) {
+        newState.result = cachedQueryResult;
+      }
 
       if ( // don't keep the pane open if we're completing a filter clause
         editingExistingClause &&
@@ -126,22 +149,33 @@ export default class IRBApp extends BaseApp {
     }
 
     this.update(newState);
-    this.queries.segmentation.run(this.state)
-      .then(result => this.update({result}));
-
-    // query new property values if we're setting a new filter property
-    if (sectionType === 'filter' && clauseData.value) {
-      this.queries.topPropertyValues.run(this.state)
-        .then(topPropertyValues => this.update({topPropertyValues}));
-    }
   }
 
   removeClause(sectionType, clauseIndex) {
-    let section = this.state.sections[sectionType].removeClause(clauseIndex);
-    let sections = this.state.sections.replaceSection(sectionType, section);
-    this.update({sections});
+    const section = this.state.sections[sectionType].removeClause(clauseIndex);
+    const sections = this.state.sections.replaceSection(sectionType, section);
+    const newState = extend(this.state, {sections});
 
-    this.queries.segmentation.run(this.state)
-      .then(result => this.update({result}));
+    const cachedQueryResult = this.query(newState);
+    if (cachedQueryResult) {
+      newState.result = cachedQueryResult;
+    }
+
+    this.update(newState);
+  }
+
+  query(state) {
+    const query = this.queries.segmentation.build(state);
+    const cachedResult = this.queries.segmentationCache.get(query);
+    const cacheExpiry = 10; // seconds
+
+    if (cachedResult) {
+      return cachedResult;
+    } else {
+      this.queries.segmentation.run().then(result => {
+        this.queries.segmentationCache.set(query, result, cacheExpiry);
+        this.update({result});
+      });
+    }
   }
 }

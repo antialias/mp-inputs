@@ -1,50 +1,25 @@
-class QueryCache {
-  constructor() {
-    this.results = {};
-  }
-
-  get(query) {
-    return this.results[this.hash(query)];
-  }
-
-  set(query, results) {
-    this.results[this.hash(query)] = results;
-  }
-
-  hash(query) {
-    let params = Object.keys(query);
-    params.sort();
-    return params.map(param => param + ':' + JSON.stringify(query[param])).join(',');
-  }
-}
-
 export default class BaseQuery {
   constructor() {
-    this.cache = new QueryCache();
     this.currentQuery = null; // used to check for obsolete queries
   }
 
+  build(state) {
+    this.currentQuery = this.buildQuery(state);
+    return this.currentQuery;
+  }
+
   run(state) {
+    const query = state ? this.build(state) : this.currentQuery;
+
     return new Promise((resolve, reject) => {
-      let query = this.buildQuery(state);
-      let results = this.cache.get(query);
+      this.executeQuery(query).done(rawResults => {
+        let results = this.processResults(rawResults);
 
-      this.currentQuery = query;
-
-      if (results) {
-        resolve(results);
-      } else {
-        this.executeQuery(query).done(rawResults => {
-          let results = this.processResults(rawResults);
-
-          this.cache.set(query, results);
-
-          // ignore obsolete queries
-          if (query === this.currentQuery) {
-            resolve(results);
-          }
-        });
-      }
+        // ignore obsolete queries
+        if (query === this.currentQuery) {
+          resolve(results);
+        }
+      });
     });
   }
 

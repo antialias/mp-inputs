@@ -131,7 +131,7 @@ class FilterEditControlView extends EditControlView {
         const clause = this.app.state.sections.getClause('filter', clauseIndex);
         const property = renameProperty(clause.value);
         const connector = this.app.state.sections.getClause('filter', clauseIndex).filterType;
-        const propertyValue = clause.filterTypeIsSetOrNotSet ? '' : clause.filterValue
+        const propertyValue = clause.filterTypeIsSetOrNotSet ? '' : clause.filterValue;
 
         return [property, connector, propertyValue];
       },
