@@ -6,7 +6,7 @@ export class Clause {
   }
 
   get attrs() {
-    let { paneIndex } = this;
+    const { paneIndex } = this;
     return {paneIndex};
   }
 
@@ -47,7 +47,7 @@ export class EventsPropertiesClause extends Clause {
   }
 
   get attrs() {
-    let { value, resourceType, search } = this;
+    const { value, resourceType, search } = this;
     return extend(super.attrs, {value, resourceType, search});
   }
 
@@ -69,7 +69,7 @@ export class ShowClause extends EventsPropertiesClause {
   }
 
   get attrs() {
-    let { math } = this;
+    const { math } = this;
     return extend(super.attrs, {math});
   }
 
@@ -94,7 +94,7 @@ export class FilterClause extends EventsPropertiesClause {
   }
 
   get attrs() {
-    let { filterType, filterValue } = this;
+    const { filterType, filterValue } = this;
     return extend(super.attrs, {filterType, filterValue});
   }
 
@@ -127,7 +127,7 @@ export class TimeClause extends Clause {
   }
 
   get attrs() {
-    let { unit, from, to } = this;
+    const { unit, from, to } = this;
     return {unit, from, to};
   }
 

@@ -83,9 +83,9 @@ class ShowEditControlView extends EditControlView {
   get templateHelpers() {
     return extend(super.templateHelpers, {
       getLabel: clauseIndex => {
-        let clause = this.app.state.sections.getClause('show', clauseIndex);
-        let math = capitalize(clause.math);
-        let value = clause.value === ShowClause.TOP_EVENTS ?
+        const clause = this.app.state.sections.getClause('show', clauseIndex);
+        const math = capitalize(clause.math);
+        const value = clause.value === ShowClause.TOP_EVENTS ?
           `Top ${capitalize(clause.resourceType)}` : clause.value;
 
         return [math, ' of ', renameEvent(value)];

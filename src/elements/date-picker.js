@@ -14,8 +14,8 @@ class DatePicker extends HTMLElement {
   }
 
   set value(value) {
-    let { from, to } = JSON.parse(value);
-    let formattedValue = {from: new Date(from), to: new Date(to)};
+    const { from, to } = JSON.parse(value);
+    const formattedValue = {from: new Date(from), to: new Date(to)};
 
     if (formattedValue !== this.$el.val()) {
       this.$el.val(formattedValue);

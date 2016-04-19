@@ -4,7 +4,7 @@ import {
   GroupSection,
   FilterSection,
   TimeSection,
-} from './section.js';
+} from './section';
 
 export default class Sections {
   constructor(attrs={}) {
@@ -15,7 +15,7 @@ export default class Sections {
   }
 
   get attrs() {
-    let { show, group, filter, time } = this;
+    const { show, group, filter, time } = this;
     return {show, group, filter, time};
   }
 
@@ -46,7 +46,7 @@ export default class Sections {
   }
 
   getClause(type, clauseIndex) {
-    let { section, clause } = this.get(type, clauseIndex);
+    const { section, clause } = this.get(type, clauseIndex);
     return clause;
   }
 

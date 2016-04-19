@@ -23,8 +23,7 @@ export default class QueryCache {
   }
 
   hash(query) {
-    let params = Object.keys(query);
-    params.sort();
+    const params = Object.keys(query).sort();
     return params.map(param => param + ':' + JSON.stringify(query[param])).join(',');
   }
 }

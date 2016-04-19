@@ -6,7 +6,7 @@ export default class TopPropertiesQuery extends BaseQuery {
   }
 
   processResults(results) {
-    let properties = results.values();
+    const properties = results.values();
     return Object.keys(properties)
       .sort((a, b) => properties[b] - properties[a]);
   }

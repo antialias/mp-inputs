@@ -1,6 +1,6 @@
 div(class=[elementClass, constants.class || helpers.getClass()])
   button.modify(ev-click=event => helpers.updatePosition(event) && helpers.openPane(state.clauseIndex))
-    - let label = constants.label || helpers.getLabel(state.clauseIndex)
+    - const label = constants.label || helpers.getLabel(state.clauseIndex)
     if typeof label === 'string'
       span= label
     else

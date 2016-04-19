@@ -13,11 +13,8 @@ export default class BaseQuery {
 
     return new Promise((resolve, reject) => {
       this.executeQuery(query).done(rawResults => {
-        let results = this.processResults(rawResults);
-
-        // ignore obsolete queries
-        if (query === this.currentQuery) {
-          resolve(results);
+        if (query === this.currentQuery) { // ignore obsolete queries
+          resolve(this.processResults(rawResults));
         }
       });
     });

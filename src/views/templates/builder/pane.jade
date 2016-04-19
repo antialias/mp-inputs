@@ -1,5 +1,5 @@
 mixin pane(paneViews, paneIndex)
-  - let header = constants.header || helpers.getHeader(paneIndex)
+  - const header = constants.header || helpers.getHeader(paneIndex);
   if header
     .header
       span= header
@@ -17,7 +17,7 @@ mixin pane(paneViews, paneIndex)
 
 div(class=elementClass)
   if views.panes
-    - let activeIndex = helpers.getPaneIndex(state.clauseIndex);
+    - const activeIndex = helpers.getPaneIndex(state.clauseIndex);
     for paneViews, paneIndex in views.panes
       .pane(style={transform: `translateX(${(paneIndex - activeIndex) * 400}px)`})
         +pane(paneViews, paneIndex)

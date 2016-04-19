@@ -50,7 +50,7 @@ export default class BaseApp extends App {
     let el = event.target;
 
     Object.keys(this.clickOutsideHandlers).forEach(appMethodName => {
-      let classes = this.clickOutsideHandlers[appMethodName];
+      const classes = this.clickOutsideHandlers[appMethodName];
 
       do {
         for (let i = 0; i < classes.length; i++) {

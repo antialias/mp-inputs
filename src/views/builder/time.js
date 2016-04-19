@@ -25,7 +25,7 @@ class TimePaneContentView extends PaneContentView {
     return extend(super.templateHelpers, {
       updateClause: data => this.app.updateClause('time', 0, data),
       rangeToString: () => {
-        let { from, to } = this.app.state.sections.getClause('time', 0);
+        const { from, to } = this.app.state.sections.getClause('time', 0);
         return JSON.stringify({from, to});
       },
     });

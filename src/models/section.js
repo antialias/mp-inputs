@@ -9,13 +9,13 @@ import {
 
 export class Section {
   constructor(attrs={}) {
-    let clauseArgs = Array.prototype.slice.call(arguments)
+    const clauseArgs = Array.prototype.slice.call(arguments)
       .filter(arg => arg instanceof Clause);
     this.clauses = [...clauseArgs, ...(attrs.clauses || [])];
   }
 
   get attrs() {
-    let { clauses } = this;
+    const { clauses } = this;
     return {clauses};
   }
 
