@@ -3,22 +3,24 @@
 - const selectedValueIndex = state.editingClause && constants.eventChoices.indexOf(state.editingClause.value);
 
 div(class=elementClass)
-  ul.column.math
+  ul.column.toggle.math
     for math, i in constants.mathChoices
       li(
         class=selectedMathIndex === i ? 'selected' : '',
         ev-click=() => helpers.updateClause(state.clauseIndex, {math}),
       )= util.capitalize(math)
-  ul.column.resourceType
-    for type, i in constants.resourceTypeChoices
+  ul.column.toggle.resource-type
+    for resourceType, i in constants.resourceTypeChoices
       li(
         class=selectedTypeIndex === i ? 'selected' : '',
-        ev-click=() => helpers.updateClause(state.clauseIndex, {type}),
-      )= util.capitalize(type)
-  ul.column.resourceValue
+        ev-click=() => helpers.updateClause(state.clauseIndex, {resourceType}),
+      )= util.capitalize(resourceType)
+  ul.column.resource-value
     for value, i in constants.eventChoices
       if helpers.matchesSearch(util.renameEvent(value))
         li(
           class=selectedValueIndex === i ? 'selected' : '',
           ev-click=() => helpers.updateClause(state.clauseIndex, {value}),
-        )= util.renameEvent(value)
+        )
+          span= util.renameEvent(value)
+          button.next-arrow ›

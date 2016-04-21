@@ -10,8 +10,8 @@ import {
 import { Clause, FilterClause } from '../../models/clause';
 
 import template from '../templates/builder/filter.jade';
-import filterPropertyPaneContentTemplate from '../templates/builder/filter-property-pane-content.jade';
-import filterPropertyValuePaneContentTemplate from '../templates/builder/filter-property-value-pane-content.jade';
+import propertyPaneTemplate from '../templates/builder/property-pane-content.jade';
+import propertyValuePaneTemplate from '../templates/builder/property-value-pane-content.jade';
 
 import '../stylesheets/builder/filter.styl';
 
@@ -21,7 +21,7 @@ class FilterPropertyPaneContentView extends PaneContentView {
   }
 
   get TEMPLATE() {
-    return filterPropertyPaneContentTemplate;
+    return propertyPaneTemplate;
   }
 
   get templateConstants() {
@@ -32,14 +32,14 @@ class FilterPropertyPaneContentView extends PaneContentView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      selectProperty: (clauseIndex, value) => {
-        this.templateHelpers.updateClause(clauseIndex, {value});
+      updateClause: (clauseIndex, clauseData) => {
+        super.templateHelpers.updateClause(clauseIndex, clauseData);
 
         // when a property is selected, switch to the property value inner pane
         // - requestAnimationFrame allows the add pane to be re-rendered as an
         //   edit pane, and still show the css animation sliding to the new pane
         window.requestAnimationFrame(() =>
-          this.templateHelpers.updateClause(this.app.editingClauseIndex, {paneIndex: 1})
+          super.templateHelpers.updateClause(this.app.editingClauseIndex, {paneIndex: 1})
         );
       },
     });
@@ -52,7 +52,7 @@ class FilterPropertyValuePaneContentView extends PaneContentView {
   }
 
   get TEMPLATE() {
-    return filterPropertyValuePaneContentTemplate;
+    return propertyValuePaneTemplate;
   }
 
   get templateConstants() {

@@ -61,7 +61,7 @@ export default class BaseView {
   }
 
   get elementClass() {
-    return this.constructor.name.split(/(?=[A-Z])/)
+    return this.constructor.name.split(/(?=[A-Z][a-z])/)
       .map(word => word.toLowerCase())
       .join('-');
   }

@@ -1,0 +1,19 @@
+- const selectedTypeIndex = state.editingClause && constants.resourceTypeChoices.indexOf(state.editingClause.resourceType);
+- const selectedValueIndex = state.editingClause && state.topProperties.indexOf(state.editingClause.value);
+
+div(class=elementClass)
+  ul.column.toggle.resource-type
+    for resourceType, i in constants.resourceTypeChoices
+      li(
+        class=selectedTypeIndex === i ? 'selected' : '',
+        ev-click=() => helpers.updateClause(state.clauseIndex, {resourceType}),
+      )= util.capitalize(resourceType)
+  ul.column.resource-value
+    for property, i in state.topProperties
+      if helpers.matchesSearch(util.renameProperty(property.name))
+        li.property(
+          class=[`type-${property.type}`, selectedValueIndex === i ? 'selected' : ''],
+          ev-click=() => helpers.updateClause(state.clauseIndex, {value: property.name}),
+        )
+          span= util.renameProperty(property.name)
+          button.next-arrow ›

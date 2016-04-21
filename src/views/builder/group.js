@@ -10,7 +10,7 @@ import {
 import { Clause, GroupClause, ShowClause } from '../../models/clause';
 
 import template from '../templates/builder/group.jade';
-import groupPaneContentTemplate from '../templates/builder/group-pane-content.jade';
+import propertyPaneTemplate from '../templates/builder/property-pane-content.jade';
 
 import '../stylesheets/builder/group.styl';
 
@@ -20,7 +20,7 @@ class GroupPaneContentView extends PaneContentView {
   }
 
   get TEMPLATE() {
-    return groupPaneContentTemplate;
+    return propertyPaneTemplate;
   }
 
   get templateConstants() {

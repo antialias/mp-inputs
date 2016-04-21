@@ -1,13 +1,20 @@
 import BaseQuery from './base';
 
 export default class TopPropertiesQuery extends BaseQuery {
-  executeQuery(query) {
-    return window.MP.api.topProperties();
+  buildUrl(query) {
+    return 'api/2.0/events/properties/toptypes';
   }
 
-  processResults(results) {
-    const properties = results.values();
+  buildParams(query) {
+    return {limit: 255};
+  }
+
+  processResults(properties) {
     return Object.keys(properties)
-      .sort((a, b) => properties[b] - properties[a]);
+      .sort((a, b) => properties[b].count - properties[a].count)
+      .map(name => {
+        const { count, type } = properties[name];
+        return {count, type, name};
+      });
   }
 }

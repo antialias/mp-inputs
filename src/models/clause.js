@@ -37,13 +37,13 @@ export class Clause {
     return this.validate(Clause.create(this.TYPE, extend(this.attrs, attrs)));
   }
 }
-Clause.RESOURCE_TYPES = Clause.prototype.RESOURCE_TYPES = ['events', 'people'];
+Clause.RESOURCE_TYPES = Clause.prototype.RESOURCE_TYPES = ['all', 'events', 'people'];
 
 export class EventsPropertiesClause extends Clause {
   constructor(attrs={}) {
     super(...arguments);
     this.value = attrs.value || null;
-    this.resourceType = attrs.resourceType || 'events';
+    this.resourceType = attrs.resourceType || Clause.RESOURCE_TYPES[0];
     this.search = attrs.search || '';
   }
 
