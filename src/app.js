@@ -41,11 +41,11 @@ export default class IRBApp extends BaseApp {
       segmentationCache: new QueryCache(),
     };
 
-    this.queries.topProperties.run(this.state).then(topProperties => {
+    this.queries.topProperties.build(this.state).run().then(topProperties => {
       this.update({topProperties});
     });
 
-    this.queries.topEvents.run(this.state).then(topEvents => {
+    this.queries.topEvents.build(this.state).run().then(topEvents => {
       this.update({topEvents});
       this.query(this.state);
     });
@@ -109,7 +109,7 @@ export default class IRBApp extends BaseApp {
 
     // query new property values if we're setting a new filter property
     if (sectionType === 'filter' && clauseData.value) {
-      const query = this.queries.topPropertyValues.build(newState);
+      const query = this.queries.topPropertyValues.build(newState).query;
       const cachedResult = this.queries.topPropertyValuesCache.get(query);
 
       if (cachedResult) {
@@ -165,7 +165,7 @@ export default class IRBApp extends BaseApp {
   }
 
   query(state) {
-    const query = this.queries.segmentation.build(state);
+    const query = this.queries.segmentation.build(state).query;
     const cachedResult = this.queries.segmentationCache.get(query);
     const cacheExpiry = 10; // seconds
 

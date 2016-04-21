@@ -1,19 +1,19 @@
 export default class BaseQuery {
   constructor() {
-    this.currentQuery = null; // used to check for obsolete queries
+    this.query = null; // used to check for obsolete queries
   }
 
   build(state) {
-    this.currentQuery = this.buildQuery(state);
-    return this.currentQuery;
+    this.query = this.buildQuery(state);
+    return this;
   }
 
-  run(state) {
-    const query = state ? this.build(state) : this.currentQuery;
+  run() {
+    const query = this.query;
 
     return new Promise((resolve, reject) => {
       this.executeQuery(query).done(rawResults => {
-        if (query === this.currentQuery) { // ignore obsolete queries
+        if (query === this.query) { // ignore obsolete queries
           resolve(this.processResults(rawResults));
         }
       });
