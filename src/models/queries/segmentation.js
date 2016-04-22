@@ -16,7 +16,7 @@ export default class SegmentationQuery extends BaseQuery {
     const filters = state.sections.filter.clauses
       .map(clause => [
         clause.value,
-        clause.filterType,
+        clause.filterOperator,
         clause.filterValue
       ]);
 

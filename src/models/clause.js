@@ -90,25 +90,25 @@ GroupClause.prototype.TYPE = 'group';
 export class FilterClause extends EventsPropertiesClause {
   constructor(attrs={}) {
     super(...arguments);
-    this.filterType = attrs.filterType || 'equals';
+    this.filterOperator = attrs.filterOperator || 'equals';
     this.filterValue = attrs.filterValue || null;
   }
 
   get attrs() {
-    const { filterType, filterValue } = this;
-    return extend(super.attrs, {filterType, filterValue});
+    const { filterOperator, filterValue } = this;
+    return extend(super.attrs, {filterOperator, filterValue});
   }
 
   get valid() {
-    return super.valid && this.FILTER_TYPES.indexOf(this.filterType) !== -1;
+    return super.valid && this.FILTER_OPERATORS.indexOf(this.filterOperator) !== -1;
   }
 
-  get filterTypeIsSetOrNotSet() {
-    return this.filterType === 'is set' || this.filterType === 'is not set';
+  get filterOperatorIsSetOrNotSet() {
+    return this.filterOperator === 'is set' || this.filterOperator === 'is not set';
   }
 }
 FilterClause.TYPE = FilterClause.prototype.TYPE = 'filter';
-FilterClause.FILTER_TYPES = FilterClause.prototype.FILTER_TYPES = [
+FilterClause.FILTER_OPERATORS = FilterClause.prototype.FILTER_OPERATORS = [
   'equals',   'does not equal',
   'contains', 'does not contain',
   'is set',   'is not set',

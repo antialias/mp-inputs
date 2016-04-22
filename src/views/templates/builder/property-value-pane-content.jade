@@ -1,16 +1,16 @@
 - const property = state.editingClause && state.editingClause.value;
 - const propertyValues = state.editingClause && state.topPropertyValues;
 
-- const selectedTypeIndex = state.editingClause && constants.filterTypeChoices.indexOf(state.editingClause.filterType);
+- const selectedTypeIndex = state.editingClause && constants.filterOperatorChoices.indexOf(state.editingClause.filterOperator);
 - const selectedValueIndex = state.editingClause && propertyValues.indexOf(state.editingClause.filterValue);
 
 div(class=elementClass)
   ul.column.toggle.resource-type
-    for filterType, i in constants.filterTypeChoices
+    for filterOperator, i in constants.filterOperatorChoices
       li(
         class=selectedTypeIndex === i ? 'selected' : '',
-        ev-click=() => helpers.updateClause(state.clauseIndex, {filterType}),
-      )= util.capitalize(filterType.replace('_', ' '))
+        ev-click=() => helpers.updateClause(state.clauseIndex, {filterOperator}),
+      )= util.capitalize(filterOperator.replace('_', ' '))
   ul.column.resource-value
     if helpers.showPropertyValues()
       for filterValue, i in propertyValues

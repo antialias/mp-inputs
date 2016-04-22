@@ -133,7 +133,7 @@ export default class IRBApp extends BaseApp {
       if ( // don't keep the pane open if we're completing a filter clause
         editingExistingClause &&
         sectionType === 'filter' &&
-        newClause.filterTypeIsSetOrNotSet ||
+        newClause.filterOperatorIsSetOrNotSet ||
         (newClause.value && !oldClause.filterValue && newClause.filterValue)
       ) {
         newState.editingClause = null;

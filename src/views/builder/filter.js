@@ -57,13 +57,13 @@ class FilterPropertyValuePaneContentView extends PaneContentView {
 
   get templateConstants() {
     return extend(super.templateConstants, {
-      filterTypeChoices: FilterClause.FILTER_TYPES,
+      filterOperatorChoices: FilterClause.FILTER_OPERATORS,
     });
   }
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      showPropertyValues: () => this.app.state.editingClause && !this.app.state.editingClause.filterTypeIsSetOrNotSet,
+      showPropertyValues: () => this.app.state.editingClause && !this.app.state.editingClause.filterOperatorIsSetOrNotSet,
     });
   }
 }
@@ -130,8 +130,8 @@ class FilterEditControlView extends EditControlView {
       getLabel: clauseIndex => {
         const clause = this.app.state.sections.getClause('filter', clauseIndex);
         const property = renameProperty(clause.value);
-        const connector = this.app.state.sections.getClause('filter', clauseIndex).filterType;
-        const propertyValue = clause.filterTypeIsSetOrNotSet ? '' : clause.filterValue;
+        const connector = this.app.state.sections.getClause('filter', clauseIndex).filterOperator;
+        const propertyValue = clause.filterOperatorIsSetOrNotSet ? '' : clause.filterValue;
 
         return [property, connector, propertyValue];
       },
