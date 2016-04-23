@@ -1,21 +1,35 @@
-- const property = state.editingClause && state.editingClause.value;
-- const propertyValues = state.editingClause && state.topPropertyValues;
+- const selectedProperty = state.editingClause && state.editingClause.value;
 
-- const selectedTypeIndex = state.editingClause && constants.filterOperatorChoices.indexOf(state.editingClause.filterOperator);
-- const selectedValueIndex = state.editingClause && propertyValues.indexOf(state.editingClause.filterValue);
+- const selectedOperator = state.editingClause && state.editingClause.filterOperator;
+- const selectedOperatorIndex = state.editingClause && constants.filterOperatorChoices.indexOf(operator);
+
+- const selectedType = state.editingClause && state.editingClause.filterType;
+- const selectedTypeIndex = state.editinClause && constants.filterTypeChoices.indexOf(type)
+
+- const values = state.editingClause && state.topPropertyValues;
+- const selectedValue = state.editingClause && state.editingClause.filterValue;
 
 div(class=elementClass)
-  ul.column.toggle.resource-type
-    for filterOperator, i in constants.filterOperatorChoices
-      li(
-        class=selectedTypeIndex === i ? 'selected' : '',
-        ev-click=() => helpers.updateClause(state.clauseIndex, {filterOperator}),
-      )= util.capitalize(filterOperator.replace('_', ' '))
-  ul.column.resource-value
-    if helpers.showPropertyValues()
-      for filterValue, i in propertyValues
-        if helpers.matchesSearch(filterValue)
-          li(
-            class=selectedValueIndex === i ? 'selected' : '',
-            ev-click=() => helpers.updateClause(state.clauseIndex, {filterValue}),
-          )= filterValue
+  table.tabs
+    tbody
+      tr
+        for filterType in constants.filterTypeChoices
+          td(class=['type-' + filterType, filterType === selectedType ? 'selected' : ''])
+            button(
+              ev-click=() => helpers.updateClause(state.clauseIndex, {filterType})
+            )= util.renamePropertyType(filterType)
+  //
+    button.operator
+      for filterOperator, i in constants.filterOperatorChoices
+        li(
+          class=filterOperator === selectedOperator ? 'selected' : '',
+          ev-click=() => helpers.updateClause(state.clauseIndex, {filterOperator}),
+        )= util.capitalize(filterOperator.replace('_', ' '))
+    ul.column.resource-value
+      if helpers.showPropertyValues()
+        for filterValue, i in state.topPropertyValues
+          if helpers.matchesSearch(filterValue)
+            li(
+              class=filterValue === selectedValue ? 'selected' : '',
+              ev-click=() => helpers.updateClause(state.clauseIndex, {filterValue}),
+            )= filterValue

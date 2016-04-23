@@ -119,6 +119,14 @@ export function renameProperty(property) {
   return property;
 }
 
+export function renamePropertyType(type) {
+  return {
+    number: 'Integer',
+    datetime: 'Date',
+    boolean: 'True/False',
+  }[type] || capitalize(type);
+}
+
 // TODO epurcer - replace this with a more general-purpose tool like https://www.npmjs.com/package/debug
 function getLogger(level) {
   return function () {

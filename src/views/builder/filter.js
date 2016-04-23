@@ -57,6 +57,7 @@ class FilterPropertyValuePaneContentView extends PaneContentView {
 
   get templateConstants() {
     return extend(super.templateConstants, {
+      filterTypeChoices: FilterClause.FILTER_TYPES,
       filterOperatorChoices: FilterClause.FILTER_OPERATORS,
     });
   }
@@ -80,6 +81,15 @@ class FilterPaneView extends PaneView {
         {content: new FilterPropertyValuePaneContentView(this)},
       ],
     };
+  }
+
+  get templateConstants() {
+    return extend(super.templateConstants, {
+      panes: [
+        {},
+        {search: false},
+      ],
+    });
   }
 
   getPaneIndex(clauseIndex) {

@@ -91,6 +91,7 @@ export class FilterClause extends EventsPropertiesClause {
   constructor(attrs={}) {
     super(...arguments);
     this.filterOperator = attrs.filterOperator || 'equals';
+    this.filterType = attrs.filterType || 'string';
     this.filterValue = attrs.filterValue || null;
   }
 
@@ -100,7 +101,9 @@ export class FilterClause extends EventsPropertiesClause {
   }
 
   get valid() {
-    return super.valid && this.FILTER_OPERATORS.indexOf(this.filterOperator) !== -1;
+    return super.valid &&
+      this.FILTER_OPERATORS.indexOf(this.filterOperator) !== -1 &&
+      this.FILTER_TYPES.indexOf(this.filterType) !== -1;
   }
 
   get filterOperatorIsSetOrNotSet() {
@@ -112,6 +115,9 @@ FilterClause.FILTER_OPERATORS = FilterClause.prototype.FILTER_OPERATORS = [
   'equals',   'does not equal',
   'contains', 'does not contain',
   'is set',   'is not set',
+];
+FilterClause.FILTER_TYPES = FilterClause.prototype.FILTER_TYPES = [
+  'string', 'number', 'datetime', 'boolean', 'list',
 ];
 
 export class TimeClause extends Clause {

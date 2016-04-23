@@ -166,3 +166,57 @@
 .pane-container.visible .pane
   transition transform 0.2s
 
+.group-property-value-pane-content-view,
+.filter-property-value-pane-content-view
+    table.tabs
+      &, tr
+        width 100%
+
+      td
+        border 1px solid light-gray
+        border-top none
+        transition background-color .2s, border-color .2s
+
+        &:first-child
+          border-left none
+
+        &:last-child
+          border-right none
+
+        &:hover, &.selected
+          button
+            color medium-gray
+
+        &.selected
+          border-bottom-color white
+
+        &:not(.selected)
+          background lighten(background-gray, 50%)
+
+        button
+          background transparent 8px 7px no-repeat;
+          border none
+          color light-gray
+          font-size 12px
+          height 29px
+          line-height 12px
+          padding 6px 0 5px 0
+          text-align left
+          text-indent 29px
+          transition color .1s
+          width 100%
+
+        &.type-string button
+          background-image url(../../images/properties/types/string.svg)
+
+        &.type-number button
+          background-image url(../../images/properties/types/number.svg)
+
+        &.type-boolean button
+          background-image url(../../images/properties/types/boolean.svg)
+
+        &.type-list button
+          background-image url(../../images/properties/types/list.svg)
+
+        &.type-datetime button
+          background-image url(../../images/properties/types/datetime.svg)
