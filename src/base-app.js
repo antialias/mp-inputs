@@ -1,6 +1,7 @@
 import { App, Router } from 'panel';
 
 import { mirrorLocationHash } from './mp-common/parent-frame';
+import { debug } from './util';
 
 export default class BaseApp extends App {
   constructor(elID, initialState={}, options={}) {
@@ -16,15 +17,9 @@ export default class BaseApp extends App {
   }
 
   update(stateUpdate={}) {
-    if (APP_ENV === 'development') {
-      console.info('applying update ->', stateUpdate);
-    }
-
+    debug.info('applying update ->', stateUpdate);
     super.update(...arguments);
-
-    if (APP_ENV === 'development') {
-      console.info('      new state ->', this.state);
-    }
+    debug.info('      new state ->', this.state);
   }
 
   // DOM helpers

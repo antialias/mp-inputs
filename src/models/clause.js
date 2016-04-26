@@ -1,8 +1,17 @@
-import { extend } from '../util';
+import { extend, debug } from '../util';
 
 export class Clause {
   constructor(attrs={}) {
     this.paneIndex = attrs.paneIndex || 0;
+  }
+
+  static create(sectionType, attrs) {
+    switch (sectionType) {
+      case 'show': return new ShowClause(attrs);
+      case 'group': return new GroupClause(attrs);
+      case 'filter': return new FilterClause(attrs);
+      case 'time': return new TimeClause(attrs);
+    }
   }
 
   get attrs() {
@@ -17,8 +26,8 @@ export class Clause {
   validate(newClause) {
     const valid = newClause.valid;
 
-    if (APP_ENV === 'development' && !valid) {
-      console.warn(`${this.TYPE} clause invalid:`, newClause);
+    if (!valid) {
+      debug.warn(`${this.TYPE} clause invalid:`, newClause);
     }
 
     return valid ? newClause : this;
@@ -28,14 +37,6 @@ export class Clause {
     return this.validate(Clause.create(this.TYPE, extend(this.attrs, attrs)));
   }
 }
-Clause.create = Clause.prototype.create = (sectionType, attrs) => {
-  switch (sectionType) {
-    case 'show': return new ShowClause(attrs);
-    case 'group': return new GroupClause(attrs);
-    case 'filter': return new FilterClause(attrs);
-    case 'time': return new TimeClause(attrs);
-  }
-};
 Clause.RESOURCE_TYPES = Clause.prototype.RESOURCE_TYPES = ['events', 'people'];
 
 export class EventsPropertiesClause extends Clause {

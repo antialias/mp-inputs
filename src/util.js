@@ -118,3 +118,21 @@ export function renameProperty(property) {
 
   return property;
 }
+
+// TODO epurcer - replace this with a more general-purpose tool like https://www.npmjs.com/package/debug
+function getLogger(level) {
+  return function () {
+    if (APP_ENV === 'development') {
+      /* eslint-disable no-console */
+      console[level](...arguments);
+      /* eslint-enable no-console */
+    }
+  };
+}
+
+export const debug = {
+  log:   getLogger('log'),
+  info:  getLogger('info'),
+  warn:  getLogger('warn'),
+  error: getLogger('error'),
+};

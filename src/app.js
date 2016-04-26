@@ -2,7 +2,7 @@ import BaseApp from './base-app.js';
 import IRBView from './views/irb';
 import { extend, replaceIndex, removeIndex } from './util';
 
-import Sections from './models/sections';
+import BuilderSections from './models/builder-sections';
 import { ShowSection, TimeSection } from './models/section';
 import { Clause, ShowClause, TimeClause } from './models/clause';
 
@@ -10,14 +10,14 @@ import TopEventsQuery from './models/queries/top-events';
 import TopPropertiesQuery from './models/queries/top-properties';
 import TopPropertyValuesQuery from './models/queries/top-property-values';
 import SegmentationQuery from './models/queries/segmentation';
-import QueryCache from './models/queries/cache';
+import QueryCache from './models/queries/query-cache';
 
 import './stylesheets/app.styl';
 
 const INITIAL_STATE = {
   $screen: 'main',
   reportName: 'Untitled report',
-  sections: new Sections({
+  sections: new BuilderSections({
     show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
     time: new TimeSection(new TimeClause()),
   }),
@@ -57,10 +57,6 @@ export default class IRBApp extends BaseApp {
     };
   }
 
-  main(state={}) {
-    this.update({$screen: 'main'});
-  }
-
   // State helpers
 
   get editingClauseIndex() {
@@ -90,7 +86,9 @@ export default class IRBApp extends BaseApp {
   }
 
   startEditingClause(sectionType, clauseIndex) {
-    const { section, clause } = this.state.sections.get(sectionType, clauseIndex);
+    const section = this.state.sections[sectionType];
+    const clause = section.clauses[clauseIndex];
+
     this.update({editingClause: clause});
   }
 
@@ -99,7 +97,8 @@ export default class IRBApp extends BaseApp {
   }
 
   updateClause(sectionType, clauseIndex, clauseData) {
-    const { section, clause } = this.state.sections.get(sectionType, clauseIndex);
+    const section = this.state.sections[sectionType];
+    const clause = section.clauses[clauseIndex];
     const editingExistingClause = !!clause;
 
     const oldClause = clause || this.state.editingClause;

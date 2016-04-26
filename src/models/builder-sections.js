@@ -1,4 +1,4 @@
-import { extend } from '../util';
+import { extend, debug } from '../util';
 import {
   ShowSection,
   GroupSection,
@@ -6,7 +6,7 @@ import {
   TimeSection,
 } from './section';
 
-export default class Sections {
+export default class BuilderSections {
   constructor(attrs={}) {
     this.show = attrs.show || new ShowSection();
     this.group = attrs.group || new GroupSection();
@@ -31,29 +31,21 @@ export default class Sections {
   validate(newSections) {
     const valid = newSections.valid;
 
-    if (APP_ENV === 'development' && !valid) {
-      console.warn('sections invalid:', newSections);
+    if (!valid) {
+      debug.warn('sections invalid:', newSections);
     }
 
     return valid ? newSections : this;
   }
 
-  get(type, clauseIndex) {
-    return {
-      section: this[type],
-      clause: this[type].clauses[clauseIndex],
-    };
-  }
-
   getClause(type, clauseIndex) {
-    const { section, clause } = this.get(type, clauseIndex);
-    return clause;
+    return this[type].clauses[clauseIndex];
   }
 
   replaceSection(type, newSection) {
-    return this.validate(new Sections(extend(this.attrs, {[type]: newSection})));
+    return this.validate(new BuilderSections(extend(this.attrs, {[type]: newSection})));
   }
 }
-Sections.TYPES = Sections.prototype.TYPES = [
+BuilderSections.TYPES = BuilderSections.prototype.TYPES = [
   'show', 'group', 'time', 'filter'
 ];

@@ -1,4 +1,4 @@
-import { replaceIndex, removeIndex } from '../util';
+import { replaceIndex, removeIndex, debug } from '../util';
 import {
   Clause,
   ShowClause,
@@ -26,8 +26,8 @@ export class Section {
   validate(newSection) {
     const valid = newSection.valid;
 
-    if (APP_ENV === 'development' && !valid) {
-      console.warn(`${this.TYPE} section invalid:`, newSection);
+    if (!valid) {
+      debug.warn(`${this.TYPE} section invalid:`, newSection);
     }
 
     return valid ? newSection : this;
