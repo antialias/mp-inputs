@@ -90,20 +90,60 @@ GroupClause.prototype.TYPE = 'group';
 export class FilterClause extends EventsPropertiesClause {
   constructor(attrs={}) {
     super(...arguments);
-    this.filterOperator = attrs.filterOperator || 'equals';
+
     this.filterType = attrs.filterType || 'string';
+
+    const filterOperatorChoices = FilterClause.FILTER_OPERATORS[this.filterType];
+    if (filterOperatorChoices.indexOf(attrs.filterOperator) !== -1) {
+      this.filterOperator = attrs.filterOperator;
+    } else {
+      this.filterOperator = filterOperatorChoices[0];
+    }
+    this.editingFilterOperator = !!attrs.editingFilterOperator;
+
     this.filterValue = attrs.filterValue || null;
+
+    this.filterBetweenStart = attrs.filterBetweenStart || null;
+    this.filterBetweenEnd = attrs.filterBetweenEnd || null;
+    this.editingFilterBetweenStart = !!attrs.editingFilterBetweenStart;
+    this.editingFilterBetweenEnd = !!attrs.editingFilterBetweenEnd;
+
+    this.filterUnit = attrs.filterUnit || null;
+    this.editingFilterUnit = !!attrs.editingFilterUnit;
   }
 
   get attrs() {
-    const { filterOperator, filterValue } = this;
-    return extend(super.attrs, {filterOperator, filterValue});
+    const {
+      filterType,
+      filterOperator,
+      editingFilterOperator,
+      filterValue,
+      filterBetweenStart,
+      filterBewteenEnd,
+      editingFilterBetweenStart,
+      editingFilterBetweenEnd,
+      filterUnit,
+      editingFilterUnit,
+    } = this;
+
+    return extend(super.attrs, {
+      filterType,
+      filterOperator,
+      editingFilterOperator,
+      filterValue,
+      filterBetweenStart,
+      filterBewteenEnd,
+      editingFilterBetweenStart,
+      editingFilterBetweenEnd,
+      filterUnit,
+      editingFilterUnit,
+    });
   }
 
   get valid() {
     return super.valid &&
-      this.FILTER_OPERATORS.indexOf(this.filterOperator) !== -1 &&
-      this.FILTER_TYPES.indexOf(this.filterType) !== -1;
+      this.FILTER_TYPES.indexOf(this.filterType) !== -1 &&
+      this.FILTER_OPERATORS[this.filterType].indexOf(this.filterOperator) !== -1;
   }
 
   get filterOperatorIsSetOrNotSet() {
@@ -111,11 +151,36 @@ export class FilterClause extends EventsPropertiesClause {
   }
 }
 FilterClause.TYPE = FilterClause.prototype.TYPE = 'filter';
-FilterClause.FILTER_OPERATORS = FilterClause.prototype.FILTER_OPERATORS = [
-  'equals',   'does not equal',
-  'contains', 'does not contain',
-  'is set',   'is not set',
-];
+FilterClause.FILTER_OPERATORS = FilterClause.prototype.FILTER_OPERATORS = {
+  string: [
+    'equals',
+    'does not equal',
+    'contains',
+    'does not contain',
+    'is set',
+    'is not set',
+  ],
+  number: [
+    'is between',
+    'is equal to',
+    'is less than',
+    'is greater than',
+  ],
+  datetime: [
+    'was less than',
+    'was more than',
+    'was on',
+    'was between',
+  ],
+  boolean: [
+    'is true',
+    'is false',
+  ],
+  list: [
+    'contains',
+    'does not contain',
+  ],
+};
 FilterClause.FILTER_TYPES = FilterClause.prototype.FILTER_TYPES = [
   'string', 'number', 'datetime', 'boolean', 'list',
 ];

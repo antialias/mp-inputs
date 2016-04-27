@@ -2,6 +2,8 @@ import BaseView from '../base';
 import { AddControlView, EditControlView } from './control';
 import PaneView from './pane';
 import PaneContentView from './pane-content';
+import DropdownView from '../widgets/dropdown';
+import ToggleView from '../widgets/toggle';
 import {
   extend,
   renameProperty,
@@ -14,6 +16,25 @@ import propertyPaneTemplate from '../templates/builder/property-pane-content.jad
 import propertyValuePaneTemplate from '../templates/builder/property-value-pane-content.jade';
 
 import '../stylesheets/builder/filter.styl';
+
+class OperatorDropdownView extends DropdownView {
+  toggleOpen() {
+    console.log('toggleOpen')
+    this.app.updateEditingClause({
+      editingFilterOperator: !this.app.state.editingClause.editingFilterOperator,
+    });
+  }
+
+  select(filterOperator) {
+    this.app.updateEditingClause({filterOperator});
+  }
+}
+
+class OperatorToggleView extends ToggleView {
+  select(filterOperator) {
+    this.app.updateEditingClause({filterOperator});
+  }
+}
 
 class FilterPropertyPaneContentView extends PaneContentView {
   get section() {
@@ -53,6 +74,13 @@ class FilterPropertyValuePaneContentView extends PaneContentView {
 
   get TEMPLATE() {
     return propertyValuePaneTemplate;
+  }
+
+  get VIEWS() {
+    return {
+      operatorDropdown: new OperatorDropdownView(this),
+      operatorToggle: new OperatorToggleView(this),
+    };
   }
 
   get templateConstants() {

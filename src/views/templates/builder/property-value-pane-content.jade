@@ -1,30 +1,30 @@
 - const selectedProperty = state.editingClause && state.editingClause.value;
 
-- const selectedOperator = state.editingClause && state.editingClause.filterOperator;
-- const selectedOperatorIndex = state.editingClause && constants.filterOperatorChoices.indexOf(operator);
-
+- const typeChoices = constants.filterTypeChoices;
 - const selectedType = state.editingClause && state.editingClause.filterType;
-- const selectedTypeIndex = state.editinClause && constants.filterTypeChoices.indexOf(type)
 
-- const values = state.editingClause && state.topPropertyValues;
+- const operatorChoices = constants.filterOperatorChoices[selectedType];
+- const selectedOperator = state.editingClause && state.editingClause.filterOperator;
+
+- const valueChoices = state.editingClause && state.topPropertyValues;
 - const selectedValue = state.editingClause && state.editingClause.filterValue;
 
 div(class=elementClass)
   table.tabs
     tbody
       tr
-        for filterType in constants.filterTypeChoices
+        for filterType in typeChoices
           td(class=['type-' + filterType, filterType === selectedType ? 'selected' : ''])
             button(
               ev-click=() => helpers.updateClause(state.clauseIndex, {filterType})
             )= util.renamePropertyType(filterType)
+
+  if selectedType
+    if selectedType === 'boolean' || selectedType === 'list'
+      .operator= views.operatorToggle({choices: operatorChoices, selected: selectedOperator})
+    else
+      .operator= views.operatorDropdown({open: state.editingClause.editingFilterOperator, choices: operatorChoices, selected: selectedOperator})
   //
-    button.operator
-      for filterOperator, i in constants.filterOperatorChoices
-        li(
-          class=filterOperator === selectedOperator ? 'selected' : '',
-          ev-click=() => helpers.updateClause(state.clauseIndex, {filterOperator}),
-        )= util.capitalize(filterOperator.replace('_', ' '))
     ul.column.resource-value
       if helpers.showPropertyValues()
         for filterValue, i in state.topPropertyValues

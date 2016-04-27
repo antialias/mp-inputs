@@ -96,13 +96,28 @@ export default class IRBApp extends BaseApp {
     this.update({editingClause: null});
   }
 
+  updateEditingClause(clauseData) {
+    const sectionType = this.state.editingClause.TYPE;
+    const clauseIndex = this.state.sections[sectionType].clauses.indexOf(this.state.editingClause);
+
+    if (clauseIndex >= 0) {
+      this.updateClause(sectionType, clauseIndex, clauseData);
+    } else {
+      this.update({editingClause: extend(this.state.editingClause.attrs, clauseData)});
+    }
+  }
+
   updateClause(sectionType, clauseIndex, clauseData) {
+    console.log(arguments)
     const section = this.state.sections[sectionType];
     const clause = section.clauses[clauseIndex];
     const editingExistingClause = !!clause;
 
     const oldClause = clause || this.state.editingClause;
     const newClause = Clause.create(sectionType, extend(oldClause ? oldClause.attrs : {}, clauseData));
+    console.log('old clause', oldClause)
+    console.log(extend(oldClause ? oldClause.attrs : {}, clauseData))
+    console.log('new clause', newClause)
     const newSection = editingExistingClause ? section.replaceClause(clauseIndex, newClause) : section.addClause(newClause);
     const newState = extend(this.state, {editingClause: newClause});
 
@@ -130,13 +145,22 @@ export default class IRBApp extends BaseApp {
         newState.result = cachedQueryResult;
       }
 
-      if ( // don't keep the pane open if we're completing a filter clause
-        editingExistingClause &&
-        sectionType === 'filter' &&
-        newClause.filterOperatorIsSetOrNotSet ||
-        (newClause.value && !oldClause.filterValue && newClause.filterValue)
-      ) {
-        newState.editingClause = null;
+      // filter clause special cases
+      if (editingExistingClause && sectionType === 'filter') {
+        if ( // don't keep the pane open if we're completing a filter clause
+          newClause.filterOperatorIsSetOrNotSet ||
+          (newClause.value && !oldClause.filterValue && newClause.filterValue)
+        ) {
+          newState.editingClause = null;
+        }
+
+        // if we're changing filter type, close all dropdowns, datepickers, etc.
+        if (oldClause.filterType !== newClause.filterType) {
+          newClause.editingFilterOperator = false;
+          newClause.editingFilterBetweenStart = false;
+          newClause.editingFilterBetweenEnd = false;
+          newClause.editingFilterUnit = false;
+        }
       }
 
       if ( // don't keep the pane open if we're adding a new non-filter clause

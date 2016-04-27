@@ -1,0 +1,4 @@
+ul.toggle-view
+  for choice in state.choices
+    li(class=choice === state.selected ? 'selected' : '')
+      button(ev-click=() => handlers.onChoiceClick(choice))= helpers.formatChoice(choice)
