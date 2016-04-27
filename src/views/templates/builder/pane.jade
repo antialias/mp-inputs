@@ -18,7 +18,7 @@ mixin pane(paneViews, paneIndex)
   if paneViews.footer
     .footer= paneViews.footer(state)
 
-div(class=elementClass)
+.pane-view(class=elementClass)
   if views.panes
     - const activeIndex = helpers.getPaneIndex(state.clauseIndex);
     for paneViews, paneIndex in views.panes

@@ -19,10 +19,14 @@ import propertyValuePaneTemplate from '../templates/builder/property-value-pane-
 import '../stylesheets/builder/filter.styl';
 
 class OperatorDropdownView extends DropdownView {
+  setApp() {
+    super.setApp(...arguments);
+    this.app.onClickOutside(this.elementClass, 'stopEditingClauseAttrs');
+  }
+
   toggleOpen() {
-    console.log('toggleOpen')
     this.app.updateEditingClause({
-      editingFilterOperator: !this.app.state.editingClause.editingFilterOperator,
+      editing: this.app.state.editingClause.editingFilterOperator ? null : 'filterOperator',
     });
   }
 
@@ -159,7 +163,6 @@ class FilterAddControlView extends AddControlView {
       pane: new FilterPaneView(this),
     };
   }
-
 
   get templateConstants() {
     return extend(super.templateConstants, {

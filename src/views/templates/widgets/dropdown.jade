@@ -1,4 +1,4 @@
-.dropdown-view(class=state.open ? 'menu-open' : '')
+.dropdown-view(class=[elementClass, state.open ? 'menu-open' : ''])
   button.label(ev-click=handlers.onLabelClick)= helpers.formatChoice(state.selected)
   ul
     for choice in state.choices

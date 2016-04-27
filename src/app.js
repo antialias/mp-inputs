@@ -93,7 +93,14 @@ export default class IRBApp extends BaseApp {
   }
 
   stopEditingClause() {
+    this.stopEditingClauseAttrs();
     this.update({editingClause: null});
+  }
+
+  stopEditingClauseAttrs() {
+    if (this.state.editingClause) {
+      this.updateEditingClause({editing: null});
+    }
   }
 
   updateEditingClause(clauseData) {
@@ -103,21 +110,17 @@ export default class IRBApp extends BaseApp {
     if (clauseIndex >= 0) {
       this.updateClause(sectionType, clauseIndex, clauseData);
     } else {
-      this.update({editingClause: extend(this.state.editingClause.attrs, clauseData)});
+      this.update({editingClause: Clause.create(sectionType, extend(this.state.editingClause.attrs, clauseData))});
     }
   }
 
   updateClause(sectionType, clauseIndex, clauseData) {
-    console.log(arguments)
     const section = this.state.sections[sectionType];
     const clause = section.clauses[clauseIndex];
     const editingExistingClause = !!clause;
 
     const oldClause = clause || this.state.editingClause;
     const newClause = Clause.create(sectionType, extend(oldClause ? oldClause.attrs : {}, clauseData));
-    console.log('old clause', oldClause)
-    console.log(extend(oldClause ? oldClause.attrs : {}, clauseData))
-    console.log('new clause', newClause)
     const newSection = editingExistingClause ? section.replaceClause(clauseIndex, newClause) : section.addClause(newClause);
     const newState = extend(this.state, {editingClause: newClause});
 
@@ -143,17 +146,6 @@ export default class IRBApp extends BaseApp {
       const cachedQueryResult = this.query(newState);
       if (cachedQueryResult) {
         newState.result = cachedQueryResult;
-      }
-
-      // filter clause special cases
-      if (editingExistingClause && sectionType === 'filter') {
-        // if we're changing filter type, close all dropdowns, datepickers, etc.
-        if (oldClause.filterType !== newClause.filterType) {
-          newClause.editingFilterOperator = false;
-          newClause.editingFilterBetweenStart = false;
-          newClause.editingFilterBetweenEnd = false;
-          newClause.editingFilterUnit = false;
-        }
       }
 
       if ( // don't keep the pane open if we're adding a new non-filter clause

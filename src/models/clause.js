@@ -99,47 +99,38 @@ export class FilterClause extends EventsPropertiesClause {
     } else {
       this.filterOperator = filterOperatorChoices[0];
     }
-    this.editingFilterOperator = !!attrs.editingFilterOperator;
 
     this.filterValue = attrs.filterValue || null;
     this.filterSearch = attrs.filterSearch || null;
 
     this.filterBetweenStart = attrs.filterBetweenStart || null;
     this.filterBetweenEnd = attrs.filterBetweenEnd || null;
-    this.editingFilterBetweenStart = !!attrs.editingFilterBetweenStart;
-    this.editingFilterBetweenEnd = !!attrs.editingFilterBetweenEnd;
-
     this.filterUnit = attrs.filterUnit || null;
-    this.editingFilterUnit = !!attrs.editingFilterUnit;
+
+    this.editing = attrs.editing || null;
   }
 
   get attrs() {
     const {
       filterType,
       filterOperator,
-      editingFilterOperator,
       filterValue,
       filterSearch,
       filterBetweenStart,
       filterBewteenEnd,
-      editingFilterBetweenStart,
-      editingFilterBetweenEnd,
       filterUnit,
-      editingFilterUnit,
+      editing,
     } = this;
 
     return extend(super.attrs, {
       filterType,
       filterOperator,
-      editingFilterOperator,
       filterValue,
       filterSearch,
       filterBetweenStart,
       filterBewteenEnd,
-      editingFilterBetweenStart,
-      editingFilterBetweenEnd,
       filterUnit,
-      editingFilterUnit,
+      editing,
     });
   }
 
@@ -151,6 +142,22 @@ export class FilterClause extends EventsPropertiesClause {
 
   get filterOperatorIsSetOrNotSet() {
     return this.filterOperator === 'is set' || this.filterOperator === 'is not set';
+  }
+
+  get editingFilterOperator() {
+    return this.editing === 'filterOperator';
+  }
+
+  get editingFilterBetweenStart() {
+    return this.editing === 'filterBetweenStart';
+  }
+
+  get editingFilterBetweenEnd() {
+    return this.editing === 'filterBetweenEnd';
+  }
+
+  get editingFilterUnit() {
+    return this.editing === 'filterUnit';
   }
 }
 FilterClause.TYPE = FilterClause.prototype.TYPE = 'filter';

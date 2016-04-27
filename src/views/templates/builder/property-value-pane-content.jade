@@ -16,7 +16,7 @@ div(class=elementClass)
         for filterType in typeChoices
           td(class=['type-' + filterType, filterType === selectedType ? 'selected' : ''])
             button(
-              ev-click=() => helpers.updateClause(state.clauseIndex, {filterType})
+              ev-click=() => helpers.updateClause(state.clauseIndex, {filterType, filterValue: null, filterSearch: null, editing: null})
             )= util.renamePropertyType(filterType)
 
   if selectedType
@@ -31,7 +31,11 @@ div(class=elementClass)
           .summary= `${selectedValue.length} selected`
 
         .search
-          input(type='text' ev-input=event => helpers.updateClause(state.clauseIndex, {filterSearch: event.target.value}))
+          input(
+            type='text'
+            value=state.editingClause.filterSearch
+            ev-input=event => helpers.updateClause(state.clauseIndex, {filterSearch: event.target.value})
+          )
 
           ul
             for value in helpers.getValueMatches(state.editingClause.filterSearch)
@@ -40,7 +44,11 @@ div(class=elementClass)
 
       else if selectedOperator === 'contains' || selectedOperator === 'does not contain'
         .contains
-          input(type='text' ev-input=event => helpers.updateClause(state.clauseIndex, {filterValue: event.target.value}))
+          input(
+            type='text'
+            value=selectedValue
+            ev-input=event => helpers.updateClause(state.clauseIndex, {filterValue: event.target.value})
+          )
 
           if selectedValue
             ul
