@@ -147,13 +147,6 @@ export default class IRBApp extends BaseApp {
 
       // filter clause special cases
       if (editingExistingClause && sectionType === 'filter') {
-        if ( // don't keep the pane open if we're completing a filter clause
-          newClause.filterOperatorIsSetOrNotSet ||
-          (newClause.value && !oldClause.filterValue && newClause.filterValue)
-        ) {
-          newState.editingClause = null;
-        }
-
         // if we're changing filter type, close all dropdowns, datepickers, etc.
         if (oldClause.filterType !== newClause.filterType) {
           newClause.editingFilterOperator = false;

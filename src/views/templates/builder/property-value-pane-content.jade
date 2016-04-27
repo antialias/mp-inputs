@@ -24,6 +24,28 @@ div(class=elementClass)
       .operator= views.operatorToggle({choices: operatorChoices, selected: selectedOperator})
     else
       .operator= views.operatorDropdown({open: state.editingClause.editingFilterOperator, choices: operatorChoices, selected: selectedOperator})
+
+    if selectedType === 'string'
+      if selectedOperator === 'equals' || selectedOperator === 'does not equal'
+        if selectedValue && selectedValue.length
+          .summary= `${selectedValue.length} selected`
+
+        .search
+          input(type='text' ev-input=event => helpers.updateClause(state.clauseIndex, {filterSearch: event.target.value}))
+
+          ul
+            for value in helpers.getValueMatches(state.editingClause.filterSearch)
+              li(class=selectedValue && selectedValue.indexOf(value) !== -1 ? 'selected' : '')
+                button(ev-click=() => helpers.toggleStringEqualsValueSelected(value))= value
+
+      else if selectedOperator === 'contains' || selectedOperator === 'does not contain'
+        .contains
+          input(type='text' ev-input=event => helpers.updateClause(state.clauseIndex, {filterValue: event.target.value}))
+
+          if selectedValue
+            ul
+              for value in helpers.getValueMatches(selectedValue, selectedOperator === 'does not contain')
+                li= value
   //
     ul.column.resource-value
       if helpers.showPropertyValues()

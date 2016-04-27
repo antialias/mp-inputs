@@ -12,6 +12,66 @@
     width 328px
 
 .filter-property-value-pane-content-view
+  position relative
+
   .operator
     margin 12px
     width 50%
+
+  .summary
+    color light-gray
+    font-size 12px
+    position absolute
+    right 16px
+    top 49px
+
+  .search
+    border-top 1px solid background-gray
+
+    ul
+      height 130px
+      overflow scroll
+      padding 8px 0
+
+      li
+        padding 4px 12px
+
+        button
+          background url(../../images/properties/checkbox-unchecked.svg) no-repeat
+          border none
+          color medium-gray
+          font-size 12px
+          line-height 14px
+          text-indent 18px
+
+        &:hover, &.selected
+          button
+            color dark-gray
+
+        &.selected button
+          background-image url(../../images/properties/checkbox-checked.svg)
+
+  .contains
+    margin 12px
+    margin-top 0
+    width 100%
+
+    input
+      background lighten(background-gray, 50%)
+      border 1px solid light-gray
+      border-radius 2px
+      color dark-gray
+      font-size 12px
+      height 24px
+      outline none
+      padding 3px 8px
+      // width 100% - padding - border - margin
+      width calc(100% - 16px - 2px - 24px)
+
+    ul
+      padding 6px 0
+
+      li
+        font-size 12px
+        padding 3px 8px
+

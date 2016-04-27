@@ -7,6 +7,7 @@ import ToggleView from '../widgets/toggle';
 import {
   extend,
   renameProperty,
+  removeValue,
 } from '../../util';
 
 import { Clause, FilterClause } from '../../models/clause';
@@ -93,6 +94,21 @@ class FilterPropertyValuePaneContentView extends PaneContentView {
   get templateHelpers() {
     return extend(super.templateHelpers, {
       showPropertyValues: () => this.app.state.editingClause && !this.app.state.editingClause.filterOperatorIsSetOrNotSet,
+      getValueMatches: (string, invert) =>
+        this.app.state.topPropertyValues
+          .filter(value => !string || value.toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert),
+      toggleStringEqualsValueSelected: value => {
+        const selected = this.app.state.editingClause.filterValue || [];
+        let filterValue;
+
+        if (selected.indexOf(value) === -1) {
+            filterValue = [...selected, value];
+        } else {
+            filterValue = removeValue(selected, value);
+        }
+
+        this.app.updateEditingClause({filterValue});
+      },
     });
   }
 }
@@ -169,9 +185,21 @@ class FilterEditControlView extends EditControlView {
         const clause = this.app.state.sections.getClause('filter', clauseIndex);
         const property = renameProperty(clause.value);
         const connector = this.app.state.sections.getClause('filter', clauseIndex).filterOperator;
-        const propertyValue = clause.filterOperatorIsSetOrNotSet ? '' : clause.filterValue;
+        let propertyValue = [];
 
-        return [property, connector, propertyValue];
+        if (!clause.filterOperatorIsSetOrNotSet) {
+          if (Array.isArray(clause.filterValue)) {
+            clause.filterValue.forEach(value => {
+              propertyValue.push(value);
+              propertyValue.push('or');
+            });
+            propertyValue = propertyValue.slice(0, -1); // remove trailing "or"
+          } else {
+            propertyValue = [clause.filterValue];
+          }
+        }
+
+        return [property, connector, ...propertyValue];
       },
     });
   }

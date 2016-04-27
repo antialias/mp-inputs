@@ -102,6 +102,7 @@ export class FilterClause extends EventsPropertiesClause {
     this.editingFilterOperator = !!attrs.editingFilterOperator;
 
     this.filterValue = attrs.filterValue || null;
+    this.filterSearch = attrs.filterSearch || null;
 
     this.filterBetweenStart = attrs.filterBetweenStart || null;
     this.filterBetweenEnd = attrs.filterBetweenEnd || null;
@@ -118,6 +119,7 @@ export class FilterClause extends EventsPropertiesClause {
       filterOperator,
       editingFilterOperator,
       filterValue,
+      filterSearch,
       filterBetweenStart,
       filterBewteenEnd,
       editingFilterBetweenStart,
@@ -131,6 +133,7 @@ export class FilterClause extends EventsPropertiesClause {
       filterOperator,
       editingFilterOperator,
       filterValue,
+      filterSearch,
       filterBetweenStart,
       filterBewteenEnd,
       editingFilterBetweenStart,
