@@ -95,7 +95,7 @@ function filterToArbSelectorString(property, type, operator, value, dateUnit) {
     case 'list':
       switch (operator) {
         case 'contains'         : return `(${value} in list(${property}))`;
-        case 'does not contain' : return `(${value} not in list(${property}))`;
+        case 'does not contain' : return `(not ${value} in list(${property}))`;
       }
   }
 }

@@ -175,6 +175,8 @@ class FilterPropertyValuePaneContentView extends PaneContentView {
 
         this.app.updateEditingClause({filterValue});
       },
+      getDoneLabel: () => this.app.isAddingClause() ? 'Add' : 'Update',
+      stopEditingClause: () => this.app.stopEditingClause(),
     });
   }
 }

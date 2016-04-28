@@ -4,7 +4,7 @@
 - const filterValue = state.editingClause && state.editingClause.filterValue;
 - const filterDateUnit = state.editingClause && state.editingClause.filterDateUnit;
 
-div(class=[elementClass, filterType ? `filter-type-${filterType}` : ''])
+.pane-content-view(class=[elementClass, filterType ? `filter-type-${filterType}` : ''])
   table.tabs
     tbody
       tr
@@ -105,3 +105,5 @@ div(class=[elementClass, filterType ? `filter-type-${filterType}` : ''])
           value=filterValue
           ev-input=event => helpers.updateClause({filterValue: event.target.value})
         )
+
+  button.filter-done(ev-click=() => helpers.stopEditingClause())= helpers.getDoneLabel()

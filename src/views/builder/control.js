@@ -17,7 +17,7 @@ class ControlView extends BaseView {
   get templateConstants() {
     return {
       paneWidth: 400,
-      paneHeight: 300,
+      paneHeight: 340,
     };
   }
 

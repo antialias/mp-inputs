@@ -10,18 +10,28 @@ export default class ToggleView extends BaseView {
 
   get templateHelpers() {
     return {
+      getChoices: () => this.choices,
+      getSelected: () => this.selected,
       formatChoice: choice => this.formatChoice(choice),
     };
-  }
-
-  formatChoice(choice) {
-    return choice;
   }
 
   get templateHandlers() {
     return {
       onChoiceClick: choice => this.select(choice),
     };
+  }
+
+  get choices() {
+    throw new Error('Must be implemented by subclass');
+  }
+
+  get selected() {
+    throw new Error('Must be implemented by subclass');
+  }
+
+  formatChoice(choice) {
+    return choice;
   }
 
   select(choice) {

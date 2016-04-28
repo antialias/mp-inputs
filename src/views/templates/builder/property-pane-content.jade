@@ -1,7 +1,7 @@
 - const selectedTypeIndex = state.editingClause && constants.resourceTypeChoices.indexOf(state.editingClause.resourceType);
 - const selectedValueIndex = state.editingClause && state.topProperties.indexOf(state.editingClause.value);
 
-div(class=elementClass)
+.pane-content-view(class=elementClass)
   ul.column.toggle.resource-type
     for resourceType, i in constants.resourceTypeChoices
       li(

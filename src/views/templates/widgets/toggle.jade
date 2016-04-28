@@ -1,4 +1,7 @@
+- const choices = helpers.getChoices();
+- const selected = helpers.getSelected();
+
 ul.toggle-view
-  for choice in state.choices
-    li(class=choice === state.selected ? 'selected' : '')
+  for choice in choices
+    li(class=choice === selected ? 'selected' : '')
       button(ev-click=() => handlers.onChoiceClick(choice))= helpers.formatChoice(choice)
