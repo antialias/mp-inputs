@@ -151,11 +151,11 @@ export default class IRBApp extends BaseApp {
       newState.sections = this.state.sections.replaceSection(sectionType, newSection);
     }
 
-    if (closePane) {
-      newState.editingClause = null;
-    }
-
     this.update(newState);
+
+    if (closePane) {
+      this.stopEditingClause();
+    }
   }
 
   removeClause(sectionType, clauseIndex) {
