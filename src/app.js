@@ -94,7 +94,15 @@ export default class IRBApp extends BaseApp {
 
   stopEditingClause() {
     this.stopEditingClauseAttrs();
-    this.update({editingClause: null});
+
+    const newState = {editingClause: null};
+    const cachedQueryResult = this.query(this.state);
+
+    if (cachedQueryResult) {
+      newState.result = cachedQueryResult;
+    }
+
+    this.update(newState);
   }
 
   stopEditingClauseAttrs() {
@@ -141,12 +149,6 @@ export default class IRBApp extends BaseApp {
 
     if (newClause.valid) {
       newState.sections = this.state.sections.replaceSection(sectionType, newSection);
-
-      // re-query since we updated sections
-      const cachedQueryResult = this.query(newState);
-      if (cachedQueryResult) {
-        newState.result = cachedQueryResult;
-      }
 
       if ( // don't keep the pane open if we're adding a new non-filter clause
         !editingExistingClause &&
