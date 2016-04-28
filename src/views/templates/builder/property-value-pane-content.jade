@@ -9,7 +9,7 @@
 - const valueChoices = state.editingClause && state.topPropertyValues;
 - const selectedValue = state.editingClause && state.editingClause.filterValue;
 
-div(class=elementClass)
+div(class=[elementClass, selectedType ? `filter-type-${selectedType}` : ''])
   table.tabs
     tbody
       tr
@@ -20,30 +20,35 @@ div(class=elementClass)
             )= util.renamePropertyType(filterType)
 
   if selectedType
+
+    // "operator" input - present on all panes
+
     if selectedType === 'boolean' || selectedType === 'list'
-      .operator= views.operatorToggle({choices: operatorChoices, selected: selectedOperator})
+      .filter-operator-input= views.operatorToggle({choices: operatorChoices, selected: selectedOperator})
     else
-      .operator= views.operatorDropdown({open: state.editingClause.editingFilterOperator, choices: operatorChoices, selected: selectedOperator})
+      .filter-operator-input= views.operatorDropdown({open: state.editingClause.editingFilterOperator, choices: operatorChoices, selected: selectedOperator})
+
+    // type-specific inputs
 
     if selectedType === 'string'
       if selectedOperator === 'equals' || selectedOperator === 'does not equal'
         if selectedValue && selectedValue.length
-          .summary= `${selectedValue.length} selected`
+          .filter-string-equals-summary= `${selectedValue.length} selected`
 
-        .search
+        .filter-string-equals-search.search
           input(
             type='text'
             value=state.editingClause.filterSearch
             ev-input=event => helpers.updateClause(state.clauseIndex, {filterSearch: event.target.value})
           )
 
-          ul
-            for value in helpers.getValueMatches(state.editingClause.filterSearch)
-              li(class=selectedValue && selectedValue.indexOf(value) !== -1 ? 'selected' : '')
-                button(ev-click=() => helpers.toggleStringEqualsValueSelected(value))= value
+        ul.filter-string-equals-choices
+          for value in helpers.getValueMatches(state.editingClause.filterSearch)
+            li(class=selectedValue && selectedValue.indexOf(value) !== -1 ? 'selected' : '')
+              button(ev-click=() => helpers.toggleStringEqualsValueSelected(value))= value
 
       else if selectedOperator === 'contains' || selectedOperator === 'does not contain'
-        .contains
+        .filter-value-input
           input(
             type='text'
             value=selectedValue
@@ -51,9 +56,33 @@ div(class=elementClass)
           )
 
           if selectedValue
-            ul
+            ul.filter-string-contains-matches
               for value in helpers.getValueMatches(selectedValue, selectedOperator === 'does not contain')
                 li= value
+
+    else if selectedType === 'number'
+      if selectedOperator === 'is between'
+        - const betweenStart = selectedValue ? selectedValue[0] : null;
+        - const betweenEnd = selectedValue ? selectedValue[1] : null;
+        .filter-value-input.filter-operator-between
+          input(
+            type='number'
+            value=betweenStart
+            ev-input=event => helpers.updateClause(state.clauseIndex, {filterValue: [Number(event.target.value), betweenEnd]})
+          )
+          .connector and
+          input(
+            type='number'
+            value=betweenEnd
+            ev-input=event => helpers.updateClause(state.clauseIndex, {filterValue: [betweenStart, Number(event.target.value)]})
+          )
+      else
+        .filter-value-input
+          input(
+            type='number'
+            value=selectedValue
+            ev-input=event => helpers.updateClause(state.clauseIndex, {filterValue: Number(event.target.value)})
+          )
   //
     ul.column.resource-value
       if helpers.showPropertyValues()

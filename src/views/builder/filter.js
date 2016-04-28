@@ -31,7 +31,12 @@ class OperatorDropdownView extends DropdownView {
   }
 
   select(filterOperator) {
-    this.app.updateEditingClause({filterOperator});
+    this.app.updateEditingClause({
+      filterOperator,
+      filterValue: null,
+      filterSearch: null,
+      editing: null,
+    });
   }
 }
 
@@ -58,8 +63,11 @@ class FilterPropertyPaneContentView extends PaneContentView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      updateClause: (clauseIndex, clauseData) => {
-        super.templateHelpers.updateClause(clauseIndex, clauseData);
+      selectProperty: (clauseIndex, property) => {
+        this.templateHelpers.updateClause(clauseIndex, {
+          value: property.name,
+          filterType: property.type,
+        });
 
         // when a property is selected, switch to the property value inner pane
         // - requestAnimationFrame allows the add pane to be re-rendered as an
@@ -187,22 +195,44 @@ class FilterEditControlView extends EditControlView {
       getLabel: clauseIndex => {
         const clause = this.app.state.sections.getClause('filter', clauseIndex);
         const property = renameProperty(clause.value);
-        const connector = this.app.state.sections.getClause('filter', clauseIndex).filterOperator;
+        const operator = clause.filterOperator;
         let propertyValue = [];
 
-        if (!clause.filterOperatorIsSetOrNotSet) {
-          if (Array.isArray(clause.filterValue)) {
-            clause.filterValue.forEach(value => {
-              propertyValue.push(value);
-              propertyValue.push('or');
-            });
-            propertyValue = propertyValue.slice(0, -1); // remove trailing "or"
-          } else {
-            propertyValue = [clause.filterValue];
+        if (clause.filterValue) {
+          switch (operator) {
+            case 'equals':
+            case 'does not equal':
+              clause.filterValue.forEach(value => {
+                propertyValue.push(value);
+                propertyValue.push('or');
+              });
+              propertyValue = propertyValue.slice(0, -1); // remove trailing "or"
+              break;
+            case 'is between':
+            case 'was between':
+              propertyValue = [clause.filterValue[0], 'and', clause.filterValue[1]];
+              break;
+            case 'is set':
+            case 'is not set':
+            case 'is true':
+            case 'is false':
+              propertyValue = [];
+              break;
+            default:
+              propertyValue = [clause.filterValue];
+              break;
           }
+
+          propertyValue = propertyValue.map(value => {
+            if (value instanceof Date) {
+              return `${value.getUTCMonth()}/${value.getUTCFullYear().toString().slice(2)}`;
+            } else {
+              return value ? value.toString() : '';
+            }
+          });
         }
 
-        return [property, connector, ...propertyValue];
+        return [property, operator, ...propertyValue];
       },
     });
   }

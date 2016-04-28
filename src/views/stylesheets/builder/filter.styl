@@ -14,21 +14,39 @@
 .filter-property-value-pane-content-view
   position relative
 
-  .operator
+  .filter-operator-input
     margin 12px
     width 50%
 
-  .summary
-    color light-gray
-    font-size 12px
-    position absolute
-    right 16px
-    top 49px
+  .filter-value-input
+    margin 12px
+    margin-top 0
+    width 100%
 
-  .search
-    border-top 1px solid background-gray
+    input
+      background lighten(background-gray, 50%)
+      border 1px solid light-gray
+      border-radius 2px
+      color dark-gray
+      font-size 12px
+      height 24px
+      outline none
+      padding 3px 8px
+      // width 100% - padding - border - margin
+      width calc(100% - 16px - 2px - 24px)
 
-    ul
+  &.filter-type-string
+    .filter-string-equals-summary
+      color light-gray
+      font-size 12px
+      position absolute
+      right 16px
+      top 49px
+
+    .filter-string-equals-search
+      border-top 1px solid background-gray
+
+    ul.filter-string-equals-choices
       height 130px
       overflow scroll
       padding 8px 0
@@ -51,27 +69,28 @@
         &.selected button
           background-image url(../../images/properties/checkbox-checked.svg)
 
-  .contains
-    margin 12px
-    margin-top 0
-    width 100%
-
-    input
-      background lighten(background-gray, 50%)
-      border 1px solid light-gray
-      border-radius 2px
-      color dark-gray
-      font-size 12px
-      height 24px
-      outline none
-      padding 3px 8px
-      // width 100% - padding - border - margin
-      width calc(100% - 16px - 2px - 24px)
-
-    ul
+    ul.filter-string-contains-matches
       padding 6px 0
 
       li
         font-size 12px
         padding 3px 8px
 
+  &.filter-type-number
+    .filter-value-input.filter-operator-between
+      input, .connector
+        display inline-block
+
+      input 
+        // width 50% - padding - border - margin
+        width calc(50% - 16px - 2px - 24px - 20px)
+
+      .connector
+        background lighten(background-gray, 40%)
+        border-radius 2px
+        color darken(light-gray, 10%)
+        padding 8px 10px 9px
+        margin 0 12px
+        margin-bottom -7px
+        vertical-align top
+        font-size 12px
