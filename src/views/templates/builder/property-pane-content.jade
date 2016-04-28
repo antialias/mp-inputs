@@ -5,7 +5,7 @@
   ul.column.toggle.resource-type
     for resourceType, i in constants.resourceTypeChoices
       li(
-        class=selectedTypeIndex === i ? 'selected' : '',
+        class=[selectedTypeIndex === i ? 'selected' : '', resourceType !== 'all' ? 'disabled' : '']
         ev-click=() => helpers.updateClause(state.clauseIndex, {resourceType}),
       )= util.capitalize(resourceType)
   ul.column.resource-value

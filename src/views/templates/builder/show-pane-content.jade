@@ -6,14 +6,14 @@ div(class=elementClass)
   ul.column.toggle.math
     for math, i in constants.mathChoices
       li(
-        class=selectedMathIndex === i ? 'selected' : '',
-        ev-click=() => helpers.updateClause(state.clauseIndex, {math}),
+        class=[selectedMathIndex === i ? 'selected' : '', (math === 'sum' || math === 'median') ? 'disabled' : '']
+        ev-click=() => helpers.updateClause(state.clauseIndex, {math})
       )= util.capitalize(math)
   ul.column.toggle.resource-type
     for resourceType, i in constants.resourceTypeChoices
       li(
-        class=selectedTypeIndex === i ? 'selected' : '',
-        ev-click=() => helpers.updateClause(state.clauseIndex, {resourceType}),
+        class=[selectedTypeIndex === i ? 'selected' : '', resourceType !== 'all' ? 'disabled' : '']
+        ev-click=() => helpers.updateClause(state.clauseIndex, {resourceType})
       )= util.capitalize(resourceType)
   ul.column.resource-value
     for value, i in constants.eventChoices

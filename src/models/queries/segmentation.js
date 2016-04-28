@@ -105,6 +105,15 @@ export default class SegmentationQuery extends BaseQuery {
     let events = state.sections.show.clauses
       .map(clause => clause.value);
 
+    let type = ShowClause.MATH_TYPES[0];
+
+    if (events.length) {
+      type = state.sections.show.clauses[0].math;
+    }
+
+    // remap total -> general
+    type = type === 'total' ? 'general' : type;
+
     if (events.indexOf(ShowClause.TOP_EVENTS) !== -1) {
       events = state.topEvents
         .filter(event => event !== ShowClause.TOP_EVENTS)
@@ -126,6 +135,7 @@ export default class SegmentationQuery extends BaseQuery {
     const time = state.sections.time.clauses[0];
 
     return {
+      type,
       events,
       segments,
       filters,
@@ -150,8 +160,8 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   buildParams(query) {
-    const { events, segments, filters, unit, from, to } = query;
-    let params = {unit, from, to, event: events};
+    const { type, events, segments, filters, unit, from, to } = query;
+    let params = {unit, from, to, type, event: events};
 
     if (events.length === 1 && segments.length) {
       params.event = events[0];
