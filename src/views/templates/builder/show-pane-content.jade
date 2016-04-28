@@ -20,7 +20,7 @@ div(class=elementClass)
       if helpers.matchesSearch(util.renameEvent(value))
         li(
           class=selectedValueIndex === i ? 'selected' : '',
-          ev-click=() => helpers.updateClause(state.clauseIndex, {value}),
+          ev-click=() => helpers.updateClause(state.clauseIndex, {value}, true),
         )
           span= util.renameEvent(value)
           button.next-arrow ›

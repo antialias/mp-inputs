@@ -13,7 +13,7 @@
       if helpers.matchesSearch(util.renameProperty(property.name))
         li.property(
           class=[`type-${property.type}`, selectedValueIndex === i ? 'selected' : ''],
-          ev-click=() => helpers.selectProperty(state.clauseIndex, property),
+          ev-click=() => helpers.selectProperty(state.clauseIndex, property, true),
         )
           span= util.renameProperty(property.name)
-          button.next-arrow ›
+          button.next-arrow(ev-click=() => helpers.selectProperty(state.clauseIndex, property)) ›

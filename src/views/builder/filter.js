@@ -115,18 +115,22 @@ class FilterPropertyPaneContentView extends PaneContentView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      selectProperty: (clauseIndex, property) => {
+      selectProperty: (clauseIndex, property, closePane) => {
+        closePane = false; // TODO talk with design about how this interaction should work; right now it's confusing
+
         this.templateHelpers.updateClause(clauseIndex, {
           value: property.name,
           filterType: property.type,
-        });
+        }, closePane);
 
-        // when a property is selected, switch to the property value inner pane
-        // - requestAnimationFrame allows the add pane to be re-rendered as an
-        //   edit pane, and still show the css animation sliding to the new pane
-        window.requestAnimationFrame(() =>
-          super.templateHelpers.updateClause(this.app.editingClauseIndex, {paneIndex: 1})
-        );
+        if (!closePane) {
+          // when a property is selected, switch to the property value inner pane
+          // - requestAnimationFrame allows the add pane to be re-rendered as an
+          //   edit pane, and still show the css animation sliding to the new pane
+          window.requestAnimationFrame(() =>
+            super.templateHelpers.updateClause(this.app.editingClauseIndex, {paneIndex: 1})
+          );
+        }
       },
     });
   }
@@ -211,7 +215,15 @@ class FilterPaneView extends PaneView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      getHeader: paneIndex => paneIndex ? 'Property values' : 'Properties',
+      getHeader: paneIndex => {
+        const clause = this.app.state.editingClause;
+
+        if (paneIndex && clause && clause.value) {
+          return renameProperty(clause.value);
+        }
+
+        return 'Properties';
+      },
       getPaneIndex: clauseIndex => this.getPaneIndex(clauseIndex),
     });
   }

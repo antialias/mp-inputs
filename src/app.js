@@ -122,7 +122,7 @@ export default class IRBApp extends BaseApp {
     }
   }
 
-  updateClause(sectionType, clauseIndex, clauseData) {
+  updateClause(sectionType, clauseIndex, clauseData, closePane) {
     const section = this.state.sections[sectionType];
     const clause = section.clauses[clauseIndex];
     const editingExistingClause = !!clause;
@@ -149,13 +149,10 @@ export default class IRBApp extends BaseApp {
 
     if (newClause.valid) {
       newState.sections = this.state.sections.replaceSection(sectionType, newSection);
+    }
 
-      if ( // don't keep the pane open if we're adding a new non-filter clause
-        !editingExistingClause &&
-        sectionType !== 'filter'
-      ) {
-        newState.editingClause = null;
-      }
+    if (closePane) {
+      newState.editingClause = null;
     }
 
     this.update(newState);
