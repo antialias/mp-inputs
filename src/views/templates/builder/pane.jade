@@ -22,7 +22,10 @@ mixin pane(paneViews, paneIndex)
   if views.panes
     - const activeIndex = helpers.getPaneIndex(state.clauseIndex);
     for paneViews, paneIndex in views.panes
-      .pane(style={transform: `translateX(${(paneIndex - activeIndex) * 400}px)`})
+      .pane(style={
+        '-webkit-transform': `translateX(${(paneIndex - activeIndex) * 400}px)`,
+        transform: `translateX(${(paneIndex - activeIndex) * 400}px)`,
+      })
         +pane(paneViews, paneIndex)
   else
     .pane.active
