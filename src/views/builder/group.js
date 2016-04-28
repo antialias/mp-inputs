@@ -28,6 +28,16 @@ class GroupPaneContentView extends PaneContentView {
       resourceTypeChoices: Clause.RESOURCE_TYPES,
     });
   }
+
+  get templateHelpers() {
+    return extend(super.templateHelpers, {
+      selectProperty: (clauseIndex, property) => {
+        this.templateHelpers.updateClause(clauseIndex, {
+          value: property.name,
+        });
+      },
+    });
+  }
 }
 
 class GroupPaneView extends PaneView {
