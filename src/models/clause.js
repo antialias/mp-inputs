@@ -91,7 +91,7 @@ export class FilterClause extends EventsPropertiesClause {
   constructor(attrs={}) {
     super(...arguments);
 
-    this.filterType = attrs.filterType || 'string';
+    this.filterType = attrs.filterType || FilterClause.FILTER_TYPES[0];
 
     const filterOperatorChoices = FilterClause.FILTER_OPERATORS[this.filterType];
     if (filterOperatorChoices.indexOf(attrs.filterOperator) !== -1) {
@@ -102,10 +102,7 @@ export class FilterClause extends EventsPropertiesClause {
 
     this.filterValue = attrs.filterValue || null;
     this.filterSearch = attrs.filterSearch || null;
-
-    this.filterBetweenStart = attrs.filterBetweenStart || null;
-    this.filterBetweenEnd = attrs.filterBetweenEnd || null;
-    this.filterUnit = attrs.filterUnit || null;
+    this.filterDateUnit = attrs.filterDateUnit || FilterClause.FILTER_DATE_UNITS[0];
 
     this.editing = attrs.editing || null;
   }
@@ -116,9 +113,7 @@ export class FilterClause extends EventsPropertiesClause {
       filterOperator,
       filterValue,
       filterSearch,
-      filterBetweenStart,
-      filterBewteenEnd,
-      filterUnit,
+      filterDateUnit,
       editing,
     } = this;
 
@@ -127,9 +122,7 @@ export class FilterClause extends EventsPropertiesClause {
       filterOperator,
       filterValue,
       filterSearch,
-      filterBetweenStart,
-      filterBewteenEnd,
-      filterUnit,
+      filterDateUnit,
       editing,
     });
   }
@@ -144,20 +137,12 @@ export class FilterClause extends EventsPropertiesClause {
     return this.filterOperator === 'is set' || this.filterOperator === 'is not set';
   }
 
-  get editingFilterOperator() {
+  get isEditingFilterOperator() {
     return this.editing === 'filterOperator';
   }
 
-  get editingFilterBetweenStart() {
-    return this.editing === 'filterBetweenStart';
-  }
-
-  get editingFilterBetweenEnd() {
-    return this.editing === 'filterBetweenEnd';
-  }
-
-  get editingFilterUnit() {
-    return this.editing === 'filterUnit';
+  get isEditingFilterDateUnit() {
+    return this.editing === 'filterDateUnit';
   }
 }
 FilterClause.TYPE = FilterClause.prototype.TYPE = 'filter';
@@ -193,6 +178,9 @@ FilterClause.FILTER_OPERATORS = FilterClause.prototype.FILTER_OPERATORS = {
 };
 FilterClause.FILTER_TYPES = FilterClause.prototype.FILTER_TYPES = [
   'string', 'number', 'datetime', 'boolean', 'list',
+];
+FilterClause.FILTER_DATE_UNITS = FilterClause.prototype.FILTER_DATE_UNITS = [
+  'days', 'weeks', 'months', 'years',
 ];
 
 export class TimeClause extends Clause {

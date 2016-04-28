@@ -10,12 +10,11 @@ export default class DropdownView extends BaseView {
 
   get templateHelpers() {
     return {
+      getChoices: () => this.choices,
+      getSelected: () => this.selected,
+      isOpen: () => this.isOpen,
       formatChoice: choice => this.formatChoice(choice),
     };
-  }
-
-  formatChoice(choice) {
-    return choice;
   }
 
   get templateHandlers() {
@@ -23,6 +22,22 @@ export default class DropdownView extends BaseView {
       onLabelClick: () => this.toggleOpen(),
       onChoiceClick: choice => this.select(choice),
     };
+  }
+
+  get choices() {
+    throw new Error('Must be implemented by subclass');
+  }
+
+  get selected() {
+    throw new Error('Must be implemented by subclass');
+  }
+
+  get isOpen() {
+    throw new Error('Must be implemented by subclass');
+  }
+
+  formatChoice(choice) {
+    return choice;
   }
 
   toggleOpen() {

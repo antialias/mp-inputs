@@ -1,13 +1,14 @@
 import { ShowClause } from '../clause';
 import BaseQuery from './base';
 
-function isFilterValid(property, type, operator, value) {
+function isFilterValid(property, type, operator, value, dateUnit) {
   if (!property) {
     return false;
   }
 
   const isSetOrBoolean = ['is set', 'is not set', 'is true', 'is false'].indexOf(operator) !== -1;
   const isBetween = ['is between', 'was between'].indexOf(operator) !== -1;
+  const isDaysAgo = type === 'datetime' && ['was more than', 'was less than'].indexOf(operator) !== -1;
 
   // filter must have a value UNLESS it is set or boolean
   if (!isSetOrBoolean && !value) {
@@ -24,10 +25,15 @@ function isFilterValid(property, type, operator, value) {
     return false;
   }
 
+  // days ago filter must have a value and a unit
+  if (isDaysAgo && (!value || !dateUnit)) {
+    return false;
+  }
+
   return true;
 }
 
-function filterToArbSelectorString(property, type, operator, value) {
+function filterToArbSelectorString(property, type, operator, value, dateUnit) {
   property = `(properties["${property}"])`;
 
   if (typeof value === 'string') {
@@ -59,13 +65,27 @@ function filterToArbSelectorString(property, type, operator, value) {
         case 'is greater than' : return `(${property} > ${value})`;
       }
     case 'datetime':
+      const dayMs = 24 * 60 * 60 * 1000;
+      const unitMs = {
+        days: dayMs,
+        weeks: dayMs * 7,
+        months: dayMs * 30,
+        year: dayMs * 365,
+      }[dateUnit];
+
       switch (operator) {
-        case 'was less than' : return `(${property} < datetime(${new Date(new Date().getDate() - value).getTime()}))`;
-        case 'was more than' : return `(${property} > datetime(${new Date(new Date().getDate() - value).getTime()}))`;
-        case 'was on'        : return `((${property} >= datetime(${new Date(value.getTime()).setHours(0,0,0,0).getTime()})) and ` +
-                                       `(${property} <= datetime(${new Date(value.getTime()).setHours(23,59,59,999).getTime()})))`;
-        case 'was between'   : return `((${property} >= datetime(${new Date(value[0].getTime()).setHours(0,0,0,0).getTime()})) and ` +
-                                       `(${property} <= datetime(${new Date(value[1].getTime()).setHours(23,59,59,999).getTime()})))`;
+        case 'was less than': return `(${property} > datetime(${new Date(new Date().getTime() - (value * unitMs)).getTime()}))`;
+        case 'was more than': return `(${property} < datetime(${new Date(new Date().getTime() - (value * unitMs)).getTime()}))`;
+        // TODO 'was on' should be a different case - when we have better date controls
+        case 'was on':
+        case 'was between':
+          let from = new Date(value[0].getTime());
+          let to = new Date(value[1].getTime());
+
+          from.setHours(0, 0, 0, 0);
+          to.setHours(23, 59, 59, 999);
+
+          return `((${property} >= datetime(${from.getTime()})) and (${property} <= datetime(${to.getTime()})))`;
       }
     case 'boolean':
       switch (operator) {
@@ -100,6 +120,7 @@ export default class SegmentationQuery extends BaseQuery {
         clause.filterType,
         clause.filterOperator,
         clause.filterValue,
+        clause.filterDateUnit,
       ]);
 
     const time = state.sections.time.clauses[0];

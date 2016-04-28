@@ -24,9 +24,21 @@ class OperatorDropdownView extends DropdownView {
     this.app.onClickOutside(this.elementClass, 'stopEditingClauseAttrs');
   }
 
+  get choices() {
+    return FilterClause.FILTER_OPERATORS[this.app.state.editingClause.filterType];
+  }
+
+  get selected() {
+    return this.app.state.editingClause.filterOperator;
+  }
+
+  get isOpen() {
+    return this.app.state.editingClause.isEditingFilterOperator;
+  }
+
   toggleOpen() {
     this.app.updateEditingClause({
-      editing: this.app.state.editingClause.editingFilterOperator ? null : 'filterOperator',
+      editing: this.app.state.editingClause.isEditingFilterOperator ? null : 'filterOperator',
     });
   }
 
@@ -41,8 +53,48 @@ class OperatorDropdownView extends DropdownView {
 }
 
 class OperatorToggleView extends ToggleView {
+  get choices() {
+    return FilterClause.FILTER_OPERATORS[this.app.state.editingClause.filterType];
+  }
+
+  get selected() {
+    return this.app.state.editingClause.filterOperator;
+  }
+
   select(filterOperator) {
     this.app.updateEditingClause({filterOperator});
+  }
+}
+
+class DateUnitDropdownView extends DropdownView {
+  setApp() {
+    super.setApp(...arguments);
+    this.app.onClickOutside(this.elementClass, 'stopEditingClauseAttrs');
+  }
+
+  get choices() {
+    return FilterClause.FILTER_DATE_UNITS;
+  }
+
+  get selected() {
+    return this.app.state.editingClause.filterDateUnit;
+  }
+
+  get isOpen() {
+    return this.app.state.editingClause.isEditingFilterDateUnit;
+  }
+
+  toggleOpen() {
+    this.app.updateEditingClause({
+      editing: this.app.state.editingClause.isEditingFilterDateUnit ? null : 'filterDateUnit',
+    });
+  }
+
+  select(filterDateUnit) {
+    this.app.updateEditingClause({
+      filterDateUnit,
+      editing: null,
+    });
   }
 }
 
@@ -93,6 +145,7 @@ class FilterPropertyValuePaneContentView extends PaneContentView {
     return {
       operatorDropdown: new OperatorDropdownView(this),
       operatorToggle: new OperatorToggleView(this),
+      dateUnitDropdown: new DateUnitDropdownView(this),
     };
   }
 
@@ -105,6 +158,7 @@ class FilterPropertyValuePaneContentView extends PaneContentView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
+      updateClause: clauseData => this.app.updateEditingClause(clauseData),
       showPropertyValues: () => this.app.state.editingClause && !this.app.state.editingClause.filterOperatorIsSetOrNotSet,
       getValueMatches: (string, invert) =>
         this.app.state.topPropertyValues
@@ -195,32 +249,37 @@ class FilterEditControlView extends EditControlView {
       getLabel: clauseIndex => {
         const clause = this.app.state.sections.getClause('filter', clauseIndex);
         const property = renameProperty(clause.value);
+        const type = clause.filterType;
         const operator = clause.filterOperator;
         let propertyValue = [];
 
         if (clause.filterValue) {
-          switch (operator) {
-            case 'equals':
-            case 'does not equal':
-              clause.filterValue.forEach(value => {
-                propertyValue.push(value);
-                propertyValue.push('or');
-              });
-              propertyValue = propertyValue.slice(0, -1); // remove trailing "or"
-              break;
-            case 'is between':
-            case 'was between':
-              propertyValue = [clause.filterValue[0], 'and', clause.filterValue[1]];
-              break;
-            case 'is set':
-            case 'is not set':
-            case 'is true':
-            case 'is false':
-              propertyValue = [];
-              break;
-            default:
-              propertyValue = [clause.filterValue];
-              break;
+          if (type === 'datetime' && (operator === 'was more than' || operator === 'was less than')) {
+            propertyValue = [clause.filterValue, clause.filterDateUnit, 'ago'];
+          } else {
+            switch (operator) {
+              case 'equals':
+              case 'does not equal':
+                clause.filterValue.forEach(value => {
+                  propertyValue.push(value);
+                  propertyValue.push('or');
+                });
+                propertyValue = propertyValue.slice(0, -1); // remove trailing "or"
+                break;
+              case 'is between':
+              case 'was between':
+                propertyValue = [clause.filterValue[0], 'and', clause.filterValue[1]];
+                break;
+              case 'is set':
+              case 'is not set':
+              case 'is true':
+              case 'is false':
+                propertyValue = [];
+                break;
+              default:
+                propertyValue = [clause.filterValue];
+                break;
+            }
           }
 
           propertyValue = propertyValue.map(value => {

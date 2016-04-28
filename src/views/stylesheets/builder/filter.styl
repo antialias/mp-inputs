@@ -76,21 +76,25 @@
         font-size 12px
         padding 3px 8px
 
-  &.filter-type-number
-    .filter-value-input.filter-operator-between
-      input, .connector
-        display inline-block
+  &.filter-type-number, &.filter-type-datetime
+    .filter-value-input
+      &.filter-operator-between, &.filter-days-ago
+        input, .filter-unit-input, .connector
+          display inline-block
 
-      input 
-        // width 50% - padding - border - margin
-        width calc(50% - 16px - 2px - 24px - 20px)
+        input
+          width calc(50% - 16px - 2px - 24px - 20px)
 
-      .connector
-        background lighten(background-gray, 40%)
-        border-radius 2px
-        color darken(light-gray, 10%)
-        padding 8px 10px 9px
-        margin 0 12px
-        margin-bottom -7px
-        vertical-align top
-        font-size 12px
+        .filter-unit-input
+          margin-left 12px
+          width calc(50% - 16px - 2px - 26px)
+
+        .connector
+          background lighten(background-gray, 40%)
+          border-radius 2px
+          color darken(light-gray, 10%)
+          padding 8px 10px 9px
+          margin 0 12px
+          margin-bottom -7px
+          vertical-align top
+          font-size 12px
