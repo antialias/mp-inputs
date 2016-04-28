@@ -410,6 +410,11 @@
   overflow: hidden;
   white-space: nowrap;
 }
+.show-pane-content-view ul.math li.disabled,
+.show-pane-content-view ul.resource-type li.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
 .show-pane-content-view ul.resource-value {
   width: 248px;
 }
@@ -430,6 +435,10 @@
   height: 100%;
   overflow: hidden;
   white-space: nowrap;
+}
+.group-pane-content-view ul.resource-type li.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 .group-pane-content-view ul.resource-value {
   width: 328px;
@@ -550,6 +559,10 @@
 .filter-property-pane-content-view {
   height: 100%;
   overflow: hidden;
+}
+.filter-property-pane-content-view ul.resource-type li.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 .filter-property-pane-content-view ul.resource-value {
   width: 328px;
