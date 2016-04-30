@@ -1,34 +1,34 @@
-- const filterProperty = state.editingClause && state.editingClause.value;
-- const filterType = state.editingClause && state.editingClause.filterType;
-- const filterOperator = state.editingClause && state.editingClause.filterOperator;
-- const filterValue = state.editingClause && state.editingClause.filterValue;
-- const filterDateUnit = state.editingClause && state.editingClause.filterDateUnit;
+- const selectedProperty = state.editingClause && state.editingClause.value;
+- const selectedType = state.editingClause && state.editingClause.filterType;
+- const selectedOperator = state.editingClause && state.editingClause.filterOperator;
+- const selectedValue = state.editingClause && state.editingClause.filterValue;
+- const selectedDateUnit = state.editingClause && state.editingClause.filterDateUnit;
 
-.pane-content-view(class=[elementClass, filterType ? `filter-type-${filterType}` : ''])
+.pane-content-view(class=[elementClass, selectedType ? `filter-type-${selectedType}` : ''])
   table.tabs
     tbody
       tr
         for typeChoice in constants.filterTypeChoices
-          td(class=['type-' + typeChoice, typeChoice === filterType ? 'selected' : ''])
+          td(class=['type-' + typeChoice, typeChoice === selectedType ? 'selected' : ''])
             button(
               ev-click=() => helpers.updateClause({filterType: typeChoice, filterValue: null, filterSearch: null, editing: null})
             )= util.renamePropertyType(typeChoice)
 
-  if filterType
+  if selectedType
 
     // "operator" input - present on all panes
 
-    if filterType === 'boolean' || filterType === 'list'
+    if selectedType === 'boolean' || selectedType === 'list'
       .filter-operator-input= views.operatorToggle()
     else
       .filter-operator-input= views.operatorDropdown()
 
     // type-specific inputs
 
-    if filterType === 'string'
-      if filterOperator === 'equals' || filterOperator === 'does not equal'
-        if filterValue && filterValue.length
-          .filter-string-equals-summary= `${filterValue.length} selected`
+    if selectedType === 'string'
+      if selectedOperator === 'equals' || selectedOperator === 'does not equal'
+        if selectedValue && selectedValue.length
+          .filter-string-equals-summary= `${selectedValue.length} selected`
 
         .filter-string-equals-search.search
           input(
@@ -39,26 +39,26 @@
 
         ul.filter-string-equals-choices
           for value in helpers.getValueMatches(state.editingClause.filterSearch)
-            li(class=filterValue && filterValue.indexOf(value) !== -1 ? 'selected' : '')
+            li(class=selectedValue && selectedValue.indexOf(value) !== -1 ? 'selected' : '')
               button(ev-click=() => helpers.toggleStringEqualsValueSelected(value))= value
 
-      else if filterOperator === 'contains' || filterOperator === 'does not contain'
+      else if selectedOperator === 'contains' || selectedOperator === 'does not contain'
         .filter-value-input
           input(
             type='text'
-            value=filterValue
+            value=selectedValue
             ev-input=event => helpers.updateClause({filterValue: event.target.value})
           )
 
-          if filterValue
+          if selectedValue
             ul.filter-string-contains-matches
-              for value in helpers.getValueMatches(filterValue, filterOperator === 'does not contain')
+              for value in helpers.getValueMatches(selectedValue, selectedOperator === 'does not contain')
                 li= value
 
-    else if filterType === 'number'
-      if filterOperator === 'is between'
-        - const betweenStart = filterValue ? filterValue[0] : null;
-        - const betweenEnd = filterValue ? filterValue[1] : null;
+    else if selectedType === 'number'
+      if selectedOperator === 'is between'
+        - const betweenStart = selectedValue ? selectedValue[0] : null;
+        - const betweenEnd = selectedValue ? selectedValue[1] : null;
         .filter-value-input.filter-operator-between
           input(
             type='number'
@@ -75,14 +75,14 @@
         .filter-value-input
           input(
             type='number'
-            value=filterValue
+            value=selectedValue
             ev-input=event => helpers.updateClause({filterValue: Number(event.target.value)})
           )
 
-    else if filterType === 'datetime'
-      if filterOperator === 'was between' || filterOperator === 'was on'
-        - const from = filterValue ? filterValue[0] : null;
-        - const to = filterValue ? filterValue[1] : null;
+    else if selectedType === 'datetime'
+      if selectedOperator === 'was between' || selectedOperator === 'was on'
+        - const from = selectedValue ? selectedValue[0] : null;
+        - const to = selectedValue ? selectedValue[1] : null;
         .filter-value-input
           irb-date-picker(
             value=JSON.stringify({from, to})
@@ -92,17 +92,17 @@
         .filter-value-input.filter-days-ago
           input(
             type='number'
-            value=filterValue
+            value=selectedValue
             ev-input=event => helpers.updateClause({filterValue: Number(event.target.value)})
           )
           .filter-unit-input= views.dateUnitDropdown()
           .connector ago
 
-    else if filterType === 'list'
+    else if selectedType === 'list'
       .filter-value-input
         input(
           type='text'
-          value=filterValue
+          value=selectedValue
           ev-input=event => helpers.updateClause({filterValue: event.target.value})
         )
 

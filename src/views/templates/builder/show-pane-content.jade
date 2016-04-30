@@ -1,25 +1,25 @@
-- const selectedMathIndex = state.editingClause && constants.mathChoices.indexOf(state.editingClause.math);
-- const selectedTypeIndex = state.editingClause && constants.resourceTypeChoices.indexOf(state.editingClause.resourceType);
-- const selectedValueIndex = state.editingClause && constants.eventChoices.indexOf(state.editingClause.value);
+- const selectedMath = state.editingClause && state.editingClause.math;
+- const selectedResourceType = state.editingClause && state.editingClause.resourceType;
+- const selectedValue = state.editingClause && state.editingClause.value;
 
 div(class=elementClass)
   ul.column.toggle.math
-    for math, i in constants.mathChoices
+    for math in constants.mathChoices
       li(
-        class=[selectedMathIndex === i ? 'selected' : '', (math === 'sum' || math === 'median') ? 'disabled' : '']
+        class=[math === selectedMath ? 'selected' : '', (math === 'sum' || math === 'median') ? 'disabled' : '']
         ev-click=() => helpers.updateClause(state.clauseIndex, {math})
       )= util.capitalize(math)
   ul.column.toggle.resource-type
-    for resourceType, i in constants.resourceTypeChoices
+    for resourceType in constants.resourceTypeChoices
       li(
-        class=[selectedTypeIndex === i ? 'selected' : '', resourceType !== 'all' ? 'disabled' : '']
+        class=[resourceType === selectedResourceType ? 'selected' : '', resourceType !== 'all' ? 'disabled' : '']
         ev-click=() => helpers.updateClause(state.clauseIndex, {resourceType})
       )= util.capitalize(resourceType)
   ul.column.resource-value
-    for value, i in constants.eventChoices
+    for value in constants.eventChoices
       if helpers.matchesSearch(util.renameEvent(value))
         li(
-          class=selectedValueIndex === i ? 'selected' : '',
+          class=value === selectedValue ? 'selected' : '',
           ev-click=() => helpers.updateClause(state.clauseIndex, {value}, true),
         )
           span= util.renameEvent(value)
