@@ -105,5 +105,3 @@
           value=selectedValue
           ev-input=event => helpers.updateClause({filterValue: event.target.value})
         )
-
-  button.filter-done(ev-click=() => helpers.stopEditingClause())= helpers.getDoneLabel()

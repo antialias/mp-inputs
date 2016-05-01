@@ -32,12 +32,14 @@
       margin-right 12px
       margin-bottom 16px
 
-      .preposition
-        float initial
-        margin 0
+      .control-container
+        .preposition
+          float initial
+          margin 0
 
-      .control-container + .control-container
-        margin-left 12px
+        +
+          .control-container, .preposition
+            margin-left 12px
 
   .filters
     margin 0 24px

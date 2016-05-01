@@ -1,6 +1,10 @@
 mixin pane(paneViews, paneIndex)
-  - const paneConstants = constants.panes ? constants.panes[paneIndex] : {};
-  - const header = constants.header || helpers.getHeader(paneIndex);
+  - const paneConstants = util.extend(constants, (constants.panes && constants.panes[paneIndex]) || {});
+  - const paneHelpers = util.extend(helpers, (helpers.panes && helpers.panes[paneIndex]) || {});
+  - const paneHandlers = util.extend(handlers, (handlers.panes && handlers.panes[paneIndex]) || {});
+  - const header = paneConstants.header || paneHelpers.getHeader && paneHelpers.getHeader();
+  - const commitLabel = paneConstants.commitLabel || paneHelpers.getCommitLabel && paneHelpers.getCommitLabel();
+  - const commitHandler = paneHandlers.commitHandler;
 
   if header
     .header
@@ -15,16 +19,17 @@ mixin pane(paneViews, paneIndex)
   if paneViews.content
     .content= paneViews.content(util.extend(state, {paneIndex}))
 
-  if paneViews.footer
-    .footer= paneViews.footer(state)
+  if commitLabel && commitHandler
+    button.commit(ev-click=commitHandler)= commitLabel
 
 .pane-view(class=elementClass)
   if views.panes
-    - const activeIndex = helpers.getPaneIndex(state.clauseIndex);
+    - const activePaneIndex = (state.editingClause && state.editingClause.paneIndex) || 0;
+
     for paneViews, paneIndex in views.panes
       .pane(style={
-        '-webkit-transform': `translateX(${(paneIndex - activeIndex) * 400}px)`,
-        transform: `translateX(${(paneIndex - activeIndex) * 400}px)`,
+        '-webkit-transform': `translateX(${(paneIndex - activePaneIndex) * 400}px)`,
+        transform: `translateX(${(paneIndex - activePaneIndex) * 400}px)`,
       })
         +pane(paneViews, paneIndex)
   else

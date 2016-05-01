@@ -19,14 +19,12 @@
     position absolute
     width 400px
 
-  .header, .footer
-    line-height 40px
-    text-align center
-    width 100%
-
   .header
     color white
+    line-height 40px
     position relative
+    text-align center
+    width 100%
 
     .back
       background none
@@ -161,8 +159,17 @@
           top -4px
           width 27px
 
-  .footer
-    background background-gray
+  button.commit
+    background lighten(background-gray, 50%)
+    border none
+    border-top 1px solid background-gray
+    bottom 0
+    color medium-gray
+    font-size 14px
+    font-weight bold
+    height 36px
+    position absolute
+    width 100%
 
 .time-pane-view
   overflow visible

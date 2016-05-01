@@ -202,29 +202,39 @@ class FilterPaneView extends PaneView {
   get templateConstants() {
     return extend(super.templateConstants, {
       panes: [
-        {},
-        {search: false},
+        {
+          header: 'Properties',
+        },
+        {
+          search: false,
+          commitLabel: 'Update',
+        },
       ],
     });
   }
 
-  getPaneIndex(clauseIndex) {
-    const clause = this.app.state.sections.getClause('filter', clauseIndex) || this.app.state.editingClause;
-    return clause ? clause.paneIndex : 0;
-  }
-
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      getHeader: paneIndex => {
-        const clause = this.app.state.editingClause;
+      panes: [
+        {},
+        {
+          getHeader: () => {
+            const clause = this.app.state.editingClause;
+            return clause && clause.value ? renameProperty(clause.value) : '';
+          },
+        },
+      ]
+    });
+  }
 
-        if (paneIndex && clause && clause.value) {
-          return renameProperty(clause.value);
-        }
-
-        return 'Properties';
-      },
-      getPaneIndex: clauseIndex => this.getPaneIndex(clauseIndex),
+  get templateHandlers() {
+    return extend(super.templateHandlers, {
+      panes: [
+        {},
+        {
+          commitHandler: () => this.app.stopEditingClause(),
+        },
+      ],
     });
   }
 }
@@ -321,5 +331,11 @@ export default class FilterView extends BaseView {
       addControl: new FilterAddControlView(this),
       editControl: new FilterEditControlView(this),
     };
+  }
+
+  get templateHelpers() {
+    return {
+      isAddingClause: () => this.app.isAddingClause('filter'),
+    }
   }
 }

@@ -1,4 +1,4 @@
-div(class=[elementClass, constants.class || helpers.getClass()])
+.control-view(class=[elementClass, constants.class || helpers.getClass()])
   button.modify(ev-click=event => helpers.updatePosition(event) && helpers.openPane(state.clauseIndex))
     - const label = constants.label || helpers.getLabel(state.clauseIndex)
     if typeof label === 'string'
