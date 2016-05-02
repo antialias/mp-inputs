@@ -86,7 +86,7 @@ class ShowEditControlView extends EditControlView {
         const clause = this.app.state.sections.getClause('show', clauseIndex);
         const math = capitalize(clause.math);
 
-        return [math, ' of ', renameEvent(clause.value)];
+        return [math, ' number of ', renameEvent(clause.value)];
       },
     });
   }

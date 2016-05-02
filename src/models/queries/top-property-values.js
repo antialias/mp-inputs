@@ -2,7 +2,7 @@ import BaseQuery from './base';
 
 export default class TopPropertyValuesQuery extends BaseQuery {
   buildQuery(state) {
-    return {property: state.editingClause.value};
+    return {property: state.stageClause.value};
   }
 
   buildUrl(query) {

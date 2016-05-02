@@ -1,19 +1,19 @@
-- const selectedResourceType = state.editingClause && state.editingClause.resourceType;
-- const selectedProperty = state.editingClause && state.editingClause.value;
+- const selectedResourceType = state.stageClause && state.stageClause.resourceType;
+- const selectedProperty = state.stageClause && state.stageClause.value;
 
 .pane-content-view(class=elementClass)
   ul.column.toggle.resource-type
     for resourceType in constants.resourceTypeChoices
       li(
         class=[resourceType === selectedResourceType ? 'selected' : '', resourceType !== 'all' ? 'disabled' : '']
-        ev-click=() => helpers.updateClause(state.clauseIndex, {resourceType}),
+        ev-click=() => helpers.updateStageClause({resourceType}),
       )= util.capitalize(resourceType)
   ul.column.resource-value
     for property in state.topProperties
       if helpers.matchesSearch(util.renameProperty(property.name))
         li.property(
           class=[`type-${property.type}`, property.name === selectedProperty ? 'selected' : ''],
-          ev-click=() => helpers.selectProperty(state.clauseIndex, property, true),
+          ev-click=() => helpers.selectProperty(property, true),
         )
           span= util.renameProperty(property.name)
-          button.next-arrow(ev-click=() => helpers.selectProperty(state.clauseIndex, property)) ›
+          button.next-arrow(ev-click=() => helpers.selectProperty(property)) ›

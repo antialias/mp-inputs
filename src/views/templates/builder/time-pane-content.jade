@@ -1,9 +1,9 @@
-- const selectedRange = state.editingClause && state.editingClause.range;
+- const selectedRange = state.stageClause && state.stageClause.range;
 
 .pane-content-view(class=elementClass)
   ul.column.toggle.ranges
     for range in constants.rangeChoices
       li(
         class=[range === selectedRange ? 'selected' : '', range === constants.customRange ? 'disabled' : '']
-        ev-click=() => helpers.updateClause({range}),
+        ev-click=() => helpers.updateStageClause({range}, true),
       )= range

@@ -32,7 +32,10 @@ class TimePaneContentView extends PaneContentView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      updateClause: clauseData => this.app.updateClause('time', 0, clauseData, true),
+      updateStageClause: clauseData => {
+        this.app.updateStageClause(clauseData);
+        this.app.commitStageClause();
+      },
     });
   }
 }

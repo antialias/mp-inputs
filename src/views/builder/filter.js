@@ -25,25 +25,25 @@ class OperatorDropdownView extends DropdownView {
   }
 
   get choices() {
-    return FilterClause.FILTER_OPERATORS[this.app.state.editingClause.filterType];
+    return FilterClause.FILTER_OPERATORS[this.app.state.stageClause.filterType];
   }
 
   get selected() {
-    return this.app.state.editingClause.filterOperator;
+    return this.app.state.stageClause.filterOperator;
   }
 
   get isOpen() {
-    return this.app.state.editingClause.isEditingFilterOperator;
+    return this.app.state.stageClause.isEditingFilterOperator;
   }
 
   toggleOpen() {
-    this.app.updateEditingClause({
-      editing: this.app.state.editingClause.isEditingFilterOperator ? null : 'filterOperator',
+    this.app.updateStageClause({
+      editing: this.app.state.stageClause.isEditingFilterOperator ? null : 'filterOperator',
     });
   }
 
   select(filterOperator) {
-    this.app.updateEditingClause({
+    this.app.updateStageClause({
       filterOperator,
       filterValue: null,
       filterSearch: null,
@@ -54,15 +54,15 @@ class OperatorDropdownView extends DropdownView {
 
 class OperatorToggleView extends ToggleView {
   get choices() {
-    return FilterClause.FILTER_OPERATORS[this.app.state.editingClause.filterType];
+    return FilterClause.FILTER_OPERATORS[this.app.state.stageClause.filterType];
   }
 
   get selected() {
-    return this.app.state.editingClause.filterOperator;
+    return this.app.state.stageClause.filterOperator;
   }
 
   select(filterOperator) {
-    this.app.updateEditingClause({filterOperator});
+    this.app.updateStageClause({filterOperator});
   }
 }
 
@@ -77,21 +77,21 @@ class DateUnitDropdownView extends DropdownView {
   }
 
   get selected() {
-    return this.app.state.editingClause.filterDateUnit;
+    return this.app.state.stageClause.filterDateUnit;
   }
 
   get isOpen() {
-    return this.app.state.editingClause.isEditingFilterDateUnit;
+    return this.app.state.stageClause.isEditingFilterDateUnit;
   }
 
   toggleOpen() {
-    this.app.updateEditingClause({
-      editing: this.app.state.editingClause.isEditingFilterDateUnit ? null : 'filterDateUnit',
+    this.app.updateStageClause({
+      editing: this.app.state.stageClause.isEditingFilterDateUnit ? null : 'filterDateUnit',
     });
   }
 
   select(filterDateUnit) {
-    this.app.updateEditingClause({
+    this.app.updateStageClause({
       filterDateUnit,
       editing: null,
     });
@@ -121,22 +121,18 @@ class FilterPropertyPaneContentView extends PaneContentView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      selectProperty: (clauseIndex, property, closePane) => {
-        closePane = false; // TODO talk with design about how this interaction should work; right now it's confusing
-
-        this.templateHelpers.updateClause(clauseIndex, {
+      selectProperty: (property, closePane) => {
+        this.templateHelpers.updateStageClause({
           value: property.name,
           filterType: property.type,
-        }, closePane);
+        });
 
-        if (!closePane) {
-          // when a property is selected, switch to the property value inner pane
-          // - requestAnimationFrame allows the add pane to be re-rendered as an
-          //   edit pane, and still show the css animation sliding to the new pane
-          window.requestAnimationFrame(() =>
-            super.templateHelpers.updateClause(this.app.editingClauseIndex, {paneIndex: 1})
-          );
-        }
+        // when a property is selected, switch to the property value inner pane
+        // - requestAnimationFrame allows the add pane to be re-rendered as an
+        //   edit pane, and still show the css animation sliding to the new pane
+        window.requestAnimationFrame(() =>
+          super.templateHelpers.updateStageClause({paneIndex: 1})
+        );
       },
     });
   }
@@ -168,13 +164,13 @@ class FilterPropertyValuePaneContentView extends PaneContentView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      updateClause: clauseData => this.app.updateEditingClause(clauseData),
-      showPropertyValues: () => this.app.state.editingClause && !this.app.state.editingClause.filterOperatorIsSetOrNotSet,
+      updateStageClause: clauseData => this.app.updateStageClause(clauseData),
+      showPropertyValues: () => this.app.state.stageClause && !this.app.state.stageClause.filterOperatorIsSetOrNotSet,
       getValueMatches: (string, invert) =>
         this.app.state.topPropertyValues
           .filter(value => !string || value.toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert),
       toggleStringEqualsValueSelected: value => {
-        const selected = this.app.state.editingClause.filterValue || [];
+        const selected = this.app.state.stageClause.filterValue || [];
         let filterValue;
 
         if (selected.indexOf(value) === -1) {
@@ -183,7 +179,7 @@ class FilterPropertyValuePaneContentView extends PaneContentView {
             filterValue = removeValue(selected, value);
         }
 
-        this.app.updateEditingClause({filterValue});
+        this.app.updateStageClause({filterValue});
       },
       getDoneLabel: () => this.app.isAddingClause() ? 'Add' : 'Update',
       stopEditingClause: () => this.app.stopEditingClause(),
@@ -225,7 +221,7 @@ class FilterPaneView extends PaneView {
         {},
         {
           getHeader: () => {
-            const clause = this.app.state.editingClause;
+            const clause = this.app.state.stageClause;
             return clause && clause.value ? renameProperty(clause.value) : '';
           },
         },
@@ -238,7 +234,7 @@ class FilterPaneView extends PaneView {
       panes: [
         {},
         {
-          commitHandler: () => this.app.stopEditingClause(),
+          commitHandler: () => this.app.commitStageClause(),
         },
       ],
     });
@@ -280,46 +276,47 @@ class FilterEditControlView extends EditControlView {
         const clause = this.app.state.sections.getClause('filter', clauseIndex);
         const property = renameProperty(clause.value);
         const type = clause.filterType;
-        const operator = clause.filterOperator;
+        let operator = clause.filterOperator;
         let propertyValue = [];
 
-        if (clause.filterValue) {
-          if (type === 'datetime' && (operator === 'was more than' || operator === 'was less than')) {
-            propertyValue = [clause.filterValue, `${clause.filterDateUnit}s`, 'ago'];
-          } else {
-            switch (operator) {
-              case 'equals':
-              case 'does not equal':
-                clause.filterValue.forEach(value => {
-                  propertyValue.push(value);
-                  propertyValue.push('or');
-                });
-                propertyValue = propertyValue.slice(0, -1); // remove trailing "or"
-                break;
-              case 'is between':
-              case 'was between':
-                propertyValue = [clause.filterValue[0], 'and', clause.filterValue[1]];
-                break;
-              case 'is set':
-              case 'is not set':
-              case 'is true':
-              case 'is false':
-                propertyValue = [];
-                break;
-              default:
-                propertyValue = [clause.filterValue];
-                break;
-            }
+        if (type === 'datetime' && (operator === 'was more than' || operator === 'was less than')) {
+          propertyValue = [clause.filterValue, `${clause.filterDateUnit}s`, 'ago'];
+        } else {
+          switch (operator) {
+            case 'equals':
+            case 'does not equal':
+              clause.filterValue.forEach(value => {
+                propertyValue.push(value);
+                propertyValue.push('or');
+              });
+              propertyValue = propertyValue.slice(0, -1); // remove trailing "or"
+              break;
+            case 'is between':
+            case 'was between':
+              propertyValue = [clause.filterValue[0], 'and', clause.filterValue[1]];
+              break;
+            case 'is set':
+            case 'is not set':
+              propertyValue = [];
+              break;
+            case 'is true':
+            case 'is false':
+              propertyValue = [operator.split(' ').slice(1).join(' ')];
+              operator = operator.split(' ')[0];
+              break;
+            default:
+              propertyValue = [clause.filterValue];
+              break;
           }
-
-          propertyValue = propertyValue.map(value => {
-            if (value instanceof Date) {
-              return `${value.getUTCMonth()}/${value.getUTCFullYear().toString().slice(2)}`;
-            } else {
-              return value ? value.toString() : '';
-            }
-          });
         }
+
+        propertyValue = propertyValue.map(value => {
+          if (value instanceof Date) {
+            return `${value.getUTCMonth()}/${value.getUTCFullYear().toString().slice(2)}`;
+          } else {
+            return value ? value.toString() : '';
+          }
+        });
 
         return [property, operator, ...propertyValue];
       },

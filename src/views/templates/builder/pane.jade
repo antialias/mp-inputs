@@ -2,6 +2,7 @@ mixin pane(paneViews, paneIndex)
   - const paneConstants = util.extend(constants, (constants.panes && constants.panes[paneIndex]) || {});
   - const paneHelpers = util.extend(helpers, (helpers.panes && helpers.panes[paneIndex]) || {});
   - const paneHandlers = util.extend(handlers, (handlers.panes && handlers.panes[paneIndex]) || {});
+
   - const header = paneConstants.header || paneHelpers.getHeader && paneHelpers.getHeader();
   - const commitLabel = paneConstants.commitLabel || paneHelpers.getCommitLabel && paneHelpers.getCommitLabel();
   - const commitHandler = paneHandlers.commitHandler;
@@ -10,11 +11,11 @@ mixin pane(paneViews, paneIndex)
     .header
       span= header
       if paneIndex
-        button.back(ev-click=() => helpers.updateClause(state.clauseIndex, {paneIndex: paneIndex - 1}))
+        button.back(ev-click=() => helpers.updateStageClause({paneIndex: paneIndex - 1}))
 
   if paneConstants.search !== false && constants.search !== false
     .search
-      input(type='text' ev-input=event => helpers.updateClause(state.clauseIndex, {search: event.target.value}))
+      input(type='text' ev-input=event => helpers.updateStageClause({search: event.target.value}))
 
   if paneViews.content
     .content= paneViews.content(util.extend(state, {paneIndex}))
@@ -24,7 +25,7 @@ mixin pane(paneViews, paneIndex)
 
 .pane-view(class=elementClass)
   if views.panes
-    - const activePaneIndex = (state.editingClause && state.editingClause.paneIndex) || 0;
+    - const activePaneIndex = (state.stageClause && state.stageClause.paneIndex) || 0;
 
     for paneViews, paneIndex in views.panes
       .pane(style={

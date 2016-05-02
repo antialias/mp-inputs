@@ -31,11 +31,8 @@ class GroupPaneContentView extends PaneContentView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      selectProperty: (clauseIndex, property, closePane) => {
-        this.templateHelpers.updateClause(clauseIndex, {
-          value: property.name,
-        }, closePane);
-      },
+      selectProperty: (property, closePane) =>
+        this.templateHelpers.updateStageClause({value: property.name}, closePane),
     });
   }
 }

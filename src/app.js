@@ -21,7 +21,7 @@ const INITIAL_STATE = {
     show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
     time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
   }),
-  editingClause: null,
+  stageClause: null,
   topEvents: [],
   topProperties: [],
   topPropertyValues: [],
@@ -59,81 +59,59 @@ export default class IRBApp extends BaseApp {
 
   // State helpers
 
-  get editingClauseIndex() {
-    if (this.state.editingClause) {
-      return this.state.sections[this.state.editingClause.TYPE].clauses.indexOf(this.state.editingClause);
-    } else {
-      return -1;
-    }
-  }
-
   isAddingClause(sectionType) {
-    return this.isEditingClause(sectionType, -1);
+    return (
+      this.state.stageClause &&
+      this.state.stageClause.TYPE === sectionType &&
+      typeof this.state.stageClauseIndex !== 'number'
+    );
   }
 
   isEditingClause(sectionType, clauseIndex) {
     return (
-      this.state.editingClause &&
-      this.state.editingClause.TYPE === sectionType &&
-      this.editingClauseIndex === clauseIndex
+      this.state.stageClause &&
+      this.state.stageClause.TYPE === sectionType &&
+      this.state.stageClauseIndex === clauseIndex
     );
   }
 
   // State modifiers
 
   startAddingClause(sectionType) {
-    this.update({editingClause: Clause.create(sectionType)});
+    this.update({stageClause: Clause.create(sectionType)});
   }
 
   startEditingClause(sectionType, clauseIndex) {
-    const section = this.state.sections[sectionType];
-    const clause = section.clauses[clauseIndex];
+    const stageClause = this.state.sections[sectionType].clauses[clauseIndex];
 
-    this.update({editingClause: clause});
+    if (stageClause) {
+      this.update({
+        stageClause,
+        stageClauseIndex: clauseIndex,
+      });
+    } else {
+      throw new Error('app.startEditingClause error: invalid clauseIndex provided');
+    }
   }
 
   stopEditingClause() {
     this.stopEditingClauseAttrs();
 
-    const newState = {editingClause: null};
-    const cachedQueryResult = this.query(this.state);
-
-    if (cachedQueryResult) {
-      newState.result = cachedQueryResult;
-    }
-
+    const newState = {stageClause: null, stageClauseIndex: null};
     this.update(newState);
   }
 
   stopEditingClauseAttrs() {
-    if (this.state.editingClause) {
-      this.updateEditingClause({editing: null});
+    if (this.state.stageClause) {
+      this.updateStageClause({editing: null});
     }
   }
 
-  updateEditingClause(clauseData) {
-    const sectionType = this.state.editingClause.TYPE;
-    const clauseIndex = this.state.sections[sectionType].clauses.indexOf(this.state.editingClause);
-
-    if (clauseIndex >= 0) {
-      this.updateClause(sectionType, clauseIndex, clauseData);
-    } else {
-      this.update({editingClause: Clause.create(sectionType, extend(this.state.editingClause.attrs, clauseData))});
-    }
-  }
-
-  updateClause(sectionType, clauseIndex, clauseData, closePane) {
-    const section = this.state.sections[sectionType];
-    const clause = section.clauses[clauseIndex];
-    const editingExistingClause = !!clause;
-
-    const oldClause = clause || this.state.editingClause;
-    const newClause = Clause.create(sectionType, extend(oldClause ? oldClause.attrs : {}, clauseData));
-    const newSection = editingExistingClause ? section.replaceClause(clauseIndex, newClause) : section.addClause(newClause);
-    const newState = extend(this.state, {editingClause: newClause});
+  updateStageClause(clauseData) {
+    let newState = {stageClause: this.state.stageClause.extend(clauseData)};
 
     // query new property values if we're setting a new filter property
-    if (sectionType === 'filter' && clauseData.value) {
+    if (this.state.stageClause.TYPE === 'filter' && clauseData.value) {
       const query = this.queries.topPropertyValues.build(newState).query;
       const cachedResult = this.queries.topPropertyValuesCache.get(query);
 
@@ -147,15 +125,30 @@ export default class IRBApp extends BaseApp {
       }
     }
 
+    this.update(newState);
+  }
+
+  commitStageClause() {
+    const sectionType = this.state.stageClause.TYPE;
+    const section = this.state.sections[sectionType];
+    const clauseIndex = this.state.stageClauseIndex;
+
+    const newClause = this.state.stageClause;
+    const newSection = typeof clauseIndex === 'number' ? section.replaceClause(clauseIndex, newClause) : section.addClause(newClause);
+    const newState = extend(this.state);
+
     if (newClause.valid) {
       newState.sections = this.state.sections.replaceSection(sectionType, newSection);
+
+      const cachedQueryResult = this.query(newState);
+      if (cachedQueryResult) {
+        newState.result = cachedQueryResult;
+      }
+
+      this.update(newState);
     }
 
-    this.update(newState);
-
-    if (closePane) {
-      this.stopEditingClause();
-    }
+    this.stopEditingClause();
   }
 
   removeClause(sectionType, clauseIndex) {

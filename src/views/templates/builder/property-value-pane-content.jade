@@ -1,8 +1,8 @@
-- const selectedProperty = state.editingClause && state.editingClause.value;
-- const selectedType = state.editingClause && state.editingClause.filterType;
-- const selectedOperator = state.editingClause && state.editingClause.filterOperator;
-- const selectedValue = state.editingClause && state.editingClause.filterValue;
-- const selectedDateUnit = state.editingClause && state.editingClause.filterDateUnit;
+- const selectedProperty = state.stageClause && state.stageClause.value;
+- const selectedType = state.stageClause && state.stageClause.filterType;
+- const selectedOperator = state.stageClause && state.stageClause.filterOperator;
+- const selectedValue = state.stageClause && state.stageClause.filterValue;
+- const selectedDateUnit = state.stageClause && state.stageClause.filterDateUnit;
 
 .pane-content-view(class=[elementClass, selectedType ? `filter-type-${selectedType}` : ''])
   table.tabs
@@ -11,7 +11,7 @@
         for typeChoice in constants.filterTypeChoices
           td(class=['type-' + typeChoice, typeChoice === selectedType ? 'selected' : ''])
             button(
-              ev-click=() => helpers.updateClause({filterType: typeChoice, filterValue: null, filterSearch: null, editing: null})
+              ev-click=() => helpers.updateStageClause({filterType: typeChoice, filterValue: null, filterSearch: null, editing: null})
             )= util.renamePropertyType(typeChoice)
 
   if selectedType
@@ -33,12 +33,12 @@
         .filter-string-equals-search.search
           input(
             type='text'
-            value=state.editingClause.filterSearch
-            ev-input=event => helpers.updateClause({filterSearch: event.target.value})
+            value=state.stageClause.filterSearch
+            ev-input=event => helpers.updateStageClause({filterSearch: event.target.value})
           )
 
         ul.filter-string-equals-choices
-          for value in helpers.getValueMatches(state.editingClause.filterSearch)
+          for value in helpers.getValueMatches(state.stageClause.filterSearch)
             li(class=selectedValue && selectedValue.indexOf(value) !== -1 ? 'selected' : '')
               button(ev-click=() => helpers.toggleStringEqualsValueSelected(value))= value
 
@@ -47,7 +47,7 @@
           input(
             type='text'
             value=selectedValue
-            ev-input=event => helpers.updateClause({filterValue: event.target.value})
+            ev-input=event => helpers.updateStageClause({filterValue: event.target.value})
           )
 
           if selectedValue
@@ -63,20 +63,20 @@
           input(
             type='number'
             value=betweenStart
-            ev-input=event => helpers.updateClause({filterValue: [Number(event.target.value), betweenEnd]})
+            ev-input=event => helpers.updateStageClause({filterValue: [Number(event.target.value), betweenEnd]})
           )
           .connector and
           input(
             type='number'
             value=betweenEnd
-            ev-input=event => helpers.updateClause({filterValue: [betweenStart, Number(event.target.value)]})
+            ev-input=event => helpers.updateStageClause({filterValue: [betweenStart, Number(event.target.value)]})
           )
       else
         .filter-value-input
           input(
             type='number'
             value=selectedValue
-            ev-input=event => helpers.updateClause({filterValue: Number(event.target.value)})
+            ev-input=event => helpers.updateStageClause({filterValue: Number(event.target.value)})
           )
 
     else if selectedType === 'datetime'
@@ -86,14 +86,14 @@
         .filter-value-input
           irb-date-picker(
             value=JSON.stringify({from, to})
-            ev-change=event => helpers.updateClause({filterValue: [new Date(event.target.value.from), new Date(event.target.value.to)]})
+            ev-change=event => helpers.updateStageClause({filterValue: [new Date(event.target.value.from), new Date(event.target.value.to)]})
           )
       else
         .filter-value-input.filter-days-ago
           input(
             type='number'
             value=selectedValue
-            ev-input=event => helpers.updateClause({filterValue: Number(event.target.value)})
+            ev-input=event => helpers.updateStageClause({filterValue: Number(event.target.value)})
           )
           .filter-unit-input= views.dateUnitDropdown()
           .connector ago
@@ -103,5 +103,5 @@
         input(
           type='text'
           value=selectedValue
-          ev-input=event => helpers.updateClause({filterValue: event.target.value})
+          ev-input=event => helpers.updateStageClause({filterValue: event.target.value})
         )
