@@ -116,6 +116,10 @@
         &:hover
           background lighten(background-gray, 50%)
 
+        &.disabled
+          opacity .5
+          pointer-events none
+
       &.resource-value li
         overflow hidden
         padding-right 32px
@@ -170,9 +174,6 @@
     height 36px
     position absolute
     width 100%
-
-.time-pane-view
-  overflow visible
 
 .pane-container.visible .pane
   transition transform 0.2s

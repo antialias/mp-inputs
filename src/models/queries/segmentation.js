@@ -1,6 +1,17 @@
 import { ShowClause } from '../clause';
 import BaseQuery from './base';
 
+const MS_IN_HOUR = 60 * 60 * 1000;
+const MS_IN_DAY = MS_IN_HOUR * 24;
+const MS_BY_UNIT = {
+  hour: MS_IN_HOUR,
+  day: MS_IN_DAY,
+  week: MS_IN_DAY * 7,
+  month: MS_IN_DAY * 30,
+  quarter: MS_IN_DAY * 120,
+  year: MS_IN_DAY * 365,
+};
+
 function isFilterValid(property, type, operator, value, dateUnit) {
   if (!property) {
     return false;
@@ -65,17 +76,11 @@ function filterToArbSelectorString(property, type, operator, value, dateUnit) {
         case 'is greater than' : return `(${property} > ${value})`;
       }
     case 'datetime':
-      const dayMs = 24 * 60 * 60 * 1000;
-      const unitMs = {
-        days: dayMs,
-        weeks: dayMs * 7,
-        months: dayMs * 30,
-        year: dayMs * 365,
-      }[dateUnit];
+      const unitMs = MS_BY_UNIT[dateUnit];
 
       switch (operator) {
-        case 'was less than': return `(${property} > datetime(${new Date(new Date().getTime() - (value * unitMs)).getTime()}))`;
-        case 'was more than': return `(${property} < datetime(${new Date(new Date().getTime() - (value * unitMs)).getTime()}))`;
+        case 'was less than': return `(${property} < datetime(${new Date(new Date().getTime() - (value * unitMs)).getTime()}))`;
+        case 'was more than': return `(${property} > datetime(${new Date(new Date().getTime() - (value * unitMs)).getTime()}))`;
         // TODO 'was on' should be a different case - when we have better date controls
         case 'was on':
         case 'was between':
@@ -133,16 +138,26 @@ export default class SegmentationQuery extends BaseQuery {
       ]);
 
     const time = state.sections.time.clauses[0];
+    const unit = time.unit;
+    let from = 0;
+    let to = 0;
 
-    return {
-      type,
-      events,
-      segments,
-      filters,
-      unit: time.unit,
-      from: time.from,
-      to: time.to,
-    };
+    if (Array.isArray(time.value)) {
+      from = time.value[0] || 0;
+      to = time.value[1] || 0;
+    } else {
+      from = time.value;
+    }
+
+    if (!(from instanceof Date)) {
+      from = new Date(new Date().getTime() - (MS_BY_UNIT[unit] * from));
+    }
+
+    if (!(to instanceof Date)) {
+      to = new Date(new Date().getTime() - (MS_BY_UNIT[unit] * to));
+    }
+
+    return {type, events, segments, filters, unit, from, to};
   }
 
   buildUrl(query) {

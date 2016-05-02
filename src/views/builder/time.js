@@ -5,6 +5,8 @@ import PaneContentView from './pane-content';
 import { extend } from '../../util';
 import { register as registerDatePicker } from '../../elements/date-picker';
 
+import { TimeClause } from '../../models/clause';
+
 import template from '../templates/builder/time.jade';
 import timePaneContentTemplate from '../templates/builder/time-pane-content.jade';
 
@@ -21,13 +23,16 @@ class TimePaneContentView extends PaneContentView {
     return timePaneContentTemplate;
   }
 
+  get templateConstants() {
+    return extend(super.templateConstants, {
+      rangeChoices: TimeClause.RANGE_CHOICES,
+      customRange: TimeClause.RANGES.CUSTOM,
+    });
+  }
+
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      updateClause: data => this.app.updateClause('time', 0, data),
-      rangeToString: () => {
-        const { from, to } = this.app.state.sections.getClause('time', 0);
-        return JSON.stringify({from, to});
-      },
+      updateClause: clauseData => this.app.updateClause('time', 0, clauseData, true),
     });
   }
 }
@@ -71,26 +76,14 @@ class TimeEditControlView extends EditControlView {
   get templateHelpers() {
     return extend(super.templateHelpers, {
       getLabel: () => {
-        const { unit, from, to } = this.app.state.sections.getClause('time', 0);
-        const now = new Date();
-        const startOfToday = new Date().setHours(0, 0, 0, 0);
-        const hoursFromNow = Math.round(Math.abs(now - from) / (60 * 60 * 1000));
+        const clause = this.app.state.sections.time.clauses[0];
+        const range = clause.range;
 
-        if (hoursFromNow < 100) {
-          return `last ${hoursFromNow} hours`;
+        if (range) {
+          return range;
+        } else {
+          throw new Error('Custom ranges not implemented yet');
         }
-
-        const includeYear = from.getFullYear() !== to.getFullYear() ||
-                          from.getFullYear() !== now.getFullYear();
-
-        const formatDate = date =>
-          `${date.getMonth() + 1}/${date.getDate()}` +
-            (includeYear ? `/${date.getFullYear().toString().slice(2)}` : '');
-
-        const fromFormatted = formatDate(from);
-        const toFormatted = formatDate(to);
-
-        return fromFormatted === toFormatted ? fromFormatted : `${fromFormatted} - ${toFormatted}`;
       },
     });
   }

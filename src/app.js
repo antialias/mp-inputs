@@ -19,7 +19,7 @@ const INITIAL_STATE = {
   reportName: 'Untitled report',
   sections: new BuilderSections({
     show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
-    time: new TimeSection(new TimeClause()),
+    time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
   }),
   editingClause: null,
   topEvents: [],

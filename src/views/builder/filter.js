@@ -10,7 +10,7 @@ import {
   removeValue,
 } from '../../util';
 
-import { Clause, FilterClause } from '../../models/clause';
+import { Clause, FilterClause, TimeClause } from '../../models/clause';
 
 import template from '../templates/builder/filter.jade';
 import propertyPaneTemplate from '../templates/builder/property-pane-content.jade';
@@ -73,7 +73,7 @@ class DateUnitDropdownView extends DropdownView {
   }
 
   get choices() {
-    return FilterClause.FILTER_DATE_UNITS;
+    return TimeClause.UNIT_CHOICES;
   }
 
   get selected() {
@@ -94,6 +94,12 @@ class DateUnitDropdownView extends DropdownView {
     this.app.updateEditingClause({
       filterDateUnit,
       editing: null,
+    });
+  }
+
+  get templateHelpers() {
+    return extend(super.templateHelpers, {
+      formatChoice: choice => `${choice}s`,
     });
   }
 }
@@ -279,7 +285,7 @@ class FilterEditControlView extends EditControlView {
 
         if (clause.filterValue) {
           if (type === 'datetime' && (operator === 'was more than' || operator === 'was less than')) {
-            propertyValue = [clause.filterValue, clause.filterDateUnit, 'ago'];
+            propertyValue = [clause.filterValue, `${clause.filterDateUnit}s`, 'ago'];
           } else {
             switch (operator) {
               case 'equals':
@@ -336,6 +342,6 @@ export default class FilterView extends BaseView {
   get templateHelpers() {
     return {
       isAddingClause: () => this.app.isAddingClause('filter'),
-    }
+    };
   }
 }

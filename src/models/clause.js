@@ -87,6 +87,123 @@ ShowClause.MATH_TYPES = ShowClause.prototype.MATH_TYPES = [
 export class GroupClause extends EventsPropertiesClause {}
 GroupClause.prototype.TYPE = 'group';
 
+export class TimeClause extends Clause {
+  constructor(attrs={}) {
+    super(...arguments);
+
+    if (attrs.range) {
+      let { unit, value } = TimeClause.rangeToUnitValue(attrs.range);
+
+      this.unit = unit;
+      this.value = value;
+    } else {
+      this.unit = attrs.unit;
+      this.value = attrs.value;
+    }
+  }
+
+  get attrs() {
+    const { unit, value } = this;
+    return {unit, value};
+  }
+
+  get valid() {
+    /* conditions:
+     * - unit must be one of TimeClause.UNIT_CHOICES
+     * - value must exist
+     * - value must be either a single entry OR an array of entries
+     * - entries in value must be numbers OR Dates
+     * - numbers in value must be greater than 0
+     * - Dates in value must occur before now
+     */
+    return (
+      this.UNIT_CHOICES.indexOf(this.unit) !== -1
+      &&
+      this.value
+      &&
+      (
+        (typeof this.value === 'number' && this.value > 0)
+        ||
+        (this.value instanceof Date && this.value < new Date())
+        ||
+        (
+          Array.isArray(this.value)
+          &&
+          this.value.length === 2
+          &&
+          (
+            (
+              (typeof this.value[0] === 'number' && this.value[0] > 0)
+              &&
+              (typeof this.value[1] === 'number' && this.value[1] > 0)
+            )
+            ||
+            (
+              (this.value instanceof Date && this.value < new Date())
+              &&
+              (this.value instanceof Date && this.value < new Date())
+            )
+          )
+        )
+      )
+    );
+  }
+
+  get range() {
+    return TimeClause.unitValueToRange(this.unit, this.value);
+  }
+
+  static rangeToUnitValue(range) {
+    let value = {
+      [TimeClause.RANGES.HOURS]: 96,
+      [TimeClause.RANGES.WEEK]: 7,
+      [TimeClause.RANGES.MONTH]: 30,
+      [TimeClause.RANGES.QUARTER]: 120,
+      [TimeClause.RANGES.YEAR]: 365,
+    }[range];
+
+    let unit = 'day';
+    if (range === TimeClause.RANGES.HOURS) {
+      unit = 'hour';
+    }
+
+    return {value, unit};
+  }
+
+  static unitValueToRange(unit, value) {
+    if (unit === 'hour' && value === 96) {
+      return TimeClause.RANGES.HOURS;
+    } else if (unit === 'day') {
+      if (value === 7) {
+        return TimeClause.RANGES.WEEK;
+      } else if (value === 30) {
+        return TimeClause.RANGES.MONTH;
+      } else if (value === 120) {
+        return TimeClause.RANGES.QUARTER;
+      } else if (value === 365) {
+        return TimeClause.RANGES.YEAR;
+      }
+    }
+    return null;
+  }
+}
+TimeClause.TYPE = TimeClause.prototype.TYPE = 'time';
+TimeClause.UNIT_CHOICES = TimeClause.prototype.UNIT_CHOICES = [
+  'hour', 'day', 'week', 'month', 'quarter', 'year',
+];
+const HOURS = 'last 96 hours';
+const WEEK = 'last week';
+const MONTH = 'last 30 days';
+const QUARTER = 'last quarter';
+const YEAR = 'last 12 months';
+const CUSTOM = 'Custom date range ...';
+TimeClause.RANGES = TimeClause.prototype.RANGES = {
+  HOURS, WEEK, MONTH, QUARTER, YEAR, CUSTOM,
+};
+TimeClause.RANGE_CHOICES = [
+  HOURS, WEEK, MONTH, QUARTER, YEAR, CUSTOM,
+];
+
 export class FilterClause extends EventsPropertiesClause {
   constructor(attrs={}) {
     super(...arguments);
@@ -102,7 +219,7 @@ export class FilterClause extends EventsPropertiesClause {
 
     this.filterValue = attrs.filterValue || null;
     this.filterSearch = attrs.filterSearch || null;
-    this.filterDateUnit = attrs.filterDateUnit || FilterClause.FILTER_DATE_UNITS[0];
+    this.filterDateUnit = attrs.filterDateUnit || TimeClause.UNIT_CHOICES[0];
 
     this.editing = attrs.editing || null;
   }
@@ -178,35 +295,4 @@ FilterClause.FILTER_OPERATORS = FilterClause.prototype.FILTER_OPERATORS = {
 };
 FilterClause.FILTER_TYPES = FilterClause.prototype.FILTER_TYPES = [
   'string', 'number', 'datetime', 'boolean', 'list',
-];
-FilterClause.FILTER_DATE_UNITS = FilterClause.prototype.FILTER_DATE_UNITS = [
-  'days', 'weeks', 'months', 'years',
-];
-
-export class TimeClause extends Clause {
-  constructor(attrs={}) {
-    super(...arguments);
-
-    let to = new Date();
-    let from = new Date();
-    from.setHours(to.getHours() - 96);
-
-    this.unit = attrs.unit || 'hour';
-    this.from = attrs.from || from;
-    this.to = attrs.to || to;
-  }
-
-  get attrs() {
-    const { unit, from, to } = this;
-    return {unit, from, to};
-  }
-
-  get valid() {
-    return this.UNIT_TYPES.indexOf(this.unit) !== -1 &&
-      this.to instanceof Date && this.from instanceof Date;
-  }
-}
-TimeClause.TYPE = TimeClause.prototype.TYPE = 'time';
-TimeClause.UNIT_TYPES = TimeClause.prototype.UNIT_TYPES = [
-  'hour', 'day', 'week', 'month', 'quarter', 'year'
 ];
