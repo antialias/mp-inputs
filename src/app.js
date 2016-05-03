@@ -26,6 +26,7 @@ const INITIAL_STATE = {
   topProperties: [],
   topPropertyValues: [],
   result: {},
+  chartType: 'bar',
 };
 
 export default class IRBApp extends BaseApp {

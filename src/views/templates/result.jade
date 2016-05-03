@@ -1,2 +1,3 @@
 div(class=elementClass)
-  irb-chart(data=JSON.stringify(state.result))
+  .controls= views.chartToggle()
+  .chart= views.charts[state.chartType](state)

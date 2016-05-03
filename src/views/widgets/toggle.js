@@ -13,6 +13,7 @@ export default class ToggleView extends BaseView {
       getChoices: () => this.choices,
       getSelected: () => this.selected,
       formatChoice: choice => this.formatChoice(choice),
+      formatChoiceClass: choice => this.formatChoiceClass(choice),
     };
   }
 
@@ -30,11 +31,15 @@ export default class ToggleView extends BaseView {
     throw new Error('Must be implemented by subclass');
   }
 
+  select(choice) {
+    throw new Error('Must be implemented by subclass');
+  }
+
   formatChoice(choice) {
     return choice;
   }
 
-  select(choice) {
-    throw new Error('Must be implemented by subclass');
+  formatChoiceClass(choice) {
+    return '';
   }
 }
