@@ -1,2 +1,28 @@
 div(class=elementClass)
-  bar chart
+  .header
+    for groupClause in state.sections.group.clauses
+      .group= util.renameProperty(groupClause.value)
+
+  table
+    for row in state.rows
+      tr
+        for cell, i in row
+          if cell
+            if i + 1 < row.length
+              td.chart-header(rowSpan=state.rowSpans[i])
+                if Array.isArray(cell)
+                  ul
+                    for value in cell
+                      li= value.toString()
+                else
+                  span= cell
+            else
+              td.chart-data
+                ul
+                  for value, i in cell
+                    li.bar(
+                      class=value / state.max < .03 ? 'narrow' : ''
+                      style={width: `${value / state.max * 100}%`}
+                    )
+                      .background(style={opacity: 1 - (0.6 * i / cell.length)})
+                      .label= value

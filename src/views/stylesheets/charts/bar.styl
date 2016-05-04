@@ -1,1 +1,61 @@
 @import "../../../stylesheets/common"
+
+.bar-chart-view
+  table
+    width 100%
+
+    td
+      border 1px solid background-gray
+      color medium-gray
+      padding 12px
+      text-align right
+      vertical-align top
+
+      &:first-child
+        border-left none
+
+      &:not(:last-child)
+        width 1%
+
+      &:last-child
+        border-right none
+        text-align left
+
+      li
+        white-space nowrap
+
+        &:not(:last-child)
+          margin-bottom 5px
+
+      &.chart-data
+        padding 0
+        padding-top 12px
+
+        li
+          height 20px
+          margin-bottom 2px
+          position relative
+          text-align right
+
+          .background
+            background medium-gray
+            height 100%
+            position absolute
+            width 100%
+            z-index 0
+
+          .label
+            color white
+            float right
+            font-size 12px
+            line-height 20.5px
+            padding 0px 4px
+            position relative
+            width 40px
+            z-index 1
+
+          &.narrow .label
+            color medium-gray
+            margin-right -48px
+            text-align left
+
