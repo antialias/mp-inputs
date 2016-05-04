@@ -57,7 +57,6 @@ var webpackConfig = {
       APP_ENV: JSON.stringify(process.env.NODE_ENV),
       ROLLBAR_TOKEN: JSON.stringify('f1363513be0a42d1951b4f4e153996ec'),
     }),
-    new HtmlWebpackPlugin({template: 'index.template.html'}),
   ],
   resolveLoader: {
     root: path.join(__dirname, 'node_modules'),
@@ -87,6 +86,7 @@ if (process.env.NODE_ENV === 'development') {
       new webpack.DefinePlugin({
         MIXPANEL_TOKEN: JSON.stringify('<IRB production Mixpanel project token>'),
       }),
+      new HtmlWebpackPlugin({template: 'index.template.html'}),
       new ExtractTextPlugin('dist/bundle.[hash].min.css'),
       //new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
     ]),
