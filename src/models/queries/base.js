@@ -14,7 +14,7 @@ export default class BaseQuery {
     return new Promise((resolve, reject) => {
       this.executeQuery(query).done(rawResults => {
         if (query === this.query) { // ignore obsolete queries
-          resolve(this.processResults(rawResults));
+          resolve(this.processResults(rawResults, query));
         }
       });
     });
@@ -36,7 +36,7 @@ export default class BaseQuery {
     return window.MP.api.query(this.buildUrl(query), this.buildParams(query));
   }
 
-  processResults(results) {
+  processResults(results, query) {
     return results;
   }
 }

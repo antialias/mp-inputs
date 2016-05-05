@@ -2,6 +2,7 @@
 
 .result-view
   padding 24px
+  position relative
 
   .controls
     clearfix()
@@ -59,3 +60,14 @@
 
   .chart
     width 100%
+    transition opacity .2s
+
+    &.loading
+      opacity .2
+      pointer-events none
+
+  .loader
+    loader()
+    position absolute
+    top 30%
+    left 50%

@@ -200,7 +200,10 @@ export default class SegmentationQuery extends BaseQuery {
     return params;
   }
 
-  processResults(results) {
-    return results.data.values;
+  processResults(results, query) {
+    return {
+      headers: query.segments,
+      data: results.data.values,
+    };
   }
 }

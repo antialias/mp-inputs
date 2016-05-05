@@ -99,8 +99,8 @@ export default class BarChartView extends BaseView {
   }
 
   format(state) {
-    let headers = state.sections['group'].clauses.map(clause => clause.value);
-    let data = JSON.parse(JSON.stringify(state.result)); // deep copy state.result
+    let headers = state.result.headers;
+    let data = JSON.parse(JSON.stringify(state.result.data)); // deep copy
 
     (function sumDateResults(obj) {
       if (containsObjects(obj)) {

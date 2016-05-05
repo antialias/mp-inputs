@@ -1,3 +1,5 @@
 div(class=elementClass)
   .controls= views.chartToggle()
-  .chart= views.charts[state.chartType](state)
+  .chart(class=state.result.loading ? 'loading' : '')= views.charts[state.chartType](state)
+  if state.result.loading && state.chartType !== 'line'
+    .loader
