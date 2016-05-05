@@ -7,7 +7,7 @@ import {
   renameProperty,
 } from '../../util';
 
-import { Clause, GroupClause, ShowClause } from '../../models/clause';
+import { Clause, ShowClause } from '../../models/clause';
 
 import template from '../templates/builder/group.jade';
 import propertyPaneTemplate from '../templates/builder/property-pane-content.jade';

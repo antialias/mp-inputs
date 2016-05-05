@@ -11,7 +11,7 @@ export default class BaseQuery {
   run() {
     const query = this.query;
 
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       this.executeQuery(query).done(rawResults => {
         if (query === this.query) { // ignore obsolete queries
           resolve(this.processResults(rawResults));
@@ -20,15 +20,15 @@ export default class BaseQuery {
     });
   }
 
-  buildQuery(state) {
+  buildQuery() {
     return {};
   }
 
-  buildUrl(query) {
+  buildUrl() {
     return '';
   }
 
-  buildParams(query) {
+  buildParams() {
     return {};
   }
 

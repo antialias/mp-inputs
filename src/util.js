@@ -1,3 +1,7 @@
+/* global APP_ENV */
+
+import _ from 'lodash';
+
 export function extend() {
   return Object.assign(...[{}, ...Array.prototype.slice.call(arguments)]);
 }
@@ -30,7 +34,7 @@ export function renameEvent(event) {
     '$campaign_marked_spam': 'Notification Marked Spam',
     '$experiment_started': 'Experiment Started',
     '$show_survey': 'Show Survey',
-    '$top_events': 'Your Top Events'
+    '$top_events': 'Your Top Events',
   };
 
   if (mapping.hasOwnProperty(event)) {
@@ -103,7 +107,7 @@ export function renameProperty(property) {
     'mp_browser': 'Browser',
     'mp_page': 'Page View',
     'mp_platform': 'Platform',
-    'mp_referrer': 'Referrer'
+    'mp_referrer': 'Referrer',
   };
 
   if (mapping.hasOwnProperty(property)) {

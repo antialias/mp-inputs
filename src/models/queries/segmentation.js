@@ -68,6 +68,7 @@ function filterToArbSelectorString(property, type, operator, value, dateUnit) {
         case 'is set'           : return `(defined ${property})`;
         case 'is not set'       : return `(not defined ${property})`;
       }
+      break;
     case 'number':
       switch (operator) {
         case 'is between'      : return `((${property} > ${value[0]}) and (${property} < ${value[1]}))`;
@@ -75,7 +76,8 @@ function filterToArbSelectorString(property, type, operator, value, dateUnit) {
         case 'is less than'    : return `(${property} < ${value})`;
         case 'is greater than' : return `(${property} > ${value})`;
       }
-    case 'datetime':
+      break;
+    case 'datetime': {
       const unitMs = MS_BY_UNIT[dateUnit];
 
       switch (operator) {
@@ -83,7 +85,7 @@ function filterToArbSelectorString(property, type, operator, value, dateUnit) {
         case 'was more than': return `(${property} > datetime(${new Date(new Date().getTime() - (value * unitMs)).getTime()}))`;
         // TODO 'was on' should be a different case - when we have better date controls
         case 'was on':
-        case 'was between':
+        case 'was between': {
           let from = new Date(value[0].getTime());
           let to = new Date(value[1].getTime());
 
@@ -91,17 +93,22 @@ function filterToArbSelectorString(property, type, operator, value, dateUnit) {
           to.setHours(23, 59, 59, 999);
 
           return `((${property} >= datetime(${from.getTime()})) and (${property} <= datetime(${to.getTime()})))`;
+        }
       }
+      break;
+    }
     case 'boolean':
       switch (operator) {
         case 'is true'  : return `(boolean(${property}) == true)`;
         case 'is false' : return `(boolean(${property}) == false)`;
       }
+      break;
     case 'list':
       switch (operator) {
         case 'contains'         : return `(${value} in list(${property}))`;
         case 'does not contain' : return `(not ${value} in list(${property}))`;
       }
+      break;
   }
 }
 

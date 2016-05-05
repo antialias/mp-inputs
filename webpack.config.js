@@ -15,20 +15,6 @@ var webpackConfig = {
         test: /\.js$/,
         include: path.join(__dirname, 'src'),
         loader: 'eslint',
-        query: {
-          extends: 'eslint:recommended',
-          parser: 'babel-eslint',
-          rules: {
-            'no-console': [1, {allow: ['info', 'warn', 'error']}],
-            'no-debugger': 1,
-            'comma-dangle': [2, 'only-multiline'],
-            'eol-last': 2,
-            'no-unused-expressions': 2,
-            'no-use-before-define': 2,
-            'quotes': [2, 'single'],
-            'semi': 2,
-          },
-        },
       },
     ],
     loaders: [

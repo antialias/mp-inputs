@@ -1,4 +1,4 @@
-/* global APP_ENV */
+/* global APP_ENV, MIXPANEL_TOKEN, ROLLBAR_TOKEN */
 
 import mixpanel from 'mixpanel-browser';
 import rollbarConfig from 'rollbar-browser';

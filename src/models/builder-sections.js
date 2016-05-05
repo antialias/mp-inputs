@@ -47,5 +47,5 @@ export default class BuilderSections {
   }
 }
 BuilderSections.TYPES = BuilderSections.prototype.TYPES = [
-  'show', 'group', 'time', 'filter'
+  'show', 'group', 'time', 'filter',
 ];

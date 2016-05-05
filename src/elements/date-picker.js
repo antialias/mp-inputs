@@ -1,3 +1,5 @@
+/* global $ */
+
 class DatePicker extends HTMLElement {
   createdCallback() {
     this.$el = $('<div>').appendTo(this);

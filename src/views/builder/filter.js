@@ -121,7 +121,7 @@ class FilterPropertyPaneContentView extends PaneContentView {
 
   get templateHelpers() {
     return extend(super.templateHelpers, {
-      selectProperty: (property, closePane) => {
+      selectProperty: property => {
         this.templateHelpers.updateStageClause({
           value: property.name,
           filterType: property.type,
@@ -174,9 +174,9 @@ class FilterPropertyValuePaneContentView extends PaneContentView {
         let filterValue;
 
         if (selected.indexOf(value) === -1) {
-            filterValue = [...selected, value];
+          filterValue = [...selected, value];
         } else {
-            filterValue = removeValue(selected, value);
+          filterValue = removeValue(selected, value);
         }
 
         this.app.updateStageClause({filterValue});
@@ -225,7 +225,7 @@ class FilterPaneView extends PaneView {
             return clause && clause.value ? renameProperty(clause.value) : '';
           },
         },
-      ]
+      ],
     });
   }
 

@@ -5,7 +5,7 @@ export default class TopPropertyValuesQuery extends BaseQuery {
     return {property: state.stageClause.value};
   }
 
-  buildUrl(query) {
+  buildUrl() {
     return 'api/2.0/events/properties/values';
   }
 

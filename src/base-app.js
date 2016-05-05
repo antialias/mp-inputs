@@ -1,4 +1,4 @@
-import { App, Router } from 'panel';
+import { App } from 'panel';
 
 import { mirrorLocationHash } from './mp-common/parent-frame';
 import { debug } from './util';
@@ -43,16 +43,15 @@ export default class BaseApp extends App {
 
   clickOutsideHandler(event) {
     Object.keys(this.clickOutsideHandlers).forEach(appMethodName => {
-      let el = event.target;
       const classes = this.clickOutsideHandlers[appMethodName];
 
-      do {
+      for (let el = event.target; el; el = el.parentElement) {
         for (let i = 0; i < classes.length; i++) {
           if (el.classList.contains(classes[i])) {
             return;
           }
         }
-      } while (el = el.parentElement);
+      }
 
       this[appMethodName](event);
     });

@@ -1,3 +1,5 @@
+/* global $ */
+
 class Chart extends HTMLElement {
   createdCallback() {
     this.$el = $('<div>').appendTo(this);

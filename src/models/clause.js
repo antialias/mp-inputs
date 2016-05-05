@@ -81,7 +81,7 @@ export class ShowClause extends EventsPropertiesClause {
 ShowClause.TYPE = ShowClause.prototype.TYPE = 'show';
 ShowClause.TOP_EVENTS = ShowClause.prototype.TOP_EVENTS = '$top_events';
 ShowClause.MATH_TYPES = ShowClause.prototype.MATH_TYPES = [
-  'total', 'unique', 'average', 'sum', 'median'
+  'total', 'unique', 'average', 'sum', 'median',
 ];
 
 export class GroupClause extends EventsPropertiesClause {}

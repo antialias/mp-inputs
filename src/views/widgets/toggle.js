@@ -34,7 +34,7 @@ export default class ToggleView extends BaseView {
     return choice;
   }
 
-  select(choice) {
+  select() {
     throw new Error('Must be implemented by subclass');
   }
 }

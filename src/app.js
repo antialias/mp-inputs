@@ -1,6 +1,6 @@
 import BaseApp from './base-app.js';
 import IRBView from './views/irb';
-import { extend, replaceIndex, removeIndex } from './util';
+import { extend } from './util';
 
 import BuilderSections from './models/builder-sections';
 import { ShowSection, TimeSection } from './models/section';

@@ -23,6 +23,19 @@ export class Section {
     return this.clauses.every(clause => clause.valid);
   }
 
+  static create(sectionType, attrs) {
+    switch (sectionType) {
+      case 'show': return new ShowSection(attrs);
+      case 'group': return new GroupSection(attrs);
+      case 'filter': return new FilterSection(attrs);
+      case 'time': return new TimeSection(attrs);
+    }
+  }
+
+  create() {
+    return Section.create(...arguments);
+  }
+
   validate(newSection) {
     const valid = newSection.valid;
 
@@ -45,14 +58,6 @@ export class Section {
     return this.validate(Section.create(this.TYPE, {clauses: removeIndex(this.clauses, index)}));
   }
 }
-Section.create = Section.prototype.create = (sectionType, attrs) => {
-  switch (sectionType) {
-    case 'show': return new ShowSection(attrs);
-    case 'group': return new GroupSection(attrs);
-    case 'filter': return new FilterSection(attrs);
-    case 'time': return new TimeSection(attrs);
-  }
-};
 
 export class ShowSection extends Section {
   get valid() {

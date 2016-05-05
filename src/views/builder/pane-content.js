@@ -1,10 +1,6 @@
 import BaseView from '../base';
 
 export default class PaneContentView extends BaseView {
-  get TEMPLATE() {
-    return template;
-  }
-
   get templateHelpers() {
     return {
       matchesSearch: value => (

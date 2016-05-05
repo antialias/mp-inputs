@@ -1,7 +1,7 @@
 import BaseQuery from './base';
 
 export default class TopPropertiesQuery extends BaseQuery {
-  executeQuery(query) {
+  executeQuery() {
     return window.MP.api.topEvents();
   }
 

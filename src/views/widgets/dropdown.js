@@ -44,7 +44,7 @@ export default class DropdownView extends BaseView {
     throw new Error('Must be implemented by subclass');
   }
 
-  select(choice) {
+  select() {
     throw new Error('Must be implemented by subclass');
   }
 }

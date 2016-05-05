@@ -1,11 +1,11 @@
 import BaseQuery from './base';
 
 export default class TopPropertiesQuery extends BaseQuery {
-  buildUrl(query) {
+  buildUrl() {
     return 'api/2.0/events/properties/toptypes';
   }
 
-  buildParams(query) {
+  buildParams() {
     return {limit: 255};
   }
 
