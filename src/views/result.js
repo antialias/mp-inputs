@@ -41,6 +41,6 @@ export default class ResultView extends BaseView {
         line: new LineChartView(this),
         table: new TableChartView(this),
       },
-    }
+    };
   }
 }
