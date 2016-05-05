@@ -1,9 +1,10 @@
 import BaseView from '../base';
 import {
   extend,
-  renameProperty,
   getTextWidth,
   getTickDistance,
+  isDateString,
+  renameProperty,
 } from '../../util';
 
 import template from '../templates/charts/bar.jade';
@@ -112,7 +113,7 @@ export default class BarChartView extends BaseView {
           let subKeys = Object.keys(subObj);
 
           if (subKeys.length) {
-            if (subKeys[0].match(/\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d/)) {
+            if (isDateString(subKeys[0])) {
               obj[key] = subKeys.reduce((accum, key) => accum + subObj[key], 0);
             } else {
               sumDateResults(subObj);

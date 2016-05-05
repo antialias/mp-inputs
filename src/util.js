@@ -127,6 +127,10 @@ export function renamePropertyType(type) {
   }[type] || capitalize(type);
 }
 
+export function isDateString(string) {
+  return !!string.match(/^\d\d\d\d-\d\d-\d\d( \d\d:\d\d:\d\d)?$/);
+}
+
 export function getTextWidth(text, font) {
   const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'));
   let context = canvas.getContext('2d');
