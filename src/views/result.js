@@ -19,6 +19,7 @@ class ChartToggleView extends ToggleView {
   }
 
   select(chartType) {
+    if (chartType === 'table') { return; } // TODO: remove when we add pivot table
     this.app.update({chartType});
   }
 
