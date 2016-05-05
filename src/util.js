@@ -22,6 +22,82 @@ export function capitalize(string) {
   return string && string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+export function commaizeNumber(number, no_conversion) {
+  switch (typeof number) {
+    case "number":
+      if (_.isNaN(number)) { return number; }
+      number = number.toString();
+      break;
+    case "string":
+      number = number;
+      break;
+    default:
+      return number;
+  }
+
+  let neg = false;
+  if (number[0] === '-') {
+    neg = true;
+    number = number.slice(1);
+  }
+
+  // Parse main number
+  let split = number.split('.');
+  let commaized = no_conversion ? split[0] : parseInt(split[0] || 0, 10).toString();
+
+  if (commaized.length) {
+    commaized = commaized.split('').reverse().join('');
+    commaized = commaized.match(/.{1,3}/g).join(',');
+    commaized = commaized.split('').reverse().join('');
+  }
+
+  if (split[1]) {
+    // Add decimals, if applicable
+    commaized += '.' + split[1];
+  }
+
+  if (neg) {
+    commaized = '-' + commaized;
+  }
+
+  return commaized;
+}
+
+export function abbreviateNumber(number, precision) {
+  number = parseFloat(number);
+  precision = (precision === undefined) ? 1 : precision;
+
+  let large_numbers = [
+    [Math.pow(10, 15), 'Q'],
+    [Math.pow(10, 12), 'T'],
+    [Math.pow(10, 9), 'B'],
+    [Math.pow(10, 6), 'M'],
+    [Math.pow(10, 3), 'K']
+  ];
+  let suffix = '';
+
+  for (let i = 0; i < large_numbers.length; i++) {
+    let bignum = large_numbers[i][0];
+    let letter = large_numbers[i][1];
+
+    if (Math.abs(number) >= bignum) {
+      number /= bignum;
+      suffix = letter;
+      break;
+    }
+  }
+
+  let is_negative = number < 0;
+  let fixed = number.toFixed(precision).split('.');
+  let formatted = commaizeNumber(Math.abs(parseInt(fixed[0], 10)));
+
+  if (fixed[1] && parseInt(fixed[1], 10) !== 0) {
+    formatted += '.' + fixed[1];
+  }
+
+  return (is_negative ? '-' : '') + formatted + suffix;
+}
+
 export function renameEvent(event) {
   var mapping = {
     '$campaign_delivery': 'Notification Sent',

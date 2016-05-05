@@ -1,5 +1,6 @@
 import BaseView from '../base';
 import {
+  abbreviateNumber,
   extend,
   getTextWidth,
   getTickDistance,
@@ -52,7 +53,7 @@ document.registerElement('irb-bar-chart-header', class extends HTMLElement {
       $('<div>')
         .addClass('bar-chart-tick')
         .width(`${tickDistance / this._chartMax * 100}%`)
-        .append($('<div>').addClass('text').html(tick))
+        .append($('<div>').addClass('text').html(abbreviateNumber(tick)))
         .get(0)
     ));
 
