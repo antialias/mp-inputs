@@ -19,7 +19,7 @@ div(class=elementClass)
             if cell
               if i + 1 < row.length
                 td.chart-header(
-                  rowSpan=state.rowSpans[i]
+                  rowSpan=state.rowSpans[i] || 1
                   style={'min-width': `${util.getTextWidth(util.renameProperty(state.headers[i]), 'bold 14px Helvetica')}px`}
                 )
                   if Array.isArray(cell)
