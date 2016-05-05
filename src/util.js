@@ -24,11 +24,11 @@ export function capitalize(string) {
 
 export function commaizeNumber(number, no_conversion) {
   switch (typeof number) {
-    case "number":
+    case 'number':
       if (_.isNaN(number)) { return number; }
       number = number.toString();
       break;
-    case "string":
+    case 'string':
       number = number;
       break;
     default:
