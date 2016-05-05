@@ -102,27 +102,6 @@ export default class BarChartView extends BaseView {
     let headers = state.sections['group'].clauses.map(clause => clause.value);
     let data = JSON.parse(JSON.stringify(state.result)); // deep copy state.result
 
-    //let data = {
-    //  Chrome: {
-    //    SanFrancisco: {UnitedStates: {Retention: 307, Segmentation: 164, Funnels: 821}, Canada: {Retention: 307, Segmentation: 164, Funnels: 821}},
-    //    Chicago: {UnitedStates: {Retention: 174, Segmentation: 920, Funnels: 31}, Canada: {Retention: 174, Segmentation: 920, Funnels: 31}},
-    //    Seattle: {UnitedStates: {Retention: 203, Segmentation: 596, Funnels: 855}, Canada: {Retention: 203, Segmentation: 596, Funnels: 855}},
-    //    Vancouver: {UnitedStates: {Retention: 542, Segmentation: 467, Funnels: 115}, Canada: {Retention: 542, Segmentation: 467, Funnels: 115}},
-    //  },
-    //  Firefox: {
-    //    SanFrancisco: {UnitedStates: {Retention: 90, Segmentation: 311, Funnels: 860}, Canada: {Retention: 90, Segmentation: 311, Funnels: 860}},
-    //    Chicago: {UnitedStates: {Retention: 240, Segmentation: 482, Funnels: 932}, Canada: {Retention: 240, Segmentation: 482, Funnels: 932}},
-    //    Seattle: {UnitedStates: {Retention: 948, Segmentation: 181, Funnels: 625}, Canada: {Retention: 948, Segmentation: 181, Funnels: 625}},
-    //    Vancouver: {UnitedStates: {Retention: 287, Segmentation: 464, Funnels: 798}, Canada: {Retention: 287, Segmentation: 464, Funnels: 798}},
-    //  },
-    //  Safari: {
-    //    SanFrancisco: {UnitedStates: {Retention: 478, Segmentation: 813, Funnels: 654}, Canada: {Retention: 478, Segmentation: 813, Funnels: 654}},
-    //    Chicago: {UnitedStates: {Retention: 975, Segmentation: 64, Funnels: 323}, Canada: {Retention: 975, Segmentation: 64, Funnels: 323}},
-    //    Seattle: {UnitedStates: {Retention: 781, Segmentation: 539, Funnels: 735}, Canada: {Retention: 781, Segmentation: 539, Funnels: 735}},
-    //    Vancouver: {UnitedStates: {Retention: 970, Segmentation: 411, Funnels: 122}, Canada: {Retention: 970, Segmentation: 411, Funnels: 122}},
-    //  }
-    //};
-
     (function sumDateResults(obj) {
       if (containsObjects(obj)) {
         Object.keys(obj).forEach(key => {
@@ -161,7 +140,10 @@ export default class BarChartView extends BaseView {
       if (containsObjects(data)) {
         Object.keys(data).forEach(key => getRows(data[key], [...row, key]));
       } else {
-        rows.push([...row, Object.keys(data), Object.values(data)]);
+        const keys = Object.keys(data).sort((a, b) => data[b] - data[a]);
+        const values = keys.map(key => data[key]);
+
+        rows.push([...row, keys, values]);
       }
     })(data);
 
