@@ -684,11 +684,12 @@
 .bar-chart-view table thead,
 .bar-chart-view table tbody {
   display: block;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 .bar-chart-view table tbody {
   min-height: 200px;
   max-height: 400px;
-  overflow: scroll;
 }
 .bar-chart-view table th,
 .bar-chart-view table td {
@@ -866,7 +867,7 @@
   -webkit-transform: translateZ(0);
           transform: translateZ(0);
   position: absolute;
-  top: 30%;
+  top: 25%;
   left: 50%;
 }
 .result-view .loader,
