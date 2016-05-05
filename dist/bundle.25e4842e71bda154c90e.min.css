@@ -770,12 +770,12 @@
   line-height: 20.5px;
   padding: 0px 4px;
   position: relative;
-  width: 40px;
+  width: 100px;
   z-index: 1;
 }
 .bar-chart-view table td.chart-data li.narrow .label {
   color: #92949d;
-  margin-right: -48px;
+  margin-right: -108px;
   text-align: left;
 }
 .result-view {
