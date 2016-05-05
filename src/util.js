@@ -127,6 +127,24 @@ export function renamePropertyType(type) {
   }[type] || capitalize(type);
 }
 
+export function getTextWidth(text, font) {
+  const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'));
+  let context = canvas.getContext('2d');
+  context.font = font;
+
+  return context.measureText(text).width;
+}
+
+// get the ideal "distance" between ticks for a given range
+// results in a value like 5, 10, 25, 50, 100, 250, 500, etc.
+export function getTickDistance(max, min=0, targetNumTicks=10) {
+  let distance = 5;
+  while ((max - min) / distance > targetNumTicks) {
+    distance *= Number.isInteger(Math.log10(distance)) ? 2.5 : 2;
+  }
+  return distance;
+}
+
 // TODO epurcer - replace this with a more general-purpose tool like https://www.npmjs.com/package/debug
 function getLogger(level) {
   return function () {

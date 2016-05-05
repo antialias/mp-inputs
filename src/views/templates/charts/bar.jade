@@ -1,28 +1,43 @@
-div(class=elementClass)
-  .header
-    for groupClause in state.sections.group.clauses
-      .group= util.renameProperty(groupClause.value)
+- const gridLineDistance = util.getTickDistance(state.chartMax);
+- const gridLineWidth = gridLineDistance / state.chartMax * 100;
+- const numGridLines = state.chartMax && gridLineDistance ? Math.floor(state.chartMax / gridLineDistance) : 0;
+- const gridLines = new Array(numGridLines).fill(gridLineWidth);
 
+div(class=elementClass)
   table
-    for row in state.rows
+    thead
       tr
-        for cell, i in row
-          if cell
-            if i + 1 < row.length
-              td.chart-header(rowSpan=state.rowSpans[i])
-                if Array.isArray(cell)
+        th(colspan=0)
+          irb-bar-chart-header(
+            headers=JSON.stringify(state.headers)
+            chartMax=JSON.stringify(state.chartMax)
+          )
+    tbody
+      for row in state.rows
+        tr
+          for cell, i in row
+            if cell
+              if i + 1 < row.length
+                td.chart-header(
+                  rowSpan=state.rowSpans[i]
+                  style={'min-width': `${util.getTextWidth(util.renameProperty(state.headers[i]), 'bold 14px Helvetica')}px`}
+                )
+                  if Array.isArray(cell)
+                    ul
+                      for value in cell
+                        li= value.toString()
+                  else
+                    span= cell
+              else
+                td.chart-data
+                  .chart-grid
+                    for width in gridLines
+                      .chart-line(style={width: `${width}%`})
                   ul
-                    for value in cell
-                      li= value.toString()
-                else
-                  span= cell
-            else
-              td.chart-data
-                ul
-                  for value, i in cell
-                    li.bar(
-                      class=value / state.max < .03 ? 'narrow' : ''
-                      style={width: `${value / state.max * 100}%`}
-                    )
-                      .background(style={opacity: 1 - (0.6 * i / cell.length)})
-                      .label= value
+                    for value, i in cell
+                      li.chart-bar(
+                        class=value / state.chartMax < .03 ? 'narrow' : ''
+                        style={width: `${value / state.chartMax * 100}%`}
+                      )
+                        .background(style={opacity: 1 - (0.6 * i / cell.length)})
+                        .label= value

@@ -1,5 +1,10 @@
 import BaseView from '../base';
-import { extend } from '../../util';
+import {
+  extend,
+  renameProperty,
+  getTextWidth,
+  getTickDistance,
+} from '../../util';
 
 import template from '../templates/charts/bar.jade';
 import '../stylesheets/charts/bar.styl';
@@ -13,6 +18,77 @@ function transpose(matrix) {
   return matrix[0].map((col, i) => matrix.map(row => row[i]));
 }
 
+document.registerElement('irb-bar-chart-header', class extends HTMLElement {
+  createdCallback() {
+    this.$el = $('<div>').appendTo(this);
+  }
+
+  render() {
+    this.$el.empty();
+
+    let $headers = $(this._headers.map(header =>
+      $('<div>')
+        .addClass('bar-chart-header')
+        .append($('<div>').addClass('text').html(renameProperty(header)))
+        .get(0)
+    ));
+    this.$el.append($headers);
+
+
+    // get an array of tick values, something like [25, 50, 75, 100, ...]
+    let tick = 0;
+    let ticks = [tick];
+    let tickDistance = getTickDistance(this._chartMax);
+    while (tick < this._chartMax) {
+      tick += tickDistance;
+      ticks.push(tick);
+    }
+
+    let $ticks = $(ticks.map(tick =>
+      $('<div>')
+        .addClass('bar-chart-tick')
+        .width(`${tickDistance / this._chartMax * 100}%`)
+        .append($('<div>').addClass('text').html(tick))
+        .get(0)
+    ));
+
+    let $axis = $('<div class="bar-chart-axis"></div>').append($ticks);
+    this.$el.append($axis);
+
+    setTimeout(() => { // defer so we can inspect the fully-rendered table
+      const tableColWidths = this.$el.parents('table')
+        .find('tbody tr:first-child td').map((i, el) => $(el).outerWidth()).get();
+
+      // set header widths
+      $headers.each((i, el) => {
+        $(el).width(tableColWidths[i]);
+      });
+
+      // set axis width
+      const headerWidths = tableColWidths.slice(0, -1).reduce((sum, width) => sum + width, 0);
+      $axis.width(`calc(100% - ${headerWidths}px)`);
+    }, 0);
+  }
+
+  get headers() {
+    return this._headers;
+  }
+
+  set headers(headers) {
+    this._headers = JSON.parse(headers);
+    this.render();
+  }
+
+  get chartMax() {
+    return this._chartMax;
+  }
+
+  set chartMax(chartMax) {
+    this._chartMax = JSON.parse(chartMax);
+    this.render();
+  }
+});
+
 export default class BarChartView extends BaseView {
   get TEMPLATE() {
     return template;
@@ -23,6 +99,7 @@ export default class BarChartView extends BaseView {
   }
 
   format(state) {
+    let headers = state.sections['group'].clauses.map(clause => clause.value);
     let data = JSON.parse(JSON.stringify(state.result)); // deep copy state.result
 
     //let data = {
@@ -63,9 +140,9 @@ export default class BarChartView extends BaseView {
       }
     })(data);
 
-    const max = (function getDataMax(data) {
+    const chartMax = (function getChartMax(data) {
       if (typeof data === 'number') { return data; }
-      return Math.max(...Object.keys(data).map(key => getDataMax(data[key])));
+      return Math.max(0, Math.max(...Object.keys(data).map(key => getChartMax(data[key]))));
     })(data);
 
     // get levels - lists of keys at each level of result
@@ -101,6 +178,6 @@ export default class BarChartView extends BaseView {
       return levels.slice(i + 1).reduce((accum, level) => accum * level.length, 1);
     });
 
-    return extend(state, {levels, rows, rowSpans, max});
+    return {headers, levels, rows, rowSpans, chartMax};
   }
 }
