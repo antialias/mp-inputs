@@ -15,7 +15,10 @@ function containsObjects(obj) {
 }
 
 function transpose(matrix) {
-  return matrix[0].map((col, i) => matrix.map(row => row[i]));
+  if (matrix && matrix.length) {
+    return matrix[0].map((col, i) => matrix.map(row => row[i]));
+  }
+  return matrix;
 }
 
 document.registerElement('irb-bar-chart-header', class extends HTMLElement {
@@ -102,7 +105,7 @@ export default class BarChartView extends BaseView {
     let headers = state.result.headers;
     let data = JSON.parse(JSON.stringify(state.result.data)); // deep copy
 
-    (function sumDateResults(obj) {
+    function sumDateResults(obj) {
       if (containsObjects(obj)) {
         Object.keys(obj).forEach(key => {
           let subObj = obj[key];
@@ -117,7 +120,8 @@ export default class BarChartView extends BaseView {
           }
         });
       }
-    })(data);
+    }
+    sumDateResults(data);
 
     const chartMax = (function getChartMax(data) {
       if (typeof data === 'number') { return data; }
@@ -136,16 +140,22 @@ export default class BarChartView extends BaseView {
 
     // get rows - lists of keys/data that will fill table
     let rows = [];
-    (function getRows(data, row=[]) {
+    function getRows(data, row=[]) {
       if (containsObjects(data)) {
         Object.keys(data).forEach(key => getRows(data[key], [...row, key]));
       } else {
-        const keys = Object.keys(data).sort((a, b) => data[b] - data[a]);
+        const keys = Object.keys(data)
+          .sort((a, b) => data[b] - data[a])
+          .filter(key => data[key]);
+
         const values = keys.map(key => data[key]);
 
-        rows.push([...row, keys, values]);
+        if (keys.length) {
+          rows.push([...row, keys, values]);
+        }
       }
-    })(data);
+    }
+    getRows(data);
 
     rows = transpose(rows);
     rows = rows.map(row =>
@@ -155,10 +165,11 @@ export default class BarChartView extends BaseView {
     );
     rows = transpose(rows);
 
+    // TODO this won't currently work for >2 level multiseg, since each segment can have a different set of subsegments underneath it
     // get rowSpans - number of rows each level should span in the table
-    let rowSpans = levels.map((level, i) => {
-      return levels.slice(i + 1).reduce((accum, level) => accum * level.length, 1);
-    });
+    let rowSpans = levels.map((level, i) =>
+      levels.slice(i + 1).reduce((accum, level) => accum * level.length, 1)
+    );
 
     return {headers, levels, rows, rowSpans, chartMax};
   }
