@@ -26,14 +26,14 @@ document.registerElement('irb-bar-chart-header', class extends HTMLElement {
   render() {
     this.$el.empty();
 
-    let $headers = $(this._headers.map(header =>
+    let headers = (this._headers && this._headers.length) ? this._headers : [''];
+    let $headers = $(headers.map(header =>
       $('<div>')
         .addClass('bar-chart-header')
         .append($('<div>').addClass('text').html(renameProperty(header)))
         .get(0)
     ));
     this.$el.append($headers);
-
 
     // get an array of tick values, something like [25, 50, 75, 100, ...]
     let tick = 0;

@@ -111,7 +111,7 @@ export function renameProperty(property) {
   }
 
   // default conversion for all properties starting with '$'
-  if (property[0] === '$' && property.length > 1) {
+  if (property && property.length > 1 && property[0] === '$') {
     var parts = _.map(property.substr(1).split('_'), _.capitalize);
     return parts.join(' ');
   }
