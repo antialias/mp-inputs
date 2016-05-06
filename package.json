@@ -31,7 +31,8 @@
     "panel": "^0.4.1",
     "rollbar-browser": "^1.8.5",
     "virtual-dom": "^2.1.1",
-    "webcomponent": "0.1.2"
+    "webcomponent": "0.1.2",
+    "webcomponents.js": "0.7.22"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.1.0",

@@ -1,6 +1,9 @@
 /* global APP_ENV */
 
+// polyfills, must import first
 import 'babel-polyfill';
+import 'webcomponents.js/webcomponents-lite';
+
 import Framesg from 'framesg';
 
 import IRBApp from './app';
