@@ -1,6 +1,8 @@
+import WebComponent from 'webcomponent';
+
 const CHANGE_EVENTS = ['blur', 'change', 'focusout', 'input', 'keypress'];
 
-class FocusInput extends HTMLElement {
+class FocusInput extends WebComponent {
   createdCallback() {
     this.inputEl = document.createElement('input');
     this.inputEl.type = 'text';
