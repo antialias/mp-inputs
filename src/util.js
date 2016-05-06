@@ -259,7 +259,7 @@ const EVENTS = {
   $campaign_marked_spam: 'Notification Marked Spam',
   $experiment_started: 'Experiment Started',
   $show_survey: 'Show Survey',
-  $top_events: 'Your Top Events'
+  $top_events: 'Your Top Events',
 };
 
 const PROPERTIES = {
@@ -324,7 +324,7 @@ const PROPERTIES = {
   mp_browser: 'Browser',
   mp_page: 'Page View',
   mp_platform: 'Platform',
-  mp_referrer: 'Referrer'
+  mp_referrer: 'Referrer',
 };
 
 export function extend() {
@@ -354,11 +354,13 @@ export function capitalize(string) {
 export function commaizeNumber(number, no_conversion) {
   switch (typeof number) {
     case 'number':
-      if (_.isNaN(number)) { return number; }
+      if (isNaN(number)) {
+        return number;
+      }
       number = number.toString();
       break;
     case 'string':
-      number = number;
+      // noop
       break;
     default:
       return number;
@@ -401,7 +403,7 @@ export function abbreviateNumber(number, precision) {
     [Math.pow(10, 12), 'T'],
     [Math.pow(10, 9), 'B'],
     [Math.pow(10, 6), 'M'],
-    [Math.pow(10, 3), 'K']
+    [Math.pow(10, 3), 'K'],
   ];
   let suffix = '';
 

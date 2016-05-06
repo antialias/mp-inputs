@@ -40,7 +40,7 @@ export default class ToggleView extends BaseView {
     return choice;
   }
 
-  formatChoiceClass(choice) {
+  formatChoiceClass() {
     return '';
   }
 }

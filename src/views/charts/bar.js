@@ -1,8 +1,8 @@
+/* global $ */
+
 import BaseView from '../base';
 import {
   abbreviateNumber,
-  extend,
-  getTextWidth,
   getTickDistance,
   isDateString,
   renameProperty,

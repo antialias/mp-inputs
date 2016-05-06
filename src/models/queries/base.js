@@ -36,7 +36,8 @@ export default class BaseQuery {
     return window.MP.api.query(this.buildUrl(query), this.buildParams(query));
   }
 
-  processResults(results, query) {
+  // expected args: results, query (optional)
+  processResults(results) {
     return results;
   }
 }
