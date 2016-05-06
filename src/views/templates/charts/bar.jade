@@ -25,9 +25,9 @@ div(class=elementClass)
                   if Array.isArray(cell)
                     ul
                       for value in cell
-                        li= value.toString()
+                        li= util.renamePropertyValue(value.toString())
                   else
-                    span= cell
+                    span= util.renamePropertyValue(cell)
               else
                 td.chart-data
                   .chart-grid

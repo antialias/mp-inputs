@@ -40,7 +40,7 @@
         ul.filter-string-equals-choices
           for value in helpers.getValueMatches(state.stageClause.filterSearch)
             li(class=selectedValue && selectedValue.indexOf(value) !== -1 ? 'selected' : '')
-              button(ev-click=() => helpers.toggleStringEqualsValueSelected(value))= value
+              button(ev-click=() => helpers.toggleStringEqualsValueSelected(value))= util.renamePropertyValue(value)
 
       else if selectedOperator === 'contains' || selectedOperator === 'does not contain'
         .filter-value-input
@@ -53,7 +53,7 @@
           if selectedValue
             ul.filter-string-contains-matches
               for value in helpers.getValueMatches(selectedValue, selectedOperator === 'does not contain')
-                li= value
+                li= util.renamePropertyValue(value)
 
     else if selectedType === 'number'
       if selectedOperator === 'is between'
