@@ -520,7 +520,8 @@
 }
 .filter-property-value-pane-content-view.filter-type-string ul.filter-string-equals-choices {
   height: 130px;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   padding: 8px 0;
 }
 .filter-property-value-pane-content-view.filter-type-string ul.filter-string-equals-choices li {
