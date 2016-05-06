@@ -31,7 +31,8 @@
           .filter-string-equals-summary= `${selectedValue.length} selected`
 
         .filter-string-equals-search.search
-          input(
+          focus-input(
+            autofocus
             type='text'
             value=state.stageClause.filterSearch
             ev-input=event => helpers.updateStageClause({filterSearch: event.target.value})
@@ -44,7 +45,8 @@
 
       else if selectedOperator === 'contains' || selectedOperator === 'does not contain'
         .filter-value-input
-          input(
+          focus-input(
+            autofocus
             type='text'
             value=selectedValue
             ev-input=event => helpers.updateStageClause({filterValue: event.target.value})
@@ -60,20 +62,22 @@
         - const betweenStart = selectedValue ? selectedValue[0] : null;
         - const betweenEnd = selectedValue ? selectedValue[1] : null;
         .filter-value-input.filter-operator-between
-          input(
+          focus-input(
+            autofocus
             type='number'
             value=betweenStart
             ev-input=event => helpers.updateStageClause({filterValue: [Number(event.target.value), betweenEnd]})
           )
           .connector and
-          input(
+          focus-input(
             type='number'
             value=betweenEnd
             ev-input=event => helpers.updateStageClause({filterValue: [betweenStart, Number(event.target.value)]})
           )
       else
         .filter-value-input
-          input(
+          focus-input(
+            autofocus
             type='number'
             value=selectedValue
             ev-input=event => helpers.updateStageClause({filterValue: Number(event.target.value)})
@@ -84,13 +88,14 @@
         - const from = selectedValue ? selectedValue[0] : null;
         - const to = selectedValue ? selectedValue[1] : null;
         .filter-value-input
-          irb-date-picker(
+          date-picker(
             value=JSON.stringify({from, to})
             ev-change=event => helpers.updateStageClause({filterValue: [new Date(event.target.value.from), new Date(event.target.value.to)]})
           )
       else
         .filter-value-input.filter-days-ago
-          input(
+          focus-input(
+            autofocus
             type='number'
             value=selectedValue
             ev-input=event => helpers.updateStageClause({filterValue: Number(event.target.value)})
@@ -100,7 +105,8 @@
 
     else if selectedType === 'list'
       .filter-value-input
-        input(
+        focus-input(
+          autofocus
           type='text'
           value=selectedValue
           ev-input=event => helpers.updateStageClause({filterValue: event.target.value})

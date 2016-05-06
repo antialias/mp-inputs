@@ -15,7 +15,7 @@ mixin pane(paneViews, paneIndex)
 
   if paneConstants.search !== false && constants.search !== false
     .search
-      input(type='text' ev-input=event => helpers.updateStageClause({search: event.target.value}))
+      focus-input(autofocus type='text' ev-input=event => helpers.updateStageClause({search: event.target.value}))
 
   if paneViews.content
     .content= paneViews.content(util.extend(state, {paneIndex}))
