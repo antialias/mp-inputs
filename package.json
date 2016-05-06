@@ -27,7 +27,6 @@
   "dependencies": {
     "babel-polyfill": "^6.7.4",
     "framesg": "^0.1.2",
-    "lodash": "^4.7.0",
     "mixpanel-browser": "^2.7.2",
     "panel": "^0.4.1",
     "rollbar-browser": "^1.8.5",
