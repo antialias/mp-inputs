@@ -41,7 +41,6 @@ class FocusInput extends WebComponent {
 
   focusInputEl() {
     if (this.focus) {
-      console.log('focusing')
       setTimeout(() => this.inputEl.focus(), 0);
     }
   }
