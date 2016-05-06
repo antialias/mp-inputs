@@ -4,8 +4,8 @@ Interactive Report Builder
 install deps:
 `npm install`
 
-run during development:
-`npm start`
+run during development on devbox:
+`npm run watch`
 
-build for production:
-`npm run build`
+run for development independent of Mixpanel web app:
+`npm run serve`
