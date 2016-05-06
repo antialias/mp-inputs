@@ -1,6 +1,8 @@
+import WebComponent from 'webcomponent';
+
 /* global $ */
 
-class DatePicker extends HTMLElement {
+class DatePicker extends WebComponent {
   createdCallback() {
     this.$el = $('<div>').appendTo(this);
   }

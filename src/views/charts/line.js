@@ -1,12 +1,14 @@
 /* global $ */
 
+import WebComponent from 'webcomponent';
+
 import BaseView from '../base';
 
 import template from '../templates/charts/line.jade';
 
 import '../stylesheets/charts/line.styl';
 
-document.registerElement('irb-line-chart', class extends HTMLElement {
+document.registerElement('irb-line-chart', class extends WebComponent {
   createdCallback() {
     this.$el = $('<div>').appendTo(this);
   }

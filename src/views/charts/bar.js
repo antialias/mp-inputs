@@ -1,5 +1,7 @@
 /* global $ */
 
+import WebComponent from 'webcomponent';
+
 import BaseView from '../base';
 import {
   abbreviateNumber,
@@ -23,7 +25,7 @@ function transpose(matrix) {
   return matrix;
 }
 
-document.registerElement('irb-bar-chart-header', class extends HTMLElement {
+document.registerElement('irb-bar-chart-header', class extends WebComponent {
   createdCallback() {
     this.$el = $('<div>').appendTo(this);
   }
