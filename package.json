@@ -4,10 +4,8 @@
   "description": "Interactive report builder",
   "main": "index.js",
   "scripts": {
-    "deploy": "git checkout master && npm run production-build && git add . && git commit -m rebuild && git push origin master",
     "lint": "eslint src",
     "production-build": "rm -rf dist && NODE_ENV=production ./node_modules/.bin/webpack",
-    "revert": "git checkout master && git revert && git push origin master",
     "build": "./node_modules/.bin/webpack",
     "watch": "./node_modules/.bin/webpack --progress --colors --watch",
     "serve": "./node_modules/.bin/webpack-dev-server --inline",
