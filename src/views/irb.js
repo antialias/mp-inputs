@@ -4,6 +4,8 @@ import HeaderView from './header';
 import BuilderView from './builder/builder';
 import ResultView from './result';
 
+import '../elements/focus-input.js';
+
 import template from './templates/irb.jade';
 import './stylesheets/irb.styl';
 

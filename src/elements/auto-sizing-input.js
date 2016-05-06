@@ -2,7 +2,7 @@ import WebComponent from 'webcomponent';
 
 const CHANGE_EVENTS = ['blur', 'change', 'focusout', 'input', 'keypress'];
 
-class AutoSizingInput extends WebComponent {
+document.registerElement('auto-sizing-input', class extends WebComponent {
   createdCallback() {
     this.inputEl = document.createElement('input');
     this.inputEl.type = 'text';
@@ -60,8 +60,4 @@ class AutoSizingInput extends WebComponent {
       this.resize();
     }
   }
-}
-
-export function register() {
-  document.registerElement('auto-sizing-input', AutoSizingInput);
-}
+});

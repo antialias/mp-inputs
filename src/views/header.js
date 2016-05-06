@@ -3,8 +3,7 @@ import BaseView from './base';
 import template from './templates/header.jade';
 import './stylesheets/header.styl';
 
-import { register as registerAutoSizingInput } from '../elements/auto-sizing-input';
-registerAutoSizingInput();
+import '../elements/auto-sizing-input';
 
 export default class HeaderView extends BaseView {
   get TEMPLATE() {

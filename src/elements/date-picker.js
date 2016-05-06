@@ -1,8 +1,8 @@
-import WebComponent from 'webcomponent';
-
 /* global $ */
 
-class DatePicker extends WebComponent {
+import WebComponent from 'webcomponent';
+
+document.registerElement('date-picker', class extends WebComponent {
   createdCallback() {
     this.$el = $('<div>').appendTo(this);
   }
@@ -25,8 +25,4 @@ class DatePicker extends WebComponent {
       this.$el.val(formattedValue);
     }
   }
-}
-
-export function register() {
-  document.registerElement('irb-date-picker', DatePicker);
-}
+});

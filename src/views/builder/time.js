@@ -3,7 +3,7 @@ import { EditControlView } from './control';
 import PaneView from './pane';
 import PaneContentView from './pane-content';
 import { extend } from '../../util';
-import { register as registerDatePicker } from '../../elements/date-picker';
+import '../../elements/date-picker';
 
 import { TimeClause } from '../../models/clause';
 
@@ -11,8 +11,6 @@ import template from '../templates/builder/time.jade';
 import timePaneContentTemplate from '../templates/builder/time-pane-content.jade';
 
 import '../stylesheets/builder/time.styl';
-
-registerDatePicker();
 
 class TimePaneContentView extends PaneContentView {
   get section() {

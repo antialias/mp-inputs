@@ -2,7 +2,7 @@ import WebComponent from 'webcomponent';
 
 const CHANGE_EVENTS = ['blur', 'change', 'focusout', 'input', 'keypress'];
 
-class FocusInput extends WebComponent {
+document.registerElement('focus-input', class extends WebComponent {
   createdCallback() {
     this.inputEl = document.createElement('input');
     this.inputEl.type = 'text';
@@ -35,17 +35,12 @@ class FocusInput extends WebComponent {
   set value(val) {
     if (val !== this.inputEl.value) {
       this.inputEl.value = val;
-      this.resize();
     }
   }
 
   focusInputEl() {
-    if (this.focus) {
+    if (this.autofocus) {
       setTimeout(() => this.inputEl.focus(), 0);
     }
   }
-}
-
-export default function register() {
-  document.registerElement('focus-input', FocusInput);
-}
+});
