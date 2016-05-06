@@ -1,2 +1,5 @@
 div(class=elementClass)
-  irb-chart(data=JSON.stringify(state.result))
+  .controls= views.chartToggle()
+  .chart(class=state.result.loading ? 'loading' : '')= views.charts[state.chartType](state)
+  if state.result.loading && state.chartType !== 'line'
+    .loader

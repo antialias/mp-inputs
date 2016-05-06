@@ -1,0 +1,123 @@
+@import "../../../stylesheets/common"
+
+.bar-chart-view
+  table
+    overflow hidden
+    width 100%
+
+    thead
+      box-shadow 0 0 8px medium-gray
+      position relative
+      z-index 1
+
+      tr, th
+        display block
+        padding 0
+
+      irb-bar-chart-header
+        .bar-chart-header, .bar-chart-axis, .bar-chart-tick
+          display inline-block
+
+          .text
+            padding 8px
+
+        .bar-chart-tick .text
+            margin-left -50px
+            padding 8px 0
+            text-align center
+            width 100px
+
+    thead, tbody
+      display block
+      overflow-y scroll
+      overflow-x hidden
+
+    tbody
+      min-height 200px
+      max-height 400px
+
+    th, td
+      white-space nowrap
+
+    th
+      text-align left
+      padding 8px
+
+    tr:first-child td
+      border-top-color transparent
+
+    tr:last-child td
+      border-bottom-color transparent
+
+    td
+      border 2px solid lighten(background-gray, 50%)
+      border-bottom-color lighten(background-gray, 75%)
+      color medium-gray
+      font-size 12px
+      padding 12px
+      text-align right
+      vertical-align top
+
+      &:first-child
+        border-left none
+
+      &:not(:last-child)
+        width 1%
+
+      &:last-child
+        border-right none
+        text-align left
+
+      li
+        white-space nowrap
+
+        &:not(:last-child)
+          margin-bottom 7px
+
+      &.chart-data
+        border none
+        padding 0
+        padding-top 12px
+        position relative
+
+        .chart-grid
+          height 100%
+          left 0
+          position absolute
+          top 0
+          width 100%
+
+          .chart-line
+            border-right 2px solid lighten(background-gray, 75%)
+            display inline-block
+            height 100%
+            margin-left -2px
+
+        li
+          height 20px
+          margin-bottom 2px
+          margin-left -2px
+          position relative
+          text-align right
+
+          .background
+            background medium-gray
+            height 100%
+            position absolute
+            width 100%
+            z-index 0
+
+          .label
+            color white
+            float right
+            font-size 12px
+            line-height 20.5px
+            padding 0px 4px
+            position relative
+            width 100px
+            z-index 1
+
+          &.narrow .label
+            color medium-gray
+            margin-right -108px
+            text-align left

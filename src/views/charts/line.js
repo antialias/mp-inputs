@@ -1,6 +1,12 @@
 /* global $ */
 
-class Chart extends HTMLElement {
+import BaseView from '../base';
+
+import template from '../templates/charts/line.jade';
+
+import '../stylesheets/charts/line.styl';
+
+document.registerElement('irb-line-chart', class extends HTMLElement {
   createdCallback() {
     this.$el = $('<div>').appendTo(this);
   }
@@ -26,8 +32,10 @@ class Chart extends HTMLElement {
       }
     }
   }
-}
+});
 
-export function register() {
-  document.registerElement('irb-chart', Chart);
+export default class LineChartView extends BaseView {
+  get TEMPLATE() {
+    return template;
+  }
 }

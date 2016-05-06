@@ -25,7 +25,12 @@ const INITIAL_STATE = {
   topEvents: [],
   topProperties: [],
   topPropertyValues: [],
-  result: {},
+  result: {
+    headers: [],
+    data: {},
+    loading: true,
+  },
+  chartType: 'bar',
 };
 
 export default class IRBApp extends BaseApp {
@@ -143,6 +148,8 @@ export default class IRBApp extends BaseApp {
       const cachedQueryResult = this.query(newState);
       if (cachedQueryResult) {
         newState.result = cachedQueryResult;
+      } else {
+        newState.result = extend(this.state.result, {loading: true});
       }
 
       this.update(newState);
@@ -159,6 +166,8 @@ export default class IRBApp extends BaseApp {
     const cachedQueryResult = this.query(newState);
     if (cachedQueryResult) {
       newState.result = cachedQueryResult;
+    } else {
+      newState.result = extend(this.state.result, {loading: true});
     }
 
     this.update(newState);

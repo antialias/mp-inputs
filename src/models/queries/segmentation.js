@@ -61,8 +61,8 @@ function filterToArbSelectorString(property, type, operator, value, dateUnit) {
         }
       }
       switch (operator) {
-        case 'equals'           : return value.map(val => `(${property} == ${val})`).join(' or ');
-        case 'does not equal'   : return value.map(val => `(${property} != ${val})`).join(' and ');
+        case 'equals'           : return '(' + value.map(val => `(${property} == ${val})`).join(' or ') + ')';
+        case 'does not equal'   : return '(' + value.map(val => `(${property} != ${val})`).join(' and ') + ')';
         case 'contains'         : return `(${value} in ${property})`;
         case 'does not contain' : return `(${value} not in ${property})`;
         case 'is set'           : return `(defined ${property})`;
@@ -207,7 +207,10 @@ export default class SegmentationQuery extends BaseQuery {
     return params;
   }
 
-  processResults(results) {
-    return results.data.values;
+  processResults(results, query) {
+    return {
+      headers: query.segments,
+      data: results.data.values,
+    };
   }
 }

@@ -30,7 +30,7 @@ export class Clause {
       debug.warn(`${this.TYPE} clause invalid:`, newClause);
     }
 
-    return valid ? newClause : this;
+    return newClause;
   }
 
   extend(attrs) {
