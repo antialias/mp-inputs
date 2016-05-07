@@ -73,13 +73,6 @@
   top: 40px;
   z-index: 2;
 }
-.control-view .pane-container.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-.control-view .pane-container.visible {
-  opacity: 1;
-}
 .show-edit-control-view {
   min-width: 60px;
 }
@@ -261,7 +254,7 @@
   position: absolute;
   width: 100%;
 }
-.pane-container.visible .pane {
+.pane-container .pane {
   -webkit-transition: -webkit-transform 0.2s;
   transition: -webkit-transform 0.2s;
   transition: transform 0.2s;
