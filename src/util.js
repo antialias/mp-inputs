@@ -260,6 +260,7 @@ const EVENTS = {
   $experiment_started: 'Experiment Started',
   $show_survey: 'Show Survey',
   $top_events: 'Your Top Events',
+  $signup: 'Signup',
 };
 
 const PROPERTIES = {
@@ -445,8 +446,11 @@ export function renameProperty(property) {
 
   // default conversion for all properties starting with '$'
   if (property && property.length > 1 && property[0] === '$') {
-    var parts = property.slice(1).split('_');
-    return [capitalize(parts[0]), ...parts.slice(1)].join(' ');
+    return property
+      .slice(1)
+      .split('_')
+      .map(capitalize)
+      .join(' ');
   }
 
   return property;
