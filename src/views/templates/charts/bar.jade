@@ -25,7 +25,10 @@ div(class=elementClass)
                   if Array.isArray(cell)
                     ul
                       for value in cell
-                        li= util.renamePropertyValue(value.toString())
+                        if !i && !state.headers.length
+                          li= util.renameEvent(value)
+                        else
+                          li= util.renamePropertyValue(value)
                   else
                     span= util.renamePropertyValue(cell)
               else
