@@ -130,8 +130,8 @@ export default class SegmentationQuery extends BaseQuery {
       events = state.topEvents.filter(event => event !== ShowClause.TOP_EVENTS);
     }
 
-    const segments = state.sections.group.clauses
-      .map(clause => clause.value);
+    const segments = events.length > 1 ? [] :
+      state.sections.group.clauses.map(clause => clause.value);
 
     const filters = state.sections.filter.clauses
       .map(clause => [
