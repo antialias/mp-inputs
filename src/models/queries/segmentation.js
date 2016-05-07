@@ -127,9 +127,7 @@ export default class SegmentationQuery extends BaseQuery {
     type = type === 'total' ? 'general' : type;
 
     if (events.indexOf(ShowClause.TOP_EVENTS) !== -1) {
-      events = state.topEvents
-        .filter(event => event !== ShowClause.TOP_EVENTS)
-        .slice(0, 50); // TODO remove this limit when we switch to JQL
+      events = state.topEvents.filter(event => event !== ShowClause.TOP_EVENTS);
     }
 
     const segments = state.sections.group.clauses
