@@ -12,13 +12,20 @@ document.registerElement('focus-input', class extends WebComponent {
   attachedCallback() {
     this.changeHandler = () => this.dispatchChange();
     CHANGE_EVENTS.forEach(evName => this.inputEl.addEventListener(evName, this.changeHandler));
+
     this.appendChild(this.inputEl);
     this.focusInputEl();
+  }
+
+  /* TODO: this should work so we don't need to recreate inputs every time we need to focus
+  static get observedAttributes() {
+    return ['autoFocus'];
   }
 
   attributeChangedCallback() {
     this.focusInputEl();
   }
+  */
 
   detachedCallback() {
     CHANGE_EVENTS.forEach(evName => this.inputEl.removeEventListener(evName, this.changeHandler));
@@ -39,8 +46,12 @@ document.registerElement('focus-input', class extends WebComponent {
   }
 
   focusInputEl() {
-    if (this.autofocus) {
-      setTimeout(() => this.inputEl.focus(), 0);
+    if (this.autoFocus) {
+      if (this.focusDelay || this.focusDelay === 0) {
+        setTimeout(() => this.inputEl.focus(), this.focusDelay);
+      } else {
+        this.inputEl.focus();
+      }
     }
   }
 });

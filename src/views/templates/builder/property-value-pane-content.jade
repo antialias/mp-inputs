@@ -31,12 +31,16 @@
           .filter-string-equals-summary= `${selectedValue.length} selected`
 
         .filter-string-equals-search.search
-          focus-input(
-            autofocus
-            type='text'
-            value=state.stageClause.filterSearch
-            ev-input=event => helpers.updateStageClause({filterSearch: event.target.value})
-          )
+          // TODO: we are required to recreate this input between panes switches because of 
+          //       limitations of the focus-input; this shouldn't be necessary
+          if state.isPaneActive
+            focus-input(
+              autoFocus=state.isPaneActive
+              focusDelay=200
+              type='text'
+              value=state.stageClause.filterSearch
+              ev-input=event => helpers.updateStageClause({filterSearch: event.target.value})
+            )
 
         ul.filter-string-equals-choices
           for value in helpers.getValueMatches(state.stageClause.filterSearch)
@@ -45,12 +49,16 @@
 
       else if selectedOperator === 'contains' || selectedOperator === 'does not contain'
         .filter-value-input
-          focus-input(
-            autofocus
-            type='text'
-            value=selectedValue
-            ev-input=event => helpers.updateStageClause({filterValue: event.target.value})
-          )
+          // TODO: we are required to recreate this input between panes switches because of 
+          //       limitations of the focus-input; this shouldn't be necessary
+          if state.isPaneActive
+            focus-input(
+              autoFocus=state.isPaneActive
+              focusDelay=200
+              type='text'
+              value=selectedValue
+              ev-input=event => helpers.updateStageClause({filterValue: event.target.value})
+            )
 
           if selectedValue
             ul.filter-string-contains-matches
@@ -62,26 +70,34 @@
         - const betweenStart = selectedValue ? selectedValue[0] : null;
         - const betweenEnd = selectedValue ? selectedValue[1] : null;
         .filter-value-input.filter-operator-between
-          focus-input(
-            autofocus
-            type='number'
-            value=betweenStart
-            ev-input=event => helpers.updateStageClause({filterValue: [Number(event.target.value), betweenEnd]})
-          )
+          // TODO: we are required to recreate this input between panes switches because of 
+          //       limitations of the focus-input; this shouldn't be necessary
+          if state.isPaneActive
+            focus-input(
+              autoFocus=state.isPaneActive
+              focusDelay=200
+              type='number'
+              value=betweenStart
+              ev-input=event => helpers.updateStageClause({filterValue: [Number(event.target.value), betweenEnd]})
+            )
           .connector and
-          focus-input(
+          input(
             type='number'
             value=betweenEnd
             ev-input=event => helpers.updateStageClause({filterValue: [betweenStart, Number(event.target.value)]})
           )
       else
         .filter-value-input
-          focus-input(
-            autofocus
-            type='number'
-            value=selectedValue
-            ev-input=event => helpers.updateStageClause({filterValue: Number(event.target.value)})
-          )
+          // TODO: we are required to recreate this input between panes switches because of 
+          //       limitations of the focus-input; this shouldn't be necessary
+          if state.isPaneActive
+            focus-input(
+              autoFocus=state.isPaneActive
+              focusDelay=200
+              type='number'
+              value=selectedValue
+              ev-input=event => helpers.updateStageClause({filterValue: Number(event.target.value)})
+            )
 
     else if selectedType === 'datetime'
       if selectedOperator === 'was between' || selectedOperator === 'was on'
@@ -94,20 +110,28 @@
           )
       else
         .filter-value-input.filter-days-ago
-          focus-input(
-            autofocus
-            type='number'
-            value=selectedValue
-            ev-input=event => helpers.updateStageClause({filterValue: Number(event.target.value)})
-          )
+          // TODO: we are required to recreate this input between panes switches because of 
+          //       limitations of the focus-input; this shouldn't be necessary
+          if state.isPaneActive
+            focus-input(
+              autoFocus=state.isPaneActive
+              focusDelay=200
+              type='number'
+              value=selectedValue
+              ev-input=event => helpers.updateStageClause({filterValue: Number(event.target.value)})
+            )
           .filter-unit-input= views.dateUnitDropdown()
           .connector ago
 
     else if selectedType === 'list'
       .filter-value-input
-        focus-input(
-          autofocus
-          type='text'
-          value=selectedValue
-          ev-input=event => helpers.updateStageClause({filterValue: event.target.value})
-        )
+        // TODO: we are required to recreate this input between panes switches because of 
+        //       limitations of the focus-input; this shouldn't be necessary
+        if state.isPaneActive
+          focus-input(
+            autoFocus=state.isPaneActive
+            focusDelay=200
+            type='text'
+            value=selectedValue
+            ev-input=event => helpers.updateStageClause({filterValue: event.target.value})
+          )

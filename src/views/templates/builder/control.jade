@@ -11,11 +11,11 @@
           span= part
   if constants.showRemove
     button.remove(ev-click=() => helpers.removeClause(state.clauseIndex))
-  .pane-container(
-    class=helpers.isPaneOpen(state.clauseIndex) ? 'visible' : 'hidden',
-    style={
-      height: `${constants.paneHeight}px`,
-      width: `${constants.paneWidth}px`,
-      left: `${helpers.getPaneLeft()}px`,
-    }
-  )= views.pane(state)
+  if helpers.isPaneOpen(state.clauseIndex)
+    .pane-container(
+      style={
+        height: `${constants.paneHeight}px`,
+        width: `${constants.paneWidth}px`,
+        left: `${helpers.getPaneLeft()}px`,
+      }
+    )= views.pane(state)
