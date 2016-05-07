@@ -44,11 +44,13 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
 
     // get an array of tick values, something like [25, 50, 75, 100, ...]
     let tick = 0;
-    let ticks = [tick];
+    let ticks = [];
     let tickDistance = getTickDistance(this._chartMax);
-    while (tick < this._chartMax) {
-      tick += tickDistance;
+    if (this._chartMax) {
       ticks.push(tick);
+      for (tick; tick < this._chartMax; tick += tickDistance) {
+        ticks.push(tick);
+      }
     }
 
     let $ticks = $(ticks.map(tick =>

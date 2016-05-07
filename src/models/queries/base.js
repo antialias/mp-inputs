@@ -12,12 +12,20 @@ export default class BaseQuery {
     const query = this.query;
 
     return new Promise(resolve => {
-      this.executeQuery(query).done(rawResults => {
-        if (query === this.query) { // ignore obsolete queries
-          resolve(this.processResults(rawResults, query));
-        }
-      });
+      if (this.valid) {
+        this.executeQuery().done(rawResults => {
+          if (query === this.query) { // ignore obsolete queries
+            resolve(this.processResults(rawResults));
+          }
+        });
+      } else {
+        resolve(this.processResults(null));
+      }
     });
+  }
+
+  get valid() {
+    return true;
   }
 
   buildQuery() {
@@ -32,8 +40,8 @@ export default class BaseQuery {
     return {};
   }
 
-  executeQuery(query) {
-    return window.MP.api.query(this.buildUrl(query), this.buildParams(query));
+  executeQuery() {
+    return window.MP.api.query(this.buildUrl(), this.buildParams());
   }
 
   // expected args: results, query (optional)

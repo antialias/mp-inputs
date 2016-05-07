@@ -113,6 +113,10 @@ function filterToArbSelectorString(property, type, operator, value, dateUnit) {
 }
 
 export default class SegmentationQuery extends BaseQuery {
+  get valid() {
+    return this.query.events && this.query.events.length;
+  }
+
   buildQuery(state) {
     let events = state.sections.show.clauses
       .map(clause => clause.value);
@@ -165,13 +169,13 @@ export default class SegmentationQuery extends BaseQuery {
     return {type, events, segments, filters, unit, from, to};
   }
 
-  buildUrl(query) {
+  buildUrl() {
     let endpoint = 'events';
 
-    if (query.events.length === 1 && query.segments.length) {
+    if (this.query.events.length === 1 && this.query.segments.length) {
       endpoint = 'segmentation';
 
-      if (query.segments.length > 1) {
+      if (this.query.segments.length > 1) {
         endpoint += '/multiseg';
       }
     }
@@ -179,8 +183,8 @@ export default class SegmentationQuery extends BaseQuery {
     return `api/2.0/${endpoint}`;
   }
 
-  buildParams(query) {
-    const { type, events, segments, filters, unit, from, to } = query;
+  buildParams() {
+    const { type, events, segments, filters, unit, from, to } = this.query;
     let params = {unit, from, to, type, event: events};
 
     if (events.length === 1 && segments.length) {
@@ -205,10 +209,10 @@ export default class SegmentationQuery extends BaseQuery {
     return params;
   }
 
-  processResults(results, query) {
+  processResults(results) {
     return {
-      headers: query.segments,
-      data: results.data.values,
+      headers: this.query.segments,
+      data: results ? results.data.values : {},
     };
   }
 }

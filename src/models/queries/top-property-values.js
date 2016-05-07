@@ -9,7 +9,7 @@ export default class TopPropertyValuesQuery extends BaseQuery {
     return 'api/2.0/events/properties/values';
   }
 
-  buildParams(query) {
-    return {name: query.property};
+  buildParams() {
+    return {name: this.query.property};
   }
 }
