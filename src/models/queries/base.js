@@ -28,6 +28,14 @@ export default class BaseQuery {
     return true;
   }
 
+  buildOptions() {
+    return {};
+  }
+
+  buildParams() {
+    return {};
+  }
+
   buildQuery() {
     return {};
   }
@@ -36,12 +44,8 @@ export default class BaseQuery {
     return '';
   }
 
-  buildParams() {
-    return {};
-  }
-
   executeQuery() {
-    return window.MP.api.query(this.buildUrl(), this.buildParams());
+    return window.MP.api.query(this.buildUrl(), this.buildParams(), this.buildOptions());
   }
 
   // expected args: results, query (optional)
