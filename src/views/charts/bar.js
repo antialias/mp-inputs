@@ -13,16 +13,30 @@ import {
 import template from '../templates/charts/bar.jade';
 import '../stylesheets/charts/bar.styl';
 
+// return true if the given object is itself made up of objects
 function containsObjects(obj) {
   let keys = Object.keys(obj);
   return Boolean(keys.length && typeof obj[keys[0]] === 'object');
 }
 
+// transpose a 2-dimensional array
+// [[1, 2, 3],    [[1, 4],
+//  [4, 5, 6]] =>  [2, 5],
+//                 [3, 6]]
 function transpose(matrix) {
   if (matrix && matrix.length) {
     return matrix[0].map((col, i) => matrix.map(row => row[i]));
   }
   return matrix;
+}
+
+// given an array of values and a start index,
+// count the number of the value at the start index repeats:
+// countRun(['a', 'a', 'b', 'b', 'b', 'c'], 2) => 3
+function countRun(row, start) {
+  let i;
+  for (i = start; row[i] === row[start]; i++);
+  return i - start;
 }
 
 document.registerElement('irb-bar-chart-header', class extends WebComponent {
@@ -134,16 +148,6 @@ export default class BarChartView extends BaseView {
       return Math.max(0, Math.max(...Object.keys(data).map(key => getChartMax(data[key]))));
     })(data);
 
-    // get levels - lists of keys at each level of result
-    let levels = [];
-    let subData = data;
-    let keys;
-    while (containsObjects(subData)) {
-      keys = Object.keys(subData);
-      levels.push(keys);
-      subData = subData[keys[0]];
-    }
-
     // get rows - lists of keys/data that will fill table
     let rows = [];
     function getRows(data, row=[]) {
@@ -163,20 +167,17 @@ export default class BarChartView extends BaseView {
     }
     getRows(data);
 
-    rows = transpose(rows);
-    rows = rows.map(row =>
-      row.map((key, i) => // ['a', 'a', 'a', 'b', 'b'] -> ['a', null, null, 'b', null]
-        i && row[i - 1] === row[i] ? null : key
+    // Format rows for nested table, calculating necessary rowspans
+    // ['a', 'a', 'a', 'b', 'b'] -> [{value: 'a', span: 3}, null, null, {value: 'b': span: 2}, null]
+    rows = transpose(transpose(rows).map((row, y) =>
+      row.map((cell, x) =>
+        x && row[x - 1] === row[x] ? null : {
+          span: countRun(row, x),
+          value: cell,
+        }
       )
-    );
-    rows = transpose(rows);
+    ));
 
-    // TODO this won't currently work for >2 level multiseg, since each segment can have a different set of subsegments underneath it
-    // get rowSpans - number of rows each level should span in the table
-    let rowSpans = levels.map((level, i) =>
-      levels.slice(i + 1).reduce((accum, level) => accum * level.length, 1)
-    );
-
-    return {headers, levels, rows, rowSpans, chartMax};
+    return {headers, rows, chartMax};
   }
 }
