@@ -5,7 +5,7 @@ install deps:
 `npm install`
 
 run during development on devbox:
-`npm run watch`
+`npm start`
 
 run for development independent of Mixpanel web app:
 `npm run serve`
