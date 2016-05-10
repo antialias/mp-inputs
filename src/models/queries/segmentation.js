@@ -201,17 +201,6 @@ export default class SegmentationQuery extends BaseQuery {
 
     // let params = {unit, from, to, type, event: events};
 
-    // if (events.length === 1 && segments.length) {
-    //   params.event = events[0];
-
-    //   if (segments.length === 1) {
-    //     params.on = `properties["${segments[0]}"]`;
-    //   } else {
-    //     params.outer = `properties["${segments[0]}"]`;
-    //     params.inner = `properties["${segments[1]}"]`;
-    //   }
-    // }
-
     // const validFilters = filters.filter(filter => isFilterValid(...filter));
 
     // if (validFilters.length) {
@@ -230,11 +219,22 @@ export default class SegmentationQuery extends BaseQuery {
   processResults(results) {
     let data = {};
     if (results) {
-      data = results.reduce((h, p) => {
-        h[p.key[0]] = h[p.key[0]] || {};
-        h[p.key[0]][p.key[1]] = p.value;
-        return h;
+      data = results.reduce((dataObj, item) => {
+        // transform item.key array into nested obj,
+        // with item.value at the deepest level
+        let obj = dataObj;
+        for (let si = 0; si < item.key.length - 1; si++) {
+          let key = item.key[si];
+          obj[key] = obj[key] || {};
+          obj = obj[key];
+        }
+        obj[item.key[item.key.length - 1]] = item.value;
+        return dataObj;
       }, {});
+    }
+    if (this.query.events.length === 1 && this.query.segments.length) {
+      // special case segmentation on one event
+      data = data[this.query.events[0]];
     }
     return {
       data,
