@@ -60,6 +60,9 @@ module.exports = function main() {
   }
 
   var groups = ['name'];
+  if (params.groups) {
+    groups = groups.concat(params.groups.map(function(group) { return 'properties.' + group; }));
+  }
   switch(params.dates.unit) {
     case 'day':
       groups.push(function(ev) {
@@ -72,9 +75,6 @@ module.exports = function main() {
         return `${dateMatch[1]} ${dateMatch[2]}:00:00`;
       });
       break;
-  }
-  if (params.groups) {
-    groups = groups.concat(params.groups.map(function(group) { return 'properties.' + group; }));
   }
 
   var query = Events({from_date: params.dates.from, to_date: params.dates.to});
