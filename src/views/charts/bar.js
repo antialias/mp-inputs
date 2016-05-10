@@ -61,10 +61,10 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
     let ticks = [];
     let tickDistance = getTickDistance(this._chartMax);
     if (this._chartMax) {
-      ticks.push(tick);
-      for (tick; tick < this._chartMax; tick += tickDistance) {
+      do {
         ticks.push(tick);
-      }
+        tick += tickDistance;
+      } while (tick < this._chartMax);
     }
 
     let $ticks = $(ticks.map(tick =>
@@ -169,10 +169,10 @@ export default class BarChartView extends BaseView {
 
     // Format rows for nested table, calculating necessary rowspans
     // ['a', 'a', 'a', 'b', 'b'] -> [{value: 'a', span: 3}, null, null, {value: 'b': span: 2}, null]
-    rows = transpose(transpose(rows).map((row, y) =>
-      row.map((cell, x) =>
-        x && row[x - 1] === row[x] ? null : {
-          span: countRun(row, x),
+    rows = transpose(transpose(rows).map(row =>
+      row.map((cell, i) =>
+        i && row[i - 1] === row[i] ? null : {
+          span: countRun(row, i),
           value: cell,
         }
       )
