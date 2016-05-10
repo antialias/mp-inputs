@@ -187,6 +187,7 @@ export default class SegmentationQuery extends BaseQuery {
           expected: this.query.events,
         },
       ],
+      groups: this.query.segments,
       // TMP
       validFilters: this.query.filters.filter(filter => isFilterValid(...filter)).length,
     };
