@@ -181,10 +181,12 @@ export default class IRBApp extends BaseApp {
     if (cachedResult) {
       return cachedResult;
     } else {
-      this.queries.segmentation.run().then(result => {
-        this.queries.segmentationCache.set(query, result, cacheExpiry);
-        this.update({result});
-      });
+      this.queries.segmentation.run()
+        .then(result => {
+          this.queries.segmentationCache.set(query, result, cacheExpiry);
+          this.update({result});
+        })
+        .catch(err => console.error(err));
     }
   }
 }
