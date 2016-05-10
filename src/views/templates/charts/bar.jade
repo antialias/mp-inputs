@@ -26,11 +26,11 @@ div(class=elementClass)
                     ul
                       for value in cell.value
                         if !j && !state.headers.length
-                          li= util.renameEvent(value)
+                          li(title=util.renameEvent(value))= util.renameEvent(value)
                         else
-                          li= util.renamePropertyValue(value)
+                          li(title=util.renamePropertyValue(value))= util.renamePropertyValue(value)
                   else
-                    span= util.renamePropertyValue(cell.value)
+                    span(title=util.renamePropertyValue(cell.value))= util.renamePropertyValue(cell.value)
               else
                 td.chart-data
                   .chart-grid
