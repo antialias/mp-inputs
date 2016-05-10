@@ -25,7 +25,7 @@ var webpackConfig = {
       },
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: /node_modules|\.jql\.js$/,
         loader: babelLoader,
       },
       {
