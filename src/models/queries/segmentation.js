@@ -229,7 +229,6 @@ export default class SegmentationQuery extends BaseQuery {
   processResults(results) {
     let data = {};
     if (results) {
-      data = results.reduce((h, p) => Object.assign(h, {[p.key[0]]: p.value}), {});
       data = results.reduce((h, p) => {
         h[p.key[0]] = h[p.key[0]] || {};
         h[p.key[0]][p.key[1]] = p.value;
