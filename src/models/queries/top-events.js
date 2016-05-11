@@ -2,7 +2,7 @@ import BaseQuery from './base';
 
 export default class TopEventsQuery extends BaseQuery {
   executeQuery() {
-    return window.MP.api.topEvents({limit: 12});
+    return window.MP.api.topEvents({sort_fn: 'desc'});
   }
 
   processResults(results) {

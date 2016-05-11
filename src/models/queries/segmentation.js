@@ -130,8 +130,8 @@ export default class SegmentationQuery extends BaseQuery {
     // remap total -> general
     type = type === 'total' ? 'general' : type;
 
-    if (events.indexOf(ShowClause.TOP_EVENTS) !== -1) {
-      events = state.topEvents.filter(event => event !== ShowClause.TOP_EVENTS);
+    if (events.includes(ShowClause.TOP_EVENTS)) {
+      events = state.topEvents.filter(event => event !== ShowClause.TOP_EVENTS).slice(0, 12);
     }
 
     const segments = events.length > 1 ? [] :
