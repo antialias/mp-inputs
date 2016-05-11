@@ -70,21 +70,6 @@ function filterToParams(filter) {
 //   }
 
 //   switch (type) {
-//     case 'string':
-//       if (operator === 'equals' || operator === 'does not equal') {
-//         if (!Array.isArray(value)) {
-//           value = [value];
-//         }
-//       }
-//       switch (operator) {
-//         case 'equals'           : return '(' + value.map(val => `(${property} == ${val})`).join(' or ') + ')';
-//         case 'does not equal'   : return '(' + value.map(val => `(${property} != ${val})`).join(' and ') + ')';
-//         case 'contains'         : return `(${value} in ${property})`;
-//         case 'does not contain' : return `(${value} not in ${property})`;
-//         case 'is set'           : return `(defined ${property})`;
-//         case 'is not set'       : return `(not defined ${property})`;
-//       }
-//       break;
 //     case 'number':
 //       switch (operator) {
 //         case 'is between'      : return `((${property} > ${value[0]}) and (${property} < ${value[1]}))`;

@@ -37,6 +37,21 @@ module.exports = function main() {
     for (var filter of params.filters) {
       var actual = filter.prop ? ev.properties[filter.prop] : ev.name;
       switch(filter.operator) {
+        case 'contains':
+          if (String(actual).toLowerCase().indexOf(filter.expected.toLowerCase()) === -1) {
+            return false;
+          }
+          break;
+        case 'does not contain':
+          if (String(actual).toLowerCase().indexOf(filter.expected.toLowerCase()) !== -1) {
+            return false;
+          }
+          break;
+        case 'does not equal':
+          if (filter.expected.some(expectedVal => actual === expectedVal)) {
+            return false;
+          }
+          break;
         case 'equals':
           if (!filter.expected.some(expectedVal => actual === expectedVal)) {
             return false;
