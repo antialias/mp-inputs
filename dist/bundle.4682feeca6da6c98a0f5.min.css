@@ -595,6 +595,7 @@
   font-size: 16px;
   font-weight: 500;
   padding: 24px 36px;
+  padding-bottom: 0;
 }
 .builder-view::after {
   content: "";
@@ -691,8 +692,8 @@
   overflow-x: hidden;
 }
 .bar-chart-view table tbody {
-  min-height: 200px;
-  max-height: 400px;
+  min-height: 300px;
+  max-height: calc(100vh - 353px);
 }
 .bar-chart-view table th,
 .bar-chart-view table td {
@@ -790,6 +791,7 @@
 }
 .result-view {
   padding: 24px;
+  padding-top: 0;
   position: relative;
 }
 .result-view .controls {
@@ -910,6 +912,7 @@
   background-color: #fff;
   border-radius: 5px;
   margin: 20px;
+  margin-bottom: 0;
 }
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
