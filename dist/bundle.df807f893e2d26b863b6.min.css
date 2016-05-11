@@ -733,6 +733,13 @@
 .bar-chart-view table td li:not(:last-child) {
   margin-bottom: 7px;
 }
+.bar-chart-view table td.chart-header {
+  max-width: 160px;
+}
+.bar-chart-view table td.chart-header li {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .bar-chart-view table td.chart-data {
   border: none;
   padding: 0;
