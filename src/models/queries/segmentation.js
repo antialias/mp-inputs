@@ -13,38 +13,53 @@ const MS_BY_UNIT = {
   year: MS_IN_DAY * 365,
 };
 
-function isFilterValid(property, type, operator, value, dateUnit) {
-  if (!property) {
+function isFilterValid(filter) {
+  if (!filter.value) {
     return false;
   }
 
-  const isSetOrBoolean = ['is set', 'is not set', 'is true', 'is false'].indexOf(operator) !== -1;
-  const isBetween = ['is between', 'was between'].indexOf(operator) !== -1;
-  const isDaysAgo = type === 'datetime' && ['was more than', 'was less than'].indexOf(operator) !== -1;
+  const isSetOrBoolean = ['is set', 'is not set', 'is true', 'is false'].includes(filter.filterOperator);
+  const isBetween = ['is between', 'was between'].includes(filter.filterOperator);
+  const isDaysAgo = filter.filterType === 'datetime' && ['was more than', 'was less than'].includes(filter.filterOperator);
 
   // filter must have a value UNLESS it is set or boolean
-  if (!isSetOrBoolean && !value) {
+  if (!isSetOrBoolean && !filter.filterValue) {
     return false;
   }
 
   // between filter must have a value of length 2 with both entries present
   if (isBetween && (
-    !value ||
-    value.length !== 2 ||
-    !value[0] ||
-    !value[1]
+    !filter.filterValue ||
+    filter.filterValue.length !== 2 ||
+    !filter.filterValue[0] ||
+    !filter.filterValue[1]
   )) {
     return false;
   }
 
   // days ago filter must have a value and a unit
-  if (isDaysAgo && (!value || !dateUnit)) {
+  if (isDaysAgo && (!filter.filterValue || !filter.filterDateUnit)) {
     return false;
   }
 
   return true;
 }
 
+function filterToParams(filter) {
+  return {
+    prop: filter.value,
+    operator: filter.filterOperator,
+    expected: filter.filterValue,
+  };
+}
+
+      // .map(clause => [
+      //   clause.value,
+      //   clause.filterType,
+      //   clause.filterOperator,
+      //   clause.filterValue,
+      //   clause.filterDateUnit,
+      // ]);
 // function filterToArbSelectorString(property, type, operator, value, dateUnit) {
 //   property = `(properties["${property}"])`;
 
@@ -138,14 +153,7 @@ export default class SegmentationQuery extends BaseQuery {
     const segments = events.length > 1 ? [] :
       state.sections.group.clauses.map(clause => clause.value);
 
-    const filters = state.sections.filter.clauses
-      .map(clause => [
-        clause.value,
-        clause.filterType,
-        clause.filterOperator,
-        clause.filterValue,
-        clause.filterDateUnit,
-      ]);
+    const filters = state.sections.filter.clauses.map(clause => clause.attrs);
 
     const time = state.sections.time.clauses[0];
     const unit = time.unit;
@@ -183,33 +191,21 @@ export default class SegmentationQuery extends BaseQuery {
       },
       filters: [
         {
-          condition: '==',
+          operator: 'equals',
           expected: this.query.events,
         },
-      ],
+      ]
+        .concat(
+          this.query.filters
+          .filter(filter => isFilterValid(filter))
+          .map(filter => filterToParams(filter))
+        ),
       groups: this.query.segments,
-      // TMP
-      validFilters: this.query.filters.filter(filter => isFilterValid(...filter)).length,
     };
     return {
       script: String(main),
       params: JSON.stringify(scriptParams),
     };
-
-
-    // const { type, events, segments, filters, unit, from, to } = this.query;
-
-    // let params = {unit, from, to, type, event: events};
-
-    // const validFilters = filters.filter(filter => isFilterValid(...filter));
-
-    // if (validFilters.length) {
-    //   params.where = validFilters
-    //     .map(filter => filterToArbSelectorString(...filter))
-    //     .join(' and ');
-    // }
-
-    // return params;
   }
 
   buildOptions() {
@@ -234,7 +230,10 @@ export default class SegmentationQuery extends BaseQuery {
     }
     if (this.query.events.length === 1 && this.query.segments.length) {
       // special case segmentation on one event
-      data = data[this.query.events[0]];
+      let ev = this.query.events[0];
+      if (ev in data) {
+        data = data[ev];
+      }
     }
     return {
       data,

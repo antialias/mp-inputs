@@ -11,17 +11,17 @@
 //   },
 //   filters: [
 //     {
-//       condition: '==',
+//       operator: 'equals',
 //       expected: ['Viewed report'],
 //     },
 //     {
 //       prop: '$browser',
-//       condition: '==',
+//       operator: 'equals',
 //       expected: ['Chrome'],
 //     },
 //     {
 //       prop: 'mp_country_code',
-//       condition: 'true',
+//       operator: 'is set',
 //     },
 //   ],
 //   groups: [
@@ -36,24 +36,34 @@ module.exports = function main() {
   function filterByParams(ev) {
     for (var filter of params.filters) {
       var actual = filter.prop ? ev.properties[filter.prop] : ev.name;
-      switch(filter.condition) {
-        case '==':
+      switch(filter.operator) {
+        case 'equals':
           if (!filter.expected.some(expectedVal => actual === expectedVal)) {
             return false;
           }
           break;
-        case 'false':
+        case 'is false':
           if (actual) {
             return false;
           }
           break;
-        case 'true':
+        case 'is not set':
+          if (typeof actual !== 'undefined' && actual !== null) {
+            return false;
+          }
+          break;
+        case 'is set':
+          if (typeof actual === 'undefined' || actual === null) {
+            return false;
+          }
+          break;
+        case 'is true':
           if (!actual) {
             return false;
           }
           break;
         default:
-          throw `Unknown filter condition: "${filter.condition}"`;
+          throw `Unknown filter operator: "${filter.operator}"`;
       }
     }
     return true;
