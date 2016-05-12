@@ -70,14 +70,6 @@ function filterToParams(filter) {
 //   }
 
 //   switch (type) {
-//     case 'number':
-//       switch (operator) {
-//         case 'is between'      : return `((${property} > ${value[0]}) and (${property} < ${value[1]}))`;
-//         case 'is equal to'     : return `(${property} == ${value})`;
-//         case 'is less than'    : return `(${property} < ${value})`;
-//         case 'is greater than' : return `(${property} > ${value})`;
-//       }
-//       break;
 //     case 'datetime': {
 //       const unitMs = MS_BY_UNIT[dateUnit];
 

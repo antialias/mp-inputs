@@ -33,55 +33,58 @@
 // }
 
 module.exports = function main() {
-  function filterByParams(ev) {
-    for (var filter of params.filters) {
-      var actual = filter.prop ? ev.properties[filter.prop] : ev.name;
-      switch(filter.operator) {
-        case 'contains':
-          if (String(actual).toLowerCase().indexOf(filter.expected.toLowerCase()) === -1) {
-            return false;
-          }
-          break;
-        case 'does not contain':
-          if (String(actual).toLowerCase().indexOf(filter.expected.toLowerCase()) !== -1) {
-            return false;
-          }
-          break;
-        case 'does not equal':
-          if (filter.expected.some(expectedVal => actual === expectedVal)) {
-            return false;
-          }
-          break;
-        case 'equals':
-          if (!filter.expected.some(expectedVal => actual === expectedVal)) {
-            return false;
-          }
-          break;
-        case 'is false':
-          if (actual) {
-            return false;
-          }
-          break;
-        case 'is not set':
-          if (typeof actual !== 'undefined' && actual !== null) {
-            return false;
-          }
-          break;
-        case 'is set':
-          if (typeof actual === 'undefined' || actual === null) {
-            return false;
-          }
-          break;
-        case 'is true':
-          if (!actual) {
-            return false;
-          }
-          break;
-        default:
+  if (params.filters) {
+    var between = function(actual, expected) {
+      return typeof actual === 'number' && actual > expected[0] && actual < expected[1];
+    };
+    var contains = function(actual, expected) {
+      return String(actual).toLowerCase().indexOf(expected.toLowerCase()) !== -1;
+    };
+    var equalNum = function(actual, expected) {
+      return actual === expected;
+    };
+    var equals = function(actual, expectedList) {
+      actual = String(actual).toLowerCase();
+      return expectedList.some(function(expectedVal) { return actual === String(expectedVal).toLowerCase(); });
+    };
+    var greaterThan = function(actual, expected) {
+      return typeof actual === 'number' && actual > expected;
+    };
+    var isSet = function(actual) {
+      return typeof actual !== 'undefined' && actual !== null;
+    };
+    var isTruthy = function(actual) {
+      return !!actual;
+    };
+    var lessThan = function(actual, expected) {
+      return typeof actual === 'number' && actual < expected;
+    };
+    var filterTests = {
+      'contains':         [contains,    true ],
+      'does not contain': [contains,    false],
+      'does not equal':   [equals,      false],
+      'equals':           [equals,      true ],
+      'is between':       [between,     true ],
+      'is equal to':      [equalNum,    true ],
+      'is false':         [isTruthy,    false],
+      'is greater than':  [greaterThan, true ],
+      'is less than':     [lessThan,    true ],
+      'is not set':       [isSet,       false],
+      'is set':           [isSet,       true ],
+      'is true':          [isTruthy,    true ],
+    };
+    var filterByParams = function(ev) {
+      for (var filter of params.filters) {
+        var filterTest = filterTests[filter.operator];
+        if (!filterTest) {
           throw `Unknown filter operator: "${filter.operator}"`;
+        }
+        if (filterTest[0](filter.prop ? ev.properties[filter.prop] : ev.name, filter.expected) !== filterTest[1]) {
+          return false;
+        }
       }
-    }
-    return true;
+      return true;
+    };
   }
 
   var groups = ['name'];
