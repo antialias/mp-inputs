@@ -9,11 +9,12 @@
 //     to: '2016-05-05',
 //     unit: 'hour',
 //   },
-//   filters: [
+//   events: [
 //     {
-//       operator: 'equals',
-//       expected: ['Viewed report'],
+//       event: 'Viewed report',
 //     },
+//   ],
+//   filters: [
 //     {
 //       prop: '$browser',
 //       operator: 'equals',
@@ -105,7 +106,11 @@ module.exports = function main() {
       break;
   }
 
-  var query = Events({from_date: params.dates.from, to_date: params.dates.to});
+  var query = Events({
+    event_selectors: params.events,
+    from_date: params.dates.from,
+    to_date: params.dates.to,
+  });
   if (params.filters) {
     query = query.filter(filterByParams);
   }

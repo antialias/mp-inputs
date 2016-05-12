@@ -90,12 +90,6 @@ function filterToParams(filter) {
 //       }
 //       break;
 //     }
-//     case 'boolean':
-//       switch (operator) {
-//         case 'is true'  : return `(boolean(${property}) == true)`;
-//         case 'is false' : return `(boolean(${property}) == false)`;
-//       }
-//       break;
 //     case 'list':
 //       switch (operator) {
 //         case 'contains'         : return `(${value} in list(${property}))`;
@@ -166,17 +160,11 @@ export default class SegmentationQuery extends BaseQuery {
         to:   (new Date(this.query.to)).toISOString().split('T')[0],
         unit: this.query.unit,
       },
-      filters: [
-        {
-          operator: 'equals',
-          expected: this.query.events,
-        },
-      ]
-        .concat(
-          this.query.filters
+      events: this.query.events.map(ev => ({event: ev})),
+      filters:
+        this.query.filters
           .filter(filter => isFilterValid(filter))
-          .map(filter => filterToParams(filter))
-        ),
+          .map(filter => filterToParams(filter)),
       groups: this.query.segments,
     };
     return {
