@@ -4,13 +4,13 @@
   "description": "Interactive report builder",
   "main": "index.js",
   "scripts": {
+    "build": "webpack",
     "lint": "eslint src",
-    "production-build": "rm -rf dist && NODE_ENV=production ./node_modules/.bin/webpack",
-    "build": "./node_modules/.bin/webpack",
-    "watch": "./node_modules/.bin/webpack --progress --colors --watch",
-    "serve": "./node_modules/.bin/webpack-dev-server --inline",
+    "production-build": "rm -rf dist && NODE_ENV=production webpack",
+    "serve": "webpack-dev-server --inline",
     "start": "npm run watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack --progress --colors --watch"
   },
   "repository": {
     "type": "git",
