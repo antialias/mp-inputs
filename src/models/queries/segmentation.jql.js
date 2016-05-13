@@ -1,4 +1,4 @@
-/* global Events, mixpanel, module, params */
+/* global Events, module, params */
 
 // parameterized JQL segmentation query
 //
@@ -112,6 +112,22 @@ module.exports = function main() {
       break;
   }
 
+  var countWithSampling = function(counts, events) {
+    var count = 0;
+    for (var i = 0; i < events.length; i++) {
+      var ev = events[i];
+      if (ev.sampling_factor === 1.0) {
+        count++;
+      } else {
+        count += 1.0 / ev.sampling_factor;
+      }
+    }
+    for (i = 0; i < counts.length; i++) {
+      count += counts[i];
+    }
+    return Math.round(count);
+  };
+
   var query = Events({
     event_selectors: params.events,
     from_date: params.dates.from,
@@ -121,9 +137,9 @@ module.exports = function main() {
     query = query.filter(filterByParams);
   }
   if (groups.length) {
-    query = query.groupBy(groups, mixpanel.reducer.count());
+    query = query.groupBy(groups, countWithSampling);
   } else {
-    query = query.reduce(mixpanel.reducer.count());
+    query = query.reduce(countWithSampling);
   }
   return query;
 };
