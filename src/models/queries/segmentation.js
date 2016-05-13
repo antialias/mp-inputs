@@ -46,50 +46,37 @@ function isFilterValid(filter) {
 }
 
 function filterToParams(filter) {
-  return {
+  const params = {
     prop: filter.value,
+    dataType: filter.filterType,
     operator: filter.filterOperator,
     expected: filter.filterValue,
   };
+  if (params.dataType === 'datetime') {
+    // add date params and convert from relative to absolute
+    params.dateUnit = filter.filterDateUnit;
+    const unitMS = MS_BY_UNIT[params.dateUnit];
+    if (params.operator === 'was on') {
+      // TODO de-hack once we have better UI
+      params.operator = 'was between';
+      params.expected[1] = params.expected[0];
+    }
+    if (params.operator === 'was between') {
+      params.expected[0] = new Date(params.expected[0].getTime());
+      params.expected[0].setHours(0, 0, 0, 0);
+      params.expected[0] = new Date(params.expected[0].getTime());
+      params.expected[1] = new Date(params.expected[1].getTime());
+      params.expected[1].setHours(23, 59, 59, 999);
+      params.expected[1] = new Date(params.expected[1].getTime());
+    } else {
+      params.expected = new Date(new Date().getTime() - (params.expected * unitMS)).getTime();
+    }
+  }
+  return params;
 }
 
-      // .map(clause => [
-      //   clause.value,
-      //   clause.filterType,
-      //   clause.filterOperator,
-      //   clause.filterValue,
-      //   clause.filterDateUnit,
-      // ]);
 // function filterToArbSelectorString(property, type, operator, value, dateUnit) {
-//   property = `(properties["${property}"])`;
-
-//   if (typeof value === 'string') {
-//     value = `"${value}"`;
-//   } else if (Array.isArray(value)) {
-//     value = value.map(val => typeof val === 'string' ? `"${val}"` : val);
-//   }
-
 //   switch (type) {
-//     case 'datetime': {
-//       const unitMs = MS_BY_UNIT[dateUnit];
-
-//       switch (operator) {
-//         case 'was less than': return `(${property} < datetime(${new Date(new Date().getTime() - (value * unitMs)).getTime()}))`;
-//         case 'was more than': return `(${property} > datetime(${new Date(new Date().getTime() - (value * unitMs)).getTime()}))`;
-//         // TODO 'was on' should be a different case - when we have better date controls
-//         case 'was on':
-//         case 'was between': {
-//           let from = new Date(value[0].getTime());
-//           let to = new Date(value[1].getTime());
-
-//           from.setHours(0, 0, 0, 0);
-//           to.setHours(23, 59, 59, 999);
-
-//           return `((${property} >= datetime(${from.getTime()})) and (${property} <= datetime(${to.getTime()})))`;
-//         }
-//       }
-//       break;
-//     }
 //     case 'list':
 //       switch (operator) {
 //         case 'contains'         : return `(${value} in list(${property}))`;

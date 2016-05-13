@@ -34,9 +34,12 @@
 // }
 
 module.exports = function main() {
-  if (params.filters) {
+  if (params.filters && params.filters.length) {
     var between = function(actual, expected) {
       return typeof actual === 'number' && actual > expected[0] && actual < expected[1];
+    };
+    var betweenIncl = function(actual, expected) {
+      return typeof actual === 'number' && actual >= expected[0] && actual <= expected[1];
     };
     var contains = function(actual, expected) {
       return String(actual).toLowerCase().indexOf(expected.toLowerCase()) !== -1;
@@ -73,6 +76,9 @@ module.exports = function main() {
       'is not set':       [isSet,       false],
       'is set':           [isSet,       true ],
       'is true':          [isTruthy,    true ],
+      'was between':      [betweenIncl, true ],
+      'was less than':    [greaterThan, true ],
+      'was more than':    [lessThan,    true ],
     };
     var filterByParams = function(ev) {
       for (var filter of params.filters) {
@@ -111,7 +117,7 @@ module.exports = function main() {
     from_date: params.dates.from,
     to_date: params.dates.to,
   });
-  if (params.filters) {
+  if (params.filters && params.filters.length) {
     query = query.filter(filterByParams);
   }
   if (groups.length) {
