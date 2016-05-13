@@ -52,39 +52,34 @@ function filterToParams(filter) {
     operator: filter.filterOperator,
     expected: filter.filterValue,
   };
-  if (params.dataType === 'datetime') {
-    // add date params and convert from relative to absolute
-    params.dateUnit = filter.filterDateUnit;
-    const unitMS = MS_BY_UNIT[params.dateUnit];
-    if (params.operator === 'was on') {
-      // TODO de-hack once we have better UI
-      params.operator = 'was between';
-      params.expected[1] = params.expected[0];
+  switch(params.dataType) {
+    case 'datetime': {
+      // add date params and convert from relative to absolute
+      params.dateUnit = filter.filterDateUnit;
+      const unitMS = MS_BY_UNIT[params.dateUnit];
+      if (params.operator === 'was on') {
+        // TODO de-hack once we have better UI
+        params.operator = 'was between';
+        params.expected[1] = params.expected[0];
+      }
+      if (params.operator === 'was between') {
+        params.expected[0] = new Date(params.expected[0].getTime());
+        params.expected[0].setHours(0, 0, 0, 0);
+        params.expected[0] = new Date(params.expected[0].getTime());
+        params.expected[1] = new Date(params.expected[1].getTime());
+        params.expected[1].setHours(23, 59, 59, 999);
+        params.expected[1] = new Date(params.expected[1].getTime());
+      } else {
+        params.expected = new Date(new Date().getTime() - (params.expected * unitMS)).getTime();
+      }
+      break;
     }
-    if (params.operator === 'was between') {
-      params.expected[0] = new Date(params.expected[0].getTime());
-      params.expected[0].setHours(0, 0, 0, 0);
-      params.expected[0] = new Date(params.expected[0].getTime());
-      params.expected[1] = new Date(params.expected[1].getTime());
-      params.expected[1].setHours(23, 59, 59, 999);
-      params.expected[1] = new Date(params.expected[1].getTime());
-    } else {
-      params.expected = new Date(new Date().getTime() - (params.expected * unitMS)).getTime();
-    }
+    case 'list':
+      params.operator = `list ${params.operator}`;
+      break;
   }
   return params;
 }
-
-// function filterToArbSelectorString(property, type, operator, value, dateUnit) {
-//   switch (type) {
-//     case 'list':
-//       switch (operator) {
-//         case 'contains'         : return `(${value} in list(${property}))`;
-//         case 'does not contain' : return `(not ${value} in list(${property}))`;
-//       }
-//       break;
-//   }
-// }
 
 export default class SegmentationQuery extends BaseQuery {
   get valid() {

@@ -63,22 +63,27 @@ module.exports = function main() {
     var lessThan = function(actual, expected) {
       return typeof actual === 'number' && actual < expected;
     };
+    var listContains = function(actual, expected) {
+      return actual && actual.indexOf && actual.map(a => String(a)).indexOf(String(expected)) !== -1;
+    };
     var filterTests = {
-      'contains':         [contains,    true ],
-      'does not contain': [contains,    false],
-      'does not equal':   [equals,      false],
-      'equals':           [equals,      true ],
-      'is between':       [between,     true ],
-      'is equal to':      [equalNum,    true ],
-      'is false':         [isTruthy,    false],
-      'is greater than':  [greaterThan, true ],
-      'is less than':     [lessThan,    true ],
-      'is not set':       [isSet,       false],
-      'is set':           [isSet,       true ],
-      'is true':          [isTruthy,    true ],
-      'was between':      [betweenIncl, true ],
-      'was less than':    [greaterThan, true ],
-      'was more than':    [lessThan,    true ],
+      'contains':              [contains,     true ],
+      'does not contain':      [contains,     false],
+      'does not equal':        [equals,       false],
+      'equals':                [equals,       true ],
+      'is between':            [between,      true ],
+      'is equal to':           [equalNum,     true ],
+      'is false':              [isTruthy,     false],
+      'is greater than':       [greaterThan,  true ],
+      'is less than':          [lessThan,     true ],
+      'is not set':            [isSet,        false],
+      'is set':                [isSet,        true ],
+      'is true':               [isTruthy,     true ],
+      'list contains':         [listContains, true ],
+      'list does not contain': [listContains, false],
+      'was between':           [betweenIncl,  true ],
+      'was less than':         [greaterThan,  true ],
+      'was more than':         [lessThan,     true ],
     };
     var filterByParams = function(ev) {
       for (var filter of params.filters) {
