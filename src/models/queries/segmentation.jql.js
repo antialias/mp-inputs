@@ -35,56 +35,68 @@
 
 module.exports = function main() {
   if (params.filters && params.filters.length) {
+    // String
+    var stringContains = function(actual, expected) {
+      return String(actual).toLowerCase().indexOf(expected.toLowerCase()) !== -1;
+    };
+    var stringEquals = function(actual, expectedList) {
+      actual = String(actual).toLowerCase();
+      return expectedList.some(function(expectedVal) { return actual === String(expectedVal).toLowerCase(); });
+    };
+    var isSet = function(actual) {
+      return typeof actual !== 'undefined' && actual !== null;
+    };
+
+    // Integer / Date
     var between = function(actual, expected) {
       return typeof actual === 'number' && actual > expected[0] && actual < expected[1];
     };
     var betweenIncl = function(actual, expected) {
       return typeof actual === 'number' && actual >= expected[0] && actual <= expected[1];
     };
-    var contains = function(actual, expected) {
-      return String(actual).toLowerCase().indexOf(expected.toLowerCase()) !== -1;
-    };
     var equalNum = function(actual, expected) {
       return actual === expected;
-    };
-    var equals = function(actual, expectedList) {
-      actual = String(actual).toLowerCase();
-      return expectedList.some(function(expectedVal) { return actual === String(expectedVal).toLowerCase(); });
     };
     var greaterThan = function(actual, expected) {
       return typeof actual === 'number' && actual > expected;
     };
-    var isSet = function(actual) {
-      return typeof actual !== 'undefined' && actual !== null;
-    };
-    var isTruthy = function(actual) {
-      return !!actual;
-    };
     var lessThan = function(actual, expected) {
       return typeof actual === 'number' && actual < expected;
     };
+
+    // Boolean
+    var isTruthy = function(actual) {
+      return !!actual;
+    };
+
+    // List
     var listContains = function(actual, expected) {
       return actual && actual.indexOf && actual.map(a => String(a)).indexOf(String(expected)) !== -1;
     };
+
     var negate = f => (...args) => !f(...args);
     var filterTests = {
-      'contains':              contains,
-      'does not contain':      negate(contains),
-      'does not equal':        negate(equals),
-      'equals':                equals,
+      'contains':              stringContains,
+      'does not contain':      negate(stringContains),
+      'equals':                stringEquals,
+      'does not equal':        negate(stringEquals),
+      'is set':                isSet,
+      'is not set':            negate(isSet),
+
       'is between':            between,
       'is equal to':           equalNum,
-      'is false':              negate(isTruthy),
       'is greater than':       greaterThan,
       'is less than':          lessThan,
-      'is not set':            negate(isSet),
-      'is set':                isSet,
-      'is true':               isTruthy,
-      'list contains':         listContains,
-      'list does not contain': negate(listContains),
+
       'was between':           betweenIncl,
       'was less than':         greaterThan,
       'was more than':         lessThan,
+
+      'is true':               isTruthy,
+      'is false':              negate(isTruthy),
+
+      'list contains':         listContains,
+      'list does not contain': negate(listContains),
     };
     var filterByParams = function(ev) {
       for (var filter of params.filters) {
