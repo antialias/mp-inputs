@@ -332,6 +332,18 @@ export function extend() {
   return Object.assign(...[{}, ...Array.prototype.slice.call(arguments)]);
 }
 
+export function unique(list) {
+  let uniqueList = [];
+  list.forEach(val => !uniqueList.includes(val) && uniqueList.push(val));
+  return uniqueList;
+}
+
+export function objectFromPairs(pairs) {
+  let object = {};
+  pairs.forEach(pair => { object[pair[0]] = pair[1]; });
+  return object;
+}
+
 export function replaceIndex(array, index, value) {
   return [...array.slice(0, index), value, ...array.slice(index + 1)];
 }
@@ -482,16 +494,6 @@ export function getTextWidth(text, font) {
   context.font = font;
 
   return context.measureText(text).width;
-}
-
-// get the ideal "distance" between ticks for a given range
-// results in a value like 5, 10, 25, 50, 100, 250, 500, etc.
-export function getTickDistance(max, min=0, targetNumTicks=10) {
-  let distance = 5;
-  while ((max - min) / distance > targetNumTicks) {
-    distance *= Number.isInteger(Math.log10(distance)) ? 2.5 : 2;
-  }
-  return distance;
 }
 
 // TODO epurcer - replace this with a more general-purpose tool like https://www.npmjs.com/package/debug

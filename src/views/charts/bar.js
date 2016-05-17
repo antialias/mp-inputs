@@ -5,10 +5,12 @@ import WebComponent from 'webcomponent';
 import BaseView from '../base';
 import {
   abbreviateNumber,
-  getTickDistance,
   isDateString,
   renameProperty,
 } from '../../util';
+import {
+  getTickDistance,
+} from '../../chart-util';
 
 import template from '../templates/charts/bar.jade';
 import '../stylesheets/charts/bar.styl';
@@ -115,6 +117,12 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
 export default class BarChartView extends BaseView {
   get TEMPLATE() {
     return template;
+  }
+
+  get templateHelpers() {
+    return {
+      getTickDistance,
+    };
   }
 
   render(state={}) {
