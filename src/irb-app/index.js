@@ -4,12 +4,13 @@ import { extend } from '../util';
 import BuilderSections from '../models/builder-sections';
 import { ShowSection, TimeSection } from '../models/section';
 import { Clause, ShowClause, TimeClause } from '../models/clause';
-
 import TopEventsQuery from '../models/queries/top-events';
 import TopPropertiesQuery from '../models/queries/top-properties';
 import TopPropertyValuesQuery from '../models/queries/top-property-values';
 import SegmentationQuery from '../models/queries/segmentation';
 import QueryCache from '../models/queries/query-cache';
+
+import './irb-header';
 
 import template from './index.jade';
 import './index.styl';

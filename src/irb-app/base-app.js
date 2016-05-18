@@ -41,6 +41,7 @@ export default class BaseApp extends Component {
   }
 
   clickOutsideHandler(event) {
+    this.clickOutsideHandlers = this.clickOutsideHandlers || {};
     Object.keys(this.clickOutsideHandlers).forEach(appMethodName => {
       const classes = this.clickOutsideHandlers[appMethodName];
 
