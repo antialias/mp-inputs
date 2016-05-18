@@ -6,7 +6,7 @@ import 'webcomponents.js/webcomponents-lite';
 
 import Framesg from 'framesg';
 
-import IRBApp from './app';
+import './irb-app';
 
 import './stylesheets/index.styl';
 
@@ -14,12 +14,15 @@ if (APP_ENV === 'development') {
   window.MP.api.options.apiHost = window.location.origin;
 }
 
+const IRB = document.createElement('irb-app');
+
 if (window.parent !== window) {
   const parentFrame = new Framesg(window.parent, 'mp-app', {
     startApp: () => {
-      new IRBApp('app', null, {parentFrame}).update();
+      IRB.parentFrame = parentFrame;
+      document.getElementById('app').appendChild(IRB);
     },
   });
 } else {
-  new IRBApp('app').update();
+  document.getElementById('app').appendChild(IRB);
 }
