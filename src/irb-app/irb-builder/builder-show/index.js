@@ -2,8 +2,7 @@ import { Component } from 'panel';
 
 import { capitalize, extend, renameEvent } from '../../../util';
 
-import { EditControl } from '../controls';
-// import { AddControl, EditControl } from '../controls';
+import { AddControl, EditControl } from '../controls';
 // import PaneView from './pane';
 // import PaneContentView from './pane-content';
 
@@ -16,6 +15,30 @@ import './index.styl';
 document.registerElement('builder-show', class extends Component {
   get config() {
     return {template};
+  }
+});
+
+document.registerElement('show-add-control', class extends AddControl {
+  get config() {
+    return extend(super.config, {
+      helpers: extend(super.config.helpers, {
+        getLabel: () => {
+          const clause = this.app.state.sections.getClause('show', this.clauseIndex);
+          const math = capitalize(clause.math);
+          return [math, ' number of ', renameEvent(clause.value)];
+        },
+      }),
+    });
+  }
+
+  get constants() {
+    return extend(super.constants, {
+      label: 'Compare',
+    });
+  }
+
+  get section() {
+    return 'show';
   }
 });
 
@@ -35,12 +58,6 @@ document.registerElement('show-edit-control', class extends EditControl {
   get section() {
     return 'show';
   }
-
-//   get VIEWS() {
-//     return {
-//       pane: new ShowPaneView(this),
-//     };
-//   }
 });
 
 
@@ -77,23 +94,5 @@ document.registerElement('show-edit-control', class extends EditControl {
 //     return {
 //       content: new ShowPaneContentView(this),
 //     };
-//   }
-// }
-
-// class ShowAddControlView extends AddControlView {
-//   get section() {
-//     return 'show';
-//   }
-
-//   get VIEWS() {
-//     return {
-//       pane: new ShowPaneView(this),
-//     };
-//   }
-
-//   get templateConstants() {
-//     return extend(super.templateConstants, {
-//       label: 'Compare',
-//     });
 //   }
 // }
