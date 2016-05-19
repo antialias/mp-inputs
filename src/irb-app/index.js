@@ -11,6 +11,7 @@ import SegmentationQuery from '../models/queries/segmentation';
 import QueryCache from '../models/queries/query-cache';
 
 import './irb-header';
+import './irb-builder';
 
 import template from './index.jade';
 import './index.styl';

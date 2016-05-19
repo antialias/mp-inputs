@@ -1,0 +1,21 @@
+.irb-control(class=[$component.constants.class || $helpers.getClass()])
+  button.modify(ev-click=event => $helpers.updatePosition(event) && $helpers.openPane($component.clauseIndex))
+    - const label = $component.constants.label || $helpers.getLabel($component.clauseIndex)
+    if typeof label === 'string'
+      span= label
+    else
+      for part, i in label
+        if i % 2
+            span.preposition= ` ${part} `
+        else
+          span= part
+  if $component.constants.showRemove
+    button.remove(ev-click=() => $helpers.removeClause($component.clauseIndex))
+  if $helpers.isPaneOpen($component.clauseIndex)
+    .pane-container(
+      style={
+        height: `${$component.constants.paneHeight}px`,
+        width: `${$component.constants.paneWidth}px`,
+        left: `${$helpers.getPaneLeft()}px`,
+      }
+    )= views.pane(state)

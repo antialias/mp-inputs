@@ -1,0 +1,14 @@
+.section.builder-show
+  if !sections.show.clauses.length
+    .clause.comparison
+      h3
+      .control-container= $component.child('show-add-control')
+  else
+    for clause, clauseIndex in sections.show.clauses
+      if clauseIndex
+        .preposition and
+      .clause.comparison
+        h3= 'Show' + (sections.show.clauses.length === 1 ? '' : ' ' + (clauseIndex + 1))
+        .control-container= $component.child('show-edit-control', {attributes: {'clause-index': clauseIndex}})
+        if clauseIndex === sections.show.clauses.length - 1
+          .control-container= $component.child('show-add-control')
