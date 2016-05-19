@@ -1,6 +1,6 @@
 .irb-control(class=[$component.constants.class || $helpers.getClass()])
-  button.modify(ev-click=event => $helpers.updatePosition(event) && $helpers.openPane($component.clauseIndex))
-    - const label = $component.constants.label || $helpers.getLabel($component.clauseIndex)
+  button.modify(onclick=$helpers.clickModify)
+    - const label = $component.constants.label || $helpers.getLabel()
     if typeof label === 'string'
       span= label
     else
@@ -10,12 +10,12 @@
         else
           span= part
   if $component.constants.showRemove
-    button.remove(ev-click=() => $helpers.removeClause($component.clauseIndex))
-  if $helpers.isPaneOpen($component.clauseIndex)
+    button.remove(onclick=$helpers.removeClause)
+  if $helpers.isPaneOpen()
     .pane-container(
       style={
         height: `${$component.constants.paneHeight}px`,
         width: `${$component.constants.paneWidth}px`,
         left: `${$helpers.getPaneLeft()}px`,
       }
-    )= views.pane(state)
+    )= $component.child('show-pane')

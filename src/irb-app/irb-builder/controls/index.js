@@ -8,7 +8,7 @@ import './index.styl';
 class ControlComponent extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
-    // this.app.onClickOutside(this.elementClass, 'stopEditingClause');
+    this.app.onClickOutside(this.tagName, 'stopEditingClause');
   }
 
   get config() {
@@ -16,8 +16,13 @@ class ControlComponent extends Component {
       template,
 
       helpers: {
-        updatePosition: ev => this.position = ev.target.parentNode.getBoundingClientRect(),
+        clickModify: ev => {
+          this.updatePosition(ev);
+          this.openPane();
+        },
+        getLabel: () => { throw 'Not implemented!'; },
         getPaneLeft: () => !this.position ? 0 : Math.min(0, (window.innerWidth - this.position.left) - this.constants.paneWidth),
+        updatePosition: ev => this.updatePosition(ev),
       },
     };
   }
@@ -32,6 +37,14 @@ class ControlComponent extends Component {
   get section() {
     throw 'Not implemented!';
   }
+
+  openPane() {
+    throw 'Not implemented!';
+  }
+
+  updatePosition(ev) {
+    this.position = ev.target.parentNode.getBoundingClientRect();
+  }
 }
 
 export class AddControl extends ControlComponent {
@@ -39,7 +52,6 @@ export class AddControl extends ControlComponent {
     return extend(super.config, {
       helpers: extend(super.config.helpers, {
         isPaneOpen: () => this.app.isAddingClause(this.section),
-        openPane: () => this.app.startAddingClause(this.section),
       }),
     });
   }
@@ -50,15 +62,18 @@ export class AddControl extends ControlComponent {
       showRemove: false,
     });
   }
+
+  openPane() {
+    this.app.startAddingClause(this.section);
+  }
 }
 
 export class EditControl extends ControlComponent {
   get config() {
     return extend(super.config, {
       helpers: extend(super.config.helpers, {
-        removeClause: clauseIndex => this.app.removeClause(this.section, clauseIndex),
-        isPaneOpen: clauseIndex => this.app.isEditingClause(this.section, clauseIndex),
-        openPane: clauseIndex => this.app.startEditingClause(this.section, clauseIndex),
+        removeClause: () => this.app.removeClause(this.section, this.clauseIndex),
+        isPaneOpen: () => this.app.isEditingClause(this.section, this.clauseIndex),
       }),
     });
   }
@@ -68,5 +83,13 @@ export class EditControl extends ControlComponent {
       class: 'noun',
       showRemove: true,
     });
+  }
+
+  get clauseIndex() {
+    return Number(this.getAttribute('clause-index'));
+  }
+
+  openPane() {
+    this.app.startEditingClause(this.section, this.clauseIndex);
   }
 }

@@ -24,36 +24,34 @@ export default class BaseApp extends Component {
   // DOM helpers
 
   initClickOutside() {
-    document.addEventListener('click', event => this.clickOutsideHandler(event));
+    document.addEventListener('click', ev => this.clickOutsideHandler(ev));
 
     if (this.parentFrame) {
-      this.parentFrame.addHandler('click', event => this.clickOutsideHandler(event));
+      this.parentFrame.addHandler('click', ev => this.clickOutsideHandler(ev));
     }
   }
 
-  onClickOutside(elementClass, appMethodName) {
+  onClickOutside(tagName, appMethodName) {
     this.clickOutsideHandlers = this.clickOutsideHandlers || {};
     this.clickOutsideHandlers[appMethodName] = this.clickOutsideHandlers[appMethodName] || [];
 
-    if (this.clickOutsideHandlers[appMethodName].indexOf(elementClass) === -1) {
-      this.clickOutsideHandlers[appMethodName].push(elementClass);
+    if (this.clickOutsideHandlers[appMethodName].indexOf(tagName) === -1) {
+      this.clickOutsideHandlers[appMethodName].push(tagName);
     }
   }
 
-  clickOutsideHandler(event) {
+  clickOutsideHandler(ev) {
     this.clickOutsideHandlers = this.clickOutsideHandlers || {};
     Object.keys(this.clickOutsideHandlers).forEach(appMethodName => {
-      const classes = this.clickOutsideHandlers[appMethodName];
+      const tagNames = this.clickOutsideHandlers[appMethodName];
 
-      for (let el = event.target; el; el = el.parentElement) {
-        for (let i = 0; i < classes.length; i++) {
-          if (el.classList.contains(classes[i])) {
-            return;
-          }
+      for (let el = ev.target; el; el = el.parentElement) {
+        if (tagNames.includes(el.tagName)) {
+          return;
         }
       }
 
-      this[appMethodName](event);
+      this[appMethodName](ev);
     });
   }
 }

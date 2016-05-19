@@ -23,8 +23,8 @@ document.registerElement('show-edit-control', class extends EditControl {
   get config() {
     return extend(super.config, {
       helpers: extend(super.config.helpers, {
-        getLabel: clauseIndex => {
-          const clause = this.app.state.sections.getClause('show', clauseIndex);
+        getLabel: () => {
+          const clause = this.app.state.sections.getClause('show', this.clauseIndex);
           const math = capitalize(clause.math);
           return [math, ' number of ', renameEvent(clause.value)];
         },
@@ -34,10 +34,6 @@ document.registerElement('show-edit-control', class extends EditControl {
 
   get section() {
     return 'show';
-  }
-
-  get clauseIndex() {
-    return Number(this.getAttribute('clause-index'));
   }
 
 //   get VIEWS() {
