@@ -1,8 +1,8 @@
 import { Component } from 'panel';
 
-import { extend } from '../../../util';
+import { extend, renameProperty } from '../../../util';
 
-import { AddControl } from '../controls';
+import { AddControl, EditControl } from '../controls';
 import { ShowClause } from '../../../models/clause';
 // import { Clause, ShowClause } from '../../../models/clause';
 
@@ -24,6 +24,27 @@ document.registerElement('builder-group', class extends Component {
 });
 
 document.registerElement('group-add-control', class extends AddControl {
+  get constants() {
+    return extend(super.constants, {
+      label: 'Group',
+    });
+  }
+
+  get section() {
+    return 'group';
+  }
+});
+
+document.registerElement('group-edit-control', class extends EditControl {
+  get config() {
+    return extend(super.config, {
+      helpers: extend(super.config.helpers, {
+        getLabel: () =>
+          renameProperty(this.state.sections.getClause('group', this.clauseIndex).value),
+      }),
+    });
+  }
+
   get constants() {
     return extend(super.constants, {
       label: 'Group',
