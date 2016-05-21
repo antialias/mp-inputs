@@ -18,18 +18,6 @@ document.registerElement('builder-show', class extends Component {
 });
 
 document.registerElement('show-add-control', class extends AddControl {
-  get config() {
-    return extend(super.config, {
-      helpers: extend(super.config.helpers, {
-        getLabel: () => {
-          const clause = this.app.state.sections.getClause('show', this.clauseIndex);
-          const math = capitalize(clause.math);
-          return [math, ' number of ', renameEvent(clause.value)];
-        },
-      }),
-    });
-  }
-
   get constants() {
     return extend(super.constants, {
       label: 'Compare',
