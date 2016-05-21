@@ -1,9 +1,9 @@
 import { Component } from 'panel';
 
 import './builder-show';
+import './builder-group';
 
 // import TimeView from './time';
-// import GroupView from './group';
 // import FilterView from './filter';
 
 import template from './index.jade';
