@@ -14,14 +14,13 @@ mixin pane(paneComponent, isPaneActive, paneIndex)
 
   if paneConstants.search !== false && $component.constants.search !== false
     .search
-      // TODO: we are required to recreate this input between panes switches because of
-      //       limitations of the focus-input; this shouldn't be necessary
+      //- TODO: we are required to recreate this input between panes switches because of
+      //-       limitations of the focus-input; this shouldn't be necessary
       if isPaneActive
         focus-input(autoFocus=isPaneActive type='text' oninput=event => $helpers.updateStageClause({search: event.target.value}))
 
-  if paneComponent.content
-    .content= TODO
-    //- .content= paneComponent.content(Object.assign(state, {isPaneActive}))
+  if paneComponent.constants.hasContent
+    .content= $component.child(`${$component.section}-pane-content`, {attributes: {'is-pane-active': isPaneActive}})
 
   if commitLabel && commitHandler
     button.commit(onclick=commitHandler)= commitLabel

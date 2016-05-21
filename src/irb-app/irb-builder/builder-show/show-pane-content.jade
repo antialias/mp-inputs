@@ -1,0 +1,26 @@
+- const selectedMath = stageClause && stageClause.math;
+- const selectedResourceType = stageClause && stageClause.resourceType;
+- const selectedValue = stageClause && stageClause.value;
+
+.show-pane-content
+  ul.column.toggle.math
+    for math in $component.constants.mathChoices
+      li(
+        class=[math === selectedMath ? 'selected' : '', (math === 'sum' || math === 'median') ? 'disabled' : '']
+        onclick=() => $helpers.updateStageClause({math})
+      )= $helpers.util.capitalize(math)
+  ul.column.toggle.resource-type
+    for resourceType in $component.constants.resourceTypeChoices
+      li(
+        class=[resourceType === selectedResourceType ? 'selected' : '', resourceType !== 'all' ? 'disabled' : '']
+        onclick=() => $helpers.updateStageClause({resourceType})
+      )= $helpers.util.capitalize(resourceType)
+  ul.column.resource-value
+    for value in $component.constants.eventChoices
+      if $helpers.matchesSearch($helpers.util.renameEvent(value))
+        li(
+          class=value === selectedValue ? 'selected' : ''
+          onclick=() => $helpers.updateStageClause({value}, true)
+        )
+          span= $helpers.util.renameEvent(value)
+          button.next-arrow ›
