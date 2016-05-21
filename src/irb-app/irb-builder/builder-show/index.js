@@ -3,6 +3,7 @@ import { Component } from 'panel';
 import { capitalize, extend, renameEvent } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
+import { Pane } from '../../pane';
 // import PaneView from './pane';
 // import PaneContentView from './pane-content';
 
@@ -60,6 +61,23 @@ document.registerElement('show-edit-control', class extends EditControl {
   }
 });
 
+document.registerElement('show-pane', class extends Pane {
+  get constants() {
+    return extend(super.constants, {
+      header: 'Show',
+    });
+  }
+
+  get section() {
+    return 'show';
+  }
+
+//   get VIEWS() {
+//     return {
+//       content: new ShowPaneContentView(this),
+//     };
+//   }
+});
 
 // class ShowPaneContentView extends PaneContentView {
 //   get section() {
@@ -76,23 +94,5 @@ document.registerElement('show-edit-control', class extends EditControl {
 //       resourceTypeChoices: Clause.RESOURCE_TYPES,
 //       eventChoices: [ShowClause.TOP_EVENTS, ...this.app.state.topEvents],
 //     });
-//   }
-// }
-
-// class ShowPaneView extends PaneView {
-//   get section() {
-//     return 'show';
-//   }
-
-//   get templateConstants() {
-//     return extend(super.templateConstants, {
-//       header: 'Show',
-//     });
-//   }
-
-//   get VIEWS() {
-//     return {
-//       content: new ShowPaneContentView(this),
-//     };
 //   }
 // }

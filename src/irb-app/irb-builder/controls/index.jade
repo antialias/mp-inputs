@@ -18,4 +18,4 @@
         width: `${$component.constants.paneWidth}px`,
         left: `${$helpers.getPaneLeft()}px`,
       }
-    )= $component.child('show-pane')
+    )= $component.child(`${$component.section}-pane`)
