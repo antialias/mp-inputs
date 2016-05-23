@@ -33,7 +33,7 @@ document.registerElement('show-edit-control', class extends EditControl {
     return extend(super.config, {
       helpers: extend(super.config.helpers, {
         getLabel: () => {
-          const clause = this.app.state.sections.getClause('show', this.clauseIndex);
+          const clause = this.state.sections.getClause('show', this.clauseIndex);
           const math = capitalize(clause.math);
           return [math, ' number of ', renameEvent(clause.value)];
         },

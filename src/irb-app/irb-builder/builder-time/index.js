@@ -2,9 +2,9 @@
 
 import { Component } from 'panel';
 
-// import { extend } from '../../../util';
+import { extend } from '../../../util';
 
-// import { EditControl } from '../controls';
+import { EditControl } from '../controls';
 // import { TimeClause } from '../../../models/clause';
 // import { Pane, PaneContent } from '../../pane';
 
@@ -18,23 +18,33 @@ document.registerElement('builder-time', class extends Component {
   }
 });
 
-// document.registerElement('time-edit-control', class extends EditControl {
-//   get config() {
-//     return extend(super.config, {
-//       helpers: extend(super.config.helpers, {
-//         getLabel: () => {
-//           const clause = this.app.state.sections.getClause('time', this.clauseIndex);
-//           const math = capitalize(clause.math);
-//           return [math, ' number of ', renameEvent(clause.value)];
-//         },
-//       }),
-//     });
-//   }
+document.registerElement('time-edit-control', class extends EditControl {
+  get config() {
+    return extend(super.config, {
+      helpers: extend(super.config.helpers, {
+        getLabel: () => {
+          const clause = this.state.sections.time.clauses[0];
+          const range = clause.range;
+          if (range) {
+            return range;
+          } else {
+            throw new Error('Custom ranges not implemented yet');
+          }
+        },
+      }),
+    });
+  }
 
-//   get section() {
-//     return 'time';
-//   }
-// });
+  get constants() {
+    return extend(super.constants, {
+      showRemove: false,
+    });
+  }
+
+  get section() {
+    return 'time';
+  }
+});
 
 // document.registerElement('time-pane', class extends Pane {
 //   get constants() {
