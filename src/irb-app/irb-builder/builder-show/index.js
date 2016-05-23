@@ -7,7 +7,7 @@ import { Clause, ShowClause } from '../../../models/clause';
 import { Pane, PaneContent } from '../../pane';
 
 import template from './index.jade';
-import showPaneContentTemplate from './show-pane-content.jade';
+import showPaneContentTemplate from '../controls/show-pane-content.jade';
 import './index.styl';
 
 document.registerElement('builder-show', class extends Component {
