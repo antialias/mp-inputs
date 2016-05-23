@@ -3,8 +3,7 @@ import { Component } from 'panel';
 import './builder-show';
 import './builder-group';
 import './builder-time';
-
-// import FilterView from './filter';
+import './builder-filter';
 
 import template from './index.jade';
 import './index.styl';

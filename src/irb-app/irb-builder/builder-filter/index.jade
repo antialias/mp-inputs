@@ -1,0 +1,13 @@
+.section.builder-filter
+  if !sections.filter.clauses.length
+    .clause.filter
+      .control-container= $component.child('filter-add-control')
+  else
+    for clause, clauseIndex in sections.filter.clauses
+      .preposition= clauseIndex ? 'and' : ''
+      .clause.filter
+        .control-container= $component.child('filter-edit-control', {attributes: {'clause-index': clauseIndex}})
+        if clauseIndex == sections.filter.clauses.length - 1
+          if $helpers.isAddingClause()
+            .preposition and
+          .control-container= $component.child('filter-add-control')
