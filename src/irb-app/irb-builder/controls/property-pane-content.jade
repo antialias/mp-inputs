@@ -1,0 +1,19 @@
+- const selectedResourceType = stageClause && stageClause.resourceType;
+- const selectedProperty = stageClause && stageClause.value;
+
+.pane-content
+  ul.column.toggle.resource-type
+    for resourceType in $component.constants.resourceTypeChoices
+      li(
+        class=[resourceType === selectedResourceType ? 'selected' : '', resourceType !== 'all' ? 'disabled' : '']
+        onclick=() => $helpers.updateStageClause({resourceType}),
+      )= $helpers.util.capitalize(resourceType)
+  ul.column.resource-value
+    for property in topProperties
+      if $helpers.matchesSearch($helpers.util.renameProperty(property.name))
+        li.property(
+          class=[`type-${property.type}`, property.name === selectedProperty ? 'selected' : ''],
+          onclick=() => $helpers.selectProperty(property, true),
+        )
+          span= $helpers.util.renameProperty(property.name)
+          button.next-arrow(onclick=() => $helpers.selectProperty(property)) ›

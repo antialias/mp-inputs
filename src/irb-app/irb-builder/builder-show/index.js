@@ -3,9 +3,8 @@ import { Component } from 'panel';
 import { capitalize, extend, renameEvent } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
-import { Pane, PaneContent } from '../../pane';
-
 import { Clause, ShowClause } from '../../../models/clause';
+import { Pane, PaneContent } from '../../pane';
 
 import template from './index.jade';
 import showPaneContentTemplate from './show-pane-content.jade';
