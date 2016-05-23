@@ -2,9 +2,9 @@
 
 import { Component } from 'panel';
 
-// import { extend, renameProperty } from '../../../util';
+import { extend } from '../../../util';
 
-// import { AddControl, EditControl } from '../controls';
+import { AddControl } from '../controls';
 // import { Clause, ShowClause } from '../../../models/clause';
 // import { Pane, PaneContent } from '../../pane';
 
@@ -24,18 +24,18 @@ document.registerElement('builder-filter', class extends Component {
   }
 });
 
-// // controls
-// document.registerElement('filter-add-control', class extends AddControl {
-//   get constants() {
-//     return extend(super.constants, {
-//       label: 'Group',
-//     });
-//   }
+// controls
+document.registerElement('filter-add-control', class extends AddControl {
+  get constants() {
+    return extend(super.constants, {
+      label: 'Filter',
+    });
+  }
 
-//   get section() {
-//     return 'filter';
-//   }
-// });
+  get section() {
+    return 'filter';
+  }
+});
 
 // document.registerElement('filter-edit-control', class extends EditControl {
 //   get config() {
