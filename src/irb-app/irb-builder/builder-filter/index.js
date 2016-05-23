@@ -2,9 +2,9 @@
 
 import { Component } from 'panel';
 
-import { extend } from '../../../util';
+import { extend, renameProperty } from '../../../util';
 
-import { AddControl } from '../controls';
+import { AddControl, EditControl } from '../controls';
 // import { Clause, ShowClause } from '../../../models/clause';
 // import { Pane, PaneContent } from '../../pane';
 
@@ -37,20 +37,66 @@ document.registerElement('filter-add-control', class extends AddControl {
   }
 });
 
-// document.registerElement('filter-edit-control', class extends EditControl {
-//   get config() {
-//     return extend(super.config, {
-//       helpers: extend(super.config.helpers, {
-//         getLabel: () =>
-//           renameProperty(this.state.sections.getClause('filter', this.clauseIndex).value),
-//       }),
-//     });
-//   }
+document.registerElement('filter-edit-control', class extends EditControl {
+  get config() {
+    return extend(super.config, {
+      helpers: extend(super.config.helpers, {
+        getLabel: clauseIndex => {
+          const clause = this.state.sections.getClause('filter', clauseIndex);
+          const property = renameProperty(clause.value);
+          const type = clause.filterType;
+          let operator = clause.filterOperator;
+          let propertyValue = [];
 
-//   get section() {
-//     return 'filter';
-//   }
-// });
+          if (type === 'datetime' && (operator === 'was more than' || operator === 'was less than')) {
+            propertyValue = [clause.filterValue, `${clause.filterDateUnit}s`, 'ago'];
+          } else {
+            switch (operator) {
+              case 'equals':
+              case 'does not equal':
+                clause.filterValue.forEach(value => {
+                  propertyValue.push(value);
+                  propertyValue.push('or');
+                });
+                propertyValue = propertyValue.slice(0, -1); // remove trailing "or"
+                break;
+              case 'is between':
+              case 'was between':
+                propertyValue = [clause.filterValue[0], 'and', clause.filterValue[1]];
+                break;
+              case 'is set':
+              case 'is not set':
+                propertyValue = [];
+                break;
+              case 'is true':
+              case 'is false':
+                propertyValue = [operator.split(' ').slice(1).join(' ')];
+                operator = operator.split(' ')[0];
+                break;
+              default:
+                propertyValue = [clause.filterValue];
+                break;
+            }
+          }
+
+          propertyValue = propertyValue.map(value => {
+            if (value instanceof Date) {
+              return `${value.getUTCMonth()}/${value.getUTCFullYear().toString().slice(2)}`;
+            } else {
+              return value ? value.toString() : '';
+            }
+          });
+
+          return [property, operator, ...propertyValue];
+        },
+      }),
+    });
+  }
+
+  get section() {
+    return 'filter';
+  }
+});
 
 // // dropdown content
 // document.registerElement('filter-pane', class extends Pane {
