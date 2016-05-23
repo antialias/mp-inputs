@@ -5,11 +5,11 @@ import { Component } from 'panel';
 import { extend } from '../../../util';
 
 import { EditControl } from '../controls';
-// import { TimeClause } from '../../../models/clause';
-// import { Pane, PaneContent } from '../../pane';
+import { TimeClause } from '../../../models/clause';
+import { Pane, PaneContent } from '../../pane';
 
 import template from './index.jade';
-// import timePaneContentTemplate from '../controls/time-pane-content.jade';
+import timePaneContentTemplate from '../controls/time-pane-content.jade';
 import './index.styl';
 
 document.registerElement('builder-time', class extends Component {
@@ -46,35 +46,42 @@ document.registerElement('time-edit-control', class extends EditControl {
   }
 });
 
-// document.registerElement('time-pane', class extends Pane {
-//   get constants() {
-//     return extend(super.constants, {
-//       hasContent: true,
-//       header: 'Show',
-//     });
-//   }
+document.registerElement('time-pane', class extends Pane {
+  get constants() {
+    return extend(super.constants, {
+      hasContent: true,
+      header: 'Time',
+      search: false,
+    });
+  }
 
-//   get section() {
-//     return 'time';
-//   }
-// });
+  get section() {
+    return 'time';
+  }
+});
 
-// document.registerElement('time-pane-content', class extends PaneContent {
-//   get config() {
-//     return extend(super.config, {
-//       template: timePaneContentTemplate,
-//     });
-//   }
+document.registerElement('time-pane-content', class extends PaneContent {
+  get config() {
+    return extend(super.config, {
+      template: timePaneContentTemplate,
 
-//   get constants() {
-//     return extend(super.constants, {
-//       mathChoices: ShowClause.MATH_TYPES,
-//       resourceTypeChoices: Clause.RESOURCE_TYPES,
-//       eventChoices: [ShowClause.TOP_EVENTS, ...this.state.topEvents],
-//     });
-//   }
+      helpers: extend(super.config.helpers, {
+        updateStageClause: clauseData => {
+          this.app.updateStageClause(clauseData);
+          this.app.commitStageClause();
+        },
+      }),
+    });
+  }
 
-//   get section() {
-//     return 'time';
-//   }
-// });
+  get constants() {
+    return extend(super.constants, {
+      rangeChoices: TimeClause.RANGE_CHOICES,
+      customRange: TimeClause.RANGES.CUSTOM,
+    });
+  }
+
+  get section() {
+    return 'time';
+  }
+});

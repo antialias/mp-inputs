@@ -1,0 +1,9 @@
+- const selectedRange = stageClause && stageClause.range;
+
+.pane-content.time-pane-content
+  ul.column.toggle.ranges
+    for range in $component.constants.rangeChoices
+      li(
+        class=[range === selectedRange ? 'selected' : '', range === $component.constants.customRange ? 'disabled' : '']
+        onclick=() => $helpers.updateStageClause({range}, true),
+      )= range
