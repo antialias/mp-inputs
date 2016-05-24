@@ -103,12 +103,6 @@ document.registerElement('filter-edit-control', class extends EditControl {
 
 // dropdown content
 document.registerElement('filter-pane', class extends Pane {
-  get constants() {
-    return extend(super.constants, {
-      header: 'Properties',
-    });
-  }
-
   get section() {
     return 'filter';
   }
