@@ -3,8 +3,8 @@ import { Component } from 'panel';
 import Toggle from '../widgets/toggle';
 
 import './bar-chart';
+import './line-chart';
 
-// import LineChartView from './charts/line';
 // import TableChartView from './charts/table';
 
 import template from './index.jade';
