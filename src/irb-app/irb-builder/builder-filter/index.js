@@ -5,11 +5,10 @@ import { Component } from 'panel';
 import { extend, renameProperty, removeValue } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
-import { Clause, FilterClause } from '../../../models/clause';
+import { Clause, FilterClause, TimeClause } from '../../../models/clause';
 import { Pane, PaneContent } from '../../pane';
-
-import './dropdowns';
-import './toggles';
+import Dropdown from '../../widgets/dropdown';
+import Toggle from '../../widgets/toggle';
 
 import template from './index.jade';
 import propertyPaneContentTemplate from '../controls/property-pane-content.jade';
@@ -206,5 +205,84 @@ document.registerElement('filter-property-value-pane-content', class extends Pan
 
   get section() {
     return 'filter';
+  }
+});
+
+document.registerElement('operator-dropdown', class extends Dropdown {
+  get choices() {
+    return FilterClause.FILTER_OPERATORS[this.state.stageClause.filterType];
+  }
+
+  get isOpen() {
+    return this.state.stageClause.isEditingFilterOperator;
+  }
+
+  select(filterOperator) {
+    this.app.updateStageClause({
+      filterOperator,
+      filterValue: null,
+      filterSearch: null,
+      editing: null,
+    });
+  }
+
+  get selected() {
+    return this.state.stageClause.filterOperator;
+  }
+
+  toggleOpen() {
+    this.app.updateStageClause({
+      editing: this.state.stageClause.isEditingFilterOperator ? null : 'filterOperator',
+    });
+  }
+});
+
+
+document.registerElement('date-unit-dropdown', class extends Dropdown {
+  get config() {
+    return extend(super.config, {
+      helpers: extend(super.config.helpers, {
+        formatChoice: choice => `${choice}s`,
+      }),
+    });
+  }
+
+  get choices() {
+    return TimeClause.UNIT_CHOICES;
+  }
+
+  get selected() {
+    return this.state.stageClause.filterDateUnit;
+  }
+
+  get isOpen() {
+    return this.state.stageClause.isEditingFilterDateUnit;
+  }
+
+  toggleOpen() {
+    this.app.updateStageClause({
+      editing: this.state.stageClause.isEditingFilterDateUnit ? null : 'filterDateUnit',
+    });
+  }
+
+  select(filterDateUnit) {
+    this.app.updateStageClause({
+      filterDateUnit,
+      editing: null,
+    });
+  }
+});
+
+document.registerElement('operator-toggle', class extends Toggle {
+  get choices() {
+    return FilterClause.FILTER_OPERATORS[this.state.stageClause.filterType];
+  }
+
+  select(filterOperator) {
+    this.app.updateStageClause({filterOperator});
+  }
+
+  get selected() {
+    return this.state.stageClause.filterOperator;
   }
 });
