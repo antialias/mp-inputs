@@ -59,7 +59,6 @@ document.registerElement('group-edit-control', class extends EditControl {
 document.registerElement('group-pane', class extends Pane {
   get constants() {
     return extend(super.constants, {
-      hasContent: true,
       header: 'Properties',
     });
   }

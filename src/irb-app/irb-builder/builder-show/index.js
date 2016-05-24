@@ -49,7 +49,6 @@ document.registerElement('show-edit-control', class extends EditControl {
 document.registerElement('show-pane', class extends Pane {
   get constants() {
     return extend(super.constants, {
-      hasContent: true,
       header: 'Show',
     });
   }

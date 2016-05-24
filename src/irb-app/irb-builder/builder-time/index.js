@@ -49,7 +49,6 @@ document.registerElement('time-edit-control', class extends EditControl {
 document.registerElement('time-pane', class extends Pane {
   get constants() {
     return extend(super.constants, {
-      hasContent: true,
       header: 'Time',
       search: false,
     });

@@ -6,7 +6,7 @@ import { extend, renameProperty } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
 // import { Clause, ShowClause } from '../../../models/clause';
-// import { Pane, PaneContent } from '../../pane';
+import { Pane } from '../../pane';
 
 import template from './index.jade';
 // import propertyPaneContentTemplate from '../controls/property-pane-content.jade';
@@ -98,19 +98,43 @@ document.registerElement('filter-edit-control', class extends EditControl {
   }
 });
 
-// // dropdown content
-// document.registerElement('filter-pane', class extends Pane {
-//   get constants() {
-//     return extend(super.constants, {
-//       hasContent: true,
-//       header: 'Properties',
-//     });
-//   }
+// dropdown content
+document.registerElement('filter-pane', class extends Pane {
+  get constants() {
+    return extend(super.constants, {
+      header: 'Properties',
+    });
+  }
 
-//   get section() {
-//     return 'filter';
-//   }
-// });
+  get section() {
+    return 'filter';
+  }
+
+  get subpanes() {
+    return [
+      {
+        tag: 'filter-property-pane-content',
+        constants: {
+          header: 'Properties',
+        },
+      },
+      {
+        tag: 'filter-property-value-pane-content',
+        constants: {
+          search: false,
+          commitLabel: 'Update',
+        },
+        helpers: {
+          commitHandler: () => this.app.commitStageClause(),
+          getHeader: () => {
+            const clause = this.app.state.stageClause;
+            return clause && clause.value ? renameProperty(clause.value) : '';
+          },
+        },
+      },
+    ];
+  }
+});
 
 // document.registerElement('filter-pane-content', class extends PaneContent {
 //   get config() {

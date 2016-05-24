@@ -12,10 +12,9 @@
   if $component.constants.showRemove
     button.remove(onclick=$helpers.removeClause)
   if $helpers.isPaneOpen()
-    .pane-container(
-      style={
-        height: `${$component.constants.paneHeight}px`,
-        width: `${$component.constants.paneWidth}px`,
-        left: `${$helpers.getPaneLeft()}px`,
-      }
-    )= $component.child(`${$component.section}-pane`)
+    .pane-container(style={
+      height: `${$component.constants.paneHeight}px`,
+      width: `${$component.constants.paneWidth}px`,
+      left: `${$helpers.getPaneLeft()}px`,
+    })
+      .pane-view= $component.child(`${$component.section}-pane`)

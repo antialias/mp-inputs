@@ -1,6 +1,6 @@
-mixin pane(paneComponent, isPaneActive, paneIndex)
-  - const paneConstants = Object.assign({}, $component.constants, ($component.constants.panes && $component.constants.panes[paneIndex]) || {});
-  - const paneHelpers = Object.assign({}, $helpers, ($helpers.panes && $helpers.panes[paneIndex]) || {});
+mixin paneContent(contentData, isPaneActive, paneIndex)
+  - const paneConstants = Object.assign({}, $component.constants, contentData.constants || {});
+  - const paneHelpers = Object.assign({}, $helpers, contentData.helpers || {});
 
   - const header = paneConstants.header || paneHelpers.getHeader && paneHelpers.getHeader();
   - const commitLabel = paneConstants.commitLabel || paneHelpers.getCommitLabel && paneHelpers.getCommitLabel();
@@ -19,8 +19,7 @@ mixin pane(paneComponent, isPaneActive, paneIndex)
       if isPaneActive
         focus-input(autoFocus=isPaneActive type='text' oninput=event => $helpers.updateStageClause({search: event.target.value}))
 
-  if paneComponent.constants.hasContent
-    .content= $component.child(`${$component.section}-pane-content`, {attributes: {'is-pane-active': isPaneActive}})
+  .content= $component.child(contentData.tag, {attributes: {'is-pane-active': isPaneActive}})
 
   if commitLabel && commitHandler
     button.commit(onclick=commitHandler)= commitLabel
@@ -28,14 +27,12 @@ mixin pane(paneComponent, isPaneActive, paneIndex)
 .pane-view
   if $component.subpanes
     - const activePaneIndex = (stageClause && stageClause.paneIndex) || 0;
-    - console.log('TODO SUBPANES')
-
-    //- for subpane, paneIndex in $component.subpanes
-    //-   .pane(style={
-    //-     '-webkit-transform': `translateX(${(paneIndex - activePaneIndex) * 400}px)`,
-    //-     transform: `translateX(${(paneIndex - activePaneIndex) * 400}px)`,
-    //-   })
-    //-     +pane(subpane, paneIndex === activePaneIndex, paneIndex)
+    for subpane, paneIndex in $component.subpanes
+      .pane(style={
+        '-webkit-transform': `translateX(${(paneIndex - activePaneIndex) * 400}px)`,
+        transform: `translateX(${(paneIndex - activePaneIndex) * 400}px)`,
+      })
+        +paneContent(subpane, paneIndex === activePaneIndex, paneIndex)
   else
     .pane.active
-        +pane($component, true)
+        +paneContent({tag: `${$component.section}-pane-content`}, true)
