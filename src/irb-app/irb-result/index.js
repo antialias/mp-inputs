@@ -4,8 +4,7 @@ import Toggle from '../widgets/toggle';
 
 import './bar-chart';
 import './line-chart';
-
-// import TableChartView from './charts/table';
+import './table-chart';
 
 import template from './index.jade';
 import './index.styl';
