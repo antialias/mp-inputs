@@ -5,11 +5,11 @@ import { Component } from 'panel';
 import { extend, renameProperty } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
-// import { Clause, ShowClause } from '../../../models/clause';
-import { Pane } from '../../pane';
+import { Clause } from '../../../models/clause';
+import { Pane, PaneContent } from '../../pane';
 
 import template from './index.jade';
-// import propertyPaneContentTemplate from '../controls/property-pane-content.jade';
+import propertyPaneContentTemplate from '../controls/property-pane-content.jade';
 import './index.styl';
 
 document.registerElement('builder-filter', class extends Component {
@@ -136,25 +136,36 @@ document.registerElement('filter-pane', class extends Pane {
   }
 });
 
-// document.registerElement('filter-pane-content', class extends PaneContent {
-//   get config() {
-//     return extend(super.config, {
-//       template: propertyPaneContentTemplate,
+document.registerElement('filter-property-pane-content', class extends PaneContent {
+  get config() {
+    return extend(super.config, {
+      template: propertyPaneContentTemplate,
 
-//       helpers: extend(super.config.helpers, {
-//         selectProperty: (property, closePane) =>
-//           this.config.helpers.updateStageClause({value: property.name}, closePane),
-//       }),
-//     });
-//   }
+      helpers: extend(super.config.helpers, {
+        selectProperty: property => {
+          this.config.helpers.updateStageClause({
+            value: property.name,
+            filterType: property.type,
+          });
 
-//   get constants() {
-//     return extend(super.constants, {
-//       resourceTypeChoices: Clause.RESOURCE_TYPES,
-//     });
-//   }
+          // when a property is selected, switch to the property value inner pane
+          // - requestAnimationFrame allows the add pane to be re-rendered as an
+          //   edit pane, and still show the css animation sliding to the new pane
+          window.requestAnimationFrame(() =>
+            super.config.helpers.updateStageClause({paneIndex: 1})
+          );
+        },
+      }),
+    });
+  }
 
-//   get section() {
-//     return 'filter';
-//   }
-// });
+  get constants() {
+    return extend(super.constants, {
+      resourceTypeChoices: Clause.RESOURCE_TYPES,
+    });
+  }
+
+  get section() {
+    return 'filter';
+  }
+});
