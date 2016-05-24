@@ -1,0 +1,59 @@
+@import "../../../stylesheets/common"
+
+.dropdown
+  position relative
+
+  button, li
+    text-align left
+    width 100%
+
+  button
+    background lighten(background-gray, 50%)
+    border 1px solid light-gray
+    color medium-gray
+    font-size 12px
+    height 32px
+    padding 3px 8px
+
+    &.label
+      border-radius 2px
+      color dark-gray
+
+      &::after
+        border-left 5px solid transparent
+        border-right 5px solid transparent
+        border-top 5px solid light-gray
+        content ''
+        height 0
+        position absolute
+        right 14px
+        top 14px
+        width 0
+
+  ul
+    position absolute
+    top 32px
+    left 0
+    transition opacity .05s
+    width 100%
+    z-index 2
+
+    li
+      margin-top -1px
+
+      button
+        transition color .05s
+
+      &:last-child button
+        border-radius 0 0 2px 2px
+
+      &:hover, &.selected
+        button
+          color dark-gray
+
+      &.selected button
+        background background-gray
+
+  &:not(.menu-open) ul
+    opacity 0
+    pointer-events none

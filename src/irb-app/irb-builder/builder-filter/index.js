@@ -8,6 +8,8 @@ import { AddControl, EditControl } from '../controls';
 import { Clause, FilterClause } from '../../../models/clause';
 import { Pane, PaneContent } from '../../pane';
 
+import './dropdowns';
+
 import template from './index.jade';
 import propertyPaneContentTemplate from '../controls/property-pane-content.jade';
 import propertyValuePaneContentTemplate from '../controls/property-value-pane-content.jade';
@@ -42,8 +44,8 @@ document.registerElement('filter-edit-control', class extends EditControl {
   get config() {
     return extend(super.config, {
       helpers: extend(super.config.helpers, {
-        getLabel: clauseIndex => {
-          const clause = this.state.sections.getClause('filter', clauseIndex);
+        getLabel: () => {
+          const clause = this.state.sections.getClause('filter', this.clauseIndex);
           const property = renameProperty(clause.value);
           const type = clause.filterType;
           let operator = clause.filterOperator;
