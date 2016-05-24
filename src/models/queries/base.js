@@ -8,16 +8,20 @@ export default class BaseQuery {
     return this;
   }
 
-  run() {
+  run(cachedResult) {
     const query = this.query;
 
     return new Promise(resolve => {
       if (this.valid) {
-        this.executeQuery().done(rawResults => {
-          if (query === this.query) { // ignore obsolete queries
-            resolve(this.processResults(rawResults));
-          }
-        });
+        if (cachedResult) {
+          resolve(cachedResult);
+        } else {
+          this.executeQuery().done(rawResults => {
+            if (query === this.query) { // ignore obsolete queries
+              resolve(this.processResults(rawResults));
+            }
+          });
+        }
       } else {
         resolve(this.processResults(null));
       }

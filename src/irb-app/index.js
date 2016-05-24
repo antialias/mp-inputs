@@ -212,17 +212,14 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
     const cachedResult = this.queries.segmentationCache.get(query);
     const cacheExpiry = 10; // seconds
 
-    if (cachedResult) {
-      this.app.updateSeriesData(cachedResult);
-      return cachedResult;
-    } else {
-      this.queries.segmentation.run()
-        .then(result => {
+    this.queries.segmentation.run(cachedResult)
+      .then(result => {
+        if (!cachedResult) {
           this.queries.segmentationCache.set(query, result, cacheExpiry);
-          this.app.updateSeriesData(result);
-          this.update({result});
-        })
-        .catch(err => console.error(err));
-    }
+        }
+        this.app.updateSeriesData(result);
+        this.update({result});
+      })
+      .catch(err => console.error(err));
   }
 });
