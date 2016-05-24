@@ -27,6 +27,12 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
           show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
           time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
         }),
+        series: {
+          currentSeries: null,
+          data: {},
+          isEditing: false,
+          search: null,
+        },
         stageClause: null,
         topEvents: [],
         topProperties: [],
@@ -177,17 +183,43 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
     this.update(newState);
   }
 
+  _updateSeriesState(newState) {
+    const series = extend(this.state.series, newState);
+    this.update({series});
+  }
+
+  startEditingSeries() {
+    this._updateSeriesState({isEditing: true});
+  }
+
+  stopEditingSeries() {
+    this._updateSeriesState({
+      isEditing: false,
+      search: null,
+    });
+  }
+
+  updateSeriesData(result, defaultValue) {
+    defaultValue = defaultValue === undefined ? true : defaultValue;
+    this._updateSeriesState({
+      data: util.objectFromPairs(util.nestedObjectKeys(result.data, 2).map(v => [v, defaultValue])),
+      currentSeries: result.headers[result.headers.length-1] || null,
+    });
+  }
+
   query(state) {
     const query = this.queries.segmentation.build(state).query;
     const cachedResult = this.queries.segmentationCache.get(query);
     const cacheExpiry = 10; // seconds
 
     if (cachedResult) {
+      this.app.updateSeriesData(cachedResult);
       return cachedResult;
     } else {
       this.queries.segmentation.run()
         .then(result => {
           this.queries.segmentationCache.set(query, result, cacheExpiry);
+          this.app.updateSeriesData(result);
           this.update({result});
         })
         .catch(err => console.error(err));

@@ -1,0 +1,166 @@
+@import "../../../stylesheets/common"
+
+.groups
+  float right
+
+  .group
+    float left
+    margin 0 5px
+
+    &:first-child
+      margin-left 0
+
+    &:last-child
+      margin-right 0
+
+    li
+      border 1px solid light-gray
+      margin-right -1px
+      position relative
+
+      button
+        background-color initial
+        background-position center
+        background-repeat no-repeat
+        border: none;
+        height 30px
+        text-indent -999999px
+        width 30px
+
+        &::before, &::after
+          content none
+
+      &:first-child
+        border-bottom-left-radius 2px
+        border-top-left-radius 2px
+
+      &:last-child
+        border-bottom-right-radius 2px
+        border-top-right-radius 2px
+
+      &:hover
+        border-color medium-gray
+        z-index 1
+
+      &.chart-type-bar button
+        background-image url(../../../../assets/charts/bar-inactive.svg)
+
+      &.chart-type-line button
+        background-image url(../../../../assets/charts/line-inactive.svg)
+
+      &.chart-type-table button
+        background-image url(../../../../assets/charts/table-inactive.svg)
+
+      &.compare button
+        background-image url(../../../../assets/charts/compare-inactive.svg)
+
+      &:hover, &.selected
+        &.chart-type-bar button
+          background-image url(../../../../assets/charts/bar.svg)
+
+        &.chart-type-line button
+          background-image url(../../../../assets/charts/line.svg)
+
+        &.chart-type-table button
+          background-image url(../../../../assets/charts/table.svg)
+
+        &.compare button
+          background-image url(../../../../assets/charts/compare.svg)
+
+      &.selected
+        background-color lighten(background-gray, 50%)
+
+  .show-hide-series
+    li.selected
+      background-color initial
+      border-color medium-gray
+
+    .pane-container
+      box-shadow 0px 3px 10px -4px #000
+      margin-top 2px
+      position absolute
+      right 23px
+      z-index 2
+
+      .content
+        height 330px
+
+        .info
+          background-color #f2f2f4
+          bottom 0
+          border-top 2px #e4e5e9 solid
+          font-family inherit
+          height 40px
+          line-height 40px
+          position absolute
+          width 100%
+
+          .count
+            color medium-gray
+            float left
+            font-size 12px
+            margin-left 10px
+
+          button.unselect
+            background none
+            border none
+            border-left 2px #e4e5e9 solid
+            color medium-gray
+            float right
+            height 100%
+            width 100px
+
+            &:hover
+              color dark-gray
+
+        ul.series-names
+          height 290px
+          overflow-y auto
+
+          li
+            border 0 none
+            float left
+            width 50%
+
+            &:nth-child(-n+2)
+              padding-top 10px
+
+            button.series
+              color light-gray
+              cursor pointer
+              font-family inherit
+              font-size 12px
+              height 27px
+              line-height 17px
+              overflow hidden
+              padding 5px 0
+              margin 0 5%;
+              text-align left
+              text-indent 0
+              white-space nowrap
+              width 90%
+
+              &::before
+                border 1px solid light-gray
+                border-radius 3px
+                content ''
+                float left
+                height 15px
+                left 0
+                margin-right 10px
+                position relative
+                top 0
+                width 15px
+
+              &.showing
+                color medium-gray
+
+                &::before
+                  border-color light-gray
+                  background url(../../../../assets/properties/checkbox-checked.svg) no-repeat center
+
+              &:hover
+                color dark-gray
+
+                &::before
+                  border-color medium-gray

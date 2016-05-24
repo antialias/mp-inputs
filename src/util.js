@@ -509,3 +509,23 @@ export const debug = {
   warn:  getLogger('warn'),
   error: getLogger('error'),
 };
+
+export function nestedObjectDepth(obj) {
+  return typeof obj === 'object' ? nestedObjectDepth(obj[Object.keys(obj)[0]]) + 1 : 0;
+}
+
+export function nestedObjectKeys(obj, depth=1) {
+  let keys = [];
+
+  function _getKeys(obj) {
+    if (nestedObjectDepth(obj) > depth) {
+      Object.values(obj).forEach(_getKeys);
+    } else {
+      keys = keys.concat(Object.keys(obj));
+    }
+  }
+
+  _getKeys(obj);
+
+  return unique(keys);
+}
