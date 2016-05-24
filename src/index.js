@@ -14,15 +14,18 @@ if (APP_ENV === 'development') {
   window.MP.api.options.apiHost = window.location.origin;
 }
 
-const IRB = document.createElement('irb-app');
+const initIRB = () => new Promise(resolve => {
+  const IRB = document.createElement('irb-app');
+  if (window.parent !== window) {
+    const parentFrame = new Framesg(window.parent, 'mp-app', {
+      startApp: () => {
+        IRB.parentFrame = parentFrame;
+        resolve(IRB);
+      },
+    });
+  } else {
+    resolve(IRB);
+  }
+});
 
-if (window.parent !== window) {
-  const parentFrame = new Framesg(window.parent, 'mp-app', {
-    startApp: () => {
-      IRB.parentFrame = parentFrame;
-      document.getElementById('app').appendChild(IRB);
-    },
-  });
-} else {
-  document.getElementById('app').appendChild(IRB);
-}
+initIRB().then(IRB => document.getElementById('app').appendChild(IRB));
