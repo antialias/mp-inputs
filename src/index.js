@@ -10,21 +10,23 @@ import './irb-app';
 
 import './stylesheets/index.styl';
 
-if (APP_ENV === 'development') {
+const STANDALONE = window.parent === window;
+
+if (APP_ENV === 'development' && !STANDALONE) {
   window.MP.api.options.apiHost = window.location.origin;
 }
 
 const initIRB = () => new Promise(resolve => {
   const IRB = document.createElement('irb-app');
-  if (window.parent !== window) {
+  if (STANDALONE) {
+    resolve(IRB);
+  } else {
     const parentFrame = new Framesg(window.parent, 'mp-app', {
       startApp: () => {
         IRB.parentFrame = parentFrame;
         resolve(IRB);
       },
     });
-  } else {
-    resolve(IRB);
   }
 });
 

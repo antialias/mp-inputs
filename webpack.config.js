@@ -50,6 +50,14 @@ var webpackConfig = {
 };
 
 if (process.env.NODE_ENV === 'development') {
+  if (process.env.BUILD_MODE === 'standalone') {
+    webpackConfig = Object.assign({}, webpackConfig, {
+      plugins: webpackConfig.plugins.concat([
+        new HtmlWebpackPlugin({template: 'index.template.html'}),
+      ]),
+    });
+  }
+
   webpackConfig = Object.assign({}, webpackConfig, {
     debug: true,
     output: {
@@ -63,6 +71,7 @@ if (process.env.NODE_ENV === 'development') {
       new ExtractTextPlugin('build/bundle.css'),
     ]),
   });
+
 } else if (process.env.NODE_ENV === 'production') {
   webpackConfig = Object.assign({}, webpackConfig, {
     output: {
@@ -72,8 +81,8 @@ if (process.env.NODE_ENV === 'development') {
       new webpack.DefinePlugin({
         MIXPANEL_TOKEN: JSON.stringify('<IRB production Mixpanel project token>'),
       }),
-      new HtmlWebpackPlugin({template: 'index.template.html'}),
       new ExtractTextPlugin('dist/bundle.[hash].min.css'),
+      new HtmlWebpackPlugin({template: 'index.template.html'}),
       //new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
     ]),
     eslint: {
