@@ -1,9 +1,0 @@
-- const choices = helpers.getChoices();
-- const selected = helpers.getSelected();
-
-.dropdown-view(class=[elementClass, helpers.isOpen() ? 'menu-open' : ''])
-  button.label(ev-click=handlers.onLabelClick)= helpers.formatChoice(selected)
-  ul
-    for choice in choices
-      li(class=choice === selected ? 'selected' : '')
-        button(ev-click=() => handlers.onChoiceClick(choice))= helpers.formatChoice(choice)
