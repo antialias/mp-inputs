@@ -1,0 +1,5 @@
+.irb-result
+  .controls= $component.child('chart-toggle')
+  .chart(class=result.loading ? 'loading' : '')= $component.child(chartType + '-chart')
+  if result.loading && chartType !== 'line'
+    .loader
