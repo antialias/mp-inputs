@@ -2,4 +2,4 @@
 ul.toggle-widget
   for choice in $helpers.getChoices()
     li(class=[choice === selected ? 'selected' : '', $helpers.formatChoiceClass(choice)])
-      button(onclick=() => handlers.onChoiceClick(choice))= $helpers.formatChoice(choice)
+      button(onclick=() => $helpers.onChoiceClick(choice))= $helpers.formatChoice(choice)
