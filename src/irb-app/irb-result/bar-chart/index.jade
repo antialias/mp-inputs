@@ -1,0 +1,47 @@
+- const {headers, rows, chartMax} = $helpers.formatChartData();
+- const gridLineDistance = $helpers.getTickDistance(chartMax);
+- const gridLineWidth = gridLineDistance / chartMax * 100;
+- const numGridLines = chartMax && gridLineDistance ? Math.floor(chartMax / gridLineDistance) : 0;
+- const gridLines = new Array(numGridLines).fill(gridLineWidth);
+
+.bar-chart
+  table
+    thead
+      tr
+        th(colspan=0)
+          irb-bar-chart-header(
+            headers=JSON.stringify(headers)
+            chartMax=JSON.stringify(chartMax)
+          )
+    tbody
+      for row, i in rows
+        tr
+          for cell, j in row
+            if cell
+              if j + 1 < row.length
+                td.chart-header(
+                  rowSpan=cell.span || 1
+                  style={'min-width': `${$helpers.util.getTextWidth($helpers.util.renameProperty(headers[j]), 'bold 14px Helvetica')}px`}
+                )
+                  if Array.isArray(cell.value)
+                    ul
+                      for value in cell.value
+                        if !j && !headers.length
+                          li(title=$helpers.util.renameEvent(value))= $helpers.util.renameEvent(value)
+                        else
+                          li(title=$helpers.util.renamePropertyValue(value))= $helpers.util.renamePropertyValue(value)
+                  else
+                    span(title=$helpers.util.renamePropertyValue(cell.value))= $helpers.util.renamePropertyValue(cell.value)
+              else
+                td.chart-data
+                  .chart-grid
+                    for width in gridLines
+                      .chart-line(style={width: `${width}%`})
+                  ul
+                    for value, k in cell.value
+                      li.chart-bar(
+                        class=value / chartMax < .06 ? 'narrow' : ''
+                        style={width: `${value / chartMax * 100}%`}
+                      )
+                        .background(style={opacity: 1 - (0.6 * k / cell.value.length)})
+                        .label= $helpers.util.commaizeNumber(value)

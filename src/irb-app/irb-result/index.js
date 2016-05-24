@@ -2,7 +2,8 @@ import { Component } from 'panel';
 
 import Toggle from '../widgets/toggle';
 
-// import BarChartView from './charts/bar';
+import './bar-chart';
+
 // import LineChartView from './charts/line';
 // import TableChartView from './charts/table';
 
