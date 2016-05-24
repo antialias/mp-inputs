@@ -24,6 +24,12 @@ export default class QueryCache {
 
   hash(query) {
     const params = Object.keys(query).sort();
-    return params.map(param => param + ':' + JSON.stringify(query[param])).join(',');
+    return params.map(param => {
+      let value = query[param];
+      if (query[param] instanceof Date) {
+        value = query[param].toISOString().split(':').slice(0, -1).join(':');
+      }
+      return param + ':' + JSON.stringify(value);
+    }).join(',');
   }
 }
