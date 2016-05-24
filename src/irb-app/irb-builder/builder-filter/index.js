@@ -9,6 +9,7 @@ import { Clause, FilterClause } from '../../../models/clause';
 import { Pane, PaneContent } from '../../pane';
 
 import './dropdowns';
+import './toggles';
 
 import template from './index.jade';
 import propertyPaneContentTemplate from '../controls/property-pane-content.jade';

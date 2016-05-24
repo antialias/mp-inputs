@@ -1,4 +1,4 @@
-// Basic UI widgets for filters
+// Basic dropdowns for filters
 
 import { Component } from 'panel';
 
