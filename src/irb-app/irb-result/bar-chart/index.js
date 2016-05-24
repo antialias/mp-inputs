@@ -3,6 +3,8 @@ import { Component } from 'panel';
 import { containsObjects, countRun, getTickDistance, transpose } from './util';
 import * as util from '../../../util';
 
+import './irb-bar-chart-header';
+
 import template from './index.jade';
 import './index.styl';
 
