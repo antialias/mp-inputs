@@ -2,14 +2,15 @@
 
 import { Component } from 'panel';
 
-import { extend, renameProperty } from '../../../util';
+import { extend, renameProperty, removeValue } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
-import { Clause } from '../../../models/clause';
+import { Clause, FilterClause } from '../../../models/clause';
 import { Pane, PaneContent } from '../../pane';
 
 import template from './index.jade';
 import propertyPaneContentTemplate from '../controls/property-pane-content.jade';
+import propertyValuePaneContentTemplate from '../controls/property-value-pane-content.jade';
 import './index.styl';
 
 document.registerElement('builder-filter', class extends Component {
@@ -127,7 +128,7 @@ document.registerElement('filter-pane', class extends Pane {
         helpers: {
           commitHandler: () => this.app.commitStageClause(),
           getHeader: () => {
-            const clause = this.app.state.stageClause;
+            const clause = this.state.stageClause;
             return clause && clause.value ? renameProperty(clause.value) : '';
           },
         },
@@ -162,6 +163,47 @@ document.registerElement('filter-property-pane-content', class extends PaneConte
   get constants() {
     return extend(super.constants, {
       resourceTypeChoices: Clause.RESOURCE_TYPES,
+    });
+  }
+
+  get section() {
+    return 'filter';
+  }
+});
+
+document.registerElement('filter-property-value-pane-content', class extends PaneContent {
+  get config() {
+    return extend(super.config, {
+      template: propertyValuePaneContentTemplate,
+
+      helpers: extend(super.config.helpers, {
+        updateStageClause: clauseData => this.app.updateStageClause(clauseData),
+        showPropertyValues: () => this.state.stageClause && !this.state.stageClause.filterOperatorIsSetOrNotSet,
+        getValueMatches: (string, invert) =>
+          this.state.topPropertyValues
+            .filter(value => !string || value.toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert),
+        toggleStringEqualsValueSelected: value => {
+          const selected = this.state.stageClause.filterValue || [];
+          let filterValue;
+
+          if (selected.indexOf(value) === -1) {
+            filterValue = [...selected, value];
+          } else {
+            filterValue = removeValue(selected, value);
+          }
+
+          this.app.updateStageClause({filterValue});
+        },
+        getDoneLabel: () => this.app.isAddingClause() ? 'Add' : 'Update',
+        stopEditingClause: () => this.app.stopEditingClause(),
+      }),
+    });
+  }
+
+  get constants() {
+    return extend(super.constants, {
+      filterTypeChoices: FilterClause.FILTER_TYPES,
+      filterOperatorChoices: FilterClause.FILTER_OPERATORS,
     });
   }
 

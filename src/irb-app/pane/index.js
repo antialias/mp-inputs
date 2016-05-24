@@ -45,4 +45,8 @@ export class PaneContent extends Component {
       },
     };
   }
+
+  isPaneActive() {
+    return this.isAttributeEnabled('is-pane-active');
+  }
 }
