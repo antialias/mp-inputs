@@ -2,12 +2,18 @@
 
 import { Component } from 'panel';
 
-import { FilterClause } from '../../../models/clause';
+import { FilterClause, TimeClause } from '../../../models/clause';
+import { extend } from '../../../util';
 
 import template from './dropdown.jade';
 import './dropdown.styl';
 
 class Dropdown extends Component {
+  attachedCallback() {
+    super.attachedCallback(...arguments);
+    this.app.onClickOutside(this.tagName, 'stopEditingClauseAttrs');
+  }
+
   get config() {
     return {
       template,
@@ -49,11 +55,6 @@ class Dropdown extends Component {
 }
 
 document.registerElement('operator-dropdown', class extends Dropdown {
-  attachedCallback() {
-    super.attachedCallback(...arguments);
-    this.app.onClickOutside(this.tagName, 'stopEditingClauseAttrs');
-  }
-
   get choices() {
     return FilterClause.FILTER_OPERATORS[this.state.stageClause.filterType];
   }
@@ -78,6 +79,42 @@ document.registerElement('operator-dropdown', class extends Dropdown {
   toggleOpen() {
     this.app.updateStageClause({
       editing: this.state.stageClause.isEditingFilterOperator ? null : 'filterOperator',
+    });
+  }
+});
+
+
+document.registerElement('date-unit-dropdown', class extends Dropdown {
+  get config() {
+    return extend(super.config, {
+      helpers: extend(super.config.helpers, {
+        formatChoice: choice => `${choice}s`,
+      }),
+    });
+  }
+
+  get choices() {
+    return TimeClause.UNIT_CHOICES;
+  }
+
+  get selected() {
+    return this.state.stageClause.filterDateUnit;
+  }
+
+  get isOpen() {
+    return this.state.stageClause.isEditingFilterDateUnit;
+  }
+
+  toggleOpen() {
+    this.app.updateStageClause({
+      editing: this.state.stageClause.isEditingFilterDateUnit ? null : 'filterDateUnit',
+    });
+  }
+
+  select(filterDateUnit) {
+    this.app.updateStageClause({
+      filterDateUnit,
+      editing: null,
     });
   }
 });
