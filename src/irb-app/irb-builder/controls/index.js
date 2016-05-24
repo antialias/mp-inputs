@@ -2,6 +2,8 @@ import { Component } from 'panel';
 
 import { extend } from '../../../util';
 
+import './date-picker';
+
 import template from './index.jade';
 import './index.styl';
 
