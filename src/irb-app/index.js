@@ -1,5 +1,6 @@
 import BaseApp from './base-app.js';
 import { extend } from '../util';
+import * as util from '../util';
 
 import BuilderSections from '../models/builder-sections';
 import { ShowSection, TimeSection } from '../models/section';
@@ -36,6 +37,7 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
           loading: true,
         },
         chartType: 'bar',
+        util,
       },
 
       template,

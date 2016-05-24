@@ -21,17 +21,17 @@
               if j + 1 < row.length
                 td.chart-header(
                   rowSpan=cell.span || 1
-                  style={'min-width': `${$helpers.util.getTextWidth($helpers.util.renameProperty(headers[j]), 'bold 14px Helvetica')}px`}
+                  style={'min-width': `${util.getTextWidth(util.renameProperty(headers[j]), 'bold 14px Helvetica')}px`}
                 )
                   if Array.isArray(cell.value)
                     ul
                       for value in cell.value
                         if !j && !headers.length
-                          li(title=$helpers.util.renameEvent(value))= $helpers.util.renameEvent(value)
+                          li(title=util.renameEvent(value))= util.renameEvent(value)
                         else
-                          li(title=$helpers.util.renamePropertyValue(value))= $helpers.util.renamePropertyValue(value)
+                          li(title=util.renamePropertyValue(value))= util.renamePropertyValue(value)
                   else
-                    span(title=$helpers.util.renamePropertyValue(cell.value))= $helpers.util.renamePropertyValue(cell.value)
+                    span(title=util.renamePropertyValue(cell.value))= util.renamePropertyValue(cell.value)
               else
                 td.chart-data
                   .chart-grid
@@ -44,4 +44,4 @@
                         style={width: `${value / chartMax * 100}%`}
                       )
                         .background(style={opacity: 1 - (0.6 * k / cell.value.length)})
-                        .label= $helpers.util.commaizeNumber(value)
+                        .label= util.commaizeNumber(value)

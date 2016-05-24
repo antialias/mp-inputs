@@ -1,6 +1,5 @@
 import { Component } from 'panel';
 
-import * as util from '../../util';
 import './focus-input';
 
 import template from './index.jade';
@@ -41,7 +40,6 @@ export class PaneContent extends Component {
             this.app.commitStageClause();
           }
         },
-        util,
       },
     };
   }

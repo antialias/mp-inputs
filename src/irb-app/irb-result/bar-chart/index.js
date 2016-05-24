@@ -1,7 +1,7 @@
 import { Component } from 'panel';
 
 import { containsObjects, countRun, getTickDistance, transpose } from './util';
-import * as util from '../../../util';
+import { isDateString } from '../../../util';
 
 import './irb-bar-chart-header';
 
@@ -25,7 +25,7 @@ document.registerElement('bar-chart', class extends Component {
                 let subKeys = Object.keys(subObj);
 
                 if (subKeys.length) {
-                  if (util.isDateString(subKeys[0])) {
+                  if (isDateString(subKeys[0])) {
                     obj[key] = subKeys.reduce((accum, key) => accum + subObj[key], 0);
                   } else {
                     sumDateResults(subObj);
@@ -75,8 +75,6 @@ document.registerElement('bar-chart', class extends Component {
         },
 
         getTickDistance,
-
-        util,
       },
     };
   }

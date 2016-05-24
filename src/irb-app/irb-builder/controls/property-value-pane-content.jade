@@ -12,7 +12,7 @@
           td(class=['type-' + typeChoice, typeChoice === selectedType ? 'selected' : ''])
             button(
               onclick=() => $helpers.updateStageClause({filterType: typeChoice, filterValue: null, filterSearch: null, editing: null})
-            )= $helpers.util.renamePropertyType(typeChoice)
+            )= util.renamePropertyType(typeChoice)
 
   if selectedType
 
@@ -45,7 +45,7 @@
         ul.filter-string-equals-choices
           for value in $helpers.getValueMatches(stageClause.filterSearch)
             li(class=selectedValue && selectedValue.indexOf(value) !== -1 ? 'selected' : '')
-              button(onclick=() => $helpers.toggleStringEqualsValueSelected(value))= $helpers.util.renamePropertyValue(value)
+              button(onclick=() => $helpers.toggleStringEqualsValueSelected(value))= util.renamePropertyValue(value)
 
       else if selectedOperator === 'contains' || selectedOperator === 'does not contain'
         .filter-value-input
@@ -63,7 +63,7 @@
           if selectedValue
             ul.filter-string-contains-matches
               for value in $helpers.getValueMatches(selectedValue, selectedOperator === 'does not contain')
-                li= $helpers.util.renamePropertyValue(value)
+                li= util.renamePropertyValue(value)
 
     else if selectedType === 'number'
       if selectedOperator === 'is between'
