@@ -18,36 +18,121 @@
 
     // "operator" input - present on all panes
 
-    if selectedType === 'boolean' || selectedType === 'list'
-      .filter-operator-input= $component.child('operator-toggle')
-    else
-      .filter-operator-input= $component.child('operator-dropdown')
+    case selectedType
+      when 'boolean'
+      when 'list'
+        .filter-operator-input= $component.child('operator-toggle')
+      default
+        .filter-operator-input= $component.child('operator-dropdown')
 
     // type-specific inputs
 
-    if selectedType === 'string'
-      if selectedOperator === 'equals' || selectedOperator === 'does not equal'
-        if selectedValue && selectedValue.length
-          .filter-string-equals-summary= `${selectedValue.length} selected`
+    case selectedType
+      when 'string'
+        case selectedOperator
+          when 'equals'
+          when 'does not equal'
+            if selectedValue && selectedValue.length
+              .filter-string-equals-summary= `${selectedValue.length} selected`
 
-        .filter-string-equals-search.search
-          // TODO: we are required to recreate this input between panes switches because of
-          //       limitations of the focus-input; this shouldn't be necessary
-          if $component.isPaneActive()
-            focus-input(
-              autoFocus=$component.isPaneActive()
-              focusDelay=200
-              type='text'
-              value=stageClause.filterSearch
-              oninput=event => $helpers.updateStageClause({filterSearch: event.target.value})
-            )
+            .filter-string-equals-search.search
+              // TODO: we are required to recreate this input between panes switches because of
+              //       limitations of the focus-input; this shouldn't be necessary
+              if $component.isPaneActive()
+                focus-input(
+                  autoFocus=$component.isPaneActive()
+                  focusDelay=200
+                  type='text'
+                  value=stageClause.filterSearch
+                  oninput=event => $helpers.updateStageClause({filterSearch: event.target.value})
+                )
 
-        ul.filter-string-equals-choices
-          for value in $helpers.getValueMatches(stageClause.filterSearch)
-            li(class=selectedValue && selectedValue.indexOf(value) !== -1 ? 'selected' : '')
-              button(onclick=() => $helpers.toggleStringEqualsValueSelected(value))= util.renamePropertyValue(value)
+            ul.filter-string-equals-choices
+              for value in $helpers.getValueMatches(stageClause.filterSearch)
+                li(class=selectedValue && selectedValue.indexOf(value) !== -1 ? 'selected' : '')
+                  button(onclick=() => $helpers.toggleStringEqualsValueSelected(value))= util.renamePropertyValue(value)
 
-      else if selectedOperator === 'contains' || selectedOperator === 'does not contain'
+          when 'contains'
+          when 'does not contain'
+            .filter-value-input
+              // TODO: we are required to recreate this input between panes switches because of
+              //       limitations of the focus-input; this shouldn't be necessary
+              if $component.isPaneActive()
+                focus-input(
+                  autoFocus=$component.isPaneActive()
+                  focusDelay=200
+                  type='text'
+                  value=selectedValue
+                  oninput=ev => $helpers.updateStageClause({filterValue: ev.target.value})
+                )
+
+              if selectedValue
+                ul.filter-string-contains-matches
+                  for value in $helpers.getValueMatches(selectedValue, selectedOperator === 'does not contain')
+                    li= util.renamePropertyValue(value)
+
+      when 'number'
+        case selectedOperator
+          when 'is between'
+            - const betweenStart = selectedValue ? selectedValue[0] : null;
+            - const betweenEnd = selectedValue ? selectedValue[1] : null;
+            .filter-value-input.filter-operator-between
+              // TODO: we are required to recreate this input between panes switches because of
+              //       limitations of the focus-input; this shouldn't be necessary
+              if $component.isPaneActive()
+                focus-input(
+                  autoFocus=$component.isPaneActive()
+                  focusDelay=200
+                  type='number'
+                  value=betweenStart
+                  oninput=ev => $helpers.updateStageClause({filterValue: [Number(ev.target.value), betweenEnd]})
+                )
+              .connector and
+              input(
+                type='number'
+                value=betweenEnd
+                oninput=ev => $helpers.updateStageClause({filterValue: [betweenStart, Number(ev.target.value)]})
+              )
+          default
+            .filter-value-input
+              // TODO: we are required to recreate this input between panes switches because of
+              //       limitations of the focus-input; this shouldn't be necessary
+              if $component.isPaneActive()
+                focus-input(
+                  autoFocus=$component.isPaneActive()
+                  focusDelay=200
+                  type='number'
+                  value=selectedValue
+                  oninput=ev => $helpers.updateStageClause({filterValue: Number(ev.target.value)})
+                )
+
+      when 'datetime'
+        case selectedOperator
+          when 'was between'
+          when 'was on'
+            - const from = selectedValue ? selectedValue[0] : null;
+            - const to = selectedValue ? selectedValue[1] : null;
+            .filter-value-input
+              date-picker(
+                value=JSON.stringify({from, to})
+                onchange=ev => $helpers.updateStageClause({filterValue: [new Date(ev.target.value.from), new Date(ev.target.value.to)]})
+              )
+          default
+            .filter-value-input.filter-days-ago
+              // TODO: we are required to recreate this input between panes switches because of
+              //       limitations of the focus-input; this shouldn't be necessary
+              if $component.isPaneActive()
+                focus-input(
+                  autoFocus=$component.isPaneActive()
+                  focusDelay=200
+                  type='number'
+                  value=selectedValue
+                  oninput=ev => $helpers.updateStageClause({filterValue: Number(ev.target.value)})
+                )
+              .filter-unit-input= $component.child('date-unit-dropdown')
+              .connector ago
+
+      when 'list'
         .filter-value-input
           // TODO: we are required to recreate this input between panes switches because of
           //       limitations of the focus-input; this shouldn't be necessary
@@ -59,79 +144,3 @@
               value=selectedValue
               oninput=ev => $helpers.updateStageClause({filterValue: ev.target.value})
             )
-
-          if selectedValue
-            ul.filter-string-contains-matches
-              for value in $helpers.getValueMatches(selectedValue, selectedOperator === 'does not contain')
-                li= util.renamePropertyValue(value)
-
-    else if selectedType === 'number'
-      if selectedOperator === 'is between'
-        - const betweenStart = selectedValue ? selectedValue[0] : null;
-        - const betweenEnd = selectedValue ? selectedValue[1] : null;
-        .filter-value-input.filter-operator-between
-          // TODO: we are required to recreate this input between panes switches because of
-          //       limitations of the focus-input; this shouldn't be necessary
-          if $component.isPaneActive()
-            focus-input(
-              autoFocus=$component.isPaneActive()
-              focusDelay=200
-              type='number'
-              value=betweenStart
-              oninput=ev => $helpers.updateStageClause({filterValue: [Number(ev.target.value), betweenEnd]})
-            )
-          .connector and
-          input(
-            type='number'
-            value=betweenEnd
-            oninput=ev => $helpers.updateStageClause({filterValue: [betweenStart, Number(ev.target.value)]})
-          )
-      else
-        .filter-value-input
-          // TODO: we are required to recreate this input between panes switches because of
-          //       limitations of the focus-input; this shouldn't be necessary
-          if $component.isPaneActive()
-            focus-input(
-              autoFocus=$component.isPaneActive()
-              focusDelay=200
-              type='number'
-              value=selectedValue
-              oninput=ev => $helpers.updateStageClause({filterValue: Number(ev.target.value)})
-            )
-
-    else if selectedType === 'datetime'
-      if selectedOperator === 'was between' || selectedOperator === 'was on'
-        - const from = selectedValue ? selectedValue[0] : null;
-        - const to = selectedValue ? selectedValue[1] : null;
-        .filter-value-input
-          date-picker(
-            value=JSON.stringify({from, to})
-            onchange=ev => $helpers.updateStageClause({filterValue: [new Date(ev.target.value.from), new Date(ev.target.value.to)]})
-          )
-      else
-        .filter-value-input.filter-days-ago
-          // TODO: we are required to recreate this input between panes switches because of
-          //       limitations of the focus-input; this shouldn't be necessary
-          if $component.isPaneActive()
-            focus-input(
-              autoFocus=$component.isPaneActive()
-              focusDelay=200
-              type='number'
-              value=selectedValue
-              oninput=ev => $helpers.updateStageClause({filterValue: Number(ev.target.value)})
-            )
-          .filter-unit-input= $component.child('date-unit-dropdown')
-          .connector ago
-
-    else if selectedType === 'list'
-      .filter-value-input
-        // TODO: we are required to recreate this input between panes switches because of
-        //       limitations of the focus-input; this shouldn't be necessary
-        if $component.isPaneActive()
-          focus-input(
-            autoFocus=$component.isPaneActive()
-            focusDelay=200
-            type='text'
-            value=selectedValue
-            oninput=ev => $helpers.updateStageClause({filterValue: ev.target.value})
-          )

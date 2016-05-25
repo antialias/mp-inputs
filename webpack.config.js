@@ -76,6 +76,7 @@ if (process.env.NODE_ENV === 'development') {
     },
     plugins: webpackConfig.plugins.concat([
       new webpack.DefinePlugin({
+        API_LOCAL: JSON.stringify(false),
         MIXPANEL_TOKEN: JSON.stringify('<IRB production Mixpanel project token>'),
       }),
       new ExtractTextPlugin('build-production/bundle.[hash].min.css'),
