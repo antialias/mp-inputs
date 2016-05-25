@@ -1,4 +1,4 @@
-/* global APP_ENV */
+/* global API_LOCAL */
 
 // polyfills, must import first
 import 'babel-polyfill';
@@ -12,7 +12,7 @@ import './stylesheets/index.styl';
 
 const STANDALONE = window.parent === window;
 
-if (APP_ENV === 'development' && !STANDALONE) {
+if (API_LOCAL && !STANDALONE) {
   window.MP.api.options.apiHost = window.location.origin;
 }
 
