@@ -1,1 +1,41 @@
-.pivot-table
+- const fullWidthTable = columnHeaders.length && columnRows.length
+
+.table-chart(class=fullWidthTable ? 'full-width' : '')
+  table-manager(data=JSON.stringify({headers, rows, columnHeaders, columnRows}))
+  .left-table-container
+    .fixed-header
+      for header in headers
+        .fixed-header-cell= header === '$event' ? 'Event' : util.renameProperty(header)
+    .left-table
+      table
+        thead
+          tr
+            for header in headers
+              th= util.renameProperty(header)
+        tbody
+          for row in rows
+            tr
+              for cell, i in row
+                if cell
+                  - const value = headers[i] === '$event' ? util.renameEvent(cell.value) : cell.value;
+                  td(class=cell.odd ? 'odd' : 'even', rowSpan=cell.rowSpan || 1)= value
+
+  if fullWidthTable
+    .right-table-container
+      .fixed-header
+        for header in columnHeaders
+          .fixed-header-cell= header
+      .right-table
+        table
+          thead
+            tr
+              for header in columnHeaders
+                th= header
+          tbody
+            for row in columnRows
+              tr
+                for cell in row
+                  if cell || cell === 0
+                    td(rowSpan=cell.rowSpan || 1)= cell.value || cell
+                  else
+                    td

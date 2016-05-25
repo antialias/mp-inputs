@@ -51,7 +51,12 @@ document.registerElement('bar-chart', class extends Component {
     const chartMax = nestedObjectMax(series);
     const gridLineDistance = getTickDistance(chartMax);
 
-    this.update({headers, rows, chartMax, gridLineDistance});
+    this.update({
+      headers,
+      rows,
+      chartMax,
+      gridLineDistance,
+    });
   }
 });
 

@@ -142,6 +142,7 @@ export function nestedObjectToTableRows(obj, depth=0) {
         }
 
         return {value, rowSpan};
+      }
     });
   }));
 }

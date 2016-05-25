@@ -27,7 +27,6 @@ document.registerElement('chart-toggle', class extends Toggle {
   }
 
   select(chartType) {
-    if (chartType === 'table') { return; } // TODO: remove when we add pivot table
     this.app.update({chartType});
   }
 

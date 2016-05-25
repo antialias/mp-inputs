@@ -1,11 +1,18 @@
 .irb-result
   .controls= $component.child('chart-toggle')
   .chart(class=result.loading ? 'loading' : '')
-    - const attributes = {'data': JSON.stringify(result)};
     case chartType
-      when 'line'
-        line-chart(attributes=attributes)
       when 'bar'
-        bar-chart(attributes=attributes)
+        bar-chart(attributes={data: JSON.stringify(result)})
+      when 'line'
+        line-chart(attributes={data: JSON.stringify(result)})
+      when 'table'
+        - const clauses = sections.show.clauses;
+        - let resourceDescription;
+        if clauses.length === 1
+          - resourceDescription = `${util.capitalize(clauses[0].math)} number of ${util.renameEvent(clauses[0].value)}`
+        else
+          - resourceDescription = 'Number of events'
+        table-chart(attributes={data: JSON.stringify(util.extend(result, {resourceDescription}))})
   if result.loading && chartType !== 'line'
     .loader

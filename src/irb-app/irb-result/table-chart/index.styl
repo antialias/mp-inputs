@@ -1,1 +1,111 @@
 @import "../../../stylesheets/common"
+
+border-gray = lighten(background-gray, 30%)
+
+.table-chart
+  border 2px solid border-gray
+  border-left none
+  font-size 12px
+  overflow hidden
+  white-space nowrap
+
+  .left-table-container,
+  .right-table-container
+    display inline-block
+    position relative
+
+    .fixed-header
+      left 0
+      position absolute
+      top 0
+      white-space nowrap
+      z-index 1
+
+      .fixed-header-cell
+        background white
+        border-left 2px solid border-gray
+        display inline-block
+        font-weight bold
+        padding 8px 9px 8px 9px
+
+        &:first-child
+          border-left 2px solid border-gray
+
+  .left-table-container
+    z-index 2
+
+  .left-table, .right-table
+    display inline-block
+    margin-bottom -3px
+    max-height calc(100vh - 353px)
+    position relative
+
+    table
+      width 100%
+
+      th, td
+        background white
+        border 2px solid border-gray
+        border-top none
+        border-bottom none
+        padding 8px
+
+      td
+        color medium-gray
+
+      tr
+        border 2px solid border-gray
+        border-left none
+        border-right none
+
+        &:first-child
+          border-top none
+
+      tbody
+        tr:last-child
+          border-bottom none
+
+  .left-table
+    overflow-x scroll
+    overflow-y hidden
+    text-align left
+
+    th, td
+      &:last-child
+        border-right none
+
+      &.odd
+        background lighten(border-gray, 50%)
+
+  .right-table
+    overflow scroll
+    text-align right
+    width 100%
+
+    tr:nth-child(odd) td
+      background lighten(border-gray, 50%)
+
+    th, td
+      &:last-child
+        border-right none
+
+  // 1 or 2 column table
+
+  &:not(.full-width)
+    display inline-block
+
+    .left-table
+      overflow-y scroll
+
+  // Scroll shadows
+
+  .left-table, .fixed-header
+    transition box-shadow 0.2s
+
+  &.scrolled-x
+    .left-table
+      box-shadow 0px 0px 12px 0px medium-gray
+
+  &.scrolled-y
+    .fixed-header
+      box-shadow 0 2px 10px -2px medium-gray
