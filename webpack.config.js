@@ -63,7 +63,7 @@ if (process.env.NODE_ENV === 'development') {
       }),
       new ExtractTextPlugin('build/bundle.css'),
       new HtmlWebpackPlugin({
-        template: 'index.development.html',
+        template: 'index-dev.template.html',
         filename: 'index-dev.html',
       }),
     ]),
@@ -80,7 +80,7 @@ if (process.env.NODE_ENV === 'development') {
       }),
       new ExtractTextPlugin('dist/bundle.[hash].min.css'),
       new HtmlWebpackPlugin({
-        template: 'index.production.html',
+        template: 'index.template.html',
         filename: 'index.html',
       }),
       //new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
