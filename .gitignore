@@ -1,4 +1,5 @@
 node_modules
-build-development
 npm-debug.log
 .current-mp-release
+build-development
+libs
