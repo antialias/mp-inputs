@@ -52,7 +52,7 @@ document.registerElement('show-hide-series-pane-content', class extends PaneCont
           if (currentData.hasOwnProperty(name)) {
             const newSeriesValue = {};
             newSeriesValue[name] = !currentData[name];
-            this.app._updateSeriesState({data: extend(currentData, newSeriesValue)});
+            this.app.updateSeriesState({data: extend(currentData, newSeriesValue)});
           }
         },
         totalSeriesCount: () => Object.keys(this.app.state.series.data).length,
@@ -77,7 +77,7 @@ document.registerElement('show-hide-series-pane', class extends Pane {
     return extend(super.config, {
       helpers: extend(super.config.helpers, {
         searchHandler: event => {
-          this.app._updateSeriesState({search: event.target.value});
+          this.app.updateSeriesState({search: event.target.value});
         },
       }),
     });

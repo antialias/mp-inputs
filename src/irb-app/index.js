@@ -183,17 +183,16 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
     this.update(newState);
   }
 
-  _updateSeriesState(newState) {
-    const series = extend(this.state.series, newState);
-    this.update({series});
+  updateSeriesState(newState) {
+    this.update({series: extend(this.state.series, newState)});
   }
 
   startEditingSeries() {
-    this._updateSeriesState({isEditing: true});
+    this.updateSeriesState({isEditing: true});
   }
 
   stopEditingSeries() {
-    this._updateSeriesState({
+    this.updateSeriesState({
       isEditing: false,
       search: null,
     });
@@ -201,7 +200,7 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
 
   updateSeriesData(result, defaultValue) {
     defaultValue = defaultValue === undefined ? true : defaultValue;
-    this._updateSeriesState({
+    this.updateSeriesState({
       data: util.objectFromPairs(util.nestedObjectKeys(result.data, 2).map(v => [v, defaultValue])),
       currentSeries: result.headers[result.headers.length-1] || null,
     });
