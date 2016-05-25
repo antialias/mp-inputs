@@ -36,7 +36,7 @@ document.registerElement('show-hide-series-pane-content', class extends PaneCont
       template: showHideSeriesPaneContentTemplate,
 
       helpers: extend(super.config.helpers, {
-        isSeriesShowing: name => this.app.state.series.data[name],
+        isSeriesShowing: name => this.state.series.data[name],
         renameSeries: name => this.app.state.series.currentSeries === null ? renameEvent(name) : renamePropertyValue(name),
         matchesSearch: value => (
           this.app.state.series && (
@@ -62,17 +62,6 @@ document.registerElement('show-hide-series-pane-content', class extends PaneCont
 });
 
 document.registerElement('show-hide-series-pane', class extends Pane {
-  get subpanes() {
-    return [
-      {
-        tag: 'show-hide-series-pane-content',
-        constants: {
-          header: 'Segments',
-        },
-      },
-    ];
-  }
-
   get config() {
     return extend(super.config, {
       helpers: extend(super.config.helpers, {
@@ -81,6 +70,16 @@ document.registerElement('show-hide-series-pane', class extends Pane {
         },
       }),
     });
+  }
+
+  get constants() {
+    return extend(super.constants, {
+      header: 'Show | Hide',
+    });
+  }
+
+  get section() {
+    return 'show-hide-series';
   }
 });
 

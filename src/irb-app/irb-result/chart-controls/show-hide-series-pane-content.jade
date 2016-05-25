@@ -3,7 +3,7 @@
     each series in $helpers.seriesData()
       li
         button.series(
-          class= $helpers.isSeriesShowing(series) ? 'showing' : 'hidden',
+          class=$helpers.isSeriesShowing(series) ? 'showing' : 'hidden'
           onclick= () => $helpers.toggleShowSeries(series)
         )= $helpers.renameSeries(series)
   .info
