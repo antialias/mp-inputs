@@ -17,7 +17,7 @@ mixin paneContent(contentData, isPaneActive, paneIndex)
       //- TODO: we are required to recreate this input between panes switches because of
       //-       limitations of the focus-input; this shouldn't be necessary
       if isPaneActive
-        focus-input(autoFocus=isPaneActive type='text' oninput=event => $helpers.updateStageClause({search: event.target.value}))
+        focus-input(autoFocus=isPaneActive type='text' oninput= $helpers.searchHandler)
 
   .content= $component.child(contentData.tag, {attributes: {'is-pane-active': isPaneActive}})
 

@@ -73,13 +73,15 @@ document.registerElement('show-hide-series-pane', class extends Pane {
     ];
   }
 
-  // get templateHelpers() {
-  //   return extend(super.templateHelpers, {
-  //     searchHandler: () => {
-  //       this.app._updateSeriesState({search: event.target.value});
-  //     },
-  //   });
-  // }
+  get config() {
+    return extend(super.config, {
+      helpers: extend(super.config.helpers, {
+        searchHandler: event => {
+          this.app._updateSeriesState({search: event.target.value});
+        },
+      }),
+    });
+  }
 });
 
 document.registerElement('show-hide-series', class extends BaseApp {
