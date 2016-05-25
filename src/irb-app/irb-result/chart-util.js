@@ -1,15 +1,10 @@
 import { objectFromPairs, unique } from '../../util';
 
-// return true if the given object is itself made up of objects
-export function containsObjects(obj) {
-  let keys = Object.keys(obj);
-  return Boolean(keys.length && typeof obj[keys[0]] === 'object');
-}
-
-// transpose a 2-dimensional array
-// [[1, 2, 3],    [[1, 4],
-//  [4, 5, 6]] =>  [2, 5],
-//                 [3, 6]]
+/* Transpose a 2-dimensional array:
+ * [[1, 2, 3],    [[1, 4],
+ *  [4, 5, 6]] =>  [2, 5],
+ *                 [3, 6]]
+ */
 export function transpose(matrix) {
   if (matrix && matrix.length) {
     return matrix[0].map((col, i) => matrix.map(row => row[i]));
@@ -17,17 +12,19 @@ export function transpose(matrix) {
   return matrix;
 }
 
-// given an array of values and a start index,
-// count the number of the value at the start index repeats:
-// countRun(['a', 'a', 'b', 'b', 'b', 'c'], 2) => 3
+/* Given an array of values and a start index,
+ * count the number of the value at the start index repeats:
+ * countRun(['a', 'a', 'b', 'b', 'b', 'c'], 2) => 3
+ */
 export function countRun(row, start) {
   let i;
   for (i = start; row[i] === row[start]; i++);
   return i - start;
 }
 
-// get the ideal "distance" between ticks for a given range
-// results in a value like 5, 10, 25, 50, 100, 250, 500, etc.
+/* Get the ideal "distance" between ticks for a given range
+ * results in a value like 5, 10, 25, 50, 100, 250, 500, etc.
+ */
 export function getTickDistance(max, min=0, targetNumTicks=10) {
   let distance = 5;
   while ((max - min) / distance > targetNumTicks) {
@@ -40,6 +37,9 @@ export function nestedObjectDepth(obj) {
   return typeof obj === 'object' ? nestedObjectDepth(obj[Object.keys(obj)[0]]) + 1 : 0;
 }
 
+/* Sum the leaf values of a nested object,
+ * constructing a new object with depth 1 less than the original
+ */
 export function nestedObjectSum(obj) {
   const sum = Object.values(obj).reduce((accum, val) => accum + val, 0);
 
@@ -52,11 +52,19 @@ export function nestedObjectSum(obj) {
   }
 }
 
+// Get the max leaf value of a nested object
 export function nestedObjectMax(obj) {
   if (typeof obj === 'number') { return obj; }
   return Math.max(0, Math.max(...Object.keys(obj).map(key => nestedObjectMax(obj[key]))));
 }
 
+/* Collects unique keys at a given level in a nested object:
+ * Example (depth=1):
+ *   {
+ *     a: {x: 1, y: 2}, => ['x', 'y', 'z']
+ *     b: {x: 1, z: 2},
+ *   }
+ */
 export function nestedObjectKeys(obj, depth=1) {
   let keys = [];
 
@@ -73,6 +81,22 @@ export function nestedObjectKeys(obj, depth=1) {
   return unique(keys);
 }
 
+/* Turn a nested object into a list of "path" arrays,
+ * which represent all of its key combinations.
+ * Example:
+ *   {                     [['a', 'x', 1],
+ *     a: {x: 1, y: 2}, =>  ['a', 'y', 2],
+ *     b: {x: 1, y: 2},     ['b', 'x', 1],
+ *   }                      ['b', 'y', 2]]
+ * The depth param controls how deep into the object the
+ * transformation is applied. Sub-objects of the given
+ * depth will be placed at the last index of the path.
+ * Example (depth=1):
+ *   {                     [['a', {x: 1}],
+ *     a: {x: 1, y: 2}, =>  ['a', {y: 2}],
+ *     b: {x: 1, y: 2},     ['b', {x: 1}],
+ *   }                      ['b', {y: 2}]]
+ */
 export function nestedObjectPaths(obj, depth=0) {
   let paths = [];
 
@@ -89,16 +113,35 @@ export function nestedObjectPaths(obj, depth=0) {
   return paths;
 }
 
+/* Format rows for nested table, calculating necessary rowspans
+ * Example:
+ *   for each row
+ *   ['a', 'a', 'a', 'b', 'b'] => [{value: 'a', rowSpan: 3}, null, null, {value: 'b': rowSpan: 2}, null]
+ * Won't allow a lower row to have spans that cross over changes in a higher row,
+ * in order to maintain the "tree-like" structure of the original nested object.
+ * Example:
+ *   NO
+ *     [['a', 'a', 'b', 'b'], =/=> [[a2, null,   b2, null],
+ *      ['x', 'y', 'y', 'y']]       [x1,   y3, null, null]]
+ *   YES
+ *     [['a', 'a', 'b', 'b'], => [[a2, null, b2, null],
+ *      ['x', 'y', 'y', 'y']]     [x1,   y1, y2, null]]
+ */
 export function nestedObjectToTableRows(obj, depth=0) {
-  // Format rows for nested table, calculating necessary rowspans
-  // For each row
-  // ['a', 'a', 'a', 'b', 'b'] -> [{value: 'a', rowSpan: 3}, null, null, {value: 'b': rowSpan: 2}, null]
-  return transpose(transpose(nestedObjectPaths(obj, depth)).map(row =>
-    row.map((cell, i) =>
-      i && row[i - 1] === row[i] ? null : {
-        rowSpan: countRun(row, i),
-        value: cell,
-      }
-    )
-  ));
+  return transpose(transpose(nestedObjectPaths(obj, depth)).map((row, y, rows) => {
+    let prevRow = y && rows[y - 1];
+
+    return row.map((value, x) => {
+      if (x && row[x - 1] === row[x] && (!prevRow || prevRow[x - 1] === prevRow[x])) {
+        return null;
+      } else {
+        let rowSpan = countRun(row, x);
+
+        if (prevRow) {
+          rowSpan = Math.min(rowSpan, countRun(prevRow, x));
+        }
+
+        return {value, rowSpan};
+    });
+  }));
 }
