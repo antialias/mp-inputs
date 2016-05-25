@@ -215,7 +215,7 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
         if (!cachedResult) {
           this.queries.segmentationCache.set(query, result, cacheExpiry);
         }
-        this.app.updateSeriesData(result);
+        this.updateSeriesData(result);
         this.update({result});
       })
       .catch(err => console.error(err));
