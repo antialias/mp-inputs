@@ -65,8 +65,8 @@ document.registerElement('show-hide-series-pane', class extends Pane {
   get config() {
     return extend(super.config, {
       helpers: extend(super.config.helpers, {
-        searchHandler: event => {
-          this.app.updateSeriesState({search: event.target.value});
+        searchHandler: ev => {
+          this.app.updateSeriesState({search: ev.target.value});
         },
       }),
     });

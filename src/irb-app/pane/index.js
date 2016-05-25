@@ -11,8 +11,8 @@ export class Pane extends Component {
       template,
 
       helpers: {
-        searchHandler: event => {
-          this.config.helpers.updateStageClause({search: event.target.value});
+        searchHandler: ev => {
+          this.config.helpers.updateStageClause({search: ev.target.value});
         },
         updateStageClause: clauseData => this.app.updateStageClause(clauseData),
       },
