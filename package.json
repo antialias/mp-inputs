@@ -7,7 +7,7 @@
     "build": "webpack",
     "lint": "eslint src",
     "production-build": "rm -rf build-production && NODE_ENV=production webpack",
-    "serve": "webpack-dev-server --inline --content-base build-development/",
+    "serve": "webpack-dev-server --inline",
     "start": "npm run watch",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack --progress --colors --watch"

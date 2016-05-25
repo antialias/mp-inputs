@@ -64,7 +64,7 @@ if (process.env.NODE_ENV === 'development') {
       new ExtractTextPlugin('build/bundle.css'),
       new HtmlWebpackPlugin({
         template: 'index.development.html',
-        filename: 'build-development/index.html',
+        filename: 'index-dev.html',
       }),
     ]),
   });
