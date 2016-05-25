@@ -37,6 +37,7 @@ document.registerElement('show-edit-control', class extends EditControl {
           const math = capitalize(clause.math);
           return [math, ' number of ', renameEvent(clause.value)];
         },
+        showRemove: () => this.app.state.sections.show.clauses.length > 1,
       }),
     });
   }
