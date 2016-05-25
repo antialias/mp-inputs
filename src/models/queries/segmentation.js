@@ -1,5 +1,6 @@
 import BaseQuery from './base';
 import { ShowClause } from '../clause';
+import { unique } from '../../util';
 import main from './segmentation.jql.js';
 
 const MS_IN_HOUR = 60 * 60 * 1000;
@@ -90,6 +91,11 @@ export default class SegmentationQuery extends BaseQuery {
     let events = state.sections.show.clauses
       .map(clause => clause.value);
 
+    if (events.includes(ShowClause.TOP_EVENTS)) {
+      let topEvents = state.topEvents.filter(event => event !== ShowClause.TOP_EVENTS).slice(0, 12);
+      events = unique(events.concat(topEvents));
+    }
+
     let type = ShowClause.MATH_TYPES[0];
 
     if (events.length) {
@@ -99,13 +105,7 @@ export default class SegmentationQuery extends BaseQuery {
     // remap total -> general
     type = type === 'total' ? 'general' : type;
 
-    if (events.includes(ShowClause.TOP_EVENTS)) {
-      events = state.topEvents.filter(event => event !== ShowClause.TOP_EVENTS).slice(0, 12);
-    }
-
-    const segments = events.length > 1 ? [] :
-      state.sections.group.clauses.map(clause => clause.value);
-
+    const segments = state.sections.group.clauses.map(clause => clause.value);
     const filters = state.sections.filter.clauses.map(clause => clause.attrs);
 
     const time = state.sections.time.clauses[0];
@@ -161,6 +161,12 @@ export default class SegmentationQuery extends BaseQuery {
 
   processResults(results) {
     let data = {};
+    let headers = this.query.segments;
+
+    if (this.query.events.length > 1 || !this.query.segments.length) {
+      headers = ['$events'].concat(headers);
+    }
+
     if (results) {
       data = results.reduce((dataObj, item) => {
         // transform item.key array into nested obj,
@@ -175,6 +181,7 @@ export default class SegmentationQuery extends BaseQuery {
         return dataObj;
       }, {});
     }
+
     if (this.query.events.length === 1 && this.query.segments.length) {
       // special case segmentation on one event
       let ev = this.query.events[0];
@@ -182,9 +189,6 @@ export default class SegmentationQuery extends BaseQuery {
         data = data[ev];
       }
     }
-    return {
-      data,
-      headers: this.query.segments,
-    };
+    return {data, headers};
   }
 }
