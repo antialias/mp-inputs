@@ -1,13 +1,5 @@
-- const showPane = $helpers.isEditingSeries()
-
-
 ul.toggle-view
-  li.compare(class= showPane ? 'selected' : '')
-    button(onclick=() => $helpers.startEditingSeries())
-  if showPane
-    .pane-container(
-        style={
-          height: '400px',
-          width: '400px',
-        }
-      )= $component.child('show-hide-series-pane')
+  li.compare(class= series.isEditing ? 'selected' : '')
+    button(onclick= $helpers.startEditingSeries)
+  if series.isEditing
+    .pane-container= $component.child('show-hide-series-pane')

@@ -95,7 +95,6 @@ document.registerElement('show-hide-series', class extends Component {
       template: showHideSeriesTemplate,
 
       helpers: {
-        isEditingSeries: () => this.app.state.series.isEditing,
         startEditingSeries: () => this.app.startEditingSeries(),
       },
     };
