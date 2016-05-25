@@ -160,35 +160,35 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   processResults(results) {
-    let data = {};
     let headers = this.query.segments;
+    let series = {};
 
     if (this.query.events.length > 1 || !this.query.segments.length) {
       headers = ['$events'].concat(headers);
     }
 
     if (results) {
-      data = results.reduce((dataObj, item) => {
+      series = results.reduce((seriesObj, item) => {
         // transform item.key array into nested obj,
         // with item.value at the deepest level
-        let obj = dataObj;
+        let obj = seriesObj;
         for (let si = 0; si < item.key.length - 1; si++) {
           let key = item.key[si];
           obj[key] = obj[key] || {};
           obj = obj[key];
         }
         obj[item.key[item.key.length - 1]] = item.value;
-        return dataObj;
+        return seriesObj;
       }, {});
     }
 
     if (this.query.events.length === 1 && this.query.segments.length) {
       // special case segmentation on one event
       let ev = this.query.events[0];
-      if (ev in data) {
-        data = data[ev];
+      if (ev in series) {
+        series = series[ev];
       }
     }
-    return {data, headers};
+    return {series, headers};
   }
 }

@@ -33,7 +33,7 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
         topPropertyValues: [],
         result: {
           headers: [],
-          data: {},
+          series: {},
           loading: true,
         },
         chartType: 'bar',
