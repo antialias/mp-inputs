@@ -1,5 +1,5 @@
-import BaseApp from '../../base-app';
 import Toggle from '../../widgets/toggle';
+import { Component } from 'panel';
 import { Pane, PaneContent } from '../../pane';
 
 import { extend, renameEvent, renamePropertyValue } from '../../../util';
@@ -84,7 +84,7 @@ document.registerElement('show-hide-series-pane', class extends Pane {
   }
 });
 
-document.registerElement('show-hide-series', class extends BaseApp {
+document.registerElement('show-hide-series', class extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
     this.app.onClickOutside(this.tagName, 'stopEditingSeries');
@@ -102,7 +102,7 @@ document.registerElement('show-hide-series', class extends BaseApp {
   }
 });
 
-document.registerElement('chart-controls', class extends BaseApp {
+document.registerElement('chart-controls', class extends Component {
   get config() {
     return extend(super.config, {template});
   }
