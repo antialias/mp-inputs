@@ -1,4 +1,4 @@
-import { objectFromPairs, unique } from '../../../util';
+import { objectFromPairs, unique } from '../../util';
 
 // return true if the given object is itself made up of objects
 export function containsObjects(obj) {

@@ -1,5 +1,4 @@
-- const {headers, rows, chartMax} = $helpers.formatChartData();
-- const gridLineDistance = $helpers.getTickDistance(chartMax);
+- const {headers, rows, chartMax, gridLineDistance} = $helpers.formatChartData();
 - const gridLineWidth = gridLineDistance / chartMax * 100;
 - const numGridLines = chartMax && gridLineDistance ? Math.floor(chartMax / gridLineDistance) : 0;
 - const gridLines = new Array(numGridLines).fill(gridLineWidth);
@@ -8,7 +7,7 @@
   table
     thead
       tr
-        th(colspan=0)
+        th(colSpan=0)
           irb-bar-chart-header(
             headers=JSON.stringify(headers)
             chartMax=JSON.stringify(chartMax)
@@ -19,29 +18,29 @@
           for cell, j in row
             if cell
               if j + 1 < row.length
+                - const headerText = headers[j] === '$events' ? 'Events' : util.renameProperty(headers[j]);
+                - const getLabel = value => headers[j] === '$events' ? util.renameEvent(value) : util.renamePropertyValue(value);
+
                 td.chart-header(
-                  rowSpan=cell.span || 1
-                  style={'min-width': `${util.getTextWidth(util.renameProperty(headers[j]), 'bold 14px Helvetica')}px`}
+                  rowSpan=cell.rowSpan || 1
+                  style={'min-width': `${util.getTextWidth(headerText, 'bold 14px Helvetica')}px`}
                 )
-                  if Array.isArray(cell.value)
+                  if Array.isArray(cell)
                     ul
-                      for value in cell.value
-                        if !j && !headers.length
-                          li(title=util.renameEvent(value))= util.renameEvent(value)
-                        else
-                          li(title=util.renamePropertyValue(value))= util.renamePropertyValue(value)
+                      for value in cell
+                        li(title=getLabel(value))= getLabel(value)
                   else
-                    span(title=util.renamePropertyValue(cell.value))= util.renamePropertyValue(cell.value)
+                    span(title=getLabel(cell.value))= getLabel(cell.value)
               else
                 td.chart-data
                   .chart-grid
                     for width in gridLines
                       .chart-line(style={width: `${width}%`})
                   ul
-                    for value, k in cell.value
+                    for value, k in cell
                       li.chart-bar(
                         class=value / chartMax < .06 ? 'narrow' : ''
                         style={width: `${value / chartMax * 100}%`}
                       )
-                        .background(style={opacity: 1 - (0.6 * k / cell.value.length)})
+                        .background(style={opacity: 1 - (0.6 * k / cell.length)})
                         .label= util.commaizeNumber(value)

@@ -2,7 +2,7 @@
 
 import WebComponent from 'webcomponent';
 
-import { getTickDistance } from './util';
+import { getTickDistance } from '../chart-util';
 import { abbreviateNumber, renameProperty } from '../../../util';
 
 document.registerElement('irb-bar-chart-header', class extends WebComponent {
@@ -13,12 +13,12 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
   render() {
     this.$el.empty();
 
-    let headers = (this._headers && this._headers.length) ? this._headers : [''];
-    let $headers = $(headers.map(header =>
+    let $headers = $(this.headers.map(header =>
       $('<div>')
         .addClass('bar-chart-header')
-        .append($('<div>').addClass('text').html(renameProperty(header)))
-        .get(0)
+        .append($('<div>').addClass('text').html(
+          header === '$events' ? 'Events' : renameProperty(header)
+        )).get(0)
     ));
     this.$el.append($headers);
 
