@@ -16,37 +16,34 @@ document.registerElement('builder-show', class extends Component {
   }
 });
 
+// controls
 document.registerElement('show-add-control', class extends AddControl {
-  get constants() {
-    return extend(super.constants, {
-      label: 'Compare',
-    });
-  }
-
   get section() {
     return 'show';
+  }
+
+  get label() {
+    return 'Compare';
   }
 });
 
 document.registerElement('show-edit-control', class extends EditControl {
-  get config() {
-    return extend(super.config, {
-      helpers: extend(super.config.helpers, {
-        getLabel: () => {
-          const clause = this.state.sections.getClause('show', this.clauseIndex);
-          const math = capitalize(clause.math);
-          return [math, ' number of ', renameEvent(clause.value)];
-        },
-        showRemove: () => this.app.state.sections.show.clauses.length > 1,
-      }),
-    });
-  }
-
   get section() {
     return 'show';
   }
+
+  get label() {
+    const clause = this.state.sections.getClause('show', this.clauseIndex);
+    const math = capitalize(clause.math);
+    return [math, ' number of ', renameEvent(clause.value)];
+  }
+
+  get isRemoveable() {
+    return this.state.sections.show.clauses.length > 1;
+  }
 });
 
+// dropdown content
 document.registerElement('show-pane', class extends Pane {
   get constants() {
     return extend(super.constants, {

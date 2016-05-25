@@ -16,13 +16,14 @@ class ControlComponent extends Component {
   get config() {
     return {
       template,
-
       helpers: {
+        getClass: () => this.elementClass,
+        getLabel: () => this.label,
+        isRemoveable: () => this.isRemoveable,
         clickModify: ev => {
           this.updatePosition(ev);
           this.openPane();
         },
-        getLabel: () => { throw 'Not implemented!'; },
         getPaneLeft: () => !this.position ? 0 : Math.min(0, (window.innerWidth - this.position.left) - this.constants.paneWidth),
         updatePosition: ev => this.updatePosition(ev),
       },
@@ -37,6 +38,18 @@ class ControlComponent extends Component {
   }
 
   get section() {
+    throw 'Not implemented!';
+  }
+
+  get elementClass() {
+    throw 'Not implemented!';
+  }
+
+  get label() {
+    throw 'Not implemented!';
+  }
+
+  get isRemoveable() {
     throw 'Not implemented!';
   }
 
@@ -58,11 +71,12 @@ export class AddControl extends ControlComponent {
     });
   }
 
-  get constants() {
-    return extend(super.constants, {
-      class: 'verb',
-      showRemove: false,
-    });
+  get elementClass() {
+    return 'verb';
+  }
+
+  get isRemoveable() {
+    return false;
   }
 
   openPane() {
@@ -80,11 +94,12 @@ export class EditControl extends ControlComponent {
     });
   }
 
-  get constants() {
-    return extend(super.constants, {
-      class: 'noun',
-      showRemove: true,
-    });
+  get elementClass() {
+    return 'noun';
+  }
+
+  get isRemoveable() {
+    return true;
   }
 
   get clauseIndex() {

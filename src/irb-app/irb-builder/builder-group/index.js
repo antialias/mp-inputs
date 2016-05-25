@@ -20,29 +20,22 @@ document.registerElement('builder-group', class extends Component {
 
 // controls
 document.registerElement('group-add-control', class extends AddControl {
-  get constants() {
-    return extend(super.constants, {
-      label: 'Group by',
-    });
-  }
-
   get section() {
     return 'group';
+  }
+
+  get label() {
+    return 'Group by';
   }
 });
 
 document.registerElement('group-edit-control', class extends EditControl {
-  get config() {
-    return extend(super.config, {
-      helpers: extend(super.config.helpers, {
-        getLabel: () =>
-          renameProperty(this.state.sections.getClause('group', this.clauseIndex).value),
-      }),
-    });
-  }
-
   get section() {
     return 'group';
+  }
+
+  get label() {
+    return renameProperty(this.state.sections.getClause('group', this.clauseIndex).value);
   }
 });
 

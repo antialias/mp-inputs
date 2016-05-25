@@ -18,27 +18,20 @@ document.registerElement('builder-time', class extends Component {
   }
 });
 
+// controls
 document.registerElement('time-edit-control', class extends EditControl {
-  get config() {
-    return extend(super.config, {
-      helpers: extend(super.config.helpers, {
-        getLabel: () => {
-          const clause = this.state.sections.time.clauses[0];
-          const range = clause.range;
-          if (range) {
-            return range;
-          } else {
-            throw new Error('Custom ranges not implemented yet');
-          }
-        },
-      }),
-    });
+  get label() {
+    const clause = this.state.sections.time.clauses[0];
+    const range = clause.range;
+    if (range) {
+      return range;
+    } else {
+      throw new Error('Custom ranges not implemented yet');
+    }
   }
 
-  get constants() {
-    return extend(super.constants, {
-      showRemove: false,
-    });
+  get isRemoveable() {
+    return false;
   }
 
   get section() {
@@ -46,6 +39,7 @@ document.registerElement('time-edit-control', class extends EditControl {
   }
 });
 
+// dropdown content
 document.registerElement('time-pane', class extends Pane {
   get constants() {
     return extend(super.constants, {
