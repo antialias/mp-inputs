@@ -53,7 +53,7 @@ if (process.env.NODE_ENV === 'development') {
   webpackConfig = Object.assign({}, webpackConfig, {
     debug: true,
     output: {
-      filename: 'build/bundle.js',
+      filename: 'build-development/bundle.js',
       pathinfo: true,
     },
     plugins: webpackConfig.plugins.concat([
@@ -61,7 +61,7 @@ if (process.env.NODE_ENV === 'development') {
         API_LOCAL: JSON.stringify(true),
         MIXPANEL_TOKEN: JSON.stringify('9c4e9a6caf9f429a7e3821141fc769b7'), // Project 132990 Mixpanel Dev
       }),
-      new ExtractTextPlugin('build/bundle.css'),
+      new ExtractTextPlugin('build-development/bundle.css'),
       new HtmlWebpackPlugin({
         template: 'index-dev.template.html',
         filename: 'index-dev.html',
@@ -72,13 +72,13 @@ if (process.env.NODE_ENV === 'development') {
 } else if (process.env.NODE_ENV === 'production') {
   webpackConfig = Object.assign({}, webpackConfig, {
     output: {
-      filename: 'dist/bundle.[hash].min.js',
+      filename: 'build-production/bundle.[hash].min.js',
     },
     plugins: webpackConfig.plugins.concat([
       new webpack.DefinePlugin({
         MIXPANEL_TOKEN: JSON.stringify('<IRB production Mixpanel project token>'),
       }),
-      new ExtractTextPlugin('dist/bundle.[hash].min.css'),
+      new ExtractTextPlugin('build-production/bundle.[hash].min.css'),
       new HtmlWebpackPlugin({
         template: 'index.template.html',
         filename: 'index.html',
