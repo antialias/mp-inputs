@@ -1,7 +1,5 @@
 import { Component } from 'panel';
 
-import { extend } from '../../../util';
-
 import './date-picker';
 
 import template from './index.jade';
@@ -17,14 +15,12 @@ class ControlComponent extends Component {
     return {
       template,
       helpers: {
-        getClass: () => this.elementClass,
-        getLabel: () => this.label,
-        isRemoveable: () => this.isRemoveable,
         clickModify: ev => {
           this.updatePosition(ev);
           this.openPane();
         },
         getPaneLeft: () => !this.position ? 0 : Math.min(0, (window.innerWidth - this.position.left) - this.constants.paneWidth),
+        removeClause: () => this.app.removeClause(this.section, this.clauseIndex),
         updatePosition: ev => this.updatePosition(ev),
       },
     };
@@ -53,6 +49,10 @@ class ControlComponent extends Component {
     throw 'Not implemented!';
   }
 
+  get isPaneOpen() {
+    throw 'Not implemented!';
+  }
+
   openPane() {
     throw 'Not implemented!';
   }
@@ -63,14 +63,6 @@ class ControlComponent extends Component {
 }
 
 export class AddControl extends ControlComponent {
-  get config() {
-    return extend(super.config, {
-      helpers: extend(super.config.helpers, {
-        isPaneOpen: () => this.app.isAddingClause(this.section),
-      }),
-    });
-  }
-
   get elementClass() {
     return 'verb';
   }
@@ -79,27 +71,26 @@ export class AddControl extends ControlComponent {
     return false;
   }
 
+  get isPaneOpen() {
+    return this.app.isAddingClause(this.section);
+  }
+
   openPane() {
     this.app.startAddingClause(this.section);
   }
 }
 
 export class EditControl extends ControlComponent {
-  get config() {
-    return extend(super.config, {
-      helpers: extend(super.config.helpers, {
-        removeClause: () => this.app.removeClause(this.section, this.clauseIndex),
-        isPaneOpen: () => this.app.isEditingClause(this.section, this.clauseIndex),
-      }),
-    });
-  }
-
   get elementClass() {
     return 'noun';
   }
 
   get isRemoveable() {
     return true;
+  }
+
+  get isPaneOpen() {
+    return this.app.isEditingClause(this.section, this.clauseIndex);
   }
 
   get clauseIndex() {

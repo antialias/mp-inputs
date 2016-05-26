@@ -1,17 +1,16 @@
-.irb-control(class=$helpers.getClass())
+.irb-control(class=$component.elementClass)
   button.modify(onclick=$helpers.clickModify)
-    - const label = $helpers.getLabel()
-    if typeof label === 'string'
-      span= label
+    if typeof $component.label === 'string'
+      span= $component.label
     else
-      for part, i in label
+      for part, i in $component.label
         if i % 2
             span.preposition= ` ${part} `
         else
           span= part
-  if $helpers.isRemoveable()
+  if $component.isRemoveable
     button.remove(onclick=$helpers.removeClause)
-  if $helpers.isPaneOpen()
+  if $component.isPaneOpen
     .pane-container(style={
       height: `${$component.constants.paneHeight}px`,
       width: `${$component.constants.paneWidth}px`,
