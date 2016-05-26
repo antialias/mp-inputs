@@ -200,7 +200,7 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
 
   updateSeriesData(result, defaultValue=true) {
     this.updateSeriesState({
-      data: util.objectFromPairs(util.nestedObjectKeys(result.data, 2).map(v => [v, defaultValue])),
+      data: util.objectFromPairs(util.nestedObjectKeys(result.series, 2).map(v => [v, defaultValue])),
       currentSeries: result.headers[result.headers.length-1] || null,
     });
   }

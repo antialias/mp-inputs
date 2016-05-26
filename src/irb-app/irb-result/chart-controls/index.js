@@ -21,7 +21,6 @@ document.registerElement('chart-toggle', class extends Toggle {
   }
 
   select(chartType) {
-    if (chartType === 'table') { return; } // TODO: remove when we add pivot table
     this.app.update({chartType});
   }
 
@@ -37,14 +36,14 @@ document.registerElement('show-hide-series-pane-content', class extends PaneCont
 
       helpers: extend(super.config.helpers, {
         isSeriesShowing: name => this.state.series.data[name],
-        renameSeries: name => this.app.state.series.currentSeries === null ? renameEvent(name) : renamePropertyValue(name),
+        renameSeries: name => this.app.state.series.currentSeries === '$events' ? renameEvent(name) : renamePropertyValue(name),
         matchesSearch: value => (
           this.app.state.series && (
             !this.app.state.series.search ||
             this.config.helpers.renameSeries(value).toLowerCase().indexOf(this.app.state.series.search.toLowerCase()) === 0
           )
         ),
-        resetSeries: () => {this.app.updateSeriesData(this.app.state.result, false);},
+        resetSeries: () => this.app.updateSeriesData(this.app.state.result, false),
         selectedSeriesCount: () => Object.values(this.app.state.series.data).filter(Boolean).length,
         seriesData: () => Object.keys(this.app.state.series.data).filter(this.config.helpers.matchesSearch),
         toggleShowSeries: name => {

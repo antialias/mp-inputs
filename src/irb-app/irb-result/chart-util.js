@@ -1,4 +1,4 @@
-import { objectFromPairs, unique } from '../../util';
+import { nestedObjectDepth, objectFromPairs } from '../../util';
 
 /* Transpose a 2-dimensional array:
  * [[1, 2, 3],    [[1, 4],
@@ -33,10 +33,6 @@ export function getTickDistance(max, min=0, targetNumTicks=10) {
   return distance;
 }
 
-export function nestedObjectDepth(obj) {
-  return typeof obj === 'object' ? nestedObjectDepth(obj[Object.keys(obj)[0]]) + 1 : 0;
-}
-
 /* Sum the leaf values of a nested object,
  * constructing a new object with depth 1 less than the original
  */
@@ -65,21 +61,6 @@ export function nestedObjectMax(obj) {
  *     b: {x: 1, z: 2},
  *   }
  */
-export function nestedObjectKeys(obj, depth=1) {
-  let keys = [];
-
-  function _getKeys(obj) {
-    if (nestedObjectDepth(obj) > depth) {
-      Object.values(obj).forEach(_getKeys);
-    } else {
-      keys = keys.concat(Object.keys(obj));
-    }
-  }
-
-  _getKeys(obj);
-
-  return unique(keys);
-}
 
 /* Turn a nested object into a list of "path" arrays,
  * which represent all of its key combinations.
@@ -145,4 +126,20 @@ export function nestedObjectToTableRows(obj, depth=0) {
       }
     });
   }));
+}
+
+function _intoObject(obj, filter, depth) {
+  Object.keys(obj).forEach( key => {
+    if ((nestedObjectDepth(obj) === depth) && !filter(key)) {
+      delete obj[key];
+    } else if (typeof obj[key] === 'object') {
+      return _intoObject(obj[key], filter, depth);
+    }
+  });
+}
+
+export function filterObjectAtDepth(obj, filter, depth = 1) {
+  let newObject = JSON.parse(JSON.stringify(obj));
+  _intoObject(newObject, filter, depth);
+  return newObject;
 }

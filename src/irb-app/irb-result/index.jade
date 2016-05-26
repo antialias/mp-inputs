@@ -3,9 +3,9 @@
   .chart(class=result.loading ? 'loading' : '')
     case chartType
       when 'bar'
-        bar-chart(attributes={data: JSON.stringify(result)})
+        bar-chart(attributes={data: JSON.stringify($helpers.filterResults(result))})
       when 'line'
-        line-chart(attributes={data: JSON.stringify(result)})
+        line-chart(attributes={data: JSON.stringify($helpers.filterResults(result))})
       when 'table'
         - const clauses = sections.show.clauses;
         - let resourceDescription;
@@ -13,6 +13,6 @@
           - resourceDescription = `${util.capitalize(clauses[0].math)} number of ${util.renameEvent(clauses[0].value)}`
         else
           - resourceDescription = 'Number of events'
-        table-chart(attributes={data: JSON.stringify(util.extend(result, {resourceDescription}))})
+        table-chart(attributes={data: JSON.stringify(util.extend($helpers.filterResults(result), {resourceDescription}))})
   if result.loading && chartType !== 'line'
     .loader

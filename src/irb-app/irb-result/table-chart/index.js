@@ -5,7 +5,6 @@ import WebComponent from 'webcomponent';
 
 import * as util from '../../../util';
 import {
-  nestedObjectKeys,
   nestedObjectSum,
   nestedObjectPaths,
   nestedObjectToTableRows,
@@ -49,7 +48,7 @@ document.registerElement('table-chart', class extends Component {
       const rowData = rows.map(row => row.slice(-1)[0].value); // last item of each row is data
       rows = rows.map(row => row.slice(0, -1)); // strip off data items
 
-      columnHeaders = nestedObjectKeys(series).sort();
+      columnHeaders = util.nestedObjectKeys(series).sort();
       columnRows = rowData.map(row =>
         columnHeaders.map(key => row[key])
       );

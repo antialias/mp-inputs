@@ -1,4 +1,5 @@
 import { Component } from 'panel';
+import { filterObjectAtDepth } from './chart-util';
 
 import './bar-chart';
 import './line-chart';
@@ -10,6 +11,14 @@ import './index.styl';
 
 document.registerElement('irb-result', class extends Component {
   get config() {
-    return {template};
+    return {
+      helpers: {
+        filterResults: (result, depth=2) => ({
+          headers: result.headers,
+          series: filterObjectAtDepth(result.series, k => this.state.series.data[k], depth),
+        }),
+      },
+      template,
+    };
   }
 });
