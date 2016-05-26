@@ -116,7 +116,7 @@ document.registerElement('table-manager', class extends WebComponent {
 
     $leftHeaders.each((i, el) => {
       const adjust = isFirefox ? 2 : 1;
-      const width = $(el).width() - (i === $leftHeaders.length - 1 ? adjust : 0) - 1;
+      const width = $(el).width() - (i === $leftHeaders.length - 1 ? adjust : 0) + (1 - adjust);
       $leftFixedHeaders.eq(i).width(width);
     });
 

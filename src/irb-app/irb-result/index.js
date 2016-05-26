@@ -27,7 +27,7 @@ document.registerElement('chart-toggle', class extends Toggle {
   }
 
   select(chartType) {
-    this.app.update({chartType});
+    this.update({chartType});
   }
 
   get selected() {
