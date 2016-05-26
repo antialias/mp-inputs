@@ -4,8 +4,8 @@
       li
         button.series(
           class=$helpers.isSeriesShowing(series) ? 'showing' : 'hidden'
-          onclick= () => $helpers.toggleShowSeries(series)
+          onclick=() => $helpers.toggleShowSeries(series)
         )= $helpers.renameSeries(series)
   .info
     .count #{$helpers.selectedSeriesCount()}/#{$helpers.totalSeriesCount()}
-    button.unselect(onclick= $helpers.resetSeries) Unselect all
+    button.unselect(onclick=$helpers.resetSeries) Unselect all
