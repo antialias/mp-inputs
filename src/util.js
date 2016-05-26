@@ -514,18 +514,16 @@ export function nestedObjectDepth(obj) {
   return typeof obj === 'object' ? nestedObjectDepth(obj[Object.keys(obj)[0]]) + 1 : 0;
 }
 
-export function nestedObjectKeys(obj, depth=1) {
-  let keys = [];
-
-  function _getKeys(obj) {
-    if (nestedObjectDepth(obj) > depth) {
-      Object.values(obj).forEach(_getKeys);
-    } else {
-      keys = keys.concat(Object.keys(obj));
-    }
+function _getKeys(obj, depth, keySet) {
+  if (nestedObjectDepth(obj) > depth) {
+    Object.values(obj).forEach(o => _getKeys(o, depth, keySet));
+  } else {
+    Object.keys(obj).forEach(o => keySet.add(o));
   }
+}
 
-  _getKeys(obj);
-
-  return unique(keys);
+export function nestedObjectKeys(obj, depth=0) {
+  const keys = new Set();
+  _getKeys(obj, depth, keys);
+  return Array.from(keys);
 }
