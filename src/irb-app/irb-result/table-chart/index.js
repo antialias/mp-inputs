@@ -74,8 +74,8 @@ document.registerElement('table-chart', class extends Component {
 
 document.registerElement('table-manager', class extends WebComponent {
   attachedCallback() {
-    this.scrollHandler = event => {
-      const $target = $(event.target);
+    this.scrollHandler = ev => {
+      const $target = $(ev.target);
       const scrollX = $target.scrollLeft();
       const scrollY = $target.scrollTop();
 
@@ -136,6 +136,6 @@ document.registerElement('table-manager', class extends WebComponent {
   set data(data) {
     this._data = JSON.parse(data);
     // allow time for table to fully render so we can check width
-    setTimeout(() => this.render(), 0);
+    window.requestAnimationFrame(() => this.render());
   }
 });
