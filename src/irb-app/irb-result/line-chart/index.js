@@ -22,22 +22,14 @@ document.registerElement('line-chart', class extends Component {
     };
   }
 
-  attachedCallback() {}
+  attributeChangedCallback() {
+    let { headers, series } = JSON.parse(this.getAttribute('data'));
 
-  set data(data) {
-    if (!this.$panelRoot) {
-      super.attachedCallback();
-    }
-
-    this.render(JSON.parse(data));
-  }
-
-  render(data) {
     this.update({
       // transform nested object into single-level object:
       // {'a': {'b': {'c': 5}}} => {'a / b / c': 5}
-      data: util.objectFromPairs(nestedObjectPaths(data.series, 1).map(path =>
-        [this.formatHeader(path.slice(0, -1), data.headers), path.slice(-1)[0]]
+      data: util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
+        [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
       )),
     });
   }

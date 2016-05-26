@@ -92,7 +92,7 @@ export default class SegmentationQuery extends BaseQuery {
       .map(clause => clause.value);
 
     if (events.includes(ShowClause.TOP_EVENTS)) {
-      let topEvents = state.topEvents.filter(event => event !== ShowClause.TOP_EVENTS).slice(0, 12);
+      let topEvents = state.topEvents.filter(ev => ev !== ShowClause.TOP_EVENTS).slice(0, 12);
       events = unique(events.concat(topEvents));
     }
 

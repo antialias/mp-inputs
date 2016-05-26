@@ -25,22 +25,16 @@ document.registerElement('bar-chart', class extends Component {
         gridLineDistance: 0,
         util,
       },
+      helpers: {
+        getHeaderWidth: (text) => util.getTextWidth(text, 'bold 14px Helvetica'),
+      },
     };
   }
 
-  attachedCallback() {}
+  attributeChangedCallback() {
+    let { headers, series } = JSON.parse(this.getAttribute('data'));
 
-  set data(data) {
-    if (!this.$panelRoot) {
-      super.attachedCallback();
-    }
-
-    this.render(JSON.parse(data));
-  }
-
-  render(data) {
-    const headers = data.headers;
-    const series = nestedObjectSum(data.series);
+    series = nestedObjectSum(series);
 
     // for each table row, split the data entry (last entry) into
     // two key/value list cells, sorting alphabetically by key
@@ -100,7 +94,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
     let $axis = $('<div class="bar-chart-axis"></div>').append($ticks);
     this.$el.append($axis);
 
-    setTimeout(() => { // defer so we can inspect the fully-rendered table
+    window.requestAnimationFrame(() => { // defer so we can inspect the fully-rendered table
       const tableColWidths = this.$el.parents('table')
         .find('tbody tr:first-child td').map((i, el) => $(el).outerWidth()).get();
 
@@ -112,7 +106,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
       // set axis width
       const headerWidths = tableColWidths.slice(0, -1).reduce((sum, width) => sum + width, 0);
       $axis.width(`calc(100% - ${headerWidths}px)`);
-    }, 0);
+    });
   }
 
   get headers() {

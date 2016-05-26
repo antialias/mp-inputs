@@ -22,7 +22,7 @@
 
                 td.chart-header(
                   rowSpan=cell.rowSpan || 1
-                  style={'min-width': `${util.getTextWidth(headerText, 'bold 14px Helvetica')}px`}
+                  style={'min-width': `${$helpers.getHeaderWidth(headerText)}px`}
                 )
                   if Array.isArray(cell)
                     ul
