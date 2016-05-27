@@ -25,7 +25,7 @@ export default class Dropdown extends Component {
   }
 
   get choices() {
-    throw new Error('Must be implemented by subclass');
+    throw 'Not implemented!';
   }
 
   formatChoice(choice) {
@@ -33,18 +33,18 @@ export default class Dropdown extends Component {
   }
 
   get isOpen() {
-    throw new Error('Must be implemented by subclass');
+    throw 'Not implemented!';
   }
 
   select() {
-    throw new Error('Must be implemented by subclass');
+    throw 'Not implemented!';
   }
 
   get selected() {
-    throw new Error('Must be implemented by subclass');
+    throw 'Not implemented!';
   }
 
   toggleOpen() {
-    throw new Error('Must be implemented by subclass');
+    throw 'Not implemented!';
   }
 }

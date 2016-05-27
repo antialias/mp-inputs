@@ -169,7 +169,8 @@ document.registerElement('filter-property-value-pane-content', class extends Pan
           this.state.topPropertyValues
             .filter(value => !string || value.toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert),
         toggleStringEqualsValueSelected: value => {
-          const selected = this.state.stageClause.filterValue || [];
+          const clause = this.state.stageClause;
+          const selected = (clause && clause.filterValue) || [];
           let filterValue;
 
           if (selected.indexOf(value) === -1) {
@@ -197,7 +198,8 @@ document.registerElement('filter-property-value-pane-content', class extends Pan
 
 document.registerElement('operator-dropdown', class extends Dropdown {
   get choices() {
-    return FilterClause.FILTER_OPERATORS[this.state.stageClause.filterType];
+    const clause = this.state.stageClause;
+    return clause ? FilterClause.FILTER_OPERATORS[clause.filterType] : [];
   }
 
   get selected() {
@@ -209,8 +211,9 @@ document.registerElement('operator-dropdown', class extends Dropdown {
   }
 
   toggleOpen() {
+    const clause = this.state.stageClause;
     this.app.updateStageClause({
-      editing: this.state.stageClause.isEditingFilterOperator ? null : 'filterOperator',
+      editing: clause && clause.isEditingFilterOperator ? null : 'filterOperator',
     });
   }
 
@@ -247,8 +250,9 @@ document.registerElement('date-unit-dropdown', class extends Dropdown {
   }
 
   toggleOpen() {
+    const clause = this.state.stageClause;
     this.app.updateStageClause({
-      editing: this.state.stageClause.isEditingFilterDateUnit ? null : 'filterDateUnit',
+      editing: clause && clause.isEditingFilterDateUnit ? null : 'filterDateUnit',
     });
   }
 
@@ -262,7 +266,8 @@ document.registerElement('date-unit-dropdown', class extends Dropdown {
 
 document.registerElement('operator-toggle', class extends Toggle {
   get choices() {
-    return FilterClause.FILTER_OPERATORS[this.state.stageClause.filterType];
+    const clause = this.state.stageClause;
+    return clause ? FilterClause.FILTER_OPERATORS[clause.filterType] : [];
   }
 
   get selected() {
