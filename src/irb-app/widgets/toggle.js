@@ -19,7 +19,7 @@ export default class Toggle extends Component {
   }
 
   get choices() {
-    throw new Error('Must be implemented by subclass');
+    throw 'Not implemented!';
   }
 
   formatChoice(choice) {
@@ -32,10 +32,10 @@ export default class Toggle extends Component {
 
   // expected args: choice (the option to select)
   select() {
-    throw new Error('Must be implemented by subclass');
+    throw 'Not implemented!';
   }
 
   get selected() {
-    throw new Error('Must be implemented by subclass');
+    throw 'Not implemented!';
   }
 }

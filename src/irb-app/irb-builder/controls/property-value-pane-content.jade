@@ -8,7 +8,7 @@
   table.tabs
     tbody
       tr
-        for typeChoice in $component.constants.filterTypeChoices
+        for typeChoice in $component.filterTypeChoices
           td(class=['type-' + typeChoice, typeChoice === selectedType ? 'selected' : ''])
             button(
               onclick=() => $helpers.updateStageClause({filterType: typeChoice, filterValue: null, filterSearch: null, editing: null})

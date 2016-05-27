@@ -148,14 +148,12 @@ document.registerElement('filter-property-pane-content', class extends PaneConte
     });
   }
 
-  get constants() {
-    return extend(super.constants, {
-      resourceTypeChoices: Clause.RESOURCE_TYPES,
-    });
-  }
-
   get section() {
     return 'filter';
+  }
+
+  get resourceTypeChoices() {
+    return Clause.RESOURCE_TYPES;
   }
 });
 
@@ -188,15 +186,12 @@ document.registerElement('filter-property-value-pane-content', class extends Pan
     });
   }
 
-  get constants() {
-    return extend(super.constants, {
-      filterTypeChoices: FilterClause.FILTER_TYPES,
-      filterOperatorChoices: FilterClause.FILTER_OPERATORS,
-    });
-  }
-
   get section() {
     return 'filter';
+  }
+
+  get filterTypeChoices() {
+    return FilterClause.FILTER_TYPES;
   }
 });
 
@@ -205,8 +200,18 @@ document.registerElement('operator-dropdown', class extends Dropdown {
     return FilterClause.FILTER_OPERATORS[this.state.stageClause.filterType];
   }
 
+  get selected() {
+    return this.state.stageClause && this.state.stageClause.filterOperator;
+  }
+
   get isOpen() {
-    return this.state.stageClause.isEditingFilterOperator;
+    return this.state.stageClause && this.state.stageClause.isEditingFilterOperator;
+  }
+
+  toggleOpen() {
+    this.app.updateStageClause({
+      editing: this.state.stageClause.isEditingFilterOperator ? null : 'filterOperator',
+    });
   }
 
   select(filterOperator) {
@@ -215,16 +220,6 @@ document.registerElement('operator-dropdown', class extends Dropdown {
       filterValue: null,
       filterSearch: null,
       editing: null,
-    });
-  }
-
-  get selected() {
-    return this.state.stageClause.filterOperator;
-  }
-
-  toggleOpen() {
-    this.app.updateStageClause({
-      editing: this.state.stageClause.isEditingFilterOperator ? null : 'filterOperator',
     });
   }
 });
@@ -244,11 +239,11 @@ document.registerElement('date-unit-dropdown', class extends Dropdown {
   }
 
   get selected() {
-    return this.state.stageClause.filterDateUnit;
+    return this.state.stageClause && this.state.stageClause.filterDateUnit;
   }
 
   get isOpen() {
-    return this.state.stageClause.isEditingFilterDateUnit;
+    return this.state.stageClause && this.state.stageClause.isEditingFilterDateUnit;
   }
 
   toggleOpen() {
@@ -270,11 +265,11 @@ document.registerElement('operator-toggle', class extends Toggle {
     return FilterClause.FILTER_OPERATORS[this.state.stageClause.filterType];
   }
 
-  select(filterOperator) {
-    this.app.updateStageClause({filterOperator});
+  get selected() {
+    return this.state.stageClause && this.state.stageClause.filterOperator;
   }
 
-  get selected() {
-    return this.state.stageClause.filterOperator;
+  select(filterOperator) {
+    this.app.updateStageClause({filterOperator});
   }
 });

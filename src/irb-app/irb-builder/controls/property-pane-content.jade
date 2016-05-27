@@ -3,7 +3,7 @@
 
 .pane-content
   ul.column.toggle.resource-type
-    for resourceType in $component.constants.resourceTypeChoices
+    for resourceType in $component.resourceTypeChoices
       li(
         class=[resourceType === selectedResourceType ? 'selected' : '', resourceType !== 'all' ? 'disabled' : '']
         onclick=() => $helpers.updateStageClause({resourceType}),

@@ -35,7 +35,8 @@ document.registerElement('group-edit-control', class extends EditControl {
   }
 
   get label() {
-    return renameProperty(this.state.sections.getClause('group', this.clauseIndex).value);
+    const clause = this.state.sections.getClause('group', this.clauseIndex);
+    return clause && renameProperty(clause.value);
   }
 });
 
@@ -64,13 +65,11 @@ document.registerElement('group-pane-content', class extends PaneContent {
     });
   }
 
-  get constants() {
-    return extend(super.constants, {
-      resourceTypeChoices: Clause.RESOURCE_TYPES,
-    });
-  }
-
   get section() {
     return 'group';
+  }
+
+  get resourceTypeChoices() {
+    return Clause.RESOURCE_TYPES;
   }
 });

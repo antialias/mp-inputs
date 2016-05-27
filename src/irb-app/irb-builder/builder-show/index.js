@@ -66,12 +66,15 @@ document.registerElement('show-pane-content', class extends PaneContent {
   get constants() {
     return extend(super.constants, {
       mathChoices: ShowClause.MATH_TYPES,
-      resourceTypeChoices: Clause.RESOURCE_TYPES,
       eventChoices: [ShowClause.TOP_EVENTS, ...this.state.topEvents],
     });
   }
 
   get section() {
     return 'show';
+  }
+
+  get resourceTypeChoices() {
+    return Clause.RESOURCE_TYPES;
   }
 });
