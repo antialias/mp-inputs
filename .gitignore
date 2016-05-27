@@ -2,4 +2,3 @@ node_modules
 npm-debug.log
 .current-mp-release
 build-development
-libs
