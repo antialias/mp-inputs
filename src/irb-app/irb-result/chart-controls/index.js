@@ -36,7 +36,7 @@ document.registerElement('show-hide-series-pane-content', class extends PaneCont
 
       helpers: extend(super.config.helpers, {
         isSeriesShowing: name => this.state.series.data[name],
-        renameSeries: name => this.app.state.series.currentSeries === '$events' ? renameEvent(name) : renamePropertyValue(name),
+        renameSeries: name => this.app.state.series.currentSeries === '$event' ? renameEvent(name) : renamePropertyValue(name),
         matchesSearch: value => (
           this.app.state.series && (
             !this.app.state.series.search ||

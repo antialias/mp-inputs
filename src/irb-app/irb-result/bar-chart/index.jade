@@ -17,8 +17,8 @@
           for cell, j in row
             if cell
               if j + 1 < row.length
-                - const headerText = headers[j] === '$events' ? 'Events' : util.renameProperty(headers[j]);
-                - const getLabel = value => headers[j] === '$events' ? util.renameEvent(value) : util.renamePropertyValue(value);
+                - const headerText = headers[j] === '$event' ? 'Events' : util.renameProperty(headers[j]);
+                - const getLabel = value => headers[j] === '$event' ? util.renameEvent(value) : util.renamePropertyValue(value);
 
                 td.chart-header(
                   rowSpan=cell.rowSpan || 1

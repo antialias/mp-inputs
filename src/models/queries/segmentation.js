@@ -164,7 +164,7 @@ export default class SegmentationQuery extends BaseQuery {
     let series = {};
 
     if (this.query.events.length > 1 || !this.query.segments.length) {
-      headers = ['$events'].concat(headers);
+      headers = ['$event'].concat(headers);
     }
 
     if (results) {

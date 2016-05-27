@@ -72,7 +72,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
       $('<div>')
         .addClass('bar-chart-header')
         .append($('<div>').addClass('text').html(
-          header === '$events' ? 'Events' : util.renameProperty(header)
+          header === '$event' ? 'Events' : util.renameProperty(header)
         )).get(0)
     ));
     this.$el.append($headers);
