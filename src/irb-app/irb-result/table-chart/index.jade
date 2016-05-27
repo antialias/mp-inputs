@@ -5,7 +5,7 @@
   .left-table-container
     .fixed-header
       for header in headers
-        .fixed-header-cell= header === '$event' ? 'Event' : util.renameProperty(header)
+        .fixed-header-cell= header === '$events' ? 'Event' : util.renameProperty(header)
     .left-table
       table
         thead
@@ -17,7 +17,7 @@
             tr
               for cell, i in row
                 if cell
-                  - const value = headers[i] === '$event' ? util.renameEvent(cell.value) : cell.value;
+                  - const value = headers[i] === '$events' ? util.renameEvent(cell.value) : util.renamePropertyValue(cell.value);
                   td(class=cell.odd ? 'odd' : 'even', rowSpan=cell.rowSpan || 1)= value
 
   if fullWidthTable

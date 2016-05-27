@@ -477,7 +477,7 @@ export function renamePropertyType(type) {
 }
 
 export function renamePropertyValue(value) {
-  const country = COUNTRIES[value.toUpperCase()];
+  const country = COUNTRIES[String(value).toUpperCase()];
   if (country) {
     return country;
   }
