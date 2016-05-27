@@ -516,13 +516,13 @@ export function nestedObjectDepth(obj) {
 
 function _getKeys(obj, depth, keySet) {
   if (nestedObjectDepth(obj) > depth) {
-    Object.values(obj).forEach(o => _getKeys(o, depth, keySet));
+    Object.values(obj).forEach(value => _getKeys(value, depth, keySet));
   } else {
-    Object.keys(obj).forEach(o => keySet.add(o));
+    Object.keys(obj).forEach(key => keySet.add(key));
   }
 }
 
-export function nestedObjectKeys(obj, depth=0) {
+export function nestedObjectKeys(obj, depth=1) {
   const keys = new Set();
   _getKeys(obj, depth, keys);
   return Array.from(keys);

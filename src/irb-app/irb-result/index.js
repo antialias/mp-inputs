@@ -15,7 +15,7 @@ document.registerElement('irb-result', class extends Component {
       helpers: {
         filterResults: (result, depth=2) => ({
           headers: result.headers,
-          series: filterObjectAtDepth(result.series, k => this.state.series.data[k], depth),
+          series: filterObjectAtDepth(result.series, series => this.state.series.data[series], depth),
         }),
       },
       template,
