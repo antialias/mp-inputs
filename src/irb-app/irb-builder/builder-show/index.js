@@ -28,6 +28,10 @@ document.registerElement('show-add-control', class extends AddControl {
 });
 
 document.registerElement('show-edit-control', class extends EditControl {
+  shouldUpdate(state) {
+    return state.sections.getClause('show', this.clauseIndex);
+  }
+
   get section() {
     return 'show';
   }

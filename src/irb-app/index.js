@@ -21,32 +21,39 @@ import './index.styl';
 document.registerElement('irb-app', class IRBApp extends BaseApp {
   get config() {
     return {
-      defaultState: {
-        reportName: 'Untitled report',
-        sections: new BuilderSections({
-          show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
-          time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
-        }),
-        series: {
-          currentSeries: null,
-          data: {},
-          isEditing: false,
-          search: null,
-        },
-        stageClause: null,
-        topEvents: [],
-        topProperties: [],
-        topPropertyValues: [],
-        result: {
-          headers: [],
-          series: {},
-          loading: true,
-        },
-        chartType: 'bar',
-        util,
-      },
+      defaultState: extend(this.resettableState, {
+        // The following states should persist through reset.
+      }),
 
       template,
+    };
+  }
+
+  // The following states should be reset.
+  get resettableState() {
+    return {
+      reportName: 'Untitled report',
+      sections: new BuilderSections({
+        show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
+        time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
+      }),
+      series: {
+        currentSeries: null,
+        data: {},
+        isEditing: false,
+        search: null,
+      },
+      stageClause: null,
+      topEvents: [],
+      topProperties: [],
+      topPropertyValues: [],
+      result: {
+        headers: [],
+        series: {},
+        loading: true,
+      },
+      chartType: 'bar',
+      util,
     };
   }
 
@@ -62,6 +69,10 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
       segmentationCache: new QueryCache(),
     };
 
+    this.resetTopQueries();
+  }
+
+  resetTopQueries() {
     this.queries.topProperties.build(this.state).run().then(topProperties => {
       this.update({topProperties});
     });
@@ -91,6 +102,11 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
   }
 
   // State modifiers
+
+  resetQuery() {
+    this.update(this.resettableState);
+    this.resetTopQueries();
+  }
 
   startAddingClause(sectionType) {
     this.update({stageClause: Clause.create(sectionType)});
