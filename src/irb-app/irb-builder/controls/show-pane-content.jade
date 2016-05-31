@@ -6,20 +6,26 @@
   ul.column.toggle.math
     for math in $component.constants.mathChoices
       li(
-        class=[math === selectedMath ? 'selected' : '', (math === 'sum' || math === 'median') ? 'disabled' : '']
+        class={
+          selected: math === selectedMath,
+          disabled: math === 'sum' || math === 'median',
+        }
         onclick=() => $helpers.updateStageClause({math})
       )= util.capitalize(math)
   ul.column.toggle.resource-type
     for resourceType in $component.resourceTypeChoices
       li(
-        class=[resourceType === selectedResourceType ? 'selected' : '', resourceType !== 'all' ? 'disabled' : '']
+        class={
+          selected: resourceType === selectedResourceType,
+          disabled: resourceType !== 'all',
+        }
         onclick=() => $helpers.updateStageClause({resourceType})
       )= util.capitalize(resourceType)
   ul.column.resource-value
     for value in $component.constants.eventChoices
       if $helpers.matchesSearch(util.renameEvent(value))
         li(
-          class=value === selectedValue ? 'selected' : ''
+          class={selected: value === selectedValue}
           onclick=() => $helpers.updateStageClause({value}, true)
         )
           span= util.renameEvent(value)

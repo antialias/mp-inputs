@@ -38,7 +38,7 @@
                   ul
                     for value, k in cell
                       li.chart-bar(
-                        class=value / chartMax < .06 ? 'narrow' : ''
+                        class={narrow: value / chartMax < .06}
                         style={width: `${value / chartMax * 100}%`}
                       )
                         .background(style={opacity: 1 - (0.6 * k / cell.length)})

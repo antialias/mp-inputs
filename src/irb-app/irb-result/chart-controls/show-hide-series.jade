@@ -1,5 +1,5 @@
 ul.toggle-view
-  li.compare(class=series.isEditing ? 'selected' : '')
+  li.compare(class={selected: series.isEditing})
     button(onclick=$helpers.startEditingSeries)
   if series.isEditing
     .pane-container= $component.child('show-hide-series-pane')

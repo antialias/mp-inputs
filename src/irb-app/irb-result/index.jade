@@ -1,6 +1,6 @@
 .irb-result
   .controls= $component.child('chart-controls')
-  .chart(class=result.loading ? 'loading' : '')
+  .chart(class={loading: result.loading})
     case chartType
       when 'bar'
         bar-chart(attributes={data: JSON.stringify($helpers.filterResults(result))})

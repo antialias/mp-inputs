@@ -1,6 +1,6 @@
 - const fullWidthTable = columnHeaders.length && columnRows.length
 
-.table-chart(class=fullWidthTable ? 'full-width' : '')
+.table-chart(class={'full-width': fullWidthTable})
   table-manager(data=JSON.stringify({headers, rows, columnHeaders, columnRows}))
   .left-table-container
     .fixed-header

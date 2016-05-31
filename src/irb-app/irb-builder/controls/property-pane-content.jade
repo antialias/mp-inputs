@@ -5,15 +5,19 @@
   ul.column.toggle.resource-type
     for resourceType in $component.resourceTypeChoices
       li(
-        class=[resourceType === selectedResourceType ? 'selected' : '', resourceType !== 'all' ? 'disabled' : '']
-        onclick=() => $helpers.updateStageClause({resourceType}),
+        class={
+          selected: resourceType === selectedResourceType,
+          disabled: resourceType !== 'all',
+        }
+        onclick=() => $helpers.updateStageClause({resourceType})
       )= util.capitalize(resourceType)
   ul.column.resource-value
     for property in topProperties
       if $helpers.matchesSearch(util.renameProperty(property.name))
         li.property(
-          class=[`type-${property.type}`, property.name === selectedProperty ? 'selected' : ''],
-          onclick=() => $helpers.selectProperty(property, true),
+          class=`type-${property.type}`
+          class={selected: property.name === selectedProperty}
+          onclick=() => $helpers.selectProperty(property, true)
         )
           span= util.renameProperty(property.name)
           button.next-arrow(onclick=() => $helpers.selectProperty(property)) ›

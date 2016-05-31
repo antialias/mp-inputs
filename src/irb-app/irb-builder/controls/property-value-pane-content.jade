@@ -9,7 +9,7 @@
     tbody
       tr
         for typeChoice in $component.filterTypeChoices
-          td(class=['type-' + typeChoice, typeChoice === selectedType ? 'selected' : ''])
+          td(class=`type-${typeChoice}` class={selected: typeChoice === selectedType})
             button(
               onclick=() => $helpers.updateStageClause({filterType: typeChoice, filterValue: null, filterSearch: null, editing: null})
             )= util.renamePropertyType(typeChoice)
@@ -49,7 +49,7 @@
 
             ul.filter-string-equals-choices
               for value in $helpers.getValueMatches(stageClause.filterSearch)
-                li(class=selectedValue && selectedValue.indexOf(value) !== -1 ? 'selected' : '')
+                li(class={selected: selectedValue && selectedValue.indexOf(value) !== -1})
                   button(onclick=() => $helpers.toggleStringEqualsValueSelected(value))= util.renamePropertyValue(value)
 
           when 'contains'
