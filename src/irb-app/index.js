@@ -23,6 +23,7 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
     return {
       defaultState: extend(this.resettableState, {
         // The following states should persist through reset.
+        util,
       }),
 
       template,
@@ -53,7 +54,6 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
         loading: true,
       },
       chartType: 'bar',
-      util,
     };
   }
 
