@@ -82,7 +82,7 @@ export class AddControl extends ControlComponent {
 
 export class EditControl extends ControlComponent {
   shouldUpdate(state) {
-    return !!state.sections.getClause('show', this.clauseIndex);
+    return !!state.sections.getClause(this.section, this.clauseIndex);
   }
 
   get elementClass() {
