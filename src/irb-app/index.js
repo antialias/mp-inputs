@@ -79,7 +79,7 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
 
     this.queries.topEvents.build(this.state).run().then(topEvents => {
       this.update({topEvents});
-      this.query(this.state);
+      this.query();
     });
   }
 
@@ -221,7 +221,7 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
     });
   }
 
-  query(state) {
+  query(state=this.state) {
     const query = this.queries.segmentation.build(state).query;
     const cachedResult = this.queries.segmentationCache.get(query);
     const cacheExpiry = 10; // seconds
