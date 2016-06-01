@@ -81,6 +81,10 @@ export class AddControl extends ControlComponent {
 }
 
 export class EditControl extends ControlComponent {
+  shouldUpdate(state) {
+    return !!state.sections.getClause('show', this.clauseIndex);
+  }
+
   get elementClass() {
     return 'noun';
   }
