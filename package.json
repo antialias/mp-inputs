@@ -29,7 +29,7 @@
     "babel-polyfill": "^6.7.4",
     "framesg": "^0.1.2",
     "mixpanel-browser": "^2.7.2",
-    "panel": "^0.7.1",
+    "panel": "^0.7.2",
     "rollbar-browser": "^1.8.5",
     "virtual-dom": "^2.1.1",
     "webcomponent": "0.1.2",
