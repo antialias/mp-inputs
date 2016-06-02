@@ -88,7 +88,7 @@ export function extend() {
 
 // return object with same keys and new values
 export function mapValues(obj, func) {
-  return Object.keys(obj).reduce((ret, k) => Object.assign(ret, {[k]: func(obj[k])}), {});
+  return Object.keys(obj).reduce((ret, k) => Object.assign(ret, {[k]: func(obj[k], k)}), {});
 }
 
 export function nestedObjectDepth(obj) {

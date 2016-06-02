@@ -33,6 +33,12 @@ export class Section {
     }
   }
 
+  static deserialize(sectionType, clauseAttrs) {
+    return Section.create(sectionType, {
+      clauses: clauseAttrs.map(c => Clause.create(sectionType, c)),
+    });
+  }
+
   create() {
     return Section.create(...arguments);
   }

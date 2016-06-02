@@ -1,6 +1,7 @@
 import { extend, mapValues, pick } from '../mp-common/data-util';
 import { debug } from '../util';
 import {
+  Section,
   ShowSection,
   GroupSection,
   FilterSection,
@@ -13,6 +14,14 @@ export default class BuilderSections {
     this.group = attrs.group || new GroupSection();
     this.filter = attrs.filter || new FilterSection();
     this.time = attrs.time || new TimeSection();
+  }
+
+  static deserialize(attrs) {
+    return new BuilderSections(
+      mapValues(attrs, (clauseAttrs, sectionType) =>
+        Section.deserialize(sectionType, clauseAttrs)
+      )
+    );
   }
 
   get attrs() {

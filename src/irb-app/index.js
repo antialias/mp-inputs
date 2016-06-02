@@ -21,10 +21,14 @@ import './index.styl';
 document.registerElement('irb-app', class IRBApp extends BaseApp {
   get config() {
     return {
-      defaultState: extend(this.resettableState, {
-        // The following states should persist through reset.
-        util,
-      }),
+      defaultState: extend(
+        this.resettableState,
+        {
+          // The following states should persist through reset.
+          util,
+        },
+        this.stateFromPersistence()
+      ),
 
       template,
     };
@@ -93,6 +97,17 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
         'series',
       ]))
     );
+  }
+
+  stateFromPersistence() {
+    let persisted = null;
+    try {
+      persisted = JSON.parse(window.localStorage.getItem('foobar'));
+      persisted.sections = BuilderSections.deserialize(persisted.sections);
+    } catch(err) {
+      console.error('Invalid persistence entry');
+    }
+    return persisted || {};
   }
 
   update() {
