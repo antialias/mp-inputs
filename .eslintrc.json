@@ -14,8 +14,6 @@
       1,
     "no-unused-expressions":
       2,
-    "no-use-before-define":
-      [2, {"classes": false}],
     "quotes":
       [2, "single"],
     "semi":
