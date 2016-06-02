@@ -1,5 +1,5 @@
 import BaseApp from './base-app.js';
-import { extend } from '../mp-common/data-util';
+import { extend, pick } from '../mp-common/data-util';
 import util from '../util';
 
 import BuilderSections from '../models/builder-sections';
@@ -81,6 +81,23 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
       this.update({topEvents});
       this.query();
     });
+  }
+
+  serializeState() {
+    return JSON.stringify(
+      extend({
+        sections: this.state.sections.serialize(),
+      }, pick(this.state, [
+        'chartType',
+        'reportName',
+        'series',
+      ]))
+    );
+  }
+
+  update() {
+    super.update(...arguments);
+    window.localStorage.setItem('foobar', this.serializeState()); // FIXME foobar
   }
 
   // State helpers

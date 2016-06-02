@@ -1,4 +1,4 @@
-import { extend } from '../mp-common/data-util';
+import { extend, mapValues, pick } from '../mp-common/data-util';
 import { debug } from '../util';
 import {
   ShowSection,
@@ -16,8 +16,19 @@ export default class BuilderSections {
   }
 
   get attrs() {
-    const { show, group, filter, time } = this;
-    return {show, group, filter, time};
+    return pick(this, ['show', 'group', 'filter', 'time']);
+  }
+
+  getClause(type, clauseIndex) {
+    return this[type].clauses[clauseIndex];
+  }
+
+  replaceSection(type, newSection) {
+    return this.validate(new BuilderSections(extend(this.attrs, {[type]: newSection})));
+  }
+
+  serialize() {
+    return mapValues(this.attrs, section => section.serialize());
   }
 
   get valid() {
@@ -37,14 +48,6 @@ export default class BuilderSections {
     }
 
     return valid ? newSections : this;
-  }
-
-  getClause(type, clauseIndex) {
-    return this[type].clauses[clauseIndex];
-  }
-
-  replaceSection(type, newSection) {
-    return this.validate(new BuilderSections(extend(this.attrs, {[type]: newSection})));
   }
 }
 BuilderSections.TYPES = BuilderSections.prototype.TYPES = [

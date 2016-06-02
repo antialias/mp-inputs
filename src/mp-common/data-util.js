@@ -86,6 +86,11 @@ export function extend() {
   return Object.assign(...[{}, ...Array.prototype.slice.call(arguments)]);
 }
 
+// return object with same keys and new values
+export function mapValues(obj, func) {
+  return Object.keys(obj).reduce((ret, k) => Object.assign(ret, {[k]: func(obj[k])}), {});
+}
+
 export function nestedObjectDepth(obj) {
   return typeof obj === 'object' ? nestedObjectDepth(obj[Object.keys(obj)[0]]) + 1 : 0;
 }
@@ -108,6 +113,11 @@ export function objectFromPairs(pairs) {
   let object = {};
   pairs.forEach(pair => { object[pair[0]] = pair[1]; });
   return object;
+}
+
+// filter object to include only given keys
+export function pick(obj, keys) {
+  return keys.reduce((ret, k) => Object.assign(ret, {[k]: obj[k]}), {});
 }
 
 export function removeIndex(array, index) {

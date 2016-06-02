@@ -16,8 +16,17 @@ export class Clause {
   }
 
   get attrs() {
-    const { paneIndex } = this;
-    return {paneIndex};
+    return {
+      paneIndex: this.paneIndex,
+    };
+  }
+
+  extend(attrs) {
+    return this.validate(Clause.create(this.TYPE, extend(this.attrs, attrs)));
+  }
+
+  serialize() {
+    return this.attrs;
   }
 
   get valid() {
@@ -32,10 +41,6 @@ export class Clause {
     }
 
     return newClause;
-  }
-
-  extend(attrs) {
-    return this.validate(Clause.create(this.TYPE, extend(this.attrs, attrs)));
   }
 }
 Clause.RESOURCE_TYPES = Clause.prototype.RESOURCE_TYPES = ['all', 'events', 'people'];

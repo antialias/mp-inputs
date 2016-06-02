@@ -37,6 +37,10 @@ export class Section {
     return Section.create(...arguments);
   }
 
+  serialize() {
+    return this.clauses.map(c => c.serialize());
+  }
+
   validate(newSection) {
     const valid = newSection.valid;
 
