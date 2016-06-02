@@ -1,4 +1,5 @@
-import { replaceIndex, removeIndex, debug } from '../util';
+import { replaceIndex, removeIndex } from '../mp-common/data-util';
+import { debug } from '../util';
 import {
   Clause,
   ShowClause,

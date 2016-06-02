@@ -3,7 +3,7 @@
 import { Component } from 'panel';
 import WebComponent from 'webcomponent';
 
-import * as util from '../../../util';
+import util from '../../../util';
 import {
   nestedObjectSum,
   nestedObjectPaths,

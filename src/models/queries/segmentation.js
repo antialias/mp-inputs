@@ -1,6 +1,6 @@
 import BaseQuery from './base';
 import { ShowClause } from '../clause';
-import { unique } from '../../util';
+import { unique } from '../../mp-common/data-util';
 import main from './segmentation.jql.js';
 
 const MS_IN_HOUR = 60 * 60 * 1000;

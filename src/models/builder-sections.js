@@ -1,4 +1,5 @@
-import { extend, debug } from '../util';
+import { extend } from '../mp-common/data-util';
+import { debug } from '../util';
 import {
   ShowSection,
   GroupSection,

@@ -1,6 +1,6 @@
 import BaseApp from './base-app.js';
-import { extend } from '../util';
-import * as util from '../util';
+import { extend } from '../mp-common/data-util';
+import util from '../util';
 
 import BuilderSections from '../models/builder-sections';
 import { ShowSection, TimeSection } from '../models/section';

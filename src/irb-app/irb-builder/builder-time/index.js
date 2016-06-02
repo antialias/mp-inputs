@@ -2,7 +2,7 @@
 
 import { Component } from 'panel';
 
-import { extend } from '../../../util';
+import { extend } from '../../../mp-common/data-util';
 
 import { EditControl } from '../controls';
 import { TimeClause } from '../../../models/clause';

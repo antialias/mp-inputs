@@ -2,7 +2,8 @@ import Toggle from '../../widgets/toggle';
 import { Component } from 'panel';
 import { Pane, PaneContent } from '../../pane';
 
-import { extend, renameEvent, renamePropertyValue } from '../../../util';
+import { extend } from '../../../mp-common/data-util';
+import { renameEvent, renamePropertyValue } from '../../../mp-common/mp-util';
 
 import template from './index.jade';
 import showHideSeriesTemplate from './show-hide-series.jade';
