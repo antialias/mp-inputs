@@ -1,11 +1,12 @@
 import { Component } from 'panel';
 
 import { capitalize, extend } from '../../../util';
-import { renameEvent } from '../../../util';
+import { renameEvent, renameProperty } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
+import { BuilderPane, PropertyPaneContent, PropertyValuePaneContent } from '../controls/builder-pane';
 import { Clause, ShowClause } from '../../../models/clause';
-import { Pane, PaneContent } from '../../pane';
+import { PaneContent } from '../../pane';
 
 import template from './index.jade';
 import showPaneContentTemplate from '../controls/show-pane-content.jade';
@@ -45,15 +46,40 @@ document.registerElement('show-edit-control', class extends EditControl {
 });
 
 // dropdown content
-document.registerElement('show-pane', class extends Pane {
-  get constants() {
-    return extend(super.constants, {
-      header: 'Show',
-    });
-  }
-
+document.registerElement('show-pane', class extends BuilderPane {
   get section() {
     return 'show';
+  }
+
+  get subpanes() {
+    return [
+      {
+        tag: 'show-pane-content',
+        constants: {
+          header: 'Show',
+        },
+      },
+      {
+        tag: 'show-property-pane-content',
+        constants: {
+          header: 'Properties',
+        },
+      },
+      {
+        tag: 'show-property-value-pane-content',
+        constants: {
+          search: false,
+          commitLabel: 'Update',
+        },
+        helpers: {
+          commitHandler: () => this.app.commitStageClause(),
+          getHeader: () => {
+            const clause = this.app.activeStageClause();
+            return clause && clause.value ? renameProperty(clause.value) : '';
+          },
+        },
+      },
+    ];
   }
 });
 
@@ -61,6 +87,15 @@ document.registerElement('show-pane-content', class extends PaneContent {
   get config() {
     return extend(super.config, {
       template: showPaneContentTemplate,
+      helpers: extend(super.config.helpers, {
+        selectArrow: value => {
+          this.app.updateStageClause({value});
+          this.app.startAddingClause('group');
+          window.requestAnimationFrame(() =>
+            this.app.updateStageClause({paneIndex: 1})
+          );
+        },
+      }),
     });
   }
 
@@ -78,4 +113,19 @@ document.registerElement('show-pane-content', class extends PaneContent {
   get resourceTypeChoices() {
     return Clause.RESOURCE_TYPES;
   }
+});
+
+document.registerElement('show-property-pane-content', class extends PropertyPaneContent {
+  get section() {
+    return 'show';
+  }
+
+});
+
+
+document.registerElement('show-property-value-pane-content', class extends PropertyValuePaneContent {
+  get section() {
+    return 'show';
+  }
+
 });

@@ -1,10 +1,10 @@
-- const selectedProperty = stageClause && stageClause.value;
-- const selectedType = stageClause && stageClause.filterType;
-- const selectedOperator = stageClause && stageClause.filterOperator;
-- const selectedValue = stageClause && stageClause.filterValue;
-- const selectedDateUnit = stageClause && stageClause.filterDateUnit;
+- const selectedProperty = $helpers.getActiveClauseProperty('value');
+- const selectedType = $helpers.getActiveClauseProperty('filterType');
+- const selectedOperator = $helpers.getActiveClauseProperty('filterOperator');
+- const selectedValue = $helpers.getActiveClauseProperty('filterValue');
+- const selectedDateUnit = $helpers.getActiveClauseProperty('filterDateUnit');
 
-.pane-content(class=selectedType ? `filter-type-${selectedType}` : '')
+.property.pane-content(class=selectedType ? `filter-type-${selectedType}` : '')
   table.tabs
     tbody
       tr

@@ -2,15 +2,12 @@
 
 import { Component } from 'panel';
 
-import { extend } from '../../../util';
 import { renameProperty } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
-import { Clause } from '../../../models/clause';
-import { Pane, PaneContent } from '../../pane';
+import { BuilderPane, PropertyPaneContent, PropertyValuePaneContent } from '../controls/builder-pane';
 
 import template from './index.jade';
-import propertyPaneContentTemplate from '../controls/property-pane-content.jade';
 import './index.styl';
 
 document.registerElement('builder-group', class extends Component {
@@ -42,35 +39,50 @@ document.registerElement('group-edit-control', class extends EditControl {
 });
 
 // dropdown content
-document.registerElement('group-pane', class extends Pane {
-  get constants() {
-    return extend(super.constants, {
-      header: 'Properties',
-    });
-  }
-
+document.registerElement('group-pane', class extends BuilderPane {
   get section() {
     return 'group';
+  }
+
+  get subpanes() {
+    return [
+      {
+        tag: 'group-property-pane-content',
+        constants: {
+          header: 'Properties',
+        },
+      },
+      {
+        tag: 'group-property-value-pane-content',
+        constants: {
+          search: false,
+          commitLabel: 'Update',
+        },
+        helpers: {
+          commitHandler: () => this.app.commitStageClause(),
+          getHeader: () => {
+            const clause = this.app.activeStageClause();
+            return clause && clause.value ? renameProperty(clause.value) : '';
+          },
+        },
+      },
+    ];
   }
 });
 
-document.registerElement('group-pane-content', class extends PaneContent {
-  get config() {
-    return extend(super.config, {
-      template: propertyPaneContentTemplate,
-
-      helpers: extend(super.config.helpers, {
-        selectProperty: (property, closePane) =>
-          this.config.helpers.updateStageClause({value: property.name}, closePane),
-      }),
-    });
-  }
+document.registerElement('group-property-pane-content', class extends PropertyPaneContent {
 
   get section() {
     return 'group';
   }
 
-  get resourceTypeChoices() {
-    return Clause.RESOURCE_TYPES;
+});
+
+
+document.registerElement('group-property-value-pane-content', class extends PropertyValuePaneContent {
+
+  get section() {
+    return 'group';
   }
+
 });

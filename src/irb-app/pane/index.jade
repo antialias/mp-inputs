@@ -10,14 +10,19 @@ mixin paneContent(contentData, isPaneActive, paneIndex)
     .header
       span= header
       if paneIndex
-        button.back(onclick=() => $helpers.updateStageClause({paneIndex: paneIndex - 1}))
+        button.back(onclick=$helpers.backButtonHandler)
 
   if paneConstants.search !== false && $component.constants.search !== false
     .search
       //- TODO: we are required to recreate this input between panes switches because of
       //-       limitations of the focus-input; this shouldn't be necessary
       if isPaneActive
-        focus-input(autoFocus=isPaneActive type='text' oninput= $helpers.searchHandler)
+        focus-input(
+          autoFocus=isPaneActive
+          focusDelay=200
+          oninput= $helpers.searchHandler
+          type='text'
+        )
 
   .content= $component.child(contentData.tag, {attributes: {'is-pane-active': isPaneActive}})
 
@@ -26,7 +31,7 @@ mixin paneContent(contentData, isPaneActive, paneIndex)
 
 .pane-view
   if $component.subpanes
-    - const activePaneIndex = (stageClause && stageClause.paneIndex) || 0;
+    - const activePaneIndex = $helpers.activePaneIndex()
     for subpane, paneIndex in $component.subpanes
       .pane(style={
         '-webkit-transform': `translateX(${(paneIndex - activePaneIndex) * 400}px)`,

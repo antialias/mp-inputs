@@ -24,9 +24,6 @@
   ul.column.resource-value
     for value in $component.constants.eventChoices
       if $helpers.matchesSearch(util.renameEvent(value))
-        li(
-          class={selected: value === selectedValue}
-          onclick=() => $helpers.updateStageClause({value}, true)
-        )
-          span= util.renameEvent(value)
-          button.next-arrow ›
+        li(class={selected: value === selectedValue})
+          span(onclick=() => $helpers.updateStageClause({value}, true))= util.renameEvent(value)
+          button(onclick=() => $helpers.selectArrow(value)).next-arrow ›

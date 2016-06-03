@@ -11,10 +11,16 @@ export class Pane extends Component {
       template,
 
       helpers: {
+        backButtonHandler: () => {
+          window.requestAnimationFrame(() =>
+            this.app.update({stageClause: this.state.stageClause.slice(0, -1)})
+          );
+        },
         searchHandler: ev => {
           this.config.helpers.updateStageClause({search: ev.target.value});
         },
         updateStageClause: clauseData => this.app.updateStageClause(clauseData),
+        activePaneIndex: () => this.app.activeClausePaneIndex(),
       },
     };
   }

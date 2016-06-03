@@ -2,18 +2,13 @@
 
 import { Component } from 'panel';
 
-import { extend, removeValue } from '../../../util';
+import { extend } from '../../../util';
 import { renameProperty } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
-import { Clause, FilterClause, TimeClause } from '../../../models/clause';
-import { Pane, PaneContent } from '../../pane';
-import Dropdown from '../../widgets/dropdown';
-import Toggle from '../../widgets/toggle';
+import { BuilderPane, PropertyPaneContent, PropertyValuePaneContent } from '../controls/builder-pane';
 
 import template from './index.jade';
-import propertyPaneContentTemplate from '../controls/property-pane-content.jade';
-import propertyValuePaneContentTemplate from '../controls/property-value-pane-content.jade';
 import './index.styl';
 
 document.registerElement('builder-filter', class extends Component {
@@ -95,7 +90,7 @@ document.registerElement('filter-edit-control', class extends EditControl {
 });
 
 // dropdown content
-document.registerElement('filter-pane', class extends Pane {
+document.registerElement('filter-pane', class extends BuilderPane {
   get section() {
     return 'filter';
   }
@@ -117,7 +112,7 @@ document.registerElement('filter-pane', class extends Pane {
         helpers: {
           commitHandler: () => this.app.commitStageClause(),
           getHeader: () => {
-            const clause = this.state.stageClause;
+            const clause = this.app.activeStageClause();
             return clause && clause.value ? renameProperty(clause.value) : '';
           },
         },
@@ -126,25 +121,11 @@ document.registerElement('filter-pane', class extends Pane {
   }
 });
 
-document.registerElement('filter-property-pane-content', class extends PaneContent {
+document.registerElement('filter-property-pane-content', class extends PropertyPaneContent {
   get config() {
     return extend(super.config, {
-      template: propertyPaneContentTemplate,
-
-      helpers: extend(super.config.helpers, {
-        selectProperty: property => {
-          this.config.helpers.updateStageClause({
-            value: property.name,
-            filterType: property.type,
-          });
-
-          // when a property is selected, switch to the property value inner pane
-          // - requestAnimationFrame allows the add pane to be re-rendered as an
-          //   edit pane, and still show the css animation sliding to the new pane
-          window.requestAnimationFrame(() =>
-            super.config.helpers.updateStageClause({paneIndex: 1})
-          );
-        },
+      helpers: extend( super.config.helpers, {
+        selectProperty: (property) => this.config.helpers.paneHandler(property, false),
       }),
     });
   }
@@ -153,129 +134,13 @@ document.registerElement('filter-property-pane-content', class extends PaneConte
     return 'filter';
   }
 
-  get resourceTypeChoices() {
-    return Clause.RESOURCE_TYPES;
-  }
 });
 
-document.registerElement('filter-property-value-pane-content', class extends PaneContent {
-  get config() {
-    return extend(super.config, {
-      template: propertyValuePaneContentTemplate,
 
-      helpers: extend(super.config.helpers, {
-        updateStageClause: clauseData => this.app.updateStageClause(clauseData),
-        showPropertyValues: () => this.state.stageClause && !this.state.stageClause.filterOperatorIsSetOrNotSet,
-        getValueMatches: (string, invert) =>
-          this.state.topPropertyValues
-            .filter(value => !string || value.toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert),
-        toggleStringEqualsValueSelected: value => {
-          const clause = this.state.stageClause;
-          const selected = (clause && clause.filterValue) || [];
-          let filterValue;
-
-          if (selected.indexOf(value) === -1) {
-            filterValue = [...selected, value];
-          } else {
-            filterValue = removeValue(selected, value);
-          }
-
-          this.app.updateStageClause({filterValue});
-        },
-        getDoneLabel: () => this.app.isAddingClause() ? 'Add' : 'Update',
-        stopEditingClause: () => this.app.stopEditingClause(),
-      }),
-    });
-  }
+document.registerElement('filter-property-value-pane-content', class extends PropertyValuePaneContent {
 
   get section() {
     return 'filter';
   }
 
-  get filterTypeChoices() {
-    return FilterClause.FILTER_TYPES;
-  }
-});
-
-document.registerElement('operator-dropdown', class extends Dropdown {
-  get choices() {
-    const clause = this.state.stageClause;
-    return clause ? FilterClause.FILTER_OPERATORS[clause.filterType] : [];
-  }
-
-  get selected() {
-    return this.state.stageClause && this.state.stageClause.filterOperator;
-  }
-
-  get isOpen() {
-    return this.state.stageClause && this.state.stageClause.isEditingFilterOperator;
-  }
-
-  toggleOpen() {
-    const clause = this.state.stageClause;
-    this.app.updateStageClause({
-      editing: clause && clause.isEditingFilterOperator ? null : 'filterOperator',
-    });
-  }
-
-  select(filterOperator) {
-    this.app.updateStageClause({
-      filterOperator,
-      filterValue: null,
-      filterSearch: null,
-      editing: null,
-    });
-  }
-});
-
-
-document.registerElement('date-unit-dropdown', class extends Dropdown {
-  get config() {
-    return extend(super.config, {
-      helpers: extend(super.config.helpers, {
-        formatChoice: choice => `${choice}s`,
-      }),
-    });
-  }
-
-  get choices() {
-    return TimeClause.UNIT_CHOICES;
-  }
-
-  get selected() {
-    return this.state.stageClause && this.state.stageClause.filterDateUnit;
-  }
-
-  get isOpen() {
-    return this.state.stageClause && this.state.stageClause.isEditingFilterDateUnit;
-  }
-
-  toggleOpen() {
-    const clause = this.state.stageClause;
-    this.app.updateStageClause({
-      editing: clause && clause.isEditingFilterDateUnit ? null : 'filterDateUnit',
-    });
-  }
-
-  select(filterDateUnit) {
-    this.app.updateStageClause({
-      filterDateUnit,
-      editing: null,
-    });
-  }
-});
-
-document.registerElement('operator-toggle', class extends Toggle {
-  get choices() {
-    const clause = this.state.stageClause;
-    return clause ? FilterClause.FILTER_OPERATORS[clause.filterType] : [];
-  }
-
-  get selected() {
-    return this.state.stageClause && this.state.stageClause.filterOperator;
-  }
-
-  select(filterOperator) {
-    this.app.updateStageClause({filterOperator});
-  }
 });

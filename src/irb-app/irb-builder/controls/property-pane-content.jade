@@ -1,7 +1,7 @@
 - const selectedResourceType = stageClause && stageClause.resourceType;
 - const selectedProperty = stageClause && stageClause.value;
 
-.pane-content
+.property.pane-content
   ul.column.toggle.resource-type
     for resourceType in $component.resourceTypeChoices
       li(
@@ -17,7 +17,6 @@
         li.property(
           class=`type-${property.type}`
           class={selected: property.name === selectedProperty}
-          onclick=() => $helpers.selectProperty(property, true)
         )
-          span= util.renameProperty(property.name)
-          button.next-arrow(onclick=() => $helpers.selectProperty(property)) ›
+          span(onclick=() => $helpers.selectProperty(property))= util.renameProperty(property.name)
+          button.next-arrow(onclick=() => $helpers.selectArrow(property)) ›

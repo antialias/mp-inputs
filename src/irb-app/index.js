@@ -47,7 +47,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         isEditing: false,
         search: null,
       },
-      stageClause: null,
+      stageClause: [],
       topEvents: [],
       topProperties: [],
       topPropertyValues: [],
@@ -101,18 +101,31 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
   // State helpers
 
+  hasStageClause() {
+    return this.state.stageClause && this.state.stageClause.length;
+  }
+
+  activeStageClause() {
+    return this.hasStageClause() ? this.state.stageClause[this.state.stageClause.length - 1] : null;
+  }
+
+  activeClausePaneIndex() {
+    const stageClause = this.activeStageClause();
+    return stageClause ? stageClause.paneIndex : 0;
+  }
+
   isAddingClause(sectionType) {
     return (
-      this.state.stageClause &&
-      this.state.stageClause.TYPE === sectionType &&
+      this.hasStageClause() &&
+      this.state.stageClause[0].TYPE === sectionType &&
       typeof this.state.stageClauseIndex !== 'number'
     );
   }
 
   isEditingClause(sectionType, clauseIndex) {
     return (
-      this.state.stageClause &&
-      this.state.stageClause.TYPE === sectionType &&
+      this.hasStageClause() &&
+      this.state.stageClause[0].TYPE === sectionType &&
       this.state.stageClauseIndex === clauseIndex
     );
   }
@@ -125,13 +138,16 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   startAddingClause(sectionType) {
-    this.update({stageClause: Clause.create(sectionType)});
+    const stageClause = this.state.stageClause.slice(0);
+    stageClause.push(Clause.create(sectionType));
+    this.update({stageClause});
   }
 
   startEditingClause(sectionType, clauseIndex) {
-    const stageClause = this.state.sections[sectionType].clauses[clauseIndex];
+    const stageClause = this.state.stageClause.slice(0);
+    stageClause.push(this.state.sections[sectionType].clauses[clauseIndex]);
 
-    if (stageClause) {
+    if (stageClause.length) {
       this.update({
         stageClause,
         stageClauseIndex: clauseIndex,
@@ -144,21 +160,30 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   stopEditingClause() {
     this.stopEditingClauseAttrs();
 
-    const newState = {stageClause: null, stageClauseIndex: null};
+    const newState = {
+      stageClause: [],
+      stageClauseIndex: null,
+    };
+
     this.update(newState);
   }
 
   stopEditingClauseAttrs() {
-    if (this.state.stageClause) {
+    if (this.state.stageClause.length) {
       this.updateStageClause({editing: null});
     }
   }
 
   updateStageClause(clauseData) {
-    let newState = {stageClause: this.state.stageClause.extend(clauseData)};
+    const stageClause = this.state.stageClause.slice(0);
+    let currentClause = stageClause.pop();
+    if (currentClause) {
+      stageClause.push(currentClause.extend(clauseData));
+    }
+    let newState = {stageClause};
 
     // query new property values if we're setting a new filter property
-    if (this.state.stageClause.TYPE === 'filter' && clauseData.value) {
+    if (this.activeStageClause().TYPE === 'filter' && clauseData.value) {
       const query = this.queries.topPropertyValues.build(newState).query;
       const cachedResult = this.queries.topPropertyValuesCache.get(query);
 
@@ -176,16 +201,23 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   commitStageClause() {
-    const sectionType = this.state.stageClause.TYPE;
-    const section = this.state.sections[sectionType];
-    const clauseIndex = this.state.stageClauseIndex;
-
-    const newClause = this.state.stageClause;
-    const newSection = typeof clauseIndex === 'number' ? section.replaceClause(clauseIndex, newClause) : section.addClause(newClause);
+    const newClauses = this.state.stageClause;
     let newState = extend(this.state);
 
-    if (newClause.valid) {
-      newState.sections = this.state.sections.replaceSection(sectionType, newSection);
+    if (newClauses.length) {
+      newClauses.forEach(clause => {
+        if (clause.valid) {
+          clause = clause.extend({paneIndex: 0});
+          let newSection = null;
+          if (clause.TYPE === newClauses[0].TYPE && typeof newState.stageClauseIndex === 'number') {
+            newSection = newState.sections[clause.TYPE].replaceClause(newState.stageClauseIndex, clause);
+          } else {
+            newSection = newState.sections[clause.TYPE].addClause(clause);
+          }
+
+          newState.sections = newState.sections.replaceSection(clause.TYPE, newSection);
+        }
+      });
 
       newState = this.query(newState);
       this.update(newState);
