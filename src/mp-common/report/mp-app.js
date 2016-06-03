@@ -1,9 +1,9 @@
 import { Component } from 'panel';
 
-import { mirrorLocationHash } from '../mp-common/parent-frame';
-import { debug } from '../util';
+import { mirrorLocationHash } from './parent-frame';
+import { debug } from './util';
 
-export default class BaseApp extends Component {
+export default class MPApp extends Component {
   attachedCallback() {
     Object.assign(this.state, this.deserialize(window.localStorage.getItem('foobar')));
 

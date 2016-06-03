@@ -2,8 +2,8 @@
 
 import { Component } from 'panel';
 
-import { extend } from '../../../mp-common/data-util';
-import { renameProperty } from '../../../mp-common/mp-util';
+import { extend } from '../../../util';
+import { renameProperty } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
 import { Clause } from '../../../models/clause';

@@ -1,6 +1,6 @@
-import BaseApp from './base-app.js';
+import MPApp from '../mp-common/report/mp-app.js';
 import { extend, pick } from '../mp-common/data-util';
-import util from '../util';
+import * as util from '../util';
 
 import BuilderSections from '../models/builder-sections';
 import { ShowSection, TimeSection } from '../models/section';
@@ -18,7 +18,7 @@ import './irb-result';
 import template from './index.jade';
 import './index.styl';
 
-document.registerElement('irb-app', class IRBApp extends BaseApp {
+document.registerElement('irb-app', class IRBApp extends MPApp {
   get config() {
     return {
       defaultState: extend(

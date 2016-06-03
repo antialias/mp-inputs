@@ -59,6 +59,7 @@ if (process.env.NODE_ENV === 'development') {
     plugins: webpackConfig.plugins.concat([
       new webpack.DefinePlugin({
         API_LOCAL: JSON.stringify(true),
+        DEBUG_LOG: JSON.stringify(true),
         MIXPANEL_TOKEN: JSON.stringify('9c4e9a6caf9f429a7e3821141fc769b7'), // Project 132990 Mixpanel Dev
       }),
       new ExtractTextPlugin('build-development/bundle.css'),
@@ -77,6 +78,7 @@ if (process.env.NODE_ENV === 'development') {
     plugins: webpackConfig.plugins.concat([
       new webpack.DefinePlugin({
         API_LOCAL: JSON.stringify(false),
+        DEBUG_LOG: JSON.stringify(false),
         MIXPANEL_TOKEN: JSON.stringify('<IRB production Mixpanel project token>'),
       }),
       new ExtractTextPlugin('build-production/bundle.[hash].min.css'),

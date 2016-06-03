@@ -1,7 +1,7 @@
 import { Component } from 'panel';
 
-import { capitalize, extend } from '../../../mp-common/data-util';
-import { renameEvent } from '../../../mp-common/mp-util';
+import { capitalize, extend } from '../../../util';
+import { renameEvent } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
 import { Clause, ShowClause } from '../../../models/clause';

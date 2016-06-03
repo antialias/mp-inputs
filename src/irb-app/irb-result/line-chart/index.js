@@ -3,7 +3,7 @@
 import { Component } from 'panel';
 import WebComponent from 'webcomponent';
 
-import util from '../../../util';
+import * as util from '../../../util';
 import {
   nestedObjectPaths,
 } from '../chart-util';

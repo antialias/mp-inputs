@@ -1,7 +1,22 @@
-// mixpanel-specific utils
+/* global DEBUG_LOG */
 
-import { capitalize } from './data-util';
-import { COUNTRIES, EVENTS, PROPERTIES } from './mp-constants';
+// mixpanel-specific report utils
+
+import { capitalize, extend } from '../data-util';
+import { COUNTRIES, EVENTS, PROPERTIES } from './constants';
+
+// TODO epurcer - replace this with a more general-purpose tool like https://www.npmjs.com/package/debug
+function getLogger(level) {
+  if (typeof DEBUG_LOG !== 'undefined' && DEBUG_LOG) {
+    /* eslint-disable no-console */
+    return function() { console[level](...arguments); };
+    /* eslint-enable no-console */
+  } else {
+    return function() {};
+  }
+}
+export const debug = ['log', 'info', 'warn', 'error', 'critical'].reduce((ret, level) =>
+  extend(ret, {[level]: getLogger(level)}), {});
 
 export function renameEvent(event) {
   if (EVENTS.hasOwnProperty(event)) {
