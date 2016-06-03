@@ -22,8 +22,8 @@ const initIRB = () => new Promise(resolve => {
     resolve(IRB);
   } else {
     const parentFrame = new Framesg(window.parent, 'mp-app', {
-      startApp: () => {
-        IRB.parentFrame = parentFrame;
+      startApp: parentData => {
+        IRB.setParentFrame(parentFrame, parentData);
         resolve(IRB);
       },
     });

@@ -5,6 +5,8 @@ import { debug } from '../util';
 
 export default class BaseApp extends Component {
   attachedCallback() {
+    Object.assign(this.state, this.deserialize(window.localStorage.getItem('foobar')));
+
     super.attachedCallback(...arguments);
 
     // initialize frame communication
@@ -15,10 +17,40 @@ export default class BaseApp extends Component {
     this.initClickOutside();
   }
 
+  setParentFrame(parentFrame, parentData) {
+    this.parentFrame = parentFrame;
+    this.parentData = parentData;
+  }
+
   update(stateUpdate={}) {
     debug.info('applying update ->', stateUpdate);
     super.update(...arguments);
     debug.info('      new state ->', this.state);
+    window.localStorage.setItem('foobar', this.serialize()); // FIXME foobar
+  }
+
+  // serialization helpers
+
+  serialize() {
+    return JSON.stringify(this.toSerializationAttrs());
+  }
+
+  deserialize(JSONstr) {
+    let persisted = null;
+    try {
+      persisted = this.fromSerializationAttrs(JSON.parse(JSONstr));
+    } catch(err) {
+      console.error('Invalid persistence entry');
+    }
+    return persisted || {};
+  }
+
+  toSerializationAttrs() {
+    return {};
+  }
+
+  fromSerializationAttrs(attrs) {
+    return attrs;
   }
 
   // DOM helpers

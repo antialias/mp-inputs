@@ -26,8 +26,7 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
         {
           // The following states should persist through reset.
           util,
-        },
-        this.stateFromPersistence()
+        }
       ),
 
       template,
@@ -72,9 +71,12 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
       segmentation: new SegmentationQuery(),
       segmentationCache: new QueryCache(),
     };
-
     this.resetTopQueries();
   }
+
+  // get persistence() {
+  //   return this._peristence || (this._peristence = );
+  // }
 
   resetTopQueries() {
     this.queries.topProperties.build(this.state).run().then(topProperties => {
@@ -87,32 +89,18 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
     });
   }
 
-  serializeState() {
-    return JSON.stringify(
-      extend({
-        sections: this.state.sections.serialize(),
-      }, pick(this.state, [
-        'chartType',
-        'reportName',
-        'series',
-      ]))
-    );
+  toSerializationAttrs() {
+    return extend({
+      sections: this.state.sections.serialize(),
+    }, pick(this.state, [
+      'chartType',
+      'reportName',
+      'series',
+    ]));
   }
 
-  stateFromPersistence() {
-    let persisted = null;
-    try {
-      persisted = JSON.parse(window.localStorage.getItem('foobar'));
-      persisted.sections = BuilderSections.deserialize(persisted.sections);
-    } catch(err) {
-      console.error('Invalid persistence entry');
-    }
-    return persisted || {};
-  }
-
-  update() {
-    super.update(...arguments);
-    window.localStorage.setItem('foobar', this.serializeState()); // FIXME foobar
+  fromSerializationAttrs(attrs) {
+    return extend(attrs, {sections: BuilderSections.deserialize(attrs.sections)});
   }
 
   // State helpers
