@@ -221,10 +221,15 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
     });
   }
 
-  query(state=this.state) {
+  query(state=this.state, useCache=true) {
     const query = this.queries.segmentation.build(state).query;
-    const cachedResult = this.queries.segmentationCache.get(query);
+    const cachedResult = useCache && this.queries.segmentationCache.get(query);
     const cacheExpiry = 10; // seconds
+
+    if (!cachedResult) {
+      let result = extend(state.result, {loading: true});
+      this.update({result});
+    }
 
     this.queries.segmentation.run(cachedResult)
       .then(result => {
@@ -235,5 +240,7 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
         this.update({result});
       })
       .catch(err => console.error(err));
+
+    return state;
   }
 });
