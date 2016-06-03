@@ -74,10 +74,6 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.resetTopQueries();
   }
 
-  // get persistence() {
-  //   return this._peristence || (this._peristence = );
-  // }
-
   resetTopQueries() {
     this.queries.topProperties.build(this.state).run().then(topProperties => {
       this.update({topProperties});

@@ -1,11 +1,12 @@
 import { Component } from 'panel';
 
 import { mirrorLocationHash } from './parent-frame';
+import Persistence from './persistence';
 import { debug } from './util';
 
 export default class MPApp extends Component {
   attachedCallback() {
-    Object.assign(this.state, this.deserialize(window.localStorage.getItem('foobar')));
+    Object.assign(this.state, this.deserialize(this.persistence.get('state')));
 
     super.attachedCallback(...arguments);
 
@@ -26,10 +27,22 @@ export default class MPApp extends Component {
     debug.info('applying update ->', stateUpdate);
     super.update(...arguments);
     debug.info('      new state ->', this.state);
-    window.localStorage.setItem('foobar', this.serialize()); // FIXME foobar
+    this.persistence.set('state', this.serialize());
   }
 
   // serialization helpers
+
+  get persistence() {
+    if (!this._persistence) {
+      let namespaceVars = ['IRB'];
+      if (this.parentData) {
+        const {project_id, user_id} = this.parentData;
+        namespaceVars = namespaceVars.concat([project_id, user_id]);
+      }
+      this._persistence = new Persistence(namespaceVars.join(':'));
+    }
+    return this._persistence;
+  }
 
   serialize() {
     return JSON.stringify(this.toSerializationAttrs());
@@ -40,7 +53,9 @@ export default class MPApp extends Component {
     try {
       persisted = this.fromSerializationAttrs(JSON.parse(JSONstr));
     } catch(err) {
-      console.error('Invalid persistence entry');
+      if (JSONstr) {
+        debug.warn(`Invalid persistence entry: ${JSONstr}`);
+      }
     }
     return persisted || {};
   }
