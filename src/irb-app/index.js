@@ -166,18 +166,12 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
 
     const newClause = this.state.stageClause;
     const newSection = typeof clauseIndex === 'number' ? section.replaceClause(clauseIndex, newClause) : section.addClause(newClause);
-    const newState = extend(this.state);
+    let newState = extend(this.state);
 
     if (newClause.valid) {
       newState.sections = this.state.sections.replaceSection(sectionType, newSection);
 
-      const cachedQueryResult = this.query(newState);
-      if (cachedQueryResult) {
-        newState.result = cachedQueryResult;
-      } else {
-        newState.result = extend(this.state.result, {loading: true});
-      }
-
+      newState = this.query(newState);
       this.update(newState);
     }
 
@@ -187,15 +181,9 @@ document.registerElement('irb-app', class IRBApp extends BaseApp {
   removeClause(sectionType, clauseIndex) {
     const section = this.state.sections[sectionType].removeClause(clauseIndex);
     const sections = this.state.sections.replaceSection(sectionType, section);
-    const newState = extend(this.state, {sections});
+    let newState = extend(this.state, {sections});
 
-    const cachedQueryResult = this.query(newState);
-    if (cachedQueryResult) {
-      newState.result = cachedQueryResult;
-    } else {
-      newState.result = extend(this.state.result, {loading: true});
-    }
-
+    newState = this.query(newState);
     this.update(newState);
   }
 
