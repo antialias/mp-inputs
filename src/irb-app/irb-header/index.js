@@ -9,7 +9,7 @@ document.registerElement('irb-header', class extends Component {
   get config() {
     return {
       helpers: {
-        refresh: () => this.app.query(),
+        refresh: () => this.app.query(this.state, false),
         updateReportName: ev => this.update({reportName: ev.target.value}),
       },
 
