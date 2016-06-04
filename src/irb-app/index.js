@@ -1,5 +1,5 @@
-import MPApp from '../mp-common/report/mp-app.js';
-import { extend, pick } from '../mp-common/data-util';
+import MPApp from 'mixpanel-common/report/mp-app';
+import { extend, pick } from 'mixpanel-common/util';
 import * as util from '../util';
 
 import BuilderSections from '../models/builder-sections';

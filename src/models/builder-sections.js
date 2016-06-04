@@ -1,5 +1,6 @@
-import { extend, mapValues, pick } from '../mp-common/data-util';
-import { debug } from '../util';
+import { extend, mapValues, pick } from 'mixpanel-common/util';
+import { debug } from 'mixpanel-common/report/util';
+
 import {
   Section,
   ShowSection,

@@ -1,5 +1,6 @@
-import { replaceIndex, removeIndex } from '../mp-common/data-util';
-import { debug } from '../util';
+import { replaceIndex, removeIndex } from 'mixpanel-common/util';
+import { debug } from 'mixpanel-common/report/util';
+
 import {
   Clause,
   ShowClause,

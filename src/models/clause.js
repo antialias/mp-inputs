@@ -1,5 +1,5 @@
-import { extend } from '../mp-common/data-util';
-import { debug } from '../util';
+import { extend } from 'mixpanel-common/util';
+import { debug } from 'mixpanel-common/report/util';
 
 export class Clause {
   constructor(attrs={}) {

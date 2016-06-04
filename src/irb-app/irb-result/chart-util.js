@@ -1,4 +1,4 @@
-import { nestedObjectDepth, objectFromPairs } from '../../mp-common/data-util';
+import { nestedObjectDepth, objectFromPairs } from 'mixpanel-common/util';
 
 /* Transpose a 2-dimensional array:
  * [[1, 2, 3],    [[1, 4],
