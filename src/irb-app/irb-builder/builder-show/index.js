@@ -67,7 +67,7 @@ document.registerElement('show-pane-content', class extends PaneContent {
   get constants() {
     return extend(super.constants, {
       mathChoices: ShowClause.MATH_TYPES,
-      eventChoices: [ShowClause.TOP_EVENTS, ...this.state.topEvents],
+      eventChoices: [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS, ...this.state.topEvents],
     });
   }
 

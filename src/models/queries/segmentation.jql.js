@@ -112,7 +112,11 @@ module.exports = function main() {
     };
   }
 
-  var groups = ['name'];
+  var groups = [];
+  // Don't segments on 'name' for the special case 'all events'
+  if (params.events && params.events.length) {
+    groups.push('name');
+  }
   if (params.groups) {
     groups = groups.concat(params.groups.map(function(group) { return 'properties.' + group; }));
   }

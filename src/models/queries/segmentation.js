@@ -85,17 +85,23 @@ function filterToParams(filter) {
 
 export default class SegmentationQuery extends BaseQuery {
   get valid() {
-    return this.query.events && this.query.events.length;
+    // events can be an empty list for "all events"
+    return this.query.events;
   }
 
   buildQuery(state) {
     let events = state.sections.show.clauses
       .map(clause => clause.value);
 
-    if (events.includes(ShowClause.TOP_EVENTS)) {
+    if (events.includes(ShowClause.ALL_EVENTS)) {
+      events = [];
+    } else if (events.includes(ShowClause.TOP_EVENTS)) {
       let topEvents = state.topEvents.filter(ev => ev !== ShowClause.TOP_EVENTS).slice(0, 12);
       events = unique(events.concat(topEvents));
     }
+
+    // Remove special events
+    events = events.filter(event => event !== ShowClause.ALL_EVENTS && event !== ShowClause.TOP_EVENTS);
 
     let type = ShowClause.MATH_TYPES[0];
 
@@ -164,10 +170,6 @@ export default class SegmentationQuery extends BaseQuery {
     let headers = this.query.segments;
     let series = {};
 
-    if (this.query.events.length > 1 || !this.query.segments.length) {
-      headers = ['$event'].concat(headers);
-    }
-
     if (results) {
       series = results.reduce((seriesObj, item) => {
         // transform item.key array into nested obj,
@@ -183,7 +185,17 @@ export default class SegmentationQuery extends BaseQuery {
       }, {});
     }
 
-    if (this.query.events.length === 1 && this.query.segments.length) {
+    // For only one event or 'all events', which is also treated as one event in displaying for
+    // groupBy, kill the top level group for the event name.
+    if (this.query.events.length > 1 || !this.query.segments.length) {
+      headers = ['$event'].concat(headers);
+    }
+
+    // Treat 'all events' as one event in groupBy display, so only add the special name back when
+    // not displaying for groupBy.
+    if (this.query.events.length === 0 && this.query.segments.length === 0) {
+      series = {[ShowClause.ALL_EVENTS]: series};
+    } else if (this.query.events.length === 1 && this.query.segments.length) {
       // special case segmentation on one event
       let ev = this.query.events[0];
       if (ev in series) {
