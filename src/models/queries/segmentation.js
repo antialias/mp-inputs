@@ -1,4 +1,4 @@
-import { unique } from 'mixpanel-common/util';
+import { unique } from 'mixpanel-common/build/util';
 
 import BaseQuery from './base';
 import { ShowClause } from '../clause';

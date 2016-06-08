@@ -1,5 +1,5 @@
-import { replaceIndex, removeIndex } from 'mixpanel-common/util';
-import { debug } from 'mixpanel-common/report/util';
+import { replaceIndex, removeIndex } from 'mixpanel-common/build/util';
+import { debug } from 'mixpanel-common/build/report/util';
 
 import {
   Clause,

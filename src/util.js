@@ -1,7 +1,7 @@
 // IRB-specific utils
 
-export * from 'mixpanel-common/util';
-export * from 'mixpanel-common/report/util';
+export * from 'mixpanel-common/build/util';
+export * from 'mixpanel-common/build/report/util';
 
 export function getTextWidth(text, font) {
   const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'));
