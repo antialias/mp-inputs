@@ -1,7 +1,6 @@
 import { Component } from 'panel';
 
-import { capitalize, extend } from '../../../util';
-import { renameEvent, renameProperty } from '../../../util';
+import { capitalize, extend, renameEvent, renameProperty } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
 import { BuilderPane, PropertyPaneContent, PropertyValuePaneContent } from '../controls/builder-pane';

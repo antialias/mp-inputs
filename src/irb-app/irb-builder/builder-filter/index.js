@@ -2,8 +2,7 @@
 
 import { Component } from 'panel';
 
-import { extend } from '../../../util';
-import { renameProperty } from '../../../util';
+import { extend, renameProperty } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
 import { BuilderPane, PropertyPaneContent, PropertyValuePaneContent } from '../controls/builder-pane';
