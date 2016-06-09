@@ -85,8 +85,14 @@ export class ShowClause extends EventsPropertiesClause {
   }
 }
 ShowClause.TYPE = ShowClause.prototype.TYPE = 'show';
-ShowClause.TOP_EVENTS = ShowClause.prototype.TOP_EVENTS = '$top_events';
-ShowClause.ALL_EVENTS = ShowClause.prototype.ALL_EVENTS = '$all_events';
+ShowClause.TOP_EVENTS = ShowClause.prototype.TOP_EVENTS = {
+  name: '$top_events',
+  custom: false,
+};
+ShowClause.ALL_EVENTS = ShowClause.prototype.ALL_EVENTS = {
+  name: '$all_events',
+  custom: false,
+};
 ShowClause.MATH_TYPES = ShowClause.prototype.MATH_TYPES = [
   'total', 'unique', 'average', 'sum', 'median',
 ];

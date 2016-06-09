@@ -33,7 +33,7 @@ document.registerElement('show-edit-control', class extends EditControl {
   get label() {
     const clause = this.state.sections.getClause('show', this.clauseIndex);
     const math = capitalize(clause.math);
-    return [math, ' number of ', renameEvent(clause.value)];
+    return [math, ' number of ', renameEvent(clause.value.name)];
   }
 
   get isRemoveable() {

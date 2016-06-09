@@ -1,6 +1,6 @@
 - const selectedMath = $helpers.getActiveClauseProperty('math');
 - const selectedResourceType = $helpers.getActiveClauseProperty('resourceType');
-- const selectedValue = $helpers.getActiveClauseProperty('value');
+- const selectedValueName = $helpers.getActiveClauseProperty('value');
 
 .show-pane-content
   ul.column.toggle.math
@@ -23,7 +23,7 @@
       )= util.capitalize(resourceType)
   ul.column.resource-value
     for value in $component.constants.eventChoices
-      if $helpers.matchesSearch(util.renameEvent(value))
-        li(class={selected: value === selectedValue})
-          span(onclick=() => $helpers.updateStageClause({value}, true))= util.renameEvent(value)
+      if $helpers.matchesSearch(util.renameEvent(value.name))
+        li(class={selected: value.name === selectedValueName})
+          span(onclick=() => $helpers.updateStageClause({value}, true))= util.renameEvent(value.name)
           button(onclick=() => $helpers.selectArrow(value)).next-arrow ›

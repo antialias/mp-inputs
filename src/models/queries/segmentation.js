@@ -93,15 +93,17 @@ export default class SegmentationQuery extends BaseQuery {
     let events = state.sections.show.clauses
       .map(clause => clause.value);
 
-    if (events.includes(ShowClause.ALL_EVENTS)) {
+    if (events.find(ev => ev.name === ShowClause.ALL_EVENTS.name)) {
       events = [];
-    } else if (events.includes(ShowClause.TOP_EVENTS)) {
-      let topEvents = state.topEvents.filter(ev => ev !== ShowClause.TOP_EVENTS).slice(0, 12);
+    } else if (events.find(ev => ev.name === ShowClause.TOP_EVENTS.name)) {
+      let topEvents = state.topEvents.filter(ev => ev.name !== ShowClause.TOP_EVENTS.name).slice(0, 12);
       events = unique(events.concat(topEvents));
     }
 
     // Remove special events
-    events = events.filter(ev => ev !== ShowClause.ALL_EVENTS && ev !== ShowClause.TOP_EVENTS);
+    events = events.filter(ev =>
+      ev.name !== ShowClause.ALL_EVENTS.name && ev.name !== ShowClause.TOP_EVENTS.name
+    );
 
     let type = ShowClause.MATH_TYPES[0];
 
@@ -149,7 +151,7 @@ export default class SegmentationQuery extends BaseQuery {
         to:   (new Date(this.query.to)).toISOString().split('T')[0],
         unit: this.query.unit,
       },
-      events: this.query.events.map(ev => ({event: ev})),
+      events: this.query.events.map(ev => ({event: ev.name})),
       filters:
         this.query.filters
           .filter(filter => isFilterValid(filter))
@@ -194,7 +196,7 @@ export default class SegmentationQuery extends BaseQuery {
     // Treat 'all events' as one event in groupBy display, so only add the special name back when
     // not displaying for groupBy.
     if (this.query.events.length === 0 && this.query.segments.length === 0) {
-      series = {[ShowClause.ALL_EVENTS]: series};
+      series = {[ShowClause.ALL_EVENTS.name]: series};
     } else if (this.query.events.length === 1 && this.query.segments.length) {
       // special case segmentation on one event
       let ev = this.query.events[0];

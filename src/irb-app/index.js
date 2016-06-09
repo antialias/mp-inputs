@@ -80,7 +80,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     });
 
     this.queries.topEvents.build(this.state).run().then(topEvents => {
-      this.update({topEvents});
+      this.update({
+        topEvents: topEvents.map(ev => ({name: ev, custom: false})),
+      });
       this.query();
     });
   }
