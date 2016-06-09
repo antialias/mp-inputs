@@ -68,13 +68,13 @@ export class PropertyValuePaneContent extends PaneContent {
 
       helpers: extend(super.config.helpers, {
         updateStageClause: clauseData => this.app.updateStageClause(clauseData),
-        showPropertyValues: () => this.state.stageClause.length && !this.app.activeStageClause().filterOperatorIsSetOrNotSet,
-        getActiveClauseProperty: property => this.app.hasStageClause() ? this.app.activeStageClause()[property] : false,
+        showPropertyValues: () => this.state.stageClause.length && !this.app.activeStageClause.filterOperatorIsSetOrNotSet,
+        getActiveClauseProperty: property => this.app.hasStageClause() ? this.app.activeStageClause[property] : false,
         getValueMatches: (string, invert) =>
           this.state.topPropertyValues
             .filter(value => !string || value.toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert),
         toggleStringEqualsValueSelected: value => {
-          const clause = this.app.activeStageClause();
+          const clause = this.app.activeStageClause;
           const selected = (clause && clause.filterValue) || [];
           let filterValue;
 
@@ -100,20 +100,20 @@ export class PropertyValuePaneContent extends PaneContent {
 
 document.registerElement('operator-dropdown', class extends Dropdown {
   get choices() {
-    const clause = this.app.activeStageClause();
+    const clause = this.app.activeStageClause;
     return clause ? FilterClause.FILTER_OPERATORS[clause.filterType] : [];
   }
 
   get selected() {
-    return this.state.stageClause.length && this.app.activeStageClause().filterOperator;
+    return this.state.stageClause.length && this.app.activeStageClause.filterOperator;
   }
 
   get isOpen() {
-    return this.state.stageClause.length && this.app.activeStageClause().isEditingFilterOperator;
+    return this.state.stageClause.length && this.app.activeStageClause.isEditingFilterOperator;
   }
 
   toggleOpen() {
-    const clause = this.app.activeStageClause();
+    const clause = this.app.activeStageClause;
     this.app.updateStageClause({
       editing: clause && clause.isEditingFilterOperator ? null : 'filterOperator',
     });
@@ -144,15 +144,15 @@ document.registerElement('date-unit-dropdown', class extends Dropdown {
   }
 
   get selected() {
-    return this.state.stageClause.length && this.app.activeStageClause().filterDateUnit;
+    return this.state.stageClause.length && this.app.activeStageClause.filterDateUnit;
   }
 
   get isOpen() {
-    return this.state.stageClause.length && this.app.activeStageClause().isEditingFilterDateUnit;
+    return this.state.stageClause.length && this.app.activeStageClause.isEditingFilterDateUnit;
   }
 
   toggleOpen() {
-    const clause = this.app.activeStageClause();
+    const clause = this.app.activeStageClause;
     this.app.updateStageClause({
       editing: clause && clause.isEditingFilterDateUnit ? null : 'filterDateUnit',
     });
@@ -168,12 +168,12 @@ document.registerElement('date-unit-dropdown', class extends Dropdown {
 
 document.registerElement('operator-toggle', class extends Toggle {
   get choices() {
-    const clause = this.app.activeStageClause();
+    const clause = this.app.activeStageClause;
     return clause ? FilterClause.FILTER_OPERATORS[clause.filterType] : [];
   }
 
   get selected() {
-    return this.state.stageClause.length && this.app.activeStageClause().filterOperator;
+    return this.state.stageClause.length && this.app.activeStageClause.filterOperator;
   }
 
   select(filterOperator) {

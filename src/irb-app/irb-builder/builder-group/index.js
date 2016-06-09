@@ -61,7 +61,7 @@ document.registerElement('group-pane', class extends BuilderPane {
         helpers: {
           commitHandler: () => this.app.commitStageClause(),
           getHeader: () => {
-            const clause = this.app.activeStageClause();
+            const clause = this.app.activeStageClause;
             return clause && clause.value ? renameProperty(clause.value) : '';
           },
         },

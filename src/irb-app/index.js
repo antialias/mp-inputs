@@ -102,16 +102,15 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   // State helpers
 
   hasStageClause() {
-    return this.state.stageClause && this.state.stageClause.length;
+    return !!(this.state.stageClause && this.state.stageClause.length);
   }
 
-  activeStageClause() {
+  get activeStageClause() {
     return this.hasStageClause() ? this.state.stageClause[this.state.stageClause.length - 1] : null;
   }
 
   activeClausePaneIndex() {
-    const stageClause = this.activeStageClause();
-    return stageClause ? stageClause.paneIndex : 0;
+    return this.hasStageClause() ? this.activeStageClause.paneIndex : 0;
   }
 
   isAddingClause(sectionType) {
@@ -183,7 +182,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     let newState = {stageClause};
 
     // query new property values if we're setting a new filter property
-    if (this.activeStageClause().TYPE === 'filter' && clauseData.value) {
+    if (this.activeStageClause.TYPE === 'filter' && clauseData.value) {
       const query = this.queries.topPropertyValues.build(newState).query;
       const cachedResult = this.queries.topPropertyValuesCache.get(query);
 
