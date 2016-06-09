@@ -87,6 +87,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     });
   }
 
+  get persistenceKey() {
+    return 'irb2';
+  }
+
   toSerializationAttrs() {
     return extend({
       sections: this.state.sections.serialize(),
