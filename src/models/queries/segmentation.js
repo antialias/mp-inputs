@@ -101,7 +101,7 @@ export default class SegmentationQuery extends BaseQuery {
     }
 
     // Remove special events
-    events = events.filter(event => event !== ShowClause.ALL_EVENTS && event !== ShowClause.TOP_EVENTS);
+    events = events.filter(ev => ev !== ShowClause.ALL_EVENTS && ev !== ShowClause.TOP_EVENTS);
 
     let type = ShowClause.MATH_TYPES[0];
 
