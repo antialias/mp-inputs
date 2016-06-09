@@ -30,7 +30,7 @@
     "framesg": "^0.1.2",
     "mixpanel-browser": "^2.7.2",
     "mixpanel-common": "^0.3.8",
-    "panel": "^0.8.0",
+    "panel": "^0.8.1",
     "rollbar-browser": "^1.8.5",
     "virtual-dom": "^2.1.1",
     "webcomponent": "0.1.2",
