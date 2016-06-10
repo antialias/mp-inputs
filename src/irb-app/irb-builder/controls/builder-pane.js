@@ -12,13 +12,6 @@ import showPaneContentTemplate from '../controls/show-pane-content.jade';
 import './builder-pane.styl';
 
 export class BuilderPane extends Pane {
-  get config() {
-    return extend(super.config, {
-      helpers: extend(super.config.helpers, {
-      }),
-    });
-  }
-
   get filterPropertyValuePaneContent() {
     return {
       tag: 'filter-property-value-pane-content',
@@ -52,44 +45,6 @@ export class BuilderPane extends Pane {
         header: 'Show',
       },
     };
-  }
-}
-
-export class PropertyPaneContent extends PaneContent {
-  get config() {
-    return extend(super.config, {
-      template: propertyPaneContentTemplate,
-
-      helpers: extend(super.config.helpers, {
-        selectProperty: (property) => this.config.helpers.paneHandler(property, true),
-        selectArrow: (property) => this.config.helpers.paneHandler(property, false),
-        paneHandler: (property, shouldClosePane) => {
-          const value = property.name;
-          const filterType = property.type;
-          const paneIndex = this.app.hasStageClause() ? this.app.activeStageClause.paneIndex : 0;
-
-          this.config.helpers.updateStageClause({filterType, value}, shouldClosePane);
-
-          // when a property is selected, switch to the property value inner pane
-          // - requestAnimationFrame allows the add pane to be re-rendered as an
-          //   edit pane, and still show the css animation sliding to the new pane
-          if (!shouldClosePane) {
-            if (this.section !== 'filter') {
-              this.app.startAddingClause('filter', {paneIndex});
-              this.app.updateStageClause({value});
-            }
-            window.requestAnimationFrame(() =>{
-              this.app.updateStageClause({paneIndex: paneIndex + 1});
-            }
-            );
-          }
-        },
-      }),
-    });
-  }
-
-  get resourceTypeChoices() {
-    return Clause.RESOURCE_TYPES;
   }
 }
 
@@ -144,7 +99,7 @@ document.registerElement('group-property-pane-content', class extends PaneConten
           // - requestAnimationFrame allows the add pane to be re-rendered as an
           //   edit pane, and still show the css animation sliding to the new pane
           if (!shouldClosePane) {
-            if (this.section !== 'filter') {
+            if (this.app.originStageClauseType() !== 'filter') {
               this.app.startAddingClause('filter', {paneIndex});
               this.app.updateStageClause({value});
             }
@@ -214,7 +169,7 @@ document.registerElement('operator-dropdown', class extends Dropdown {
   }
 
   get selected() {
-    return this.app.hasStageClause() && this.app.activeStageClause.filterOperator;
+    return this.app.hasStageClause() ? this.app.activeStageClause.filterOperator : null;
   }
 
   get isOpen() {

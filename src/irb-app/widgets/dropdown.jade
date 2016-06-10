@@ -1,5 +1,6 @@
 - const selected = $helpers.getSelected();
 .dropdown(class={'menu-open': $helpers.isOpen()})
+  - console.log(selected)
   button.label(onclick=$helpers.onLabelClick)= $helpers.formatChoice(selected)
   ul
     for choice in $helpers.getChoices()
