@@ -87,9 +87,10 @@ document.registerElement('group-property-pane-content', class extends PaneConten
 
       helpers: extend(super.config.helpers, {
         paneHandler: (property, shouldClosePane) => {
-          const value = property.name;
           const filterType = property.type;
+          const originalValue = this.app.activeStageClause.value;
           const paneIndex = this.app.hasStageClause() ? this.app.activeStageClause.paneIndex : 0;
+          const value = property.name;
 
           this.config.helpers.updateStageClause({filterType, value}, shouldClosePane);
 
@@ -97,10 +98,11 @@ document.registerElement('group-property-pane-content', class extends PaneConten
           // - requestAnimationFrame allows the add pane to be re-rendered as an
           //   edit pane, and still show the css animation sliding to the new pane
           if (!shouldClosePane) {
-            if (this.app.originStageClauseType() === 'filter') {
-              this.app.update({stageClauses: this.state.stageClauses.slice(0, -1)});
+            if (this.app.originStageClauseType() !== 'filter') {
+              this.app.startAddingClause('filter', {paneIndex});
+            } else if (value !== originalValue) {
+              this.app.updateStageClause({filterValue: null});
             }
-            this.app.startAddingClause('filter', {paneIndex});
             this.app.updateStageClause({value});
             window.requestAnimationFrame(() => {
               this.app.updateStageClause({paneIndex: paneIndex + 1});
