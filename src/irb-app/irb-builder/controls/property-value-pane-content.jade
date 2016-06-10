@@ -43,12 +43,11 @@
                   autoFocus=$component.isPaneActive()
                   focusDelay=200
                   type='text'
-                  value=stageClauses.filterSearch
                   oninput=event => $helpers.updateStageClause({filterSearch: event.target.value})
                 )
 
             ul.filter-string-equals-choices
-              for value in $helpers.getValueMatches(stageClauses.filterSearch)
+              for value in $helpers.getValueMatches($component.app.activeStageClause.filterSearch)
                 li(class={selected: selectedValue && selectedValue.indexOf(value) !== -1})
                   button(onclick=() => $helpers.toggleStringEqualsValueSelected(value))= util.renamePropertyValue(value)
 

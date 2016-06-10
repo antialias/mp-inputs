@@ -1,4 +1,4 @@
-import { extend, removeValue, renameProperty } from '../../../util';
+import { extend, removeValue, renameProperty, renamePropertyValue } from '../../../util';
 
 import { Pane, PaneContent } from '../../pane';
 import { Clause, FilterClause, ShowClause, TimeClause } from '../../../models/clause';
@@ -134,7 +134,7 @@ document.registerElement('filter-property-value-pane-content', class extends Pan
         getDoneLabel: () => this.app.isAddingClause() ? 'Add' : 'Update',
         getValueMatches: (string, invert) =>
           this.state.topPropertyValues
-            .filter(value => !string || value.toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert),
+            .filter(value => !string || renamePropertyValue(value).toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert),
         toggleStringEqualsValueSelected: value => {
           const clause = this.app.activeStageClause;
           const selected = (clause && clause.filterValue) || [];
