@@ -1,14 +1,11 @@
+import { capitalize, renameEvent } from '../../../util';
+
 import { Component } from 'panel';
 
-import { capitalize, extend, renameEvent, renameProperty } from '../../../util';
-
 import { AddControl, EditControl } from '../controls';
-import { BuilderPane, PropertyPaneContent, PropertyValuePaneContent } from '../controls/builder-pane';
-import { Clause, ShowClause } from '../../../models/clause';
-import { PaneContent } from '../../pane';
+import { BuilderPane } from '../controls/builder-pane';
 
 import template from './index.jade';
-import showPaneContentTemplate from '../controls/show-pane-content.jade';
 import './index.styl';
 
 document.registerElement('builder-show', class extends Component {
@@ -52,79 +49,9 @@ document.registerElement('show-pane', class extends BuilderPane {
 
   get subpanes() {
     return [
-      {
-        tag: 'show-pane-content',
-        constants: {
-          header: 'Show',
-        },
-      },
-      {
-        tag: 'show-property-pane-content',
-        constants: {
-          header: 'Properties',
-        },
-      },
-      {
-        tag: 'show-property-value-pane-content',
-        constants: {
-          search: false,
-          commitLabel: 'Update',
-        },
-        helpers: {
-          commitHandler: () => this.app.commitStageClause(),
-          getHeader: () => {
-            const clause = this.app.activeStageClause;
-            return clause && clause.value ? renameProperty(clause.value) : '';
-          },
-        },
-      },
+      this.showPaneContent,
+      this.groupPropertyPaneContent,
+      this.filterPropertyValuePaneContent,
     ];
   }
-});
-
-document.registerElement('show-pane-content', class extends PaneContent {
-  get config() {
-    return extend(super.config, {
-      template: showPaneContentTemplate,
-      helpers: extend(super.config.helpers, {
-        selectArrow: value => {
-          this.app.updateStageClause({value});
-          this.app.startAddingClause('group');
-          window.requestAnimationFrame(() =>
-            this.app.updateStageClause({paneIndex: 1})
-          );
-        },
-      }),
-    });
-  }
-
-  get constants() {
-    return extend(super.constants, {
-      mathChoices: ShowClause.MATH_TYPES,
-      eventChoices: [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS, ...this.state.topEvents],
-    });
-  }
-
-  get section() {
-    return 'show';
-  }
-
-  get resourceTypeChoices() {
-    return Clause.RESOURCE_TYPES;
-  }
-});
-
-document.registerElement('show-property-pane-content', class extends PropertyPaneContent {
-  get section() {
-    return 'show';
-  }
-
-});
-
-
-document.registerElement('show-property-value-pane-content', class extends PropertyValuePaneContent {
-  get section() {
-    return 'show';
-  }
-
 });

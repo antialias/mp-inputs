@@ -4,7 +4,6 @@ import { debug } from 'mixpanel-common/build/report/util';
 export class Clause {
   constructor(attrs={}) {
     this.paneIndex = attrs.paneIndex || 0;
-    this.clausePath = attrs.clausePath || null;
   }
 
   static create(sectionType, attrs) {
@@ -19,7 +18,6 @@ export class Clause {
   get attrs() {
     return {
       paneIndex: this.paneIndex,
-      clausePath: this.clausePath,
     };
   }
 

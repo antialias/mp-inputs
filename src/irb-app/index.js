@@ -113,18 +113,20 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     return this.hasStageClause() ? this.activeStageClause.paneIndex : 0;
   }
 
+  originStageClauseType() {
+    return this.hasStageClause() && this.state.stageClause[0].TYPE;
+  }
+
   isAddingClause(sectionType) {
     return (
-      this.hasStageClause() &&
-      this.state.stageClause[0].TYPE === sectionType &&
+      this.originStageClauseType() === sectionType &&
       typeof this.state.stageClauseIndex !== 'number'
     );
   }
 
   isEditingClause(sectionType, clauseIndex) {
     return (
-      this.hasStageClause() &&
-      this.state.stageClause[0].TYPE === sectionType &&
+      this.originStageClauseType() === sectionType &&
       this.state.stageClauseIndex === clauseIndex
     );
   }
@@ -168,7 +170,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   stopEditingClauseAttrs() {
-    if (this.state.stageClause.length) {
+    if (this.hasStageClause()) {
       this.updateStageClause({editing: null});
     }
   }

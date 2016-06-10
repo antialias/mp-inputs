@@ -5,7 +5,7 @@ import { Component } from 'panel';
 import { renameProperty } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
-import { BuilderPane, PropertyPaneContent, PropertyValuePaneContent } from '../controls/builder-pane';
+import { BuilderPane } from '../controls/builder-pane';
 
 import template from './index.jade';
 import './index.styl';
@@ -46,43 +46,8 @@ document.registerElement('group-pane', class extends BuilderPane {
 
   get subpanes() {
     return [
-      {
-        tag: 'group-property-pane-content',
-        constants: {
-          header: 'Properties',
-        },
-      },
-      {
-        tag: 'group-property-value-pane-content',
-        constants: {
-          search: false,
-          commitLabel: 'Update',
-        },
-        helpers: {
-          commitHandler: () => this.app.commitStageClause(),
-          getHeader: () => {
-            const clause = this.app.activeStageClause;
-            return clause && clause.value ? renameProperty(clause.value) : '';
-          },
-        },
-      },
+      this.groupPropertyPaneContent,
+      this.filterPropertyValuePaneContent,
     ];
   }
-});
-
-document.registerElement('group-property-pane-content', class extends PropertyPaneContent {
-
-  get section() {
-    return 'group';
-  }
-
-});
-
-
-document.registerElement('group-property-value-pane-content', class extends PropertyValuePaneContent {
-
-  get section() {
-    return 'group';
-  }
-
 });
