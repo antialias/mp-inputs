@@ -86,8 +86,6 @@ document.registerElement('group-property-pane-content', class extends PaneConten
       template: propertyPaneContentTemplate,
 
       helpers: extend(super.config.helpers, {
-        selectProperty: property => this.config.helpers.paneHandler(property, this.app.originStageClauseType() !== 'filter'),
-        selectArrow: property => this.config.helpers.paneHandler(property, false),
         paneHandler: (property, shouldClosePane) => {
           const value = property.name;
           const filterType = property.type;
@@ -103,11 +101,13 @@ document.registerElement('group-property-pane-content', class extends PaneConten
               this.app.startAddingClause('filter', {paneIndex});
               this.app.updateStageClause({value});
             }
-            window.requestAnimationFrame(() =>{
+            window.requestAnimationFrame(() => {
               this.app.updateStageClause({paneIndex: paneIndex + 1});
             });
           }
         },
+        selectArrow: property => this.config.helpers.paneHandler(property, false),
+        selectProperty: property => this.config.helpers.paneHandler(property, this.app.originStageClauseType() !== 'filter'),
       }),
     });
   }
@@ -128,9 +128,8 @@ document.registerElement('filter-property-value-pane-content', class extends Pan
       template: propertyValuePaneContentTemplate,
 
       helpers: extend(super.config.helpers, {
-        updateStageClause: clauseData => this.app.updateStageClause(clauseData),
-        showPropertyValues: () => this.app.hasStageClause() && !this.app.activeStageClause.filterOperatorIsSetOrNotSet,
         getActiveClauseProperty: property => this.app.hasStageClause() ? this.app.activeStageClause[property] : false,
+        getDoneLabel: () => this.app.isAddingClause() ? 'Add' : 'Update',
         getValueMatches: (string, invert) =>
           this.state.topPropertyValues
             .filter(value => !string || value.toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert),
@@ -147,8 +146,9 @@ document.registerElement('filter-property-value-pane-content', class extends Pan
 
           this.app.updateStageClause({filterValue});
         },
-        getDoneLabel: () => this.app.isAddingClause() ? 'Add' : 'Update',
+        showPropertyValues: () => this.app.hasStageClause() && !this.app.activeStageClause.filterOperatorIsSetOrNotSet,
         stopEditingClause: () => this.app.stopEditingClause(),
+        updateStageClause: clauseData => this.app.updateStageClause(clauseData),
       }),
     });
   }

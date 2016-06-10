@@ -11,6 +11,7 @@ export class Pane extends Component {
       template,
 
       helpers: {
+        activePaneIndex: () => this.app.hasStageClause() ? this.app.activeStageClause.paneIndex : 0,
         backButtonHandler: () => {
           window.requestAnimationFrame(() =>
             this.app.update({stageClause: this.state.stageClause.slice(0, -1)})
@@ -20,7 +21,6 @@ export class Pane extends Component {
           this.config.helpers.updateStageClause({search: ev.target.value});
         },
         updateStageClause: clauseData => this.app.updateStageClause(clauseData),
-        activePaneIndex: () => this.app.hasStageClause() ? this.app.activeStageClause.paneIndex : 0,
       },
     };
   }

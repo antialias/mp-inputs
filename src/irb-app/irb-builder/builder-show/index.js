@@ -1,6 +1,6 @@
-import { capitalize, renameEvent } from '../../../util';
-
 import { Component } from 'panel';
+
+import { capitalize, renameEvent } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
 import { BuilderPane } from '../controls/builder-pane';
