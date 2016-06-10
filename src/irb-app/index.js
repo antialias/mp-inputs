@@ -63,6 +63,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   attachedCallback() {
     super.attachedCallback(...arguments);
 
+    this.customEvents = (this.parentData && this.parentData.custom_events) || [];
     this.queries = {
       topEvents: new TopEventsQuery(),
       topProperties: new TopPropertiesQuery(),
@@ -81,7 +82,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
     this.queries.topEvents.build(this.state).run().then(topEvents => {
       this.update({
-        topEvents: topEvents.map(ev => ({name: ev, custom: false})),
+        topEvents: topEvents
+          .map(ev => ({name: ev, custom: false}))
+          .concat(this.customEvents.map(ce => Object.assign(ce, {custom: true}))),
       });
       this.query();
     });
