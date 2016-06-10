@@ -17,7 +17,7 @@ export class Pane extends Component {
             if (this.app.originStageClauseType() === 'filter') {
               this.app.updateStageClause({paneIndex: this.app.activeStageClause - 1});
             } else {
-              this.app.update({stageClause: this.state.stageClause.slice(0, -1)});
+              this.app.update({stageClauses: this.state.stageClauses.slice(0, -1)});
             }
           });
         },

@@ -47,7 +47,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         isEditing: false,
         search: null,
       },
-      stageClause: [],
+      stageClauses: [],
       topEvents: [],
       topProperties: [],
       topPropertyValues: [],
@@ -102,15 +102,15 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   // State helpers
 
   hasStageClause() {
-    return !!(this.state.stageClause && this.state.stageClause.length);
+    return !!(this.state.stageClauses && this.state.stageClauses.length);
   }
 
   get activeStageClause() {
-    return this.hasStageClause() ? this.state.stageClause[this.state.stageClause.length - 1] : null;
+    return this.hasStageClause() ? this.state.stageClauses[this.state.stageClauses.length - 1] : null;
   }
 
   originStageClauseType() {
-    return this.hasStageClause() && this.state.stageClause[0].TYPE;
+    return this.hasStageClause() && this.state.stageClauses[0].TYPE;
   }
 
   isAddingClause(sectionType) {
@@ -135,15 +135,15 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   startAddingClause(sectionType) {
-    this.update({stageClause: this.state.stageClause.concat(Clause.create(sectionType))});
+    this.update({stageClauses: this.state.stageClauses.concat(Clause.create(sectionType))});
   }
 
   startEditingClause(sectionType, clauseIndex) {
-    const stageClause = this.state.stageClause.concat(this.state.sections[sectionType].clauses[clauseIndex]);
+    const stageClauses = this.state.stageClauses.concat(this.state.sections[sectionType].clauses[clauseIndex]);
 
-    if (stageClause.length) {
+    if (stageClauses.length) {
       this.update({
-        stageClause,
+        stageClauses,
         stageClauseIndex: clauseIndex,
       });
     } else {
@@ -155,7 +155,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.stopEditingClauseAttrs();
 
     const newState = {
-      stageClause: [],
+      stageClauses: [],
       stageClauseIndex: null,
     };
 
@@ -169,12 +169,12 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   updateStageClause(clauseData) {
-    const stageClause = this.state.stageClause.concat();
-    let currentClause = stageClause.pop();
+    const stageClauses = this.state.stageClauses.concat();
+    let currentClause = stageClauses.pop();
     if (currentClause) {
-      stageClause.push(currentClause.extend(clauseData));
+      stageClauses.push(currentClause.extend(clauseData));
     }
-    let newState = {stageClause};
+    let newState = {stageClauses};
 
     // query new property values if we're setting a new filter property
     if (this.activeStageClause.TYPE === 'filter' && clauseData.value) {
@@ -195,7 +195,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   commitStageClause() {
-    const newClauses = this.state.stageClause;
+    const newClauses = this.state.stageClauses;
     let newState = extend(this.state);
 
     if (newClauses.length) {
