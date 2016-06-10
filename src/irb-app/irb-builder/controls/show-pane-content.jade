@@ -1,6 +1,6 @@
-- const selectedMath = stageClause && stageClause.math;
-- const selectedResourceType = stageClause && stageClause.resourceType;
-- const selectedValue = stageClause && stageClause.value;
+- const selectedMath = $helpers.getActiveClauseProperty('math');
+- const selectedResourceType = $helpers.getActiveClauseProperty('resourceType');
+- const selectedValue = $helpers.getActiveClauseProperty('value');
 
 .show-pane-content
   ul.column.toggle.math

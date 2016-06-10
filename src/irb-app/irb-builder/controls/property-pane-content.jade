@@ -1,5 +1,5 @@
-- const selectedResourceType = stageClause && stageClause.resourceType;
-- const selectedProperty = stageClause && stageClause.value;
+- const selectedResourceType = $helpers.getActiveClauseProperty('resourceType');
+- const selectedProperty = $helpers.getActiveClauseProperty('value');
 
 .property.pane-content
   ul.column.toggle.resource-type

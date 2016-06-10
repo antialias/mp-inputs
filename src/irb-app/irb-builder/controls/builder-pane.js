@@ -128,7 +128,6 @@ document.registerElement('filter-property-value-pane-content', class extends Pan
       template: propertyValuePaneContentTemplate,
 
       helpers: extend(super.config.helpers, {
-        getActiveClauseProperty: property => this.app.hasStageClause() ? this.app.activeStageClause[property] : false,
         getDoneLabel: () => this.app.isAddingClause() ? 'Add' : 'Update',
         getValueMatches: (string, invert) =>
           this.state.topPropertyValues

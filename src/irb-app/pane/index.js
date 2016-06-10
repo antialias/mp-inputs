@@ -13,9 +13,13 @@ export class Pane extends Component {
       helpers: {
         activePaneIndex: () => this.app.hasStageClause() ? this.app.activeStageClause.paneIndex : 0,
         backButtonHandler: () => {
-          window.requestAnimationFrame(() =>
-            this.app.update({stageClause: this.state.stageClause.slice(0, -1)})
-          );
+          window.requestAnimationFrame(() =>{
+            if (this.app.originStageClauseType() === 'filter') {
+              this.app.updateStageClause({paneIndex: this.app.activeStageClause - 1});
+            } else {
+              this.app.update({stageClause: this.state.stageClause.slice(0, -1)});
+            }
+          });
         },
         searchHandler: ev => {
           this.config.helpers.updateStageClause({search: ev.target.value});
@@ -37,6 +41,7 @@ export class PaneContent extends Component {
     return {
       helpers: {
         commitStageClause: () => this.app.commitStageClause(),
+        getActiveClauseProperty: property => this.app.hasStageClause() ? this.app.activeStageClause[property] : false,
         matchesSearch: value => (
           this.state.stageClause && (
             !this.state.stageClause.search ||
