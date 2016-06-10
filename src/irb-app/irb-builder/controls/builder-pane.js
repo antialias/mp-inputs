@@ -66,7 +66,7 @@ export class PropertyPaneContent extends PaneContent {
         paneHandler: (property, shouldClosePane) => {
           const value = property.name;
           const filterType = property.type;
-          const paneIndex = this.app.activeClausePaneIndex();
+          const paneIndex = this.app.hasStageClause() ? this.app.activeStageClause.paneIndex : 0;
 
           this.config.helpers.updateStageClause({filterType, value}, shouldClosePane);
 
@@ -131,12 +131,12 @@ document.registerElement('group-property-pane-content', class extends PaneConten
       template: propertyPaneContentTemplate,
 
       helpers: extend(super.config.helpers, {
-        selectProperty: property => this.config.helpers.paneHandler(property, this.app.originStageClauseType() == 'filter'),
+        selectProperty: property => this.config.helpers.paneHandler(property, this.app.originStageClauseType() !== 'filter'),
         selectArrow: property => this.config.helpers.paneHandler(property, false),
         paneHandler: (property, shouldClosePane) => {
           const value = property.name;
           const filterType = property.type;
-          const paneIndex = this.app.activeClausePaneIndex();
+          const paneIndex = this.app.hasStageClause() ? this.app.activeStageClause.paneIndex : 0;
 
           this.config.helpers.updateStageClause({filterType, value}, shouldClosePane);
 

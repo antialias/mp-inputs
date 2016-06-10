@@ -109,10 +109,6 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     return this.hasStageClause() ? this.state.stageClause[this.state.stageClause.length - 1] : null;
   }
 
-  activeClausePaneIndex() {
-    return this.hasStageClause() ? this.activeStageClause.paneIndex : 0;
-  }
-
   originStageClauseType() {
     return this.hasStageClause() && this.state.stageClause[0].TYPE;
   }
