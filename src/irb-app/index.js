@@ -163,7 +163,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   stopEditingClauseAttrs() {
-    if (this.hasStageClause()) {
+    if (this.hasStageClause() && this.activeStageClause.valid) {
       this.updateStageClause({editing: null});
     }
   }

@@ -97,10 +97,11 @@ document.registerElement('group-property-pane-content', class extends PaneConten
           // - requestAnimationFrame allows the add pane to be re-rendered as an
           //   edit pane, and still show the css animation sliding to the new pane
           if (!shouldClosePane) {
-            if (this.app.originStageClauseType() !== 'filter') {
-              this.app.startAddingClause('filter', {paneIndex});
-              this.app.updateStageClause({value});
+            if (this.app.originStageClauseType() === 'filter') {
+              this.app.update({stageClauses: this.state.stageClauses.slice(0, -1)});
             }
+            this.app.startAddingClause('filter', {paneIndex});
+            this.app.updateStageClause({value});
             window.requestAnimationFrame(() => {
               this.app.updateStageClause({paneIndex: paneIndex + 1});
             });
