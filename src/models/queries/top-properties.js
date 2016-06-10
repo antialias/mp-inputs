@@ -1,6 +1,6 @@
 import BaseQuery from './base';
 
-export default class TopPropertiesQuery extends BaseQuery {
+export class TopEventPropertiesQuery extends BaseQuery {
   buildUrl() {
     return 'api/2.0/events/properties/toptypes';
   }
@@ -16,5 +16,15 @@ export default class TopPropertiesQuery extends BaseQuery {
         const { count, type } = properties[name];
         return {count, type, name};
       });
+  }
+}
+
+export class TopPeoplePropertiesQuery extends TopEventPropertiesQuery {
+  buildUrl() {
+    return 'api/2.0/engage/properties';
+  }
+
+  processResults(properties) {
+    return super.processResults(properties.results);
   }
 }

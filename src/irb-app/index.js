@@ -6,7 +6,7 @@ import BuilderSections from '../models/builder-sections';
 import { ShowSection, TimeSection } from '../models/section';
 import { Clause, ShowClause, TimeClause } from '../models/clause';
 import TopEventsQuery from '../models/queries/top-events';
-import TopPropertiesQuery from '../models/queries/top-properties';
+import { TopEventPropertiesQuery, TopPeoplePropertiesQuery } from '../models/queries/top-properties';
 import TopPropertyValuesQuery from '../models/queries/top-property-values';
 import SegmentationQuery from '../models/queries/segmentation';
 import QueryCache from '../models/queries/query-cache';
@@ -49,7 +49,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       },
       stageClauses: [],
       topEvents: [],
-      topProperties: [],
+      topEventProperties: [],
+      topPeopleProperties: [],
       topPropertyValues: [],
       result: {
         headers: [],
@@ -66,7 +67,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.customEvents = (this.parentData && this.parentData.custom_events) || [];
     this.queries = {
       topEvents: new TopEventsQuery(),
-      topProperties: new TopPropertiesQuery(),
+      topEventProperties: new TopEventPropertiesQuery(),
+      TopPeopleProperties: new TopPeoplePropertiesQuery(),
       topPropertyValues: new TopPropertyValuesQuery(),
       topPropertyValuesCache: new QueryCache(),
       segmentation: new SegmentationQuery(this.customEvents),
@@ -76,8 +78,12 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   resetTopQueries() {
-    this.queries.topProperties.build(this.state).run().then(topProperties => {
-      this.update({topProperties});
+    this.queries.topEventProperties.build(this.state).run().then(topEventProperties => {
+      this.update({topEventProperties});
+    });
+
+    this.queries.TopPeopleProperties.build(this.state).run().then(topPeopleProperties => {
+      this.update({topPeopleProperties});
     });
 
     this.queries.topEvents.build(this.state).run().then(topEvents => {

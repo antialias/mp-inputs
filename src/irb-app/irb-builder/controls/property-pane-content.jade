@@ -12,7 +12,7 @@
         onclick=() => $helpers.updateStageClause({resourceType})
       )= util.capitalize(resourceType)
   ul.column.resource-value
-    for property in topProperties
+    for property in topEventProperties
       if $helpers.matchesSearch(util.renameProperty(property.name))
         li.property(
           class=`type-${property.type}`
