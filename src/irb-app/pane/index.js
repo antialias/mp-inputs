@@ -43,9 +43,9 @@ export class PaneContent extends Component {
         commitStageClause: () => this.app.commitStageClause(),
         getActiveClauseProperty: property => this.app.hasStageClause() ? this.app.activeStageClause[property] : false,
         matchesSearch: value => (
-          this.state.stageClause && (
-            !this.state.stageClause.search ||
-            value.toLowerCase().indexOf(this.state.stageClause.search.toLowerCase()) === 0
+          this.app.hasStageClause() && (
+            !this.app.activeStageClause.search ||
+            value.toLowerCase().indexOf(this.app.activeStageClause.search.toLowerCase()) === 0
           )
         ),
         updateStageClause: (clauseData, commit) => {
