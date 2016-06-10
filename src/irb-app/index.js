@@ -199,18 +199,15 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     let newState = extend(this.state);
 
     if (newClauses.length) {
-      newClauses.forEach(clause => {
-        if (clause.valid) {
-          clause = clause.extend({paneIndex: 0});
-          let newSection = null;
-          if (clause.TYPE === newClauses[0].TYPE && typeof newState.stageClauseIndex === 'number') {
-            newSection = newState.sections[clause.TYPE].replaceClause(newState.stageClauseIndex, clause);
-          } else {
-            newSection = newState.sections[clause.TYPE].addClause(clause);
-          }
-
-          newState.sections = newState.sections.replaceSection(clause.TYPE, newSection);
+      newClauses.filter(clause => clause.valid).forEach(clause => {
+        const newClause = clause.extend({paneIndex: 0});
+        let newSection = null;
+        if (clause === newClauses[0] && typeof newState.stageClauseIndex === 'number') {
+          newSection = newState.sections[newClause.TYPE].replaceClause(newState.stageClauseIndex, newClause);
+        } else {
+          newSection = newState.sections[newClause.TYPE].addClause(newClause);
         }
+        newState.sections = newState.sections.replaceSection(clause.TYPE, newSection);
       });
 
       newState = this.query(newState);
