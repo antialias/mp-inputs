@@ -135,14 +135,11 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   startAddingClause(sectionType) {
-    const stageClause = this.state.stageClause.slice(0);
-    stageClause.push(Clause.create(sectionType));
-    this.update({stageClause});
+    this.update({stageClause: this.state.stageClause.concat(Clause.create(sectionType))});
   }
 
   startEditingClause(sectionType, clauseIndex) {
-    const stageClause = this.state.stageClause.slice(0);
-    stageClause.push(this.state.sections[sectionType].clauses[clauseIndex]);
+    const stageClause = this.state.stageClause.concat(this.state.sections[sectionType].clauses[clauseIndex]);
 
     if (stageClause.length) {
       this.update({
@@ -172,7 +169,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   updateStageClause(clauseData) {
-    const stageClause = this.state.stageClause.slice(0);
+    const stageClause = this.state.stageClause.concat();
     let currentClause = stageClause.pop();
     if (currentClause) {
       stageClause.push(currentClause.extend(clauseData));
