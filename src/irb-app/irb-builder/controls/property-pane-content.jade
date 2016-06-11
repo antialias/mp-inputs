@@ -7,12 +7,11 @@
       li(
         class={
           selected: resourceType === selectedResourceType,
-          disabled: resourceType !== 'all',
         }
         onclick=() => $helpers.updateStageClause({resourceType})
       )= util.capitalize(resourceType)
   ul.column.resource-value
-    for property in topEventProperties
+    for property in $helpers.TopProperties(selectedResourceType)
       if $helpers.matchesSearch(util.renameProperty(property.name))
         li.property(
           class=`type-${property.type}`
