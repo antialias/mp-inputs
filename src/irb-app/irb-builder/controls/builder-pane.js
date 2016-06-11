@@ -116,9 +116,9 @@ document.registerElement('group-property-pane-content', class extends PaneConten
             case 'all':
               return this.state.topEventProperties.concat(this.state.topPeopleProperties).sort((a, b) => b.count - a.count);
             case 'events':
-              return this.state.topEventProperties
+              return this.state.topEventProperties;
             case 'people':
-              return this.state.topPeopleProperties
+              return this.state.topPeopleProperties;
           }
 
         },

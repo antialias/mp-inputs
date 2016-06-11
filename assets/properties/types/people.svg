@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="18px" height="12px" viewBox="0 0 18 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.7 (28169) - http://www.bohemiancoding.com/sketch -->
+    <title>Icon / People</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M12.5,6.91151145 C14.4329966,6.91151145 16,5.36431691 16,3.45575573 C16,1.54719454 14.4329966,0 12.5,0 C10.5670034,0 9,1.54719454 9,3.45575573 C9,5.36431691 10.5670034,6.91151145 12.5,6.91151145 Z M12.5,11.8483054 C15.5375661,11.8483054 18,12.4968562 18,10.8609466 C18,9.22503698 15.5375661,7.89887023 12.5,7.89887023 C9.46243388,7.89887023 7,9.22503698 7,10.8609466 C7,12.4968562 9.46243388,11.8483054 12.5,11.8483054 Z" id="path-1"></path>
+        <mask id="mask-2" maskContentUnits="userSpaceOnUse" maskUnits="objectBoundingBox" x="-1" y="-1" width="13" height="13.9751478">
+            <rect x="6" y="-1" width="13" height="13.9751478" fill="white"></rect>
+            <use xlink:href="#path-1" fill="black"></use>
+        </mask>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Icon-/-People">
+            <path d="M4.54385581,7.68470146 C6.1408118,7.68470146 7.43540041,6.40647802 7.43540041,4.82970951 C7.43540041,3.25294099 6.1408118,1.97471756 4.54385581,1.97471756 C2.94689982,1.97471756 1.6523112,3.25294099 1.6523112,4.82970951 C1.6523112,6.40647802 2.94689982,7.68470146 4.54385581,7.68470146 Z M4.54385581,11.7632614 C7.05335808,11.7632614 9.08771162,12.2990653 9.08771162,10.9475494 C9.08771162,9.59603353 7.05335808,8.50041345 4.54385581,8.50041345 C2.03435354,8.50041345 0,9.59603353 0,10.9475494 C0,12.2990653 2.03435354,11.7632614 4.54385581,11.7632614 Z" id="Combined-Shape" fill-opacity="0.300000012" fill="#BBC1DE"></path>
+            <g id="Combined-Shape">
+                <use fill="#C6C9D8" fill-rule="evenodd" xlink:href="#path-1"></use>
+                <use stroke="#FFFFFF" mask="url(#mask-2)" stroke-width="2" xlink:href="#path-1"></use>
+            </g>
+        </g>
+    </g>
+</svg>

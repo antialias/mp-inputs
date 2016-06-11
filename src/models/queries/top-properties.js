@@ -9,12 +9,12 @@ export class TopEventPropertiesQuery extends BaseQuery {
     return {limit: 255};
   }
 
-  processResults(properties) {
+  processResults(properties, resourceType='event') {
     return Object.keys(properties)
       .sort((a, b) => properties[b].count - properties[a].count)
       .map(name => {
         const { count, type } = properties[name];
-        return {count, type, name};
+        return {count, type, name, resourceType};
       });
   }
 }
@@ -25,6 +25,6 @@ export class TopPeoplePropertiesQuery extends TopEventPropertiesQuery {
   }
 
   processResults(properties) {
-    return super.processResults(properties.results);
+    return super.processResults(properties.results, 'people');
   }
 }
