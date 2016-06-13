@@ -9,7 +9,7 @@ export class TopEventPropertiesQuery extends BaseQuery {
     return {limit: 255};
   }
 
-  processResults(properties, resourceType='event') {
+  processResults(properties, resourceType='events') {
     return Object.keys(properties)
       .sort((a, b) => properties[b].count - properties[a].count)
       .map(name => {

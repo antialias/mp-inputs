@@ -1,4 +1,3 @@
-- const selectedResourceType = $helpers.getActiveClauseProperty('resourceType');
 - const selectedProperty = $helpers.getActiveClauseProperty('value');
 
 .property.pane-content
@@ -6,18 +5,17 @@
     for resourceType in $component.resourceTypeChoices
       li(
         class={
-          selected: resourceType === selectedResourceType
+          selected: resourceType === resourceTypeFilter
         }
-        onclick=() => $helpers.updateStageClause({resourceType})
+        onclick=() => $component.app.update({resourceTypeFilter: resourceType})
       )= util.capitalize(resourceType)
   ul.column.resource-value
-    if selectedResourceType
-      for property in $helpers.TopProperties(selectedResourceType)
-        if $helpers.matchesSearch(util.renameProperty(property.name))
-          li.property(
-            class=`type-${property.type}`
-            class=property.resourceType
-            class={selected: property.name === selectedProperty}
-          )
-            span(onclick=() => $helpers.selectProperty(property))= util.renameProperty(property.name)
-            button.next-arrow(onclick=() => $helpers.selectArrow(property)) ›
+    for property in $helpers.TopProperties()
+      if $helpers.matchesSearch(util.renameProperty(property.name))
+        li.property(
+          class=`type-${property.type}`
+          class=property.resourceType
+          class={selected: property.name === selectedProperty}
+        )
+          span(onclick=() => $helpers.selectProperty(property))= util.renameProperty(property.name)
+          button.next-arrow(onclick=() => $helpers.selectArrow(property)) ›

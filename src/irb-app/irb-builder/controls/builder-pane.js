@@ -90,9 +90,10 @@ document.registerElement('group-property-pane-content', class extends PaneConten
           const filterType = property.type;
           const originalValue = this.app.activeStageClause.value;
           const paneIndex = this.app.hasStageClause() ? this.app.activeStageClause.paneIndex : 0;
+          const resourceType = property.resourceType;
           const value = property.name;
 
-          this.config.helpers.updateStageClause({filterType, value}, shouldClosePane);
+          this.config.helpers.updateStageClause({filterType, resourceType, value}, shouldClosePane);
 
           // when a property is selected, switch to the property value inner pane
           // - requestAnimationFrame allows the add pane to be re-rendered as an
@@ -111,16 +112,15 @@ document.registerElement('group-property-pane-content', class extends PaneConten
         },
         selectArrow: property => this.config.helpers.paneHandler(property, false),
         selectProperty: property => this.config.helpers.paneHandler(property, this.app.originStageClauseType() !== 'filter'),
-        TopProperties: (resourceType) => {
-          switch (resourceType) {
-            case 'all':
-              return this.state.topEventProperties.concat(this.state.topPeopleProperties).sort((a, b) => b.count - a.count);
+        TopProperties: () => {
+          switch (this.state.resourceTypeFilter) {
             case 'events':
               return this.state.topEventProperties;
             case 'people':
               return this.state.topPeopleProperties;
+            default:
+              return this.state.topEventProperties.concat(this.state.topPeopleProperties).sort((a, b) => b.count - a.count);
           }
-
         },
       }),
     });

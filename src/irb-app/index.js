@@ -52,6 +52,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       topEventProperties: [],
       topPeopleProperties: [],
       topPropertyValues: [],
+      resourceTypeFilter: 'all',
       result: {
         headers: [],
         series: {},
@@ -175,6 +176,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     const newState = {
       stageClauses: [],
       stageClauseIndex: null,
+      resourceTypeFilter: 'all',
     };
 
     this.update(newState);
