@@ -104,7 +104,7 @@ document.registerElement('group-property-pane-content', class extends PaneConten
             } else if (value !== originalValue) {
               this.app.updateStageClause({filterValue: null});
             }
-            this.app.updateStageClause({value});
+            this.app.updateStageClause({value, resourceType});
             window.requestAnimationFrame(() => {
               this.app.updateStageClause({paneIndex: paneIndex + 1});
             });

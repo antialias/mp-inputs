@@ -7,7 +7,7 @@ import { ShowSection, TimeSection } from '../models/section';
 import { Clause, ShowClause, TimeClause } from '../models/clause';
 import TopEventsQuery from '../models/queries/top-events';
 import { TopEventPropertiesQuery, TopPeoplePropertiesQuery } from '../models/queries/top-properties';
-import TopPropertyValuesQuery from '../models/queries/top-property-values';
+import { TopEventPropertyValuesQuery, TopPeoplePropertyValuesQuery } from '../models/queries/top-property-values';
 import SegmentationQuery from '../models/queries/segmentation';
 import QueryCache from '../models/queries/query-cache';
 
@@ -69,8 +69,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.queries = {
       topEvents: new TopEventsQuery(),
       topEventProperties: new TopEventPropertiesQuery(),
-      TopPeopleProperties: new TopPeoplePropertiesQuery(),
-      topPropertyValues: new TopPropertyValuesQuery(),
+      topPeopleProperties: new TopPeoplePropertiesQuery(),
+      topEventPropertyValues: new TopEventPropertyValuesQuery(),
+      topPeoplePropertyValues: new TopPeoplePropertyValuesQuery(),
       topPropertyValuesCache: new QueryCache(),
       segmentation: new SegmentationQuery(this.customEvents),
       segmentationCache: new QueryCache(),
@@ -83,7 +84,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       this.update({topEventProperties});
     });
 
-    this.queries.TopPeopleProperties.build(this.state).run().then(topPeopleProperties => {
+    this.queries.topPeopleProperties.build(this.state).run().then(topPeopleProperties => {
       this.update({topPeopleProperties});
     });
 
@@ -198,13 +199,22 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
     // query new property values if we're setting a new filter property
     if (this.activeStageClause.TYPE === 'filter' && clauseData.value) {
-      const query = this.queries.topPropertyValues.build(newState).query;
+      let topPropertyValues = null;
+      switch (clauseData.resourceType) {
+        case 'people':
+          topPropertyValues = this.queries.topPeoplePropertyValues;
+          break;
+        case 'events':
+          topPropertyValues = this.queries.topEventPropertyValues;
+          break;
+      }
+      const query = topPropertyValues.build(newState).query;
       const cachedResult = this.queries.topPropertyValuesCache.get(query);
 
       if (cachedResult) {
         newState.topPropertyValues = cachedResult;
       } else {
-        this.queries.topPropertyValues.run().then(topPropertyValues => {
+        topPropertyValues.run().then(topPropertyValues => {
           this.queries.topPropertyValuesCache.set(query, topPropertyValues);
           this.update({topPropertyValues});
         });
