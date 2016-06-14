@@ -16,7 +16,7 @@ export default class BaseQuery {
         if (cachedResult) {
           resolve(cachedResult);
         } else {
-          this.executeQuery().done(rawResults => {
+          this.executeQuery().then(rawResults => {
             if (query === this.query) { // ignore obsolete queries
               resolve(this.processResults(rawResults));
             }
@@ -48,8 +48,16 @@ export default class BaseQuery {
     return '';
   }
 
-  executeQuery() {
+  MPApiQuery() {
     return window.MP.api.query(this.buildUrl(), this.buildParams(), this.buildOptions());
+  }
+
+  executeQuery() {
+    return new Promise((resolve, reject) => {
+      this.MPApiQuery()
+        .done(results => resolve(results))
+        .fail((xhr, status, error) => reject(error));
+    });
   }
 
   // expected args: results, query (optional)

@@ -168,6 +168,18 @@ export default class SegmentationQuery extends BaseQuery {
     return {type: 'POST'};
   }
 
+  buildQueries() {
+    return [window.MP.api.query(this.buildUrl(), this.buildParams(), this.buildOptions())];
+  }
+
+  executeQuery() {
+    return Promise.all(this.buildQueries()).then(resultSets => {
+      // TODO combine all results
+      console.log('results', resultSets);
+      return resultSets[0];
+    });
+  }
+
   processResults(results) {
     let headers = this.query.segments;
     let series = {};

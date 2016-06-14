@@ -1,7 +1,7 @@
 import BaseQuery from './base';
 
 export default class TopEventsQuery extends BaseQuery {
-  executeQuery() {
+  MPApiQuery() {
     return window.MP.api.topEvents({sort_fn: 'desc'});
   }
 
