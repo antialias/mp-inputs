@@ -141,10 +141,10 @@ module.exports = function main() {
     var count = 0;
     for (var i = 0; i < events.length; i++) {
       var ev = events[i];
-      if (ev.sampling_factor === 1.0) {
-        count++;
-      } else {
+      if (ev.sampling_factor && ev.sampling_factor <= 1.0) {
         count += 1.0 / ev.sampling_factor;
+      } else {
+        count++;
       }
     }
     for (i = 0; i < counts.length; i++) {
