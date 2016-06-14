@@ -16,11 +16,13 @@ export default class BaseQuery {
         if (cachedResult) {
           resolve(cachedResult);
         } else {
-          this.executeQuery().then(rawResults => {
-            if (query === this.query) { // ignore obsolete queries
-              resolve(this.processResults(rawResults));
-            }
-          });
+          this.executeQuery()
+            .then(rawResults => {
+              if (query === this.query) { // ignore obsolete queries
+                resolve(this.processResults(rawResults));
+              }
+            })
+            .catch(err => console.error(err));
         }
       } else {
         resolve(this.processResults(null));
