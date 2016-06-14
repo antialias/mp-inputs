@@ -176,12 +176,13 @@ export default class SegmentationQuery extends BaseQuery {
 
   executeQuery() {
     return Promise.all(this.runQueries()).then(resultSets => {
+      // add "All Events" top level if necessary
       for (let qi = 0; qi < this.query.eventQueries.length; qi++) {
         if (!this.query.eventQueries[qi].length) {
-          // add All Events label
           resultSets[qi].forEach(result => result.key.unshift(ShowClause.ALL_EVENTS.name));
         }
       }
+
       return resultSets.reduce((acc, results) => acc.concat(results), []);
     });
   }
