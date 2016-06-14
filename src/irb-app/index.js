@@ -260,6 +260,20 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     });
   }
 
+  updateChartType(chartType) {
+    // For some types of query, changing to a different chart type necessitates a new
+    // query. Check the correct conditions here and call 'query'.
+
+    // for 'unique', 'average' and 'median', 'bar' and 'table' require a different query than
+    // 'line'.
+    if (this.state.sections.show.clauses.some(clause => ['unique', 'average', 'median'].includes(clause.math)) &&
+        (chartType === 'line' && ['bar', 'table'].includes(this.state.chartType)
+         || ['bar', 'table'].includes(chartType) && this.state.chartType === 'line')) {
+      this.query(extend(this.state, {chartType}));
+    }
+    this.update({chartType});
+  }
+
   query(state=this.state, useCache=true) {
     const query = this.queries.segmentation.build(state).query;
     const cachedResult = useCache && this.queries.segmentationCache.get(query);
