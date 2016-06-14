@@ -123,19 +123,22 @@ module.exports = function main() {
   if (params.groups) {
     groups = groups.concat(params.groups.map(function(group) { return 'properties.' + group; }));
   }
-  switch(params.dates.unit) {
-    case 'day':
-      groups.push(function(ev) {
-        return (new Date(ev.time)).toISOString().split('T')[0];
-      });
-      break;
-    case 'hour':
-      groups.push(function(ev) {
-        var dateMatch = (new Date(ev.time)).toISOString().match(/(.+)T(\d\d):/);
-        return `${dateMatch[1]} ${dateMatch[2]}:00:00`;
-      });
-      break;
-  }
+  var timeUnitGroupByFuncs = {
+    day: function(ev) {
+      return (new Date(ev.time)).toISOString().split('T')[0];
+    },
+    hour: function(ev) {
+      var dateMatch = (new Date(ev.time)).toISOString().match(/(.+)T(\d\d):/);
+      return `${dateMatch[1]} ${dateMatch[2]}:00:00`;
+    },
+    // 'all' is a special group for entire time range in order for different query results to have
+    // same depth, consistent for front end to process.
+    all: function() {
+      return 'all';
+    },
+  };
+
+  groups.push(timeUnitGroupByFuncs[params.dates.unit]);
 
   var countWithSampling = function(counts, events) {
     var count = 0;
@@ -161,6 +164,15 @@ module.exports = function main() {
   if (params.filters && params.filters.length) {
     query = query.filter(filterByParams);
   }
-  query = query.groupBy(groups, countWithSampling);
+  if (params.type === 'unique') {
+    query = query.groupByUser(groups, function() {return 1;})
+    // Slice off distinct_id and group again.
+      .groupBy(
+        [function(row) {return row.key.slice(1);}],
+        countWithSampling
+      );
+  } else {
+    query = query.groupBy(groups, countWithSampling);
+  }
   return query;
 };
