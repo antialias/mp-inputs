@@ -53,6 +53,7 @@ function filterToParams(filter) {
     prop: filter.value,
     dataType: filter.filterType,
     operator: filter.filterOperator,
+    resourceType: filter.resourceType,
     expected: filter.filterValue,
   };
   switch(params.dataType) {
@@ -144,7 +145,11 @@ export default class SegmentationQuery extends BaseQuery {
     let jqlQueries = state.sections.show.clauses.map(showClause => new JQLQuery(showClause, state));
 
     // data global to all JQL queries.
-    const segments = state.sections.group.clauses.map(clause => clause.value);
+    const segments = state.sections.group.clauses
+      .map(clause => ({
+        value: clause.value,
+        resourceType: clause.resourceType,
+      }));
     const filters = state.sections.filter.clauses.map(clause => clause.attrs);
 
     const time = state.sections.time.clauses[0];

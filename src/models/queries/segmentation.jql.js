@@ -121,7 +121,7 @@ function main() {
     groups.push('name');
   }
   if (params.groups) {
-    groups = groups.concat(params.groups.map(function(group) { return 'properties.' + group; }));
+    groups = groups.concat(params.groups.map(function(group) { return 'properties.' + group.value; }));
   }
   var timeUnitGroupByFuncs = {
     day: function(ev) {
