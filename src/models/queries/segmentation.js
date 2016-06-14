@@ -120,7 +120,7 @@ export default class SegmentationQuery extends BaseQuery {
     const filters = state.sections.filter.clauses.map(clause => clause.attrs);
 
     const time = state.sections.time.clauses[0];
-    const unit = time.unit;
+    var unit = time.unit;
     let from = 0;
     let to = 0;
 
@@ -137,6 +137,10 @@ export default class SegmentationQuery extends BaseQuery {
 
     if (!(to instanceof Date)) {
       to = new Date(new Date().getTime() - (MS_BY_UNIT[unit] * to));
+    }
+
+    if (type === 'unique' && state.chartType !== 'line') {
+      unit = 'all';
     }
 
     return {type, eventQueries, segments, filters, unit, from, to};
