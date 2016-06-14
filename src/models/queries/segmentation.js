@@ -111,10 +111,7 @@ export default class SegmentationQuery extends BaseQuery {
       }
     });
 
-    let type = ShowClause.MATH_TYPES[0];
-    if (eventQueries.length) {
-      type = state.sections.show.clauses[0].math;
-    }
+    let type = state.sections.show.clauses[0].math;
 
     // remap total -> general
     type = type === 'total' ? 'general' : type;
@@ -162,6 +159,7 @@ export default class SegmentationQuery extends BaseQuery {
           .filter(filter => isFilterValid(filter))
           .map(filter => filterToParams(filter)),
       groups: this.query.segments,
+      type: this.query.type,
     };
 
     // insert events
