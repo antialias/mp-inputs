@@ -168,14 +168,20 @@ export default class SegmentationQuery extends BaseQuery {
     return {type: 'POST'};
   }
 
-  buildQueries() {
+  runQueries() {
     return this.query.eventQueries.map(events => window.MP.api.query(
       this.buildUrl(), this.buildParams(events), this.buildOptions()
     ));
   }
 
   executeQuery() {
-    return Promise.all(this.buildQueries()).then(resultSets => {
+    return Promise.all(this.runQueries()).then(resultSets => {
+      for (let qi = 0; qi < this.query.eventQueries.length; qi++) {
+        if (!this.query.eventQueries[qi].length) {
+          // add All Events label
+          resultSets[qi].forEach(result => result.key.unshift(ShowClause.ALL_EVENTS.name));
+        }
+      }
       return resultSets.reduce((acc, results) => acc.concat(results), []);
     });
   }
@@ -209,9 +215,7 @@ export default class SegmentationQuery extends BaseQuery {
 
     // Treat 'all events' as one event in groupBy display, so only add the special name back when
     // not displaying for groupBy.
-    if (queriedEvents.length === 0 && this.query.segments.length === 0) {
-      series = {[ShowClause.ALL_EVENTS.name]: series};
-    } else if (queriedEvents.length === 1 && this.query.segments.length) {
+    if (queriedEvents.length === 1 && this.query.segments.length) {
       // special case segmentation on one event
       let ev = queriedEvents[0];
       if (ev in series) {
