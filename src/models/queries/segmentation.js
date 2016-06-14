@@ -1,5 +1,3 @@
-import { unique } from 'mixpanel-common/build/util';
-
 import BaseQuery from './base';
 import { ShowClause } from '../clause';
 import main from './segmentation.jql.js';
@@ -85,29 +83,31 @@ function filterToParams(filter) {
 
 export default class SegmentationQuery extends BaseQuery {
   get valid() {
-    // events can be an empty list for "all events"
-    return this.query.events;
+    // only valid if one or more queries is prepared
+    return !!this.query.eventQueries.length;
   }
 
   buildQuery(state) {
-    let events = state.sections.show.clauses
-      .map(clause => clause.value);
-
-    if (events.find(ev => ev.name === ShowClause.ALL_EVENTS.name)) {
-      events = [];
-    } else if (events.find(ev => ev.name === ShowClause.TOP_EVENTS.name)) {
-      let topEvents = state.topEvents.filter(ev => ev.name !== ShowClause.TOP_EVENTS.name).slice(0, 12);
-      events = unique(events.concat(topEvents));
-    }
-
-    // Remove special events
-    events = events.filter(ev =>
-      ev.name !== ShowClause.ALL_EVENTS.name && ev.name !== ShowClause.TOP_EVENTS.name
-    );
+    // fire one query per show clause
+    let eventQueries = state.sections.show.clauses.map(clause => {
+      const ev = clause.value;
+      if (ev.custom) {
+        // TODO custom event
+        return [ev];
+      } else {
+        switch(ev.name) {
+          case ShowClause.ALL_EVENTS.name:
+            return [];
+          case ShowClause.TOP_EVENTS.name:
+            return state.topEvents.slice(0, 12);
+          default:
+            return [ev];
+        }
+      }
+    });
 
     let type = ShowClause.MATH_TYPES[0];
-
-    if (events.length) {
+    if (eventQueries.length) {
       type = state.sections.show.clauses[0].math;
     }
 
@@ -137,21 +137,21 @@ export default class SegmentationQuery extends BaseQuery {
       to = new Date(new Date().getTime() - (MS_BY_UNIT[unit] * to));
     }
 
-    return {type, events, segments, filters, unit, from, to};
+    return {type, eventQueries, segments, filters, unit, from, to};
   }
 
   buildUrl() {
     return 'api/2.0/jql';
   }
 
-  buildParams() {
+  buildParams(events) {
     let scriptParams = {
       dates: {
         from: (new Date(this.query.from)).toISOString().split('T')[0],
         to:   (new Date(this.query.to)).toISOString().split('T')[0],
         unit: this.query.unit,
       },
-      events: this.query.events.map(ev => ({event: ev.name})),
+      events: events.map(ev => ({event: ev.name})),
       filters:
         this.query.filters
           .filter(filter => isFilterValid(filter))
@@ -169,14 +169,14 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   buildQueries() {
-    return [window.MP.api.query(this.buildUrl(), this.buildParams(), this.buildOptions())];
+    return this.query.eventQueries.map(events => window.MP.api.query(
+      this.buildUrl(), this.buildParams(events), this.buildOptions()
+    ));
   }
 
   executeQuery() {
     return Promise.all(this.buildQueries()).then(resultSets => {
-      // TODO combine all results
-      console.log('results', resultSets);
-      return resultSets[0];
+      return resultSets.reduce((acc, results) => acc.concat(results), []);
     });
   }
 
@@ -199,19 +199,21 @@ export default class SegmentationQuery extends BaseQuery {
       }, {});
     }
 
+    const queriedEvents = this.query.eventQueries.reduce((acc, events) => acc.concat(events), []);
+
     // For only one event or 'all events', which is also treated as one event in displaying for
     // groupBy, kill the top level group for the event name.
-    if (this.query.events.length > 1 || !this.query.segments.length) {
+    if (queriedEvents.length > 1 || !this.query.segments.length) {
       headers = ['$event'].concat(headers);
     }
 
     // Treat 'all events' as one event in groupBy display, so only add the special name back when
     // not displaying for groupBy.
-    if (this.query.events.length === 0 && this.query.segments.length === 0) {
+    if (queriedEvents.length === 0 && this.query.segments.length === 0) {
       series = {[ShowClause.ALL_EVENTS.name]: series};
-    } else if (this.query.events.length === 1 && this.query.segments.length) {
+    } else if (queriedEvents.length === 1 && this.query.segments.length) {
       // special case segmentation on one event
-      let ev = this.query.events[0];
+      let ev = queriedEvents[0];
       if (ev in series) {
         series = series[ev];
       }
