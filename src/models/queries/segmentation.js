@@ -93,7 +93,7 @@ export default class SegmentationQuery extends BaseQuery {
       const ev = clause.value;
       if (ev.custom) {
         // TODO custom event
-        return [ev];
+        return ev;
       } else {
         switch(ev.name) {
           case ShowClause.ALL_EVENTS.name:
@@ -144,20 +144,32 @@ export default class SegmentationQuery extends BaseQuery {
     return 'api/2.0/jql';
   }
 
-  buildParams(events) {
+  buildParams(eventData) {
+    // base params
     let scriptParams = {
       dates: {
         from: (new Date(this.query.from)).toISOString().split('T')[0],
         to:   (new Date(this.query.to)).toISOString().split('T')[0],
         unit: this.query.unit,
       },
-      events: events.map(ev => ({event: ev.name})),
       filters:
         this.query.filters
           .filter(filter => isFilterValid(filter))
           .map(filter => filterToParams(filter)),
       groups: this.query.segments,
     };
+
+    // insert events
+    if (eventData.custom) {
+      scriptParams.events = eventData.alternatives.map(ev => ({
+        event: ev.event,
+        selector: ev.serialized,
+      }));
+      scriptParams.customEventName = eventData.name;
+    } else {
+      scriptParams.events = eventData.map(ev => ({event: ev.name}));
+    }
+
     return {
       script: String(main),
       params: JSON.stringify(scriptParams),
@@ -178,7 +190,8 @@ export default class SegmentationQuery extends BaseQuery {
     return Promise.all(this.runQueries()).then(resultSets => {
       // add "All Events" top level if necessary
       for (let qi = 0; qi < this.query.eventQueries.length; qi++) {
-        if (!this.query.eventQueries[qi].length) {
+        let query = this.query.eventQueries[qi];
+        if (!query.custom && !query.length) {
           resultSets[qi].forEach(result => result.key.unshift(ShowClause.ALL_EVENTS.name));
         }
       }

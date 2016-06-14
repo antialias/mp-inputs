@@ -112,7 +112,14 @@ module.exports = function main() {
     };
   }
 
-  var groups = params.events && params.events.length ? ['name'] : [];
+  var groups = [];
+  if (params.customEventName) {
+    groups.push(function() {
+      return params.customEventName;
+    });
+  } else if (params.events && params.events.length) {
+    groups.push('name');
+  }
   if (params.groups) {
     groups = groups.concat(params.groups.map(function(group) { return 'properties.' + group; }));
   }
