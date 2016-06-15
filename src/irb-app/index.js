@@ -69,7 +69,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       topProperties: new TopPropertiesQuery(),
       topPropertyValues: new TopPropertyValuesQuery(),
       topPropertyValuesCache: new QueryCache(),
-      segmentation: new SegmentationQuery(),
+      segmentation: new SegmentationQuery(this.customEvents),
       segmentationCache: new QueryCache(),
     };
     this.resetTopQueries();

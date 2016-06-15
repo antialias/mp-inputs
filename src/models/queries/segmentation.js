@@ -1,6 +1,7 @@
 import BaseQuery from './base';
 import { ShowClause } from '../clause';
 import main from './segmentation.jql.js';
+import { extend } from '../../util';
 
 const MS_IN_HOUR = 60 * 60 * 1000;
 const MS_IN_DAY = MS_IN_HOUR * 24;
@@ -82,6 +83,11 @@ function filterToParams(filter) {
 }
 
 export default class SegmentationQuery extends BaseQuery {
+  constructor(customEvents) {
+    super(...arguments);
+    this.customEvents = customEvents;
+  }
+
   get valid() {
     // only valid if one or more queries is prepared
     return !!this.query.eventQueries.length;
@@ -161,10 +167,7 @@ export default class SegmentationQuery extends BaseQuery {
 
     // insert events
     if (eventData.custom) {
-      scriptParams.events = eventData.alternatives.map(ev => ({
-        event: ev.event,
-        selector: ev.serialized,
-      }));
+      scriptParams.events = this.customEventToSelectors(eventData);
       scriptParams.customEventName = eventData.name;
     } else if (eventData.length === 0) {
       scriptParams.events = [];
@@ -240,5 +243,41 @@ export default class SegmentationQuery extends BaseQuery {
       }
     }
     return {series, headers};
+  }
+
+  // convert custom event data struct to format for JQL selectors:
+  // [{event: 'foo', selector: 'bar'}, {event: 'foo', selector: 'bar'}]
+  // including merging nested custom events
+  customEventToSelectors(ce) {
+    return ce.alternatives.reduce((selectors, ev) => {
+
+      const selector = {
+        event: ev.event,
+        selector: ev.serialized,
+      };
+      let currentSelectors = [];
+
+      const cidMatch = selector.event.match(/\$custom_event:(\d+)/);
+      if (cidMatch) {
+        // nested custom event
+        const cid = Number(cidMatch[1]);
+        let nestedCE = this.customEvents.find(c => c.id === cid);
+        if (!nestedCE) {
+          console.error(`No custom event with ID ${cid} found!`);
+        } else {
+          // merge nested CE's selectors with this one's
+          let nestedSelectors = this.customEventToSelectors(nestedCE)
+            .map(nestedSelector => extend(nestedSelector, {
+              selector: [nestedSelector.selector, selector.selector].filter(Boolean).join(' and '),
+            }));
+          currentSelectors = currentSelectors.concat(nestedSelectors);
+        }
+      } else {
+        // unnested
+        currentSelectors.push(selector);
+      }
+
+      return selectors.concat(currentSelectors);
+    }, []);
   }
 }
