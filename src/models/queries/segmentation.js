@@ -98,7 +98,6 @@ export default class SegmentationQuery extends BaseQuery {
     let eventQueries = state.sections.show.clauses.map(clause => {
       const ev = clause.value;
       if (ev.custom) {
-        // TODO custom event
         return ev;
       } else {
         switch(ev.name) {
