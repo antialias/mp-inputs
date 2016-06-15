@@ -156,6 +156,10 @@ module.exports = function main() {
     return Math.round(count);
   };
 
+  var sliceOffDistinctId = function(row) {
+    return row.key.slice(1);
+  };
+
   var query = Events({
     event_selectors: params.events,
     from_date: params.dates.from,
@@ -167,10 +171,54 @@ module.exports = function main() {
   if (params.type === 'unique') {
     query = query.groupByUser(groups, function() {return 1;})
     // Slice off distinct_id and group again.
-      .groupBy(
-        [function(row) {return row.key.slice(1);}],
-        countWithSampling
-      );
+      .groupBy([sliceOffDistinctId], countWithSampling);
+  } else if (params.type === 'average' || params.type === 'median') {
+    var operatorFuncs = {
+      average: function(list) {
+        return list.reduce(function(prev, curr) {return prev + curr;}) / list.length;
+      },
+      median: function(list) {
+        var median;
+        list = list.sort();
+        var length = list.length;
+        if (length % 2 === 0) {
+          median = (list[length / 2 - 1] + list[length / 2]) / 2;
+        } else {
+          median = list[(length - 1) / 2];
+        }
+        return median;
+      },
+    };
+
+    var countWithSamplingForGroupByUser = function(count, events) {
+      count = count || 0;
+      for (var i = 0; i < events.length; i++) {
+        var ev = events[i];
+        if (ev.sampling_factor && ev.sampling_factor <= 1.0) {
+          count += 1.0 / ev.sampling_factor;
+        } else {
+          count++;
+        }
+      }
+      return Math.round(count);
+    };
+
+    var toList = function(accumulators, items) {
+      var output = items.map(item => item.value);
+      _.each(accumulators, function(a) {
+        _.each(a, function(item) {
+          output.push(item);
+        });
+      });
+      return output;
+    };
+
+    query = query.groupByUser(groups, countWithSamplingForGroupByUser)
+      .groupBy([sliceOffDistinctId], toList)
+      .map(function(item) {
+        item.value = operatorFuncs[params.type](item.value);
+        return item;
+      });
   } else {
     query = query.groupBy(groups, countWithSampling);
   }

@@ -139,7 +139,7 @@ export default class SegmentationQuery extends BaseQuery {
       to = new Date(new Date().getTime() - (MS_BY_UNIT[unit] * to));
     }
 
-    if (type === 'unique' && state.chartType !== 'line') {
+    if (['unique', 'average', 'median'].includes(type) && state.chartType !== 'line') {
       unit = 'all';
     }
 
