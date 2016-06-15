@@ -151,6 +151,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     const stageClauses = this.state.stageClauses.concat(this.state.sections[sectionType].clauses[clauseIndex]);
 
     if (stageClauses.length) {
+      for (const clause of stageClauses) {
+        clause.search = '';
+      }
       this.update({
         stageClauses,
         stageClauseIndex: clauseIndex,
