@@ -9,7 +9,7 @@
       li(
         class={
           selected: math === selectedMath,
-          disabled: math === 'sum' || math === 'median',
+          disabled: math === 'sum',
         }
         onclick=() => $helpers.updateStageClause({math})
       )= util.capitalize(math)
