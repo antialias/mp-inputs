@@ -166,6 +166,9 @@ export default class SegmentationQuery extends BaseQuery {
         selector: ev.serialized,
       }));
       scriptParams.customEventName = eventData.name;
+    } else if (eventData.length === 0) {
+      scriptParams.events = [];
+      scriptParams.customEventName = ShowClause.ALL_EVENTS.name;
     } else {
       scriptParams.events = eventData.map(ev => ({event: ev.name}));
     }
@@ -188,14 +191,6 @@ export default class SegmentationQuery extends BaseQuery {
 
   executeQuery() {
     return Promise.all(this.runQueries()).then(resultSets => {
-      // add "All Events" top level if necessary
-      for (let qi = 0; qi < this.query.eventQueries.length; qi++) {
-        let query = this.query.eventQueries[qi];
-        if (!query.custom && !query.length) {
-          resultSets[qi].forEach(result => result.key.unshift(ShowClause.ALL_EVENTS.name));
-        }
-      }
-
       return resultSets.reduce((acc, results) => acc.concat(results), []);
     });
   }
@@ -219,21 +214,29 @@ export default class SegmentationQuery extends BaseQuery {
       }, {});
     }
 
-    const queriedEvents = this.query.eventQueries.reduce((acc, events) => acc.concat(events), []);
+    const queriedEventNames = this.query.eventQueries.reduce((acc, eventData) => {
+      let names = [];
+      if (eventData.custom) {
+        names.push(eventData.name);
+      } else if (eventData.length === 0) {
+        names.push(ShowClause.ALL_EVENTS.name);
+      } else {
+        names.push(eventData.map(ev => ev.name));
+      }
+      return acc.concat(names);
+    }, []);
 
     // For only one event or 'all events', which is also treated as one event in displaying for
     // groupBy, kill the top level group for the event name.
-    if (queriedEvents.length > 1 || !this.query.segments.length) {
+    if (queriedEventNames.length > 1 || !this.query.segments.length) {
       headers = ['$event'].concat(headers);
     }
 
-    // Treat 'all events' as one event in groupBy display, so only add the special name back when
-    // not displaying for groupBy.
-    if (queriedEvents.length === 1 && this.query.segments.length) {
-      // special case segmentation on one event
-      let ev = queriedEvents[0];
-      if (ev in series) {
-        series = series[ev];
+    // special case segmentation on one event
+    if (queriedEventNames.length === 1 && this.query.segments.length) {
+      const evName = queriedEventNames[0];
+      if (evName in series) {
+        series = series[evName];
       }
     }
     return {series, headers};

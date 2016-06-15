@@ -161,10 +161,6 @@ module.exports = function main() {
   if (params.filters && params.filters.length) {
     query = query.filter(filterByParams);
   }
-  if (groups.length) {
-    query = query.groupBy(groups, countWithSampling);
-  } else {
-    query = query.reduce(countWithSampling);
-  }
+  query = query.groupBy(groups, countWithSampling);
   return query;
 };
