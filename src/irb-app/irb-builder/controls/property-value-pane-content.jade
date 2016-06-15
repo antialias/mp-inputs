@@ -47,7 +47,7 @@
                 )
 
             ul.filter-string-equals-choices
-              for value in $helpers.getValueMatches($component.app.activeStageClause.filterSearch)
+              for value in $helpers.getEqualsMatches()
                 li(class={selected: selectedValue && selectedValue.indexOf(value) !== -1})
                   button(onclick=() => $helpers.toggleStringEqualsValueSelected(value))= util.renamePropertyValue(value)
 
