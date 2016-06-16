@@ -82,6 +82,72 @@ function filterToParams(filter) {
   return params;
 }
 
+class JQLQuery {
+  constructor(showClause, state) {
+    const ev = showClause.value;
+
+    // insert events
+    let events;
+    if (ev.custom) {
+      events = this.customEventToSelectors(ev);
+    } else {
+      switch(ev.name) {
+        case ShowClause.ALL_EVENTS.name:
+          events = [];
+          break;
+        case ShowClause.TOP_EVENTS.name:
+          events = state.topEvents.slice(0, 12);
+          break;
+        default:
+          events = [ev];
+          break;
+      }
+      events = events.map(ev => ({event: ev.name}));
+    }
+
+    this.events = events;
+
+    // Treat 'All Events' as a custom event
+    if (ev.custom || ev.name === ShowClause.ALL_EVENTS.name) {
+      this.customEventName = ev.name;
+    }
+
+    this.type = showClause.math;
+
+    this.unit = state.sections.time.clauses[0].unit;
+    if (['unique', 'average', 'median'].includes(this.type) && state.chartType !== 'line') {
+      this.unit = 'all';
+    }
+
+    this.displayNames = {};
+  }
+
+  eventNames() {
+    let names = [];
+    if (this.customEventName) {
+      names = [this.customEventName];
+    } else {
+      names = this.events.map(ev => ev.event);
+    }
+    return names;
+  }
+
+  setDisplayName(name, eventQueries) {
+    const index = eventQueries.indexOf(this);
+    this.displayNames[name] = [renameEvent(name), '(' + this.type.toUpperCase() + ')', '#' + (index + 1)].join(' ');
+  }
+
+  prepareDisplayNames(otherEventQuery, eventQueries) {
+    const otherNames = otherEventQuery.eventNames();
+    this.eventNames().forEach(name => {
+      if (otherNames.includes(name)) {
+        this.setDisplayName(name, eventQueries);
+        otherEventQuery.setDisplayName(name, eventQueries);
+      }
+    });
+  }
+}
+
 export default class SegmentationQuery extends BaseQuery {
   constructor(customEvents) {
     super(...arguments);
@@ -95,46 +161,9 @@ export default class SegmentationQuery extends BaseQuery {
 
   buildQuery(state) {
     // fire one query per show clause
-    let eventQueries = state.sections.show.clauses.map(clause => {
-      const ev = clause.value;
+    let eventQueries = state.sections.show.clauses.map(showClause => new JQLQuery(showClause, state));
 
-      // insert events
-      let events;
-      if (ev.custom) {
-        events = this.customEventToSelectors(ev);
-      } else {
-        switch(ev.name) {
-          case ShowClause.ALL_EVENTS.name:
-            events = [];
-            break;
-          case ShowClause.TOP_EVENTS.name:
-            events = state.topEvents.slice(0, 12);
-            break;
-          default:
-            events = [ev];
-            break;
-        }
-        events = events.map(ev => ({event: ev.name}));
-      }
-
-      // Treat 'All Events' as a custom event
-      let customEventName;
-      if (ev.custom || ev.name === ShowClause.ALL_EVENTS.name) {
-        customEventName = ev.name;
-      }
-
-      let type = clause.math;
-
-      let unit = state.sections.time.clauses[0].unit;
-      if (['unique', 'average', 'median'].includes(type) && state.chartType !== 'line') {
-        unit = 'all';
-      }
-
-      const displayNames = {};
-
-      return {events, customEventName, type, unit, displayNames};
-    });
-
+    // data global to all JQL queries.
     const segments = state.sections.group.clauses.map(clause => clause.value);
     const filters = state.sections.filter.clauses.map(clause => clause.attrs);
 
@@ -194,32 +223,10 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   preprocessNameConflicts() {
-    const getNames = eventQuery => {
-      let names = [];
-      if (eventQuery.customEventName) {
-        names = [eventQuery.customEventName];
-      } else {
-        names = eventQuery.events.map(ev => ev.event);
-      }
-      return names;
-    };
-    const setDisplayname = (eventQuery, name, index) => {
-      eventQuery.displayNames[name] = [renameEvent(name), '(' + eventQuery.type.toUpperCase() + ')', '#' + (index + 1)].join(' ');
-    };
-
     let eventQueries = this.query.eventQueries;
     for (let i = 0; i < eventQueries.length - 1; i++) {
       for (let j = i + 1; j < eventQueries.length; j++) {
-        let eventQueryI = eventQueries[i];
-        let eventQueryJ = eventQueries[j];
-        let namesI = getNames(eventQueryI);
-        let namesJ = getNames(eventQueryJ);
-        namesI.forEach(name => {
-          if (namesJ.includes(name)) {
-            setDisplayname(eventQueryI, name, i);
-            setDisplayname(eventQueryJ, name, j);
-          }
-        });
+        eventQueries[i].prepareDisplayNames(eventQueries[j], eventQueries);
       }
     }
   }
