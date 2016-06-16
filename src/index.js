@@ -6,6 +6,8 @@ import 'webcomponents.js/webcomponents-lite';
 
 import Framesg from 'framesg';
 
+import { mixpanel } from './tracking';
+
 import './irb-app';
 
 import './stylesheets/index.styl';
@@ -23,6 +25,14 @@ const initIRB = () => new Promise(resolve => {
   } else {
     const parentFrame = new Framesg(window.parent, 'mp-app', {
       startApp: parentData => {
+        mixpanel.identify(parentData.user_id);
+        mixpanel.register({
+          'Email':      parentData.user_email,
+          'Project ID': parentData.project_id,
+          'User ID':    parentData.user_id,
+        });
+        mixpanel.track('Viewed report');
+
         IRB.setParentFrame(parentFrame, parentData);
         resolve(IRB);
       },
