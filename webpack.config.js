@@ -79,7 +79,7 @@ if (process.env.NODE_ENV === 'development') {
       new webpack.DefinePlugin({
         API_LOCAL: JSON.stringify(false),
         DEBUG_LOG: JSON.stringify(false),
-        MIXPANEL_TOKEN: JSON.stringify('<IRB production Mixpanel project token>'),
+        MIXPANEL_TOKEN: JSON.stringify('2fd54f3085a7b7d70da94096fc415078'),
       }),
       new ExtractTextPlugin('build-production/bundle.[hash].min.css'),
       new HtmlWebpackPlugin({
