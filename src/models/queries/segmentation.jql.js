@@ -1,4 +1,4 @@
-/* global Events, module, params */
+/* global Events, module, params, _*/
 
 // parameterized JQL segmentation query
 //
