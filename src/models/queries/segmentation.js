@@ -132,17 +132,17 @@ class JQLQuery {
     return names;
   }
 
-  setDisplayName(name, eventQueries) {
-    const index = eventQueries.indexOf(this);
+  setDisplayName(name, jqlQueries) {
+    const index = jqlQueries.indexOf(this);
     this.displayNames[name] = [renameEvent(name), '(' + this.type.toUpperCase() + ')', '#' + (index + 1)].join(' ');
   }
 
-  prepareDisplayNames(otherEventQuery, eventQueries) {
+  prepareDisplayNames(otherEventQuery, jqlQueries) {
     const otherNames = otherEventQuery.eventNames();
     this.eventNames().forEach(name => {
       if (otherNames.includes(name)) {
-        this.setDisplayName(name, eventQueries);
-        otherEventQuery.setDisplayName(name, eventQueries);
+        this.setDisplayName(name, jqlQueries);
+        otherEventQuery.setDisplayName(name, jqlQueries);
       }
     });
   }
@@ -156,12 +156,12 @@ export default class SegmentationQuery extends BaseQuery {
 
   get valid() {
     // only valid if one or more queries is prepared
-    return !!this.query.eventQueries.length;
+    return !!this.query.jqlQueries.length;
   }
 
   buildQuery(state) {
     // fire one query per show clause
-    let eventQueries = state.sections.show.clauses.map(showClause => new JQLQuery(showClause, state));
+    let jqlQueries = state.sections.show.clauses.map(showClause => new JQLQuery(showClause, state));
 
     // data global to all JQL queries.
     const segments = state.sections.group.clauses.map(clause => clause.value);
@@ -187,29 +187,29 @@ export default class SegmentationQuery extends BaseQuery {
       to = new Date(new Date().getTime() - (MS_BY_UNIT[unit] * to));
     }
 
-    return {eventQueries, segments, filters, from, to};
+    return {jqlQueries, segments, filters, from, to};
   }
 
   buildUrl() {
     return 'api/2.0/jql';
   }
 
-  buildParams(eventQuery) {
+  buildParams(jqlQuery) {
     // base params
     let scriptParams = {
-      events: eventQuery.events,
-      customEventName: eventQuery.customEventName,
+      events: jqlQuery.events,
+      customEventName: jqlQuery.customEventName,
       dates: {
         from: (new Date(this.query.from)).toISOString().split('T')[0],
         to:   (new Date(this.query.to)).toISOString().split('T')[0],
-        unit: eventQuery.unit,
+        unit: jqlQuery.unit,
       },
       filters:
         this.query.filters
           .filter(filter => isFilterValid(filter))
           .map(filter => filterToParams(filter)),
       groups: this.query.segments,
-      type: eventQuery.type,
+      type: jqlQuery.type,
     };
 
     return {
@@ -223,18 +223,18 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   preprocessNameConflicts() {
-    let eventQueries = this.query.eventQueries;
-    for (let i = 0; i < eventQueries.length - 1; i++) {
-      for (let j = i + 1; j < eventQueries.length; j++) {
-        eventQueries[i].prepareDisplayNames(eventQueries[j], eventQueries);
+    let jqlQueries = this.query.jqlQueries;
+    for (let i = 0; i < jqlQueries.length - 1; i++) {
+      for (let j = i + 1; j < jqlQueries.length; j++) {
+        jqlQueries[i].prepareDisplayNames(jqlQueries[j], jqlQueries);
       }
     }
   }
 
   runQueries() {
     this.preprocessNameConflicts();
-    return this.query.eventQueries.map(eventQuery => window.MP.api.query(
-      this.buildUrl(), this.buildParams(eventQuery), this.buildOptions()
+    return this.query.jqlQueries.map(jqlQuery => window.MP.api.query(
+      this.buildUrl(), this.buildParams(jqlQuery), this.buildOptions()
     ));
   }
 
@@ -243,7 +243,7 @@ export default class SegmentationQuery extends BaseQuery {
       return resultSets.reduce((acc, results, index) => {
         // resolve name conflicts
         results.forEach(result => {
-          const displayName = this.query.eventQueries[index].displayNames[result.key[0]];
+          const displayName = this.query.jqlQueries[index].displayNames[result.key[0]];
           if (displayName) {
             result.key[0] = displayName;
           }
@@ -272,12 +272,12 @@ export default class SegmentationQuery extends BaseQuery {
       }, {});
     }
 
-    const queriedEventNames = this.query.eventQueries.reduce((acc, eventQuery) => {
+    const queriedEventNames = this.query.jqlQueries.reduce((acc, jqlQuery) => {
       let names = [];
-      if (eventQuery.customEventName) {
-        names.push(eventQuery.customEventName);
+      if (jqlQuery.customEventName) {
+        names.push(jqlQuery.customEventName);
       } else {
-        names.push(eventQuery.events);
+        names.push(jqlQuery.events);
       }
       return acc.concat(names);
     }, []);
