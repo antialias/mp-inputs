@@ -30,6 +30,7 @@
     "framesg": "^0.1.2",
     "mixpanel-common": "^0.3.14",
     "panel": "^0.8.1",
+    "pikaday": "^1.4.0",
     "virtual-dom": "^2.1.1",
     "webcomponent": "0.1.2",
     "webcomponents.js": "0.7.22"

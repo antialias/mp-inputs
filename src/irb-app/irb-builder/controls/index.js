@@ -1,6 +1,7 @@
 import { Component } from 'panel';
 
 import './date-picker';
+import './mp-calendar';
 
 import template from './index.jade';
 import './index.styl';

@@ -108,7 +108,6 @@
       when 'datetime'
         case selectedOperator
           when 'was between'
-          when 'was on'
             - const from = selectedValue ? selectedValue[0] : null;
             - const to = selectedValue ? selectedValue[1] : null;
             .filter-value-input
@@ -116,6 +115,9 @@
                 value=JSON.stringify({from, to})
                 onchange=ev => $helpers.updateStageClause({filterValue: [new Date(ev.target.value.from), new Date(ev.target.value.to)]})
               )
+          when 'was on'
+            .filter-value-input
+              mp-calendar(onchange=$helpers.updateDate)
           default
             .filter-value-input.filter-days-ago
               // TODO: we are required to recreate this input between panes switches because of
