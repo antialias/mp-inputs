@@ -1,7 +1,7 @@
 import BaseQuery from './base';
 import { ShowClause } from '../clause';
 import main from './segmentation.jql.js';
-import { extend } from '../../util';
+import { extend, renameEvent } from '../../util';
 
 const MS_IN_HOUR = 60 * 60 * 1000;
 const MS_IN_DAY = MS_IN_HOUR * 24;
@@ -124,15 +124,15 @@ export default class SegmentationQuery extends BaseQuery {
       }
 
       let type = clause.math;
-      // remap total -> general
-      type = type === 'total' ? 'general' : type;
 
       let unit = state.sections.time.clauses[0].unit;
       if (['unique', 'average', 'median'].includes(type) && state.chartType !== 'line') {
         unit = 'all';
       }
 
-      return {events, customEventName, type, unit};
+      const displayNames = {};
+
+      return {events, customEventName, type, unit, displayNames};
     });
 
     const segments = state.sections.group.clauses.map(clause => clause.value);
@@ -193,7 +193,39 @@ export default class SegmentationQuery extends BaseQuery {
     return {type: 'POST'};
   }
 
+  preprocessNameConflicts() {
+    const getNames = eventQuery => {
+      let names = [];
+      if (eventQuery.customEventName) {
+        names = [eventQuery.customEventName];
+      } else {
+        names = eventQuery.events.map(ev => ev.event);
+      }
+      return names;
+    };
+    const setDisplayname = (eventQuery, name, index) => {
+      eventQuery.displayNames[name] = [renameEvent(name), '(' + eventQuery.type.toUpperCase() + ')', '#' + (index + 1)].join(' ');
+    };
+
+    let eventQueries = this.query.eventQueries;
+    for (let i = 0; i < eventQueries.length - 1; i++) {
+      for (let j = i + 1; j < eventQueries.length; j++) {
+        let eventQueryI = eventQueries[i];
+        let eventQueryJ = eventQueries[j];
+        let namesI = getNames(eventQueryI);
+        let namesJ = getNames(eventQueryJ);
+        namesI.forEach(name => {
+          if (namesJ.includes(name)) {
+            setDisplayname(eventQueryI, name, i);
+            setDisplayname(eventQueryJ, name, j);
+          }
+        });
+      }
+    }
+  }
+
   runQueries() {
+    this.preprocessNameConflicts();
     return this.query.eventQueries.map(eventQuery => window.MP.api.query(
       this.buildUrl(), this.buildParams(eventQuery), this.buildOptions()
     ));
@@ -201,7 +233,16 @@ export default class SegmentationQuery extends BaseQuery {
 
   executeQuery() {
     return Promise.all(this.runQueries()).then(resultSets => {
-      return resultSets.reduce((acc, results) => acc.concat(results), []);
+      return resultSets.reduce((acc, results, index) => {
+        // resolve name conflicts
+        results.forEach(result => {
+          const displayName = this.query.eventQueries[index].displayNames[result.key[0]];
+          if (displayName) {
+            result.key[0] = displayName;
+          }
+        });
+        return acc.concat(results);
+      }, []);
     });
   }
 
