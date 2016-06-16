@@ -97,30 +97,49 @@ export default class SegmentationQuery extends BaseQuery {
     // fire one query per show clause
     let eventQueries = state.sections.show.clauses.map(clause => {
       const ev = clause.value;
+
+      // insert events
+      let events;
       if (ev.custom) {
-        return ev;
+        events = this.customEventToSelectors(ev);
       } else {
         switch(ev.name) {
           case ShowClause.ALL_EVENTS.name:
-            return [];
+            events = [];
+            break;
           case ShowClause.TOP_EVENTS.name:
-            return state.topEvents.slice(0, 12);
+            events = state.topEvents.slice(0, 12);
+            break;
           default:
-            return [ev];
+            events = [ev];
+            break;
         }
+        events = events.map(ev => ({event: ev.name}));
       }
+
+      // Treat 'All Events' as a custom event
+      let customEventName;
+      if (ev.custom || ev.name === ShowClause.ALL_EVENTS.name) {
+        customEventName = ev.name;
+      }
+
+      let type = clause.math;
+      // remap total -> general
+      type = type === 'total' ? 'general' : type;
+
+      let unit = state.sections.time.clauses[0].unit;
+      if (['unique', 'average', 'median'].includes(type) && state.chartType !== 'line') {
+        unit = 'all';
+      }
+
+      return {events, customEventName, type, unit};
     });
-
-    let type = state.sections.show.clauses[0].math;
-
-    // remap total -> general
-    type = type === 'total' ? 'general' : type;
 
     const segments = state.sections.group.clauses.map(clause => clause.value);
     const filters = state.sections.filter.clauses.map(clause => clause.attrs);
 
     const time = state.sections.time.clauses[0];
-    var unit = time.unit;
+    const unit = time.unit;
     let from = 0;
     let to = 0;
 
@@ -139,11 +158,7 @@ export default class SegmentationQuery extends BaseQuery {
       to = new Date(new Date().getTime() - (MS_BY_UNIT[unit] * to));
     }
 
-    if (['unique', 'average', 'median'].includes(type) && state.chartType !== 'line') {
-      unit = 'all';
-    }
-
-    return {type, eventQueries, segments, filters, unit, from, to};
+    return {eventQueries, segments, filters, from, to};
   }
 
   buildUrl() {
@@ -153,29 +168,20 @@ export default class SegmentationQuery extends BaseQuery {
   buildParams(eventData) {
     // base params
     let scriptParams = {
+      events: eventData.events,
+      customEventName: eventData.customEventName,
       dates: {
         from: (new Date(this.query.from)).toISOString().split('T')[0],
         to:   (new Date(this.query.to)).toISOString().split('T')[0],
-        unit: this.query.unit,
+        unit: eventData.unit,
       },
       filters:
         this.query.filters
           .filter(filter => isFilterValid(filter))
           .map(filter => filterToParams(filter)),
       groups: this.query.segments,
-      type: this.query.type,
+      type: eventData.type,
     };
-
-    // insert events
-    if (eventData.custom) {
-      scriptParams.events = this.customEventToSelectors(eventData);
-      scriptParams.customEventName = eventData.name;
-    } else if (eventData.length === 0) {
-      scriptParams.events = [];
-      scriptParams.customEventName = ShowClause.ALL_EVENTS.name;
-    } else {
-      scriptParams.events = eventData.map(ev => ({event: ev.name}));
-    }
 
     return {
       script: String(main),
@@ -220,12 +226,10 @@ export default class SegmentationQuery extends BaseQuery {
 
     const queriedEventNames = this.query.eventQueries.reduce((acc, eventData) => {
       let names = [];
-      if (eventData.custom) {
-        names.push(eventData.name);
-      } else if (eventData.length === 0) {
-        names.push(ShowClause.ALL_EVENTS.name);
+      if (eventData.customEventName) {
+        names.push(eventData.customEventName);
       } else {
-        names.push(eventData.map(ev => ev.name));
+        names.push(eventData.events);
       }
       return acc.concat(names);
     }, []);
