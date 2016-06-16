@@ -165,22 +165,22 @@ export default class SegmentationQuery extends BaseQuery {
     return 'api/2.0/jql';
   }
 
-  buildParams(eventData) {
+  buildParams(eventQuery) {
     // base params
     let scriptParams = {
-      events: eventData.events,
-      customEventName: eventData.customEventName,
+      events: eventQuery.events,
+      customEventName: eventQuery.customEventName,
       dates: {
         from: (new Date(this.query.from)).toISOString().split('T')[0],
         to:   (new Date(this.query.to)).toISOString().split('T')[0],
-        unit: eventData.unit,
+        unit: eventQuery.unit,
       },
       filters:
         this.query.filters
           .filter(filter => isFilterValid(filter))
           .map(filter => filterToParams(filter)),
       groups: this.query.segments,
-      type: eventData.type,
+      type: eventQuery.type,
     };
 
     return {
@@ -194,8 +194,8 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   runQueries() {
-    return this.query.eventQueries.map(events => window.MP.api.query(
-      this.buildUrl(), this.buildParams(events), this.buildOptions()
+    return this.query.eventQueries.map(eventQuery => window.MP.api.query(
+      this.buildUrl(), this.buildParams(eventQuery), this.buildOptions()
     ));
   }
 
@@ -224,12 +224,12 @@ export default class SegmentationQuery extends BaseQuery {
       }, {});
     }
 
-    const queriedEventNames = this.query.eventQueries.reduce((acc, eventData) => {
+    const queriedEventNames = this.query.eventQueries.reduce((acc, eventQuery) => {
       let names = [];
-      if (eventData.customEventName) {
-        names.push(eventData.customEventName);
+      if (eventQuery.customEventName) {
+        names.push(eventQuery.customEventName);
       } else {
-        names.push(eventData.events);
+        names.push(eventQuery.events);
       }
       return acc.concat(names);
     }, []);
