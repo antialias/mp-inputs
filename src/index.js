@@ -32,6 +32,7 @@ const initIRB = () => new Promise(resolve => {
           'User ID':    parentData.user_id,
         });
         mixpanel.track('Viewed report');
+        mixpanel.people.set({'Email': parentData.user_email});
 
         IRB.setParentFrame(parentFrame, parentData);
         resolve(IRB);
