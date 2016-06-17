@@ -272,28 +272,17 @@ export default class SegmentationQuery extends BaseQuery {
       }, {});
     }
 
-    const queriedEventNames = this.query.jqlQueries.reduce((acc, jqlQuery) => {
-      let names = [];
-      if (jqlQuery.customEventName) {
-        names.push(jqlQuery.customEventName);
-      } else {
-        names.push(jqlQuery.events);
-      }
-      return acc.concat(names);
-    }, []);
+    const queriedEventNames = this.query.jqlQueries.reduce((acc, jqlQuery) => acc.concat(jqlQuery.eventNames()), []);
 
-    // For only one event or 'all events', which is also treated as one event in displaying for
-    // groupBy, kill the top level group for the event name.
-    if (queriedEventNames.length > 1 || !this.query.segments.length) {
-      headers = ['$event'].concat(headers);
+    // All Event is considered just a normal event in display.
+    // When segmenting on only one event, don't display the top level names and header.
+    if (queriedEventNames.length === 1 && this.query.segments.length > 0) {
+      series = series[queriedEventNames[0]];
     }
 
-    // special case segmentation on one event
-    if (queriedEventNames.length === 1 && this.query.segments.length) {
-      const evName = queriedEventNames[0];
-      if (evName in series) {
-        series = series[evName];
-      }
+    // Add the special $event header when not doing groupBy or have more than one event name.
+    if (queriedEventNames.length > 1 || this.query.segments.length === 0) {
+      headers = ['$event'].concat(headers);
     }
     return {series, headers};
   }
