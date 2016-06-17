@@ -28,10 +28,8 @@
   "dependencies": {
     "babel-polyfill": "^6.7.4",
     "framesg": "^0.1.2",
-    "mixpanel-browser": "^2.7.2",
-    "mixpanel-common": "^0.3.11",
+    "mixpanel-common": "^0.3.14",
     "panel": "^0.8.1",
-    "rollbar-browser": "^1.8.5",
     "virtual-dom": "^2.1.1",
     "webcomponent": "0.1.2",
     "webcomponents.js": "0.7.22"
