@@ -270,8 +270,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         (chartType === 'line' && ['bar', 'table'].includes(this.state.chartType)
          || ['bar', 'table'].includes(chartType) && this.state.chartType === 'line')) {
       this.query(extend(this.state, {chartType}));
+    } else {
+      this.update({chartType});
     }
-    this.update({chartType});
   }
 
   query(state=this.state, useCache=true) {
@@ -290,7 +291,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           this.queries.segmentationCache.set(query, result, cacheExpiry);
         }
         this.updateSeriesData(result);
-        this.update({result});
+        this.update({result, chartType: state.chartType});
       })
       .catch(err => console.error(err));
 
