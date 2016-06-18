@@ -123,18 +123,12 @@ class JQLQuery {
   }
 
   eventNames() {
-    let names = [];
-    if (this.customEventName) {
-      names = [this.customEventName];
-    } else {
-      names = this.events.map(ev => ev.event);
-    }
-    return names;
+    return this.customEventName ? [this.customEventName] : this.events.map(ev => ev.event);
   }
 
   setDisplayName(name, jqlQueries) {
     const index = jqlQueries.indexOf(this);
-    this.displayNames[name] = [renameEvent(name), '(' + this.type.toUpperCase() + ')', '#' + (index + 1)].join(' ');
+    this.displayNames[name] = `${renameEvent(name)} (${this.type.toUpperCase()}) #${index + 1}`;
   }
 
   prepareDisplayNames(otherEventQuery, jqlQueries) {
@@ -280,7 +274,8 @@ export default class SegmentationQuery extends BaseQuery {
       series = series[queriedEventNames[0]];
     }
 
-    // Add the special $event header when not doing groupBy or have more than one event name.
+    // Add the special $event header when not doing groupBy or when there is more than one event
+    // name.
     if (queriedEventNames.length > 1 || this.query.segments.length === 0) {
       headers = ['$event'].concat(headers);
     }
