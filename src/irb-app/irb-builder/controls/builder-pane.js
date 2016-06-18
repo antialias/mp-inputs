@@ -152,6 +152,7 @@ document.registerElement('filter-property-value-pane-content', class extends Pan
         },
         showPropertyValues: () => this.app.hasStageClause() && !this.app.activeStageClause.filterOperatorIsSetOrNotSet,
         stopEditingClause: () => this.app.stopEditingClause(),
+        updateDate: ev => ev.detail && this.app.updateStageClause({filterValue: ev.detail}),
         updateStageClause: clauseData => this.app.updateStageClause(clauseData),
       }),
     });
