@@ -107,9 +107,10 @@ class JQLQuery {
 
     this.events = events;
 
-    // Treat 'All Events' as a custom event
+    // Custom events and 'All Events' are a special case since they can't be used in the JQL
+    // 'event_selectors' directly but we still want to track their display names.
     if (ev.custom || ev.name === ShowClause.ALL_EVENTS.name) {
-      this.customEventName = ev.name;
+      this.outputName = ev.name;
     }
 
     this.type = showClause.math;
@@ -123,7 +124,7 @@ class JQLQuery {
   }
 
   eventNames() {
-    return this.customEventName ? [this.customEventName] : this.events.map(ev => ev.event);
+    return this.outputName ? [this.outputName] : this.events.map(ev => ev.event);
   }
 
   setDisplayName(name, jqlQueries) {
@@ -192,7 +193,7 @@ export default class SegmentationQuery extends BaseQuery {
     // base params
     let scriptParams = {
       events: jqlQuery.events,
-      customEventName: jqlQuery.customEventName,
+      outputName: jqlQuery.outputName,
       dates: {
         from: (new Date(this.query.from)).toISOString().split('T')[0],
         to:   (new Date(this.query.to)).toISOString().split('T')[0],

@@ -113,9 +113,9 @@ module.exports = function main() {
   }
 
   var groups = [];
-  if (params.customEventName) {
+  if (params.outputName) {
     groups.push(function() {
-      return params.customEventName;
+      return params.outputName;
     });
   } else if (params.events && params.events.length) {
     groups.push('name');
