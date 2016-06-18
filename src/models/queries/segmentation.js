@@ -126,21 +126,6 @@ class JQLQuery {
   eventNames() {
     return this.outputName ? [this.outputName] : this.events.map(ev => ev.event);
   }
-
-  setDisplayName(name, jqlQueries) {
-    const index = jqlQueries.indexOf(this);
-    this.displayNames[name] = `${renameEvent(name)} (${this.type.toUpperCase()}) #${index + 1}`;
-  }
-
-  prepareDisplayNames(otherEventQuery, jqlQueries) {
-    const otherNames = otherEventQuery.eventNames();
-    this.eventNames().forEach(name => {
-      if (otherNames.includes(name)) {
-        this.setDisplayName(name, jqlQueries);
-        otherEventQuery.setDisplayName(name, jqlQueries);
-      }
-    });
-  }
 }
 
 export default class SegmentationQuery extends BaseQuery {
@@ -221,7 +206,15 @@ export default class SegmentationQuery extends BaseQuery {
     let jqlQueries = this.query.jqlQueries;
     for (let i = 0; i < jqlQueries.length - 1; i++) {
       for (let j = i + 1; j < jqlQueries.length; j++) {
-        jqlQueries[i].prepareDisplayNames(jqlQueries[j], jqlQueries);
+        jqlQueries[i].eventNames().forEach(name => {
+          const names = jqlQueries[j].eventNames();
+          if (names.includes(name)) {
+            var index = jqlQueries.indexOf(jqlQueries[i]);
+            jqlQueries[i].displayNames[name] = `${renameEvent(name)} (${jqlQueries[i].type.toUpperCase()}) #${index + 1}`;
+            index = jqlQueries.indexOf(jqlQueries[j]);
+            jqlQueries[j].displayNames[name] = `${renameEvent(name)} (${jqlQueries[j].type.toUpperCase()}) #${index + 1}`;
+          }
+        });
       }
     }
   }
