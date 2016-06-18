@@ -9,8 +9,9 @@ document.registerElement('mp-calendar', class extends WebComponent {
     this.inputEl.className = 'mp-pikaday-input';
 
     this.picker = new Pikaday({
-      field: this.inputEl,
       container: document.getElementsByClassName('calendar-hook')[0],
+      field: this.inputEl,
+      numberOfMonths: 2,
       onSelect: date => {
         console.log('Selected', date);
         this.dispatchEvent(new Event('change', {detail: date}));
