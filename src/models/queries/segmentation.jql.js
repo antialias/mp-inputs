@@ -1,4 +1,4 @@
-/* global Events, module, params, _*/
+/* global Events, People, join, module, params, _*/
 
 // parameterized JQL segmentation query
 //
@@ -98,13 +98,14 @@ function main() {
       'list contains':         listContains,
       'list does not contain': negate(listContains),
     };
-    var filterByParams = function(ev) {
+    var filterByParams = function(eventData) {
       for (var filter of params.filters) {
+        var filterData = filter.resourceType === 'people' ? eventData.user : eventData.event ;
         var filterTest = filterTests[filter.operator];
         if (!filterTest) {
           throw `Unknown filter operator: "${filter.operator}"`;
         }
-        if (!filterTest(filter.prop ? ev.properties[filter.prop] : ev.name, filter.expected)) {
+        if (!filterData || !filterTest(filter.prop ? filterData.properties[filter.prop] : filterData.name, filter.expected)) {
           return false;
         }
       }
@@ -118,17 +119,20 @@ function main() {
       return params.outputName;
     });
   } else if (params.events && params.events.length) {
-    groups.push('name');
+    groups = groups.concat(eventData => eventData.event.name);
   }
   if (params.groups) {
-    groups = groups.concat(params.groups.map(function(group) { return 'properties.' + group.value; }));
+    groups = groups.concat(params.groups.map(function(group) {
+      var sections = group.resourceType === 'people' ? ['user'] : ['event'];
+      return sections.concat('properties', group.value).join('.');
+    }));
   }
   var timeUnitGroupByFuncs = {
-    day: function(ev) {
-      return (new Date(ev.time)).toISOString().split('T')[0];
+    day: function(eventData) {
+      return (new Date(eventData.event.time)).toISOString().split('T')[0];
     },
-    hour: function(ev) {
-      var dateMatch = (new Date(ev.time)).toISOString().match(/(.+)T(\d\d):/);
+    hour: function(eventData) {
+      var dateMatch = (new Date(eventData.event.time)).toISOString().match(/(.+)T(\d\d):/);
       return `${dateMatch[1]} ${dateMatch[2]}:00:00`;
     },
     // 'all' is a special group for entire time range in order for different query results to have
@@ -143,7 +147,7 @@ function main() {
   var countWithSampling = function(counts, events) {
     var count = 0;
     for (var i = 0; i < events.length; i++) {
-      var ev = events[i];
+      var ev = events[i].event;
       if (ev.sampling_factor && ev.sampling_factor <= 1.0) {
         count += 1.0 / ev.sampling_factor;
       } else {
@@ -161,6 +165,14 @@ function main() {
     from_date: params.dates.from,
     to_date: params.dates.to,
   });
+
+  if (params.filters.concat(params.groups).some(param => param.resourceType === 'people')) {
+    query = join(query, People())
+      .filter(tuple => tuple.event);
+  } else {
+    query = query.map(event => ({event}));
+  }
+
   if (params.filters && params.filters.length) {
     query = query.filter(filterByParams);
   }
