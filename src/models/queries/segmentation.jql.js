@@ -100,7 +100,10 @@ function main() {
     };
     var filterByParams = function(eventData) {
       for (var filter of params.filters) {
-        var filterData = filter.resourceType === 'people' ? eventData.user : eventData.event ;
+        var filterData = eventData;
+        if (eventData.event) {
+          filterData = filter.resourceType === 'people' ? eventData.user : eventData.event;
+        }
         var filterTest = filterTests[filter.operator];
         if (!filterTest) {
           throw `Unknown filter operator: "${filter.operator}"`;
@@ -119,20 +122,27 @@ function main() {
       return params.outputName;
     });
   } else if (params.events && params.events.length) {
-    groups = groups.concat(eventData => eventData.event.name);
+    groups = groups.concat(eventData => (eventData.event ? eventData.event.name : eventData.name));
   }
+
+  var needsPeopleData = params.filters.concat(params.groups).some(param => param.resourceType === 'people');
   if (params.groups) {
     groups = groups.concat(params.groups.map(function(group) {
-      var sections = group.resourceType === 'people' ? ['user'] : ['event'];
+      var sections = [];
+      if (needsPeopleData) {
+        sections.push(group.resourceType === 'people' ? 'user' : 'event');
+      }
       return sections.concat('properties', group.value).join('.');
     }));
   }
   var timeUnitGroupByFuncs = {
     day: function(eventData) {
-      return (new Date(eventData.event.time)).toISOString().split('T')[0];
+      eventData = eventData.event || eventData;
+      return (new Date(eventData.time)).toISOString().split('T')[0];
     },
     hour: function(eventData) {
-      var dateMatch = (new Date(eventData.event.time)).toISOString().match(/(.+)T(\d\d):/);
+      eventData = eventData.event || eventData;
+      var dateMatch = (new Date(eventData.time)).toISOString().match(/(.+)T(\d\d):/);
       return `${dateMatch[1]} ${dateMatch[2]}:00:00`;
     },
     // 'all' is a special group for entire time range in order for different query results to have
@@ -147,7 +157,7 @@ function main() {
   var countWithSampling = function(counts, events) {
     var count = 0;
     for (var i = 0; i < events.length; i++) {
-      var ev = events[i].event;
+      var ev = events[i].event || events[i];
       if (ev.sampling_factor && ev.sampling_factor <= 1.0) {
         count += 1.0 / ev.sampling_factor;
       } else {
@@ -166,11 +176,8 @@ function main() {
     to_date: params.dates.to,
   });
 
-  if (params.filters.concat(params.groups).some(param => param.resourceType === 'people')) {
-    query = join(query, People())
-      .filter(tuple => tuple.event);
-  } else {
-    query = query.map(event => ({event}));
+  if (needsPeopleData) {
+    query = join(query, People()).filter(tuple => tuple.event);
   }
 
   if (params.filters && params.filters.length) {
@@ -206,7 +213,7 @@ function main() {
       var countWithSamplingForGroupByUser = function(count, events) {
         count = count || 0;
         for (var i = 0; i < events.length; i++) {
-          var ev = events[i];
+          var ev = events[i].event;
           if (ev.sampling_factor && ev.sampling_factor <= 1.0) {
             count += 1.0 / ev.sampling_factor;
           } else {
