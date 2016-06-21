@@ -122,10 +122,15 @@ function main() {
       return params.outputName;
     });
   } else if (params.events && params.events.length) {
-    groups = groups.concat(eventData => (eventData.event ? eventData.event.name : eventData.name));
+    groups = groups.concat(function(eventData) {
+      return eventData.event ? eventData.event.name : eventData.name
+    });
   }
 
-  var needsPeopleData = params.filters.concat(params.groups).some(param => param.resourceType === 'people');
+  var needsPeopleData = params.filters.concat(params.groups).some(function(param) {
+    return param.resourceType === 'people'
+  });
+
   if (params.groups) {
     groups = groups.concat(params.groups.map(function(group) {
       var sections = [];
@@ -177,7 +182,7 @@ function main() {
   });
 
   if (needsPeopleData) {
-    query = join(query, People()).filter(tuple => tuple.event);
+    query = join(query, People()).filter(function(tuple) { return tuple.event; });
   }
 
   if (params.filters && params.filters.length) {
