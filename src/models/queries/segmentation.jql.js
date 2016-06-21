@@ -124,9 +124,7 @@ function main() {
       return params.outputName;
     });
   } else if (params.events && params.events.length) {
-    groups = groups.concat(function(eventData) {
-      return getEvent(eventData).name;
-    });
+    groups.push(params.needsPeopleData ? 'event.name' : 'name');
   }
 
   if (params.groups) {

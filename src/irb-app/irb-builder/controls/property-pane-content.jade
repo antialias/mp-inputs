@@ -11,6 +11,6 @@
         li.property(
           class=[`type-${property.type}`, property.resourceType]
           class={selected: $helpers.isSelectedProperty(property)}
-          )
+        )
           span(onclick=() => $helpers.selectProperty(property))= util.renameProperty(property.name)
           button.next-arrow(onclick=() => $helpers.selectArrow(property)) ›

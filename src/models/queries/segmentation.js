@@ -195,7 +195,7 @@ export default class SegmentationQuery extends BaseQuery {
     };
 
     // As we need more helper data this should be moved down a level in the params
-    scriptParams.needsPeopleData = Array().concat(scriptParams.filters, scriptParams.groups).some(param => param.resourceType === 'people');
+    scriptParams.needsPeopleData = scriptParams.filters.concat(scriptParams.groups).some(param => param.resourceType === 'people');
 
     return {
       script: String(main),
