@@ -50,6 +50,7 @@ document.registerElement('time-pane', class extends Pane {
             this.app.updateStageClause({paneIndex: 0});
           });
         },
+        commitHandler: () => console.log('COMMITTTT'),
       }),
     });
   }
@@ -73,6 +74,7 @@ document.registerElement('time-pane', class extends Pane {
       {
         tag: 'custom-date-pane-content',
         constants: {
+          commitLabel: 'Update',
           header: 'Custom date range',
         },
       },
