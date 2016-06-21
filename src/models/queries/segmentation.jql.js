@@ -123,12 +123,12 @@ function main() {
     });
   } else if (params.events && params.events.length) {
     groups = groups.concat(function(eventData) {
-      return eventData.event ? eventData.event.name : eventData.name
+      return eventData.event ? eventData.event.name : eventData.name;
     });
   }
 
   var needsPeopleData = params.filters.concat(params.groups).some(function(param) {
-    return param.resourceType === 'people'
+    return param.resourceType === 'people';
   });
 
   if (params.groups) {
