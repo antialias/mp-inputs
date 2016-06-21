@@ -66,8 +66,10 @@ function filterToParams(filter) {
         params.expected = [params.expected, params.expected];
       }
       if (params.operator === 'was between') {
-        params.expected[0] = Number(moment.utc(params.expected[0]));
-        params.expected[1] = Number(moment.utc(params.expected[1]).add(1, 'day')) - 1;
+        params.expected = [
+          Number(moment.utc(params.expected[0])),
+          Number(moment.utc(params.expected[1]).add(1, 'day')) - 1,
+        ];
       } else {
         params.expected = new Date(new Date().getTime() - (params.expected * unitMS)).getTime();
       }
