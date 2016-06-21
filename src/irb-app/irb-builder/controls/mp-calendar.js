@@ -74,8 +74,6 @@ document.registerElement('mp-calendar', class extends WebComponent {
           this.inputs[0].picker.setStartRange(date);
           this.inputs[1].picker.setStartRange(date);
           this.inputs[1].picker.setMinDate(date);
-          this.inputs[0].picker.hide();
-          this.inputs[0].input.blur();
           this.emitChange();
           break;
         case 1:
@@ -83,8 +81,6 @@ document.registerElement('mp-calendar', class extends WebComponent {
           this.inputs[1].picker.setEndRange(date);
           this.inputs[0].picker.setEndRange(date);
           this.inputs[0].picker.setMaxDate(date);
-          this.inputs[1].picker.hide();
-          this.inputs[1].input.blur();
           this.emitChange();
           break;
       }
@@ -92,5 +88,7 @@ document.registerElement('mp-calendar', class extends WebComponent {
       this.startDate = date;
       this.emitChange();
     }
+    this.inputs[idx].picker.hide();
+    this.inputs[idx].input.blur();
   }
 });
