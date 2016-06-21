@@ -61,13 +61,13 @@ function filterToParams(filter) {
       params.dateUnit = filter.filterDateUnit;
       const unitMS = MS_BY_UNIT[params.dateUnit];
       if (params.operator === 'was on') {
+        // convert 'was on' to 'was between'
         params.operator = 'was between';
         params.expected = [params.expected, params.expected];
       }
       if (params.operator === 'was between') {
-        const date1 = moment.utc(params.expected[0]);
-        params.expected[0] = Number(date1);
-        params.expected[1] = Number(date1.clone().add(1, 'day')) - 1;
+        params.expected[0] = Number(moment.utc(params.expected[0]));
+        params.expected[1] = Number(moment.utc(params.expected[1]).add(1, 'day')) - 1;
       } else {
         params.expected = new Date(new Date().getTime() - (params.expected * unitMS)).getTime();
       }
