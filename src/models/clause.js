@@ -99,8 +99,27 @@ ShowClause.MATH_TYPES = ShowClause.prototype.MATH_TYPES = [
   'total', 'unique', 'average', 'sum', 'median',
 ];
 
-export class GroupClause extends EventsPropertiesClause {}
+const PROPERTY_TYPES = [
+  'string', 'number', 'datetime', 'boolean', 'list',
+];
+export class GroupClause extends EventsPropertiesClause {
+  constructor(attrs={}) {
+    super(...arguments);
+
+    this.filterType = attrs.filterType || GroupClause.FILTER_TYPES[0];
+  }
+
+  get valid() {
+    return super.valid &&
+      this.FILTER_TYPES.indexOf(this.filterType) !== -1;
+  }
+
+  get attrs() {
+    return extend(super.attrs, {filterType: this.filterType});
+  }
+}
 GroupClause.prototype.TYPE = 'group';
+GroupClause.FILTER_TYPES = GroupClause.prototype.FILTER_TYPES = PROPERTY_TYPES;
 
 export class TimeClause extends Clause {
   constructor(attrs={}) {
@@ -302,6 +321,4 @@ FilterClause.FILTER_OPERATORS = FilterClause.prototype.FILTER_OPERATORS = {
     'does not contain',
   ],
 };
-FilterClause.FILTER_TYPES = FilterClause.prototype.FILTER_TYPES = [
-  'string', 'number', 'datetime', 'boolean', 'list',
-];
+FilterClause.FILTER_TYPES = FilterClause.prototype.FILTER_TYPES = PROPERTY_TYPES;
