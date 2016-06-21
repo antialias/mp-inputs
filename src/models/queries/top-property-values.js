@@ -1,6 +1,6 @@
 import BaseQuery from './base';
 
-export class TopEventPropertyValuesQuery extends BaseQuery {
+class BasePropertyValuesQuery extends BaseQuery {
   buildQuery(state) {
     let property = null;
     if (typeof state.stageClauses === 'object' && state.stageClauses.length) {
@@ -8,7 +8,9 @@ export class TopEventPropertyValuesQuery extends BaseQuery {
     }
     return {property};
   }
+}
 
+export class TopEventPropertyValuesQuery extends BasePropertyValuesQuery {
   buildUrl() {
     return 'api/2.0/events/properties/values';
   }
@@ -18,7 +20,7 @@ export class TopEventPropertyValuesQuery extends BaseQuery {
   }
 }
 
-export class TopPeoplePropertyValuesQuery extends TopEventPropertyValuesQuery {
+export class TopPeoplePropertyValuesQuery extends BasePropertyValuesQuery {
   buildUrl() {
     return 'api/2.0/engage/values';
   }
