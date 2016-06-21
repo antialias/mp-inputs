@@ -86,6 +86,10 @@ document.registerElement('group-property-pane-content', class extends PaneConten
       template: propertyPaneContentTemplate,
 
       helpers: extend(super.config.helpers, {
+        isSelectedProperty: (property) => (
+          super.config.helpers.getActiveClauseProperty('value') === property.name &&
+          super.config.helpers.getActiveClauseProperty('resourceType') === property.resourceType
+        ),
         paneHandler: (property, shouldClosePane) => {
           const filterType = property.type;
           const originalValue = this.app.activeStageClause.value;

@@ -1,5 +1,3 @@
-- const selectedProperty = $helpers.getActiveClauseProperty('value');
-
 .property.pane-content
   ul.column.toggle.resource-type
     for resourceType in $component.resourceTypeChoices
@@ -12,7 +10,7 @@
       if $helpers.matchesSearch(util.renameProperty(property.name))
         li.property(
           class=[`type-${property.type}`, property.resourceType]
-          class={selected: property.name === selectedProperty}
+          class={selected: $helpers.isSelectedProperty(property)}
           )
           span(onclick=() => $helpers.selectProperty(property))= util.renameProperty(property.name)
           button.next-arrow(onclick=() => $helpers.selectArrow(property)) ›
