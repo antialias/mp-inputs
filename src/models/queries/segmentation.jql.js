@@ -98,23 +98,25 @@ function main() {
       'list contains':         listContains,
       'list does not contain': negate(listContains),
     };
+
     var filterByParams = function(eventData) {
       for (var filter of params.filters) {
-        var filterData = eventData;
-        if (eventData.event) {
-          filterData = filter.resourceType === 'people' ? eventData.user : eventData.event;
-        }
+        var dataToFilter = filter.resourceType === 'people' ? eventData.user : getEvent(eventData);
         var filterTest = filterTests[filter.operator];
         if (!filterTest) {
           throw `Unknown filter operator: "${filter.operator}"`;
         }
-        if (!filterData || !filterTest(filter.prop ? filterData.properties[filter.prop] : filterData.name, filter.expected)) {
+        if (!dataToFilter || !filterTest(filter.prop ? dataToFilter.properties[filter.prop] : dataToFilter.name, filter.expected)) {
           return false;
         }
       }
       return true;
     };
   }
+
+  var getEvent = function(eventData) {
+    return eventData.event || eventData;
+  };
 
   var groups = [];
   if (params.outputName) {
@@ -123,7 +125,7 @@ function main() {
     });
   } else if (params.events && params.events.length) {
     groups = groups.concat(function(eventData) {
-      return eventData.event ? eventData.event.name : eventData.name;
+      return getEvent(eventData).name;
     });
   }
 
@@ -138,12 +140,10 @@ function main() {
   }
   var timeUnitGroupByFuncs = {
     day: function(eventData) {
-      eventData = eventData.event || eventData;
-      return (new Date(eventData.time)).toISOString().split('T')[0];
+      return (new Date(getEvent(eventData).time)).toISOString().split('T')[0];
     },
     hour: function(eventData) {
-      eventData = eventData.event || eventData;
-      var dateMatch = (new Date(eventData.time)).toISOString().match(/(.+)T(\d\d):/);
+      var dateMatch = (new Date(getEvent(eventData).time)).toISOString().match(/(.+)T(\d\d):/);
       return `${dateMatch[1]} ${dateMatch[2]}:00:00`;
     },
     // 'all' is a special group for entire time range in order for different query results to have
@@ -158,7 +158,7 @@ function main() {
   var countWithSampling = function(counts, events) {
     var count = 0;
     for (var i = 0; i < events.length; i++) {
-      var ev = events[i].event || events[i];
+      var ev = getEvent(events[i]);
       if (ev.sampling_factor && ev.sampling_factor <= 1.0) {
         count += 1.0 / ev.sampling_factor;
       } else {
