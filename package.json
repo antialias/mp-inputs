@@ -29,6 +29,7 @@
     "babel-polyfill": "^6.7.4",
     "framesg": "^0.1.2",
     "mixpanel-common": "^0.3.14",
+    "moment": "^2.13.0",
     "panel": "^0.8.1",
     "pikaday": "^1.4.0",
     "virtual-dom": "^2.1.1",
