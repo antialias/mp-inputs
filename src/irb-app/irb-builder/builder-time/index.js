@@ -9,7 +9,8 @@ import { TimeClause } from '../../../models/clause';
 import { Pane, PaneContent } from '../../pane';
 
 import template from './index.jade';
-import timePaneContentTemplate from '../controls/time-pane-content.jade';
+import timePaneContentTemplate from './time-pane-content.jade';
+import customDatePaneContentTemplate from './custom-date-pane-content.jade';
 import './index.styl';
 
 document.registerElement('builder-time', class extends Component {
@@ -41,6 +42,18 @@ document.registerElement('time-edit-control', class extends EditControl {
 
 // dropdown content
 document.registerElement('time-pane', class extends Pane {
+  get config() {
+    return extend(super.config, {
+      helpers: extend(super.config.helpers, {
+        backButtonHandler: () => {
+          window.requestAnimationFrame(() =>{
+            this.app.updateStageClause({paneIndex: 0});
+          });
+        },
+      }),
+    });
+  }
+
   get constants() {
     return extend(super.constants, {
       header: 'Time',
@@ -51,6 +64,20 @@ document.registerElement('time-pane', class extends Pane {
   get section() {
     return 'time';
   }
+
+  get subpanes() {
+    return [
+      {
+        tag: 'time-pane-content',
+      },
+      {
+        tag: 'custom-date-pane-content',
+        constants: {
+          header: 'Custom date range',
+        },
+      },
+    ];
+  }
 });
 
 document.registerElement('time-pane-content', class extends PaneContent {
@@ -60,8 +87,14 @@ document.registerElement('time-pane-content', class extends PaneContent {
 
       helpers: extend(super.config.helpers, {
         selectTimeRange: range => {
-          this.app.updateStageClause({range});
-          this.app.commitStageClause();
+          if (range === this.constants.customRange) {
+            window.requestAnimationFrame(() => {
+              this.app.updateStageClause({paneIndex: 1});
+            });
+          } else {
+            this.app.updateStageClause({range});
+            this.app.commitStageClause();
+          }
         },
       }),
     });
@@ -71,6 +104,21 @@ document.registerElement('time-pane-content', class extends PaneContent {
     return extend(super.constants, {
       rangeChoices: TimeClause.RANGE_CHOICES,
       customRange: TimeClause.RANGES.CUSTOM,
+    });
+  }
+
+  get section() {
+    return 'time';
+  }
+});
+
+document.registerElement('custom-date-pane-content', class extends PaneContent {
+  get config() {
+    return extend(super.config, {
+      template: customDatePaneContentTemplate,
+
+      helpers: extend(super.config.helpers, {
+      }),
     });
   }
 
