@@ -8,5 +8,5 @@
           selected: range === selectedRange,
           disabled: range === $component.constants.customRange,
         }
-        onclick=() => $helpers.updateStageClause({range}, true)
+        onclick=() => $helpers.selectTimeRange(range)
       )= range

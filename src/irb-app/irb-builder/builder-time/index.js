@@ -59,8 +59,8 @@ document.registerElement('time-pane-content', class extends PaneContent {
       template: timePaneContentTemplate,
 
       helpers: extend(super.config.helpers, {
-        updateStageClause: clauseData => {
-          this.app.updateStageClause(clauseData);
+        selectTimeRange: range => {
+          this.app.updateStageClause({range});
           this.app.commitStageClause();
         },
       }),
