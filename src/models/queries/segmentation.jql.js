@@ -52,7 +52,7 @@ function main() {
       return typeof actual === 'number' && actual > expected[0] && actual < expected[1];
     };
     var betweenIncl = function(actual, expected) {
-      return typeof actual === 'number' && actual >= expected[0] && actual <= expected[1];
+      return actual >= expected[0] && actual <= expected[1];
     };
     var equalNum = function(actual, expected) {
       return actual === expected;

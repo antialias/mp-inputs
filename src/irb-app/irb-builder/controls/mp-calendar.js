@@ -12,7 +12,8 @@ document.registerElement('mp-calendar', class extends WebComponent {
       container: document.getElementsByClassName('calendar-hook')[0],
       field: this.inputEl,
       numberOfMonths: 2,
-      onSelect: date => this.dispatchEvent(new CustomEvent('change', {detail: date})),
+      onSelect: date =>
+        this.dispatchEvent(new CustomEvent('change', {detail: date.toISOString().slice(0, 10)})),
     });
 
     this.appendChild(this.inputEl);
