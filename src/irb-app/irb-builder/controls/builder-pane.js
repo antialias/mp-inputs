@@ -112,7 +112,7 @@ document.registerElement('group-property-pane-content', class extends PaneConten
         },
         selectArrow: property => this.config.helpers.paneHandler(property, false),
         selectProperty: property => this.config.helpers.paneHandler(property, this.app.originStageClauseType() !== 'filter'),
-        TopProperties: () => {
+        topProperties: () => {
           switch (this.state.resourceTypeFilter) {
             case 'events':
               return this.state.topEventProperties;
@@ -122,6 +122,7 @@ document.registerElement('group-property-pane-content', class extends PaneConten
               return this.state.topEventProperties.concat(this.state.topPeopleProperties).sort((a, b) => b.count - a.count);
           }
         },
+        updateResourceTypeFilter: (resourceTypeFilter) => this.app.update({resourceTypeFilter}),
       }),
     });
   }

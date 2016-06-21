@@ -4,18 +4,15 @@
   ul.column.toggle.resource-type
     for resourceType in $component.resourceTypeChoices
       li(
-        class={
-          selected: resourceType === resourceTypeFilter
-        }
-        onclick=() => $component.app.update({resourceTypeFilter: resourceType})
+        class={selected: resourceType === resourceTypeFilter}
+        onclick=() => $helpers.updateResourceTypeFilter(resourceType)
       )= util.capitalize(resourceType)
   ul.column.resource-value
-    for property in $helpers.TopProperties()
+    for property in $helpers.topProperties()
       if $helpers.matchesSearch(util.renameProperty(property.name))
         li.property(
-          class=`type-${property.type}`
-          class=property.resourceType
+          class=[`type-${property.type}`, property.resourceType]
           class={selected: property.name === selectedProperty}
-        )
+          )
           span(onclick=() => $helpers.selectProperty(property))= util.renameProperty(property.name)
           button.next-arrow(onclick=() => $helpers.selectArrow(property)) ›
