@@ -58,10 +58,10 @@ function main() {
       return actual === expected;
     };
     var greaterThan = function(actual, expected) {
-      return typeof actual === 'number' && actual > expected;
+      return actual > expected;
     };
     var lessThan = function(actual, expected) {
-      return typeof actual === 'number' && actual < expected;
+      return actual < expected;
     };
 
     // Boolean
