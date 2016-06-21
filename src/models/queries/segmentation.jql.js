@@ -33,7 +33,7 @@
 //   ],
 // }
 
-module.exports = function main() {
+function main() {
   if (params.filters && params.filters.length) {
     // String
     var stringContains = function(actual, expected) {
@@ -223,4 +223,9 @@ module.exports = function main() {
     }
   }
   return query;
-};
+}
+
+// ===== JQL CODE ENDS
+// anything below this line will not be sent to the JQL backend
+
+module.exports = main;
