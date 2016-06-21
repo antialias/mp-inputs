@@ -218,7 +218,7 @@ function main() {
       var countWithSamplingForGroupByUser = function(count, events) {
         count = count || 0;
         for (var i = 0; i < events.length; i++) {
-          var ev = events[i].event;
+          var ev = events[i].event || events[i];
           if (ev.sampling_factor && ev.sampling_factor <= 1.0) {
             count += 1.0 / ev.sampling_factor;
           } else {
