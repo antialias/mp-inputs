@@ -4,9 +4,6 @@
   ul.column.toggle.ranges
     for range in $component.constants.rangeChoices
       li(
-        class={
-          selected: range === selectedRange,
-          disabled: range === $component.constants.customRange,
-        }
+        class={selected: range === selectedRange}
         onclick=() => $helpers.selectTimeRange(range)
       )= range
