@@ -127,14 +127,10 @@ function main() {
     });
   }
 
-  var needsPeopleData = params.filters.concat(params.groups).some(function(param) {
-    return param.resourceType === 'people';
-  });
-
   if (params.groups) {
     groups = groups.concat(params.groups.map(function(group) {
       var sections = [];
-      if (needsPeopleData) {
+      if (params.needsPeopleData) {
         sections.push(group.resourceType === 'people' ? 'user' : 'event');
       }
       return sections.concat('properties', group.value).join('.');
@@ -181,7 +177,7 @@ function main() {
     to_date: params.dates.to,
   });
 
-  if (needsPeopleData) {
+  if (params.needsPeopleData) {
     query = join(query, People()).filter(function(tuple) { return tuple.event; });
   }
 
