@@ -3,7 +3,7 @@ import moment from 'moment';
 import BaseQuery from './base';
 import { ShowClause } from '../clause';
 import main from './segmentation.jql.js';
-import { extend, renameEvent } from '../../util';
+import { extend, pick, renameEvent } from '../../util';
 
 const MS_IN_HOUR = 60 * 60 * 1000;
 const MS_IN_DAY = MS_IN_HOUR * 24;
@@ -145,11 +145,8 @@ export default class SegmentationQuery extends BaseQuery {
     let jqlQueries = state.sections.show.clauses.map(showClause => new JQLQuery(showClause, state));
 
     // data global to all JQL queries.
-    const segments = state.sections.group.clauses
-      .map(clause => ({
-        value: clause.value,
-        resourceType: clause.resourceType,
-      }));
+    const segments = state.sections.group.clauses.map(clause => pick(clause, ['value', 'resourceType']));
+
     const filters = state.sections.filter.clauses.map(clause => clause.attrs);
 
     const time = state.sections.time.clauses[0];
