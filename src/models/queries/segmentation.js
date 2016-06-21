@@ -269,7 +269,7 @@ export default class SegmentationQuery extends BaseQuery {
 
     // All Event is considered just a normal event in display.
     // When segmenting on only one event, don't display the top level names and header.
-    if (queriedEventNames.length === 1 && this.query.segments.length > 0) {
+    if (Object.keys(series).length && queriedEventNames.length === 1 && this.query.segments.length > 0) {
       series = series[queriedEventNames[0]];
     }
 
