@@ -110,13 +110,14 @@
           when 'was between'
             - const from = selectedValue ? selectedValue[0] : null;
             - const to = selectedValue ? selectedValue[1] : null;
-            .filter-value-input
-              date-picker(
+            .filter-value-input.filter-date
+              mp-calendar(
+                attributes={range: true}
                 value=JSON.stringify({from, to})
-                onchange=ev => $helpers.updateStageClause({filterValue: [new Date(ev.target.value.from), new Date(ev.target.value.to)]})
+                onchange=$helpers.updateDate
               )
           when 'was on'
-            .filter-value-input
+            .filter-value-input.filter-date
               mp-calendar(onchange=$helpers.updateDate)
           default
             .filter-value-input.filter-days-ago

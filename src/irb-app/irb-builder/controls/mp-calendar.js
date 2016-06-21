@@ -5,18 +5,92 @@ import './mp-calendar.styl';
 
 document.registerElement('mp-calendar', class extends WebComponent {
   attachedCallback() {
-    this.inputEl = document.createElement('input');
-    this.inputEl.className = 'mp-pikaday-input';
+    this.init();
+  }
 
-    this.picker = new Pikaday({
-      container: document.getElementsByClassName('calendar-hook')[0],
-      field: this.inputEl,
-      numberOfMonths: 2,
-      onSelect: date =>
-        this.dispatchEvent(new CustomEvent('change', {detail: date.toISOString().slice(0, 10)})),
+  attributeChangedCallback() {
+    if (this._initialized) {
+      this.init();
+    }
+  }
+
+  init() {
+    this._initialized = true;
+    this.innerHTML = '';
+    this.startDate = this.endDate = null;
+
+    this.rangeSelect = this.isAttributeEnabled('range');
+    const numInputs = this.rangeSelect ? 2 : 1;
+    this.inputs = Array(numInputs).fill().map((x, idx) => {
+      const el = {};
+
+      el.input = document.createElement('input');
+      el.input.className = 'mp-pikaday-input';
+
+      el.picker = new Pikaday({
+        bound: false,
+        container: document.getElementsByClassName('calendar-hook')[0],
+        field: el.input,
+        numberOfMonths: 2,
+        onSelect: date => this.selectDate(date, idx),
+      });
+      el.picker.hide();
+
+      el.input.addEventListener('focus', () => el.picker.show());
+      el.input.addEventListener('blur', () => el.picker.hide());
+
+      this.appendChild(el.input);
+
+      return el;
     });
+  }
 
-    this.appendChild(this.inputEl);
-    this.inputEl.focus();
+  emitChange() {
+    if (this.rangeSelect) {
+      if (this.startDate && this.endDate) {
+        this.dispatchEvent(new CustomEvent('change', {
+          detail: [
+            this.formatDate(this.startDate),
+            this.formatDate(this.endDate),
+          ],
+        }));
+      }
+    } else {
+      this.dispatchEvent(new CustomEvent('change', {
+        detail: this.formatDate(this.startDate),
+      }));
+    }
+  }
+
+  formatDate(date) {
+    return date.toISOString().slice(0, 10);
+  }
+
+  selectDate(date, idx) {
+    if (this.rangeSelect) {
+      switch(idx) {
+        case 0:
+          this.startDate = date;
+          this.inputs[0].picker.setStartRange(date);
+          this.inputs[1].picker.setStartRange(date);
+          this.inputs[1].picker.setMinDate(date);
+          this.inputs[0].picker.hide();
+          this.inputs[0].input.blur();
+          this.emitChange();
+          break;
+        case 1:
+          this.endDate = date;
+          this.inputs[1].picker.setEndRange(date);
+          this.inputs[0].picker.setEndRange(date);
+          this.inputs[0].picker.setMaxDate(date);
+          this.inputs[1].picker.hide();
+          this.inputs[1].input.blur();
+          this.emitChange();
+          break;
+      }
+    } else {
+      this.startDate = date;
+      this.emitChange();
+    }
   }
 });
