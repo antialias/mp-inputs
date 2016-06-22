@@ -15,4 +15,34 @@ time-pane
       font-size 14px
 
 .custom-date-pane-content
+  font-size 14px
   padding 12px
+
+  .filter-value-input
+    margin 12px 0
+
+  .date-unit-select
+    h4
+      font-size 12px
+      font-weight normal
+      margin-bottom 5px
+      margin-top 20px
+      text-transform uppercase
+
+    .toggle
+      display flex
+
+      li
+        border 1px solid light-gray
+        border-left none
+        cursor pointer
+        display inline-block
+        flex 1
+        padding 10px
+        text-align center
+        text-transform capitalize
+        &:first-child
+          border-left 1px solid light-gray
+          border-radius 5px 0 0 5px
+        &:last-child
+          border-radius 0 5px 5px 0

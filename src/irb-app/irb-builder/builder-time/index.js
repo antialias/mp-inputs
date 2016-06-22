@@ -125,6 +125,12 @@ document.registerElement('custom-date-pane-content', class extends PaneContent {
     });
   }
 
+  get constants() {
+    return extend(super.constants, {
+      unitChoices: TimeClause.UNIT_CHOICES.filter(choice => choice !== 'year'),
+    });
+  }
+
   get section() {
     return 'time';
   }

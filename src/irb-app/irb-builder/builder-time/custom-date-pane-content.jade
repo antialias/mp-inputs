@@ -4,3 +4,8 @@
       attributes={range: true}
       onchange=$helpers.updateDate
     )
+  .date-unit-select
+    h4 Display unit
+    ol.toggle
+      for unit in $component.constants.unitChoices
+        li= unit
