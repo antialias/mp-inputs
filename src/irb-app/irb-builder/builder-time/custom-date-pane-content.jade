@@ -7,5 +7,9 @@
   .date-unit-select
     h4 Display unit
     ol.toggle
+      - const selectedUnit = $helpers.getActiveClauseProperty('unit');
       for unit in $component.constants.unitChoices
-        li(onclick=() => $helpers.selectUnit(unit))= unit
+        li(
+          class={selected: unit === selectedUnit}
+          onclick=() => $helpers.selectUnit(unit)
+        )= unit
