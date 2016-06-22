@@ -149,7 +149,7 @@ export default class SegmentationQuery extends BaseQuery {
     let jqlQueries = sections.show.clauses.map(showClause => new JQLQuery(showClause, state, options));
 
     // data global to all JQL queries.
-    const segments = sections.group.clauses.map(clause => pick(clause, ['value', 'resourceType']));
+    const segments = sections.group.clauses.map(clause => pick(clause, ['value', 'resourceType', 'filterType']));
 
     const filters = sections.filter.clauses.map(clause => clause.attrs);
 
