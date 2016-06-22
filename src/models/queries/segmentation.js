@@ -247,7 +247,7 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   processResults(results) {
-    let headers = this.query.segments;
+    let headers = this.query.segments.map(segment => segment.value);
     let series = {};
 
     if (results) {
