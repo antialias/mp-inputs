@@ -28,6 +28,7 @@
   "dependencies": {
     "babel-polyfill": "^6.7.4",
     "framesg": "^0.1.2",
+    "lodash": "^4.13.1",
     "mixpanel-common": "^0.3.14",
     "moment": "^2.13.0",
     "panel": "^0.8.1",
