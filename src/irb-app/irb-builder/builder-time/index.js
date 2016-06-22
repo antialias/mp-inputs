@@ -120,6 +120,7 @@ document.registerElement('custom-date-pane-content', class extends PaneContent {
       template: customDatePaneContentTemplate,
 
       helpers: extend(super.config.helpers, {
+        updateDate: ev => ev.detail && console.log('date range selected', ev.detail),
       }),
     });
   }
