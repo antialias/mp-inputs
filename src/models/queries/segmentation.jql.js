@@ -177,6 +177,20 @@ function main() {
       };
       params.dates.from = getFirstOfMonth(params.dates.from);
       break;
+    case 'quarter':
+      var getStartOfQuarter = function(date) {
+        date = new Date(date);
+        var qMonth = Math.floor(date.getMonth() / 3) * 3 + 1;
+        if (qMonth < 10) {
+          qMonth = '0' + qMonth;
+        }
+        return date.toISOString().split('T')[0].replace(/(\d+)-\d\d-\d\d/, '$1-' + qMonth + '-01');
+      };
+      timeUnitGroupByFunc = function(eventData) {
+        return getStartOfQuarter(getEvent(eventData).time);
+      };
+      params.dates.from = getStartOfQuarter(params.dates.from);
+      break;
   }
   groups.push(timeUnitGroupByFunc);
 
