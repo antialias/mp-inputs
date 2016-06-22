@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 import { extend } from 'mixpanel-common/build/util';
 import { debug } from 'mixpanel-common/build/report/util';
 
@@ -130,30 +132,27 @@ export class TimeClause extends Clause {
      * - Dates in value must occur before now
      */
     return (
-      this.UNIT_CHOICES.indexOf(this.unit) !== -1
-      &&
-      this.value
-      &&
+      this.UNIT_CHOICES.indexOf(this.unit) !== -1 &&
+      this.value &&
       (
-        (typeof this.value === 'number' && this.value > 0)
-        ||
-        (this.value instanceof Date && this.value < new Date())
-        ||
+        (typeof this.value === 'number' && this.value > 0) ||
+        (this.value instanceof Date && this.value < new Date()) ||
         (
-          Array.isArray(this.value)
-          &&
-          this.value.length === 2
-          &&
+          Array.isArray(this.value) &&
+          this.value.length === 2 &&
           (
             (
-              (typeof this.value[0] === 'number' && this.value[0] > 0)
-              &&
+              (typeof this.value[0] === 'string' && moment.utc(this.value[0]).isBefore(moment.utc())) &&
+              (typeof this.value[1] === 'string' && moment.utc(this.value[1]).isBefore(moment.utc()))
+            )
+            ||
+            (
+              (typeof this.value[0] === 'number' && this.value[0] > 0) &&
               (typeof this.value[1] === 'number' && this.value[1] > 0)
             )
             ||
             (
-              (this.value instanceof Date && this.value < new Date())
-              &&
+              (this.value instanceof Date && this.value < new Date()) &&
               (this.value instanceof Date && this.value < new Date())
             )
           )

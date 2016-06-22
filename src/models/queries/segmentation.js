@@ -151,22 +151,13 @@ export default class SegmentationQuery extends BaseQuery {
 
     const time = state.sections.time.clauses[0];
     const unit = time.unit;
-    let from = 0;
-    let to = 0;
 
+    let from, to;
     if (Array.isArray(time.value)) {
-      from = time.value[0] || 0;
-      to = time.value[1] || 0;
+      [from, to] = time.value.map(ts => Number(moment.utc(ts)));
     } else {
-      from = time.value;
-    }
-
-    if (!(from instanceof Date)) {
-      from = new Date(new Date().getTime() - (MS_BY_UNIT[unit] * from));
-    }
-
-    if (!(to instanceof Date)) {
-      to = new Date(new Date().getTime() - (MS_BY_UNIT[unit] * to));
+      to = Number(moment.utc());
+      from = to - MS_BY_UNIT[unit] * time.value;
     }
 
     return {jqlQueries, segments, filters, from, to};

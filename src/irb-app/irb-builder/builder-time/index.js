@@ -1,5 +1,6 @@
 // Time controls for setting query date range / unit
 
+import moment from 'moment';
 import { Component } from 'panel';
 
 import { extend } from '../../../util';
@@ -23,12 +24,7 @@ document.registerElement('builder-time', class extends Component {
 document.registerElement('time-edit-control', class extends EditControl {
   get label() {
     const clause = this.state.sections.time.clauses[0];
-    const range = clause.range;
-    if (range) {
-      return range;
-    } else {
-      throw new Error('Custom ranges not implemented yet');
-    }
+    return clause.range ? clause.range : `${clause.value[0]} - ${clause.value[1]}`;
   }
 
   get isRemoveable() {
@@ -50,7 +46,7 @@ document.registerElement('time-pane', class extends Pane {
             this.app.updateStageClause({paneIndex: 0});
           });
         },
-        commitHandler: () => console.log('COMMITTTT'),
+        commitHandler: () => this.app.activeStageClause.valid && this.app.commitStageClause(),
       }),
     });
   }
@@ -121,7 +117,25 @@ document.registerElement('custom-date-pane-content', class extends PaneContent {
 
       helpers: extend(super.config.helpers, {
         selectUnit: unit => this.app.updateStageClause({unit, paneIndex: 1}),
-        selectDateRange: ev => ev.detail && console.log('date range selected', ev.detail),
+        selectDateRange: ev => {
+          if (ev.detail) {
+            // auto-adjust unit when changing date range
+            const [start, end] = ev.detail.map(ds => moment.utc(ds));
+            let unit = this.config.helpers.getActiveClauseProperty('unit');
+            const days = end.diff(start, 'days') + 1;
+            if (days <= 4) {
+              unit = 'hour';
+            } else if (days <= 31) {
+              unit = 'day';
+            } else if (days <= 183) {
+              unit = 'week';
+            } else {
+              unit = 'month';
+            }
+
+            this.app.updateStageClause({paneIndex: 1, range: null, unit, value: ev.detail});
+          }
+        },
       }),
     });
   }
