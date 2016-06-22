@@ -142,15 +142,15 @@ function main() {
     case 'all':
       timeUnitGroupByFunc = function() { return 'all'; };
       break;
-    case 'day':
-      timeUnitGroupByFunc = function(eventData) {
-        return (new Date(getEvent(eventData).time)).toISOString().split('T')[0];
-      };
-      break;
     case 'hour':
       timeUnitGroupByFunc = function(eventData) {
         var dateMatch = (new Date(getEvent(eventData).time)).toISOString().match(/(.+)T(\d\d):/);
         return `${dateMatch[1]} ${dateMatch[2]}:00:00`;
+      };
+      break;
+    case 'day':
+      timeUnitGroupByFunc = function(eventData) {
+        return (new Date(getEvent(eventData).time)).toISOString().split('T')[0];
       };
       break;
     case 'week':
@@ -165,6 +165,17 @@ function main() {
         return getMonday(getEvent(eventData).time);
       };
       params.dates.from = getMonday(params.dates.from);
+      break;
+    case 'month':
+      var getFirstOfMonth = function(date) {
+        date = new Date(date);
+        date.setDate(1);
+        return date.toISOString().split('T')[0];
+      };
+      timeUnitGroupByFunc = function(eventData) {
+        return getFirstOfMonth(getEvent(eventData).time);
+      };
+      params.dates.from = getFirstOfMonth(params.dates.from);
       break;
   }
   groups.push(timeUnitGroupByFunc);
