@@ -136,22 +136,38 @@ function main() {
       return sections.concat('properties', group.value).join('.');
     }));
   }
-  var timeUnitGroupByFuncs = {
-    day: function(eventData) {
-      return (new Date(getEvent(eventData).time)).toISOString().split('T')[0];
-    },
-    hour: function(eventData) {
-      var dateMatch = (new Date(getEvent(eventData).time)).toISOString().match(/(.+)T(\d\d):/);
-      return `${dateMatch[1]} ${dateMatch[2]}:00:00`;
-    },
-    // 'all' is a special group for entire time range in order for different query results to have
-    // same depth, consistent for front end to process.
-    all: function() {
-      return 'all';
-    },
-  };
 
-  groups.push(timeUnitGroupByFuncs[params.dates.unit]);
+  var timeUnitGroupByFunc;
+  switch(params.dates.unit) {
+    case 'all':
+      timeUnitGroupByFunc = function() { return 'all'; };
+      break;
+    case 'day':
+      timeUnitGroupByFunc = function(eventData) {
+        return (new Date(getEvent(eventData).time)).toISOString().split('T')[0];
+      };
+      break;
+    case 'hour':
+      timeUnitGroupByFunc = function(eventData) {
+        var dateMatch = (new Date(getEvent(eventData).time)).toISOString().match(/(.+)T(\d\d):/);
+        return `${dateMatch[1]} ${dateMatch[2]}:00:00`;
+      };
+      break;
+    case 'week':
+      var getMonday = function(date) {
+        date = new Date(date);
+        var day = date.getDay();
+        var offset = day > 0 ? day - 1 : 6;
+        date.setDate(date.getDate() - offset);
+        return date.toISOString().split('T')[0];
+      };
+      timeUnitGroupByFunc = function(eventData) {
+        return getMonday(getEvent(eventData).time);
+      };
+      params.dates.from = getMonday(params.dates.from);
+      break;
+  }
+  groups.push(timeUnitGroupByFunc);
 
   var countWithSampling = function(counts, events) {
     var count = 0;
