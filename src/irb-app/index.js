@@ -37,7 +37,15 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   // The following states should be reset.
   get resettableState() {
     return {
+      chartType: 'bar',
+      newCachedData: false,
       reportName: 'Untitled report',
+      resourceTypeFilter: 'all',
+      result: {
+        headers: [],
+        series: {},
+        loading: true,
+      },
       sections: new BuilderSections({
         show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
         time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
@@ -54,14 +62,6 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       topEventProperties: [],
       topPeopleProperties: [],
       topPropertyValues: [],
-      resourceTypeFilter: 'all',
-      result: {
-        headers: [],
-        series: {},
-        loading: true,
-      },
-      chartType: 'bar',
-      newCachedData: false,
     };
   }
 
@@ -72,8 +72,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.queries = {
       topEvents: new TopEventsQuery(),
       topEventProperties: new TopEventPropertiesQuery(),
-      topPeopleProperties: new TopPeoplePropertiesQuery(),
       topEventPropertyValues: new TopEventPropertyValuesQuery(),
+      topPeopleProperties: new TopPeoplePropertiesQuery(),
       topPeoplePropertyValues: new TopPeoplePropertyValuesQuery(),
       topPropertyValuesCache: new QueryCache(),
       segmentation: new SegmentationQuery(this.customEvents),
