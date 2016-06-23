@@ -5,6 +5,10 @@ import WebComponent from 'webcomponent';
 import './mp-calendar.styl';
 
 document.registerElement('mp-calendar', class extends WebComponent {
+  createdCallback() {
+    this.selectedStr = [];
+  }
+
   attachedCallback() {
     this.init();
   }
@@ -22,7 +26,6 @@ document.registerElement('mp-calendar', class extends WebComponent {
     } catch(e) {
       newVal = val;
     }
-    this.selectedStr = this.selectedStr || [];
     if (newVal.from) {
       this.selectedStr[0] = newVal.from;
     }
