@@ -1,3 +1,4 @@
+import moment from 'moment';
 import Pikaday from 'pikaday';
 import WebComponent from 'webcomponent';
 
@@ -11,6 +12,25 @@ document.registerElement('mp-calendar', class extends WebComponent {
   attributeChangedCallback() {
     if (this._initialized) {
       this.init();
+    }
+  }
+
+  set value(val) {
+    let newVal;
+    try {
+      newVal = JSON.parse(val);
+    } catch(e) {
+      newVal = val;
+    }
+    this.selectedStr = this.selectedStr || [];
+    if (newVal.from) {
+      this.selectedStr[0] = newVal.from;
+    }
+    if (newVal.to) {
+      this.selectedStr[1] = newVal.to;
+    }
+    if (!newVal.from && !newVal.to) {
+      this.selectedStr[0] = newVal;
     }
   }
 
@@ -43,6 +63,12 @@ document.registerElement('mp-calendar', class extends WebComponent {
 
       return el;
     });
+
+    this.inputs.forEach((input, idx) => {
+      if (this.selectedStr[idx]) {
+        input.picker.setDate(new Date(Number(moment(this.selectedStr[idx]))));
+      }
+    });
   }
 
   emitChange() {
@@ -66,7 +92,7 @@ document.registerElement('mp-calendar', class extends WebComponent {
     return date.toISOString().slice(0, 10);
   }
 
-  selectDate(date, idx) {
+  selectDate(date, idx, emit=true) {
     if (this.rangeSelect) {
       switch(idx) {
         case 0:
@@ -74,18 +100,18 @@ document.registerElement('mp-calendar', class extends WebComponent {
           this.inputs[0].picker.setStartRange(date);
           this.inputs[1].picker.setStartRange(date);
           this.inputs[1].picker.setMinDate(date);
-          this.emitChange();
           break;
         case 1:
           this.endDate = date;
           this.inputs[1].picker.setEndRange(date);
           this.inputs[0].picker.setEndRange(date);
           this.inputs[0].picker.setMaxDate(date);
-          this.emitChange();
           break;
       }
     } else {
       this.startDate = date;
+    }
+    if (emit) {
       this.emitChange();
     }
     this.inputs[idx].picker.hide();

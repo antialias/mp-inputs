@@ -1,7 +1,11 @@
 .pane-content.custom-date-pane-content
   .filter-value-input
+    - const selectedValue = $helpers.getActiveClauseProperty('value');
+    - const from = Array.isArray(selectedValue) ? selectedValue[0] : null;
+    - const to = Array.isArray(selectedValue) ? selectedValue[1] : null;
     mp-calendar(
       attributes={range: true}
+      value=JSON.stringify({from, to})
       onchange=$helpers.selectDateRange
     )
   .date-unit-select

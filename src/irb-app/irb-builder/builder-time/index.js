@@ -123,18 +123,25 @@ document.registerElement('custom-date-pane-content', class extends PaneContent {
         selectUnit: unit => this.app.updateStageClause({unit, paneIndex: 1}),
         selectDateRange: ev => {
           if (ev.detail) {
-            // auto-adjust unit when changing date range
-            const [start, end] = ev.detail.map(ds => moment.utc(ds));
             let unit = this.config.helpers.getActiveClauseProperty('unit');
-            const days = end.diff(start, 'days') + 1;
-            if (days <= 4) {
-              unit = 'hour';
-            } else if (days <= 31) {
-              unit = 'day';
-            } else if (days <= 183) {
-              unit = 'week';
-            } else {
-              unit = 'month';
+            const currentVal = this.config.helpers.getActiveClauseProperty('value');
+            if (
+              !Array.isArray(currentVal) ||
+              currentVal[0] !== ev.detail[0] ||
+              currentVal[1] !== ev.detail[1]
+            ) {
+              // auto-adjust unit when changing date range
+              const [start, end] = ev.detail.map(ds => moment.utc(ds));
+              const days = end.diff(start, 'days') + 1;
+              if (days <= 4) {
+                unit = 'hour';
+              } else if (days <= 31) {
+                unit = 'day';
+              } else if (days <= 183) {
+                unit = 'week';
+              } else {
+                unit = 'month';
+              }
             }
 
             this.app.updateStageClause({paneIndex: 1, range: null, unit, value: ev.detail});
