@@ -1,9 +1,7 @@
-- const selectedRange = $helpers.getActiveClauseProperty('range');
-
 .pane-content.time-pane-content
   ul.column.toggle.ranges
     for range in $component.constants.rangeChoices
       li(
-        class={selected: range === selectedRange}
+        class={selected: $helpers.isRangeSelected(range)}
         onclick=() => $helpers.selectTimeRange(range)
       )= range

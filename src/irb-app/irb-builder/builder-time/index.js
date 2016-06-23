@@ -84,6 +84,10 @@ document.registerElement('time-pane-content', class extends PaneContent {
       template: timePaneContentTemplate,
 
       helpers: extend(super.config.helpers, {
+        isRangeSelected: range => {
+          const selectedRange = this.config.helpers.getActiveClauseProperty('range');
+          return range === selectedRange || (!selectedRange && range === this.constants.customRange);
+        },
         selectTimeRange: range => {
           if (range === this.constants.customRange) {
             window.requestAnimationFrame(() => {
