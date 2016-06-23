@@ -16,3 +16,9 @@
         table-chart(attributes={data: JSON.stringify(util.extend($helpers.filterResults(result), {resourceDescription}))})
   if result.loading && chartType !== 'line'
     .loader
+  if showToast
+    mp-toast(
+      attributes={'message': 'You have new data.', 'select-text': 'Refresh'}
+      onclose=$helpers.closeToast
+      onselect=$helpers.selectToast
+    )

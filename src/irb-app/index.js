@@ -1,3 +1,4 @@
+import { isEqual } from 'lodash';
 import MPApp from 'mixpanel-common/build/report/mp-app';
 import { extend, pick } from 'mixpanel-common/build/util';
 import * as util from '../util';
@@ -48,6 +49,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         search: null,
       },
       stageClauses: [],
+      toastTimer: null,
       topEvents: [],
       topEventProperties: [],
       topPeopleProperties: [],
@@ -59,6 +61,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         loading: true,
       },
       chartType: 'bar',
+      newCachedData: false,
     };
   }
 
@@ -257,6 +260,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   updateSeriesState(newState) {
+    this.resetToastTimer();
     this.update({series: extend(this.state.series, newState)});
   }
 
@@ -291,6 +295,28 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     } else {
       this.update({chartType});
     }
+  }
+
+  resetToastTimer() {
+    clearTimeout(this.state.toastTimer);
+    // const fifteenMinutes = 1000 * 60 * 15;
+    const toastTimer = setTimeout(this.displayToast.bind(this), 1000);
+    this.update({toastTimer});
+  }
+
+  displayToast() {
+    this.queries.segmentation.run()
+      .then(result=> {
+        if (!isEqual(pick(this.state.result, ['series', 'headers']), result)) {
+          this.update({showToast: true});
+          this.queries.segmentationCache.set(
+            this.queries.segmentation.build(this.state).query,
+            result,
+            60
+          );
+        }
+      });
+    this.update({toastTimer: null});
   }
 
   query(state=this.state, useCache=true) {
