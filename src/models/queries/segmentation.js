@@ -7,7 +7,7 @@ import { extend, pick, renameEvent } from '../../util';
 
 const MS_IN_HOUR = 60 * 60 * 1000;
 const MS_IN_DAY = MS_IN_HOUR * 24;
-const MS_BY_UNIT = {
+export const MS_BY_UNIT = {
   hour: MS_IN_HOUR,
   day: MS_IN_DAY,
   week: MS_IN_DAY * 7,
