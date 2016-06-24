@@ -11,11 +11,12 @@ export function getTextWidth(text, font) {
 }
 
 // TODO: Move to mixpanel-common utils
+// Compare data likeness of two different objects. Does not handle circular references, functions, or regex.
+// Sourced from: http://stackoverflow.com/a/16788517
 export function isEqual(x, y) {
   if (x === null || x === undefined || y === null || y === undefined) {
     return x === y;
   }
-
   if (x.constructor !== y.constructor) {
     return false;
   }
