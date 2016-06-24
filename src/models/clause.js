@@ -166,37 +166,12 @@ export class TimeClause extends Clause {
   }
 
   static rangeToUnitValue(range) {
-    let value = {
-      [TimeClause.RANGES.HOURS]: 96,
-      [TimeClause.RANGES.WEEK]: 7,
-      [TimeClause.RANGES.MONTH]: 30,
-      [TimeClause.RANGES.QUARTER]: 120,
-      [TimeClause.RANGES.YEAR]: 365,
-    }[range];
-
-    let unit = 'day';
-    if (range === TimeClause.RANGES.HOURS) {
-      unit = 'hour';
-    }
-
-    return {value, unit};
+    return RANGE_TO_VALUE_AND_UNIT[range] || {};
   }
 
   static unitValueToRange(unit, value) {
-    if (unit === 'hour' && value === 96) {
-      return TimeClause.RANGES.HOURS;
-    } else if (unit === 'day') {
-      if (value === 7) {
-        return TimeClause.RANGES.WEEK;
-      } else if (value === 30) {
-        return TimeClause.RANGES.MONTH;
-      } else if (value === 120) {
-        return TimeClause.RANGES.QUARTER;
-      } else if (value === 365) {
-        return TimeClause.RANGES.YEAR;
-      }
-    }
-    return null;
+    const unitVals = UNIT_AND_VALUE_TO_RANGE[unit];
+    return (unitVals && unitVals[value]) || null;
   }
 }
 TimeClause.TYPE = TimeClause.prototype.TYPE = 'time';
@@ -215,6 +190,28 @@ TimeClause.RANGES = TimeClause.prototype.RANGES = {
 TimeClause.RANGE_CHOICES = [
   HOURS, WEEK, MONTH, QUARTER, YEAR, CUSTOM,
 ];
+const RANGE_TO_VALUE_AND_UNIT = {
+  [TimeClause.RANGES.HOURS]:   {value: 96, unit: 'hour' },
+  [TimeClause.RANGES.WEEK]:    {value: 7,  unit: 'day'  },
+  [TimeClause.RANGES.MONTH]:   {value: 30, unit: 'day'  },
+  [TimeClause.RANGES.QUARTER]: {value: 12, unit: 'week' },
+  [TimeClause.RANGES.YEAR]:    {value: 12, unit: 'month'},
+};
+const UNIT_AND_VALUE_TO_RANGE = {
+  hour: {
+    96: TimeClause.RANGES.HOURS,
+  },
+  day: {
+    7: TimeClause.RANGES.WEEK,
+    30: TimeClause.RANGES.MONTH,
+  },
+  week: {
+    12: TimeClause.RANGES.QUARTER,
+  },
+  month: {
+    12: TimeClause.RANGES.YEAR,
+  },
+};
 
 export class FilterClause extends EventsPropertiesClause {
   constructor(attrs={}) {
