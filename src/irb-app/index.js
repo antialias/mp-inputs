@@ -298,22 +298,26 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   resetToastTimer() {
-    clearTimeout(this.state.toastTimer);
-    // const fifteenMinutes = 1000 * 60 * 15;
-    const toastTimer = setTimeout(this.displayToast.bind(this), 1000);
-    this.update({toastTimer});
+    if (!this.state.newCachedData) {
+      clearTimeout(this.state.toastTimer);
+      const fifteenMinutes = 1000 * 60 * 15;
+      const toastTimer = setTimeout(this._checkForNewResults.bind(this), fifteenMinutes);
+      this.update({toastTimer});
+    }
   }
 
-  displayToast() {
+  _checkForNewResults() {
     this.queries.segmentation.run()
       .then(result=> {
         if (!isEqual(pick(this.state.result, ['series', 'headers']), result)) {
-          this.update({showToast: true});
+          this.update({newCachedData: true});
           this.queries.segmentationCache.set(
             this.queries.segmentation.build(this.state).query,
             result,
             60
           );
+        } else {
+          this.resetToastTimer();
         }
       });
     this.update({toastTimer: null});
@@ -329,13 +333,15 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       this.update({result});
     }
 
+    this.update({newCachedData: false});
+    this.resetToastTimer();
     this.queries.segmentation.run(cachedResult)
       .then(result => {
         if (!cachedResult) {
           this.queries.segmentationCache.set(query, result, cacheExpiry);
         }
         this.updateSeriesData(result);
-        this.update({result, chartType: state.chartType});
+        this.update({result, chartType: state.chartType, newCachedData: false});
       })
       .catch(err => console.error(err));
 

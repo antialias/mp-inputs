@@ -15,11 +15,11 @@ document.registerElement('irb-result', class extends Component {
     return {
       helpers: {
         closeToast: () => {
-          this.update({showToast: false});
+          this.update({newCachedData: false});
         },
         selectToast: () => {
           this.app.query();
-          this.update({showToast: false});
+          this.update({newCachedData: false});
         },
         filterResults: (result, depth=2) => ({
           headers: result.headers,
