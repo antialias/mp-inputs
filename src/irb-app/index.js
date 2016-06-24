@@ -19,6 +19,10 @@ import './irb-result';
 import template from './index.jade';
 import './index.styl';
 
+const MINUTE_MS = 1000 * 60;
+
+let toastTimer = null;
+
 document.registerElement('irb-app', class IRBApp extends MPApp {
   get config() {
     return {
@@ -57,7 +61,6 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         search: null,
       },
       stageClauses: [],
-      toastTimer: null,
       topEvents: [],
       topEventProperties: [],
       topPeopleProperties: [],
@@ -299,10 +302,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
   resetToastTimer() {
     if (!this.state.newCachedData) {
-      clearTimeout(this.state.toastTimer);
-      const fifteenMinutes = 1000 * 60 * 15;
-      const toastTimer = setTimeout(this._checkForNewResults.bind(this), fifteenMinutes);
-      this.update({toastTimer});
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => this._checkForNewResults(), 15 * MINUTE_MS);
     }
   }
 
