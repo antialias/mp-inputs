@@ -1,6 +1,7 @@
 import moment from 'moment';
 
 import BaseQuery from './base';
+import ExtremaQuery from './extrema';
 import { ShowClause } from '../clause';
 import main from './segmentation.jql.js';
 import { extend, pick, renameEvent } from '../../util';
@@ -83,6 +84,74 @@ function filterToParams(filter) {
   return params;
 }
 
+function filterToArbSelectorString(property, type, operator, value, dateUnit) {
+  property = `(properties["${property}"])`;
+
+  if (typeof value === 'string') {
+    value = `"${value}"`;
+  } else if (Array.isArray(value)) {
+    value = value.map(val => typeof val === 'string' ? `"${val}"` : val);
+  }
+
+  switch (type) {
+    case 'string':
+      if (operator === 'equals' || operator === 'does not equal') {
+        if (!Array.isArray(value)) {
+          value = [value];
+        }
+      }
+      switch (operator) {
+        case 'equals'           : return '(' + value.map(val => `(${property} == ${val})`).join(' or ') + ')';
+        case 'does not equal'   : return '(' + value.map(val => `(${property} != ${val})`).join(' and ') + ')';
+        case 'contains'         : return `(${value} in ${property})`;
+        case 'does not contain' : return `(${value} not in ${property})`;
+        case 'is set'           : return `(defined ${property})`;
+        case 'is not set'       : return `(not defined ${property})`;
+      }
+      break;
+    case 'number':
+      switch (operator) {
+        case 'is between'      : return `((${property} > ${value[0]}) and (${property} < ${value[1]}))`;
+        case 'is equal to'     : return `(${property} == ${value})`;
+        case 'is less than'    : return `(${property} < ${value})`;
+        case 'is greater than' : return `(${property} > ${value})`;
+      }
+      break;
+    case 'datetime': {
+      const unitMs = MS_BY_UNIT[dateUnit];
+
+      switch (operator) {
+        case 'was less than': return `(${property} < datetime(${new Date(new Date().getTime() - (value * unitMs)).getTime()}))`;
+        case 'was more than': return `(${property} > datetime(${new Date(new Date().getTime() - (value * unitMs)).getTime()}))`;
+        // TODO 'was on' should be a different case - when we have better date controls
+        case 'was on':
+        case 'was between': {
+          let from = new Date(value[0].getTime());
+          let to = new Date(value[1].getTime());
+
+          from.setHours(0, 0, 0, 0);
+          to.setHours(23, 59, 59, 999);
+
+          return `((${property} >= datetime(${from.getTime()})) and (${property} <= datetime(${to.getTime()})))`;
+        }
+      }
+      break;
+    }
+    case 'boolean':
+      switch (operator) {
+        case 'is true'  : return `(boolean(${property}) == true)`;
+        case 'is false' : return `(boolean(${property}) == false)`;
+      }
+      break;
+    case 'list':
+      switch (operator) {
+        case 'contains'         : return `(${value} in list(${property}))`;
+        case 'does not contain' : return `(not ${value} in list(${property}))`;
+      }
+      break;
+  }
+}
+
 class JQLQuery {
   constructor(showClause, state, options={}) {
     this.chartType = options.chartType || state.report.chartType;
@@ -108,6 +177,7 @@ class JQLQuery {
       events = events.map(ev => ({event: ev.name}));
     }
 
+    this.custom = ev.custom;
     this.events = events;
 
     // Custom events and 'All Events' are a special case since they can't be used in the JQL
@@ -171,7 +241,50 @@ export default class SegmentationQuery extends BaseQuery {
     return 'api/2.0/jql';
   }
 
-  buildParams(jqlQuery) {
+  buildGroups(jqlQuery) {
+    // check and replace all any numeric property groupBys.
+    return Promise.all(this.query.segments.map(segment => new Promise(resolve => {
+      if (segment.filterType === 'number') {
+        let event;
+        if (jqlQuery.custom) {
+          event = jqlQuery.outputName;
+        } else if (jqlQuery.events.length === 1) {
+          event = jqlQuery.eventNames()[0];
+        } else {
+          // Don't support getting extrema on the same property of multiple events *in the same
+          // show clause* for now. This means using 'Top Events' with a high-cardinality groupBy can
+          // still freeze the browser. Alternatively, we can call extrema for all 12 top events and
+          // get an universal bucketing scheme, but this gets crazy for 'All Events'.
+          return resolve(segment);
+        }
+        const action = segment.resourceType === 'people' ? 'user' : 'properties';
+        let extremaQuery = new ExtremaQuery();
+        let state = {
+          from: new Date(this.query.from),
+          to: new Date(this.query.to),
+          event: event,
+          on: `${action}["${segment.value}"]`,
+          where: this.query.filters
+            .filter(filter => isFilterValid(filter))
+            .map(filter => filterToArbSelectorString(filter.value, filter.filterType, filter.filterOperator, filter.filterValue, filter.dateUnit))
+            .join(' and '),
+          allow_more_buckets: false,
+          buckets: 12,
+        };
+        state.interval = (state.to.getTime() - state.from.getTime()) / MS_BY_UNIT.day + 1;
+        extremaQuery.build(state);
+        extremaQuery.run().then(result => {
+          let group;
+          console.log(result);
+          resolve(group);
+        });
+      } else {
+        resolve(segment);
+      }
+    })));
+  }
+
+  buildJQLParams(jqlQuery) {
     // base params
     let scriptParams = {
       events: jqlQuery.events,
@@ -185,13 +298,23 @@ export default class SegmentationQuery extends BaseQuery {
         this.query.filters
           .filter(filter => isFilterValid(filter))
           .map(filter => filterToParams(filter)),
-      groups: this.query.segments,
       type: jqlQuery.type,
     };
 
-    // As we need more helper data this should be moved down a level in the params
-    scriptParams.needsPeopleData = scriptParams.filters.concat(scriptParams.groups).some(param => param.resourceType === 'people');
+    return new Promise(resolve => {
+      this.buildGroups(jqlQuery)
+        .then(groups => {
+          scriptParams.groups = groups;
 
+          // As we need more helper data this should be moved down a level in the params
+          scriptParams.needsPeopleData = scriptParams.filters.concat(scriptParams.groups).some(param => param.resourceType === 'people');
+
+          resolve(scriptParams);
+        });
+    });
+  }
+
+  buildParams(scriptParams) {
     return {
       script: String(main),
       params: JSON.stringify(scriptParams),
@@ -219,17 +342,11 @@ export default class SegmentationQuery extends BaseQuery {
     }
   }
 
-  buildJQLArgs() {
-    this.preprocessNameConflicts();
-    return this.query.jqlQueries.map(jqlQuery => [
-      this.buildUrl(),
-      this.buildParams(jqlQuery),
-      this.buildOptions(),
-    ]);
-  }
-
   runJQLQueries() {
-    return this.buildJQLArgs().map(args => window.MP.api.query(...args));
+    this.preprocessNameConflicts();
+    return this.query.jqlQueries.map(jqlQuery =>
+      this.buildJQLParams(jqlQuery).then(jqlParams =>
+        window.MP.api.query(this.buildUrl(), this.buildParams(jqlParams), this.buildOptions())));
   }
 
   executeQuery() {
