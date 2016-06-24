@@ -8,14 +8,10 @@ document.registerElement('mp-toast', class extends Component {
   get config() {
     return {
       helpers: {
-        eatToast: () => {
-          this.dispatchEvent(new Event('select'));
-        },
+        eatToast: () => this.dispatchEvent(new Event('select')),
         getMessage: () => this.getAttribute('message'),
         getSelectText: () => this.getAttribute('select-text'),
-        trashToast: () => {
-          this.dispatchEvent(new Event('close'));
-        },
+        trashToast: () => this.dispatchEvent(new Event('close')),
       },
       template,
     };
