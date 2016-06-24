@@ -1,4 +1,3 @@
-import { isEqual } from 'lodash';
 import MPApp from 'mixpanel-common/build/report/mp-app';
 import { extend, pick } from 'mixpanel-common/build/util';
 import * as util from '../util';
@@ -310,7 +309,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   _checkForNewResults() {
     this.queries.segmentation.run()
       .then(result=> {
-        if (!isEqual(pick(this.state.result, ['series', 'headers']), result)) {
+        if (!util.isEqual(pick(this.state.result, ['series', 'headers']), result)) {
           this.update({newCachedData: true});
           this.queries.segmentationCache.set(
             this.queries.segmentation.build(this.state).query,
