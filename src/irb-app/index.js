@@ -20,8 +20,6 @@ import './index.styl';
 
 const MINUTE_MS = 1000 * 60;
 
-let toastTimer = null;
-
 document.registerElement('irb-app', class IRBApp extends MPApp {
   get config() {
     return {
@@ -301,8 +299,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
   resetToastTimer() {
     if (!this.state.newCachedData) {
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => this._checkForNewResults(), 15 * MINUTE_MS);
+      clearTimeout(this.toastTimer);
+      this.toastTimer = setTimeout(() => this._checkForNewResults(), 15 * MINUTE_MS);
     }
   }
 
