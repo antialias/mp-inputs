@@ -16,9 +16,27 @@ irbQuery.query = irbQuery.buildQuery({
   }),
 });
 
-const postArgs = irbQuery.buildJQLArgs();
-for (const queryArgs of postArgs) {
-  const [url, params, options] = queryArgs;
-  const fullURL = `${API_BASE}/${url}`;
-  fetch(fullURL).then(res => res.text()).then(body => console.log(body));
+async function makeQueries(postArgs) {
+  const results = await Promise.all(postArgs.map(queryArgs => {
+    const [url, params, options] = queryArgs;
+    const fullURL = `${API_BASE}/${url}`;
+    return fetchResponse(fullURL);
+  }));
+  return results;
 }
+
+async function fetchResponse(url) {
+  let text;
+  try {
+    const res = await fetch(url);
+    text = await res.text();
+  } catch(e) {
+    console.error(e);
+  }
+  return text;
+}
+
+(async () => {
+  const results = await makeQueries(irbQuery.buildJQLArgs());
+  console.log('results:', results);
+})();
