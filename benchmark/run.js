@@ -11,32 +11,38 @@ const API_BASE = 'https://mixpanel.com';
 const irbQuery = new SegmentationQuery([]);
 irbQuery.query = irbQuery.buildQuery({
   sections: new BuilderSections({
-    show: new ShowSection(new ShowClause({value: 'Viewed report'})),
+    show: new ShowSection(
+      new ShowClause({value: 'Viewed report'}),
+      new ShowClause({value: 'Segmentation query'})
+    ),
     time: new TimeSection(new TimeClause({range: TimeClause.RANGES.MONTH})),
   }),
 });
 
-async function makeQueries(postArgs) {
+async function timeJQLQueries(postArgs) {
   const results = await Promise.all(postArgs.map(queryArgs => {
     const [url, params, options] = queryArgs;
     const fullURL = `${API_BASE}/${url}`;
-    return fetchResponse(fullURL);
+    return timeQuery(fullURL);
   }));
   return results;
 }
 
-async function fetchResponse(url) {
-  let text;
+async function timeQuery(url) {
+  const start = new Date();
   try {
-    const res = await fetch(url);
-    text = await res.text();
+    await (await fetch(url)).text();
   } catch(e) {
     console.error(e);
   }
-  return text;
+  return new Date() - start;
 }
 
 (async () => {
-  const results = await makeQueries(irbQuery.buildJQLArgs());
-  console.log('results:', results);
+  try {
+    const results = await timeJQLQueries(irbQuery.buildJQLArgs());
+    console.log('results:', results);
+  } catch(e) {
+    console.error(e);
+  }
 })();
