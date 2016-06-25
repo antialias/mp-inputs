@@ -7,6 +7,7 @@ import { MS_BY_UNIT } from '../src/models/queries/segmentation';
 import SegmentationQuery from '../src/models/queries/segmentation';
 
 const API_BASE = 'https://mixpanel.com';
+const all = Promise.all.bind(Promise);
 
 const irbQuery = new SegmentationQuery([]);
 irbQuery.query = irbQuery.buildQuery({
@@ -20,11 +21,11 @@ irbQuery.query = irbQuery.buildQuery({
 });
 
 function timeJQLQueries(postArgs) {
-  return Promise.all(postArgs.map(queryArgs => {
+  return postArgs.map(queryArgs => {
     const [url, params, options] = queryArgs;
     const fullURL = `${API_BASE}/${url}`;
     return timeQuery(fullURL);
-  }));
+  });
 }
 
 async function timeQuery(url) {
@@ -39,7 +40,7 @@ async function timeQuery(url) {
 
 (async () => {
   try {
-    const results = await timeJQLQueries(irbQuery.buildJQLArgs());
+    const results = await all(timeJQLQueries(irbQuery.buildJQLArgs()));
     console.log('results:', results);
   } catch(e) {
     console.error(e);
