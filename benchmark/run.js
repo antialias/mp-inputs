@@ -20,8 +20,8 @@ irbQuery.query = irbQuery.buildQuery({
   }),
 });
 
-function timeJQLQueries(postArgs) {
-  return postArgs.map(queryArgs => {
+function timeJQLQueries(irbQuery) {
+  return irbQuery.buildJQLArgs().map(queryArgs => {
     const [url, params, options] = queryArgs;
     const fullURL = `${API_BASE}/${url}`;
     return timeQuery(fullURL);
@@ -40,7 +40,7 @@ async function timeQuery(url) {
 
 (async () => {
   try {
-    const results = await all(timeJQLQueries(irbQuery.buildJQLArgs()));
+    const results = await all(timeJQLQueries(irbQuery));
     console.log('results:', results);
   } catch(e) {
     console.error(e);
