@@ -20,12 +20,11 @@ irbQuery.query = irbQuery.buildQuery({
 });
 
 async function timeJQLQueries(postArgs) {
-  const results = await Promise.all(postArgs.map(queryArgs => {
+  return await Promise.all(postArgs.map(queryArgs => {
     const [url, params, options] = queryArgs;
     const fullURL = `${API_BASE}/${url}`;
     return timeQuery(fullURL);
   }));
-  return results;
 }
 
 async function timeQuery(url) {
