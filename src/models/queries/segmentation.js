@@ -198,6 +198,10 @@ export default class SegmentationQuery extends BaseQuery {
     };
   }
 
+  getParams() {
+    return this.query.jqlQueries.map(jqlQuery => this.buildParams(jqlQuery));
+  }
+
   buildOptions() {
     return {type: 'POST'};
   }
