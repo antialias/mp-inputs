@@ -1,6 +1,7 @@
 @import "../../stylesheets/common"
 
 .irb-header
+  clearfix()
   align-items center
   border-bottom 1px solid light-gray
   display flex
@@ -21,7 +22,9 @@
     border 1px solid light-gray
     border-radius 3px
     color medium-gray
+    font-size 20px
     display inline-block
+    outline none
     padding 5px
 
     &.refresh-query
@@ -32,3 +35,21 @@
       transition opacity 0.3s
       &.active
         opacity 1
+
+  .loading-dock
+    display inline-block
+    float right
+
+    button
+      background-color white
+      background-position center
+      background-repeat no-repeat
+      border none
+      height 25px
+      width 20px
+
+      &.download
+        background-image url(../../../assets/dock/export-inactive.svg)
+
+        &:hover
+          background-image url(../../../assets/dock/export.svg)
