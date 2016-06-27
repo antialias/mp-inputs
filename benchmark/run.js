@@ -6,8 +6,12 @@ import { ShowSection, TimeSection } from '../src/models/section';
 import { MS_BY_UNIT } from '../src/models/queries/segmentation';
 import SegmentationQuery from '../src/models/queries/segmentation';
 
-const apiSecret = 'TMP';
+// Secrets are not checked in. API_SECRETS maps project IDs to api secrets:
+// { projectID: secret, projectID: secret, ... }
+import API_SECRETS from './project-secrets';
 const API_BASE = 'https://mixpanel.com';
+const apiSecret = API_SECRETS['3'];
+
 const all = Promise.all.bind(Promise);
 
 const irbQuery = new SegmentationQuery([]);

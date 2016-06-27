@@ -3,3 +3,4 @@ npm-debug.log
 .current-mp-release
 build-development
 index-dev.html
+benchmark/project-secrets.js
