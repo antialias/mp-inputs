@@ -6,33 +6,33 @@ import { ShowSection, TimeSection } from '../src/models/section';
 import { MS_BY_UNIT } from '../src/models/queries/segmentation';
 import SegmentationQuery from '../src/models/queries/segmentation';
 
-// Secrets are not checked in. API_SECRETS maps project IDs to api secrets:
-// { projectID: secret, projectID: secret, ... }
-import API_SECRETS from './project-secrets';
-const API_BASE = 'https://mixpanel.com';
-const apiSecret = API_SECRETS['3'];
+import QUERIES from './queries';
 
+const API_BASE = 'https://mixpanel.com';
 const all = Promise.all.bind(Promise);
 
-const irbQuery = new SegmentationQuery([]);
-irbQuery.query = irbQuery.buildQuery({
-  sections: new BuilderSections({
-    show: new ShowSection(
-      new ShowClause({value: {name: 'Viewed report'}}),
-      new ShowClause({value: {name: 'Segmentation query'}})
-    ),
-    time: new TimeSection(new TimeClause({range: TimeClause.RANGES.MONTH})),
-  }),
-});
+function buildIRBQuery(queryParams) {
+  const irbQuery = new SegmentationQuery([]);
+  irbQuery.query = irbQuery.buildQuery({
+    sections: new BuilderSections({
+      show: new ShowSection(
+        new ShowClause({value: {name: 'Viewed report'}}),
+        new ShowClause({value: {name: 'Segmentation query'}})
+      ),
+      time: new TimeSection(new TimeClause({range: TimeClause.RANGES.MONTH})),
+    }),
+  });
+  return irbQuery;
+}
 
-function timeJQLQueries(irbQuery) {
-  return irbQuery.buildJQLArgs().map(queryArgs => {
+function timeJQLQueries(query) {
+  return buildIRBQuery(query).buildJQLArgs().map(queryArgs => {
     const [url, params, options] = queryArgs;
     return timeQuery(`${API_BASE}/${url}`, {
       headers: {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'x-www-form-urlencoded',
-        'Authorization': `Basic ${new Buffer(apiSecret + ':', 'binary').toString('base64')}`,
+        'Authorization': `Basic ${new Buffer(query.apiSecret + ':', 'binary').toString('base64')}`,
       },
       method: 'POST',
       body: Object.keys(params).reduce((items, pkey) =>
@@ -54,8 +54,10 @@ async function timeQuery(url, params) {
 
 (async () => {
   try {
-    const results = await all(timeJQLQueries(irbQuery));
-    console.log('results:', results);
+    for (const query of QUERIES) {
+      const results = await all(timeJQLQueries(query));
+      console.log('results:', results);
+    }
   } catch(e) {
     console.error(e);
   }
