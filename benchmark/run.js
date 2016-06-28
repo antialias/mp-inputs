@@ -101,7 +101,7 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
 (async () => {
   try {
     const table = [
-      ['JQL', 'Seg', 'Raw SQL', 'Raw Seg'],
+      ['JQL', 'Seg', 'Raw JQL', 'Raw Seg'],
     ];
 
     for (const query of QUERIES) {
