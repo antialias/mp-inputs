@@ -9,6 +9,8 @@ import SegmentationQuery from '../src/models/queries/segmentation';
 import QUERIES from './queries';
 
 const API_BASE = process.env.API_BASE || 'https://mixpanel.com';
+const PASSES = Number(process.env.PASSES || 3);
+
 const all = Promise.all.bind(Promise);
 
 function buildIRBQuery(queryParams) {
@@ -75,13 +77,31 @@ async function timeQuery(url, params) {
   return new Date() - start;
 }
 
+function outputResultSet(results, qtype, qi) {
+  const mss = results[qtype].map(res => res[qi]);
+  const avg = Math.round(mss.reduce((sum, n) => sum + n) / mss.length);
+  console.log(`${qtype}\t${avg}\traw\t${mss}`);
+}
+
 (async () => {
   try {
     for (const query of QUERIES) {
-      const jqlResults = await all(timeJQLQueries(query));
-      const segResults = await all(timeSegQueries(query));
-      console.log('jqlResults:', jqlResults);
-      console.log('segResults:', segResults);
+      const results = {
+        jql: [],
+        seg: [],
+      };
+
+      // get timings in multiple passes
+      for (let pass = 0; pass < PASSES; pass++) {
+        results.jql.push(await all(timeJQLQueries(query)));
+        results.seg.push(await all(timeSegQueries(query)));
+      }
+
+      // process and output results
+      for (let qi = 0; qi < results.jql[0].length; qi++) {
+        outputResultSet(results, 'jql', qi);
+        outputResultSet(results, 'seg', qi);
+      }
     }
   } catch(e) {
     console.error(e);
