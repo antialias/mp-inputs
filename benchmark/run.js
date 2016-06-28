@@ -77,11 +77,15 @@ async function timeQuery(url, params) {
   return new Date() - start;
 }
 
-function outputResultSet(results, qtype, qi) {
+function processedResults(results, qtype, qi) {
   const mss = results[qtype].map(res => res[qi]);
-  const avg = Math.round(mss.reduce((sum, n) => sum + n) / mss.length);
-  console.log(`${qtype}\t${avg}\traw\t${mss}`);
+  return {
+    avg: Math.round(mss.reduce((sum, n) => sum + n) / mss.length),
+    raw: mss,
+  };
 }
+
+const rightPad = (s, len) => [...s].concat(Array(len).fill(' ')).slice(0, len).join('');
 
 (async () => {
   try {
@@ -98,9 +102,17 @@ function outputResultSet(results, qtype, qi) {
       }
 
       // process and output results
+      const table = [
+        ['jql', 'seg', 'raw jql', 'raw seg'],
+      ];
       for (let qi = 0; qi < results.jql[0].length; qi++) {
-        outputResultSet(results, 'jql', qi);
-        outputResultSet(results, 'seg', qi);
+        let jql = processedResults(results, 'jql', qi);
+        let seg = processedResults(results, 'seg', qi);
+        table.push([String(jql.avg), String(seg.avg), jql.raw.join(','), seg.raw.join(',')]);
+      }
+      const colWidth = Math.max(...table.map(row => Math.max(...row.map(s => s.length))));
+      for (const row of table) {
+        console.log(row.map(s => rightPad(s, colWidth)).join('   '));
       }
     }
   } catch(e) {
