@@ -10,6 +10,7 @@ import QUERIES from './queries';
 
 const API_BASE = process.env.API_BASE || 'https://mixpanel.com';
 const PASSES = Number(process.env.PASSES || 3);
+const DEBUG = (process.env.DEBUG || '').toLowerCase() === 'true';
 
 const all = Promise.all.bind(Promise);
 
@@ -75,7 +76,10 @@ function timeSegQueries(queryParams) {
 async function timeQuery(url, params) {
   const start = new Date();
   try {
-    await (await fetch(url, params)).text();
+    const responseText = await (await fetch(url, params)).text();
+    if (DEBUG) {
+      console.log(responseText);
+    }
   } catch(e) {
     console.error(e);
   }
