@@ -35,6 +35,16 @@ const QUERIES = [
       range: TimeClause.RANGES.QUARTER,
     },
   },
+  {
+    project: 22604,
+    queries: [
+      {events: ['minute-watched']},
+      {events: ['message-sent']},
+    ],
+    time: {
+      range: TimeClause.RANGES.MONTH,
+    },
+  },
 ];
 for (const query of QUERIES) {
   query.apiSecret = API_SECRETS[query.project];

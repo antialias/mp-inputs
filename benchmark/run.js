@@ -112,8 +112,8 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
 
       // process results and add to table
       for (let qi = 0; qi < results.jql[0].length; qi++) {
-        let jql = processResults(results, 'jql', qi);
         let seg = processResults(results, 'seg', qi);
+        let jql = processResults(results, 'jql', qi);
         table.push([String(jql.avg), String(seg.avg), jql.raw.join(','), seg.raw.join(',')]);
       }
     }
