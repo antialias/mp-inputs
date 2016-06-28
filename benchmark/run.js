@@ -15,11 +15,10 @@ function buildIRBQuery(queryParams) {
   const irbQuery = new SegmentationQuery([]);
   irbQuery.query = irbQuery.buildQuery({
     sections: new BuilderSections({
-      show: new ShowSection(
-        new ShowClause({value: {name: 'Viewed report'}}),
-        new ShowClause({value: {name: 'Segmentation query'}})
-      ),
-      time: new TimeSection(new TimeClause({range: TimeClause.RANGES.MONTH})),
+      show: new ShowSection(...queryParams.queries.map(q =>
+        new ShowClause({value: {name: q.events[0]}})
+      )),
+      time: new TimeSection(new TimeClause({range: queryParams.range})),
     }),
   });
   return irbQuery;

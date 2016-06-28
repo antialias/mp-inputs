@@ -1,6 +1,7 @@
 // Secrets are not checked in. API_SECRETS maps project IDs to api secrets:
 // { projectID: secret, projectID: secret, ... }
 import API_SECRETS from './project-secrets';
+import { TimeClause } from '../src/models/clause';
 
 const QUERIES = [
   {
@@ -10,7 +11,7 @@ const QUERIES = [
       {events: ['Segmentation query']},
     ],
     time: {
-      // TODO
+      range: TimeClause.RANGES.MONTH,
     },
   },
 ];
