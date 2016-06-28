@@ -14,6 +14,15 @@ const QUERIES = [
       range: TimeClause.RANGES.MONTH,
     },
   },
+  {
+    project: 3,
+    queries: [
+      {events: ['Viewed report']},
+    ],
+    time: {
+      range: TimeClause.RANGES.HOURS,
+    },
+  },
 ];
 for (const query of QUERIES) {
   query.apiSecret = API_SECRETS[query.project];

@@ -77,7 +77,7 @@ async function timeQuery(url, params) {
   return new Date() - start;
 }
 
-function processedResults(results, qtype, qi) {
+function processResults(results, qtype, qi) {
   const mss = results[qtype].map(res => res[qi]);
   return {
     avg: Math.round(mss.reduce((sum, n) => sum + n) / mss.length),
@@ -89,6 +89,10 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
 
 (async () => {
   try {
+    const table = [
+      ['JQL', 'Seg', 'Raw SQL', 'Raw Seg'],
+    ];
+
     for (const query of QUERIES) {
       const results = {
         jql: [],
@@ -101,19 +105,18 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
         results.seg.push(await all(timeSegQueries(query)));
       }
 
-      // process and output results
-      const table = [
-        ['jql', 'seg', 'raw jql', 'raw seg'],
-      ];
+      // process results and add to table
       for (let qi = 0; qi < results.jql[0].length; qi++) {
-        let jql = processedResults(results, 'jql', qi);
-        let seg = processedResults(results, 'seg', qi);
+        let jql = processResults(results, 'jql', qi);
+        let seg = processResults(results, 'seg', qi);
         table.push([String(jql.avg), String(seg.avg), jql.raw.join(','), seg.raw.join(',')]);
       }
-      const colWidth = Math.max(...table.map(row => Math.max(...row.map(s => s.length))));
-      for (const row of table) {
-        console.log(row.map(s => rightPad(s, colWidth)).join('   '));
-      }
+    }
+
+    // output results
+    const colWidth = Math.max(...table.map(row => Math.max(...row.map(s => s.length))));
+    for (const row of table) {
+      console.log(row.map(s => rightPad(s, colWidth)).join('   '));
     }
   } catch(e) {
     console.error(e);
