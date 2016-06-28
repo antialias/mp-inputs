@@ -23,6 +23,18 @@ const QUERIES = [
       range: TimeClause.RANGES.HOURS,
     },
   },
+  {
+    project: 3,
+    queries: [
+      {
+        events: ['Segmentation query'],
+        type: 'unique',
+      },
+    ],
+    time: {
+      range: TimeClause.RANGES.QUARTER,
+    },
+  },
 ];
 for (const query of QUERIES) {
   query.apiSecret = API_SECRETS[query.project];

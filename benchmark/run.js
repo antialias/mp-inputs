@@ -16,9 +16,13 @@ const all = Promise.all.bind(Promise);
 function buildIRBQuery(queryParams) {
   const irbQuery = new SegmentationQuery([]);
   irbQuery.query = irbQuery.buildQuery({
+    chartType: 'line',
     sections: new BuilderSections({
       show: new ShowSection(...queryParams.queries.map(q =>
-        new ShowClause({value: {name: q.events[0]}})
+        new ShowClause({
+          math: q.type,
+          value: {name: q.events[0]},
+        })
       )),
       time: new TimeSection(new TimeClause({range: queryParams.time.range})),
     }),
@@ -59,6 +63,7 @@ function timeSegQueries(queryParams) {
       event: query.events[0],
       from_date: irbParams.dates.from,
       to_date: irbParams.dates.to,
+      type: query.type || 'general',
       unit: irbParams.dates.unit,
     };
     return timeQuery(`${API_BASE}/api/2.0/segmentation?${urlencodeParams(params)}`, {
