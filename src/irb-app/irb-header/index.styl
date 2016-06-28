@@ -50,6 +50,10 @@
 
       &.download
         background-image url(../../../assets/dock/export-inactive.svg)
+        cursor default
 
-        &:hover
-          background-image url(../../../assets/dock/export.svg)
+        &.enabled
+          cursor pointer
+
+          &:hover
+            background-image url(../../../assets/dock/export.svg)

@@ -17,9 +17,11 @@ document.registerElement('irb-header', class extends Component {
         updateReportTitle: ev => this.app.updateReport({title: ev.target.value}),
 
         clickExportCSV: () => {
-          this.app.queries.segmentation.build(this.state).getParams().forEach(query => {
-            this.startDownload(query.script, `${this.state.reportName}`, query.params);
-          });
+          if (Object.keys(this.state.result.series).length) {
+            this.app.queries.segmentation.build(this.state).getParams().forEach(query => {
+              this.startDownload(query.script, `${this.state.reportName}`, query.params);
+            });
+          }
         },
       },
 

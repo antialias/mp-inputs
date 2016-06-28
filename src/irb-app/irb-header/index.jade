@@ -8,5 +8,8 @@
   )
   button.save-report(class={active: editingTitle} onclick=$helpers.save) Save
   .loading-dock
-    button.download(onclick=$helpers.clickExportCSV)
+    button.download(
+      onclick=$helpers.clickExportCSV
+      class={enabled: Object.keys(result.series).length}
+    )
 
