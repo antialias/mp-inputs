@@ -77,6 +77,8 @@ async function timeQuery(url, params) {
   const start = new Date();
   try {
     const responseText = await (await fetch(url, params)).text();
+
+    process.stdout.write('.');
     if (DEBUG) {
       console.log(responseText);
     }
@@ -121,6 +123,7 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
         table.push([String(jql.avg), String(seg.avg), jql.raw.join(','), seg.raw.join(',')]);
       }
     }
+    process.stdout.write('\n\n');
 
     // output results
     const colWidth = Math.max(...table.map(row => Math.max(...row.map(s => s.length))));
