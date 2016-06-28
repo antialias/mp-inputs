@@ -85,7 +85,7 @@ function processedResults(results, qtype, qi) {
   };
 }
 
-const rightPad = (s, len) => [...s].concat(Array(len).fill(' ')).slice(0, len).join('');
+const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
 
 (async () => {
   try {
