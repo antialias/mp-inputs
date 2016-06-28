@@ -10,6 +10,5 @@
   .loading-dock
     button.download(
       onclick=$helpers.clickExportCSV
-      class={enabled: Object.keys(result.series).length}
+      class={enabled: !result.loading}
     )
-

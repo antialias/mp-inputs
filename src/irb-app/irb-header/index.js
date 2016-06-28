@@ -17,7 +17,7 @@ document.registerElement('irb-header', class extends Component {
         updateReportTitle: ev => this.app.updateReport({title: ev.target.value}),
 
         clickExportCSV: () => {
-          if (Object.keys(this.state.result.series).length) {
+          if (!this.state.result.loading) {
             this.app.queries.segmentation.build(this.state).getParams().forEach(query => {
               this.startDownload(query.script, `${this.state.reportName}`, query.params);
             });
@@ -30,7 +30,8 @@ document.registerElement('irb-header', class extends Component {
   }
 
   htmlEncodeString(string) {
-    return string.replace(/&/g, '&amp;')
+    return string
+      .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
