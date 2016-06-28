@@ -8,7 +8,7 @@ import SegmentationQuery from '../src/models/queries/segmentation';
 
 import QUERIES from './queries';
 
-const API_BASE = 'https://mixpanel.com';
+const API_BASE = process.env.API_BASE || 'https://mixpanel.com';
 const all = Promise.all.bind(Promise);
 
 function buildIRBQuery(queryParams) {
