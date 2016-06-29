@@ -5,22 +5,17 @@ import { pick } from '../util';
 // saveable / loadable report metadata
 export default class Report {
   constructor(attrs) {
-    this.id    = attrs.id;
-    this.title = attrs.title;
-    this.user  = attrs.user;
+    Object.assign(this, pick(attrs, [
+      // metadata
+      'id',
+      'title',
+      'user',
 
-    // TODO: deal with these attrs
-    // chartType: 'bar',
-    // sections: new BuilderSections({
-    //   show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
-    //   time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
-    // }),
-    // series: {
-    //   currentSeries: null,
-    //   data: {},
-    //   isEditing: false,
-    //   search: null,
-    // },
+      // visualization params
+      'chartType',
+      'sections',
+      'series',
+    ]));
 
     if (attrs.modified) {
       this.modified = moment.utc(attrs.modified).local();
