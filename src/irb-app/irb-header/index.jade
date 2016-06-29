@@ -1,3 +1,9 @@
 .irb-header
   button.refresh(onclick=$helpers.refresh) Refresh
-  auto-sizing-input(value=reportName onchange=$helpers.updateReportName)
+  auto-sizing-input(
+    value=reportName
+    onblur=$helpers.blurTitleInput
+    onchange=$helpers.updateReportName
+    onfocus=$helpers.focusTitleInput
+  )
+  button.save-report(class={active: editingTitle}) Save

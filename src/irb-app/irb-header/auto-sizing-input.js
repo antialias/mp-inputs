@@ -32,13 +32,19 @@ document.registerElement('auto-sizing-input', class extends WebComponent {
     this.inputEl.style.width = `${this.inputSizer.clientWidth}px`;
 
     this.changeHandler = () => this.resize();
+    this.focusHandler = () => this.dispatchEvent(new CustomEvent('focus'));
+    this.blurHandler = () => this.dispatchEvent(new CustomEvent('blur'));
     CHANGE_EVENTS.forEach(evName => this.inputEl.addEventListener(evName, this.changeHandler));
+    this.inputEl.addEventListener('focus', this.focusHandler);
+    this.inputEl.addEventListener('blur', this.blurHandler);
 
     this.appendChild(divEl);
   }
 
   detachedCallback() {
     CHANGE_EVENTS.forEach(evName => this.inputEl.removeEventListener(evName, this.changeHandler));
+    this.inputEl.removeEventListener('focus', this.focusHandler);
+    this.inputEl.removeEventListener('blur', this.blurHandler);
     this.inputSizer.remove();
   }
 
