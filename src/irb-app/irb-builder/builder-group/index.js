@@ -12,7 +12,13 @@ import './index.styl';
 
 document.registerElement('builder-group', class extends Component {
   get config() {
-    return {template};
+    return {
+      template,
+      helpers: {
+        moveClauseLeft: clauseIndex => this.app.moveClause('group', clauseIndex, clauseIndex - 1),
+        moveClauseRight: clauseIndex => this.app.moveClause('group', clauseIndex, clauseIndex + 1),
+      },
+    };
   }
 });
 
