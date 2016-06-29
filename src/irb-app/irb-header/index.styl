@@ -1,21 +1,34 @@
 @import "../../stylesheets/common"
 
 .irb-header
+  align-items center
   border-bottom 1px solid light-gray
+  display flex
+  height 60px
   margin 0 24px
-  padding 24px 0 16px 0
+  padding-top 10px
 
-  button.refresh
-    float left
+  auto-sizing-input
+    display inline-block
+    input
+      border none
+      color medium-gray
+      font-size 20px
+      outline none
 
-  input
-    border none
+  button
+    background-color initial
+    border 1px solid light-gray
+    border-radius 3px
     color medium-gray
-    font-size 20px
-    outline none
+    display inline-block
+    padding 5px
 
-  .save-report
-    opacity 0
-    transition opacity 0.3s
-    &.active
-      opacity 1
+    &.refresh-query
+      margin-right 5px
+
+    &.save-report
+      opacity 0
+      transition opacity 0.3s
+      &.active
+        opacity 1
