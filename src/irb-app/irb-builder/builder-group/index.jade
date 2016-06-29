@@ -8,11 +8,12 @@
       .preposition= clauseIndex ? 'and' : 'by'
       .clause.group
         .header
-          if clauseIndex > 0
-            button.reorder.reorder-left(onclick=() => $component.app.moveClause('group', clauseIndex, clauseIndex - 1)) ‹
-          h3= 'Group' + (report.sections.group.clauses.length === 1 ? '' : ' ' + (clauseIndex + 1))
-          if clauseIndex < sections.group.clauses.length - 1
-            button.reorder.reorder-right(onclick=() => $component.app.moveClause('group', clauseIndex, clauseIndex + 1)) ›
+          .header-controls
+            if clauseIndex > 0
+              button.reorder.reorder-left(onclick=() => $component.app.moveClause('group', clauseIndex, clauseIndex - 1)) ‹
+            h3= 'Group' + (report.sections.group.clauses.length === 1 ? '' : ' ' + (clauseIndex + 1))
+            if clauseIndex < report.sections.group.clauses.length - 1
+              button.reorder.reorder-right(onclick=() => $component.app.moveClause('group', clauseIndex, clauseIndex + 1)) ›
         .control-container= $component.child('group-edit-control', {attributes: {'clause-index': clauseIndex}})
         if clauseIndex + 1 === report.sections.group.clauses.length && report.sections.group.clauses.length < 10
           .control-container= $component.child('group-add-control')
