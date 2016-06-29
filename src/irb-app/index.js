@@ -325,11 +325,25 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.stopEditingClause();
   }
 
-  removeClause(sectionType, clauseIndex) {
-    const section = this.state.report.sections[sectionType].removeClause(clauseIndex);
-    const sections = this.state.report.sections.replaceSection(sectionType, section);
+  moveClause(sectionType, clauseIndex, newClauseIndex) {
+    let section = this.state.sections[sectionType];
+    const clause = section.clauses[clauseIndex];
+
+    section = section.removeClause(clauseIndex);
+
+    if (typeof newClauseIndex === 'number') {
+      section = section.addClause(clause, newClauseIndex);
+    }
+
+    const sections = this.state.sections.replaceSection(sectionType, section);
+    let newState = extend(this.state, );
+
     this.updateReport({sections});
     this.query();
+  }
+
+  removeClause(sectionType, clauseIndex) {
+    this.moveClause(sectionType, clauseIndex);
   }
 
   updateSeriesState(newState) {

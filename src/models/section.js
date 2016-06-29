@@ -58,8 +58,15 @@ export class Section {
     return valid ? newSection : this;
   }
 
-  addClause(newClause) {
-    return this.validate(Section.create(this.TYPE, {clauses: [...this.clauses, newClause]}));
+  addClause(newClause, index) {
+    if (typeof index !== 'number') {
+      index = this.clauses.length;
+    }
+    return this.validate(Section.create(this.TYPE, {clauses: [
+      ...this.clauses.slice(0, index),
+      newClause,
+      ...this.clauses.slice(index, this.clauses.length),
+    ]}));
   }
 
   replaceClause(index, newClause) {
