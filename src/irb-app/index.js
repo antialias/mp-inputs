@@ -293,7 +293,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
   updateSeriesState(newState) {
     this.resetToastTimer();
-    this.update({series: extend(this.state.series, newState)});
+    this.updateReport({series: extend(this.state.report.series, newState)});
   }
 
   startEditingSeries() {

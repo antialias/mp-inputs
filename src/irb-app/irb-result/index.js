@@ -18,7 +18,9 @@ document.registerElement('irb-result', class extends Component {
         toastSelected: () => this.app.query(),
         filterResults: (result, depth=2) => ({
           headers: result.headers,
-          series: filterObjectAtDepth(result.series, series => this.state.series.data[series], depth),
+          series: filterObjectAtDepth(
+            result.series, series => this.state.report.series.data[series], depth
+          ),
         }),
       },
       template,

@@ -36,26 +36,26 @@ document.registerElement('show-hide-series-pane-content', class extends PaneCont
       template: showHideSeriesPaneContentTemplate,
 
       helpers: extend(super.config.helpers, {
-        isSeriesShowing: name => this.state.series.data[name],
-        renameSeries: name => this.app.state.series.currentSeries === '$event' ? renameEvent(name) : renamePropertyValue(name),
+        isSeriesShowing: name => this.state.report.series.data[name],
+        renameSeries: name => this.state.report.series.currentSeries === '$event' ? renameEvent(name) : renamePropertyValue(name),
         matchesSearch: value => (
-          this.app.state.series && (
-            !this.app.state.series.search ||
-            this.config.helpers.renameSeries(value).toLowerCase().indexOf(this.app.state.series.search.toLowerCase()) === 0
+          this.state.report.series && (
+            !this.state.report.series.search ||
+            this.config.helpers.renameSeries(value).toLowerCase().indexOf(this.state.report.series.search.toLowerCase()) === 0
           )
         ),
-        resetSeries: () => this.app.updateSeriesData(this.app.state.result, false),
-        selectedSeriesCount: () => Object.values(this.app.state.series.data).filter(Boolean).length,
-        seriesData: () => Object.keys(this.app.state.series.data).filter(this.config.helpers.matchesSearch),
+        resetSeries: () => this.app.updateSeriesData(this.state.result, false),
+        selectedSeriesCount: () => Object.values(this.state.report.series.data).filter(Boolean).length,
+        seriesData: () => Object.keys(this.state.report.series.data).filter(this.config.helpers.matchesSearch),
         toggleShowSeries: name => {
-          const currentData = this.app.state.series.data;
+          const currentData = this.state.report.series.data;
           if (currentData.hasOwnProperty(name)) {
             const newSeriesValue = {};
             newSeriesValue[name] = !currentData[name];
             this.app.updateSeriesState({data: extend(currentData, newSeriesValue)});
           }
         },
-        totalSeriesCount: () => Object.keys(this.app.state.series.data).length,
+        totalSeriesCount: () => Object.keys(this.state.report.series.data).length,
       }),
     });
   }
