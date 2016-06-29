@@ -29,11 +29,11 @@ document.registerElement('irb-header', class extends Component {
     };
   }
 
-  downloadJQLQuery(script, filename, params) {
+  downloadJQLQuery(script, filename, scriptParams) {
     const parameters = {
       script: script.replace(/\r/g, '').replace(/\n/g, '\r\n'),
       download_file: `${filename}.csv`,
-      params: params,
+      params: scriptParams,
       format: 'csv',
     };
 
@@ -43,7 +43,7 @@ document.registerElement('irb-header', class extends Component {
         case 'script':
           return `<textarea name="script">${htmlEncodeString(parameters.script)}</textarea>`;
         case 'params':
-          return `<input type="hidden" name="params" value="${htmlEncodeString(params)}"/>`;
+          return `<input type="hidden" name="params" value="${htmlEncodeString(scriptParams)}"/>`;
         default:
           return `<input type="hidden" name="${param}" value="${query.queryOptions.data[param]}"/>`;
       }
