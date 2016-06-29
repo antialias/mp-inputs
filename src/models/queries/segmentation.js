@@ -117,7 +117,7 @@ class JQLQuery {
     this.type = showClause.math;
 
     this.unit = state.sections.time.clauses[0].unit;
-    if (['unique', 'average', 'median'].includes(this.type) && state.chartType !== 'line') {
+    if (['unique', 'average', 'median'].includes(this.type) && state.report.chartType !== 'line') {
       this.unit = 'all';
     }
 

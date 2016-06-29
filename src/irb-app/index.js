@@ -40,24 +40,27 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   // The following states should be reset.
   get resettableState() {
     return {
-      chartType: 'bar',
+      report: new Report({
+        chartType: 'bar',
+        sections: new BuilderSections({
+          show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
+          time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
+        }),
+        series: {
+          currentSeries: null,
+          data: {},
+          isEditing: false,
+          search: null,
+        },
+        title: 'Untitled report',
+      }),
+
       newCachedData: false,
-      reportName: 'Untitled report',
       resourceTypeFilter: 'all',
       result: {
         headers: [],
         series: {},
         loading: true,
-      },
-      sections: new BuilderSections({
-        show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
-        time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
-      }),
-      series: {
-        currentSeries: null,
-        data: {},
-        isEditing: false,
-        search: null,
       },
       stageClauses: [],
       topEvents: [],
@@ -110,24 +113,40 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     });
   }
 
+  saveReport() {
+    if (this.parentFrame) {
+      return this.parentFrame.send('saveBookmark', this.state.query.toBookmarkData())
+        .then(bookmark => {
+          const report = Report.deserialize(bookmark);
+          this.update({
+            report,
+            savedReports: extend(this.state.savedReports, {[bookmark.id]: report}),
+          });
+        })
+        .catch(err => {
+          console.error(`Error saving: ${err}`);
+        });
+    } else {
+      console.warn('Cannot save report without parent app');
+    }
+  }
+
+  updateReport(attrs) {
+    this.update({report: Object.assign(this.state.report, attrs)});
+  }
+
   // Serialization helpers
 
   get persistenceKey() {
-    return 'irb2';
+    return 'irb3';
   }
 
   toSerializationAttrs() {
-    return extend({
-      sections: this.state.sections.serialize(),
-    }, pick(this.state, [
-      'chartType',
-      'reportName',
-      'series',
-    ]));
+    return this.state.report.serialize();
   }
 
   fromSerializationAttrs(attrs) {
-    return extend(attrs, {sections: BuilderSections.deserialize(attrs.sections)});
+    return {report: Report.deserialize(attrs)};
   }
 
   // State helpers

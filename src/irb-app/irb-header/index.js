@@ -12,7 +12,8 @@ document.registerElement('irb-header', class extends Component {
         blurTitleInput: () => this.update({editingTitle: false}),
         focusTitleInput: () => this.update({editingTitle: true}),
         refresh: () => this.app.query(this.state, false),
-        updateReportName: ev => this.update({reportName: ev.target.value}),
+        save: () => this.app.saveReport(),
+        updateReportTitle: ev => this.app.updateReport({title: ev.target.value}),
       },
 
       template,
