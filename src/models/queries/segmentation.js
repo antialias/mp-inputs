@@ -118,7 +118,7 @@ class JQLQuery {
 
     this.type = showClause.math;
 
-    this.unit = state.sections.time.clauses[0].unit;
+    this.unit = state.report.sections.time.clauses[0].unit;
     if (['unique', 'average', 'median'].includes(this.type) && this.chartType !== 'line') {
       this.unit = 'all';
     }
@@ -143,15 +143,17 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   buildQuery(state, options) {
+    const sections = state.report.sections;
+
     // fire one query per show clause
-    let jqlQueries = state.sections.show.clauses.map(showClause => new JQLQuery(showClause, state, options));
+    let jqlQueries = sections.show.clauses.map(showClause => new JQLQuery(showClause, state, options));
 
     // data global to all JQL queries.
-    const segments = state.sections.group.clauses.map(clause => pick(clause, ['value', 'resourceType']));
+    const segments = sections.group.clauses.map(clause => pick(clause, ['value', 'resourceType']));
 
-    const filters = state.sections.filter.clauses.map(clause => clause.attrs);
+    const filters = sections.filter.clauses.map(clause => clause.attrs);
 
-    const time = state.sections.time.clauses[0];
+    const time = sections.time.clauses[0];
     const unit = time.unit;
 
     let from, to;

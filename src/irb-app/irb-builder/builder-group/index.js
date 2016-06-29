@@ -33,7 +33,7 @@ document.registerElement('group-edit-control', class extends EditControl {
   }
 
   get label() {
-    const clause = this.state.sections.getClause('group', this.clauseIndex);
+    const clause = this.state.report.sections.getClause('group', this.clauseIndex);
     return clause && renameProperty(clause.value);
   }
 });

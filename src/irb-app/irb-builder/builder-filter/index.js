@@ -39,7 +39,7 @@ document.registerElement('filter-edit-control', class extends EditControl {
   }
 
   get label() {
-    const clause = this.state.sections.getClause('filter', this.clauseIndex);
+    const clause = this.state.report.sections.getClause('filter', this.clauseIndex);
     const property = renameProperty(clause.value);
     const type = clause.filterType;
     let operator = clause.filterOperator;

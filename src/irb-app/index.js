@@ -189,7 +189,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   startEditingClause(sectionType, clauseIndex) {
-    const stageClauses = this.state.stageClauses.concat(this.state.sections[sectionType].clauses[clauseIndex]);
+    const stageClauses = this.state.stageClauses.concat(
+      this.state.report.sections[sectionType].clauses[clauseIndex]
+    );
 
     if (stageClauses.length) {
       for (const clause of stageClauses) {
@@ -281,8 +283,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   removeClause(sectionType, clauseIndex) {
-    const section = this.state.sections[sectionType].removeClause(clauseIndex);
-    const sections = this.state.sections.replaceSection(sectionType, section);
+    const section = this.state.report.sections[sectionType].removeClause(clauseIndex);
+    const sections = this.state.report.sections.replaceSection(sectionType, section);
     let newState = extend(this.state, {sections});
 
     this.update(newState);
@@ -318,7 +320,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
     // for 'unique', 'average' and 'median', 'bar' and 'table' require a different query than
     // 'line'.
-    if (this.state.sections.show.clauses.some(clause => ['unique', 'average', 'median'].includes(clause.math)) &&
+    if (this.state.report.sections.show.clauses.some(clause => ['unique', 'average', 'median'].includes(clause.math)) &&
         (chartType === 'line' && ['bar', 'table'].includes(this.state.report.chartType)
          || ['bar', 'table'].includes(chartType) && this.state.report.chartType === 'line')) {
       this.query({chartType});

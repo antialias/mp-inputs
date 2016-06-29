@@ -31,13 +31,13 @@ document.registerElement('show-edit-control', class extends EditControl {
   }
 
   get label() {
-    const clause = this.state.sections.getClause('show', this.clauseIndex);
+    const clause = this.state.report.sections.getClause('show', this.clauseIndex);
     const math = capitalize(clause.math);
     return [math, ' number of ', renameEvent(clause.value.name)];
   }
 
   get isRemoveable() {
-    return this.state.sections.show.clauses.length > 1;
+    return this.state.report.sections.show.clauses.length > 1;
   }
 });
 

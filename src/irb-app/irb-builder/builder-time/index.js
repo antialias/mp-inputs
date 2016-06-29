@@ -23,7 +23,7 @@ document.registerElement('builder-time', class extends Component {
 // controls
 document.registerElement('time-edit-control', class extends EditControl {
   get label() {
-    const clause = this.state.sections.time.clauses[0];
+    const clause = this.state.report.sections.time.clauses[0];
     return clause.range ? clause.range : `${clause.value[0]} - ${clause.value[1]}`;
   }
 
