@@ -10,6 +10,7 @@ import { TopEventPropertiesQuery, TopPeoplePropertiesQuery } from '../models/que
 import { TopEventPropertyValuesQuery, TopPeoplePropertyValuesQuery } from '../models/queries/top-property-values';
 import SegmentationQuery from '../models/queries/segmentation';
 import QueryCache from '../models/queries/query-cache';
+import Report from '../models/report';
 
 import './irb-header';
 import './irb-builder';
@@ -27,6 +28,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         this.resettableState,
         {
           // The following states should persist through reset.
+          savedReports: [],
           util,
         }
       ),
@@ -69,6 +71,13 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     super.attachedCallback(...arguments);
 
     this.customEvents = (this.parentData && this.parentData.custom_events) || [];
+    if (this.parentData) {
+      this.update({
+        savedReports: this.parentData.bookmarks.reduce((reports, bm) => {
+          return extend(reports, {[bm.id]: Report.deserialize(bm)});
+        }, {}),
+      });
+    }
     this.queries = {
       topEvents: new TopEventsQuery(),
       topEventProperties: new TopEventPropertiesQuery(),
@@ -100,6 +109,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       this.query();
     });
   }
+
+  // Serialization helpers
 
   get persistenceKey() {
     return 'irb2';
