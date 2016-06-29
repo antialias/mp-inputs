@@ -3,8 +3,8 @@ export default class BaseQuery {
     this.query = null; // used to check for obsolete queries
   }
 
-  build(state) {
-    this.query = this.buildQuery(state);
+  build(state, options) {
+    this.query = this.buildQuery(state, options);
     return this;
   }
 

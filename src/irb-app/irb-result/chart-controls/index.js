@@ -26,7 +26,7 @@ document.registerElement('chart-toggle', class extends Toggle {
   }
 
   get selected() {
-    return this.state.chartType;
+    return this.state.report.chartType;
   }
 });
 

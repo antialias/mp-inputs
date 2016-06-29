@@ -273,8 +273,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         newState.sections = newState.sections.replaceSection(clause.TYPE, newSection);
       });
 
-      newState = this.query(newState);
       this.update(newState);
+      this.query();
     }
 
     this.stopEditingClause();
@@ -285,8 +285,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     const sections = this.state.sections.replaceSection(sectionType, section);
     let newState = extend(this.state, {sections});
 
-    newState = this.query(newState);
     this.update(newState);
+    this.query();
   }
 
   updateSeriesState(newState) {
@@ -319,11 +319,11 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     // for 'unique', 'average' and 'median', 'bar' and 'table' require a different query than
     // 'line'.
     if (this.state.sections.show.clauses.some(clause => ['unique', 'average', 'median'].includes(clause.math)) &&
-        (chartType === 'line' && ['bar', 'table'].includes(this.state.chartType)
-         || ['bar', 'table'].includes(chartType) && this.state.chartType === 'line')) {
-      this.query(extend(this.state, {chartType}));
+        (chartType === 'line' && ['bar', 'table'].includes(this.state.report.chartType)
+         || ['bar', 'table'].includes(chartType) && this.state.report.chartType === 'line')) {
+      this.query({chartType});
     } else {
-      this.update({chartType});
+      this.updateReport({chartType});
     }
   }
 
@@ -351,13 +351,14 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.update({toastTimer: null});
   }
 
-  query(state=this.state, useCache=true) {
-    const query = this.queries.segmentation.build(state).query;
-    const cachedResult = useCache && this.queries.segmentationCache.get(query);
+  query(options={}) {
+    options = Object.assign({useCache: true}, options);
+    const query = this.queries.segmentation.build(this.state, options).query;
+    const cachedResult = options.useCache && this.queries.segmentationCache.get(query);
     const cacheExpiry = 10; // seconds
 
     if (!cachedResult) {
-      let result = extend(state.result, {loading: true});
+      let result = extend(this.state.result, {loading: true});
       this.update({result});
     }
 
@@ -369,10 +370,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           this.queries.segmentationCache.set(query, result, cacheExpiry);
         }
         this.updateSeriesData(result);
-        this.update({result, chartType: state.chartType, newCachedData: false});
+        this.update({result, newCachedData: false});
+        this.updateReport({chartType: options.chartType || this.state.report.chartType});
       })
       .catch(err => console.error(err));
-
-    return state;
   }
 });
