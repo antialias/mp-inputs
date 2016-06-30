@@ -41,4 +41,17 @@ export default class Report {
     }
     return serialized;
   }
+
+  // MP bookmarks
+  static fromBookmarkData(bookmark) {
+    return Report.deserialize(extend(pick(bookmark, ['id', 'user']), JSON.parse(bookmark.params)));
+  }
+
+  toBookmarkData() {
+    let bm = extend({name: this.title}, this.serialize());
+    if (this.id) {
+      bm.id = this.id;
+    }
+    return bm;
+  }
 }

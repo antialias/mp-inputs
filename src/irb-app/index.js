@@ -77,7 +77,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     if (this.parentData) {
       this.update({
         savedReports: this.parentData.bookmarks.reduce((reports, bm) => {
-          return extend(reports, {[bm.id]: Report.deserialize(bm)});
+          return extend(reports, {[bm.id]: Report.fromBookmarkData(bm)});
         }, {}),
       });
     }
@@ -115,9 +115,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
   saveReport() {
     if (this.parentFrame) {
-      return this.parentFrame.send('saveBookmark', this.state.report.serialize())
+      return this.parentFrame.send('saveBookmark', this.state.report.toBookmarkData())
         .then(bookmark => {
-          const report = Report.deserialize(bookmark);
+          const report = Report.fromBookmarkData(bookmark);
           this.update({
             report,
             savedReports: extend(this.state.savedReports, {[bookmark.id]: report}),
