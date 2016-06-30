@@ -1,6 +1,7 @@
 import moment from 'moment';
 
-import { pick } from '../util';
+import BuilderSections from './builder-sections';
+import { extend, pick } from '../util';
 
 // saveable / loadable report metadata
 export default class Report {
@@ -24,21 +25,20 @@ export default class Report {
   }
 
   static deserialize(data) {
-
-    // TODO deserialize sections
-    // return extend(attrs, {sections: BuilderSections.deserialize(attrs.sections)});
-
-    return new Report(data);
+    return new Report(extend(data, {sections: BuilderSections.deserialize(data.sections)}));
   }
 
   serialize() {
-    const serialized = pick(this, ['title']);
+    const serialized = extend({
+      sections: this.sections.serialize(),
+    }, pick(this, [
+      'chartType',
+      'series',
+      'title',
+    ]));
     if (this.id) {
       serialized.id = this.id;
     }
-
-    // TODO serialize sections etc
-
     return serialized;
   }
 }

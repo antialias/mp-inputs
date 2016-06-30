@@ -115,7 +115,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
   saveReport() {
     if (this.parentFrame) {
-      return this.parentFrame.send('saveBookmark', this.state.query.toBookmarkData())
+      return this.parentFrame.send('saveBookmark', this.state.report.serialize())
         .then(bookmark => {
           const report = Report.deserialize(bookmark);
           this.update({
@@ -138,7 +138,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   // Serialization helpers
 
   get persistenceKey() {
-    return 'irb3';
+    return 'irb-81f19e4';
   }
 
   toSerializationAttrs() {
