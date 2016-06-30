@@ -1,13 +1,13 @@
 .section.builder-group
-  if !sections.group.clauses.length
+  if !report.sections.group.clauses.length
     .clause.group
       h3
       .control-container= $component.child('group-add-control')
   else
-    for clause, clauseIndex in sections.group.clauses
+    for clause, clauseIndex in report.sections.group.clauses
       .preposition= clauseIndex ? 'and' : 'by'
       .clause.group
-        h3= 'Group' + (sections.group.clauses.length === 1 ? '' : ' ' + (clauseIndex + 1))
+        h3= 'Group' + (report.sections.group.clauses.length === 1 ? '' : ' ' + (clauseIndex + 1))
         .control-container= $component.child('group-edit-control', {attributes: {'clause-index': clauseIndex}})
-        if clauseIndex + 1 === sections.group.clauses.length && sections.group.clauses.length < 10
+        if clauseIndex + 1 === report.sections.group.clauses.length && report.sections.group.clauses.length < 10
           .control-container= $component.child('group-add-control')

@@ -261,21 +261,21 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
   commitStageClause() {
     const newClauses = this.state.stageClauses;
-    let newState = extend(this.state);
+    const reportAttrs = extend(this.state.report);
 
     if (newClauses.length) {
       newClauses.filter(clause => clause.valid).forEach(clause => {
         const newClause = clause.extend({paneIndex: 0});
         let newSection = null;
-        if (clause === newClauses[0] && typeof newState.stageClauseIndex === 'number') {
-          newSection = newState.sections[newClause.TYPE].replaceClause(newState.stageClauseIndex, newClause);
+        if (clause === newClauses[0] && typeof this.state.stageClauseIndex === 'number') {
+          newSection = reportAttrs.sections[newClause.TYPE].replaceClause(this.state.stageClauseIndex, newClause);
         } else {
-          newSection = newState.sections[newClause.TYPE].addClause(newClause);
+          newSection = reportAttrs.sections[newClause.TYPE].addClause(newClause);
         }
-        newState.sections = newState.sections.replaceSection(clause.TYPE, newSection);
+        reportAttrs.sections = reportAttrs.sections.replaceSection(clause.TYPE, newSection);
       });
 
-      this.update(newState);
+      this.updateReport(reportAttrs);
       this.query();
     }
 
@@ -285,9 +285,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   removeClause(sectionType, clauseIndex) {
     const section = this.state.report.sections[sectionType].removeClause(clauseIndex);
     const sections = this.state.report.sections.replaceSection(sectionType, section);
-    let newState = extend(this.state, {sections});
-
-    this.update(newState);
+    this.updateReport({sections});
     this.query();
   }
 
