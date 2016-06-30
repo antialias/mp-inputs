@@ -3,7 +3,7 @@
   auto-sizing-input(
     value=report.title
     onblur=$helpers.blurTitleInput
-    onchange=$helpers.updateReportName
+    onchange=$helpers.updateReportTitle
     onfocus=$helpers.focusTitleInput
   )
   button.save-report(class={active: editingTitle} onclick=$helpers.save) Save
