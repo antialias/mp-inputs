@@ -50,7 +50,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         if (!report) {
           return this.navigate('');
         } else {
-          return extend(stateUpdate, this.loadReport(report));
+          if (!stateUpdate.report) {
+            stateUpdate = extend(stateUpdate, this.loadReport(report));
+          }
+          return stateUpdate;
         }
       },
 
@@ -154,10 +157,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       return this.parentFrame.send('saveBookmark', this.state.report.toBookmarkData())
         .then(bookmark => {
           const report = Report.fromBookmarkData(bookmark);
-          this.update({
-            report,
-            savedReports: extend(this.state.savedReports, {[bookmark.id]: report}),
-          });
+          this.update({savedReports: extend(this.state.savedReports, {[report.id]: report})});
+          this.navigate(`report/${report.id}`, {report});
         })
         .catch(err => {
           console.error(`Error saving: ${err}`);
