@@ -98,9 +98,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.customEvents = (this.parentData && this.parentData.custom_events) || [];
     if (this.parentData) {
       this.update({
-        savedReports: this.parentData.bookmarks.reduce((reports, bm) => {
-          return extend(reports, {[bm.id]: Report.fromBookmarkData(bm)});
-        }, {}),
+        savedReports: this.parentData.bookmarks.reduce(
+          (reports, bm) => extend(reports, {[bm.id]: Report.fromBookmarkData(bm)}),
+          {}
+        ),
       });
     }
     this.queries = {
