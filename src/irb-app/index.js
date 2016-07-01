@@ -33,8 +33,32 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         }
       ),
 
+      routes: {
+        'report/:reportId': this.routeHandlers.load,
+        '':                 this.routeHandlers.index,
+      },
+
       template,
     };
+  }
+
+  get routeHandlers() {
+    return (this._routeHandlers = this._routeHandlers || {
+
+      load: (stateUpdate={}, reportId) => {
+        const report = this.state.savedReports && this.state.savedReports[Number(reportId)];
+        if (!report) {
+          return this.navigate('');
+        } else {
+          return extend(stateUpdate, this.loadReport(report));
+        }
+      },
+
+      index: (stateUpdate={}) => {
+        return extend(stateUpdate, this.resetQuery());
+      },
+
+    });
   }
 
   // The following states should be reset.
@@ -71,8 +95,6 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   attachedCallback() {
-    super.attachedCallback(...arguments);
-
     this.customEvents = (this.parentData && this.parentData.custom_events) || [];
     if (this.parentData) {
       this.update({
@@ -91,7 +113,12 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       segmentation: new SegmentationQuery(this.customEvents),
       segmentationCache: new QueryCache(),
     };
-    this.resetTopQueries();
+
+    super.attachedCallback(...arguments);
+
+    if (this.state.report.id) {
+      this.navigate(`report/${this.state.report.id}`);
+    }
   }
 
   resetTopQueries() {
@@ -142,11 +169,11 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   toSerializationAttrs() {
-    return this.state.report.serialize();
+    return this.state.report ? this.state.report.serialize() : {};
   }
 
   fromSerializationAttrs(attrs) {
-    return {report: Report.deserialize(attrs)};
+    return attrs.sections ? {report: Report.deserialize(attrs)} : {};
   }
 
   // State helpers
@@ -179,9 +206,15 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
   // State modifiers
 
-  resetQuery() {
-    this.update(this.resettableState);
+  loadReport(report) {
+    const stateUpdate = extend(this.resettableState, report ? {report} : {});
+    this.update(stateUpdate);
     this.resetTopQueries();
+    return stateUpdate;
+  }
+
+  resetQuery() {
+    return this.loadReport(null);
   }
 
   startAddingClause(sectionType) {
