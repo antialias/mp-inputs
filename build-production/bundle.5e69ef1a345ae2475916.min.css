@@ -2,18 +2,46 @@
   outline: 0;
 }
 .irb-header {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   border-bottom: 1px solid #c4c8d6;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  height: 60px;
   margin: 0 24px;
-  padding: 24px 0 16px 0;
+  padding-top: 10px;
 }
-.irb-header button.refresh {
-  float: left;
+.irb-header auto-sizing-input {
+  display: inline-block;
 }
-.irb-header input {
+.irb-header auto-sizing-input input {
   border: none;
   color: #92949d;
   font-size: 20px;
   outline: none;
+}
+.irb-header button {
+  background-color: initial;
+  border: 1px solid #c4c8d6;
+  border-radius: 3px;
+  color: #92949d;
+  display: inline-block;
+  padding: 5px;
+}
+.irb-header button.refresh-query {
+  margin-right: 5px;
+}
+.irb-header button.save-report {
+  opacity: 0;
+  -webkit-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+}
+.irb-header button.save-report.active {
+  opacity: 1;
 }
 @charset "UTF-8";
 
