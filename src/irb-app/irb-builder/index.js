@@ -14,7 +14,7 @@ document.registerElement('irb-builder', class extends Component {
       template,
 
       helpers: {
-        reset: () => this.app.navigate(''),
+        reset: () => this.app.navigate('', this.app.resetQuery()),
       },
     };
   }

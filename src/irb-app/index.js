@@ -55,7 +55,14 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       },
 
       index: (stateUpdate={}) => {
-        return extend(stateUpdate, this.resetQuery());
+        if (this.state.report.id) {
+          stateUpdate = extend(stateUpdate, this.resetQuery());
+        } else {
+          if (!stateUpdate.report) {
+            this.resetTopQueries();
+          }
+        }
+        return stateUpdate;
       },
 
     });
@@ -97,7 +104,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   attachedCallback() {
     this.customEvents = (this.parentData && this.parentData.custom_events) || [];
     if (this.parentData) {
-      this.update({
+      // don't start persisting yet
+      Object.assign(this.state, {
         savedReports: this.parentData.bookmarks.reduce(
           (reports, bm) => extend(reports, {[bm.id]: Report.fromBookmarkData(bm)}),
           {}
