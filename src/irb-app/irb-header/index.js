@@ -1,5 +1,5 @@
 import { Component } from 'panel';
-import { downloadData } from 'mixpanel-common/build/util';
+import { downloadData } from 'mixpanel-common/report/util';
 
 import './auto-sizing-input';
 
