@@ -198,10 +198,6 @@ export default class SegmentationQuery extends BaseQuery {
     };
   }
 
-  getParams() {
-    return this.query.jqlQueries.map(jqlQuery => this.buildParams(jqlQuery));
-  }
-
   buildOptions() {
     return {type: 'POST'};
   }
@@ -223,15 +219,21 @@ export default class SegmentationQuery extends BaseQuery {
     }
   }
 
-  runQueries() {
+  buildJQLArgs() {
     this.preprocessNameConflicts();
-    return this.query.jqlQueries.map(jqlQuery => window.MP.api.query(
-      this.buildUrl(), this.buildParams(jqlQuery), this.buildOptions()
-    ));
+    return this.query.jqlQueries.map(jqlQuery => [
+      this.buildUrl(),
+      this.buildParams(jqlQuery),
+      this.buildOptions(),
+    ]);
+  }
+
+  runJQLQueries() {
+    return this.buildJQLArgs().map(args => window.MP.api.query(...args));
   }
 
   executeQuery() {
-    return Promise.all(this.runQueries()).then(resultSets => {
+    return Promise.all(this.runJQLQueries()).then(resultSets => {
       return resultSets.reduce((acc, results, index) => {
         // resolve name conflicts
         results.forEach(result => {

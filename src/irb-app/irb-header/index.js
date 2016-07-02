@@ -19,9 +19,13 @@ document.registerElement('irb-header', class extends Component {
 
         clickExportCSV: () => {
           if (!this.state.result.loading) {
-            this.app.queries.segmentation.build(this.state).getParams().forEach(query => {
-              this.downloadJQLQuery(query.script, this.state.report.title, query.params);
-            });
+            this.app.queries.segmentation
+              .build(this.state)
+              .buildJQLArgs()
+              .map(args => args[1]) // extract params
+              .forEach(query =>
+                this.downloadJQLQuery(query.script, this.state.report.title, query.params)
+              );
           }
         },
       },
