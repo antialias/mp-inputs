@@ -23,3 +23,8 @@ Deploy:
 // from analytics repo on dev box
 fab stage_and_deploy_platform_app:irb,branch=<your branch>
 ```
+
+## Benchmarks
+Run: `npm run benchmark`
+
+API secrets must be defined in the (gitignored) file `benchmark/project-secrets.js`. Query definitions are in `benchmark/queries.js`. Results are output to console and tracked to Mixpanel Project 983955 (IRB).
