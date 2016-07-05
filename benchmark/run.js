@@ -107,7 +107,7 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
 (async () => {
   try {
     const table = [
-      ['JQL', 'Seg', 'Raw JQL', 'Raw Seg'],
+      ['Project', 'JQL', 'Seg', 'Raw JQL', 'Raw Seg'],
     ];
 
     for (const query of QUERIES) {
@@ -126,7 +126,11 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
       for (let qi = 0; qi < results.jql[0].length; qi++) {
         let seg = processResults(results, 'seg', qi);
         let jql = processResults(results, 'jql', qi);
-        table.push([String(jql.avg), String(seg.avg), jql.raw.join(','), seg.raw.join(',')]);
+        table.push([
+          String(query.project),
+          String(jql.avg), String(seg.avg),
+          jql.raw.join(','), seg.raw.join(','),
+        ]);
       }
     }
     process.stdout.write('\n\n');
@@ -137,6 +141,6 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
       console.log(row.map(s => rightPad(s, colWidth)).join('   '));
     }
   } catch(e) {
-    console.error(e);
+    console.error(e.stack);
   }
 })();
