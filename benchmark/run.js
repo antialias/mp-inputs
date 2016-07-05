@@ -23,16 +23,18 @@ function buildIRBQuery(queryParams) {
   debugLog('Building query for params:', queryParams);
   const irbQuery = new SegmentationQuery([]);
   irbQuery.query = irbQuery.buildQuery({
-    chartType: 'line',
-    sections: new BuilderSections({
-      show: new ShowSection(...queryParams.queries.map(q =>
-        new ShowClause({
-          math: q.type,
-          value: {name: q.events[0]},
-        })
-      )),
-      time: new TimeSection(new TimeClause({range: queryParams.time.range})),
-    }),
+    report: {
+      chartType: 'line',
+      sections: new BuilderSections({
+        show: new ShowSection(...queryParams.queries.map(q =>
+          new ShowClause({
+            math: q.type,
+            value: {name: q.events[0]},
+          })
+        )),
+        time: new TimeSection(new TimeClause({range: queryParams.time.range})),
+      }),
+    },
   });
   return irbQuery;
 }
