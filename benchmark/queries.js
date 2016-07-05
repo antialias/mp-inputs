@@ -5,6 +5,7 @@ import { TimeClause } from '../src/models/clause';
 
 const QUERIES = [
   {
+    name: '2 simultaneous',
     project: 3,
     queries: [
       {events: ['Viewed report']},
@@ -15,6 +16,7 @@ const QUERIES = [
     },
   },
   {
+    name: 'simple 96 hours',
     project: 3,
     queries: [
       {events: ['Viewed report']},
@@ -24,6 +26,7 @@ const QUERIES = [
     },
   },
   {
+    name: 'unique 1 quarter',
     project: 3,
     queries: [
       {
@@ -36,6 +39,7 @@ const QUERIES = [
     },
   },
   {
+    name: 'Twitch x 2',
     project: 22604,
     queries: [
       {events: ['minute-watched']},

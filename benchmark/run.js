@@ -107,7 +107,7 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
 (async () => {
   try {
     const table = [
-      ['Project', 'JQL', 'Seg', 'Raw JQL', 'Raw Seg'],
+      ['Project', 'Query', 'JQL', 'Seg', 'Raw JQL', 'Raw Seg'],
     ];
 
     for (const query of QUERIES) {
@@ -127,7 +127,7 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
         let seg = processResults(results, 'seg', qi);
         let jql = processResults(results, 'jql', qi);
         table.push([
-          String(query.project),
+          String(query.project), query.name,
           String(jql.avg), String(seg.avg),
           jql.raw.join(','), seg.raw.join(','),
         ]);
