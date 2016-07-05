@@ -13,8 +13,14 @@ const PASSES = Number(process.env.PASSES || 3);
 const DEBUG = (process.env.DEBUG || '').toLowerCase() === 'true';
 
 const all = Promise.all.bind(Promise);
+const debugLog = function() {
+  if (DEBUG) {
+    console.log(...arguments);
+  }
+}
 
 function buildIRBQuery(queryParams) {
+  debugLog('Building query for params:', queryParams);
   const irbQuery = new SegmentationQuery([]);
   irbQuery.query = irbQuery.buildQuery({
     chartType: 'line',
@@ -79,9 +85,7 @@ async function timeQuery(url, params) {
     const responseText = await (await fetch(url, params)).text();
 
     process.stdout.write('.');
-    if (DEBUG) {
-      console.log(responseText);
-    }
+    debugLog(responseText);
   } catch(e) {
     console.error(e);
   }
