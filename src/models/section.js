@@ -1,4 +1,8 @@
-import { replaceIndex, removeIndex } from 'mixpanel-common/build/util';
+import {
+  insertAtIndex,
+  replaceByIndex,
+  removeByIndex,
+} from 'mixpanel-common/build/util';
 import { debug } from 'mixpanel-common/build/report/util';
 
 import {
@@ -58,23 +62,20 @@ export class Section {
     return valid ? newSection : this;
   }
 
-  addClause(newClause, index) {
-    if (typeof index !== 'number') {
-      index = this.clauses.length;
-    }
-    return this.validate(Section.create(this.TYPE, {clauses: [
-      ...this.clauses.slice(0, index),
-      newClause,
-      ...this.clauses.slice(index, this.clauses.length),
-    ]}));
+  appendClause(newClause) {
+    return this.validate(Section.create(this.TYPE, {clauses: insertAtIndex(this.clauses, this.clauses.length, newClause)}));
+  }
+
+  insertClause(index, newClause) {
+    return this.validate(Section.create(this.TYPE, {clauses: insertAtIndex(this.clauses, index, newClause)}));
   }
 
   replaceClause(index, newClause) {
-    return this.validate(Section.create(this.TYPE, {clauses: replaceIndex(this.clauses, index, newClause)}));
+    return this.validate(Section.create(this.TYPE, {clauses: replaceByIndex(this.clauses, index, newClause)}));
   }
 
   removeClause(index) {
-    return this.validate(Section.create(this.TYPE, {clauses: removeIndex(this.clauses, index)}));
+    return this.validate(Section.create(this.TYPE, {clauses: removeByIndex(this.clauses, index)}));
   }
 }
 

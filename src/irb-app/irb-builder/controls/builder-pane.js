@@ -1,4 +1,9 @@
-import { extend, removeValue, renameProperty, renamePropertyValue } from '../../../util';
+import {
+  extend,
+  removeByValue,
+  renameProperty,
+  renamePropertyValue,
+} from '../../../util';
 
 import { Pane, PaneContent } from '../../pane';
 import { Clause, FilterClause, ShowClause, TimeClause } from '../../../models/clause';
@@ -161,7 +166,7 @@ document.registerElement('filter-property-value-pane-content', class extends Pan
           if (selected.indexOf(value) === -1) {
             filterValue = [...selected, value];
           } else {
-            filterValue = removeValue(selected, value);
+            filterValue = removeByValue(selected, value);
           }
 
           this.app.updateStageClause({filterValue});

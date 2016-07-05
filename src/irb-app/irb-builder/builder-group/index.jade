@@ -11,7 +11,7 @@
           .header-controls
             if clauseIndex > 0
               button.reorder.reorder-left(onclick=() => $helpers.moveClauseLeft(clauseIndex)) ‹
-            h3.test= 'Group' + (report.sections.group.clauses.length === 1 ? '' : ' ' + (clauseIndex + 1))
+            h3= 'Group' + (report.sections.group.clauses.length === 1 ? '' : ' ' + (clauseIndex + 1))
             if clauseIndex < report.sections.group.clauses.length - 1
               button.reorder.reorder-right(onclick=() => $helpers.moveClauseRight(clauseIndex)) ›
         .control-container= $component.child('group-edit-control', {attributes: {'clause-index': clauseIndex}})
