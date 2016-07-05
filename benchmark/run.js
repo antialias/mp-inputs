@@ -1,3 +1,4 @@
+import Mixpanel from 'mixpanel';
 import fetch from 'node-fetch';
 
 import BuilderSections from '../src/models/builder-sections';
@@ -18,6 +19,9 @@ const debugLog = function() {
     console.log(...arguments);
   }
 }
+
+// track to IRB project
+const mixpanel = Mixpanel.init('2fd54f3085a7b7d70da94096fc415078');
 
 function buildIRBQuery(queryParams) {
   debugLog('Building query for params:', queryParams);
@@ -124,13 +128,26 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
 
       // process results and add to table
       for (let qi = 0; qi < results.jql[0].length; qi++) {
-        let seg = processResults(results, 'seg', qi);
-        let jql = processResults(results, 'jql', qi);
+        const processed = {
+          seg: processResults(results, 'seg', qi),
+          jql: processResults(results, 'jql', qi),
+        }
         table.push([
           String(query.project), query.name,
-          String(jql.avg), String(seg.avg),
-          jql.raw.join(','), seg.raw.join(','),
+          String(processed.jql.avg), String(processed.seg.avg),
+          processed.jql.raw.join(','), processed.seg.raw.join(','),
         ]);
+
+        for (const queryType of ['jql', 'seg']) {
+          mixpanel.track('Benchmark query', {
+            'Avg latency ms': processed[queryType].avg,
+            'Passes': PASSES,
+            'Project ID': query.project,
+            'Query name': query.name,
+            'Query type': queryType,
+            'Simultaneous queries': query.queries.length,
+          });
+        }
       }
     }
     process.stdout.write('\n\n');
