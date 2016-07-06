@@ -875,6 +875,34 @@ filter-property-value-pane-content .pane-content table.tabs td.type-datetime but
 *:focus {
   outline: 0;
 }
+.clause .header-controls {
+  display: inline-block;
+  position: relative;
+}
+.clause .header-controls h3,
+.clause .header-controls button.reorder {
+  display: inline-block;
+}
+.clause .header-controls button.reorder {
+  background: none;
+  border: none;
+  color: #646670;
+  font-size: 24px;
+  opacity: 0;
+  position: absolute;
+  top: -7px;
+  -webkit-transition: opacity 0.2s;
+  transition: opacity 0.2s;
+}
+.clause .header-controls button.reorder.reorder-left {
+  left: -18px;
+}
+.clause .header-controls button.reorder:hover {
+  color: #46474e;
+}
+.clause:hover button.reorder {
+  opacity: 1;
+}
 *:focus {
   outline: 0;
 }
