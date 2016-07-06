@@ -75,7 +75,11 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   get resettableState() {
     return {
       report: new Report({
-        chartType: 'bar',
+        chartOptions: {
+          isEditing: false,
+          style: 'standard',
+          type: 'bar',
+        },
         sections: new BuilderSections({
           show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
           time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
@@ -369,18 +373,22 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     });
   }
 
-  updateChartType(chartType) {
+  updateChartOptions(options) {
+    this.updateReport({chartOptions: extend(this.state.report.chartOptions, options)});
+  }
+
+  updateChartType(type) {
     // For some types of query, changing to a different chart type necessitates a new
     // query. Check the correct conditions here and call 'query'.
 
     // for 'unique', 'average' and 'median', 'bar' and 'table' require a different query than
     // 'line'.
     if (this.state.report.sections.show.clauses.some(clause => ['unique', 'average', 'median'].includes(clause.math)) &&
-        (chartType === 'line' && ['bar', 'table'].includes(this.state.report.chartType)
-         || ['bar', 'table'].includes(chartType) && this.state.report.chartType === 'line')) {
-      this.query({chartType});
+        (type === 'line' && ['bar', 'table'].includes(this.state.report.chartOptions.type)
+         || ['bar', 'table'].includes(type) && this.state.report.chartOptions.type === 'line')) {
+      this.query({chartOptions: {type}});
     } else {
-      this.updateReport({chartType});
+      this.updateChartOptions({type});
     }
   }
 
@@ -409,7 +417,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   query(options={}) {
-    options = Object.assign({useCache: true}, options);
+    options = Object.assign({useCache: true, chartOptions: {}}, options);
     const query = this.queries.segmentation.build(this.state, options).query;
     const cachedResult = options.useCache && this.queries.segmentationCache.get(query);
     const cacheExpiry = 10; // seconds
@@ -428,7 +436,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         }
         this.updateSeriesData(result);
         this.update({result, newCachedData: false});
-        this.updateReport({chartType: options.chartType || this.state.report.chartType});
+        this.updateChartOptions({type: options.chartOptions.type  || this.state.report.chartOptions.type});
       })
       .catch(err => console.error(err));
   }

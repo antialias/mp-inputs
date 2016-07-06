@@ -85,7 +85,8 @@ function filterToParams(filter) {
 
 class JQLQuery {
   constructor(showClause, state, options={}) {
-    this.chartType = options.chartType || state.report.chartType;
+    options = Object.assign({chartOptions: {}}, options);
+    this.chartType = options.chartOptions.type || state.report.chartOptions.type;
 
     const ev = showClause.value;
 

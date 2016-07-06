@@ -1,0 +1,5 @@
+ul.chart-toggle
+  for type in $helpers.chartTypes()
+    - const className = "chart-type-" + type
+    li(class=className class={selected: type === report.chartOptions.type})
+      button(onclick=() => $helpers.onChoiceClick(type))

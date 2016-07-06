@@ -13,7 +13,7 @@ export default class Report {
       'user',
 
       // visualization params
-      'chartType',
+      'chartOptions',
       'sections',
       'series',
     ]));
@@ -32,7 +32,7 @@ export default class Report {
     const serialized = extend({
       sections: this.sections.serialize(),
     }, pick(this, [
-      'chartType',
+      'chartOptions',
       'series',
       'title',
     ]));

@@ -1,4 +1,3 @@
-import Toggle from '../../widgets/toggle';
 import { Component } from 'panel';
 import { Pane, PaneContent } from '../../pane';
 
@@ -6,29 +5,30 @@ import { extend } from '../../../util';
 import { renameEvent, renamePropertyValue } from '../../../util';
 
 import template from './index.jade';
+import chartToggleTemplate from './chart-toggle.jade';
 import showHideSeriesTemplate from './show-hide-series.jade';
 import showHideSeriesPaneContentTemplate from './show-hide-series-pane-content.jade';
 import './index.styl';
 
-const CHART_TYPES = ['bar', 'line', 'table'];
+const CHART_TYPES = {
+  bar: ['standard', 'stacked'],
+  line: ['standard', 'stacked'],
+  table: ['standard'],
+};
 
-document.registerElement('chart-toggle', class extends Toggle {
-  get choices() {
-    return CHART_TYPES;
-  }
-
-  formatChoiceClass(choice) {
-    return `chart-type-${choice}`;
-  }
-
-  select(chartType) {
-    this.app.updateChartType(chartType);
-  }
-
-  get selected() {
-    return this.state.report.chartType;
+document.registerElement('chart-toggle', class extends Component {
+  get config() {
+    return {
+      template: chartToggleTemplate,
+      helpers: {
+        chartTypes: () => Object.keys(CHART_TYPES),
+        onChoiceClick: choice => this.app.updateChartType(choice),
+      },
+    };
   }
 });
+
+
 
 document.registerElement('show-hide-series-pane-content', class extends PaneContent {
   get config() {
