@@ -33,8 +33,8 @@ export default class BuilderSections {
     return this[type].clauses[clauseIndex];
   }
 
-  replaceSection(type, newSection) {
-    return this.validate(new BuilderSections(extend(this.attrs, {[type]: newSection})));
+  replaceSection(section) {
+    return this.validate(new BuilderSections(extend(this.attrs, {[section.TYPE]: section})));
   }
 
   serialize() {

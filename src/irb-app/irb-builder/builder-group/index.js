@@ -15,8 +15,7 @@ document.registerElement('builder-group', class extends Component {
     return {
       template,
       helpers: {
-        moveClauseLeft: clauseIndex => this.app.moveClause('group', clauseIndex, clauseIndex - 1),
-        moveClauseRight: clauseIndex => this.app.moveClause('group', clauseIndex, clauseIndex + 1),
+        moveClause: (clauseIndex, offset) => this.app.moveClause('group', clauseIndex, offset),
       },
     };
   }

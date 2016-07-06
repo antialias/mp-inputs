@@ -315,7 +315,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         } else {
           newSection = reportAttrs.sections[newClause.TYPE].appendClause(newClause);
         }
-        reportAttrs.sections = reportAttrs.sections.replaceSection(clause.TYPE, newSection);
+        reportAttrs.sections = reportAttrs.sections.replaceSection(newSection);
       });
 
       this.updateReport(reportAttrs);
@@ -325,24 +325,25 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.stopEditingClause();
   }
 
-  _updateSection(sectionType, transformSection) {
-    const section = transformSection(this.state.report.sections[sectionType]);
-    const sections = this.state.report.sections.replaceSection(sectionType, section);
-
+  updateSection(section) {
+    const sections = this.state.report.sections.replaceSection(section);
     this.updateReport({sections});
     this.query();
   }
 
-  moveClause(sectionType, oldClauseIndex, newClauseIndex) {
-    this._updateSection(sectionType, section =>
+  moveClause(sectionType, clauseIndex, offset) {
+    const section = this.state.report.sections[sectionType];
+    const clause = section.clauses[clauseIndex];
+
+    this.updateSection(
       section
-        .removeClause(oldClauseIndex)
-        .insertClause(newClauseIndex, section.clauses[oldClauseIndex])
+        .removeClause(clauseIndex)
+        .insertClause(clauseIndex + offset, clause)
     );
   }
 
   removeClause(sectionType, clauseIndex) {
-    this._updateSection(sectionType, section => section.removeClause(clauseIndex));
+    this.updateSection(this.state.report.sections[sectionType].removeClause(clauseIndex));
   }
 
   updateSeriesState(newState) {
