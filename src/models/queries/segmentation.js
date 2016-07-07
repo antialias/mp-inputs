@@ -104,7 +104,7 @@ function filterToArbSelectorString(property, type, operator, value, dateUnit) {
         case 'equals'           : return '(' + value.map(val => `(${property} == ${val})`).join(' or ') + ')';
         case 'does not equal'   : return '(' + value.map(val => `(${property} != ${val})`).join(' and ') + ')';
         case 'contains'         : return `(${value} in ${property})`;
-        case 'does not contain' : return `(${value} not in ${property})`;
+        case 'does not contain' : return `(not ${value} in ${property})`;
         case 'is set'           : return `(defined ${property})`;
         case 'is not set'       : return `(not defined ${property})`;
       }
