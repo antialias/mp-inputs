@@ -58,7 +58,8 @@ document.registerElement('show-pane-content', class extends PaneContent {
     return extend(super.config, {
       template: showPaneContentTemplate,
       helpers: extend(super.config.helpers, {
-        selectArrow: value => {
+        onArrowClick: (ev, value) => {
+          ev.stopPropagation();
           this.app.updateStageClause({value});
           this.app.startAddingClause('group');
           window.requestAnimationFrame(() =>
@@ -119,7 +120,10 @@ document.registerElement('group-property-pane-content', class extends PaneConten
             });
           }
         },
-        selectArrow: property => this.config.helpers.paneHandler(property, false),
+        onArrowClick: (ev, property) => {
+          ev.stopPropagation();
+          this.config.helpers.paneHandler(property, false);
+        },
         selectProperty: property => this.config.helpers.paneHandler(property, this.app.originStageClauseType() !== 'filter'),
         topProperties: () => {
           switch (this.state.resourceTypeFilter) {
