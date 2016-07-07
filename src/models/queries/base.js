@@ -58,7 +58,7 @@ export default class BaseQuery {
     return new Promise((resolve, reject) => {
       this.MPApiQuery()
         .done(results => resolve(results))
-        .fail((xhr, status, error) => reject(error));
+        .fail(xhr => reject(xhr));
     });
   }
 
