@@ -141,6 +141,20 @@ function main() {
     };
 
     groups = groups.concat(params.groups.map(function(group) {
+      if (group.cardinality && group.cardinality === 'high') {
+        return function(eventData) {
+          const property = getPropertyPaths(group).reduce(function(property, path) {
+            return property[path];
+          }, eventData);
+          const bucketSize = group.bucket_size;
+          const min = Math.floor(group.min);
+
+          const low = Math.floor((property - min) / bucketSize) * bucketSize + min;
+          const high = low + bucketSize;
+
+          return `${low} - ${high}`;
+        };
+      }
       return getPropertyPath(group);
     }));
   }
