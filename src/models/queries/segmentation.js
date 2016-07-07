@@ -120,19 +120,27 @@ function filterToArbSelectorString(property, type, operator, value, dateUnit) {
     case 'datetime': {
       const unitMs = MS_BY_UNIT[dateUnit];
 
+      const between = (from, to) => {
+        from.setHours(0, 0, 0, 0);
+        to.setHours(23, 59, 59, 999);
+
+        return `((${property} >= datetime(${from.getTime()})) and (${property} <= datetime(${to.getTime()})))`;
+      };
+
       switch (operator) {
         case 'was less than': return `(${property} < datetime(${new Date(new Date().getTime() - (value * unitMs)).getTime()}))`;
         case 'was more than': return `(${property} > datetime(${new Date(new Date().getTime() - (value * unitMs)).getTime()}))`;
-        // TODO 'was on' should be a different case - when we have better date controls
-        case 'was on':
+        case 'was on': {
+          let from = new Date(value);
+          let to = new Date(value);
+
+          return between(from, to);
+        }
         case 'was between': {
-          let from = new Date(value[0].getTime());
-          let to = new Date(value[1].getTime());
+          let from = new Date(value[0]);
+          let to = new Date(value[1]);
 
-          from.setHours(0, 0, 0, 0);
-          to.setHours(23, 59, 59, 999);
-
-          return `((${property} >= datetime(${from.getTime()})) and (${property} <= datetime(${to.getTime()})))`;
+          return between(from, to);
         }
       }
       break;
