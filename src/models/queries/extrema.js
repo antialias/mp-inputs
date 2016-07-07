@@ -14,6 +14,7 @@ export default class ExtremaQuery extends BaseQuery {
       interval: Math.min(36, this.query.interval),
       cardinality_threshold: 50,
       allow_more_buckets: this.query.allow_more_buckets,
+      allow_fewer_buckets: this.query.allow_fewer_buckets,
       buckets: this.query.buckets,
     };
     if (this.query.where) {

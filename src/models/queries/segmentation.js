@@ -277,6 +277,7 @@ export default class SegmentationQuery extends BaseQuery {
             .map(filter => filterToArbSelectorString(filter.value, filter.filterType, filter.filterOperator, filter.filterValue, filter.dateUnit))
             .join(' and '),
           allow_more_buckets: false,
+          allow_fewer_buckets: true,
           buckets: 12,
         };
         state.interval = (state.to.getTime() - state.from.getTime()) / MS_BY_UNIT.day + 1;
