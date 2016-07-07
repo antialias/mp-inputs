@@ -274,9 +274,7 @@ export default class SegmentationQuery extends BaseQuery {
         state.interval = (state.to.getTime() - state.from.getTime()) / MS_BY_UNIT.day + 1;
         extremaQuery.build(state);
         extremaQuery.run().then(result => {
-          let group;
-          console.log(result);
-          resolve(group);
+          resolve(extend(segment, result));
         });
       } else {
         resolve(segment);
