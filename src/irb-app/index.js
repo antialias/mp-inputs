@@ -76,7 +76,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     return {
       report: new Report({
         chartOptions: {
-          isEditing: false,
+          chartTypeEditing: null,
           style: 'standard',
           type: 'bar',
         },
@@ -373,22 +373,27 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     });
   }
 
+  stopEditingChartStyle() {
+    this.updateChartOptions({chartTypeEditing: null});
+  }
+
   updateChartOptions(options) {
     this.updateReport({chartOptions: extend(this.state.report.chartOptions, options)});
   }
 
-  updateChartType(type) {
+  updateChartType(type, style='standard') {
     // For some types of query, changing to a different chart type necessitates a new
     // query. Check the correct conditions here and call 'query'.
 
     // for 'unique', 'average' and 'median', 'bar' and 'table' require a different query than
     // 'line'.
+    this.stopEditingChartStyle();
     if (this.state.report.sections.show.clauses.some(clause => ['unique', 'average', 'median'].includes(clause.math)) &&
         (type === 'line' && ['bar', 'table'].includes(this.state.report.chartOptions.type)
          || ['bar', 'table'].includes(type) && this.state.report.chartOptions.type === 'line')) {
-      this.query({chartOptions: {type}});
+      this.query({chartOptions: {type, style}});
     } else {
-      this.updateChartOptions({type});
+      this.updateChartOptions({type, style});
     }
   }
 

@@ -14,62 +14,75 @@
       margin-right 0
 
     li
-      border 1px solid light-gray
+      border 1px solid transparent
+      border-radius 3px
       display inline-block
       margin-right -1px
       position relative
+      z-index 2
 
       button
         background-color initial
         background-position center
         background-repeat no-repeat
-        border: none;
+        border none
         height 30px
-        text-indent -999999px
         width 30px
+
+        &.dropdown
+          border-left 1px solid transparent
+
+        &.label
+          width 80px
 
         &::before, &::after
           content none
 
-      &:first-child
-        border-bottom-left-radius 2px
-        border-top-left-radius 2px
+      .chart-style-options
+        background-color white
+        border 1px solid medium-gray
+        border-radius 3px
+        box-shadow: 0 7px 18px 0 rgba(121,124,135,0.26);
+        margin-top 3px
+        padding 5px 10px
+        position absolute
+        right -1px
+        width 200px
 
-      &:last-child
-        border-bottom-right-radius 2px
-        border-top-right-radius 2px
+        .style-option
+          padding 0
+          width 100%
 
-      &:hover
-        border-color medium-gray
-        z-index 1
+      &.chart-type:hover, &.editing
+        border-color light-gray
 
-      &.chart-type-bar button
+        button.dropdown
+          border-color light-gray
+
+      &.chart-type.bar button.label
         background-image url(../../../../assets/charts/bar-inactive.svg)
 
-      &.chart-type-line button
+      &.chart-type.line button.label
         background-image url(../../../../assets/charts/line-inactive.svg)
 
-      &.chart-type-table button
+      &.chart-type.table button.label
         background-image url(../../../../assets/charts/table-inactive.svg)
 
       &.compare button
         background-image url(../../../../assets/charts/compare-inactive.svg)
 
-      &:hover, &.selected
-        &.chart-type-bar button
+      &.selected
+        &.chart-type.bar button.label
           background-image url(../../../../assets/charts/bar.svg)
 
-        &.chart-type-line button
+        &.chart-type.line button.label
           background-image url(../../../../assets/charts/line.svg)
 
-        &.chart-type-table button
+        &.chart-type.table button.label
           background-image url(../../../../assets/charts/table.svg)
 
         &.compare button
           background-image url(../../../../assets/charts/compare.svg)
-
-      &.selected
-        background-color lighten(background-gray, 50%)
 
   .show-hide-series
     li.selected

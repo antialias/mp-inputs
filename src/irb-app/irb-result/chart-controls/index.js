@@ -10,19 +10,41 @@ import showHideSeriesTemplate from './show-hide-series.jade';
 import showHideSeriesPaneContentTemplate from './show-hide-series-pane-content.jade';
 import './index.styl';
 
-const CHART_TYPES = {
-  bar: ['standard', 'stacked'],
-  line: ['standard', 'stacked'],
-  table: ['standard'],
+const CHART_OPTIONS = {
+  bar: {
+    standard: 'Bar',
+    stacked: 'Stacked bar',
+  },
+  line: {
+    standard: 'Line',
+    stacked: 'Stacked line',
+  },
+  table: {
+    standard: 'Table',
+  },
 };
 
 document.registerElement('chart-toggle', class extends Component {
+  attachedCallback() {
+    super.attachedCallback(...arguments);
+    this.app.onClickOutside(this.tagName, 'stopEditingChartStyle');
+    this.selectedStyles = {};
+    Object.keys(CHART_OPTIONS).forEach(option => this.selectedStyles[option] = CHART_OPTIONS[option][0]);
+  }
+
   get config() {
     return {
       template: chartToggleTemplate,
       helpers: {
-        chartTypes: () => Object.keys(CHART_TYPES),
-        onChoiceClick: choice => this.app.updateChartType(choice),
+        chartTypes: () => Object.keys(CHART_OPTIONS),
+        chartTypeStyles: type => Object.keys(CHART_OPTIONS[type]),
+        typeSyleName: (type, style) => CHART_OPTIONS[type][style],
+        onTypeClick: type => this.app.updateChartType(type, this.selectedStyles[type]),
+        onDropdownClick: type => this.app.updateChartOptions({chartTypeEditing: type}),
+        onStyleClick: (type, style) => {
+          this.selectedStyles[type] = style;
+          this.app.updateChartOptions({type, style, chartTypeEditing: null});
+        },
       },
     };
   }
