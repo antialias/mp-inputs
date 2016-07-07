@@ -375,6 +375,7 @@ export default class SegmentationQuery extends BaseQuery {
     let series = {};
 
     if (results) {
+      results = results.filter(result => !result.key.includes('NaN - NaN'));
       series = results.reduce((seriesObj, item) => {
         // transform item.key array into nested obj,
         // with item.value at the deepest level
