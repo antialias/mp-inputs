@@ -128,12 +128,20 @@ function main() {
   }
 
   if (params.groups) {
-    groups = groups.concat(params.groups.map(function(group) {
-      var sections = [];
+    var getPropertyPath = function(group) {
+      return getPropertyPaths(group).join('.');
+    };
+
+    var getPropertyPaths = function(group) {
+      var paths = [];
       if (params.needsPeopleData) {
-        sections.push(group.resourceType === 'people' ? 'user' : 'event');
+        paths.push(group.resourceType === 'people' ? 'user' : 'event');
       }
-      return sections.concat('properties', group.value).join('.');
+      return paths.concat('properties', group.value);
+    };
+
+    groups = groups.concat(params.groups.map(function(group) {
+      return getPropertyPath(group);
     }));
   }
 
