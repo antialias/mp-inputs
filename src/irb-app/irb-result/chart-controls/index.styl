@@ -42,16 +42,71 @@
         background-color white
         border 1px solid medium-gray
         border-radius 3px
-        box-shadow: 0 7px 18px 0 rgba(121,124,135,0.26);
+        box-shadow 0 7px 18px 0 rgba(121,124,135,0.26)
         margin-top 3px
-        padding 5px 10px
+        min-width 100px
+        padding 10px 15px
         position absolute
         right -1px
-        width 200px
+
+        .style-title
+          color medium-gray
+          font-weight 600
+          font-size 11px
+          height 25px
+          line-height 25px
+          text-transform uppercase
+
 
         .style-option
+          color light-gray
+          font-weight 700
+          font-size 10px
+          height 25px
+          line-height 25px
           padding 0
+          text-align left
+          white-space nowrap
           width 100%
+
+          &:hover
+            color medium-gray
+
+          &.selected
+            color dark-gray
+
+      .chart-icon
+        &:before
+          background light-gray
+          content ''
+          display inline-block
+          height 10px
+          margin-right 10px
+          width 10px
+
+        &:hover:before
+          background medium-gray
+
+        &.selected:before
+          background dark-gray
+
+        &.line
+          &:before
+            mask url(../../../../assets/chart-controls/line.svg) no-repeat center
+
+          &.stacked:before
+            mask url(../../../../assets/chart-controls/line-stacked.svg) no-repeat center
+
+        &.bar
+          &:before
+            mask url(../../../../assets/chart-controls/bar-stacked.svg) no-repeat center
+
+          &.stacked:before
+            mask url(../../../../assets/chart-controls/bar-stacked.svg) no-repeat center
+
+        &.table
+          &:before
+            mask url(../../../../assets/chart-controls/table.svg) no-repeat center
 
       &.chart-type:hover, &.editing
         border-color light-gray
@@ -150,7 +205,7 @@
               line-height 17px
               overflow hidden
               padding 5px 0
-              margin 0 5%;
+              margin 0 5%
               text-align left
               text-indent 0
               white-space nowrap

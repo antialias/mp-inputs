@@ -29,7 +29,13 @@ document.registerElement('chart-toggle', class extends Component {
     super.attachedCallback(...arguments);
     this.app.onClickOutside(this.tagName, 'stopEditingChartStyle');
     this.selectedStyles = {};
-    Object.keys(CHART_OPTIONS).forEach(option => this.selectedStyles[option] = CHART_OPTIONS[option][0]);
+    Object.keys(CHART_OPTIONS).forEach(type => {
+      if (type == this.state.report.chartOptions.type) {
+        this.selectedStyles[type] = this.state.report.chartOptions.style;
+      } else {
+        this.selectedStyles[type] = Object.keys(CHART_OPTIONS[type])[0];
+      }
+    });
   }
 
   get config() {
@@ -38,6 +44,7 @@ document.registerElement('chart-toggle', class extends Component {
       helpers: {
         chartTypes: () => Object.keys(CHART_OPTIONS),
         chartTypeStyles: type => Object.keys(CHART_OPTIONS[type]),
+        lastSelectedStyle: type => this.selectedStyles && this.selectedStyles[type],
         typeSyleName: (type, style) => CHART_OPTIONS[type][style],
         onTypeClick: type => this.app.updateChartType(type, this.selectedStyles[type]),
         onDropdownClick: type => this.app.updateChartOptions({chartTypeEditing: type}),

@@ -11,5 +11,10 @@ ul.chart-toggle
         button.dropdown(onclick=() => $helpers.onDropdownClick(type))
       if isEditingStyle
         .chart-style-options
+          .style-title= type
           each style in typeStyles
-            button.style-option(class=style onclick=() => $helpers.onStyleClick(type, style))= $helpers.typeSyleName(type, style)
+            button.style-option.chart-icon(
+              class=[type, style]
+              class={selected: $helpers.lastSelectedStyle(type) == style}
+              onclick=() => $helpers.onStyleClick(type, style)
+            )= $helpers.typeSyleName(type, style)
