@@ -17,20 +17,34 @@
       border 1px solid transparent
       border-radius 3px
       display inline-block
+      height 30px
       margin-right -1px
       position relative
       z-index 2
 
       button
+        background none
         background-color initial
         background-position center
         background-repeat no-repeat
         border none
         height 30px
-        width 30px
+        padding 0
+        white-space nowrap
+        min-width 30px
 
         &.dropdown
           border-left 1px solid transparent
+          padding 0
+          min-width 20px
+
+          &:before
+            content ''
+            background light-gray
+            width 20px
+            height 20px
+            display inline-block
+            mask url(../../../../assets/chart-controls/caret-dropdown.svg) no-repeat center
 
         &.label
           width 80px
@@ -99,7 +113,7 @@
 
         &.bar
           &:before
-            mask url(../../../../assets/chart-controls/bar-stacked.svg) no-repeat center
+            mask url(../../../../assets/chart-controls/bar.svg) no-repeat center
 
           &.stacked:before
             mask url(../../../../assets/chart-controls/bar-stacked.svg) no-repeat center
@@ -114,28 +128,10 @@
         button.dropdown
           border-color light-gray
 
-      &.chart-type.bar button.label
-        background-image url(../../../../assets/charts/bar-inactive.svg)
-
-      &.chart-type.line button.label
-        background-image url(../../../../assets/charts/line-inactive.svg)
-
-      &.chart-type.table button.label
-        background-image url(../../../../assets/charts/table-inactive.svg)
-
       &.compare button
         background-image url(../../../../assets/charts/compare-inactive.svg)
 
       &.selected
-        &.chart-type.bar button.label
-          background-image url(../../../../assets/charts/bar.svg)
-
-        &.chart-type.line button.label
-          background-image url(../../../../assets/charts/line.svg)
-
-        &.chart-type.table button.label
-          background-image url(../../../../assets/charts/table.svg)
-
         &.compare button
           background-image url(../../../../assets/charts/compare.svg)
 

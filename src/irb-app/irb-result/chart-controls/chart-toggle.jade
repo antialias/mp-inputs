@@ -2,11 +2,12 @@ ul.chart-toggle
   for type in $helpers.chartTypes()
     - const isEditingStyle = report.chartOptions.chartTypeEditing === type
     - const typeStyles = $helpers.chartTypeStyles(type)
+    - const selectedStyle = $helpers.lastSelectedStyle(type)
     li.chart-type(class=type class={
       selected: type === report.chartOptions.type,
       editing: isEditingStyle
     })
-      button.label(onclick=() => $helpers.onTypeClick(type))
+      button.label.chart-icon(class=[type, selectedStyle] onclick=() => $helpers.onTypeClick(type))= $helpers.typeSyleName(type, selectedStyle)
       if typeStyles.length > 1
         button.dropdown(onclick=() => $helpers.onDropdownClick(type))
       if isEditingStyle
@@ -15,6 +16,6 @@ ul.chart-toggle
           each style in typeStyles
             button.style-option.chart-icon(
               class=[type, style]
-              class={selected: $helpers.lastSelectedStyle(type) == style}
+              class={selected: selectedStyle == style}
               onclick=() => $helpers.onStyleClick(type, style)
             )= $helpers.typeSyleName(type, style)
