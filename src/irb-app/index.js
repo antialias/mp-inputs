@@ -77,6 +77,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       report: new Report({
         chartOptions: {
           chartTypeEditing: null,
+          selectedStyleToggles: {},
           style: 'standard',
           type: 'bar',
         },
