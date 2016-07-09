@@ -20,6 +20,10 @@
       position relative
       z-index 2
 
+      &.selected
+        background-color initial
+        border-color medium-gray
+
       button
         align-items center
         background none
@@ -60,7 +64,7 @@
         &::before, &::after
           content none
 
-      .chart-style-options
+      .options
         background-color white
         border 1px solid medium-gray
         border-radius 3px
@@ -84,7 +88,7 @@
           text-transform uppercase
 
 
-        .style-option
+        .button-option
           color light-gray
           font-weight 700
           font-size 10px
@@ -101,7 +105,7 @@
           &.selected
             color dark-gray
 
-      .chart-icon
+      .icon
         &:before
           background light-gray
           content ''
@@ -134,23 +138,79 @@
           &:before
             mask url(../../../../assets/chart-controls/table.svg) no-repeat center
 
+        &.linear
+          &:before
+            mask url(../../../../assets/extras-menu/linear.svg) no-repeat center
+
+        &.rolling
+          &:before
+            mask url(../../../../assets/extras-menu/rolling.svg) no-repeat center
+
+        &.logarithmic
+          &:before
+            mask url(../../../../assets/extras-menu/logarithmic.svg) no-repeat center
+
+        &.cumulative
+          &:before
+            mask url(../../../../assets/extras-menu/cumulative.svg) no-repeat center
+
+        &.absolute
+          &:before
+            mask url(../../../../assets/extras-menu/pound.svg) no-repeat center
+
+        &.relative
+          &:before
+            mask url(../../../../assets/extras-menu/percent.svg) no-repeat center
+
       &.chart-type:hover, &.editing
         border-color light-gray
 
         button.dropdown
           border-color light-gray
 
+  .extras-menu
+    button.extras-menu
+      height 30px
+      width 30px
+      mask url(../../../../assets/extras-menu/ellipsis.svg) no-repeat center
+      background: medium-gray
+
+    .extras-menu-options
+      display flex
+
+      .disabled
+        opacity .5
+        pointer-events none
+
+      .analysis
+        border-right 1px light-gray solid
+        padding-right 15px
+
+      .value
+        padding-left 15px
+
+      .section
+        flex-grow 1
+        .title
+          font-weight bold
+          color: dark-gray
+          padding 6px 0px
+          font-size 11px
+          text-transform uppercase
+        li
+          justify-content: flex-start
+          button
+            padding 0px
+            height 24px
+            text-transform capitalize
+
   .show-hide-series
     button.show-hide
       width 30px
       background-image url(../../../../assets/charts/compare-inactive.svg)
 
-    li.selected
-      background-color initial
-      border-color medium-gray
-
-      button.show-hide
-        background-image url(../../../../assets/charts/compare.svg)
+    button.show-hide
+      background-image url(../../../../assets/charts/compare.svg)
 
     .pane-container
       box-shadow 0px 3px 10px -4px #000

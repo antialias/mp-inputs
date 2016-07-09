@@ -1,0 +1,29 @@
+ul.toggle-view
+  li(class={selected: report.extrasMenu.isEditing})
+    button.extras-menu(onclick=$helpers.startEditingExtrasMenu)
+    if report.extrasMenu.isEditing
+      .extras-menu-options.options
+        .analysis.section
+          .title(class={disabled: $helpers.isAllAnalysisDisabled()}) analysis
+          ul
+            each analysis in $helpers.analysisChoices()
+              li
+                button.button-option.icon(class=analysis
+                  class={
+                    selected: analysis == report.extrasMenu.lastSelectedAnalysis,
+                    disabled: $helpers.isAnalysisDisabled(analysis)
+                  }
+                  onclick=() => $helpers.onAnalysisClick(analysis)
+                )= analysis
+        .value.section
+          .title(class={disabled: $helpers.isValueToggleDisabled()}) value
+          ul
+            each value in $helpers.valueChoices()
+              li
+                button.button-option.icon(class=value
+                  class={
+                    selected: value == report.extrasMenu.lastSelectedValue,
+                    disabled: $helpers.isValueToggleDisabled()
+                  }
+                  onclick=() => $helpers.onValueClick(value)
+                )= value

@@ -6,23 +6,10 @@ import { renameEvent, renamePropertyValue } from '../../../util';
 
 import template from './index.jade';
 import chartToggleTemplate from './chart-toggle.jade';
+import extrasMenuTemplate from './extras-menu.jade';
 import showHideSeriesTemplate from './show-hide-series.jade';
 import showHideSeriesPaneContentTemplate from './show-hide-series-pane-content.jade';
 import './index.styl';
-
-const CHART_OPTIONS = {
-  bar: {
-    standard: 'Bar',
-    stacked: 'Stacked bar',
-  },
-  line: {
-    standard: 'Line',
-    stacked: 'Stacked line',
-  },
-  table: {
-    standard: 'Table',
-  },
-};
 
 document.registerElement('chart-toggle', class extends Component {
   attachedCallback() {
@@ -38,17 +25,17 @@ document.registerElement('chart-toggle', class extends Component {
     return {
       template: chartToggleTemplate,
       helpers: {
-        chartTypes: () => Object.keys(CHART_OPTIONS),
-        formattedChartName: (type, style) => CHART_OPTIONS[type][style],
+        chartTypes: () => this.app.chartTypes(),
+        formattedChartName: (type, style) => this.app.formattedChartName(type, style),
         selectedPlotStyle: type => this.state.chartToggle[type].plotStyle,
-        styleChoicesForChartType: type => Object.keys(CHART_OPTIONS[type]),
+        styleChoicesForChartType: type => this.app.styleChoicesForChartType(type),
         onTypeClick: type => this.app.updateChartType(type),
         onDropdownClick: editingType => this.app.updateChartToggle({editingType}),
         onStyleClick: (chartType, plotStyle) => {
           const chartToggle = extend(this.state.chartToggle, {editingType: null});
           chartToggle[chartType].plotStyle = plotStyle;
           this.app.updateChartToggle(chartToggle);
-          this.app.updateReport({chartType, plotStyle});
+          this.app.commitChartChoice(chartType, plotStyle);
         },
       },
     };
@@ -120,6 +107,30 @@ document.registerElement('show-hide-series', class extends Component {
 
       helpers: {
         startEditingSeries: () => this.app.startEditingSeries(),
+      },
+    };
+  }
+});
+
+document.registerElement('extras-menu', class extends Component {
+  attachedCallback() {
+    super.attachedCallback(...arguments);
+    this.app.onClickOutside(this.tagName, 'stopEditingExtrasMenu');
+  }
+
+  get config() {
+    return {
+      template: extrasMenuTemplate,
+
+      helpers: {
+        startEditingExtrasMenu: () => this.app.updateExtrasMenu({isEditing: true}),
+        analysisChoices: () => this.app.analysisChoices(),
+        valueChoices: () => this.app.valueChoices(),
+        onAnalysisClick: analysis => this.app.updateExtrasMenu({lastSelectedAnalysis: analysis}),
+        onValueClick: value => this.app.updateExtrasMenu({lastSelectedValue: value}),
+        isAllAnalysisDisabled: () => this.app.isAllAnalysisDisabled(),
+        isAnalysisDisabled: analysis => !this.app.isAnalysisEnabled(analysis),
+        isValueToggleDisabled: () => !this.app.isValueToggleEnabled(),
       },
     };
   }

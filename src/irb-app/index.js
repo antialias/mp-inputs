@@ -21,6 +21,62 @@ import './index.styl';
 
 const MINUTE_MS = 1000 * 60;
 
+const CHART_OPTIONS = {
+  bar: {
+    standard: 'Bar',
+    stacked: 'Stacked bar',
+  },
+  line: {
+    standard: 'Line',
+    stacked: 'Stacked line',
+  },
+  table: {
+    standard: 'Table',
+  },
+};
+const ANALYSIS_CHOICES = ['linear', 'rolling', 'logarithmic', 'cumulative'];
+const VALUE_CHOICES = ['absolute', 'relative'];
+const ANALYSIS_CHART_TABLE = {
+  Bar: {
+    linear: true,
+    logarithmic: true,
+    rolling: false,
+    cumulative: false,
+  },
+  Line: {
+    linear: true,
+    logarithmic: true,
+    rolling: true,
+    cumulative: true,
+  },
+  Table: {
+    linear: true,
+    logarithmic: false,
+    rolling: false,
+    cumulative: false,
+  },
+  'Stacked bar': {
+    linear: true,
+    logarithmic: true,
+    rolling: false,
+    cumulative: false,
+  },
+  'Stacked line': {
+    linear: true,
+    logarithmic: true,
+    rolling: true,
+    cumulative: true,
+  },
+};
+const VALUE_CHART_TABLE = {
+  Bar: false,
+  Line: false,
+  Table: false,
+  'Stacked bar': true,
+  'Stacked Line': true,
+};
+
+
 document.registerElement('irb-app', class IRBApp extends MPApp {
   get config() {
     return {
@@ -76,6 +132,11 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     return {
       report: new Report({
         chartType: 'bar',
+        extrasMenu: {
+          lastSelectedAnalysis: 'linear',
+          lastSelectedVaue: 'absolute',
+          isEditing: false,
+        },
         plotStyle: 'standard',
         sections: new BuilderSections({
           show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
@@ -148,6 +209,50 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     }
   }
 
+  // Serialization helpers
+
+  get persistenceKey() {
+    return 'irb-deadbeef13';
+  }
+
+  toSerializationAttrs() {
+    return this.state.report ? this.state.report.serialize() : {};
+  }
+
+  fromSerializationAttrs(attrs) {
+    return attrs.sections ? {report: Report.deserialize(attrs)} : {};
+  }
+
+  // State helpers
+
+  hasStageClause() {
+    return !!(this.state.stageClauses && this.state.stageClauses.length);
+  }
+
+  get activeStageClause() {
+    return this.hasStageClause() ? this.state.stageClauses[this.state.stageClauses.length - 1] : null;
+  }
+
+  originStageClauseType() {
+    return this.hasStageClause() && this.state.stageClauses[0].TYPE;
+  }
+
+  isAddingClause(sectionType) {
+    return (
+      this.originStageClauseType() === sectionType &&
+      typeof this.state.stageClauseIndex !== 'number'
+    );
+  }
+
+  isEditingClause(sectionType, clauseIndex) {
+    return (
+      this.originStageClauseType() === sectionType &&
+      this.state.stageClauseIndex === clauseIndex
+    );
+  }
+
+  // State modifiers
+
   resetTopQueries() {
     this.queries.topEventProperties.build(this.state).run().then(topEventProperties => {
       this.update({topEventProperties});
@@ -187,46 +292,39 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.update({report: Object.assign(this.state.report, attrs)});
   }
 
-  // Serialization helpers
-
-  get persistenceKey() {
-    return 'irb-7fc12a6e';
+  loadReport(report) {
+    const stateUpdate = extend(this.resettableState, report ? {report} : {});
+    this.update(stateUpdate);
+    this.resetTopQueries();
+    return stateUpdate;
   }
 
-  toSerializationAttrs() {
-    return this.state.report ? this.state.report.serialize() : {};
+  resetQuery() {
+    return this.loadReport(null);
   }
 
-  fromSerializationAttrs(attrs) {
-    return attrs.sections ? {report: Report.deserialize(attrs)} : {};
+  updateExtrasMenu(attrs) {
+    this.updateReport({extrasMenu: Object.assign(this.state.report.extrasMenu, attrs)});
   }
 
-  // State helpers
-
-  hasStageClause() {
-    return !!(this.state.stageClauses && this.state.stageClauses.length);
+  selectedChartName() {
+    return this.formattedChartName(this.state.report.chartType, this.state.report.plotStyle);
   }
 
-  get activeStageClause() {
-    return this.hasStageClause() ? this.state.stageClauses[this.state.stageClauses.length - 1] : null;
+  analysisChoices() {
+    return ANALYSIS_CHOICES;
   }
 
-  originStageClauseType() {
-    return this.hasStageClause() && this.state.stageClauses[0].TYPE;
+  valueChoices() {
+    return VALUE_CHOICES;
   }
 
-  isAddingClause(sectionType) {
-    return (
-      this.originStageClauseType() === sectionType &&
-      typeof this.state.stageClauseIndex !== 'number'
-    );
+  isAllAnalysisDisabled() {
+    ANALYSIS_CHOICES.every(analysis => !this.isAnalysisEnabled(analysis));
   }
 
-  isEditingClause(sectionType, clauseIndex) {
-    return (
-      this.originStageClauseType() === sectionType &&
-      this.state.stageClauseIndex === clauseIndex
-    );
+  isAnalysisEnabled(analysis) {
+    return ANALYSIS_CHART_TABLE[this.selectedChartName()][analysis];
   }
 
   sortConfigFor(result, currentSortConfig=null) {
@@ -260,17 +358,14 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     return sortConfig;
   }
 
-  // State modifiers
-
-  loadReport(report) {
-    const stateUpdate = extend(this.resettableState, report ? {report} : {});
-    this.update(stateUpdate);
-    this.resetTopQueries();
-    return stateUpdate;
+  isValueToggleEnabled() {
+    return VALUE_CHART_TABLE[this.selectedChartName()];
   }
 
-  resetQuery() {
-    return this.loadReport(null);
+  stopEditingExtrasMenu() {
+    this.updateExtrasMenu({isEditing: false});
+
+    // TODO(chi) take actions based on chosen analysis and value.
   }
 
   startAddingClause(sectionType) {
@@ -428,6 +523,18 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.update({chartToggle: extend(this.state.chartToggle, options)});
   }
 
+  chartTypes() {
+    return Object.keys(CHART_OPTIONS);
+  }
+
+  formattedChartName(type, style) {
+    return CHART_OPTIONS[type][style];
+  }
+
+  styleChoicesForChartType(type) {
+    return Object.keys(CHART_OPTIONS[type]);
+  }
+
   updateChartType(chartType) {
     // For some types of query, changing to a different chart type necessitates a new
     // query. Check the correct conditions here and call 'query'.
@@ -441,8 +548,23 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
          || ['bar', 'table'].includes(chartType) && this.state.report.chartType === 'line')) {
       this.query({chartType, plotStyle});
     } else {
-      this.updateReport({chartType, plotStyle});
+      this.commitChartChoice(chartType, plotStyle);
     }
+  }
+
+  commitChartChoice(chartType, plotStyle) {
+    this.updateReport({chartType, plotStyle});
+
+    // set extras menu *after* chart choice has been committed.
+
+    const extrasMenu = {
+      lastSelectedAnalysis: this.isAnalysisEnabled(this.state.report.extrasMenu.lastSelectedAnalysis) ?
+        this.state.report.extrasMenu.lastSelectedAnalysis : 'linear',
+      lastSelectedVaue: this.isValueToggleEnabled() ?
+        this.state.report.extrasMenu.lastSelectedValue : 'absolute',
+    };
+
+    this.updateExtrasMenu(extrasMenu);
   }
 
   resetToastTimer() {
@@ -490,10 +612,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         this.updateSeriesData(result);
         this.update({result, newCachedData: false});
         this.updateReport({
-          chartType: options.chartType || this.state.report.chartType,
-          plotStyle: options.plotStyle || this.state.report.plotStyle,
           sorting: this.sortConfigFor(result, this.state.report.sorting),
         });
+        this.commitChartChoice(options.chartType || this.state.report.chartType,
+                               options.plotStyle || this.state.report.plotStyle);
       })
       .catch(err => console.error(err));
   }

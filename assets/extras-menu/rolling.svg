@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="11px" height="4px" viewBox="0 0 11 4" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.3 (29802) - http://www.bohemiancoding.com/sketch -->
+    <title>Icon / Rolling</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+        <g id="07-Contextual-Menu" transform="translate(-776.000000, -427.000000)" stroke="#9698A4">
+            <g id="More-button-open" transform="translate(761.000000, 359.000000)">
+                <path d="M16,69 C16,69 16.4298269,69.4298269 16.9657322,69.9657322 L18.0342678,71.0342678 C18.567627,71.567627 19.3678589,71.5095215 19.8197632,70.9069824 L21.1802368,69.0930176 C21.6329795,68.4893606 22.4280701,68.4280701 22.9580997,68.9580997 L25.0419003,71.0419003" id="Icon-/-Rolling"></path>
+            </g>
+        </g>
+    </g>
+</svg>

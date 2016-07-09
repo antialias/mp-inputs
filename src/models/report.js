@@ -14,6 +14,7 @@ export default class Report {
 
       // visualization params
       'chartType',
+      'extrasMenu',
       'plotStyle',
       'sections',
       'series',
@@ -35,6 +36,7 @@ export default class Report {
       sections: this.sections.serialize(),
     }, pick(this, [
       'chartType',
+      'extrasMenu',
       'plotStyle',
       'series',
       'sorting',
