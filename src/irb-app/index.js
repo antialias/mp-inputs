@@ -442,7 +442,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         }
         this.updateSeriesData(result);
         this.update({result, newCachedData: false});
-        this.updateChartOptions({type: options.chartOptions.type  || this.state.report.chartOptions.type});
+        this.updateChartOptions({type: options.chartOptions.type || this.state.report.chartOptions.type});
       })
       .catch(err => console.error(err));
   }
