@@ -240,7 +240,7 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   buildGroups(jqlQuery) {
-    // check and replace all any numeric property groupBys.
+    // check and replace all numeric property groupBys.
     return Promise.all(this.query.segments.map(segment => new Promise(resolve => {
       if (segment.filterType === 'number') {
         let event;
