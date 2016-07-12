@@ -1,7 +1,7 @@
 import { Component } from 'panel';
 import { Pane, PaneContent } from '../../pane';
 
-import { extend } from '../../../util';
+import { extend, pick } from '../../../util';
 import { renameEvent, renamePropertyValue } from '../../../util';
 
 import template from './index.jade';
@@ -27,7 +27,11 @@ const CHART_OPTIONS = {
 document.registerElement('chart-toggle', class extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
-    this.app.onClickOutside(this.tagName, 'stopEditingChartOptions');
+    this.app.onClickOutside(this.tagName, 'stopEditingChartToggle');
+
+    const chartType = this.state.report.chartType;
+    const chartOptions = extend(this.state.chartToggle[chartType], pick(this.state.report, ['plotStyle']));
+    this.app.updateChartToggle({[chartType]: chartOptions});
   }
 
   get config() {
@@ -38,14 +42,14 @@ document.registerElement('chart-toggle', class extends Component {
         chartTypeStyles: type => Object.keys(CHART_OPTIONS[type]),
         formattedChartName: (type, style) => CHART_OPTIONS[type][style],
         onTypeClick: type => this.app.updateChartType(type),
-        onDropdownClick: editingType => this.app.updateChartOptions({editingType}),
-        onStyleClick: (chartType, style) => {
-          const chartOptions = extend(this.state.chartOptions, {editingType: null});
-          chartOptions[chartType].plotStyle = style;
-          this.app.updateChartOptions(chartOptions);
-          this.app.updateReport({chartType});
+        onDropdownClick: editingType => this.app.updateChartToggle({editingType}),
+        onStyleClick: (chartType, plotStyle) => {
+          const chartToggle = extend(this.state.chartToggle, {editingType: null});
+          chartToggle[chartType].plotStyle = plotStyle;
+          this.app.updateChartToggle(chartToggle);
+          this.app.updateReport({chartType, plotStyle});
         },
-        plotStyle: type => this.state.chartOptions[type].plotStyle,
+        plotStyle: type => this.state.chartToggle[type].plotStyle,
       },
     };
   }

@@ -14,6 +14,7 @@ export default class Report {
 
       // visualization params
       'chartType',
+      'plotStyle',
       'sections',
       'series',
     ]));
@@ -33,6 +34,7 @@ export default class Report {
       sections: this.sections.serialize(),
     }, pick(this, [
       'chartType',
+      'plotStyle',
       'series',
       'title',
     ]));

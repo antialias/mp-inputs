@@ -76,6 +76,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     return {
       report: new Report({
         chartType: 'bar',
+        plotStyle: 'standard',
         sections: new BuilderSections({
           show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
           time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
@@ -89,7 +90,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         title: 'Untitled report',
       }),
 
-      chartOptions: {
+      chartToggle: {
         editingType: null,
         bar: {
           plotStyle: 'standard',
@@ -127,6 +128,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         ),
       });
     }
+
     this.queries = {
       topEvents: new TopEventsQuery(),
       topEventProperties: new TopEventPropertiesQuery(),
@@ -381,12 +383,12 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     });
   }
 
-  stopEditingChartOptions() {
-    this.updateChartOptions({editingType: null});
+  stopEditingChartToggle() {
+    this.updateChartToggle({editingType: null});
   }
 
-  updateChartOptions(options) {
-    this.update({chartOptions: extend(this.state.chartOptions, options)});
+  updateChartToggle(options) {
+    this.update({chartToggle: extend(this.state.chartToggle, options)});
   }
 
   updateChartType(chartType) {
@@ -395,13 +397,14 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
     // for 'unique', 'average' and 'median', 'bar' and 'table' require a different query than
     // 'line'.
-    this.stopEditingChartOptions();
+    this.stopEditingChartToggle();
+    const plotStyle = this.state.chartToggle[chartType].plotStyle;
     if (this.state.report.sections.show.clauses.some(clause => ['unique', 'average', 'median'].includes(clause.math)) &&
         (chartType === 'line' && ['bar', 'table'].includes(this.state.report.chartType)
          || ['bar', 'table'].includes(chartType) && this.state.report.chartType === 'line')) {
-      this.query({chartType});
+      this.query({chartType, plotStyle});
     } else {
-      this.updateReport({chartType});
+      this.updateReport({chartType, plotStyle});
     }
   }
 
@@ -449,7 +452,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         }
         this.updateSeriesData(result);
         this.update({result, newCachedData: false});
-        this.updateReport({chartType: options.chartType || this.state.report.chartType});
+        this.updateReport({
+          chartType: options.chartType || this.state.report.chartType,
+          plotStyle: options.plotStyle || this.state.report.plotStyle,
+        });
       })
       .catch(err => console.error(err));
   }

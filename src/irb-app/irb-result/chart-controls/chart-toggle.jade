@@ -1,6 +1,6 @@
 ul.chart-toggle
   for type in $helpers.chartTypes()
-    - const isEditingCurrentStyle = chartOptions.editingType === type
+    - const isEditingCurrentStyle = chartToggle.editingType === type
     - const plotStyle = $helpers.plotStyle(type)
     - const typeStyles = $helpers.chartTypeStyles(type)
     li.chart-type(class=type class={
