@@ -337,11 +337,15 @@ export default class SegmentationQuery extends BaseQuery {
     }
   }
 
-  runJQLQueries() {
+  buildJQLArgs() {
     this.preprocessNameConflicts();
     return this.query.jqlQueries.map(jqlQuery =>
       this.buildJQLParams(jqlQuery).then(jqlParams =>
-        window.MP.api.query(this.buildUrl(), this.buildParams(jqlParams), this.buildOptions())));
+        [this.buildUrl(), this.buildParams(jqlParams), this.buildOptions()]));
+  }
+
+  runJQLQueries() {
+    return this.buildJQLArgs().map(args => args.then(args => window.MP.api.query(...args)));
   }
 
   executeQuery() {
