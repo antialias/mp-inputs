@@ -243,11 +243,11 @@ export default class SegmentationQuery extends BaseQuery {
     // check and replace all numeric property groupBys.
     return Promise.all(this.query.segments.map(segment => new Promise(resolve => {
       if (segment.filterType === 'number') {
-        let event;
+        let eventName;
         if (jqlQuery.custom) {
-          event = jqlQuery.outputName;
+          eventName = jqlQuery.outputName;
         } else if (jqlQuery.events.length === 1) {
-          event = jqlQuery.eventNames()[0];
+          eventName = jqlQuery.eventNames()[0];
         } else {
           // Don't support getting extrema on the same property of multiple events *in the same
           // show clause* for now. This means using 'Top Events' with a high-cardinality groupBy can
@@ -260,7 +260,7 @@ export default class SegmentationQuery extends BaseQuery {
         let state = {
           from: new Date(this.query.from),
           to: new Date(this.query.to),
-          event: event,
+          event: eventName,
           on: `${action}["${segment.value}"]`,
           where: this.query.filters
             .filter(filter => isFilterValid(filter))
