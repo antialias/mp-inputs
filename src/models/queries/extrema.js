@@ -1,4 +1,5 @@
 import BaseQuery from './base';
+import { extend, pick } from '../../util';
 
 export default class ExtremaQuery extends BaseQuery {
   buildQuery(state) {
@@ -6,17 +7,11 @@ export default class ExtremaQuery extends BaseQuery {
   }
 
   buildParams() {
-    let params = {
-      from_date: this.query.from.toISOString().split('T')[0],
-      to_date: this.query.to.toISOString().split('T')[0],
-      event: this.query.event,
-      on: this.query.on,
-      interval: Math.min(36, this.query.interval),
-      cardinality_threshold: 50,
-      allow_more_buckets: this.query.allow_more_buckets,
-      allow_fewer_buckets: this.query.allow_fewer_buckets,
-      buckets: this.query.buckets,
-    };
+    const params = extend(pick(this.query, ['event', 'on', 'allow_fewer_buckets', 'allow_more_buckets', 'buckets']),
+      { from_date: this.query.from.toISOString().split('T')[0],
+        to_date: this.query.to.toISOString().split('T')[0],
+        interval: Math.min(36, this.query.interval),
+        cardinality_threshold: 50 });
     if (this.query.where) {
       params['selector'] = this.query.where;
     }
