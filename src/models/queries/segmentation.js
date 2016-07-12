@@ -130,18 +130,8 @@ function filterToArbSelectorString(property, type, operator, value, dateUnit) {
       switch (operator) {
         case 'was less than': return `(${property} < datetime(${new Date().getTime() - (value * unitMs)}))`;
         case 'was more than': return `(${property} > datetime(${new Date().getTime() - (value * unitMs)}))`;
-        case 'was on': {
-          let from = new Date(value);
-          let to = new Date(value);
-
-          return between(from, to);
-        }
-        case 'was between': {
-          let from = new Date(value[0]);
-          let to = new Date(value[1]);
-
-          return between(from, to);
-        }
+        case 'was on': return between(new Date(value), new Date(value));
+        case 'was between': return between(new Date(value[0]), new Date(value[1]));
       }
       break;
     }
