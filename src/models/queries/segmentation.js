@@ -253,6 +253,8 @@ export default class SegmentationQuery extends BaseQuery {
           // show clause* for now. This means using 'Top Events' with a high-cardinality groupBy can
           // still freeze the browser. Alternatively, we can call extrema for all 12 top events and
           // get an universal bucketing scheme, but this gets crazy for 'All Events'.
+
+          // Or, we can take advantage of 'Group By Limits' in JQL 2.0.
           return resolve(segment);
         }
         const action = segment.resourceType === 'people' ? 'user' : 'properties';
