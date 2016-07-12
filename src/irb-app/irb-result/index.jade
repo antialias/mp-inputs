@@ -5,7 +5,7 @@
       when 'bar'
         bar-chart(attributes={data: JSON.stringify($helpers.filterResults(result))})
       when 'line'
-        line-chart(attributes={data: JSON.stringify($helpers.filterResults(result))})
+        line-chart(attributes={data: JSON.stringify($helpers.filterResults(result)), chartOptions: JSON.stringify($helpers.getChartOptions())})
       when 'table'
         - const clauses = report.sections.show.clauses;
         - let resourceDescription;

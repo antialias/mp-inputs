@@ -31,6 +31,7 @@ document.registerElement('line-chart', class extends Component {
       data: util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
         [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
       )),
+      chartOptions: JSON.parse(this.getAttribute('chartOptions')),
     });
   }
 
@@ -50,10 +51,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
   }
 
   attachedCallback() {
-    this.$el
-      .MPChart({chartType: 'line'})
-      .MPChart('setData', JSON.parse(this._data_string || '{}'));
-
+    this.renderMPChart();
     this._chart_initialized = true;
   }
 
@@ -69,5 +67,46 @@ document.registerElement('mp-line-chart', class extends WebComponent {
         this.$el.MPChart('setData', JSON.parse(data));
       }
     }
+  }
+
+  get chartOptions() {
+    return JSON.parse(this._chartOptions);
+  }
+
+  set chartOptions(options) {
+    if (!util.isEqual(this._chartOptions, options)) {
+      this._chartOptions = options;
+
+      if (this._chart_initialized) {
+        this.$el.remove();
+        this.$el = $('<div>').appendTo(this);
+        this.renderMPChart();
+      }
+    }
+  }
+
+  createHighchartOptions() {
+    const chartOptions = this.chartOptions || {};
+    const highchartsOptions = {
+      plotOptions: {
+        series: {
+          stacking: null,
+          marker: {
+            enabled: false,
+          },
+        },
+      },
+    };
+
+    if (chartOptions.plotStyle == 'stacked') {
+      highchartsOptions.plotOptions.series.stacking = 'normal';
+    }
+    return { highchartsOptions };
+  }
+
+  renderMPChart() {
+    this.$el
+      .MPChart(util.extend(this.createHighchartOptions(), {chartType: 'line'}))
+      .MPChart('setData', JSON.parse(this._data_string || '{}'));
   }
 });

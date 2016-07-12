@@ -1,6 +1,8 @@
 import { Component } from 'panel';
 import { filterObjectAtDepth } from './chart-util';
 
+import { pick } from '../../util';
+
 import './bar-chart';
 import './line-chart';
 import './table-chart';
@@ -14,6 +16,7 @@ document.registerElement('irb-result', class extends Component {
   get config() {
     return {
       helpers: {
+        getChartOptions: () => pick(this.state.report, ['plotStyle']),
         toastClosed: () => this.update({newCachedData: false}),
         toastSelected: () => this.app.query(),
         filterResults: (result, depth=2) => ({
