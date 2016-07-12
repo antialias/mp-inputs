@@ -75,12 +75,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   get resettableState() {
     return {
       report: new Report({
-        chartOptions: {
-          chartTypeEditing: null,
-          selectedStyleToggles: {},
-          style: 'standard',
-          type: 'bar',
-        },
+        chartType: 'bar',
         sections: new BuilderSections({
           show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
           time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
@@ -94,6 +89,18 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         title: 'Untitled report',
       }),
 
+      chartOptions: {
+        editingType: null,
+        bar: {
+          plotStyle: 'standard',
+        },
+        line: {
+          plotStyle: 'standard',
+        },
+        table: {
+          plotStyle: 'standard',
+        },
+      },
       newCachedData: false,
       resourceTypeFilter: 'all',
       result: {
@@ -374,27 +381,27 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     });
   }
 
-  stopEditingChartStyle() {
-    this.updateChartOptions({chartTypeEditing: null});
+  stopEditingChartOptions() {
+    this.updateChartOptions({editingType: null});
   }
 
   updateChartOptions(options) {
-    this.updateReport({chartOptions: extend(this.state.report.chartOptions, options)});
+    this.update({chartOptions: extend(this.state.chartOptions, options)});
   }
 
-  updateChartType(type, style='standard') {
+  updateChartType(chartType) {
     // For some types of query, changing to a different chart type necessitates a new
     // query. Check the correct conditions here and call 'query'.
 
     // for 'unique', 'average' and 'median', 'bar' and 'table' require a different query than
     // 'line'.
-    this.stopEditingChartStyle();
+    this.stopEditingChartOptions();
     if (this.state.report.sections.show.clauses.some(clause => ['unique', 'average', 'median'].includes(clause.math)) &&
-        (type === 'line' && ['bar', 'table'].includes(this.state.report.chartOptions.type)
-         || ['bar', 'table'].includes(type) && this.state.report.chartOptions.type === 'line')) {
-      this.query({chartOptions: {type, style}});
+        (chartType === 'line' && ['bar', 'table'].includes(this.state.report.chartType)
+         || ['bar', 'table'].includes(chartType) && this.state.report.chartType === 'line')) {
+      this.query({chartType});
     } else {
-      this.updateChartOptions({type, style});
+      this.updateReport({chartType});
     }
   }
 
@@ -423,7 +430,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   query(options={}) {
-    options = Object.assign({useCache: true, chartOptions: {}}, options);
+    options = Object.assign({useCache: true}, options);
     const query = this.queries.segmentation.build(this.state, options).query;
     const cachedResult = options.useCache && this.queries.segmentationCache.get(query);
     const cacheExpiry = 10; // seconds
@@ -442,7 +449,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         }
         this.updateSeriesData(result);
         this.update({result, newCachedData: false});
-        this.updateChartOptions({type: options.chartOptions.type || this.state.report.chartOptions.type});
+        this.updateReport({chartType: options.chartType || this.state.report.chartType});
       })
       .catch(err => console.error(err));
   }

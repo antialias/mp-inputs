@@ -27,7 +27,7 @@ const CHART_OPTIONS = {
 document.registerElement('chart-toggle', class extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
-    this.app.onClickOutside(this.tagName, 'stopEditingChartStyle');
+    this.app.onClickOutside(this.tagName, 'stopEditingChartOptions');
   }
 
   get config() {
@@ -36,29 +36,20 @@ document.registerElement('chart-toggle', class extends Component {
       helpers: {
         chartTypes: () => Object.keys(CHART_OPTIONS),
         chartTypeStyles: type => Object.keys(CHART_OPTIONS[type]),
-        lastSelectedStyle: type => this.lastSelectedStyle(type),
-        formattedStyleName: (type, style) => CHART_OPTIONS[type][style],
-        onTypeClick: type => this.app.updateChartType(type, this.lastSelectedStyle(type)),
-        onDropdownClick: type => this.app.updateChartOptions({chartTypeEditing: type}),
-        onStyleClick: (type, style) => {
-          const selectedStyleToggles = extend(this.selectedStyleToggles);
-          selectedStyleToggles[type] = style;
-          this.app.updateChartOptions({type, style, selectedStyleToggles, chartTypeEditing: null});
+        formattedChartName: (type, style) => CHART_OPTIONS[type][style],
+        onTypeClick: type => this.app.updateChartType(type),
+        onDropdownClick: editingType => this.app.updateChartOptions({editingType}),
+        onStyleClick: (chartType, style) => {
+          const chartOptions = extend(this.state.chartOptions, {editingType: null});
+          chartOptions[chartType].plotStyle = style;
+          this.app.updateChartOptions(chartOptions);
+          this.app.updateReport({chartType});
         },
+        plotStyle: type => this.state.chartOptions[type].plotStyle,
       },
     };
   }
-
-  get selectedStyleToggles() {
-    return this.state.report.chartOptions.selectedStyleToggles;
-  }
-
-  lastSelectedStyle(type) {
-    return this.selectedStyleToggles[type] || 'standard';
-  }
 });
-
-
 
 document.registerElement('show-hide-series-pane-content', class extends PaneContent {
   get config() {
