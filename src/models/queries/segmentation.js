@@ -283,32 +283,29 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   buildJQLParams(jqlQuery) {
-    // base params
-    let scriptParams = {
-      events: jqlQuery.events,
-      outputName: jqlQuery.outputName,
-      dates: {
-        from: (new Date(this.query.from)).toISOString().split('T')[0],
-        to:   (new Date(this.query.to)).toISOString().split('T')[0],
-        unit: jqlQuery.unit,
-      },
-      filters:
+    return this.buildGroups(jqlQuery).then(groups => {
+      // base params
+      const scriptParams = {
+        events: jqlQuery.events,
+        outputName: jqlQuery.outputName,
+        dates: {
+          from: (new Date(this.query.from)).toISOString().split('T')[0],
+          to:   (new Date(this.query.to)).toISOString().split('T')[0],
+          unit: jqlQuery.unit,
+        },
+        filters:
         this.query.filters
           .filter(filter => isFilterValid(filter))
           .map(filter => filterToParams(filter)),
-      type: jqlQuery.type,
-    };
+        type: jqlQuery.type,
+      };
 
-    return new Promise(resolve => {
-      this.buildGroups(jqlQuery)
-        .then(groups => {
-          scriptParams.groups = groups;
+      scriptParams.groups = groups;
 
-          // As we need more helper data this should be moved down a level in the params
-          scriptParams.needsPeopleData = scriptParams.filters.concat(scriptParams.groups).some(param => param.resourceType === 'people');
+      // As we need more helper data this should be moved down a level in the params
+      scriptParams.needsPeopleData = scriptParams.filters.concat(scriptParams.groups).some(param => param.resourceType === 'people');
 
-          resolve(scriptParams);
-        });
+      return scriptParams;
     });
   }
 
