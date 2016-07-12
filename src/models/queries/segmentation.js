@@ -273,8 +273,7 @@ export default class SegmentationQuery extends BaseQuery {
           buckets: 12,
         };
         state.interval = (state.to.getTime() - state.from.getTime()) / MS_BY_UNIT.day + 1;
-        extremaQuery.build(state);
-        extremaQuery.run().then(result => {
+        extremaQuery.build(state).run().then(result => {
           resolve(extend(segment, result));
         });
       } else {
