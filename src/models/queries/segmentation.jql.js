@@ -141,8 +141,9 @@ function main() {
     };
 
     groups = groups.concat(params.groups.map(function(group) {
+      var jqlGroup;
       if (group.cardinality && group.cardinality === 'high') {
-        return function(eventData) {
+        jqlGroup =  function(eventData) {
           const property = getPropertyPaths(group).reduce(function(property, path) {
             return property[path];
           }, eventData);
@@ -154,8 +155,11 @@ function main() {
 
           return `${low} - ${high}`;
         };
+      } else {
+        jqlGroup = getPropertyPath(group);
       }
-      return getPropertyPath(group);
+      return jqlGroup;
+
     }));
   }
 
