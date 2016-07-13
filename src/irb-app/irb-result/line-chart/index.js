@@ -88,6 +88,9 @@ document.registerElement('mp-line-chart', class extends WebComponent {
   createHighchartOptions() {
     const chartOptions = this.chartOptions || {};
     const highchartsOptions = {
+      chart: {
+        type: 'line',
+      },
       tooltip: {
         borderColor: '#c4c8d6',
         borderRadius: 3,
@@ -114,6 +117,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
 
     if (chartOptions.plotStyle == 'stacked') {
       highchartsOptions.plotOptions.series.stacking = 'normal';
+      highchartsOptions.chart.type = 'area';
     }
     return { highchartsOptions };
   }
