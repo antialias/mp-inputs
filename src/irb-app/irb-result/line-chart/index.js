@@ -88,11 +88,25 @@ document.registerElement('mp-line-chart', class extends WebComponent {
   createHighchartOptions() {
     const chartOptions = this.chartOptions || {};
     const highchartsOptions = {
+      tooltip: {
+        borderColor: '#c4c8d6',
+        borderRadius: 3,
+        crosshairs: [true],
+        formatter: function() {
+          const tooltip = [`<span class="title"> ${this.series.name}</span><span class="results"><span class="count">${this.y}</span>`];
+          if (this.percentage) {
+            tooltip.push(` <span class="percent">${Math.round(this.percentage * 10)/10}%</span>`);
+          }
+          tooltip.push('</span>');
+          return tooltip.join('');
+        },
+      },
       plotOptions: {
         series: {
           stacking: null,
           marker: {
             enabled: false,
+            symbol: 'url()',
           },
         },
       },
