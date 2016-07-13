@@ -1,21 +1,24 @@
 ul.chart-toggle
-  for type in $helpers.chartTypes()
-    - const isEditingCurrentStyle = chartToggle.editingType === type
-    - const plotStyle = $helpers.plotStyle(type)
-    - const typeStyles = $helpers.chartTypeStyles(type)
-    li.chart-type(class=type class={
-      selected: type === report.chartType,
+  for chartType in $helpers.chartTypes()
+    - const isEditingCurrentStyle = chartToggle.editingType === chartType
+    - const selectedPlotStyle = $helpers.selectedPlotStyle(chartType)
+    - const styleChoicesForChartType = $helpers.styleChoicesForChartType(chartType)
+    li.chart-type(class=chartType class={
+      selected: chartType === report.chartType,
       editing: isEditingCurrentStyle
     })
-      button.label.chart-icon(class=[type, plotStyle] onclick=() => $helpers.onTypeClick(type))= $helpers.formattedChartName(type, plotStyle)
-      if typeStyles.length > 1
-        button.dropdown(onclick=() => $helpers.onDropdownClick(type))
+      button.label.chart-icon(
+        class=[chartType, selectedPlotStyle]
+        onclick=() => $helpers.onTypeClick(chartType)
+      )= $helpers.formattedChartName(chartType, selectedPlotStyle)
+      if styleChoicesForChartType.length > 1
+        button.dropdown(onclick=() => $helpers.onDropdownClick(chartType))
       if isEditingCurrentStyle
         .chart-style-options
-          .style-title= type
-          each style in typeStyles
+          .chart-type-title= chartType
+          each plotStyle in styleChoicesForChartType
             button.style-option.chart-icon(
-              class=[type, style]
-              class={selected: plotStyle == style}
-              onclick=() => $helpers.onStyleClick(type, style)
-            )= $helpers.formattedChartName(type, style)
+              class=[chartType, plotStyle]
+              class={selected: selectedPlotStyle == plotStyle}
+              onclick=() => $helpers.onStyleClick(chartType, plotStyle)
+            )= $helpers.formattedChartName(chartType, plotStyle)

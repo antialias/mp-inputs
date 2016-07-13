@@ -39,8 +39,9 @@ document.registerElement('chart-toggle', class extends Component {
       template: chartToggleTemplate,
       helpers: {
         chartTypes: () => Object.keys(CHART_OPTIONS),
-        chartTypeStyles: type => Object.keys(CHART_OPTIONS[type]),
         formattedChartName: (type, style) => CHART_OPTIONS[type][style],
+        selectedPlotStyle: type => this.state.chartToggle[type].plotStyle,
+        styleChoicesForChartType: type => Object.keys(CHART_OPTIONS[type]),
         onTypeClick: type => this.app.updateChartType(type),
         onDropdownClick: editingType => this.app.updateChartToggle({editingType}),
         onStyleClick: (chartType, plotStyle) => {
@@ -49,7 +50,6 @@ document.registerElement('chart-toggle', class extends Component {
           this.app.updateChartToggle(chartToggle);
           this.app.updateReport({chartType, plotStyle});
         },
-        plotStyle: type => this.state.chartToggle[type].plotStyle,
       },
     };
   }
