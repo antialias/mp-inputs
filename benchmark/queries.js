@@ -49,6 +49,28 @@ const QUERIES = [
       range: TimeClause.RANGES.MONTH,
     },
   },
+  {
+    name: 'group by 2 high-cardinality numeric properties',
+    project: 3,
+    queries: [
+      {events: ['Viewed report']},
+    ],
+    time: {
+      range: TimeClause.RANGES.HOURS,
+    },
+    groups: [
+      {
+        value: '$screen_height',
+        resourceType: 'event',
+        filterType: 'number',
+      },
+      {
+        value: '$screen_width',
+        resourceType: 'event',
+        filterType: 'number',
+      },
+    ]
+  },
 ];
 for (const query of QUERIES) {
   query.apiSecret = API_SECRETS[query.project];
