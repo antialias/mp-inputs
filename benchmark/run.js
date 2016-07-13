@@ -2,8 +2,8 @@ import Mixpanel from 'mixpanel';
 import fetch from 'node-fetch';
 
 import BuilderSections from '../src/models/builder-sections';
-import { ShowClause, TimeClause } from '../src/models/clause';
-import { ShowSection, TimeSection } from '../src/models/section';
+import { ShowClause, TimeClause, GroupClause } from '../src/models/clause';
+import { ShowSection, TimeSection, GroupSection } from '../src/models/section';
 import { MS_BY_UNIT } from '../src/models/queries/segmentation';
 import SegmentationQuery from '../src/models/queries/segmentation';
 
@@ -26,7 +26,7 @@ const mixpanel = Mixpanel.init('2fd54f3085a7b7d70da94096fc415078');
 function buildIRBQuery(queryParams) {
   debugLog('Building query for params:', queryParams);
   const irbQuery = new SegmentationQuery([]);
-  irbQuery.query = irbQuery.buildQuery({
+  const state = {
     report: {
       chartType: 'line',
       sections: new BuilderSections({
@@ -39,7 +39,12 @@ function buildIRBQuery(queryParams) {
         time: new TimeSection(new TimeClause({range: queryParams.time.range})),
       }),
     },
-  });
+  };
+  const groups = queryParams.group;
+  if (groups) {
+    state.report.sections.group = new GroupSection(groups.map(g => new GroupClause(g)));
+  }
+  irbQuery.query = irbQuery.buildQuery(state);
   return irbQuery;
 }
 
