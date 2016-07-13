@@ -84,7 +84,13 @@ function filterToParams(filter) {
   return params;
 }
 
-function filterToArbSelectorString(property, type, operator, value, dateUnit) {
+function filterToArbSelectorString(filter) {
+  let property = filter.value;
+  const type = filter.filterType;
+  const operator = filter.filterOperator;
+  let value = filter.filterValue;
+  const dateUnit = filter.dateUnit;
+
   property = `(properties["${property}"])`;
 
   if (typeof value === 'string') {
@@ -266,7 +272,7 @@ export default class SegmentationQuery extends BaseQuery {
           on: `${action}["${segment.value}"]`,
           where: this.query.filters
             .filter(filter => isFilterValid(filter))
-            .map(filter => filterToArbSelectorString(filter.value, filter.filterType, filter.filterOperator, filter.filterValue, filter.dateUnit))
+            .map(filter => filterToArbSelectorString(filter))
             .join(' and '),
           allow_more_buckets: false,
           allow_fewer_buckets: true,
