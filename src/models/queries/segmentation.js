@@ -246,7 +246,10 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   buildGroups(jqlQuery) {
-    // check and replace all numeric property groupBys.
+    // Check all numeric property groupBys. When a group clause is a numeric property, do an extrema
+    // query asynchronously to get its cardinality information. JQL code will use it to create
+    // special groupby functions to create buckets to avoid doing high-cardinality groupbys. For all
+    // other cases, return (resolve) right away.
     return Promise.all(this.query.segments.map(segment => new Promise(resolve => {
       if (segment.filterType === 'number') {
         let eventName;
@@ -289,6 +292,7 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   buildJQLParams(jqlQuery) {
+    // prepare JQL params for one JQL query.
     return this.buildGroups(jqlQuery).then(groups => {
       // base params
       const scriptParams = {
@@ -344,6 +348,7 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   buildJQLArgs() {
+    // prepare args for each JQL Query.
     this.preprocessNameConflicts();
     return this.query.jqlQueries.map(jqlQuery =>
       this.buildJQLParams(jqlQuery).then(jqlParams =>
