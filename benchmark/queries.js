@@ -50,26 +50,26 @@ const QUERIES = [
     },
   },
   {
-    name: 'group by 2 high-cardinality numeric properties',
-    project: 3,
+    name: 'high-cardinality numeric groupBys',
+    project: 620033,
     queries: [
-      {events: ['Viewed report']},
+      {events: ['Export request finished']},
     ],
     time: {
       range: TimeClause.RANGES.HOURS,
     },
     groups: [
       {
-        value: '$screen_height',
+        value: 'date_range',
         resourceType: 'event',
         filterType: 'number',
       },
       {
-        value: '$screen_width',
+        value: 'decompressed / scped * 100',
         resourceType: 'event',
         filterType: 'number',
       },
-    ]
+    ],
   },
 ];
 for (const query of QUERIES) {
