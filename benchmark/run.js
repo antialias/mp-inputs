@@ -54,7 +54,7 @@ function urlencodeParams(params) {
 }
 
 function timeJQLQueries(queryParams) {
-  return buildIRBQuery(queryParams).buildJQLArgs().map(queryArgs => {
+  return buildIRBQuery(queryParams).buildJQLArgs().map(queryArgs => queryArgs.then(queryArgs => {
     const [url, params, options] = queryArgs;
     return timeQuery(`${API_BASE}/${url}`, {
       headers: {
@@ -65,24 +65,23 @@ function timeJQLQueries(queryParams) {
       method: 'POST',
       body: urlencodeParams(params),
     });
-  });
+  }));
 }
 
 function timeSegQueries(queryParams) {
-  const irbQueryParams = buildIRBQuery(queryParams).buildJQLArgs().map(a => a[1].params);
-  return queryParams.queries.map((query, qi) => {
-    const irbParams = JSON.parse(irbQueryParams[qi]);
+  return buildIRBQuery(queryParams).buildJQLArgs().map(queryArgs => queryArgs.then(queryArgs => {
+    const irbParams = JSON.parse(queryArgs[1].params);
     const params = {
-      event: query.events[0],
+      event: irbParams.events[0],
       from_date: irbParams.dates.from,
       to_date: irbParams.dates.to,
-      type: query.type || 'general',
+      type: irbParams.type,
       unit: irbParams.dates.unit,
     };
     return timeQuery(`${API_BASE}/api/2.0/segmentation?${urlencodeParams(params)}`, {
       headers: {'Authorization': authHeader(queryParams)},
     });
-  });
+  }));
 }
 
 async function timeQuery(url, params) {
