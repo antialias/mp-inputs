@@ -22,6 +22,7 @@ document.registerElement('bar-chart', class extends Component {
         headers: [],
         rows: [],
         chartMax: 0,
+        chartOptions: null,
         gridLineDistance: 0,
         util,
       },
@@ -33,6 +34,7 @@ document.registerElement('bar-chart', class extends Component {
 
   attributeChangedCallback() {
     let {headers, series} = this.getJSONAttribute('data');
+    const chartOptions = JSON.parse(this.getAttribute('chartOptions'));
     const sortConfig = this.getJSONAttribute('sorting');
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
@@ -44,10 +46,11 @@ document.registerElement('bar-chart', class extends Component {
     const gridLineDistance = getTickDistance(chartMax);
 
     this.update({
+      chartMax,
+      chartOptions,
+      gridLineDistance,
       headers,
       rows,
-      chartMax,
-      gridLineDistance,
     });
   }
 
