@@ -35,7 +35,7 @@
         padding 0
         white-space nowrap
 
-        &:hover
+        &:hover, &.selected
           color medium-gray
 
         &.dropdown
@@ -50,6 +50,9 @@
             height 10px
             display inline-block
             mask url(../../../../assets/chart-controls/caret-dropdown.svg) no-repeat center
+
+          &:hover:before
+            background medium-gray
 
         &.label
           padding 0 10px

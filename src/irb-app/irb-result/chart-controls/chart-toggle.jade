@@ -4,11 +4,11 @@ ul.chart-toggle
     - const selectedPlotStyle = $helpers.selectedPlotStyle(chartType)
     - const styleChoicesForChartType = $helpers.styleChoicesForChartType(chartType)
     li.chart-type(class=chartType class={
-      selected: chartType === report.chartType,
       editing: isEditingCurrentStyle
     })
       button.label.chart-icon(
         class=[chartType, selectedPlotStyle]
+        class={selected: chartType == report.chartType}
         onclick=() => $helpers.onTypeClick(chartType)
       )= $helpers.formattedChartName(chartType, selectedPlotStyle)
       if styleChoicesForChartType.length > 1
