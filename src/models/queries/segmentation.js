@@ -378,6 +378,10 @@ export default class SegmentationQuery extends BaseQuery {
     let headers = this.query.segments.map(segment => segment.value);
     let series = {};
 
+    // create an object of zero values for all possible dates
+    let baseDateResults = {};
+    results.forEach(r => baseDateResults[r.key[r.key.length-1]] = 0);
+
     if (results) {
       results = results.filter(result => !result.key.includes('NaN - NaN'));
       series = results.reduce((seriesObj, item) => {
@@ -386,7 +390,13 @@ export default class SegmentationQuery extends BaseQuery {
         let obj = seriesObj;
         for (let si = 0; si < item.key.length - 1; si++) {
           let key = item.key[si];
-          obj[key] = obj[key] || {};
+          // If it is the second to last key it must be the object holding the date values.
+          // If it does not yet exist fill this with the zeroed-out base dates.
+          if (si === item.key.length - 2 && !obj[key]) {
+            obj[key] = extend(baseDateResults);
+          } else {
+            obj[key] = obj[key] || {};
+          }
           obj = obj[key];
         }
         obj[item.key[item.key.length - 1]] = item.value;
