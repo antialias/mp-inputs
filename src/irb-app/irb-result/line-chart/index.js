@@ -55,11 +55,10 @@ document.registerElement('mp-line-chart', class extends WebComponent {
     this._chart_initialized = true;
   }
 
-  get data() {
-    return JSON.parse(this._data_string);
-  }
+  attributeChangedCallback() {
+    const data = this.getAttribute('data');
+    const options = this.getAttribute('chartOptions');
 
-  set data(data) {
     if (this._data_string !== data) {
       this._data_string = data;
 
@@ -67,14 +66,8 @@ document.registerElement('mp-line-chart', class extends WebComponent {
         this.$el.MPChart('setData', JSON.parse(data));
       }
     }
-  }
 
-  get chartOptions() {
-    return JSON.parse(this._chartOptions);
-  }
-
-  set chartOptions(options) {
-    if (!util.isEqual(this._chartOptions, options)) {
+    if (!util.isEqual(this.chartOptions, JSON.parse(options))) {
       this._chartOptions = options;
 
       if (this._chart_initialized) {
@@ -83,6 +76,14 @@ document.registerElement('mp-line-chart', class extends WebComponent {
         this.renderMPChart();
       }
     }
+  }
+
+  get data() {
+    return JSON.parse(this._data_string || '{}');
+  }
+
+  get chartOptions() {
+    return JSON.parse(this._chartOptions || '{}');
   }
 
   createHighchartOptions() {
