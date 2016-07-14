@@ -6,7 +6,7 @@ import 'webcomponents.js/webcomponents-lite';
 
 import Framesg from 'framesg';
 
-import { mixpanel } from './tracking';
+import { mixpanel, rollbar } from './tracking';
 
 import './irb-app';
 
@@ -35,6 +35,14 @@ const initIRB = () => new Promise(resolve => {
         mixpanel.people.set({
           '$email': parentData.user_email,
           '$name': parentData.user_name,
+        });
+        rollbar.configure({
+          payload: {
+            person: {
+              id: parentData.user_id,
+              email: parentData.user_email,
+            },
+          },
         });
 
         IRB.setParentFrame(parentFrame, parentData);
