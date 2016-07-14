@@ -12,7 +12,7 @@ export default class ExtremaQuery extends BaseQuery {
         from_date: this.query.from.toISOString().split('T')[0],
         to_date: this.query.to.toISOString().split('T')[0],
         interval: Math.min(36, this.query.interval),
-        cardinality_threshold: 50
+        cardinality_threshold: 50,
       });
     if (this.query.where) {
       params['selector'] = this.query.where;
