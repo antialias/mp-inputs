@@ -77,10 +77,10 @@ function timeSegQueries(queryParams) {
   return buildIRBQuery(queryParams).buildJQLArgs().map(queryArgs => queryArgs.then(queryArgs => {
     const irbParams = JSON.parse(queryArgs[1].params);
     const params = {
-      event: irbParams.events[0],
+      event: irbParams.events[0].event,
       from_date: irbParams.dates.from,
       to_date: irbParams.dates.to,
-      type: irbParams.type,
+      type: irbParams.type == 'total' ? 'general' : irbParams.type,
       unit: irbParams.dates.unit,
     };
     return timeQuery(`${API_BASE}/api/2.0/segmentation?${urlencodeParams(params)}`, {
