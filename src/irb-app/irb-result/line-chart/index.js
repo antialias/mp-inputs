@@ -107,11 +107,11 @@ document.registerElement('mp-line-chart', class extends WebComponent {
         borderRadius: 3,
         crosshairs: [true],
         formatter: function() {
-          const tooltip = [`<span class="title"> ${this.series.name}</span><span class="results"><span class="count">${this.y}</span>`];
+          const tooltip = [`<div class="title"> ${this.series.name}</div><div class="results"><div class="count">${this.y}</div>`];
           if (this.percentage) {
-            tooltip.push(` <span class="percent">${Math.round(this.percentage * 10)/10}%</span>`);
+            tooltip.push(`<div class="percent">${Math.round(this.percentage * 10)/10}%</div>`);
           }
-          tooltip.push('</span>');
+          tooltip.push('</div>');
           return tooltip.join('');
         },
       },
