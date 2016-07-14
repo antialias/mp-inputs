@@ -159,7 +159,6 @@ function main() {
         jqlGroup = getPropertyPath(group);
       }
       return jqlGroup;
-
     }));
   }
 
