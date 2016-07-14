@@ -91,6 +91,16 @@ document.registerElement('mp-line-chart', class extends WebComponent {
       chart: {
         type: 'line',
       },
+      plotOptions: {
+        series: {
+          fillOpacity: 0.7,
+          marker: {
+            enabled: false,
+            symbol: 'url()',
+          },
+          stacking: null,
+        },
+      },
       tooltip: {
         borderColor: '#c4c8d6',
         borderRadius: 3,
@@ -104,19 +114,11 @@ document.registerElement('mp-line-chart', class extends WebComponent {
           return tooltip.join('');
         },
       },
-      plotOptions: {
-        series: {
-          stacking: null,
-          marker: {
-            enabled: false,
-            symbol: 'url()',
-          },
-        },
-      },
     };
 
     if (chartOptions.plotStyle == 'stacked') {
       highchartsOptions.plotOptions.series.stacking = 'normal';
+      highchartsOptions.plotOptions.series.lineWidth = 0;
       highchartsOptions.chart.type = 'area';
     }
     return { highchartsOptions };
