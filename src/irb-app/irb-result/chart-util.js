@@ -54,6 +54,13 @@ export function nestedObjectMax(obj) {
   return Math.max(0, Math.max(...Object.keys(obj).map(key => nestedObjectMax(obj[key]))));
 }
 
+export function stackedNestedObjectMax(obj) {
+  if (Object.values(obj).some(k => typeof k == 'number')) {
+    return Object.values(obj).reduce((a, b) => a + b, 0);
+  }
+  return Math.max(0, Math.max(...Object.keys(obj).map(key => stackedNestedObjectMax(obj[key]))));
+}
+
 /* Collects unique keys at a given level in a nested object:
  * Example (depth=1):
  *   {

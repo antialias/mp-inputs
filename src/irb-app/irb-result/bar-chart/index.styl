@@ -68,8 +68,12 @@
         border-right none
         text-align left
 
+      ul.stacked
+        display flex
+
       li
         white-space nowrap
+        transition width .5s
 
         &:not(:last-child)
           margin-bottom 7px
@@ -125,6 +129,4 @@
             z-index 1
 
           &.narrow .label
-            color medium-gray
-            margin-right -108px
-            text-align left
+            display none

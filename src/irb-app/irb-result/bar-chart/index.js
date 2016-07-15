@@ -9,6 +9,7 @@ import {
   nestedObjectMax,
   nestedObjectSum,
   nestedObjectToBarChartData,
+  stackedNestedObjectMax,
 } from '../chart-util';
 
 import template from './index.jade';
@@ -34,15 +35,21 @@ document.registerElement('bar-chart', class extends Component {
 
   attributeChangedCallback() {
     let {headers, series} = this.getJSONAttribute('data');
-    const chartOptions = JSON.parse(this.getAttribute('chartOptions'));
-    const sortConfig = this.getJSONAttribute('sorting');
+    const chartOptions = this.getJSONAttribute('chartOptions') || {};
+    const sortConfig = this.getJSONAttribute('sorting') ;
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
     }
 
+    if (chartOptions && chartOptions.plotStyle == 'stacked') {
+      headers.splice(-1, 1);
+    }
+
     series = nestedObjectSum(series);
     const rows = nestedObjectToBarChartData(series, sortConfig);
-    const chartMax = nestedObjectMax(series);
+
+    const chartMax = chartOptions.plotStyle == 'stacked' ? stackedNestedObjectMax(series) : nestedObjectMax(series);
+
     const gridLineDistance = getTickDistance(chartMax);
 
     this.update({
