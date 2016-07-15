@@ -46,48 +46,19 @@ document.registerElement('line-chart', class extends Component {
 });
 
 document.registerElement('mp-line-chart', class extends WebComponent {
-  createdCallback() {
-    this.$el = $('<div>').appendTo(this);
-  }
-
   attachedCallback() {
     this.renderMPChart();
-    this._chart_initialized = true;
   }
 
   attributeChangedCallback() {
-    const data = this.getAttribute('data');
-    const options = this.getAttribute('chartOptions');
+    this._data = JSON.parse(this.getAttribute('data') || '{}');
+    this._chartOptions = JSON.parse(this.getAttribute('chartOptions') || '{}');
 
-    if (this._data_string !== data) {
-      this._data_string = data;
-
-      if (this._chart_initialized) {
-        this.$el.MPChart('setData', JSON.parse(data));
-      }
-    }
-
-    if (!util.isEqual(this.chartOptions, JSON.parse(options))) {
-      this._chartOptions = options;
-
-      if (this._chart_initialized) {
-        this.$el.remove();
-        this.$el = $('<div>').appendTo(this);
-        this.renderMPChart();
-      }
-    }
+    this.renderMPChart();
   }
 
-  get data() {
-    return JSON.parse(this._data_string || '{}');
-  }
-
-  get chartOptions() {
-    return JSON.parse(this._chartOptions || '{}');
-  }
-
-  createHighchartOptions() {
-    const chartOptions = this.chartOptions || {};
+  createChartOptions() {
+    const chartOptions = this._chartOptions || {};
     const highchartsOptions = {
       chart: {
         type: 'line',
@@ -109,7 +80,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
         formatter: function() {
           const tooltip = [`<div class="title"> ${this.series.name}</div><div class="results"><div class="count">${this.y}</div>`];
           if (this.percentage) {
-            tooltip.push(`<div class="percent">${Math.round(this.percentage * 10)/10}%</div>`);
+            tooltip.push(`<div class="percent">${Math.round(this.percentage * 10) / 10}%</div>`);
           }
           tooltip.push('</div>');
           return tooltip.join('');
@@ -122,12 +93,17 @@ document.registerElement('mp-line-chart', class extends WebComponent {
       highchartsOptions.plotOptions.series.lineWidth = 0;
       highchartsOptions.chart.type = 'area';
     }
-    return { highchartsOptions };
+    return { highchartsOptions, chartType: 'line' };
   }
 
   renderMPChart() {
+    if (this.$el) {
+      this.$el.remove();
+    }
+
+    this.$el = $('<div>').appendTo(this);
     this.$el
-      .MPChart(util.extend(this.createHighchartOptions(), {chartType: 'line'}))
-      .MPChart('setData', JSON.parse(this._data_string || '{}'));
+      .MPChart(this.createChartOptions())
+      .MPChart('setData', this._data);
   }
 });
