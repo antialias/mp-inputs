@@ -92,10 +92,13 @@ function timeSegQueries(queryParams) {
 async function timeQuery(url, params) {
   const start = new Date();
   try {
-    const responseText = await (await fetch(url, params)).text();
+    const responseData = await (await fetch(url, params)).json();
 
     process.stdout.write('.');
-    debugLog(responseText);
+    debugLog(responseData);
+    if (responseData.error) {
+      console.error(responseData);
+    }
   } catch(e) {
     console.error(e);
   }
