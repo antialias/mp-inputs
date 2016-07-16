@@ -17,6 +17,7 @@ export default class Report {
       'plotStyle',
       'sections',
       'series',
+      'sorting',
     ]));
 
     if (attrs.modified) {
@@ -36,6 +37,7 @@ export default class Report {
       'chartType',
       'plotStyle',
       'series',
+      'sorting',
       'title',
     ]));
     if (this.id) {

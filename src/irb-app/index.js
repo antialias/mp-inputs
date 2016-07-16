@@ -87,6 +87,18 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           isEditing: false,
           search: null,
         },
+        sorting: {
+          bar: {
+            sortType: 'column',
+            sortAttrs: [
+              {
+                order: 'desc',
+                sortBy: 'value',
+              },
+            ],
+          },
+          table: {},
+        },
         title: 'Untitled report',
       }),
 
@@ -189,7 +201,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   // Serialization helpers
 
   get persistenceKey() {
-    return 'irb-935fef2';
+    return 'irb-7fc12a6e';
   }
 
   toSerializationAttrs() {
