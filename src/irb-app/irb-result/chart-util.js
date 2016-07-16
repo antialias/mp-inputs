@@ -94,6 +94,10 @@ export function nestedObjectPaths(obj, depth=0) {
   return paths;
 }
 
+export function nestedObjectToNestedArray(obj) {
+  return Object.keys(obj).map(k => ({label: k, value: obj[k]}));
+}
+
 /* Format rows for nested table, calculating necessary rowspans
  * Example:
  *   for each row
