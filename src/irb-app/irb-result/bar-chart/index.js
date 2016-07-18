@@ -45,9 +45,13 @@ document.registerElement('bar-chart', class extends Component {
 
     if (chartOptions && chartOptions.plotStyle == 'stacked') {
       headers.pop();
-      if (!headers.length && showValueNames.length == 1) {
+      if (!headers.length) {
         headers.push('$events');
-        series = {[showValueNames[0]]: series};
+        if (showValueNames.length == 1) {
+          series = {[showValueNames[0]]: series};
+        } else {
+          series = {Events: series};
+        }
       }
     }
 
@@ -77,6 +81,8 @@ document.registerElement('bar-chart', class extends Component {
 document.registerElement('irb-bar-chart-header', class extends WebComponent {
   createdCallback() {
     this.$el = $('<div>').addClass('bar-chart-container').appendTo(this);
+    this.mathTypes = [];
+    this.showValueNames = [];
   }
 
   attributeChangedCallback() {
@@ -100,7 +106,8 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
     if (this.mathTypes && this.mathTypes.length == 1) {
       chartLabel.unshift(this.mathTypes[0]);
     }
-    if (this.showValueNames && this.showValueNames.length == 1) {
+
+    if (this.headers.length == 1 && this.headers[0] !== '$event' && this.showValueNames.length == 1) {
       chartLabel.push(this.showValueNames[0]);
     }
 
