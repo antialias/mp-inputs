@@ -1,6 +1,6 @@
 // Secrets are not checked in. API_SECRETS maps project IDs to api secrets:
 // { projectID: secret, projectID: secret, ... }
-import API_SECRETS from './project-secrets';
+import API_SECRETS from '/etc/secrets/irb/project-secrets';
 import { TimeClause } from '../src/models/clause';
 
 const QUERIES = [
