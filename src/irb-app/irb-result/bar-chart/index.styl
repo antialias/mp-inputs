@@ -31,7 +31,9 @@
 
           .text
             align-items center
-            padding 0px 10px
+
+        .bar-chart-header .text
+          padding-left 15px
 
         .bar-chart-axis
             justify-content flex-end
@@ -42,8 +44,9 @@
 
             .max-value
               color medium-gray
+              padding-right 15px
               text-align right
-              width 25%
+              width calc(25% - 15px)
 
     thead, tbody
       display block
