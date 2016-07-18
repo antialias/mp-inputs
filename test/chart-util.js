@@ -8,13 +8,13 @@ describe('nestedObjectToNestedArray', function() {
     wombat: 8,
   };
 
-  const sortConfig = {
+  const defaultSortConfig = {
     sortBy: 'value',
     sortOrder: 'desc',
   };
 
   it('nests arrays to the same depth as the object', function() {
-    let arr = nestedObjectToNestedArray(simpleObj, sortConfig);
+    let arr = nestedObjectToNestedArray(simpleObj, defaultSortConfig);
     expect(arr).to.be.an('array');
     expect(arr).to.have.length(2);
     expect(arr[1]).to.be.an('object');
@@ -23,8 +23,17 @@ describe('nestedObjectToNestedArray', function() {
   });
 
   it('supports sorting by the final value descending', function() {
-    let arr = nestedObjectToNestedArray(simpleObj, sortConfig);
+    let arr = nestedObjectToNestedArray(simpleObj, defaultSortConfig);
     expect(arr[0]).to.eql({label: 'wombat', value: 8});
     expect(arr[1]).to.eql({label: 'llama', value: 5});
+  });
+
+  it('supports sorting by the final value ascending', function() {
+    let arr = nestedObjectToNestedArray(simpleObj, {
+      sortBy: 'value',
+      sortOrder: 'asc',
+    });
+    expect(arr[0]).to.eql({label: 'llama', value: 5});
+    expect(arr[1]).to.eql({label: 'wombat', value: 8});
   });
 });
