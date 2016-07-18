@@ -22,17 +22,6 @@ export function countRun(row, start) {
   return i - start;
 }
 
-/* Get the ideal "distance" between ticks for a given range
- * results in a value like 5, 10, 25, 50, 100, 250, 500, etc.
- */
-export function getTickDistance(max, min=0, targetNumTicks=10) {
-  let distance = 5;
-  while ((max - min) / distance > targetNumTicks) {
-    distance *= Number.isInteger(Math.log10(distance)) ? 2.5 : 2;
-  }
-  return distance;
-}
-
 /* Sum the leaf values of a nested object,
  * constructing a new object with depth 1 less than the original
  */

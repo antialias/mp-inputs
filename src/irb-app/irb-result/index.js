@@ -17,6 +17,7 @@ document.registerElement('irb-result', class extends Component {
     return {
       helpers: {
         getChartOptions: () => pick(this.state.report, ['plotStyle']),
+        getUniqueShowMathTypes: () => new Set(this.state.report.sections.show.clauses.map(clause => clause.math)),
         toastClosed: () => this.update({newCachedData: false}),
         toastSelected: () => this.app.query(),
         filterResults: (result, depth=2) => ({

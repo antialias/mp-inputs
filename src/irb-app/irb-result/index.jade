@@ -4,8 +4,9 @@
     case report.chartType
       when 'bar'
         bar-chart(attributes={
-          chartOptions: JSON.stringify($helpers.getChartOptions()),
           data: JSON.stringify($helpers.filterResults(result)),
+          chartOptions: JSON.stringify($helpers.getChartOptions()),
+          mathTypes: JSON.stringify($helpers.getUniqueShowMathTypes()),
           sorting: JSON.stringify(report.sorting.bar),
         })
       when 'line'

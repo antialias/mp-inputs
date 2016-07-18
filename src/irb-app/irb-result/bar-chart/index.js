@@ -5,7 +5,6 @@ import WebComponent from 'webcomponent';
 
 import * as util from '../../../util';
 import {
-  getTickDistance,
   nestedObjectMax,
   nestedObjectSum,
   nestedObjectToBarChartData,
@@ -24,7 +23,7 @@ document.registerElement('bar-chart', class extends Component {
         rows: [],
         chartMax: 0,
         chartOptions: null,
-        gridLineDistance: 0,
+        mathTypes: [],
         util,
       },
       helpers: {
@@ -36,6 +35,7 @@ document.registerElement('bar-chart', class extends Component {
   attributeChangedCallback() {
     let {headers, series} = this.getJSONAttribute('data');
     const chartOptions = this.getJSONAttribute('chartOptions') || {};
+    const mathTypes = JSON.parse(this.getAttribute('mathTypes')) || [];
     const sortConfig = this.getJSONAttribute('sorting') ;
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
@@ -50,13 +50,11 @@ document.registerElement('bar-chart', class extends Component {
 
     const chartMax = chartOptions.plotStyle == 'stacked' ? stackedNestedObjectMax(series) : nestedObjectMax(series);
 
-    const gridLineDistance = getTickDistance(chartMax);
-
     this.update({
       chartMax,
       chartOptions,
-      gridLineDistance,
       headers,
+      mathTypes,
       rows,
     });
   }
@@ -71,12 +69,16 @@ document.registerElement('bar-chart', class extends Component {
 
 document.registerElement('irb-bar-chart-header', class extends WebComponent {
   createdCallback() {
-    this.$el = $('<div>').appendTo(this);
+    this.$el = $('<div>').addClass('bar-chart-container').appendTo(this);
+  }
+
+  attributeChangedCallback() {
+    this.mathTypes = JSON.parse(this.getAttribute('mathTypes') || '[]');
+    this.render();
   }
 
   render() {
     this.$el.empty();
-
     let $headers = $(this.headers.map(header =>
       $('<div>')
         .addClass('bar-chart-header')
@@ -86,26 +88,16 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
     ));
     this.$el.append($headers);
 
-    // get an array of tick values, something like [25, 50, 75, 100, ...]
-    let tick = 0;
-    let ticks = [];
-    let tickDistance = getTickDistance(this._chartMax);
-    if (this._chartMax) {
-      do {
-        ticks.push(tick);
-        tick += tickDistance;
-      } while (tick < this._chartMax);
+    let chartLabel = ['number of'];
+    if (this.mathTypes && this.mathTypes.length == 1) {
+      chartLabel.unshift(this.mathTypes[0]);
     }
+    const $axisTitle = $('<div>').addClass('axis-title text').html(util.capitalize(chartLabel.join(' ')));
 
-    let $ticks = $(ticks.map(tick =>
-      $('<div>')
-        .addClass('bar-chart-tick')
-        .width(`${tickDistance / this._chartMax * 100}%`)
-        .append($('<div>').addClass('text').html(util.abbreviateNumber(tick)))
-        .get(0)
-    ));
+    let $axis = $('<div class="bar-chart-axis"></div>')
+      .append($axisTitle)
+      .append($('<div>').addClass('max-value text').html(util.commaizeNumber(this.chartMax)));
 
-    let $axis = $('<div class="bar-chart-axis"></div>').append($ticks);
     this.$el.append($axis);
 
     window.requestAnimationFrame(() => { // defer so we can inspect the fully-rendered table

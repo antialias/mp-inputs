@@ -6,7 +6,8 @@
     width 100%
 
     thead
-      box-shadow 0 0 8px medium-gray
+      border-top 1px solid lighten(background-gray, 25%)
+      box-shadow 0 0 6px light-gray
       position relative
       z-index 1
 
@@ -15,17 +16,34 @@
         padding 0
 
       irb-bar-chart-header
-        .bar-chart-header, .bar-chart-axis, .bar-chart-tick
-          display inline-block
+        .bar-chart-container
+          display flex
+
+          & > div
+            border-right 1px solid lighten(background-gray, 50%)
+
+          &:last-child
+            border-right 0 none
+
+        .bar-chart-header, .bar-chart-axis
+          display flex
+          padding 10px 0
 
           .text
-            padding 8px
+            align-items center
+            padding 0px 10px
 
-        .bar-chart-tick .text
-            margin-left -50px
-            padding 8px 0
-            text-align center
-            width 100px
+        .bar-chart-axis
+            justify-content flex-end
+
+            .axis-title
+              text-align center
+              width 50%
+
+            .max-value
+              color medium-gray
+              text-align right
+              width 25%
 
     thead, tbody
       display block
@@ -92,17 +110,21 @@
         position relative
 
         .chart-grid
+          display flex
           height 100%
           left 0
+          opacity .3
           position absolute
           top 0
           width 100%
 
-          .chart-line
-            border-right 2px solid lighten(background-gray, 75%)
-            display inline-block
+          .grid-line
+            border-right 2px solid background-gray
+            flex-grow 1
             height 100%
-            margin-left -2px
+
+            &:last-child
+              border 0 none
 
         li
           height 20px
