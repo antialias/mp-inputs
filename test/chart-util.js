@@ -36,4 +36,32 @@ describe('nestedObjectToNestedArray', function() {
     expect(arr[0]).to.eql({label: 'llama', value: 5});
     expect(arr[1]).to.eql({label: 'wombat', value: 8});
   });
+
+  it('supports sorting by column value descending', function() {
+    let arr = nestedObjectToNestedArray(simpleObj, {
+      sortBy: 'column',
+      colSortAttrs: [
+        {
+          sortBy: 'value',
+          sortOrder: 'desc',
+        },
+      ],
+    });
+    expect(arr[0]).to.eql({label: 'wombat', value: 8});
+    expect(arr[1]).to.eql({label: 'llama', value: 5});
+  });
+
+  it('supports sorting by column value ascending', function() {
+    let arr = nestedObjectToNestedArray(simpleObj, {
+      sortBy: 'column',
+      colSortAttrs: [
+        {
+          sortBy: 'value',
+          sortOrder: 'asc',
+        },
+      ],
+    });
+    expect(arr[0]).to.eql({label: 'llama', value: 5});
+    expect(arr[1]).to.eql({label: 'wombat', value: 8});
+  });
 });

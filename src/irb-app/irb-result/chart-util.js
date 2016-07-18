@@ -102,7 +102,11 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
   let arr = Object.keys(obj).map(k => ({label: k, value: obj[k]}));
   switch(sortConfig.sortBy) {
     case 'column':
-      throw Error('not implemented yet');
+      for (let ci = 0; ci < sortConfig.colSortAttrs.length; ci++) {
+        const colSortAttrs = sortConfig.colSortAttrs[ci];
+        arr = arr.sort(NESTED_ARRAY_SORT_FUNCS[colSortAttrs.sortOrder]);
+      }
+      break;
     case 'value':
       arr = arr.sort(NESTED_ARRAY_SORT_FUNCS[sortConfig.sortOrder]);
       break;
