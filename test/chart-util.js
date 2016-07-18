@@ -104,7 +104,7 @@ describe('nestedObjectToNestedArray', function() {
       },
       Canada: {
         llama: 13,
-        aardvark: 7,
+        aardvark: 6,
       },
       Mexico: {
         llama: 35,
@@ -171,7 +171,7 @@ describe('nestedObjectToNestedArray', function() {
           label: 'Canada',
           value: [
             {label: 'llama',    value: 13},
-            {label: 'aardvark', value: 7},
+            {label: 'aardvark', value: 6},
           ],
         },
       ]);
@@ -196,7 +196,7 @@ describe('nestedObjectToNestedArray', function() {
           label: 'Canada',
           value: [
             {label: 'llama',    value: 13},
-            {label: 'aardvark', value: 7},
+            {label: 'aardvark', value: 6},
           ],
         },
         {
@@ -213,6 +213,21 @@ describe('nestedObjectToNestedArray', function() {
             {label: 'llama',    value: 5},
           ],
         },
+      ]);
+    });
+
+    it('supports sorting by final value', function() {
+      const arr = nestedObjectToNestedArray(d2Obj, {
+        sortBy: 'value',
+        sortOrder: 'desc',
+      });
+      expect(arr).to.eql([
+        {label: 'Mexico', value: [{label: 'llama',    value: 35}]},
+        {label: 'Canada', value: [{label: 'llama',    value: 13}]},
+        {label: 'US',     value: [{label: 'aardvark', value: 8 }]},
+        {label: 'Mexico', value: [{label: 'aardvark', value: 7 }]},
+        {label: 'Canada', value: [{label: 'aardvark', value: 6 }]},
+        {label: 'US',     value: [{label: 'llama',    value: 5 }]},
       ]);
     });
   });
