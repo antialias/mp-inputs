@@ -137,5 +137,83 @@ describe('nestedObjectToNestedArray', function() {
       expect(arr[1].value[1].label).to.be.a('string');
       expect(arr[1].value[1].value).to.be.a('number');
     });
+
+    it('supports sorting on multiple columns', function() {
+      const arr = nestedObjectToNestedArray(d2Obj, {
+        sortBy: 'column',
+        colSortAttrs: [
+          {
+            sortBy: 'label',
+            sortOrder: 'desc',
+          },
+          {
+            sortBy: 'label',
+            sortOrder: 'desc',
+          },
+        ],
+      });
+      expect(arr).to.eql([
+        {
+          label: 'US',
+          value: [
+            {label: 'llama',    value: 5},
+            {label: 'aardvark', value: 8},
+          ],
+        },
+        {
+          label: 'Mexico',
+          value: [
+            {label: 'llama',    value: 35},
+            {label: 'aardvark', value: 7},
+          ],
+        },
+        {
+          label: 'Canada',
+          value: [
+            {label: 'llama',    value: 13},
+            {label: 'aardvark', value: 7},
+          ],
+        },
+      ]);
+    });
+
+    it('supports different sorts for different columns', function() {
+      const arr = nestedObjectToNestedArray(d2Obj, {
+        sortBy: 'column',
+        colSortAttrs: [
+          {
+            sortBy: 'label',
+            sortOrder: 'asc',
+          },
+          {
+            sortBy: 'value',
+            sortOrder: 'desc',
+          },
+        ],
+      });
+      expect(arr).to.eql([
+        {
+          label: 'Canada',
+          value: [
+            {label: 'llama',    value: 13},
+            {label: 'aardvark', value: 7},
+          ],
+        },
+        {
+          label: 'Mexico',
+          value: [
+            {label: 'llama',    value: 35},
+            {label: 'aardvark', value: 7},
+          ],
+        },
+        {
+          label: 'US',
+          value: [
+            {label: 'aardvark', value: 8},
+            {label: 'llama',    value: 5},
+          ],
+        },
+      ]);
+    });
   });
 });
