@@ -108,7 +108,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
 
     let $axis = $('<div class="bar-chart-axis"></div>')
       .append($axisTitle)
-      .append($('<div>').addClass('max-value text').html(util.commaizeNumber(this.chartMax)));
+      .append($('<div>').addClass('max-value text').html(util.abbreviateNumber(this.chartMax)));
 
     this.$el.append($axis);
 

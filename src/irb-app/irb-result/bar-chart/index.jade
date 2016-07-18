@@ -47,4 +47,4 @@
                         style={width: `${value / chartMax * 100}%`}
                       )
                         .background(style={opacity: 1 - (0.6 * k / cell.length)})
-                        .label= util.commaizeNumber(value)
+                        .label= util.abbreviateNumber(value)
