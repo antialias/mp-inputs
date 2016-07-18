@@ -94,8 +94,22 @@ export function nestedObjectPaths(obj, depth=0) {
   return paths;
 }
 
-export function nestedObjectToNestedArray(obj) {
-  return Object.keys(obj).map(k => ({label: k, value: obj[k]}));
+const NESTED_ARRAY_SORT_FUNCS = {
+  asc:  (a, b) => a.value > b.value,
+  desc: (a, b) => a.value < b.value,
+};
+export function nestedObjectToNestedArray(obj, sortConfig) {
+  let arr = Object.keys(obj).map(k => ({label: k, value: obj[k]}));
+  switch(sortConfig.sortBy) {
+    case 'column':
+      throw Error('not implemented yet');
+    case 'value':
+      arr = arr.sort(NESTED_ARRAY_SORT_FUNCS[sortConfig.sortOrder]);
+      break;
+    default:
+      throw Error(`Unknown sortBy type: ${sortConfig.sortBy}`);
+  }
+  return arr;
 }
 
 /* Format rows for nested table, calculating necessary rowspans
