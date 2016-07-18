@@ -1,7 +1,7 @@
 import { Component } from 'panel';
 import { filterObjectAtDepth } from './chart-util';
 
-import { pick } from '../../util';
+import { pick, renameEvent } from '../../util';
 
 import './bar-chart';
 import './line-chart';
@@ -17,6 +17,7 @@ document.registerElement('irb-result', class extends Component {
     return {
       helpers: {
         getChartOptions: () => pick(this.state.report, ['plotStyle']),
+        getShowValueNames: () => this.state.report.sections.show.clauses.map(clause => renameEvent(clause.value.name)),
         getUniqueShowMathTypes: () => new Set(this.state.report.sections.show.clauses.map(clause => clause.math)),
         toastClosed: () => this.update({newCachedData: false}),
         toastSelected: () => this.app.query(),

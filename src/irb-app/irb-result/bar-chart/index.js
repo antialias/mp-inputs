@@ -24,6 +24,7 @@ document.registerElement('bar-chart', class extends Component {
         chartMax: 0,
         chartOptions: null,
         mathTypes: [],
+        showValueNames: [],
         util,
       },
       helpers: {
@@ -36,13 +37,18 @@ document.registerElement('bar-chart', class extends Component {
     let {headers, series} = this.getJSONAttribute('data');
     const chartOptions = this.getJSONAttribute('chartOptions') || {};
     const mathTypes = JSON.parse(this.getAttribute('mathTypes')) || [];
+    const showValueNames = JSON.parse(this.getAttribute('showValueNames')) || [];
     const sortConfig = this.getJSONAttribute('sorting') ;
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
     }
 
     if (chartOptions && chartOptions.plotStyle == 'stacked') {
-      headers.splice(-1, 1);
+      headers.pop();
+      if (!headers.length && showValueNames.length == 1) {
+        headers.push('$events');
+        series = {[showValueNames[0]]: series};
+      }
     }
 
     series = nestedObjectSum(series);
@@ -55,6 +61,7 @@ document.registerElement('bar-chart', class extends Component {
       chartOptions,
       headers,
       mathTypes,
+      showValueNames,
       rows,
     });
   }
@@ -74,6 +81,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
 
   attributeChangedCallback() {
     this.mathTypes = JSON.parse(this.getAttribute('mathTypes') || '[]');
+    this.showValueNames = JSON.parse(this.getAttribute('showValueNames') || '[]');
     this.render();
   }
 
@@ -92,6 +100,10 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
     if (this.mathTypes && this.mathTypes.length == 1) {
       chartLabel.unshift(this.mathTypes[0]);
     }
+    if (this.showValueNames && this.showValueNames.length == 1) {
+      chartLabel.push(this.showValueNames[0]);
+    }
+
     const $axisTitle = $('<div>').addClass('axis-title text').html(util.capitalize(chartLabel.join(' ')));
 
     let $axis = $('<div class="bar-chart-axis"></div>')
