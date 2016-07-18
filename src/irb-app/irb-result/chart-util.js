@@ -95,8 +95,14 @@ export function nestedObjectPaths(obj, depth=0) {
 }
 
 const NESTED_ARRAY_SORT_FUNCS = {
-  asc:  (a, b) => a.value > b.value,
-  desc: (a, b) => a.value < b.value,
+  label: {
+    asc:  (a, b) => a.label > b.label,
+    desc: (a, b) => a.label < b.label,
+  },
+  value: {
+    asc:  (a, b) => a.value > b.value,
+    desc: (a, b) => a.value < b.value,
+  },
 };
 export function nestedObjectToNestedArray(obj, sortConfig) {
   let arr = Object.keys(obj).map(k => ({label: k, value: obj[k]}));
@@ -104,11 +110,11 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
     case 'column':
       for (let ci = 0; ci < sortConfig.colSortAttrs.length; ci++) {
         const colSortAttrs = sortConfig.colSortAttrs[ci];
-        arr = arr.sort(NESTED_ARRAY_SORT_FUNCS[colSortAttrs.sortOrder]);
+        arr = arr.sort(NESTED_ARRAY_SORT_FUNCS[colSortAttrs.sortBy][colSortAttrs.sortOrder]);
       }
       break;
     case 'value':
-      arr = arr.sort(NESTED_ARRAY_SORT_FUNCS[sortConfig.sortOrder]);
+      arr = arr.sort(NESTED_ARRAY_SORT_FUNCS.value[sortConfig.sortOrder]);
       break;
     default:
       throw Error(`Unknown sortBy type: ${sortConfig.sortBy}`);

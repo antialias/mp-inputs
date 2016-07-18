@@ -5,7 +5,7 @@ import { nestedObjectToNestedArray } from '../src/irb-app/irb-result/chart-util'
 describe('nestedObjectToNestedArray', function() {
   const simpleObj = {
     llama: 5,
-    wombat: 8,
+    aardvark: 8,
   };
 
   const defaultSortConfig = {
@@ -24,7 +24,7 @@ describe('nestedObjectToNestedArray', function() {
 
   it('supports sorting by the final value descending', function() {
     let arr = nestedObjectToNestedArray(simpleObj, defaultSortConfig);
-    expect(arr[0]).to.eql({label: 'wombat', value: 8});
+    expect(arr[0]).to.eql({label: 'aardvark', value: 8});
     expect(arr[1]).to.eql({label: 'llama', value: 5});
   });
 
@@ -34,7 +34,7 @@ describe('nestedObjectToNestedArray', function() {
       sortOrder: 'asc',
     });
     expect(arr[0]).to.eql({label: 'llama', value: 5});
-    expect(arr[1]).to.eql({label: 'wombat', value: 8});
+    expect(arr[1]).to.eql({label: 'aardvark', value: 8});
   });
 
   it('supports sorting by column value descending', function() {
@@ -47,7 +47,7 @@ describe('nestedObjectToNestedArray', function() {
         },
       ],
     });
-    expect(arr[0]).to.eql({label: 'wombat', value: 8});
+    expect(arr[0]).to.eql({label: 'aardvark', value: 8});
     expect(arr[1]).to.eql({label: 'llama', value: 5});
   });
 
@@ -62,6 +62,34 @@ describe('nestedObjectToNestedArray', function() {
       ],
     });
     expect(arr[0]).to.eql({label: 'llama', value: 5});
-    expect(arr[1]).to.eql({label: 'wombat', value: 8});
+    expect(arr[1]).to.eql({label: 'aardvark', value: 8});
+  });
+
+  it('supports sorting by column label descending', function() {
+    let arr = nestedObjectToNestedArray(simpleObj, {
+      sortBy: 'column',
+      colSortAttrs: [
+        {
+          sortBy: 'label',
+          sortOrder: 'desc',
+        },
+      ],
+    });
+    expect(arr[0]).to.eql({label: 'llama', value: 5});
+    expect(arr[1]).to.eql({label: 'aardvark', value: 8});
+  });
+
+  it('supports sorting by column label ascending', function() {
+    let arr = nestedObjectToNestedArray(simpleObj, {
+      sortBy: 'column',
+      colSortAttrs: [
+        {
+          sortBy: 'label',
+          sortOrder: 'asc',
+        },
+      ],
+    });
+    expect(arr[0]).to.eql({label: 'aardvark', value: 8});
+    expect(arr[1]).to.eql({label: 'llama', value: 5});
   });
 });
