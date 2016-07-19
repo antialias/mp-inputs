@@ -71,7 +71,7 @@ document.registerElement('show-hide-series-pane-content', class extends PaneCont
         ),
         resetSeries: () => this.app.updateSeriesData(this.state.result, false),
         selectedSeriesCount: () => Object.values(this.state.report.series.data).filter(Boolean).length,
-        seriesData: () => Object.keys(this.state.report.series.data).filter(this.config.helpers.matchesSearch),
+        seriesData: () => Object.keys(this.state.report.series.data).filter(this.config.helpers.matchesSearch).sort(),
         toggleShowSeries: name => {
           const currentData = this.state.report.series.data;
           if (currentData.hasOwnProperty(name)) {

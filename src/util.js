@@ -41,3 +41,21 @@ export function isEqual(x, y) {
   const p = Object.keys(x);
   return Object.keys(y).every((idx) => p.indexOf(idx) !== -1) && p.every((idx) => isEqual(x[idx], y[idx]));
 }
+
+/* Combine nested objected into one object of keys and the sum of their numeric values
+ *
+ * Example:
+ *   {                                        {
+ *      first: {foo: 1, bar:2},          =>     foo: 5,
+ *      second: {foo: 4, bar:1, tab: 2},        bar: 3,
+ *   }                                          tab: 2,
+ *                                            }
+ */
+export function combineNestedObjKeys(obj, accum={}) {
+  if (Object.values(obj).some(k => typeof k == 'number')) {
+    Object.keys(obj).forEach(k=> accum[k] = accum[k] ? accum[k] + obj[k] : obj[k]);
+  } else {
+    Object.keys(obj).map(key => combineNestedObjKeys(obj[key], accum));
+  }
+  return accum;
+}
