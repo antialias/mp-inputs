@@ -228,6 +228,45 @@ describe('nestedObjectToNestedArray', function() {
       ]);
     });
 
+    it('uses sums for sorting by value on nested groups', function() {
+      const arr = nestedObjectToNestedArray(d2Obj, {
+        sortBy: 'column',
+        colSortAttrs: [
+          {
+            sortBy: 'value',
+            sortOrder: 'desc',
+          },
+          {
+            sortBy: 'value',
+            sortOrder: 'desc',
+          },
+        ],
+      });
+      expect(arr).to.eql([
+        {
+          label: 'Mexico',
+          value: [
+            {label: 'llama',    value: 35},
+            {label: 'aardvark', value: 7},
+          ],
+        },
+        {
+          label: 'Canada',
+          value: [
+            {label: 'llama',    value: 13},
+            {label: 'aardvark', value: 6},
+          ],
+        },
+        {
+          label: 'US',
+          value: [
+            {label: 'aardvark', value: 8},
+            {label: 'llama',    value: 5},
+          ],
+        },
+      ]);
+    });
+
     it('supports sorting by final value descending', function() {
       const arr = nestedObjectToNestedArray(d2Obj, {
         sortBy: 'value',
