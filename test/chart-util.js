@@ -15,8 +15,7 @@ describe('nestedObjectToBarChartData', function() {
       sortOrder: 'desc',
     });
     expect(arr).to.eql([
-      [['aardvark'], [8]],
-      [['llama'],    [5]],
+      ['aardvark', 'llama'], [8, 5],
     ]);
   });
 
@@ -50,10 +49,9 @@ describe('nestedObjectToBarChartData', function() {
       ],
     });
     expect(arr).to.eql([
-      // TODO include intermediate sums
-      [['US'],     ['aardvark', 'llama'], [8,  5]],
-      [['Canada'], ['llama', 'aardvark'], [13, 6]],
-      [['Mexico'], ['llama', 'aardvark'], [35, 7]],
+      [{value: 'US',     sum: 13}, ['aardvark', 'llama'], [8,  5]],
+      [{value: 'Canada', sum: 19}, ['llama', 'aardvark'], [13, 6]],
+      [{value: 'Mexico', sum: 42}, ['llama', 'aardvark'], [35, 7]],
     ]);
   });
 
@@ -63,12 +61,12 @@ describe('nestedObjectToBarChartData', function() {
       sortOrder: 'desc',
     });
     expect(arr).to.eql([
-      [['Mexico'], ['llama'],    [35]],
-      [['Canada'], ['llama'],    [13]],
-      [['US'],     ['aardvark'], [8] ],
-      [['Mexico'], ['aardvark'], [7] ],
-      [['Canada'], ['aardvark'], [6] ],
-      [['US'],     ['llama'],    [5] ],
+      [{value: 'Mexico', sum: 35}, ['llama'],    [35]],
+      [{value: 'Canada', sum: 13}, ['llama'],    [13]],
+      [{value: 'US',     sum: 8 }, ['aardvark'], [8] ],
+      [{value: 'Mexico', sum: 7 }, ['aardvark'], [7] ],
+      [{value: 'Canada', sum: 6 }, ['aardvark'], [6] ],
+      [{value: 'US',     sum: 5 }, ['llama'],    [5] ],
     ]);
   });
 });
