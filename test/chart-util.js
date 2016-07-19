@@ -69,6 +69,53 @@ describe('nestedObjectToBarChartData', function() {
       [{value: 'US',     sum: 5 }, ['llama'],    [5] ],
     ]);
   });
+
+  it('flattens a deeply nested object', function() {
+    const arr = nestedObjectToBarChartData({
+      US: {
+        llama: {
+          red: 3,
+          blue: 2,
+        },
+        aardvark: {
+          red: 2,
+          blue: 6,
+        },
+      },
+      Canada: {
+        llama: {
+          red: 10,
+          blue: 3,
+        },
+        aardvark: {
+          red: 1,
+          blue: 5,
+        },
+      },
+    }, {
+      sortBy: 'column',
+      colSortAttrs: [
+        {
+          sortBy: 'value',
+          sortOrder: 'asc',
+        },
+        {
+          sortBy: 'value',
+          sortOrder: 'desc',
+        },
+        {
+          sortBy: 'label',
+          sortOrder: 'asc',
+        },
+      ],
+    });
+    expect(arr).to.eql([
+      [{value: 'US',     sum: 13}, {value: 'aardvark', sum: 8 }, ['blue', 'red'], [6, 2 ]],
+      [null,                       {value: 'llama',    sum: 5 }, ['blue', 'red'], [2, 3 ]],
+      [{value: 'Canada', sum: 19}, {value: 'llama',    sum: 13}, ['blue', 'red'], [3, 10]],
+      [null,                       {value: 'aardvark', sum: 6 }, ['blue', 'red'], [5, 1 ]],
+    ]);
+  });
 });
 
 describe('nestedObjectToNestedArray', function() {
