@@ -26,8 +26,10 @@ describe('nestedObjectToNestedArray', function() {
         sortBy: 'value',
         sortOrder: 'desc',
       });
-      expect(arr[0]).to.eql({label: 'aardvark', value: 8});
-      expect(arr[1]).to.eql({label: 'llama', value: 5});
+      expect(arr).to.eql([
+        {label: 'aardvark', value: 8},
+        {label: 'llama',    value: 5},
+      ]);
     });
 
     it('supports sorting by the final value ascending', function() {
@@ -35,8 +37,10 @@ describe('nestedObjectToNestedArray', function() {
         sortBy: 'value',
         sortOrder: 'asc',
       });
-      expect(arr[0]).to.eql({label: 'llama', value: 5});
-      expect(arr[1]).to.eql({label: 'aardvark', value: 8});
+      expect(arr).to.eql([
+        {label: 'llama',    value: 5},
+        {label: 'aardvark', value: 8},
+      ]);
     });
 
     it('supports sorting by column value descending', function() {
@@ -49,8 +53,10 @@ describe('nestedObjectToNestedArray', function() {
           },
         ],
       });
-      expect(arr[0]).to.eql({label: 'aardvark', value: 8});
-      expect(arr[1]).to.eql({label: 'llama', value: 5});
+      expect(arr).to.eql([
+        {label: 'aardvark', value: 8},
+        {label: 'llama',    value: 5},
+      ]);
     });
 
     it('supports sorting by column value ascending', function() {
@@ -63,8 +69,10 @@ describe('nestedObjectToNestedArray', function() {
           },
         ],
       });
-      expect(arr[0]).to.eql({label: 'llama', value: 5});
-      expect(arr[1]).to.eql({label: 'aardvark', value: 8});
+      expect(arr).to.eql([
+        {label: 'llama',    value: 5},
+        {label: 'aardvark', value: 8},
+      ]);
     });
 
     it('supports sorting by column label descending', function() {
@@ -77,8 +85,10 @@ describe('nestedObjectToNestedArray', function() {
           },
         ],
       });
-      expect(arr[0]).to.eql({label: 'llama', value: 5});
-      expect(arr[1]).to.eql({label: 'aardvark', value: 8});
+      expect(arr).to.eql([
+        {label: 'llama',    value: 5},
+        {label: 'aardvark', value: 8},
+      ]);
     });
 
     it('supports sorting by column label ascending', function() {
@@ -91,8 +101,10 @@ describe('nestedObjectToNestedArray', function() {
           },
         ],
       });
-      expect(arr[0]).to.eql({label: 'aardvark', value: 8});
-      expect(arr[1]).to.eql({label: 'llama', value: 5});
+      expect(arr).to.eql([
+        {label: 'aardvark', value: 8},
+        {label: 'llama',    value: 5},
+      ]);
     });
   });
 

@@ -94,6 +94,11 @@ export function nestedObjectPaths(obj, depth=0) {
   return paths;
 }
 
+/**
+ * nestedObjectToNestedArray - turns a nested object with numeric leaves
+ * into a nested array with rows sorted according to given multi-level config.
+ * See tests for examples.
+ */
 const NESTED_ARRAY_SORT_FUNCS = {
   deepestValue: {
     asc:  (a, b) => deepestValue(a) > deepestValue(b),
