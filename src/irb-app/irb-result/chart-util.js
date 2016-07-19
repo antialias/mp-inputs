@@ -149,20 +149,19 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
     case 'column': {
       const colSortAttrs = sortConfig.colSortAttrs[0];
       arr = Object.keys(obj)
-        .map(k => ({label: k, value: obj[k]}))
-        .sort(NESTED_ARRAY_SORT_FUNCS[colSortAttrs.sortBy][colSortAttrs.sortOrder])
-        .map(entry => {
+        .map(k => {
+          const entry = {
+            label: k,
+            value: obj[k],
+          };
           if (typeof entry.value === 'object') {
-            return {
-              label: entry.label,
-              value: nestedObjectToNestedArray(entry.value, Object.assign({}, sortConfig, {
-                colSortAttrs: sortConfig.colSortAttrs.slice(1),
-              })),
-            };
-          } else {
-            return entry;
+            entry.value = nestedObjectToNestedArray(entry.value, Object.assign({}, sortConfig, {
+              colSortAttrs: sortConfig.colSortAttrs.slice(1),
+            }));
           }
-        });
+          return entry;
+        })
+        .sort(NESTED_ARRAY_SORT_FUNCS[colSortAttrs.sortBy][colSortAttrs.sortOrder]);
       break;
     }
 
@@ -173,6 +172,7 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
 
     default:
       throw Error(`Unknown sortBy type: ${sortConfig.sortBy}`);
+
   }
   return arr;
 }
