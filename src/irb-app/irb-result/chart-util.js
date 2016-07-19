@@ -100,10 +100,6 @@ export function nestedObjectPaths(obj, depth=0) {
  * See tests for examples.
  */
 const NESTED_ARRAY_SORT_FUNCS = {
-  deepestValue: {
-    asc:  (a, b) => compareByDeepestValue(a, b),
-    desc: (a, b) => compareByDeepestValue(a, b) * -1,
-  },
   label: {
     asc:  (a, b) => compareByKey(a, b, 'label'),
     desc: (a, b) => compareByKey(a, b, 'label') * -1,
@@ -117,27 +113,24 @@ function compareByKey(a, b, key) {
   [a, b] = [a[key], b[key]];
   return a > b ? 1 : (a < b ? -1 : 0);
 }
-function compareByDeepestValue(a, b) {
-  [a, b] = [deepestValue(a), deepestValue(b)];
-  return a > b ? 1 : (a < b ? -1 : 0);
-}
-function deepestValue(entry) {
-  return typeof entry.value === 'number' ? entry.value : deepestValue(entry.value[0]);
-}
 function flattenNestedObjectToArray(obj) {
   if (typeof obj === 'number') {
     return obj;
   } else {
     return Object.keys(obj)
-      .map(k => ({
-        label: k,
-        value: flattenNestedObjectToArray(obj[k]),
-      }))
-      .map(entry => {
-        return typeof entry.value === 'number' ? entry : entry.value.map(v => ({
-          label: entry.label,
-          value: typeof v === 'number' ? v : [v],
-        }));
+      .map(label => {
+        let entry;
+        const value = obj[label];
+        if (typeof value === 'object') {
+          entry = flattenNestedObjectToArray(value).map(child => ({
+            label: label,
+            children: [child],
+            value: child.value,
+          }));
+        } else {
+          entry = {label, value};
+        }
+        return entry;
       })
       .reduce((a, b) => a.concat(b), []);
   }
@@ -150,14 +143,15 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
       const colSortAttrs = sortConfig.colSortAttrs[0];
       arr = Object.keys(obj)
         .map(k => {
-          const entry = {
-            label: k,
-            value: obj[k],
-          };
-          if (typeof entry.value === 'object') {
-            entry.value = nestedObjectToNestedArray(entry.value, Object.assign({}, sortConfig, {
+          const entry = {label: k};
+          const value = obj[k];
+          if (typeof value === 'object') {
+            entry.children = nestedObjectToNestedArray(value, Object.assign({}, sortConfig, {
               colSortAttrs: sortConfig.colSortAttrs.slice(1),
             }));
+            entry.value = entry.children.reduce((sum, n) => sum + n.value, 0);
+          } else {
+            entry.value = value;
           }
           return entry;
         })
@@ -167,7 +161,7 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
 
     case 'value':
       arr = flattenNestedObjectToArray(obj)
-        .sort(NESTED_ARRAY_SORT_FUNCS.deepestValue[sortConfig.sortOrder]);
+        .sort(NESTED_ARRAY_SORT_FUNCS.value[sortConfig.sortOrder]);
       break;
 
     default:

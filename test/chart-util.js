@@ -144,10 +144,10 @@ describe('nestedObjectToNestedArray', function() {
       expect(arr[1]).to.be.an('object');
       expect(arr[1].label).to.be.a('string');
 
-      expect(arr[1].value).to.be.an('array');
-      expect(arr[1].value[1]).to.be.an('object');
-      expect(arr[1].value[1].label).to.be.a('string');
-      expect(arr[1].value[1].value).to.be.a('number');
+      expect(arr[1].children).to.be.an('array');
+      expect(arr[1].children[1]).to.be.an('object');
+      expect(arr[1].children[1].label).to.be.a('string');
+      expect(arr[1].children[1].value).to.be.a('number');
     });
 
     it('supports sorting on multiple columns', function() {
@@ -167,21 +167,24 @@ describe('nestedObjectToNestedArray', function() {
       expect(arr).to.eql([
         {
           label: 'US',
-          value: [
+          value: 13,
+          children: [
             {label: 'llama',    value: 5},
             {label: 'aardvark', value: 8},
           ],
         },
         {
           label: 'Mexico',
-          value: [
+          value: 42,
+          children: [
             {label: 'llama',    value: 35},
             {label: 'aardvark', value: 7},
           ],
         },
         {
           label: 'Canada',
-          value: [
+          value: 19,
+          children: [
             {label: 'llama',    value: 13},
             {label: 'aardvark', value: 6},
           ],
@@ -206,21 +209,24 @@ describe('nestedObjectToNestedArray', function() {
       expect(arr).to.eql([
         {
           label: 'Canada',
-          value: [
+          value: 19,
+          children: [
             {label: 'llama',    value: 13},
             {label: 'aardvark', value: 6},
           ],
         },
         {
           label: 'Mexico',
-          value: [
+          value: 42,
+          children: [
             {label: 'llama',    value: 35},
             {label: 'aardvark', value: 7},
           ],
         },
         {
           label: 'US',
-          value: [
+          value: 13,
+          children: [
             {label: 'aardvark', value: 8},
             {label: 'llama',    value: 5},
           ],
@@ -245,23 +251,68 @@ describe('nestedObjectToNestedArray', function() {
       expect(arr).to.eql([
         {
           label: 'Mexico',
-          value: [
+          value: 42,
+          children: [
             {label: 'llama',    value: 35},
             {label: 'aardvark', value: 7},
           ],
         },
         {
           label: 'Canada',
-          value: [
+          value: 19,
+          children: [
             {label: 'llama',    value: 13},
             {label: 'aardvark', value: 6},
           ],
         },
         {
           label: 'US',
-          value: [
+          value: 13,
+          children: [
             {label: 'aardvark', value: 8},
             {label: 'llama',    value: 5},
+          ],
+        },
+      ]);
+    });
+
+    it('supports different sort orders together with sums', function() {
+      const arr = nestedObjectToNestedArray(d2Obj, {
+        sortBy: 'column',
+        colSortAttrs: [
+          {
+            sortBy: 'value',
+            sortOrder: 'asc',
+          },
+          {
+            sortBy: 'value',
+            sortOrder: 'desc',
+          },
+        ],
+      });
+      expect(arr).to.eql([
+        {
+          label: 'US',
+          value: 13,
+          children: [
+            {label: 'aardvark', value: 8},
+            {label: 'llama',    value: 5},
+          ],
+        },
+        {
+          label: 'Canada',
+          value: 19,
+          children: [
+            {label: 'llama',    value: 13},
+            {label: 'aardvark', value: 6},
+          ],
+        },
+        {
+          label: 'Mexico',
+          value: 42,
+          children: [
+            {label: 'llama',    value: 35},
+            {label: 'aardvark', value: 7},
           ],
         },
       ]);
@@ -273,12 +324,12 @@ describe('nestedObjectToNestedArray', function() {
         sortOrder: 'desc',
       });
       expect(arr).to.eql([
-        {label: 'Mexico', value: [{label: 'llama',    value: 35}]},
-        {label: 'Canada', value: [{label: 'llama',    value: 13}]},
-        {label: 'US',     value: [{label: 'aardvark', value: 8 }]},
-        {label: 'Mexico', value: [{label: 'aardvark', value: 7 }]},
-        {label: 'Canada', value: [{label: 'aardvark', value: 6 }]},
-        {label: 'US',     value: [{label: 'llama',    value: 5 }]},
+        {label: 'Mexico', value: 35, children: [{label: 'llama',    value: 35}]},
+        {label: 'Canada', value: 13, children: [{label: 'llama',    value: 13}]},
+        {label: 'US',     value: 8,  children: [{label: 'aardvark', value: 8 }]},
+        {label: 'Mexico', value: 7,  children: [{label: 'aardvark', value: 7 }]},
+        {label: 'Canada', value: 6,  children: [{label: 'aardvark', value: 6 }]},
+        {label: 'US',     value: 5,  children: [{label: 'llama',    value: 5 }]},
       ]);
     });
 
@@ -288,12 +339,12 @@ describe('nestedObjectToNestedArray', function() {
         sortOrder: 'asc',
       });
       expect(arr).to.eql([
-        {label: 'US',     value: [{label: 'llama',    value: 5 }]},
-        {label: 'Canada', value: [{label: 'aardvark', value: 6 }]},
-        {label: 'Mexico', value: [{label: 'aardvark', value: 7 }]},
-        {label: 'US',     value: [{label: 'aardvark', value: 8 }]},
-        {label: 'Canada', value: [{label: 'llama',    value: 13}]},
-        {label: 'Mexico', value: [{label: 'llama',    value: 35}]},
+        {label: 'US',     value: 5,  children: [{label: 'llama',    value: 5 }]},
+        {label: 'Canada', value: 6,  children: [{label: 'aardvark', value: 6 }]},
+        {label: 'Mexico', value: 7,  children: [{label: 'aardvark', value: 7 }]},
+        {label: 'US',     value: 8,  children: [{label: 'aardvark', value: 8 }]},
+        {label: 'Canada', value: 13, children: [{label: 'llama',    value: 13}]},
+        {label: 'Mexico', value: 35, children: [{label: 'llama',    value: 35}]},
       ]);
     });
   });
