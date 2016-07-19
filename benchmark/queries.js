@@ -1,7 +1,9 @@
+import fs from 'fs';
+import { TimeClause } from '../src/models/clause';
+
 // Secrets are not checked in. API_SECRETS maps project IDs to api secrets:
 // { projectID: secret, projectID: secret, ... }
-import API_SECRETS from './project-secrets';
-import { TimeClause } from '../src/models/clause';
+const API_SECRETS = JSON.parse(fs.readFileSync('/etc/secrets/irb/project-secrets.json', 'utf8'));
 
 const QUERIES = [
   {
