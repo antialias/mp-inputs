@@ -157,8 +157,11 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
   process.stdout.write('\n\n');
 
   // output results
-  const colWidth = Math.max(...table.map(row => Math.max(...row.map(s => s.length))));
+  const zip = (...rows) => rows[0].map((_, i) => rows.map(row => row[i]));
+
+  const columnMaxWidths = zip(...table).map(column => Math.max(...column.map(c => c.length)));
+
   for (const row of table) {
-    console.log(row.map(s => rightPad(s, colWidth)).join('   '));
+    console.log(row.map((s, i) => rightPad(s, columnMaxWidths[i])).join('   '));
   }
 })();
