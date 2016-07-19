@@ -138,7 +138,7 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
   let arr;
   switch(sortConfig.sortBy) {
 
-    case 'column':
+    case 'column': {
       const colSortAttrs = sortConfig.colSortAttrs[0];
       arr = Object.keys(obj)
         .map(k => ({label: k, value: obj[k]}))
@@ -156,6 +156,7 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
           }
         });
       break;
+    }
 
     case 'value':
       arr = flattenNestedObjectToArray(obj)
