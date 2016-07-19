@@ -130,11 +130,13 @@
               border 0 none
 
         li
+          cursor pointer
           height 20px
           margin-bottom 2px
           margin-left -2px
           position relative
           text-align right
+          user-select none
 
           .background
             background medium-gray
@@ -153,5 +155,45 @@
             width 100px
             z-index 1
 
-          &.narrow .label
-            display none
+  .hover-label
+    position absolute
+
+    .content
+      background-color white
+      border 1px solid medium-gray
+      border-radius 3px
+      color medium-gray
+      font 700 11px font-helvetica-neue
+      padding 5px
+      position absolute
+      top -45px
+      left -50px
+      text-align center
+      user-select text
+      max-width 200px
+      z-index 3
+
+
+      .title
+        border-bottom 1px solid light-gray
+        padding-bottom 5px
+        overflow hidden
+        white-space nowrap
+
+      .results
+        align-items center
+        display flex
+        padding-top 5px
+        height 15
+
+        div
+          line-height 15px
+          padding 0 5px
+
+        .count
+          flex-grow 1
+
+        .percent
+          color light-gray
+          font-weight 600
+          flex-grow 1

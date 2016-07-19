@@ -23,12 +23,31 @@ document.registerElement('bar-chart', class extends Component {
         rows: [],
         chartMax: 0,
         chartOptions: null,
+        hoverTooltip: {show: false},
         mathTypes: [],
         showValueNames: [],
         util,
       },
       helpers: {
         getHeaderWidth: (text) => util.getTextWidth(text, 'bold 14px Helvetica'),
+        onMouseEnter: (ev, name, value, percent) => {
+          let hoverTooltip = util.extend(this.state.hoverTooltip, {show: true});
+          if (ev) {
+            const chartBounds = document.getElementsByClassName('irb-result')[0].getBoundingClientRect();
+            const targetBarBounds = ev.target.getBoundingClientRect();
+            hoverTooltip = util.extend(hoverTooltip, {
+              name,
+              percent,
+              value,
+              cssTop: `${targetBarBounds.top - chartBounds.top}px`,
+              cssLeft: `${targetBarBounds.left - chartBounds.left + (targetBarBounds.width / 2)}px`,
+            });
+          }
+          this.update({hoverTooltip});
+        },
+        onMouseLeave: () => {
+          this.update({hoverTooltip: util.extend(this.state.hoverTooltip, {show: false})});
+        },
       },
     };
   }
