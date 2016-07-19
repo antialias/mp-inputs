@@ -216,7 +216,7 @@ describe('nestedObjectToNestedArray', function() {
       ]);
     });
 
-    it('supports sorting by final value', function() {
+    it('supports sorting by final value descending', function() {
       const arr = nestedObjectToNestedArray(d2Obj, {
         sortBy: 'value',
         sortOrder: 'desc',
@@ -228,6 +228,21 @@ describe('nestedObjectToNestedArray', function() {
         {label: 'Mexico', value: [{label: 'aardvark', value: 7 }]},
         {label: 'Canada', value: [{label: 'aardvark', value: 6 }]},
         {label: 'US',     value: [{label: 'llama',    value: 5 }]},
+      ]);
+    });
+
+    it('supports sorting by final value ascending', function() {
+      const arr = nestedObjectToNestedArray(d2Obj, {
+        sortBy: 'value',
+        sortOrder: 'asc',
+      });
+      expect(arr).to.eql([
+        {label: 'US',     value: [{label: 'llama',    value: 5 }]},
+        {label: 'Canada', value: [{label: 'aardvark', value: 6 }]},
+        {label: 'Mexico', value: [{label: 'aardvark', value: 7 }]},
+        {label: 'US',     value: [{label: 'aardvark', value: 8 }]},
+        {label: 'Canada', value: [{label: 'llama',    value: 13}]},
+        {label: 'Mexico', value: [{label: 'llama',    value: 35}]},
       ]);
     });
   });
