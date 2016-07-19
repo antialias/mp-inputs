@@ -95,6 +95,10 @@ export function nestedObjectPaths(obj, depth=0) {
 }
 
 const NESTED_ARRAY_SORT_FUNCS = {
+  deepestValue: {
+    asc:  (a, b) => deepestValue(a) > deepestValue(b),
+    desc: (a, b) => deepestValue(a) < deepestValue(b),
+  },
   label: {
     asc:  (a, b) => a.label > b.label,
     desc: (a, b) => a.label < b.label,
@@ -104,12 +108,35 @@ const NESTED_ARRAY_SORT_FUNCS = {
     desc: (a, b) => a.value < b.value,
   },
 };
+function deepestValue(entry) {
+  return typeof entry.value === 'number' ? entry.value : deepestValue(entry.value[0]);
+}
+function flattenNestedObjectToArray(obj) {
+  if (typeof obj === 'number') {
+    return obj;
+  } else {
+    return Object.keys(obj)
+      .map(k => ({
+        label: k,
+        value: flattenNestedObjectToArray(obj[k]),
+      }))
+      .map(entry => {
+        return typeof entry.value === 'number' ? entry : entry.value.map(v => ({
+          label: entry.label,
+          value: typeof v === 'number' ? v : [v],
+        }));
+      })
+      .reduce((a, b) => a.concat(b), []);
+  }
+}
 export function nestedObjectToNestedArray(obj, sortConfig) {
-  let arr = Object.keys(obj).map(k => ({label: k, value: obj[k]}));
+  let arr;
   switch(sortConfig.sortBy) {
+
     case 'column':
       const colSortAttrs = sortConfig.colSortAttrs[0];
-      arr = arr
+      arr = Object.keys(obj)
+        .map(k => ({label: k, value: obj[k]}))
         .sort(NESTED_ARRAY_SORT_FUNCS[colSortAttrs.sortBy][colSortAttrs.sortOrder])
         .map(entry => {
           if (typeof entry.value === 'object') {
@@ -124,9 +151,12 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
           }
         });
       break;
+
     case 'value':
-      arr = arr.sort(NESTED_ARRAY_SORT_FUNCS.value[sortConfig.sortOrder]);
+      arr = flattenNestedObjectToArray(obj)
+        .sort(NESTED_ARRAY_SORT_FUNCS.deepestValue[sortConfig.sortOrder]);
       break;
+
     default:
       throw Error(`Unknown sortBy type: ${sortConfig.sortBy}`);
   }
