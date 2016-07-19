@@ -101,18 +101,26 @@ export function nestedObjectPaths(obj, depth=0) {
  */
 const NESTED_ARRAY_SORT_FUNCS = {
   deepestValue: {
-    asc:  (a, b) => deepestValue(a) > deepestValue(b),
-    desc: (a, b) => deepestValue(a) < deepestValue(b),
+    asc:  (a, b) => compareByDeepestValue(a, b),
+    desc: (a, b) => compareByDeepestValue(a, b) * -1,
   },
   label: {
-    asc:  (a, b) => a.label > b.label,
-    desc: (a, b) => a.label < b.label,
+    asc:  (a, b) => compareByKey(a, b, 'label'),
+    desc: (a, b) => compareByKey(a, b, 'label') * -1,
   },
   value: {
-    asc:  (a, b) => a.value > b.value,
-    desc: (a, b) => a.value < b.value,
+    asc:  (a, b) => compareByKey(a, b, 'value'),
+    desc: (a, b) => compareByKey(a, b, 'value') * -1,
   },
 };
+function compareByKey(a, b, key) {
+  [a, b] = [a[key], b[key]];
+  return a > b ? 1 : (a < b ? -1 : 0);
+}
+function compareByDeepestValue(a, b) {
+  [a, b] = [deepestValue(a), deepestValue(b)];
+  return a > b ? 1 : (a < b ? -1 : 0);
+}
 function deepestValue(entry) {
   return typeof entry.value === 'number' ? entry.value : deepestValue(entry.value[0]);
 }
