@@ -1,6 +1,77 @@
 import expect from 'expect.js';
 
-import { nestedObjectToNestedArray } from '../src/irb-app/irb-result/chart-util';
+import {
+  nestedObjectToNestedArray,
+  nestedObjectToBarChartData,
+} from '../src/irb-app/irb-result/chart-util';
+
+describe('nestedObjectToBarChartData', function() {
+  it('flattens a simple object', function() {
+    const arr = nestedObjectToBarChartData({
+      llama: 5,
+      aardvark: 8,
+    }, {
+      sortBy: 'value',
+      sortOrder: 'desc',
+    });
+    expect(arr).to.eql([
+      [['aardvark'], [8]],
+      [['llama'],    [5]],
+    ]);
+  });
+
+  const d2Obj = {
+    US: {
+      llama: 5,
+      aardvark: 8,
+    },
+    Canada: {
+      llama: 13,
+      aardvark: 6,
+    },
+    Mexico: {
+      llama: 35,
+      aardvark: 7,
+    },
+  };
+
+  it('flattens a nested object sorted by column', function() {
+    const arr = nestedObjectToBarChartData(d2Obj, {
+      sortBy: 'column',
+      colSortAttrs: [
+        {
+          sortBy: 'value',
+          sortOrder: 'asc',
+        },
+        {
+          sortBy: 'value',
+          sortOrder: 'desc',
+        },
+      ],
+    });
+    expect(arr).to.eql([
+      // TODO include intermediate sums
+      [['US'],     ['aardvark', 'llama'], [8,  5]],
+      [['Canada'], ['llama', 'aardvark'], [13, 6]],
+      [['Mexico'], ['llama', 'aardvark'], [35, 7]],
+    ]);
+  });
+
+  it('flattens a nested object sorted by final value', function() {
+    const arr = nestedObjectToBarChartData(d2Obj, {
+      sortBy: 'value',
+      sortOrder: 'desc',
+    });
+    expect(arr).to.eql([
+      [['Mexico'], ['llama'],    [35]],
+      [['Canada'], ['llama'],    [13]],
+      [['US'],     ['aardvark'], [8] ],
+      [['Mexico'], ['aardvark'], [7] ],
+      [['Canada'], ['aardvark'], [6] ],
+      [['US'],     ['llama'],    [5] ],
+    ]);
+  });
+});
 
 describe('nestedObjectToNestedArray', function() {
   context('with a simple (depth 1) object', function() {
