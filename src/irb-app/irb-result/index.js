@@ -1,6 +1,5 @@
 import { Component } from 'panel';
 import { filterObjectAtDepth } from './chart-util';
-
 import { extend, pick, renameEvent } from '../../util';
 
 import './bar-chart';
@@ -82,6 +81,9 @@ document.registerElement('irb-result', class extends Component {
             result.series, series => this.state.report.series.data[series], depth
           ),
         }),
+        tableData: (result, resourceDescription) => JSON.stringify(
+          extend(this.config.helpers.filterResults(result), {resourceDescription})
+        ),
       },
       template,
     };
