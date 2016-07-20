@@ -22,10 +22,9 @@ document.registerElement('irb-header', class extends Component {
             this.app.queries.segmentation
               .build(this.state)
               .buildJQLArgs()
-              .map(args => args[1]) // extract params
-              .forEach(query =>
-                this.downloadJQLQuery(query.script, this.state.report.title, query.params)
-              );
+              .map(queryArgs => queryArgs.then(queryArgs => {
+                this.downloadJQLQuery(queryArgs[1].script, this.state.report.title, queryArgs[1].params);
+              }));
           }
         },
       },
