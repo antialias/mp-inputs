@@ -8,7 +8,7 @@ import {
   getTickDistance,
   nestedObjectMax,
   nestedObjectSum,
-  nestedObjectToTableRows,
+  nestedObjectToBarChartData,
 } from '../chart-util';
 
 import template from './index.jade';
@@ -32,22 +32,14 @@ document.registerElement('bar-chart', class extends Component {
   }
 
   attributeChangedCallback() {
-    let { headers, series } = JSON.parse(this.getAttribute('data'));
+    let {headers, series} = this.getJSONAttribute('data');
+    const sortConfig = this.getJSONAttribute('sorting');
+    if (!this.validSortConfig(headers, sortConfig)) {
+      return;
+    }
 
     series = nestedObjectSum(series);
-
-    // for each table row, split the data entry (last entry) into
-    // two key/value list cells, sorting alphabetically by key
-    const rows = nestedObjectToTableRows(series, 1).map(row => {
-      const data = row.slice(-1)[0].value;
-      const keys = Object.keys(data)
-        .sort((a, b) => data[b] - data[a])
-        .filter(key => data[key]);
-      const values = keys.map(key => data[key]);
-
-      return [...row.slice(0, -1), keys, values];
-    });
-
+    const rows = nestedObjectToBarChartData(series, sortConfig);
     const chartMax = nestedObjectMax(series);
     const gridLineDistance = getTickDistance(chartMax);
 
@@ -57,6 +49,13 @@ document.registerElement('bar-chart', class extends Component {
       chartMax,
       gridLineDistance,
     });
+  }
+
+  validSortConfig(headers, sortConfig) {
+    return sortConfig && (
+      sortConfig.sortBy === 'value' ||
+      sortConfig.colSortAttrs.length === headers.length
+    );
   }
 });
 

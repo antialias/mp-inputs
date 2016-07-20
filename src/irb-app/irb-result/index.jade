@@ -3,7 +3,10 @@
   .chart(class={loading: result.loading})
     case report.chartType
       when 'bar'
-        bar-chart(attributes={data: JSON.stringify($helpers.filterResults(result))})
+        bar-chart(attributes={
+          data: JSON.stringify($helpers.filterResults(result)),
+          sorting: JSON.stringify(report.sorting.bar),
+        })
       when 'line'
         line-chart(attributes={data: JSON.stringify($helpers.filterResults(result)), chartOptions: JSON.stringify($helpers.getChartOptions())})
       when 'table'

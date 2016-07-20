@@ -87,18 +87,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           isEditing: false,
           search: null,
         },
-        sorting: {
-          bar: {
-            sortType: 'column',
-            sortAttrs: [
-              {
-                order: 'desc',
-                sortBy: 'value',
-              },
-            ],
-          },
-          table: {},
-        },
+        sorting: this.sortConfigFor(null),
         title: 'Untitled report',
       }),
 
@@ -238,6 +227,37 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       this.originStageClauseType() === sectionType &&
       this.state.stageClauseIndex === clauseIndex
     );
+  }
+
+  sortConfigFor(result, currentSortConfig=null) {
+    let sortConfig = {
+      bar: {
+        sortBy: 'column',
+        colSortAttrs: [
+          {
+            sortBy: 'value',
+            sortOrder: 'desc',
+          },
+        ],
+      },
+      table: {},
+    };
+
+    if (result) {
+      if (currentSortConfig) {
+        if (currentSortConfig.bar.sortBy === 'column') {
+          let colSortAttrs = currentSortConfig.bar.colSortAttrs.slice(0, result.headers.length);
+          for (let i = colSortAttrs.length; i < result.headers.length; i++) {
+            colSortAttrs.push({sortBy: 'value', sortOrder: 'desc'});
+          }
+          sortConfig.bar.colSortAttrs = colSortAttrs;
+        } else {
+          sortConfig = currentSortConfig;
+        }
+      }
+    }
+
+    return sortConfig;
   }
 
   // State modifiers
@@ -467,6 +487,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         this.updateReport({
           chartType: options.chartType || this.state.report.chartType,
           plotStyle: options.plotStyle || this.state.report.plotStyle,
+          sorting: this.sortConfigFor(result, this.state.report.sorting),
         });
       })
       .catch(err => console.error(err));
