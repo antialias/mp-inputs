@@ -6,7 +6,6 @@ import WebComponent from 'webcomponent';
 import * as util from '../../../util';
 import {
   nestedObjectMax,
-  nestedObjectSum,
   nestedObjectToBarChartData,
   stackedNestedObjectMax,
 } from '../chart-util';
@@ -74,7 +73,7 @@ document.registerElement('bar-chart', class extends Component {
       }
     }
 
-    series = nestedObjectSum(series);
+    series = util.nestedObjectSum(series);
     const rows = nestedObjectToBarChartData(series, sortConfig);
 
     const chartMax = chartOptions.plotStyle == 'stacked' ? stackedNestedObjectMax(series) : nestedObjectMax(series);

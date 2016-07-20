@@ -1,4 +1,4 @@
-import { nestedObjectDepth, objectFromPairs } from 'mixpanel-common/build/util';
+import { nestedObjectDepth } from 'mixpanel-common/build/util';
 
 /* Transpose a 2-dimensional array:
  * [[1, 2, 3],    [[1, 4],
@@ -20,21 +20,6 @@ export function countRun(row, start) {
   let i;
   for (i = start; row[i] === row[start]; i++);
   return i - start;
-}
-
-/* Sum the leaf values of a nested object,
- * constructing a new object with depth 1 less than the original
- */
-export function nestedObjectSum(obj) {
-  const sum = Object.values(obj).reduce((accum, val) => accum + val, 0);
-
-  if (typeof sum === 'number') {
-    return sum;
-  } else {
-    return objectFromPairs(Object.keys(obj).map(key => {
-      return [key, nestedObjectSum(obj[key])];
-    }));
-  }
 }
 
 // Get the max leaf value of a nested object

@@ -5,7 +5,6 @@ import WebComponent from 'webcomponent';
 
 import * as util from '../../../util';
 import {
-  nestedObjectSum,
   nestedObjectPaths,
   nestedObjectToTableRows,
   transpose,
@@ -31,7 +30,7 @@ document.registerElement('table-chart', class extends Component {
   attributeChangedCallback() {
     let { headers, series, resourceDescription } = JSON.parse(this.getAttribute('data'));
 
-    series = nestedObjectSum(series);
+    series = util.nestedObjectSum(series);
 
     let rows = [];
     let columnHeaders = [];

@@ -1,7 +1,6 @@
 import MPApp from 'mixpanel-common/build/report/mp-app';
 import { extend, pick } from 'mixpanel-common/build/util';
 import * as util from '../util';
-import { nestedObjectSum } from './irb-result/chart-util';
 
 import BuilderSections from '../models/builder-sections';
 import { ShowSection, TimeSection } from '../models/section';
@@ -410,7 +409,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   updateSeriesData(result, defaultValue=true, showLimit=48) {
-    const seriesSums = util.combineNestedObjKeys(nestedObjectSum(result.series));
+    const seriesSums = util.combineNestedObjKeys(util.nestedObjectSum(result.series));
     this.updateSeriesState({
       data: util.objectFromPairs(
         Object.keys(seriesSums)

@@ -1,4 +1,5 @@
 // IRB-specific utils
+import { objectFromPairs } from 'mixpanel-common/build/util';
 
 export * from 'mixpanel-common/build/util';
 export * from 'mixpanel-common/build/report/util';
@@ -58,4 +59,19 @@ export function combineNestedObjKeys(obj, accum={}) {
     Object.keys(obj).map(key => combineNestedObjKeys(obj[key], accum));
   }
   return accum;
+}
+
+/* Sum the leaf values of a nested object,
+ * constructing a new object with depth 1 less than the original
+ */
+export function nestedObjectSum(obj) {
+  const sum = Object.values(obj).reduce((accum, val) => accum + val, 0);
+
+  if (typeof sum === 'number') {
+    return sum;
+  } else {
+    return objectFromPairs(Object.keys(obj).map(key => {
+      return [key, nestedObjectSum(obj[key])];
+    }));
+  }
 }
