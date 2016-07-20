@@ -15,7 +15,7 @@ describe('nestedObjectToBarChartData', function() {
       sortOrder: 'desc',
     });
     expect(arr).to.eql([
-      ['aardvark', 'llama'], [8, 5],
+      [['aardvark', 'llama'], [8, 5]],
     ]);
   });
 
