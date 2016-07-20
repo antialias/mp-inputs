@@ -99,11 +99,15 @@ document.registerElement('bar-chart', class extends Component {
 document.registerElement('irb-bar-chart-header', class extends WebComponent {
   createdCallback() {
     this.$el = $('<div>').addClass('bar-chart-container').appendTo(this);
+    this.headers = [];
+    this.chartMax = null;
     this.mathTypes = [];
     this.showValueNames = [];
   }
 
   attributeChangedCallback() {
+    this.headers = JSON.parse(this.getAttribute('headers') || '[]');
+    this.chartMax = JSON.parse(this.getAttribute('chartMax') || 'null');
     this.mathTypes = JSON.parse(this.getAttribute('mathTypes') || '[]');
     this.showValueNames = JSON.parse(this.getAttribute('showValueNames') || '[]');
     this.render();
@@ -150,23 +154,5 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
       const headerWidths = tableColWidths.slice(0, -1).reduce((sum, width) => sum + width, 0);
       $axis.width(`calc(100% - ${headerWidths}px)`);
     });
-  }
-
-  get headers() {
-    return this._headers;
-  }
-
-  set headers(headers) {
-    this._headers = JSON.parse(headers);
-    this.render();
-  }
-
-  get chartMax() {
-    return this._chartMax;
-  }
-
-  set chartMax(chartMax) {
-    this._chartMax = JSON.parse(chartMax);
-    this.render();
   }
 });

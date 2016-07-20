@@ -6,9 +6,9 @@
       tr
         th(colSpan=0)
           irb-bar-chart-header(
-            headers=JSON.stringify(headers)
-            chartMax=JSON.stringify(chartMax)
             attributes={
+              chartMax: JSON.stringify(chartMax),
+              headers: JSON.stringify(headers),
               mathTypes: JSON.stringify(mathTypes),
               showValueNames: JSON.stringify(showValueNames),
             }
