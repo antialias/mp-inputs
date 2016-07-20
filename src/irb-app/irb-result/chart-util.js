@@ -99,42 +99,6 @@ export function nestedObjectPaths(obj, depth=0) {
  * into a nested array with rows sorted according to given multi-level config.
  * See tests for examples.
  */
-const NESTED_ARRAY_SORT_FUNCS = {
-  label: {
-    asc:  (a, b) => compareByKey(a, b, 'label'),
-    desc: (a, b) => compareByKey(a, b, 'label') * -1,
-  },
-  value: {
-    asc:  (a, b) => compareByKey(a, b, 'value'),
-    desc: (a, b) => compareByKey(a, b, 'value') * -1,
-  },
-};
-function compareByKey(a, b, key) {
-  [a, b] = [a[key], b[key]];
-  return a > b ? 1 : (a < b ? -1 : 0);
-}
-function flattenNestedObjectToArray(obj) {
-  if (typeof obj === 'number') {
-    return obj;
-  } else {
-    return Object.keys(obj)
-      .map(label => {
-        let entry;
-        const value = obj[label];
-        if (typeof value === 'object') {
-          entry = flattenNestedObjectToArray(value).map(child => ({
-            label: label,
-            children: [child],
-            value: child.value,
-          }));
-        } else {
-          entry = {label, value};
-        }
-        return entry;
-      })
-      .reduce((a, b) => a.concat(b), []);
-  }
-}
 export function nestedObjectToNestedArray(obj, sortConfig) {
   let arr;
   switch(sortConfig.sortBy) {
@@ -169,6 +133,57 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
 
   }
   return arr;
+}
+
+// sort utils for nestedObjectToNestedArray
+const NESTED_ARRAY_SORT_FUNCS = {
+  label: {
+    asc:  (a, b) => compareByKey(a, b, 'label'),
+    desc: (a, b) => compareByKey(a, b, 'label') * -1,
+  },
+  value: {
+    asc:  (a, b) => compareByKey(a, b, 'value'),
+    desc: (a, b) => compareByKey(a, b, 'value') * -1,
+  },
+};
+function compareByKey(a, b, key) {
+  [a, b] = [a[key], b[key]];
+  return a > b ? 1 : (a < b ? -1 : 0);
+}
+
+/**
+ * flattenNestedObjectToArray - internal util supporting 'sort by final value'
+ * functionality of nestedObjectToNestedArray. Expands nested subgroups into
+ * new rows.
+ *
+ * @example
+ * flattenNestedObjectToArray({US: {llama: 5, aardvark: 8}});
+ * // [
+ * //   {label: 'US', value: 5, children: [{label: 'llama', value: 5}]},
+ * //   {label: 'US', value: 8, children: [{label: 'aardvark', value: 8}]},
+ * // ]
+ */
+function flattenNestedObjectToArray(obj) {
+  if (typeof obj === 'number') {
+    return obj;
+  } else {
+    return Object.keys(obj)
+      .map(label => {
+        let entry;
+        const value = obj[label];
+        if (typeof value === 'object') {
+          entry = flattenNestedObjectToArray(value).map(child => ({
+            label: label,
+            children: [child],
+            value: child.value,
+          }));
+        } else {
+          entry = {label, value};
+        }
+        return entry;
+      })
+      .reduce((a, b) => a.concat(b), []);
+  }
 }
 
 export function nestedObjectToBarChartData(obj, sortConfig) {
