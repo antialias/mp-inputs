@@ -95,7 +95,70 @@ export function nestedObjectPaths(obj, depth=0) {
 }
 
 /**
- * nestedObjectToNestedArray - turns a nested object with numeric leaves
+ * Format rows for nested display. Calculates rowspans and intermediate sums, and sorts
+ * according to given config. Final numeric value/key pairs become parallel arrays for
+ * inclusion in a single table cell. See tests for detailed examples.
+ *
+ * @example
+ * nestedObjectToBarChartData({US: {llama: 5, aardvark: 8}}, {
+ *   sortBy: 'column',
+ *   colSortAttrs: [
+ *     {sortBy: 'value', sortOrder: 'asc'},
+ *     {sortBy: 'value', sortOrder: 'desc'},
+ *   ],
+ * });
+ * // [
+ * //   [{value: 'US', sum: 13}, ['aardvark', 'llama'], [8, 5]],
+ * // ]
+ */
+export function nestedObjectToBarChartData(obj, sortConfig) {
+  return nestedArrayToBarChartData(nestedObjectToNestedArray(obj, sortConfig));
+}
+function nestedArrayToBarChartData(arr) {
+  if (!arr[0].children) {
+
+    // leaf, entire list in one table cell
+    return [[arr.map(n => n.label), arr.map(n => n.value)]];
+
+  } else {
+
+    const penultimate = !arr[0].children[0].children;
+    if (penultimate) {
+
+      return arr.map(n => [{value: n.label, sum: n.value}, ...nestedArrayToBarChartData(n.children)[0]]);
+
+    } else {
+
+      // expand nested children beyond the first to extra top-level rows with null headers
+      const ret = [];
+      for (const entry of arr) {
+        let rowCount = 0, header;
+        for (const child of entry.children) {
+          const childData = nestedArrayToBarChartData([child]);
+          for (const row of childData) {
+            if (!rowCount++) {
+              let rowSpan = childData.length * entry.children.length;
+              header = {
+                value: entry.label,
+                sum: entry.value,
+              };
+              if (rowSpan > 1) {
+                header.rowSpan = rowSpan;
+              }
+            } else {
+              header = null;
+            }
+            ret.push([header, ...row]);
+          }
+        }
+      }
+      return ret;
+    }
+  }
+}
+
+/**
+ * Helper for nestedObjectToBarChartData. Turns a nested object with numeric leaves
  * into a nested array with rows sorted according to given multi-level config.
  * See tests for examples.
  */
@@ -152,9 +215,8 @@ function compareByKey(a, b, key) {
 }
 
 /**
- * flattenNestedObjectToArray - internal util supporting 'sort by final value'
- * functionality of nestedObjectToNestedArray. Expands nested subgroups into
- * new rows.
+ * Internal util supporting 'sort by final value' functionality of
+ * nestedObjectToNestedArray. Expands nested subgroups into new rows.
  *
  * @example
  * flattenNestedObjectToArray({US: {llama: 5, aardvark: 8}});
@@ -183,52 +245,6 @@ function flattenNestedObjectToArray(obj) {
         return entry;
       })
       .reduce((a, b) => a.concat(b), []);
-  }
-}
-
-export function nestedObjectToBarChartData(obj, sortConfig) {
-  return nestedArrayToBarChartData(nestedObjectToNestedArray(obj, sortConfig));
-}
-function nestedArrayToBarChartData(arr) {
-  if (!arr[0].children) {
-
-    // leaf, entire list in one table cell
-    return [[arr.map(n => n.label), arr.map(n => n.value)]];
-
-  } else {
-
-    const penultimate = !arr[0].children[0].children;
-    if (penultimate) {
-
-      return arr.map(n => [{value: n.label, sum: n.value}, ...nestedArrayToBarChartData(n.children)[0]]);
-
-    } else {
-
-      // expand nested children beyond the first to extra top-level rows with null headers
-      const ret = [];
-      for (const entry of arr) {
-        let rowCount = 0, header;
-        for (const child of entry.children) {
-          const childData = nestedArrayToBarChartData([child]);
-          for (const row of childData) {
-            if (!rowCount++) {
-              let rowSpan = childData.length * entry.children.length;
-              header = {
-                value: entry.label,
-                sum: entry.value,
-              };
-              if (rowSpan > 1) {
-                header.rowSpan = rowSpan;
-              }
-            } else {
-              header = null;
-            }
-            ret.push([header, ...row]);
-          }
-        }
-      }
-      return ret;
-    }
   }
 }
 
