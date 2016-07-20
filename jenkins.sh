@@ -8,4 +8,5 @@ apt-get install -y nodejs
 npm install
 npm run lint
 npm run build
+npm test
 npm run benchmark
