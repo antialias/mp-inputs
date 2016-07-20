@@ -171,6 +171,52 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
   return arr;
 }
 
+export function nestedObjectToBarChartData(obj, sortConfig) {
+  return nestedArrayToBarChartData(nestedObjectToNestedArray(obj, sortConfig));
+}
+function nestedArrayToBarChartData(arr) {
+  if (!arr[0].children) {
+
+    // leaf, entire list in one table cell
+    return [arr.map(n => n.label), arr.map(n => n.value)];
+
+  } else {
+
+    const penultimate = !arr[0].children[0].children;
+    if (penultimate) {
+
+      return arr.map(n => [{value: n.label, sum: n.value}, ...nestedArrayToBarChartData(n.children)]);
+
+    } else {
+
+      // expand nested children beyond the first to extra top-level rows with null headers
+      const ret = [];
+      for (const entry of arr) {
+        let rowCount = 0, header;
+        for (const child of entry.children) {
+          const childData = nestedArrayToBarChartData([child]);
+          for (const row of childData) {
+            if (!rowCount++) {
+              let rowSpan = childData.length * entry.children.length;
+              header = {
+                value: entry.label,
+                sum: entry.value,
+              };
+              if (rowSpan > 1) {
+                header.rowSpan = rowSpan;
+              }
+            } else {
+              header = null;
+            }
+            ret.push([header, ...row]);
+          }
+        }
+      }
+      return ret;
+    }
+  }
+}
+
 /* Format rows for nested table, calculating necessary rowspans
  * Example:
  *   for each row

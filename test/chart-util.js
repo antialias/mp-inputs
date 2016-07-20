@@ -110,10 +110,89 @@ describe('nestedObjectToBarChartData', function() {
       ],
     });
     expect(arr).to.eql([
-      [{value: 'US',     sum: 13}, {value: 'aardvark', sum: 8 }, ['blue', 'red'], [6, 2 ]],
-      [null,                       {value: 'llama',    sum: 5 }, ['blue', 'red'], [2, 3 ]],
-      [{value: 'Canada', sum: 19}, {value: 'llama',    sum: 13}, ['blue', 'red'], [3, 10]],
-      [null,                       {value: 'aardvark', sum: 6 }, ['blue', 'red'], [5, 1 ]],
+      [{value: 'US',     sum: 13, rowSpan: 2}, {value: 'aardvark', sum: 8 }, ['blue', 'red'], [6, 2 ]],
+      [null,                                   {value: 'llama',    sum: 5 }, ['blue', 'red'], [2, 3 ]],
+      [{value: 'Canada', sum: 19, rowSpan: 2}, {value: 'llama',    sum: 13}, ['blue', 'red'], [3, 10]],
+      [null,                                   {value: 'aardvark', sum: 6 }, ['blue', 'red'], [5, 1 ]],
+    ]);
+  });
+
+  it('flattens a depth-4 nested object', function() {
+    const arr = nestedObjectToBarChartData({
+      bunnies: {
+        US: {
+          llama: {
+            red: 3,
+            blue: 2,
+          },
+          aardvark: {
+            red: 2,
+            blue: 6,
+          },
+        },
+        Canada: {
+          llama: {
+            red: 10,
+            blue: 3,
+          },
+          aardvark: {
+            red: 1,
+            blue: 5,
+          },
+        },
+      },
+      kittens: {
+        US: {
+          llama: {
+            red: 3,
+            blue: 2,
+          },
+          aardvark: {
+            red: 2,
+            blue: 6,
+          },
+        },
+        Canada: {
+          llama: {
+            red: 10,
+            blue: 3,
+          },
+          aardvark: {
+            red: 1,
+            blue: 5,
+          },
+        },
+      },
+    }, {
+      sortBy: 'column',
+      colSortAttrs: [
+        {
+          sortBy: 'label',
+          sortOrder: 'desc',
+        },
+        {
+          sortBy: 'value',
+          sortOrder: 'asc',
+        },
+        {
+          sortBy: 'value',
+          sortOrder: 'desc',
+        },
+        {
+          sortBy: 'label',
+          sortOrder: 'asc',
+        },
+      ],
+    });
+    expect(arr).to.eql([
+      [{value: 'kittens', sum: 32, rowSpan: 4}, {value: 'US',     sum: 13, rowSpan: 2}, {value: 'aardvark', sum: 8 }, ['blue', 'red'], [6, 2 ]],
+      [null,                                    null,                                   {value: 'llama',    sum: 5 }, ['blue', 'red'], [2, 3 ]],
+      [null,                                    {value: 'Canada', sum: 19, rowSpan: 2}, {value: 'llama',    sum: 13}, ['blue', 'red'], [3, 10]],
+      [null,                                    null,                                   {value: 'aardvark', sum: 6 }, ['blue', 'red'], [5, 1 ]],
+      [{value: 'bunnies', sum: 32, rowSpan: 4}, {value: 'US',     sum: 13, rowSpan: 2}, {value: 'aardvark', sum: 8 }, ['blue', 'red'], [6, 2 ]],
+      [null,                                    null,                                   {value: 'llama',    sum: 5 }, ['blue', 'red'], [2, 3 ]],
+      [null,                                    {value: 'Canada', sum: 19, rowSpan: 2}, {value: 'llama',    sum: 13}, ['blue', 'red'], [3, 10]],
+      [null,                                    null,                                   {value: 'aardvark', sum: 6 }, ['blue', 'red'], [5, 1 ]],
     ]);
   });
 });
