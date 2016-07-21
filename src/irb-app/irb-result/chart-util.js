@@ -1,4 +1,4 @@
-import { nestedObjectDepth, sum } from 'mixpanel-common/util';
+import { nestedObjectDepth, objectFromPairs, sum } from 'mixpanel-common/util';
 
 /* Transpose a 2-dimensional array:
  * [[1, 2, 3],    [[1, 4],
@@ -20,6 +20,60 @@ export function countRun(row, start) {
   let i;
   for (i = start; row[i] === row[start]; i++);
   return i - start;
+}
+
+/*
+ * Do a rolling sum of the leaf values of a nested object, in the order of their keys (which are
+ * dates).
+ */
+export function nestedObjectCumulative(obj) {
+  if (Object.values(obj).every(value => typeof value === 'number')) {
+    return Object.keys(obj).sort().reduce((accum, key) => {
+      const reversedKeys = Object.keys(accum).sort().reverse();
+      accum[key] = (reversedKeys.length ? accum[reversedKeys[0]] : 0) + obj[key];
+      return accum;
+    }, {});
+  } else {
+    return objectFromPairs(Object.keys(obj).map(key => {
+      return [key, nestedObjectCumulative(obj[key])];
+    }));
+  }
+}
+
+/*
+ * Do a rolling average of the leaf values of a nested object, in the order of their keys (which are
+ * dates)
+ */
+export function nestedObjectRolling(obj, windowSize) {
+  if (Object.values(obj).every(value => typeof value === 'number')) {
+    let found = false;
+    const window = [];
+    let sum = 0;
+    const newObj = {};
+    Object.keys(obj).sort().forEach(key => {
+      var amount = obj[key];
+      if (!found && amount) {
+        found = true;
+      }
+
+      if (found) {
+        if (window.length === windowSize) {
+          sum -= window[0];
+          window.shift();
+        }
+        window.push(amount);
+        sum += amount;
+        amount = sum/window.length;
+      }
+
+      newObj[key] = amount;
+    });
+    return newObj;
+  } else {
+    return objectFromPairs(Object.keys(obj).map(key => {
+      return [key, nestedObjectRolling(obj[key], windowSize)];
+    }));
+  }
 }
 
 // Get the max leaf value of a nested object

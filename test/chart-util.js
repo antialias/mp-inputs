@@ -2,6 +2,8 @@ import 'babel-polyfill';
 import expect from 'expect.js';
 
 import {
+  nestedObjectCumulative,
+  nestedObjectRolling,
   nestedObjectToNestedArray,
   nestedObjectToBarChartData,
   nestedObjectToTableData,
@@ -229,6 +231,112 @@ describe('nestedObjectToTableData', function() {
       [{value: 'kittens', sum: 52}, {value: 'Canada', sum: 29}, {value: 'aardvark', sum: 16}, {'blue': 15, 'red': 1 }],
       [{value: 'bunnies', sum: 52}, {value: 'US',     sum: 23}, {value: 'aardvark', sum: 18}, {'blue': 16, 'red': 2 }],
     ]);
+  });
+});
+
+describe('nestedObjectCumulative', function() {
+  const sortedNamedD2Obj = {
+    US: {
+      aardvark: 8,
+      hyena: 3,
+      hyrax: 7,
+      llama: 1,
+    },
+    Canada: {
+      aardvark: 9,
+      hyena: 3,
+      hyrax: 9,
+      llama: 3,
+    },
+    Mexico: {
+      aardvark: 2,
+      hyena: 5,
+      hyrax: 8,
+      llama: 7,
+    },
+  };
+
+  it('supports rolling sum on the leaf nodes', function() {
+    const arr = nestedObjectCumulative(sortedNamedD2Obj);
+    expect(arr).to.eql({
+      US: {
+        aardvark: 8,
+        hyena: 11,
+        hyrax: 18,
+        llama: 19,
+      },
+      Canada: {
+        aardvark: 9,
+        hyena: 12,
+        hyrax: 21,
+        llama: 24,
+      },
+      Mexico: {
+        aardvark: 2,
+        hyena: 7,
+        hyrax: 15,
+        llama: 22,
+      },
+    });
+  });
+});
+
+describe('nestedObjectRolling', function() {
+  const sortedNamedD2Obj = {
+    US: {
+      aardvark: 8,
+      hyena: 2,
+      hyrax: 2,
+      llama: 8,
+      tapir: 14,
+    },
+    Canada: {
+      aardvark: 6,
+      hyena: 3,
+      hyrax: 3,
+      llama: 12,
+      tapir: 6,
+    },
+  };
+
+  it('supports rolling average on the leaf nodes without enought data for a window', function() {
+    const arr = nestedObjectRolling(sortedNamedD2Obj, 7);
+    expect(arr).to.eql({
+      US: {
+        aardvark: 8,
+        hyena: 5,
+        hyrax: 4,
+        llama: 5,
+        tapir: 6.8,
+      },
+      Canada: {
+        aardvark: 6,
+        hyena: 4.5,
+        hyrax: 4,
+        llama: 6,
+        tapir: 6,
+      },
+    });
+  });
+
+  it('supports rolling average on the leaf nodes with more data than a window', function() {
+    const arr = nestedObjectRolling(sortedNamedD2Obj, 3);
+    expect(arr).to.eql({
+      US: {
+        aardvark: 8,
+        hyena: 5,
+        hyrax: 4,
+        llama: 4,
+        tapir: 8,
+      },
+      Canada: {
+        aardvark: 6,
+        hyena: 4.5,
+        hyrax: 4,
+        llama: 6,
+        tapir: 7,
+      },
+    });
   });
 });
 
