@@ -123,7 +123,7 @@ function main() {
     groups.push(function() {
       return params.outputName;
     });
-  } else if (params.events && params.events.length) {
+  } else if (params.selectors && params.selectors.length) {
     groups.push(params.needsPeopleData ? 'event.name' : 'name');
   }
 
@@ -235,14 +235,17 @@ function main() {
     return Math.round(count);
   };
 
-  var query = Events({
-    event_selectors: params.events,
+  var query;
+  var queryParams = {
     from_date: params.dates.from,
     to_date: params.dates.to,
-  });
-
+  };
   if (params.needsPeopleData) {
-    query = join(query, People()).filter(function(tuple) { return tuple.event; });
+    query = join(Events(queryParams), People(), {selectors: params.selectors})
+      .filter(function(tuple) { return tuple.event; });
+  } else {
+    queryParams.event_selectors = params.selectors;
+    query = Events(queryParams);
   }
 
   if (params.filters && params.filters.length) {

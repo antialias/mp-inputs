@@ -335,7 +335,7 @@ export default class SegmentationQuery extends BaseQuery {
     return this.buildGroups(jqlQuery).then(groups => {
       // base params
       const scriptParams = {
-        events: jqlQuery.events,
+        selectors: jqlQuery.events,
         outputName: jqlQuery.outputName,
         dates: {
           from: (new Date(this.query.from)).toISOString().split('T')[0],
@@ -352,7 +352,11 @@ export default class SegmentationQuery extends BaseQuery {
       scriptParams.groups = groups;
 
       // As we need more helper data this should be moved down a level in the params
-      scriptParams.needsPeopleData = scriptParams.filters.concat(scriptParams.groups).some(param => param.resourceType === 'people');
+      const hasPeopleFilters = scriptParams.filters.concat(scriptParams.groups)
+        .some(param => param.resourceType === 'people');
+      const hasUserSelectors = scriptParams.selectors
+        .some(es => es.selector && es.selector.includes('user['));
+      scriptParams.needsPeopleData = hasPeopleFilters || hasUserSelectors;
 
       return scriptParams;
     });
