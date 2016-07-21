@@ -159,6 +159,7 @@ function filterToArbSelectorString(filter) {
 class JQLQuery {
   constructor(showClause, state, options={}) {
     this.chartType = options.chartType || state.report.chartType;
+    this.customEvents = options.customEvents || [];
 
     const ev = showClause.value;
 
@@ -203,6 +204,42 @@ class JQLQuery {
   eventNames() {
     return this.outputName ? [this.outputName] : this.events.map(ev => ev.event);
   }
+
+  // convert custom event data struct to format for JQL selectors:
+  // [{event: 'foo', selector: 'bar'}, {event: 'foo', selector: 'bar'}]
+  // including merging nested custom events
+  customEventToSelectors(ce) {
+    return ce.alternatives.reduce((selectors, ev) => {
+
+      const selector = {
+        event: ev.event,
+        selector: ev.serialized,
+      };
+      let currentSelectors = [];
+
+      const cidMatch = selector.event.match(/\$custom_event:(\d+)/);
+      if (cidMatch) {
+        // nested custom event
+        const cid = Number(cidMatch[1]);
+        let nestedCE = this.customEvents.find(c => c.id === cid);
+        if (!nestedCE) {
+          console.error(`No custom event with ID ${cid} found!`);
+        } else {
+          // merge nested CE's selectors with this one's
+          let nestedSelectors = this.customEventToSelectors(nestedCE)
+            .map(nestedSelector => extend(nestedSelector, {
+              selector: [nestedSelector.selector, selector.selector].filter(Boolean).join(' and '),
+            }));
+          currentSelectors = currentSelectors.concat(nestedSelectors);
+        }
+      } else {
+        // unnested
+        currentSelectors.push(selector);
+      }
+
+      return selectors.concat(currentSelectors);
+    }, []);
+  }
 }
 
 export default class SegmentationQuery extends BaseQuery {
@@ -220,7 +257,9 @@ export default class SegmentationQuery extends BaseQuery {
     const sections = state.report.sections;
 
     // fire one query per show clause
-    let jqlQueries = sections.show.clauses.map(showClause => new JQLQuery(showClause, state, options));
+    let jqlQueries = sections.show.clauses.map(
+      showClause => new JQLQuery(showClause, state, extend(options, pick(this, ['customEvents'])))
+    );
 
     // data global to all JQL queries.
     const segments = sections.group.clauses.map(clause => pick(clause, ['value', 'resourceType', 'filterType']));
@@ -418,41 +457,5 @@ export default class SegmentationQuery extends BaseQuery {
       headers = ['$event'].concat(headers);
     }
     return {series, headers};
-  }
-
-  // convert custom event data struct to format for JQL selectors:
-  // [{event: 'foo', selector: 'bar'}, {event: 'foo', selector: 'bar'}]
-  // including merging nested custom events
-  customEventToSelectors(ce) {
-    return ce.alternatives.reduce((selectors, ev) => {
-
-      const selector = {
-        event: ev.event,
-        selector: ev.serialized,
-      };
-      let currentSelectors = [];
-
-      const cidMatch = selector.event.match(/\$custom_event:(\d+)/);
-      if (cidMatch) {
-        // nested custom event
-        const cid = Number(cidMatch[1]);
-        let nestedCE = this.customEvents.find(c => c.id === cid);
-        if (!nestedCE) {
-          console.error(`No custom event with ID ${cid} found!`);
-        } else {
-          // merge nested CE's selectors with this one's
-          let nestedSelectors = this.customEventToSelectors(nestedCE)
-            .map(nestedSelector => extend(nestedSelector, {
-              selector: [nestedSelector.selector, selector.selector].filter(Boolean).join(' and '),
-            }));
-          currentSelectors = currentSelectors.concat(nestedSelectors);
-        }
-      } else {
-        // unnested
-        currentSelectors.push(selector);
-      }
-
-      return selectors.concat(currentSelectors);
-    }, []);
   }
 }
