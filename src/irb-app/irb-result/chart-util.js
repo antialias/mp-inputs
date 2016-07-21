@@ -112,7 +112,11 @@ export function nestedObjectPaths(obj, depth=0) {
  * // ]
  */
 export function nestedObjectToBarChartData(obj, sortConfig) {
-  return nestedArrayToBarChartData(nestedObjectToNestedArray(obj, sortConfig));
+  if (typeof obj === 'object') {
+    return nestedArrayToBarChartData(nestedObjectToNestedArray(obj, sortConfig));
+  } else {
+    return [];
+  }
 }
 function nestedArrayToBarChartData(arr) {
   if (!arr[0].children) {
