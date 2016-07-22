@@ -75,6 +75,32 @@ export function nestedObjectPaths(obj, depth=0) {
   return paths;
 }
 
+export function nestedObjectToTableData(obj, sortConfig) {
+  let arr = nestedObjectToArrayWithSums(obj, nestedObjectDepth(obj))
+    .sort((a, b) => {
+      [a, b] = [a, b].map(entry => entry[sortConfig.sortGroup][sortConfig.sortColumn || 'sum']);
+      return (a > b ? 1 : (a < b ? -1 : 0)) * (sortConfig.sortOrder === 'desc' ? -1 : 1);
+    });
+  return arr;
+}
+function sum(arr) {
+  return arr.reduce((sum, n) => sum + n, 0);
+}
+function nestedObjectToArrayWithSums(obj, depth) {
+  let arr = Object.keys(obj).map(k => {
+    let child, currentSum;
+    if (depth > 2) {
+      child = nestedObjectToArrayWithSums(obj[k], depth - 1);
+      currentSum = sum(child);
+    } else {
+      child = [obj[k]];
+      currentSum = sum(Object.values(obj[k]));
+    }
+    return [{value: k, sum: currentSum}, ...child];
+  });
+  return arr;
+}
+
 /**
  * Format rows for nested display. Calculates rowspans and intermediate sums, and sorts
  * according to given config. Final numeric value/key pairs become parallel arrays for
