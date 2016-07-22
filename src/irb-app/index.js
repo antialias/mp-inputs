@@ -319,10 +319,6 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     return VALUE_CHOICES;
   }
 
-  isAllAnalysisDisabled() {
-    ANALYSIS_CHOICES.every(analysis => !this.isAnalysisEnabled(analysis));
-  }
-
   isAnalysisEnabled(analysis) {
     return ANALYSIS_CHART_TABLE[this.selectedChartName()][analysis];
   }

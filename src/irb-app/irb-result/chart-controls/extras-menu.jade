@@ -4,7 +4,7 @@ ul.toggle-view
     if report.extrasMenu.isEditing
       .extras-menu-options.options
         .analysis.section
-          .title(class={disabled: $helpers.isAllAnalysisDisabled()}) analysis
+          .title analysis
           ul
             each analysis in $helpers.analysisChoices()
               li

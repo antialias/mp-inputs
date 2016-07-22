@@ -128,7 +128,6 @@ document.registerElement('extras-menu', class extends Component {
         valueChoices: () => this.app.valueChoices(),
         onAnalysisClick: analysis => this.app.updateExtrasMenu({lastSelectedAnalysis: analysis}),
         onValueClick: value => this.app.updateExtrasMenu({lastSelectedValue: value}),
-        isAllAnalysisDisabled: () => this.app.isAllAnalysisDisabled(),
         isAnalysisDisabled: analysis => !this.app.isAnalysisEnabled(analysis),
         isValueToggleDisabled: () => !this.app.isValueToggleEnabled(),
       },
