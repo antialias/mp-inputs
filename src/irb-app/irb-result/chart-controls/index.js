@@ -35,7 +35,7 @@ document.registerElement('chart-toggle', class extends Component {
           const chartToggle = extend(this.state.chartToggle, {editingType: null});
           chartToggle[chartType].plotStyle = plotStyle;
           this.app.updateChartToggle(chartToggle);
-          this.app.commitChartChoice(chartType, plotStyle);
+          this.app.updateReport({chartType, plotStyle});
         },
       },
     };

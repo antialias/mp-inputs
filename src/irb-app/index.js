@@ -289,7 +289,21 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   updateReport(attrs) {
+    attrs.chartType = attrs.chartType || this.state.report.chartType;
+    attrs.plotStyle = attrs.plotStyle || this.state.report.plotStyle;
+
     this.update({report: Object.assign(this.state.report, attrs)});
+
+    // set extras menu *after* chart choice has been committed.
+
+    const analysis = this.state.report.extrasMenu.analysis;
+
+    const extrasMenu = extend(this.state.report.extrasMenu, {
+      analysis: this.isAnalysisEnabled(analysis) ? analysis : 'linear',
+      value: this.isValueToggleEnabled() ? this.state.report.extrasMenu.value : 'absolute',
+    });
+
+    this.update({report: Object.assign(this.state.report, {extrasMenu})});
   }
 
   loadReport(report) {
@@ -544,23 +558,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
          || ['bar', 'table'].includes(chartType) && this.state.report.chartType === 'line')) {
       this.query({chartType, plotStyle});
     } else {
-      this.commitChartChoice(chartType, plotStyle);
+      this.updateReport({chartType, plotStyle});
     }
-  }
-
-  commitChartChoice(chartType, plotStyle) {
-    this.updateReport({chartType, plotStyle});
-
-    // set extras menu *after* chart choice has been committed.
-
-    const analysis = this.state.report.extrasMenu.analysis;
-
-    const extrasMenu = {
-      analysis: this.isAnalysisEnabled(analysis) ? analysis : 'linear',
-      vaue: this.isValueToggleEnabled() ? this.state.report.extrasMenu.value : 'absolute',
-    };
-
-    this.updateExtrasMenu(extrasMenu);
   }
 
   resetToastTimer() {
@@ -608,10 +607,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         this.updateSeriesData(result);
         this.update({result, newCachedData: false});
         this.updateReport({
-          sorting: this.sortConfigFor(result, this.state.report.sorting),
-        });
-        this.commitChartChoice(options.chartType || this.state.report.chartType,
-                               options.plotStyle || this.state.report.plotStyle);
+          chartType: options.chartType,
+          plotStyle: options.plotStyle,
+          sorting: this.sortConfigFor(result, this.state.report.sorting)});
       })
       .catch(err => console.error(err));
   }
