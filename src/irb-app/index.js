@@ -133,8 +133,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       report: new Report({
         chartType: 'bar',
         extrasMenu: {
-          lastSelectedAnalysis: 'linear',
-          lastSelectedVaue: 'absolute',
+          analysis: 'linear',
+          vaue: 'absolute',
           isEditing: false,
         },
         plotStyle: 'standard',
@@ -553,11 +553,11 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
     // set extras menu *after* chart choice has been committed.
 
-    const lastSelectedAnalysis = this.state.report.extrasMenu.lastSelectedAnalysis;
+    const analysis = this.state.report.extrasMenu.analysis;
 
     const extrasMenu = {
-      lastSelectedAnalysis: this.isAnalysisEnabled(lastSelectedAnalysis) ? lastSelectedAnalysis : 'linear',
-      lastSelectedVaue: this.isValueToggleEnabled() ? this.state.report.extrasMenu.lastSelectedValue : 'absolute',
+      analysis: this.isAnalysisEnabled(analysis) ? analysis : 'linear',
+      vaue: this.isValueToggleEnabled() ? this.state.report.extrasMenu.value : 'absolute',
     };
 
     this.updateExtrasMenu(extrasMenu);
