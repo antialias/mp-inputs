@@ -553,11 +553,11 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
     // set extras menu *after* chart choice has been committed.
 
+    const lastSelectedAnalysis = this.state.report.extrasMenu.lastSelectedAnalysis;
+
     const extrasMenu = {
-      lastSelectedAnalysis: this.isAnalysisEnabled(this.state.report.extrasMenu.lastSelectedAnalysis) ?
-        this.state.report.extrasMenu.lastSelectedAnalysis : 'linear',
-      lastSelectedVaue: this.isValueToggleEnabled() ?
-        this.state.report.extrasMenu.lastSelectedValue : 'absolute',
+      lastSelectedAnalysis: this.isAnalysisEnabled(lastSelectedAnalysis) ? lastSelectedAnalysis : 'linear',
+      lastSelectedVaue: this.isValueToggleEnabled() ? this.state.report.extrasMenu.lastSelectedValue : 'absolute',
     };
 
     this.updateExtrasMenu(extrasMenu);
