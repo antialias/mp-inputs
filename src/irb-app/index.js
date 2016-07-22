@@ -520,7 +520,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   chartTypes() {
-    return Object.keys(CHART_OPTIONS);
+    return ['bar', 'line', 'table'];
   }
 
   formattedChartName(type, style) {
