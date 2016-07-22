@@ -8,10 +8,11 @@ ul.toggle-view
           ul
             each analysis in $helpers.analysisChoices()
               li
-                button.button-option.icon(class=analysis
+                button.button-option.icon(
+                  class=analysis
                   class={
                     selected: analysis == report.extrasMenu.lastSelectedAnalysis,
-                    disabled: $helpers.isAnalysisDisabled(analysis)
+                    disabled: $helpers.isAnalysisDisabled(analysis),
                   }
                   onclick=() => $helpers.onAnalysisClick(analysis)
                 )= analysis
@@ -20,10 +21,11 @@ ul.toggle-view
           ul
             each value in $helpers.valueChoices()
               li
-                button.button-option.icon(class=value
+                button.button-option.icon(
+                  class=value
                   class={
                     selected: value == report.extrasMenu.lastSelectedValue,
-                    disabled: $helpers.isValueToggleDisabled()
+                    disabled: $helpers.isValueToggleDisabled(),
                   }
                   onclick=() => $helpers.onValueClick(value)
                 )= value
