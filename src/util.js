@@ -11,9 +11,11 @@ export function getTextWidth(text, font) {
   return context.measureText(text).width;
 }
 
-// TODO: Move to mixpanel-common utils
-// Compare data likeness of two different objects. Does not handle circular references, functions, or regex.
-// Sourced from: http://stackoverflow.com/a/16788517
+
+/**
+ * Compare data likeness of two different objects. Does not handle circular references, functions, or regex.
+ * Sourced from: http://stackoverflow.com/a/16788517
+ */
 export function isEqual(x, y) {
   if (x === null || x === undefined || y === null || y === undefined) {
     return x === y;
@@ -43,15 +45,16 @@ export function isEqual(x, y) {
   return Object.keys(y).every((idx) => p.indexOf(idx) !== -1) && p.every((idx) => isEqual(x[idx], y[idx]));
 }
 
-/* Combine nested objected into one object of keys and the sum of their numeric values
- *
- * Example:
- *   {                                        {
- *      first: {foo: 1, bar:2},          =>     foo: 5,
- *      second: {foo: 4, bar:1, tab: 2},        bar: 3,
- *   }                                          tab: 2,
- *                                            }
- */
+
+ /**
+  * Combine nested objected into one object of keys and the sum of their numeric values
+  * @example
+  * combineNestedObjKeys({
+  *   first: {foo: 1, bar:2},
+  *   second: {foo: 4, bar:1, tab: 2},
+  * });
+  * // {foo: 5, bar: 3, tab: 2}
+  */
 export function combineNestedObjKeys(obj, accum={}) {
   if (Object.values(obj).some(k => typeof k == 'number')) {
     Object.keys(obj).forEach(k=> accum[k] = accum[k] ? accum[k] + obj[k] : obj[k]);
@@ -61,7 +64,8 @@ export function combineNestedObjKeys(obj, accum={}) {
   return accum;
 }
 
-/* Sum the leaf values of a nested object,
+/**
+ * Sum the leaf values of a nested object,
  * constructing a new object with depth 1 less than the original
  */
 export function nestedObjectSum(obj) {
