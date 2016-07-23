@@ -21,7 +21,7 @@ document.registerElement('bar-chart', class extends Component {
         headers: [],
         rows: [],
         chartMax: 0,
-        chartOptions: null,
+        chartOptions: {},
         hoverTooltip: {show: false},
         mathTypes: [],
         showValueNames: [],
@@ -29,6 +29,16 @@ document.registerElement('bar-chart', class extends Component {
       },
       helpers: {
         getHeaderWidth: (text) => util.getTextWidth(text, 'bold 14px Helvetica'),
+        neededHeaders: () => {
+          let headers = null;
+          if (this.state.chartOptions.plotStyle == 'stacked') {
+            headers = this.state.headers.slice(0, this.state.headers.length - 1);
+            if (!headers.length) {
+              headers.push('$event');
+            }
+          }
+          return headers || this.state.headers;
+        },
         onMouseEnter: (ev, name, value, percent) => {
           let hoverTooltip = util.extend(this.state.hoverTooltip, {show: true});
           if (ev) {
@@ -54,23 +64,11 @@ document.registerElement('bar-chart', class extends Component {
   attributeChangedCallback() {
     let {headers, series} = this.getJSONAttribute('data');
     const chartOptions = this.getJSONAttribute('chartOptions') || {};
-    const mathTypes = JSON.parse(this.getAttribute('mathTypes')) || [];
-    const showValueNames = JSON.parse(this.getAttribute('showValueNames')) || [];
-    const sortConfig = this.getJSONAttribute('sorting') ;
+    const mathTypes = this.getJSONAttribute('mathTypes') || [];
+    const showValueNames = this.getJSONAttribute('showValueNames') || [];
+    const sortConfig = this.getJSONAttribute('sorting');
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
-    }
-
-    if (chartOptions && chartOptions.plotStyle == 'stacked') {
-      headers.pop();
-      if (!headers.length) {
-        headers.push('$events');
-        if (showValueNames.length == 1) {
-          series = {[showValueNames[0]]: series};
-        } else {
-          series = {Events: series};
-        }
-      }
     }
 
     series = util.nestedObjectSum(series);

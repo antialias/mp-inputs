@@ -1,4 +1,5 @@
 - const isStacked = chartOptions.plotStyle == 'stacked';
+- const neededHeaders = $helpers.neededHeaders();
 
 .bar-chart
   table
@@ -8,7 +9,7 @@
           irb-bar-chart-header(
             attributes={
               chartMax: JSON.stringify(chartMax),
-              headers: JSON.stringify(headers),
+              headers: JSON.stringify(neededHeaders),
               mathTypes: JSON.stringify(mathTypes),
               showValueNames: JSON.stringify(showValueNames),
             }
@@ -19,20 +20,22 @@
           for cell, j in row
             if cell
               if j < row.length - 1
-                - const headerText = headers[j] === '$event' ? 'Events' : util.renameProperty(headers[j]);
-                - const getLabel = value => headers[j] === '$event' ? util.renameEvent(value) : util.renamePropertyValue(value);
+                - const headerText = neededHeaders[j] === '$event' ? 'Events' : util.renameProperty(neededHeaders[j]);
+                - const getLabel = value => neededHeaders[j] === '$event' ? util.renameEvent(value) : util.renamePropertyValue(value);
 
-                if !(Array.isArray(cell) && isStacked)
+                if !(Array.isArray(cell) && isStacked && rows.length > 1)
                   td.chart-header(
                     rowSpan=cell.rowSpan || 1
                     style={'min-width': `${$helpers.getHeaderWidth(headerText)}px`}
                   )
-                    if Array.isArray(cell)
+                    if !Array.isArray(cell) || isStacked
+                      - const cellLabel = isStacked && rows.length == 1 ? showValueNames[0] : cell.value
+                      span(title=getLabel(cellLabel))= getLabel(cellLabel)
+                    else
                       ul
                         for value in cell
                           li(title=getLabel(value))= getLabel(value)
-                    else
-                      span(title=getLabel(cell.value))= getLabel(cell.value)
+
               else
                 td.chart-data
                   .chart-grid
