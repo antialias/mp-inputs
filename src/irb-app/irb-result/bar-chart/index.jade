@@ -39,10 +39,9 @@
               else
                 td.chart-data
                   .chart-grid
-                    - const numOfGridlines = 4
-                    - let gridNumber = 0
-                    while gridNumber < (numOfGridlines + 1)
-                      .grid-line(class=gridNumber++)
+                    - const numOfGridlines = new Array(5).fill();
+                    each _ in numOfGridlines
+                      .grid-line
                   ul(class={stacked: isStacked})
                     for value, k in cell
                       - const percentValueString = `${Math.floor(value / chartMax * 10000) / 100}%`
