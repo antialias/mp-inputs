@@ -1,4 +1,4 @@
-import { nestedObjectDepth } from 'mixpanel-common/build/util';
+import { nestedObjectDepth, sum } from 'mixpanel-common/util';
 
 /* Transpose a 2-dimensional array:
  * [[1, 2, 3],    [[1, 4],
@@ -123,9 +123,6 @@ function sortTableColumns(arr, colSortAttrs) {
       [a, b] = [a, b].map(entry => entry[0].value);
       return (a > b ? 1 : (a < b ? -1 : 0)) * (colSortAttrs[0].sortOrder === 'desc' ? -1 : 1);
     });
-}
-function sum(arr) {
-  return arr.reduce((sum, n) => sum + n, 0);
 }
 function nestedObjectToArrayWithSums(obj, depth) {
   let arr = Object.keys(obj).map(k => {
