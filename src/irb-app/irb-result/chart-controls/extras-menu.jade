@@ -1,7 +1,7 @@
 ul.toggle-view
-  li(class={selected: report.extrasMenu.isEditing})
+  li(class={selected: isEditingExtrasMenu})
     button.extras-menu(onclick=$helpers.startEditingExtrasMenu)
-    if report.extrasMenu.isEditing
+    if isEditingExtrasMenu
       .extras-menu-options.options
         .analysis.section
           .title analysis
@@ -11,7 +11,7 @@ ul.toggle-view
                 button.button-option.icon(
                   class=analysis
                   class={
-                    selected: analysis == report.extrasMenu.analysis,
+                    selected: analysis == report.displayOptions.analysis,
                     disabled: $helpers.isAnalysisDisabled(analysis),
                   }
                   onclick=() => $helpers.onAnalysisClick(analysis)
@@ -24,7 +24,7 @@ ul.toggle-view
                 button.button-option.icon(
                   class=value
                   class={
-                    selected: value == report.extrasMenu.value,
+                    selected: value == report.displayOptions.value,
                     disabled: $helpers.isValueToggleDisabled(),
                   }
                   onclick=() => $helpers.onValueClick(value)

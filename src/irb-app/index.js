@@ -21,62 +21,6 @@ import './index.styl';
 
 const MINUTE_MS = 1000 * 60;
 
-const CHART_OPTIONS = {
-  bar: {
-    standard: 'Bar',
-    stacked: 'Stacked bar',
-  },
-  line: {
-    standard: 'Line',
-    stacked: 'Stacked line',
-  },
-  table: {
-    standard: 'Table',
-  },
-};
-const ANALYSIS_CHOICES = ['linear', 'rolling', 'logarithmic', 'cumulative'];
-const VALUE_CHOICES = ['absolute', 'relative'];
-const ANALYSIS_CHART_TABLE = {
-  Bar: {
-    linear: true,
-    logarithmic: true,
-    rolling: false,
-    cumulative: false,
-  },
-  Line: {
-    linear: true,
-    logarithmic: true,
-    rolling: true,
-    cumulative: true,
-  },
-  Table: {
-    linear: true,
-    logarithmic: false,
-    rolling: false,
-    cumulative: false,
-  },
-  'Stacked bar': {
-    linear: true,
-    logarithmic: true,
-    rolling: false,
-    cumulative: false,
-  },
-  'Stacked line': {
-    linear: true,
-    logarithmic: true,
-    rolling: true,
-    cumulative: true,
-  },
-};
-const VALUE_CHART_TABLE = {
-  Bar: false,
-  Line: false,
-  Table: false,
-  'Stacked bar': true,
-  'Stacked Line': true,
-};
-
-
 document.registerElement('irb-app', class IRBApp extends MPApp {
   get config() {
     return {
@@ -131,13 +75,12 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   get resettableState() {
     return {
       report: new Report({
-        chartType: 'bar',
-        extrasMenu: {
+        displayOptions: {
+          chartType: 'bar',
+          plotStyle: 'standard',
           analysis: 'linear',
           vaue: 'absolute',
-          isEditing: false,
         },
-        plotStyle: 'standard',
         sections: new BuilderSections({
           show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
           time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
@@ -164,6 +107,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           plotStyle: 'standard',
         },
       },
+      isEditingExtrasMenu: false,
       newCachedData: false,
       resourceTypeFilter: 'all',
       result: {
@@ -212,7 +156,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   // Serialization helpers
 
   get persistenceKey() {
-    return 'irb-deadbeef13';
+    return 'irb-deadbeef18';
   }
 
   toSerializationAttrs() {
@@ -289,21 +233,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   updateReport(attrs) {
-    attrs.chartType = attrs.chartType || this.state.report.chartType;
-    attrs.plotStyle = attrs.plotStyle || this.state.report.plotStyle;
-
     this.update({report: Object.assign(this.state.report, attrs)});
-
-    // set extras menu *after* chart choice has been committed.
-
-    const analysis = this.state.report.extrasMenu.analysis;
-
-    const extrasMenu = extend(this.state.report.extrasMenu, {
-      analysis: this.isAnalysisEnabled(analysis) ? analysis : 'linear',
-      value: this.isValueToggleEnabled() ? this.state.report.extrasMenu.value : 'absolute',
-    });
-
-    this.update({report: Object.assign(this.state.report, {extrasMenu})});
   }
 
   loadReport(report) {
@@ -315,26 +245,6 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
   resetQuery() {
     return this.loadReport(null);
-  }
-
-  updateExtrasMenu(attrs) {
-    this.updateReport({extrasMenu: Object.assign(this.state.report.extrasMenu, attrs)});
-  }
-
-  selectedChartName() {
-    return this.formattedChartName(this.state.report.chartType, this.state.report.plotStyle);
-  }
-
-  analysisChoices() {
-    return ANALYSIS_CHOICES;
-  }
-
-  valueChoices() {
-    return VALUE_CHOICES;
-  }
-
-  isAnalysisEnabled(analysis) {
-    return ANALYSIS_CHART_TABLE[this.selectedChartName()][analysis];
   }
 
   sortConfigFor(result, currentSortConfig=null) {
@@ -368,12 +278,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     return sortConfig;
   }
 
-  isValueToggleEnabled() {
-    return VALUE_CHART_TABLE[this.selectedChartName()];
-  }
-
   stopEditingExtrasMenu() {
-    this.updateExtrasMenu({isEditing: false});
+    this.update({isEditingExtrasMenu: false});
 
     // TODO(chi) take actions based on chosen analysis and value.
   }
@@ -533,32 +439,16 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.update({chartToggle: extend(this.state.chartToggle, options)});
   }
 
-  chartTypes() {
-    return ['bar', 'line', 'table'];
-  }
-
-  formattedChartName(type, style) {
-    return CHART_OPTIONS[type][style];
-  }
-
-  styleChoicesForChartType(type) {
-    return Object.keys(CHART_OPTIONS[type]);
-  }
-
-  updateChartType(chartType) {
-    // For some types of query, changing to a different chart type necessitates a new
-    // query. Check the correct conditions here and call 'query'.
-
+  updateDisplayOpitons(displayOptions) {
     // for 'unique', 'average' and 'median', 'bar' and 'table' require a different query than
     // 'line'.
-    this.stopEditingChartToggle();
-    const plotStyle = this.state.chartToggle[chartType].plotStyle;
+    const chartType = displayOptions.chartType;
     if (this.state.report.sections.show.clauses.some(clause => ['unique', 'average', 'median'].includes(clause.math)) &&
-        (chartType === 'line' && ['bar', 'table'].includes(this.state.report.chartType)
-         || ['bar', 'table'].includes(chartType) && this.state.report.chartType === 'line')) {
-      this.query({chartType, plotStyle});
+        (chartType === 'line' && ['bar', 'table'].includes(this.state.report.displayOptions.chartType)
+         || ['bar', 'table'].includes(chartType) && this.state.report.displayOptions.chartType === 'line')) {
+      this.query(displayOptions).then(() => this.updateReport({displayOptions}));
     } else {
-      this.updateReport({chartType, plotStyle});
+      this.updateReport({displayOptions});
     }
   }
 
@@ -599,18 +489,14 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
     this.update({newCachedData: false});
     this.resetToastTimer();
-    this.queries.segmentation.run(cachedResult)
+    return this.queries.segmentation.run(cachedResult)
       .then(result => {
         if (!cachedResult) {
           this.queries.segmentationCache.set(query, result, cacheExpiry);
         }
         this.updateSeriesData(result);
         this.update({result, newCachedData: false});
-        this.updateReport({
-          chartType: options.chartType,
-          plotStyle: options.plotStyle,
-          sorting: this.sortConfigFor(result, this.state.report.sorting)});
-      })
+        this.updateReport({sorting: this.sortConfigFor(result, this.state.report.sorting)});})
       .catch(err => console.error(err));
   }
 });
