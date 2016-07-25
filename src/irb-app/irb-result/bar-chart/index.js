@@ -104,10 +104,10 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
   }
 
   attributeChangedCallback() {
-    this.headers = JSON.parse(this.getAttribute('headers') || '[]');
-    this.chartMax = JSON.parse(this.getAttribute('chartMax') || 'null');
-    this.mathTypes = JSON.parse(this.getAttribute('mathTypes') || '[]');
-    this.showValueNames = JSON.parse(this.getAttribute('showValueNames') || '[]');
+    this.headers = this.getJSONAttribute('headers') || [];
+    this.chartMax = this.getJSONAttribute('chartMax');
+    this.mathTypes = this.getJSONAttribute('mathTypes') || [];
+    this.showValueNames = this.getJSONAttribute('showValueNames') || [];
     this.render();
   }
 
