@@ -5,6 +5,7 @@
       when 'bar'
         bar-chart(attributes={
           data: JSON.stringify($helpers.filterResults(result)),
+          chartBoundaries: JSON.stringify($helpers.getBoundaries()),
           chartOptions: JSON.stringify($helpers.getChartOptions()),
           mathTypes: JSON.stringify($helpers.getUniqueShowMathTypes()),
           showValueNames: JSON.stringify($helpers.getShowValueNames()),

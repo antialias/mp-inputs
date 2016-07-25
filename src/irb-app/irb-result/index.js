@@ -16,6 +16,7 @@ document.registerElement('irb-result', class extends Component {
   get config() {
     return {
       helpers: {
+        getBoundaries: () => pick(this.getBoundingClientRect(), ['top', 'left']),
         getChartOptions: () => pick(this.state.report, ['plotStyle']),
         getShowValueNames: () => this.state.report.sections.show.clauses.map(clause => renameEvent(clause.value.name)),
         getUniqueShowMathTypes: () => new Set(this.state.report.sections.show.clauses.map(clause => clause.math)),

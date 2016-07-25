@@ -20,6 +20,7 @@ document.registerElement('bar-chart', class extends Component {
       defaultState: {
         headers: [],
         rows: [],
+        chartBoundaries: {},
         chartMax: 0,
         chartOptions: {},
         hoverTooltip: {show: false},
@@ -42,11 +43,7 @@ document.registerElement('bar-chart', class extends Component {
         onMouseEnter: (ev, name, value, percent) => {
           let hoverTooltip = util.extend(this.state.hoverTooltip, {show: true});
           if (ev) {
-            let parentResultNode = this.parentNode;
-            while (parentResultNode.nodeName.toLowerCase() !== 'irb-result') {
-              parentResultNode = parentResultNode.parentNode;
-            }
-            const chartBounds = parentResultNode.getBoundingClientRect();
+            const chartBounds = this.state.chartBoundaries;
             const targetBarBounds = ev.target.getBoundingClientRect();
             hoverTooltip = util.extend(hoverTooltip, {
               name,
@@ -67,6 +64,7 @@ document.registerElement('bar-chart', class extends Component {
 
   attributeChangedCallback() {
     let {headers, series} = this.getJSONAttribute('data');
+    const chartBoundaries = this.getJSONAttribute('chartBoundaries') || {};
     const chartOptions = this.getJSONAttribute('chartOptions') || {};
     const mathTypes = this.getJSONAttribute('mathTypes') || [];
     const showValueNames = this.getJSONAttribute('showValueNames') || [];
@@ -82,6 +80,7 @@ document.registerElement('bar-chart', class extends Component {
 
     this.update({
       chartMax,
+      chartBoundaries,
       chartOptions,
       headers,
       mathTypes,
