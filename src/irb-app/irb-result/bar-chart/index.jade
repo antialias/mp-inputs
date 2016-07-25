@@ -39,8 +39,7 @@
               else
                 td.chart-data
                   .chart-grid
-                    - const numOfGridlines = new Array(5).fill();
-                    each _ in numOfGridlines
+                    each _ in Array(5).fill()
                       .grid-line
                   ul(class={stacked: isStacked})
                     for value, k in cell
@@ -54,6 +53,9 @@
                         .background(class=`background-color-${(k % 8) + 1}`)
                         if value / chartMax > .06
                           .label= util.abbreviateNumber(value)
+
+  //- For the hover tool tip to break out of the scroll overflow we are manually calculating where it should be on the screen.
+  //- TODO When we change how scrolling works for results: place a tooltip on each li.chart-bar and use CSS to show/hide.
   if hoverTooltip.show
     .hover-label(
       style={top: hoverTooltip.cssTop, left: hoverTooltip.cssLeft}
