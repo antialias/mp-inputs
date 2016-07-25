@@ -9,7 +9,7 @@ ul.chart-toggle
       button.label.icon(
         class=[chartType, selectedPlotStyle]
         class={selected: chartType == report.displayOptions.chartType}
-        onclick=() => $helpers.onTypeClick(chartType)
+        onclick=() => $helpers.onStyleClick(chartType, plotstyle)
       )= $helpers.formattedChartName(chartType, selectedPlotStyle)
       if styleChoicesForChartType.length > 1
         button.dropdown(onclick=() => $helpers.onDropdownClick(chartType))

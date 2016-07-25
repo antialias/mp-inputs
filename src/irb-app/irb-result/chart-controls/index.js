@@ -32,7 +32,6 @@ document.registerElement('chart-toggle', class extends Component {
         selectedPlotStyle: type => this.state.chartToggle[type].plotStyle,
         styleChoicesForChartType: type => this.findPanelParentByTagName('irb-result').styleChoicesForChartType(type),
         onDropdownClick: editingType => this.app.updateChartToggle({editingType}),
-        onTypeClick: chartType => this.findPanelParentByTagName('irb-result').updateDisplayOpitons({chartType}),
         onStyleClick: (chartType, plotStyle) => this.findPanelParentByTagName('irb-result').updateDisplayOpitons({chartType, plotStyle}),
       },
     };
