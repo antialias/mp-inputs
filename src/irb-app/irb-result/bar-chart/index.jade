@@ -1,5 +1,5 @@
 - const isStacked = chartOptions.plotStyle == 'stacked';
-- const neededHeaders = $helpers.neededHeaders();
+- const headersToDisplay = $helpers.headersToDisplay();
 
 .bar-chart
   table
@@ -9,7 +9,7 @@
           irb-bar-chart-header(
             attributes={
               chartMax: JSON.stringify(chartMax),
-              headers: JSON.stringify(neededHeaders),
+              headers: JSON.stringify(headersToDisplay),
               mathTypes: JSON.stringify(mathTypes),
               showValueNames: JSON.stringify(showValueNames),
             }
@@ -20,8 +20,8 @@
           for cell, j in row
             if cell
               if j < row.length - 1
-                - const headerText = neededHeaders[j] === '$event' ? 'Events' : util.renameProperty(neededHeaders[j]);
-                - const getLabel = value => neededHeaders[j] === '$event' ? util.renameEvent(value) : util.renamePropertyValue(value);
+                - const headerText = headersToDisplay[j] === '$event' ? 'Events' : util.renameProperty(headersToDisplay[j]);
+                - const getLabel = value => headersToDisplay[j] === '$event' ? util.renameEvent(value) : util.renamePropertyValue(value);
 
                 if !(Array.isArray(cell) && isStacked && rows.length > 1)
                   td.chart-header(

@@ -30,7 +30,7 @@ document.registerElement('bar-chart', class extends Component {
       },
       helpers: {
         getHeaderWidth: (text) => util.getTextWidth(text, 'bold 14px Helvetica'),
-        neededHeaders: () => {
+        headersToDisplay: () => {
           let headers = null;
           if (this.state.chartOptions.plotStyle == 'stacked') {
             headers = this.state.headers.slice(0, this.state.headers.length - 1);
