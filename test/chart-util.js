@@ -22,22 +22,97 @@ const d2Obj = {
   },
 };
 
+const d3Obj = {
+  US: {
+    llama: {
+      red: 3,
+      blue: 2,
+    },
+    aardvark: {
+      red: 2,
+      blue: 6,
+    },
+  },
+  Canada: {
+    llama: {
+      red: 10,
+      blue: 3,
+    },
+    aardvark: {
+      red: 1,
+      blue: 5,
+    },
+  },
+};
+
+const d4Obj = {
+  bunnies: {
+    US: {
+      llama: {
+        red: 3,
+        blue: 2,
+      },
+      aardvark: {
+        red: 2,
+        blue: 16,
+      },
+    },
+    Canada: {
+      llama: {
+        red: 10,
+        blue: 13,
+      },
+      aardvark: {
+        red: 1,
+        blue: 5,
+      },
+    },
+  },
+  kittens: {
+    US: {
+      llama: {
+        red: 3,
+        blue: 12,
+      },
+      aardvark: {
+        red: 2,
+        blue: 6,
+      },
+    },
+    Canada: {
+      llama: {
+        red: 10,
+        blue: 3,
+      },
+      aardvark: {
+        red: 1,
+        blue: 15,
+      },
+    },
+  },
+};
+
 describe('nestedObjectToTableData', function() {
-  it('sorts by group sums', function() {
+  it('sorts by group labels', function() {
     const arr = nestedObjectToTableData(d2Obj, {
-      sortGroup: 0,
-      sortOrder: 'desc',
+      sortBy: 'column',
+      colSortAttrs: [
+        {
+          sortBy: 'label',
+          sortOrder: 'asc',
+        },
+      ],
     });
     expect(arr).to.eql([
-      [{value: 'Mexico', sum: 42}, {'aardvark': 7, 'llama': 35}],
       [{value: 'Canada', sum: 19}, {'aardvark': 6, 'llama': 13}],
+      [{value: 'Mexico', sum: 42}, {'aardvark': 7, 'llama': 35}],
       [{value: 'US',     sum: 13}, {'aardvark': 8, 'llama': 5 }],
     ]);
   });
 
   it('sorts by individual values', function() {
     const arr = nestedObjectToTableData(d2Obj, {
-      sortGroup: 1,
+      sortBy: 'value',
       sortColumn: 'aardvark',
       sortOrder: 'asc',
     });
@@ -45,6 +120,76 @@ describe('nestedObjectToTableData', function() {
       [{value: 'Canada', sum: 19}, {'aardvark': 6, 'llama': 13}],
       [{value: 'Mexico', sum: 42}, {'aardvark': 7, 'llama': 35}],
       [{value: 'US',     sum: 13}, {'aardvark': 8, 'llama': 5 }],
+    ]);
+  });
+
+  it('expands the header rows in a depth-3 object', function() {
+    const arr = nestedObjectToTableData(d3Obj, {
+      sortBy: 'column',
+      colSortAttrs: [
+        {
+          sortBy: 'label',
+          sortOrder: 'asc',
+        },
+        {
+          sortBy: 'label',
+          sortOrder: 'desc',
+        },
+      ],
+    });
+    expect(arr).to.eql([
+      [{value: 'Canada', sum: 19, rowSpan: 2}, {value: 'llama',    sum: 13}, {'blue': 3, 'red': 10}],
+      [null,                                   {value: 'aardvark', sum: 6 }, {'blue': 5, 'red': 1 }],
+      [{value: 'US',     sum: 13, rowSpan: 2}, {value: 'llama',    sum: 5 }, {'blue': 2, 'red': 3 }],
+      [null,                                   {value: 'aardvark', sum: 8 }, {'blue': 6, 'red': 2 }],
+    ]);
+  });
+
+  it('expands the header rows in a depth-4 object', function() {
+    const arr = nestedObjectToTableData(d4Obj, {
+      sortBy: 'column',
+      colSortAttrs: [
+        {
+          sortBy: 'label',
+          sortOrder: 'desc',
+        },
+        {
+          sortBy: 'label',
+          sortOrder: 'asc',
+        },
+        {
+          sortBy: 'label',
+          sortOrder: 'desc',
+        },
+      ],
+    });
+    expect(arr).to.eql([
+      [{value: 'kittens', sum: 52, rowSpan: 4}, {value: 'Canada', sum: 29, rowSpan: 2}, {value: 'llama',    sum: 13}, {'blue': 3,  'red': 10}],
+      [null,                                    null,                                   {value: 'aardvark', sum: 16}, {'blue': 15, 'red': 1 }],
+      [null,                                    {value: 'US',     sum: 23, rowSpan: 2}, {value: 'llama',    sum: 15}, {'blue': 12, 'red': 3 }],
+      [null,                                    null,                                   {value: 'aardvark', sum: 8 }, {'blue': 6,  'red': 2 }],
+      [{value: 'bunnies', sum: 52, rowSpan: 4}, {value: 'Canada', sum: 29, rowSpan: 2}, {value: 'llama',    sum: 23}, {'blue': 13, 'red': 10}],
+      [null,                                    null,                                   {value: 'aardvark', sum: 6 }, {'blue': 5,  'red': 1 }],
+      [null,                                    {value: 'US',     sum: 23, rowSpan: 2}, {value: 'llama',    sum: 5 }, {'blue': 2,  'red': 3 }],
+      [null,                                    null,                                   {value: 'aardvark', sum: 18}, {'blue': 16, 'red': 2 }],
+    ]);
+  });
+
+  it('sorts by individual values in a depth-4 object', function() {
+    const arr = nestedObjectToTableData(d4Obj, {
+      sortBy: 'value',
+      sortColumn: 'blue',
+      sortOrder: 'asc',
+    });
+    expect(arr).to.eql([
+      [{value: 'bunnies', sum: 52}, {value: 'US',     sum: 23}, {value: 'llama',    sum: 5 }, {'blue': 2,  'red': 3 }],
+      [{value: 'kittens', sum: 52}, {value: 'Canada', sum: 29}, {value: 'llama',    sum: 13}, {'blue': 3,  'red': 10}],
+      [{value: 'bunnies', sum: 52}, {value: 'Canada', sum: 29}, {value: 'aardvark', sum: 6 }, {'blue': 5,  'red': 1 }],
+      [{value: 'kittens', sum: 52}, {value: 'US',     sum: 23}, {value: 'aardvark', sum: 8 }, {'blue': 6,  'red': 2 }],
+      [{value: 'kittens', sum: 52}, {value: 'US',     sum: 23}, {value: 'llama',    sum: 15}, {'blue': 12, 'red': 3 }],
+      [{value: 'bunnies', sum: 52}, {value: 'Canada', sum: 29}, {value: 'llama',    sum: 23}, {'blue': 13, 'red': 10}],
+      [{value: 'kittens', sum: 52}, {value: 'Canada', sum: 29}, {value: 'aardvark', sum: 16}, {'blue': 15, 'red': 1 }],
+      [{value: 'bunnies', sum: 52}, {value: 'US',     sum: 23}, {value: 'aardvark', sum: 18}, {'blue': 16, 'red': 2 }],
     ]);
   });
 });
@@ -100,28 +245,7 @@ describe('nestedObjectToBarChartData', function() {
   });
 
   it('flattens a deeply nested object', function() {
-    const arr = nestedObjectToBarChartData({
-      US: {
-        llama: {
-          red: 3,
-          blue: 2,
-        },
-        aardvark: {
-          red: 2,
-          blue: 6,
-        },
-      },
-      Canada: {
-        llama: {
-          red: 10,
-          blue: 3,
-        },
-        aardvark: {
-          red: 1,
-          blue: 5,
-        },
-      },
-    }, {
+    const arr = nestedObjectToBarChartData(d3Obj, {
       sortBy: 'column',
       colSortAttrs: [
         {
@@ -147,52 +271,7 @@ describe('nestedObjectToBarChartData', function() {
   });
 
   it('flattens a depth-4 nested object', function() {
-    const arr = nestedObjectToBarChartData({
-      bunnies: {
-        US: {
-          llama: {
-            red: 3,
-            blue: 2,
-          },
-          aardvark: {
-            red: 2,
-            blue: 6,
-          },
-        },
-        Canada: {
-          llama: {
-            red: 10,
-            blue: 3,
-          },
-          aardvark: {
-            red: 1,
-            blue: 5,
-          },
-        },
-      },
-      kittens: {
-        US: {
-          llama: {
-            red: 3,
-            blue: 2,
-          },
-          aardvark: {
-            red: 2,
-            blue: 6,
-          },
-        },
-        Canada: {
-          llama: {
-            red: 10,
-            blue: 3,
-          },
-          aardvark: {
-            red: 1,
-            blue: 5,
-          },
-        },
-      },
-    }, {
+    const arr = nestedObjectToBarChartData(d4Obj, {
       sortBy: 'column',
       colSortAttrs: [
         {
@@ -214,14 +293,14 @@ describe('nestedObjectToBarChartData', function() {
       ],
     });
     expect(arr).to.eql([
-      [{value: 'kittens', sum: 32, rowSpan: 4}, {value: 'US',     sum: 13, rowSpan: 2}, {value: 'aardvark', sum: 8 }, ['blue', 'red'], [6, 2 ]],
-      [null,                                    null,                                   {value: 'llama',    sum: 5 }, ['blue', 'red'], [2, 3 ]],
-      [null,                                    {value: 'Canada', sum: 19, rowSpan: 2}, {value: 'llama',    sum: 13}, ['blue', 'red'], [3, 10]],
-      [null,                                    null,                                   {value: 'aardvark', sum: 6 }, ['blue', 'red'], [5, 1 ]],
-      [{value: 'bunnies', sum: 32, rowSpan: 4}, {value: 'US',     sum: 13, rowSpan: 2}, {value: 'aardvark', sum: 8 }, ['blue', 'red'], [6, 2 ]],
-      [null,                                    null,                                   {value: 'llama',    sum: 5 }, ['blue', 'red'], [2, 3 ]],
-      [null,                                    {value: 'Canada', sum: 19, rowSpan: 2}, {value: 'llama',    sum: 13}, ['blue', 'red'], [3, 10]],
-      [null,                                    null,                                   {value: 'aardvark', sum: 6 }, ['blue', 'red'], [5, 1 ]],
+      [{value: 'kittens', sum: 52, rowSpan: 4}, {value: 'US',     sum: 23, rowSpan: 2}, {value: 'llama',    sum: 15}, ['blue', 'red'], [12, 3 ]],
+      [null,                                    null,                                   {value: 'aardvark', sum: 8 }, ['blue', 'red'], [6,  2 ]],
+      [null,                                    {value: 'Canada', sum: 29, rowSpan: 2}, {value: 'aardvark', sum: 16}, ['blue', 'red'], [15, 1 ]],
+      [null,                                    null,                                   {value: 'llama',    sum: 13}, ['blue', 'red'], [3,  10]],
+      [{value: 'bunnies', sum: 52, rowSpan: 4}, {value: 'US',     sum: 23, rowSpan: 2}, {value: 'aardvark', sum: 18}, ['blue', 'red'], [16, 2 ]],
+      [null,                                    null,                                   {value: 'llama',    sum: 5 }, ['blue', 'red'], [2,  3 ]],
+      [null,                                    {value: 'Canada', sum: 29, rowSpan: 2}, {value: 'llama',    sum: 23}, ['blue', 'red'], [13, 10]],
+      [null,                                    null,                                   {value: 'aardvark', sum: 6 }, ['blue', 'red'], [5,  1 ]],
     ]);
   });
 });

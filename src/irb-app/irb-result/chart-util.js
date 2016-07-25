@@ -76,12 +76,53 @@ export function nestedObjectPaths(obj, depth=0) {
 }
 
 export function nestedObjectToTableData(obj, sortConfig) {
-  let arr = nestedObjectToArrayWithSums(obj, nestedObjectDepth(obj))
-    .sort((a, b) => {
-      [a, b] = [a, b].map(entry => entry[sortConfig.sortGroup][sortConfig.sortColumn || 'sum']);
-      return (a > b ? 1 : (a < b ? -1 : 0)) * (sortConfig.sortOrder === 'desc' ? -1 : 1);
-    });
+  const objDepth = nestedObjectDepth(obj);
+  let arr = nestedObjectToArrayWithSums(obj, objDepth);
+
+  switch(sortConfig.sortBy) {
+    case 'column':
+      arr = sortTableColumns(arr, sortConfig.colSortAttrs);
+      arr = expandTableHeaderRows(arr, objDepth);
+      break;
+    case 'value':
+      arr = expandTableHeaderRows(arr, objDepth, false);
+      arr = arr.sort((a, b) => {
+        [a, b] = [a, b].map(entry => entry[entry.length - 1][sortConfig.sortColumn]);
+        return (a > b ? 1 : (a < b ? -1 : 0)) * (sortConfig.sortOrder === 'desc' ? -1 : 1);
+      });
+      break;
+  }
   return arr;
+}
+
+function expandTableHeaderRows(arr, depth, allowNullHeaders=true) {
+  if (depth <= 2) {
+    return arr;
+  }
+  return arr.reduce((expanded, row) => {
+    const expandedChild = expandTableHeaderRows(row[1], depth - 1, allowNullHeaders);
+    const newRows = expandedChild.map((childRow, cri) => [
+      (cri && allowNullHeaders) ? null : row[0], ...childRow,
+    ]);
+    if (allowNullHeaders) {
+      newRows[0][0].rowSpan = newRows.length;
+    }
+    return(expanded.concat(newRows));
+  }, []);
+}
+
+function sortTableColumns(arr, colSortAttrs) {
+  let childSortAttrs = colSortAttrs.slice(1);
+  if (childSortAttrs.length) {
+    arr = arr.map(child => {
+      return [child[0], sortTableColumns(child[1], childSortAttrs)];
+    });
+  }
+  return arr
+    .sort((a, b) => {
+      [a, b] = [a, b].map(entry => entry[0].value);
+      return (a > b ? 1 : (a < b ? -1 : 0)) * (colSortAttrs[0].sortOrder === 'desc' ? -1 : 1);
+    });
 }
 function sum(arr) {
   return arr.reduce((sum, n) => sum + n, 0);
@@ -91,12 +132,12 @@ function nestedObjectToArrayWithSums(obj, depth) {
     let child, currentSum;
     if (depth > 2) {
       child = nestedObjectToArrayWithSums(obj[k], depth - 1);
-      currentSum = sum(child);
+      currentSum = sum(child.map(c => c[0].sum));
     } else {
-      child = [obj[k]];
-      currentSum = sum(Object.values(obj[k]));
+      child = obj[k];
+      currentSum = sum(Object.values(child));
     }
-    return [{value: k, sum: currentSum}, ...child];
+    return [{value: k, sum: currentSum}, child];
   });
   return arr;
 }
@@ -309,4 +350,11 @@ export function filterObjectAtDepth(obj, filter, depth=1) {
   const newObject = JSON.parse(JSON.stringify(obj));
   _intoObject(newObject, filter, depth);
   return newObject;
+}
+
+export function validSortConfig(headers, sortConfig) {
+  return sortConfig && (
+    sortConfig.sortBy === 'value' ||
+    sortConfig.colSortAttrs.length === headers.length
+  );
 }
