@@ -87,7 +87,7 @@ export function nestedObjectToTableData(obj, sortConfig) {
     case 'value':
       arr = expandTableHeaderRows(arr, objDepth, false);
       arr = arr.sort((a, b) => {
-        [a, b] = [a, b].map(entry => entry[entry.length - 1][sortConfig.sortColumn]);
+        [a, b] = [a, b].map(entry => entry[entry.length - 1][sortConfig.sortColumn] || 0);
         return (a > b ? 1 : (a < b ? -1 : 0)) * (sortConfig.sortOrder === 'desc' ? -1 : 1);
       });
       break;
@@ -350,11 +350,4 @@ export function filterObjectAtDepth(obj, filter, depth=1) {
   const newObject = JSON.parse(JSON.stringify(obj));
   _intoObject(newObject, filter, depth);
   return newObject;
-}
-
-export function validSortConfig(headers, sortConfig) {
-  return sortConfig && (
-    sortConfig.sortBy === 'value' ||
-    sortConfig.colSortAttrs.length === headers.length
-  );
 }

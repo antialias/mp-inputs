@@ -258,7 +258,15 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           },
         ],
       },
-      table: {},
+      table: {
+        sortBy: 'column',
+        colSortAttrs: [
+          {
+            sortBy: 'label',
+            sortOrder: 'asc',
+          },
+        ],
+      },
     };
 
     if (result) {
@@ -270,7 +278,21 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           }
           sortConfig.bar.colSortAttrs = colSortAttrs;
         } else {
-          sortConfig = currentSortConfig;
+          sortConfig.bar = currentSortConfig.bar;
+        }
+
+        if (currentSortConfig.table.sortBy === 'column') {
+          let numHeaders = result.headers.length;
+          if (numHeaders > 1) {
+            numHeaders--;
+          }
+          let colSortAttrs = currentSortConfig.table.colSortAttrs.slice(0, numHeaders);
+          for (let i = colSortAttrs.length; i < numHeaders; i++) {
+            colSortAttrs.push({sortBy: 'label', sortOrder: 'asc'});
+          }
+          sortConfig.table.colSortAttrs = colSortAttrs;
+        } else {
+          sortConfig.table = currentSortConfig.table;
         }
       }
     }

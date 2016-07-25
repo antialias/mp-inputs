@@ -6,7 +6,7 @@ import WebComponent from 'webcomponent';
 import * as util from '../../../util';
 import {
   nestedObjectPaths,
-  nestedObjectToTableRows,
+  nestedObjectToTableData,
   transpose,
 } from '../chart-util';
 
@@ -28,7 +28,11 @@ document.registerElement('table-chart', class extends Component {
   }
 
   attributeChangedCallback() {
-    let { headers, series, resourceDescription } = JSON.parse(this.getAttribute('data'));
+    let {headers, series, resourceDescription} = this.getJSONAttribute('data');
+    const sortConfig = this.getJSONAttribute('sorting');
+    if (!this.validSortConfig(headers, sortConfig)) {
+      return;
+    }
 
     series = util.nestedObjectSum(series);
 
@@ -42,9 +46,9 @@ document.registerElement('table-chart', class extends Component {
 
     } else if (headers.length > 1) { // nested table with last group spread over columns
       headers = headers.slice(0, -1);
-      rows = nestedObjectToTableRows(series, 1);
+      rows = nestedObjectToTableData(series, sortConfig);
 
-      const rowData = rows.map(row => row.slice(-1)[0].value); // last item of each row is data
+      const rowData = rows.map(row => row.slice(-1)[0]); // last item of each row is data
       rows = rows.map(row => row.slice(0, -1)); // strip off data items
 
       columnHeaders = util.nestedObjectKeys(series).sort();
@@ -67,6 +71,22 @@ document.registerElement('table-chart', class extends Component {
       columnHeaders,
       columnRows,
     });
+  }
+
+  validSortConfig(headers, sortConfig) {
+    if (!sortConfig) {
+      return false;
+    }
+
+    if (headers.length > 1) {
+      headers = headers.slice(0, -1);
+    }
+
+    if (sortConfig.sortBy === 'value') {
+      return !!sortConfig.sortColumn;
+    } else {
+      return sortConfig.colSortAttrs.length === headers.length;
+    }
   }
 });
 

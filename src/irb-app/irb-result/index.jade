@@ -22,6 +22,7 @@
           - resourceDescription = 'Number of events'
         table-chart(attributes={
           data: $helpers.tableData(result, resourceDescription),
+          sorting: JSON.stringify(report.sorting.table),
         })
   if result.loading && report.displayOptions.chartType !== 'line'
     .loader
