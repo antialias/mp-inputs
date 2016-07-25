@@ -45,7 +45,6 @@ export function isEqual(x, y) {
   return Object.keys(y).every((idx) => p.indexOf(idx) !== -1) && p.every((idx) => isEqual(x[idx], y[idx]));
 }
 
-
  /**
   * Combine nested objected into one object of keys and the sum of their numeric values
   * @example
