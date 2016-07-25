@@ -52,9 +52,7 @@
                         onmouseenter=(ev) => $helpers.onMouseEnter(ev, segmentName, value, percentValueString)
                         onmouseleave=$helpers.onMouseLeave
                       )
-                        .background(
-                          class=`background-color-${(k % 8) + 1}`
-                        )
+                        .background(class=`background-color-${(k % 8) + 1}`)
                         if value / chartMax > .06
                           .label= util.abbreviateNumber(value)
   if hoverTooltip.show
