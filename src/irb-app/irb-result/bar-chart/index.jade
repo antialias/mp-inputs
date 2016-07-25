@@ -59,7 +59,7 @@
   if hoverTooltip.show
     .hover-label(
       style={top: hoverTooltip.cssTop, left: hoverTooltip.cssLeft}
-      onmouseenter=() => $helpers.onMouseEnter()
+      onmouseenter=$helpers.onMouseEnter
       onmouseleave=$helpers.onMouseLeave
     )
       .content

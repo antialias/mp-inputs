@@ -42,7 +42,7 @@ document.registerElement('bar-chart', class extends Component {
         },
         onMouseEnter: (ev, name, value, percent) => {
           let hoverTooltip = util.extend(this.state.hoverTooltip, {show: true});
-          if (ev) {
+          if (ev && name) {
             const chartBounds = this.state.chartBoundaries;
             const targetBarBounds = ev.target.getBoundingClientRect();
             hoverTooltip = util.extend(hoverTooltip, {
