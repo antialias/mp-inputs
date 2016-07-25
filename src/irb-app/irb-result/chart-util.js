@@ -328,40 +328,6 @@ function flattenNestedObjectToArray(obj) {
   }
 }
 
-/* Format rows for nested table, calculating necessary rowspans
- * Example:
- *   for each row
- *   ['a', 'a', 'a', 'b', 'b'] => [{value: 'a', rowSpan: 3}, null, null, {value: 'b': rowSpan: 2}, null]
- * Won't allow a lower row to have spans that cross over changes in a higher row,
- * in order to maintain the "tree-like" structure of the original nested object.
- * Example:
- *   NO
- *     [['a', 'a', 'b', 'b'], =/=> [[a2, null,   b2, null],
- *      ['x', 'y', 'y', 'y']]       [x1,   y3, null, null]]
- *   YES
- *     [['a', 'a', 'b', 'b'], => [[a2, null, b2, null],
- *      ['x', 'y', 'y', 'y']]     [x1,   y1, y2, null]]
- */
-export function nestedObjectToTableRows(obj, depth=0) {
-  return transpose(transpose(nestedObjectPaths(obj, depth)).map((row, y, rows) => {
-    let prevRow = y && rows[y - 1];
-
-    return row.map((value, x) => {
-      if (x && row[x - 1] === row[x] && (!prevRow || prevRow[x - 1] === prevRow[x])) {
-        return null;
-      } else {
-        let rowSpan = countRun(row, x);
-
-        if (prevRow) {
-          rowSpan = Math.min(rowSpan, countRun(prevRow, x));
-        }
-
-        return {value, rowSpan};
-      }
-    });
-  }));
-}
-
 function _intoObject(obj, filter, depth) {
   Object.keys(obj).forEach( key => {
     if (nestedObjectDepth(obj) === depth) {
