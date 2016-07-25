@@ -50,7 +50,7 @@
                       li.chart-bar(
                         style={width: percentValueString}
                         onmouseenter=(ev) => $helpers.onMouseEnter(ev, segmentName, value, percentValueString)
-                        onmouseleave=() => $helpers.onMouseLeave()
+                        onmouseleave=$helpers.onMouseLeave
                       )
                         .background(style={opacity: .9 - (0.1 * (k % 8))})
                         if value / chartMax > .06
@@ -59,7 +59,7 @@
     .hover-label(
       style={top: hoverTooltip.cssTop, left: hoverTooltip.cssLeft}
       onmouseenter=() => $helpers.onMouseEnter()
-      onmouseleave=() => $helpers.onMouseLeave()
+      onmouseleave=$helpers.onMouseLeave
     )
       .content
         .title= hoverTooltip.name
