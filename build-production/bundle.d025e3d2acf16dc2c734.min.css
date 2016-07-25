@@ -1062,7 +1062,8 @@ filter-property-pane-content .pane-content ul.resource-value {
   width: 100%;
 }
 .bar-chart table thead {
-  box-shadow: 0 0 8px #92949d;
+  border-top: 1px solid #ebecef;
+  box-shadow: 0 0 6px #c4c8d6;
   position: relative;
   z-index: 1;
 }
@@ -1071,21 +1072,52 @@ filter-property-pane-content .pane-content ul.resource-value {
   display: block;
   padding: 0;
 }
+.bar-chart table thead irb-bar-chart-header .bar-chart-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.bar-chart table thead irb-bar-chart-header .bar-chart-container > div {
+  border-right: 1px solid #f2f2f4;
+}
+.bar-chart table thead irb-bar-chart-header .bar-chart-container:last-child {
+  border-right: 0 none;
+}
 .bar-chart table thead irb-bar-chart-header .bar-chart-header,
-.bar-chart table thead irb-bar-chart-header .bar-chart-axis,
-.bar-chart table thead irb-bar-chart-header .bar-chart-tick {
-  display: inline-block;
+.bar-chart table thead irb-bar-chart-header .bar-chart-axis {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 10px 0;
 }
 .bar-chart table thead irb-bar-chart-header .bar-chart-header .text,
-.bar-chart table thead irb-bar-chart-header .bar-chart-axis .text,
-.bar-chart table thead irb-bar-chart-header .bar-chart-tick .text {
-  padding: 8px;
+.bar-chart table thead irb-bar-chart-header .bar-chart-axis .text {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+              -ms-grid-row-align: center;
+          align-items: center;
 }
-.bar-chart table thead irb-bar-chart-header .bar-chart-tick .text {
-  margin-left: -50px;
-  padding: 8px 0;
+.bar-chart table thead irb-bar-chart-header .bar-chart-header .text {
+  padding-left: 15px;
+}
+.bar-chart table thead irb-bar-chart-header .bar-chart-axis {
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+.bar-chart table thead irb-bar-chart-header .bar-chart-axis .axis-title {
   text-align: center;
-  width: 100px;
+  width: 50%;
+}
+.bar-chart table thead irb-bar-chart-header .bar-chart-axis .max-value {
+  color: #92949d;
+  padding-right: 15px;
+  text-align: right;
+  width: calc(25% - 15px);
 }
 .bar-chart table thead,
 .bar-chart table tbody {
@@ -1130,8 +1162,16 @@ filter-property-pane-content .pane-content ul.resource-value {
   border-right: none;
   text-align: left;
 }
+.bar-chart table td ul.stacked {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
 .bar-chart table td li {
   white-space: nowrap;
+  -webkit-transition: width 0.5s;
+  transition: width 0.5s;
 }
 .bar-chart table td li:not(:last-child) {
   margin-bottom: 7px;
@@ -1150,31 +1190,70 @@ filter-property-pane-content .pane-content ul.resource-value {
   position: relative;
 }
 .bar-chart table td.chart-data .chart-grid {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
   height: 100%;
   left: 0;
+  opacity: 0.3;
   position: absolute;
   top: 0;
   width: 100%;
 }
-.bar-chart table td.chart-data .chart-grid .chart-line {
-  border-right: 2px solid #f8f9f9;
-  display: inline-block;
+.bar-chart table td.chart-data .chart-grid .grid-line {
+  border-right: 2px solid #e4e5e9;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
   height: 100%;
-  margin-left: -2px;
+}
+.bar-chart table td.chart-data .chart-grid .grid-line:last-child {
+  border: 0 none;
 }
 .bar-chart table td.chart-data li {
+  cursor: pointer;
   height: 20px;
   margin-bottom: 2px;
-  margin-left: -2px;
+  min-width: 1px;
   position: relative;
   text-align: right;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 .bar-chart table td.chart-data li .background {
-  background: #92949d;
+  background: #646670;
   height: 100%;
   position: absolute;
   width: 100%;
   z-index: 0;
+}
+.bar-chart table td.chart-data li .background.background-color-1 {
+  background: #646670;
+}
+.bar-chart table td.chart-data li .background.background-color-2 {
+  background: #727480;
+}
+.bar-chart table td.chart-data li .background.background-color-3 {
+  background: #81838f;
+}
+.bar-chart table td.chart-data li .background.background-color-4 {
+  background: #91939d;
+}
+.bar-chart table td.chart-data li .background.background-color-5 {
+  background: #a1a2ab;
+}
+.bar-chart table td.chart-data li .background.background-color-6 {
+  background: #b0b2b9;
+}
+.bar-chart table td.chart-data li .background.background-color-7 {
+  background: #c0c1c7;
+}
+.bar-chart table td.chart-data li .background.background-color-8 {
+  background: #d0d1d5;
 }
 .bar-chart table td.chart-data li .label {
   color: #fff;
@@ -1186,10 +1265,62 @@ filter-property-pane-content .pane-content ul.resource-value {
   width: 100px;
   z-index: 1;
 }
-.bar-chart table td.chart-data li.narrow .label {
+.bar-chart .hover-label {
+  position: absolute;
+}
+.bar-chart .hover-label .content {
+  background-color: #fff;
+  border: 1px solid #92949d;
+  border-radius: 3px;
   color: #92949d;
-  margin-right: -108px;
-  text-align: left;
+  font: 700 11px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  left: -50px;
+  max-width: 200px;
+  padding: 5px;
+  position: absolute;
+  top: -45px;
+  text-align: center;
+  -webkit-user-select: text;
+     -moz-user-select: text;
+      -ms-user-select: text;
+          user-select: text;
+  z-index: 3;
+}
+.bar-chart .hover-label .content .title {
+  border-bottom: 1px solid #c4c8d6;
+  padding-bottom: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.bar-chart .hover-label .content .results {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding-top: 5px;
+  height: 15;
+}
+.bar-chart .hover-label .content .results div {
+  line-height: 15px;
+  padding: 0 5px;
+}
+.bar-chart .hover-label .content .results .count {
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+}
+.bar-chart .hover-label .content .results .percent {
+  color: #c4c8d6;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  font-weight: 600;
 }
 *:focus {
   outline: 0;
