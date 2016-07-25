@@ -42,7 +42,11 @@ document.registerElement('bar-chart', class extends Component {
         onMouseEnter: (ev, name, value, percent) => {
           let hoverTooltip = util.extend(this.state.hoverTooltip, {show: true});
           if (ev) {
-            const chartBounds = document.getElementsByClassName('irb-result')[0].getBoundingClientRect();
+            let parentResultNode = this.parentNode;
+            while (parentResultNode.nodeName.toLowerCase() !== 'irb-result') {
+              parentResultNode = parentResultNode.parentNode;
+            }
+            const chartBounds = parentResultNode.getBoundingClientRect();
             const targetBarBounds = ev.target.getBoundingClientRect();
             hoverTooltip = util.extend(hoverTooltip, {
               name,
