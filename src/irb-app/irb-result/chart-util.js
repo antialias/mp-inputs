@@ -75,6 +75,19 @@ export function nestedObjectPaths(obj, depth=0) {
   return paths;
 }
 
+/**
+ * Format rows for nested table display. Calculates rowspans and intermediate sums, and sorts
+ * according to given config. See tests for detailed examples.
+ *
+ * @example
+ * nestedObjectToTableData({US: {llama: 5, aardvark: 8}}, {
+ *   sortBy: 'column',
+ *   colSortAttrs: [{sortBy: 'label', sortOrder: 'asc'}],
+ * });
+ * // [
+ * //   [{value: 'US', sum: 13}, {llama: 5, aardvark: 8}],
+ * // ]
+ */
 export function nestedObjectToTableData(obj, sortConfig) {
   const objDepth = nestedObjectDepth(obj);
   let arr = nestedObjectToArrayWithSums(obj, objDepth);
@@ -95,6 +108,34 @@ export function nestedObjectToTableData(obj, sortConfig) {
   return arr;
 }
 
+/**
+ * Helper for nestedObjectToTableData.
+ * Converts data object into nested array structure (with subgroup sums),
+ * which can subsequently be sorted.
+ */
+function nestedObjectToArrayWithSums(obj, depth) {
+  let arr = Object.keys(obj).map(k => {
+    let child, currentSum;
+    if (depth > 2) {
+      child = nestedObjectToArrayWithSums(obj[k], depth - 1);
+      currentSum = sum(child.map(c => c[0].sum));
+    } else {
+      child = obj[k];
+      currentSum = sum(Object.values(child));
+    }
+    return [{value: k, sum: currentSum}, child];
+  });
+  return arr;
+}
+
+/**
+ * Helper for nestedObjectToTableData.
+ * Recursively turns nested array table structure into row-by-row array.
+ * @param {array} arr - nested array table structure
+ * @param {number} depth - column depth of table
+ * @param {boolean} allowNullHeaders - whether to turn repeated headers in
+ * contiguous rows into null (for coalesced table display)
+ */
 function expandTableHeaderRows(arr, depth, allowNullHeaders=true) {
   if (depth <= 2) {
     return arr;
@@ -111,6 +152,10 @@ function expandTableHeaderRows(arr, depth, allowNullHeaders=true) {
   }, []);
 }
 
+/**
+ * Helper for nestedObjectToTableData.
+ * Sorts table rows according to header names, maintaining header groupings.
+ */
 function sortTableColumns(arr, colSortAttrs) {
   let childSortAttrs = colSortAttrs.slice(1);
   if (childSortAttrs.length) {
@@ -123,20 +168,6 @@ function sortTableColumns(arr, colSortAttrs) {
       [a, b] = [a, b].map(entry => entry[0].value);
       return (a > b ? 1 : (a < b ? -1 : 0)) * (colSortAttrs[0].sortOrder === 'desc' ? -1 : 1);
     });
-}
-function nestedObjectToArrayWithSums(obj, depth) {
-  let arr = Object.keys(obj).map(k => {
-    let child, currentSum;
-    if (depth > 2) {
-      child = nestedObjectToArrayWithSums(obj[k], depth - 1);
-      currentSum = sum(child.map(c => c[0].sum));
-    } else {
-      child = obj[k];
-      currentSum = sum(Object.values(child));
-    }
-    return [{value: k, sum: currentSum}, child];
-  });
-  return arr;
 }
 
 /**
