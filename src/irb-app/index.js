@@ -237,50 +237,49 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   updateReport(attrs) {
-    let newState = {report: Object.assign(this.state.report, attrs)};
-    if (attrs.displayOptions) {
-      // commit 'analysis' and 'value' choices
+    this.update({report: Object.assign(this.state.report, attrs)});
+  }
 
-      // the reason to cache results for different analysis choices isn't so much to save
-      // computation, but rather to always save the result for 'linear' for the same
-      // query. Otherwise, we'd either have to implement 'reverse' transformation (some
-      // transformations might be irreversible too), or go down the 'query' path to come back to
-      // 'linear', when the data was just there before. If we save for 'linear', we might as well
-      // save for all types, which makes going from 'cumulative' to 'rolling' a one step thing
-      // instead of via 'linear'.
+  transformResult(result=this.state.result, options) {
+    // commit 'analysis' and 'value' choices
 
-      let analysis = attrs.displayOptions.analysis || this.state.report.displayOptions.analysis;
+    // the reason to cache results for different analysis choices isn't so much to save
+    // computation, but rather to always save the result for 'linear' for the same
+    // query. Otherwise, we'd either have to implement 'reverse' transformation (some
+    // transformations might be irreversible too), or go down the 'query' path to come back to
+    // 'linear', when the data was just there before. If we save for 'linear', we might as well
+    // save for all types, which makes going from 'cumulative' to 'rolling' a one step thing
+    // instead of via 'linear'.
 
-      if (analysis !== 'logarithmic') {
-        if (!this.analysisCache.hasOwnProperty(analysis)) {
-          // compute transformation
-          const windowSizes = {
-            hour: 12,
-            day: 7,
-            week: 5,
-            month: 3,
-            quarter: 2,
-          };
+    let analysis = (options && options.analysis) || this.state.report.displayOptions.analysis;
 
-          const functions = {
-            cumulative: nestedObjectCumulative.bind(undefined, this.state.result.series),
-            rolling: nestedObjectRolling.bind(undefined, this.state.result.series, windowSizes[this.state.report.sections.time.clauses[0].unit]),
-          };
+    if (analysis !== 'logarithmic') {
+      if (!this.analysisCache.hasOwnProperty(analysis)) {
+        // compute transformation
+        const windowSizes = {
+          hour: 12,
+          day: 7,
+          week: 5,
+          month: 3,
+          quarter: 2,
+        };
 
-          // set cache
-          this.analysisCache[analysis] = functions[analysis]();
-        }
-      } else {
-        // for 'logarithmic', no transformation on the result is needed, we use 'linear' here and
-        // leave it to 'line' and 'bar' to display correctly.
+        const functions = {
+          cumulative: nestedObjectCumulative.bind(undefined, result.series),
+          rolling: nestedObjectRolling.bind(undefined, result.series, windowSizes[this.state.report.sections.time.clauses[0].unit]),
+        };
 
-        analysis = 'linear';
+        // set cache
+        this.analysisCache[analysis] = functions[analysis]();
       }
+    } else {
+      // for 'logarithmic', no transformation on the result is needed, we use 'linear' here and
+      // leave it to 'line' and 'bar' to display correctly.
 
-      newState = extend(newState, {result: extend(this.state.result, {series: this.analysisCache[analysis]})});
+      analysis = 'linear';
     }
 
-    this.update(newState);
+    return extend(result, {series: this.analysisCache[analysis]});
   }
 
   loadReport(report) {
@@ -528,9 +527,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     if (this.state.report.sections.show.clauses.some(clause => ['unique', 'average', 'median'].includes(clause.math)) &&
         (chartType === 'line' && ['bar', 'table'].includes(this.state.report.displayOptions.chartType)
          || ['bar', 'table'].includes(chartType) && this.state.report.displayOptions.chartType === 'line')) {
-      this.query(displayOptions).then(() => this.updateReport({displayOptions}));
+      this.query(displayOptions).then(() => this.updateReport({displayOptions})); // update displayOptions after results are committed.
     } else {
       this.updateReport({displayOptions});
+      this.update({result: this.transformResult()});
     }
   }
 
@@ -585,7 +585,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           }
         }
         this.updateSeriesData(result);
-        this.update({result, newCachedData: false});
+        this.update({result: this.transformResult(result, options), newCachedData: false});
         this.updateReport({sorting: this.sortConfigFor(result, this.state.report.sorting)});
       })
       .catch(err => console.error(err));
