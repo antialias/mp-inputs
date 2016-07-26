@@ -12,7 +12,7 @@ import './mp-toast';
 import template from './index.jade';
 import './index.styl';
 
-const ANALYSIS_CHART_TABLE = {
+const AVAILABLE_ANALYSES = {
   Bar: {
     linear: true,
     logarithmic: true,
@@ -100,14 +100,14 @@ document.registerElement('irb-result', class extends Component {
   }
 
   isAnalysisEnabled(analysis, chartName=this.selectedChartName()) {
-    return ANALYSIS_CHART_TABLE[chartName][analysis];
+    return AVAILABLE_ANALYSES[chartName][analysis];
   }
 
   isValueToggleEnabled(chartName=this.selectedChartName()) {
     return VALUE_CHART_TABLE[chartName];
   }
 
-  updateDisplayOpitons(displayOptions) {
+  updateDisplayOptions(displayOptions) {
     const options = extend(this.state.report.displayOptions, displayOptions);
 
     const chartToggle = extend(this.state.chartToggle, {editingType: null});
@@ -116,7 +116,7 @@ document.registerElement('irb-result', class extends Component {
 
     const newChartName = this.formattedChartName(options.chartType, options.plotStyle);
 
-    this.app.updateDisplayOpitons(extend(options, {
+    this.app.updateDisplayOptions(extend(options, {
       analysis: this.isAnalysisEnabled(options.analysis, newChartName) ? options.analysis : 'linear',
       value: this.isValueToggleEnabled(newChartName) ? options.value : 'absolute',
     }));

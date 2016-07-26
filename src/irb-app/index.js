@@ -439,7 +439,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.update({chartToggle: extend(this.state.chartToggle, options)});
   }
 
-  updateDisplayOpitons(displayOptions) {
+  updateDisplayOptions(displayOptions) {
     // for 'unique', 'average' and 'median', 'bar' and 'table' require a different query than
     // 'line'.
     const chartType = displayOptions.chartType;
@@ -496,7 +496,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         }
         this.updateSeriesData(result);
         this.update({result, newCachedData: false});
-        this.updateReport({sorting: this.sortConfigFor(result, this.state.report.sorting)});})
+        this.updateReport({sorting: this.sortConfigFor(result, this.state.report.sorting)});
+      })
       .catch(err => console.error(err));
   }
 });

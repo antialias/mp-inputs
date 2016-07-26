@@ -32,7 +32,7 @@ document.registerElement('chart-toggle', class extends Component {
         selectedPlotStyle: type => this.state.chartToggle[type].plotStyle,
         styleChoicesForChartType: type => this.findPanelParentByTagName('irb-result').styleChoicesForChartType(type),
         onDropdownClick: editingType => this.app.updateChartToggle({editingType}),
-        onStyleClick: (chartType, plotStyle) => this.findPanelParentByTagName('irb-result').updateDisplayOpitons({chartType, plotStyle}),
+        onStyleClick: (chartType, plotStyle) => this.findPanelParentByTagName('irb-result').updateDisplayOptions({chartType, plotStyle}),
       },
     };
   }
@@ -53,9 +53,9 @@ document.registerElement('extras-menu', class extends Component {
         valueChoices: () => VALUE_CHOICES,
         isAnalysisDisabled: analysis => !this.findPanelParentByTagName('irb-result').isAnalysisEnabled(analysis),
         isValueToggleDisabled: () => !this.findPanelParentByTagName('irb-result').isValueToggleEnabled(),
-        startEditingExtrasMenu: () => { this.update({isEditingExtrasMenu: true}); },
-        onAnalysisClick: analysis => this.findPanelParentByTagName('irb-result').updateDisplayOpitons({analysis}),
-        onValueClick: value => this.findPanelParentByTagName('irb-result').updateDisplayOpitons({value}),
+        startEditingExtrasMenu: () => this.update({isEditingExtrasMenu: true}),
+        onAnalysisClick: analysis => this.findPanelParentByTagName('irb-result').updateDisplayOptions({analysis}),
+        onValueClick: value => this.findPanelParentByTagName('irb-result').updateDisplayOptions({value}),
       },
     };
   }
