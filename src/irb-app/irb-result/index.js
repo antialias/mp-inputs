@@ -81,8 +81,9 @@ document.registerElement('irb-result', class extends Component {
             result.series, series => this.state.report.series.data[series], depth
           ),
         }),
-        tableData: (result, resourceDescription) => JSON.stringify(
-          extend(this.config.helpers.filterResults(result), {resourceDescription})
+        tableData: (result, resourceDescription) => extend(
+          this.config.helpers.filterResults(result),
+          {resourceDescription}
         ),
       },
       template,
