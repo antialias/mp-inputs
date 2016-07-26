@@ -83,7 +83,6 @@ document.registerElement('irb-result', class extends Component {
     return {
       helpers: {
         getBoundaries: () => pick(this.getBoundingClientRect(), ['top', 'left']),
-        getChartOptions: () => pick(this.state.report.displayOptions, ['analysis', 'plotStyle']),
         getChartLabel: () => {
           let chartLabel = ['number of'];
           const mathTypes = Array.from(new Set(this.state.report.sections.show.clauses.map(clause => clause.math)));
@@ -99,8 +98,9 @@ document.registerElement('irb-result', class extends Component {
 
           return capitalize(chartLabel.join(' '));
         },
+        getDisplayOptions: () => pick(this.state.report.displayOptions, ['analysis', 'plotStyle', 'value']),
         getFunctionLabel: () => {
-          switch (this.config.helpers.getChartOptions().analysis) {
+          switch (this.config.helpers.getDisplayOptions().analysis) {
             case 'logarithmic':
               return '(Logarithmic - base 10)';
             case 'cumulative':

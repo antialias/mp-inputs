@@ -25,16 +25,18 @@ document.registerElement('line-chart', class extends Component {
   }
 
   attributeChangedCallback() {
-    let { headers, series } = JSON.parse(this.getAttribute('data'));
+    let { headers, series } = JSON.parse(this.getAttribute('data')) || {};
 
-    this.update({
-      // transform nested object into single-level object:
-      // {'a': {'b': {'c': 5}}} => {'a / b / c': 5}
-      data: util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
-        [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
-      )),
-      chartOptions: JSON.parse(this.getAttribute('chartOptions')),
-    });
+    if (headers && series) {
+      this.update({
+        // transform nested object into single-level object:
+        // {'a': {'b': {'c': 5}}} => {'a / b / c': 5}
+        data: util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
+          [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
+        )),
+        displayOptions: JSON.parse(this.getAttribute('displayOptions')),
+      });
+    }
   }
 
   formatHeader(parts, headers) {
@@ -54,13 +56,13 @@ document.registerElement('mp-line-chart', class extends WebComponent {
 
   attributeChangedCallback() {
     this._data = JSON.parse(this.getAttribute('data') || '{}');
-    this._chartOptions = JSON.parse(this.getAttribute('chartOptions') || '{}');
+    this._displayOptions = JSON.parse(this.getAttribute('displayOptions') || '{}');
 
     this.renderMPChart();
   }
 
   createChartOptions() {
-    const chartOptions = this._chartOptions || {};
+    const displayOptions = this._displayOptions || {};
     const highchartsOptions = {
       chart: {
         type: 'line',
@@ -91,12 +93,12 @@ document.registerElement('mp-line-chart', class extends WebComponent {
       yAxis: {},
     };
 
-    if (chartOptions.plotStyle == 'stacked') {
+    if (displayOptions.plotStyle == 'stacked') {
       highchartsOptions.plotOptions.series.stacking = 'normal';
       highchartsOptions.plotOptions.series.lineWidth = 0;
       highchartsOptions.chart.type = 'area';
     }
-    if (chartOptions.analysis == 'logarithmic') {
+    if (displayOptions.analysis == 'logarithmic') {
       highchartsOptions.yAxis.type = 'logarithmic';
       highchartsOptions.yAxis.min = LOGARITHMIC_CHART_ZERO_REMAPPING;
     }

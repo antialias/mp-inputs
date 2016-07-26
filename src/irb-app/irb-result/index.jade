@@ -9,8 +9,10 @@
             'data': processedResult,
             'chart-boundaries': $helpers.getBoundaries(),
             'chart-label': $helpers.getChartLabel(),
-            'chart-options': $helpers.getChartOptions(),
+            'display-options': $helpers.getDisplayOptions(),
             'function-label': $helpers.getFunctionLabel(),
+            'math-types': $helpers.getUniqueShowMathTypes(),
+            'show-value-names': $helpers.getShowValueNames(),
             'sorting': report.sorting.bar,
           })
           onchange=$helpers.barChartChange
@@ -19,12 +21,13 @@
         line-chart(
           attributes=$helpers.stringifyObjValues({
             data: processedResult,
-            chartOptions: $helpers.getChartOptions(),
+            displayOptions: $helpers.getDisplayOptions(),
           })
         )
       when 'table'
         - const functionLabel = $helpers.getFunctionLabel();
         - const resourceDescription = $helpers.getChartLabel() + (functionLabel ? ` ${functionLabel}` : '');
+        - console.log(report.sorting)
         table-chart(
           attributes=$helpers.stringifyObjValues({
             data: util.extend(processedResult, {resourceDescription: resourceDescription}),

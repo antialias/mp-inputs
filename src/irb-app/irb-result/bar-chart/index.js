@@ -25,7 +25,7 @@ document.registerElement('bar-chart', class extends Component {
         rows: [],
         chartBoundaries: {},
         chartMax: 0,
-        chartOptions: {},
+        displayOptions: {},
         chartLabel: '',
         functionLabel: '',
         hoverTooltip: {show: false},
@@ -50,7 +50,7 @@ document.registerElement('bar-chart', class extends Component {
         },
         headersToDisplay: () => {
           let headers = null;
-          if (this.state.chartOptions.plotStyle == 'stacked') {
+          if (this.state.displayOptions.plotStyle == 'stacked') {
             headers = this.state.headers.slice(0, this.state.headers.length - 1);
             if (!headers.length) {
               headers.push('$event');
@@ -103,8 +103,8 @@ document.registerElement('bar-chart', class extends Component {
   attributeChangedCallback() {
     let {headers, series} = this.getJSONAttribute('data');
     const chartBoundaries = this.getJSONAttribute('chart-boundaries') || {};
-    const chartOptions = this.getJSONAttribute('chart-options') || {};
-    const chartLabel = this.getJSONAttribute('chart-label') || '';
+    const displayOptions = this.getJSONAttribute('display-options') || {};
+    const chartLabel = this.getJSONAttribute( 'chart-label') || '';
     const functionLabel = this.getJSONAttribute('function-label') || '';
     const mathTypes = this.getJSONAttribute('mathTypes') || [];
     const showValueNames = this.getJSONAttribute('showValueNames') || [];
@@ -117,12 +117,12 @@ document.registerElement('bar-chart', class extends Component {
     series = util.nestedObjectSum(series);
     const rows = nestedObjectToBarChartData(series, sortConfig);
 
-    const chartMax = chartOptions.plotStyle == 'stacked' ? stackedNestedObjectMax(series) : nestedObjectMax(series);
+    const chartMax = displayOptions.plotStyle == 'stacked' ? stackedNestedObjectMax(series) : nestedObjectMax(series);
 
     this.update({
       chartMax,
       chartBoundaries,
-      chartOptions,
+      displayOptions,
       chartLabel,
       functionLabel,
       headers,
