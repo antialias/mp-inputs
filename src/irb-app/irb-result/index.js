@@ -44,7 +44,7 @@ const AVAILABLE_ANALYSES = {
     cumulative: true,
   },
 };
-const VALUE_CHART_TABLE = {
+const VALUE_TOGGLE_AVAILABLE = {
   Bar: false,
   Line: false,
   Table: false,
@@ -104,7 +104,7 @@ document.registerElement('irb-result', class extends Component {
   }
 
   isValueToggleEnabled(chartName=this.selectedChartName()) {
-    return VALUE_CHART_TABLE[chartName];
+    return VALUE_TOGGLE_AVAILABLE[chartName];
   }
 
   updateDisplayOptions(displayOptions) {
