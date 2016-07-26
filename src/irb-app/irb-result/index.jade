@@ -17,7 +17,7 @@
         - const clauses = report.sections.show.clauses;
         - let resourceDescription;
         if clauses.length === 1
-          - resourceDescription = `${util.capitalize(clauses[0].math)} number of ${util.renameEvent(clauses[0].value)}`
+          - resourceDescription = `${util.capitalize(clauses[0].math)} number of ${util.renameEvent(clauses[0].value.name)}`
         else
           - resourceDescription = 'Number of events'
         table-chart(attributes={data: JSON.stringify(util.extend($helpers.filterResults(result), {resourceDescription}))})
