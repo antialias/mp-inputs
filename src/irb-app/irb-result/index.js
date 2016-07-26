@@ -113,8 +113,8 @@ document.registerElement('irb-result', class extends Component {
     const newChartName = this.formattedChartName(chartType, plotStyle);
 
     const displayOptions = extend({chartType, plotStyle}, {
-      analysis: options.analysis && this.isAnalysisEnabled(options.analysis, newChartName) ? this.state.report.displayOptions.analysis : 'linear',
-      value: options.value && this.isValueToggleEnabled(newChartName) ? this.state.report.displayOptions.value : 'absolute',
+      analysis: options.analysis && this.isAnalysisEnabled(options.analysis, newChartName) ? options.analysis : 'linear',
+      value: options.value && this.isValueToggleEnabled(newChartName) ? options.value : 'absolute',
     });
 
     const chartToggle = extend(this.state.chartToggle, {editingType: null});
