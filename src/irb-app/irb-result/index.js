@@ -107,20 +107,18 @@ document.registerElement('irb-result', class extends Component {
     return VALUE_CHART_TABLE[chartName];
   }
 
-  updateDisplayOpitons(options) {
-    const chartType = options.chartType || this.state.report.displayOptions.chartType;
-    const plotStyle = options.plotStyle || this.state.report.displayOptions.plotStyle;
-    const newChartName = this.formattedChartName(chartType, plotStyle);
-
-    const displayOptions = extend({chartType, plotStyle}, {
-      analysis: options.analysis && this.isAnalysisEnabled(options.analysis, newChartName) ? options.analysis : 'linear',
-      value: options.value && this.isValueToggleEnabled(newChartName) ? options.value : 'absolute',
-    });
+  updateDisplayOpitons(displayOptions) {
+    const options = extend(this.state.report.displayOptions, displayOptions);
 
     const chartToggle = extend(this.state.chartToggle, {editingType: null});
-    chartToggle[chartType].plotStyle = plotStyle;
+    chartToggle[options.chartType].plotStyle = options.plotStyle;
     this.app.updateChartToggle(chartToggle);
 
-    this.app.updateDisplayOpitons(displayOptions);
+    const newChartName = this.formattedChartName(options.chartType, options.plotStyle);
+
+    this.app.updateDisplayOpitons(extend(options, {
+      analysis: this.isAnalysisEnabled(options.analysis, newChartName) ? options.analysis : 'linear',
+      value: this.isValueToggleEnabled(newChartName) ? options.value : 'absolute',
+    }));
   }
 });
