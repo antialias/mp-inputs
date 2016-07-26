@@ -11,6 +11,8 @@ import {
 import template from './index.jade';
 import './index.styl';
 
+const LOGARITHMIC_CHART_ZERO_REMAPPING = 0.6;
+
 document.registerElement('line-chart', class extends Component {
   get config() {
     return {
@@ -86,12 +88,17 @@ document.registerElement('mp-line-chart', class extends WebComponent {
           return tooltip.join('');
         },
       },
+      yAxis: {},
     };
 
     if (chartOptions.plotStyle == 'stacked') {
       highchartsOptions.plotOptions.series.stacking = 'normal';
       highchartsOptions.plotOptions.series.lineWidth = 0;
       highchartsOptions.chart.type = 'area';
+    }
+    if (chartOptions.analysis == 'logarithmic') {
+      highchartsOptions.yAxis.type = 'logarithmic';
+      highchartsOptions.yAxis.min = LOGARITHMIC_CHART_ZERO_REMAPPING;
     }
     return { highchartsOptions, chartType: 'line' };
   }
