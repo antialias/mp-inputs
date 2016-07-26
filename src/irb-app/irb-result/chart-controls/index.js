@@ -28,13 +28,18 @@ document.registerElement('chart-toggle', class extends Component {
       template: chartToggleTemplate,
       helpers: {
         chartTypes: () => ['bar', 'line', 'table'],
-        formattedChartName: (type, style) => this.findPanelParentByTagName('irb-result').formattedChartName(type, style),
+        formattedChartName: (type, style) => this.IRBResult.formattedChartName(type, style),
         selectedPlotStyle: type => this.state.chartToggle[type].plotStyle,
-        styleChoicesForChartType: type => this.findPanelParentByTagName('irb-result').styleChoicesForChartType(type),
+        styleChoicesForChartType: type => this.IRBResult.styleChoicesForChartType(type),
         onDropdownClick: editingType => this.app.updateChartToggle({editingType}),
-        onStyleClick: (chartType, plotStyle) => this.findPanelParentByTagName('irb-result').updateDisplayOptions({chartType, plotStyle}),
+        onStyleClick: (chartType, plotStyle) => this.IRBResult.updateDisplayOptions({chartType, plotStyle}),
       },
     };
+  }
+
+  get IRBResult() {
+    this._IRBResult = this._IRBResult || this.findPanelParentByTagName('irb-result');
+    return this._IRBResult;
   }
 });
 
@@ -51,13 +56,18 @@ document.registerElement('extras-menu', class extends Component {
       helpers: {
         analysisChoices: () => ANALYSIS_CHOICES,
         valueChoices: () => VALUE_CHOICES,
-        isAnalysisDisabled: analysis => !this.findPanelParentByTagName('irb-result').isAnalysisEnabled(analysis),
-        isValueToggleDisabled: () => !this.findPanelParentByTagName('irb-result').isValueToggleEnabled(),
+        isAnalysisDisabled: analysis => !this.IRBResult.isAnalysisEnabled(analysis),
+        isValueToggleDisabled: () => !this.IRBResult.isValueToggleEnabled(),
         startEditingExtrasMenu: () => this.update({isEditingExtrasMenu: true}),
-        onAnalysisClick: analysis => this.findPanelParentByTagName('irb-result').updateDisplayOptions({analysis}),
-        onValueClick: value => this.findPanelParentByTagName('irb-result').updateDisplayOptions({value}),
+        onAnalysisClick: analysis => this.IRBResult.updateDisplayOptions({analysis}),
+        onValueClick: value => this.IRBResult.updateDisplayOptions({value}),
       },
     };
+  }
+
+  get IRBResult() {
+    this._IRBResult = this._IRBResult || this.findPanelParentByTagName('irb-result');
+    return this._IRBResult;
   }
 });
 
