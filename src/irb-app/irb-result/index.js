@@ -75,8 +75,10 @@ document.registerElement('irb-result', class extends Component {
       helpers: {
         getBoundaries: () => pick(this.getBoundingClientRect(), ['top', 'left']),
         getChartOptions: () => pick(this.state.report.displayOptions, ['analysis', 'plotStyle']),
+        getChartLabel: () => {
+          return '';
+        },
         getShowValueNames: () => this.state.report.sections.show.clauses.map(clause => renameEvent(clause.value.name)),
-        getUniqueShowMathTypes: () => new Set(this.state.report.sections.show.clauses.map(clause => clause.math)),
         toastClosed: () => this.update({newCachedData: false}),
         toastSelected: () => this.app.query(),
         filterResults: (result, depth=2) => ({

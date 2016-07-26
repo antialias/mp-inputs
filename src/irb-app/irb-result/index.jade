@@ -7,9 +7,8 @@
           attributes={
             'data': JSON.stringify($helpers.filterResults(result)),
             'chart-boundaries': JSON.stringify($helpers.getBoundaries()),
+            'chart-label': JSON.stringify($helpers.getChartLabel()),
             'chart-options': JSON.stringify($helpers.getChartOptions()),
-            'math-types': JSON.stringify($helpers.getUniqueShowMathTypes()),
-            'show-value-names': JSON.stringify($helpers.getShowValueNames()),
             'sorting': JSON.stringify(report.sorting.bar),
           }
           onchange=$helpers.barChartChange

@@ -29,9 +29,8 @@ mixin sort-axis-button(sortOrder)
           irb-bar-chart-header(
             attributes={
               'chart-max': JSON.stringify(chartMax),
+              'chart-label': JSON.stringify(chartLabel),
               'headers': JSON.stringify(headersToDisplay),
-              'math-types': JSON.stringify(mathTypes),
-              'show-value-names': JSON.stringify(showValueNames),
               'sort-config': JSON.stringify(sortConfig),
             }
             onclick=$helpers.headerClick

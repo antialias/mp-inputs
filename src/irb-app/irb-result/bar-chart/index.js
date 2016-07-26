@@ -26,8 +26,8 @@ document.registerElement('bar-chart', class extends Component {
         chartBoundaries: {},
         chartMax: 0,
         chartOptions: {},
+        chartLabel: '',
         hoverTooltip: {show: false},
-        mathTypes: [],
         showValueNames: [],
         util,
       },
@@ -103,8 +103,7 @@ document.registerElement('bar-chart', class extends Component {
     let {headers, series} = this.getJSONAttribute('data');
     const chartBoundaries = this.getJSONAttribute('chart-boundaries') || {};
     const chartOptions = this.getJSONAttribute('chart-options') || {};
-    const mathTypes = this.getJSONAttribute('math-types') || [];
-    const showValueNames = this.getJSONAttribute('show-value-names') || [];
+    const chartLabel = this.getJSONAttribute('chart-label') || '';
     const sortConfig = this.getJSONAttribute('sorting');
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
@@ -119,9 +118,8 @@ document.registerElement('bar-chart', class extends Component {
       chartMax,
       chartBoundaries,
       chartOptions,
+      chartLabel,
       headers,
-      mathTypes,
-      showValueNames,
       sortConfig,
       rows,
     });
@@ -140,15 +138,13 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
     this.$el = $('<div>').addClass('bar-chart-container').appendTo(this);
     this.headers = [];
     this.chartMax = null;
-    this.mathTypes = [];
-    this.showValueNames = [];
+    this.chartLabel = '';
   }
 
   attributeChangedCallback() {
     this.headers = this.getJSONAttribute('headers') || [];
     this.chartMax = this.getJSONAttribute('chart-max');
-    this.mathTypes = this.getJSONAttribute('math-types') || [];
-    this.showValueNames = this.getJSONAttribute('show-value-names') || [];
+    this.chartLabel = this.getJSONAttribute('chart-label');
     this.sortConfig = this.getJSONAttribute('sort-config');
     this.render();
   }
@@ -173,16 +169,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
     ));
     this.$el.append($headers);
 
-    let chartLabel = ['number of'];
-    if (this.mathTypes && this.mathTypes.length == 1) {
-      chartLabel.unshift(this.mathTypes[0]);
-    }
-
-    if (this.headers.length == 1 && this.headers[0] !== '$event' && this.showValueNames.length == 1) {
-      chartLabel.push(this.showValueNames[0]);
-    }
-
-    const $axisTitle = $('<div>').addClass('axis-title text').html(util.capitalize(chartLabel.join(' ')));
+    const $axisTitle = $('<div>').addClass('axis-title text').html(this.chartLabel);
 
     let $axis = $('<div class="bar-chart-axis"></div>')
       .on('click', function() {
