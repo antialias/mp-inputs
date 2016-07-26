@@ -34,7 +34,7 @@ document.registerElement('line-chart', class extends Component {
         data: util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
           [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
         )),
-        displayOptions: JSON.parse(this.getAttribute('displayOptions')),
+        displayOptions: JSON.parse(this.getAttribute('display-options')),
       });
     }
   }
@@ -93,10 +93,13 @@ document.registerElement('mp-line-chart', class extends WebComponent {
       yAxis: {},
     };
 
-    if (displayOptions.plotStyle == 'stacked') {
+    if (displayOptions.plotStyle === 'stacked') {
       highchartsOptions.plotOptions.series.stacking = 'normal';
       highchartsOptions.plotOptions.series.lineWidth = 0;
       highchartsOptions.chart.type = 'area';
+      if (displayOptions.value === 'relative') {
+        highchartsOptions.plotOptions.series.stacking = 'percent';
+      }
     }
     if (displayOptions.analysis == 'logarithmic') {
       highchartsOptions.yAxis.type = 'logarithmic';
