@@ -20,9 +20,12 @@
       position relative
       z-index 2
 
+      &:hover
+        border-color medium-gray
+
       &.selected
         background-color initial
-        border-color medium-gray
+        border-color dark-gray
 
       button
         align-items center
@@ -174,6 +177,12 @@
       height 30px
       width 30px
       mask url(../../../../assets/extras-menu/ellipsis.svg) no-repeat center
+
+      &:hover
+        background medium-gray
+
+      &.selected
+        background dark-gray
 
     .extras-menu-options
       display flex
