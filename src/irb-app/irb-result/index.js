@@ -1,4 +1,6 @@
 import { Component } from 'panel';
+import { capitalize } from 'mixpanel-common/build/util';
+
 import { filterObjectAtDepth } from './chart-util';
 import { extend, pick, renameEvent } from '../../util';
 
@@ -76,7 +78,18 @@ document.registerElement('irb-result', class extends Component {
         getBoundaries: () => pick(this.getBoundingClientRect(), ['top', 'left']),
         getChartOptions: () => pick(this.state.report.displayOptions, ['analysis', 'plotStyle']),
         getChartLabel: () => {
-          return '';
+          let chartLabel = ['number of'];
+          const mathTypes = Array.from(new Set(this.state.report.sections.show.clauses.map(clause => clause.math)));
+          if (mathTypes && mathTypes.length == 1) {
+            chartLabel.unshift(mathTypes[0]);
+          }
+
+          const showValueNames = this.config.helpers.getShowValueNames();
+          const headers = this.state.result.headers;
+          if (headers.length === 1 && headers[0] !== '$event' && showValueNames.length == 1) {
+            chartLabel.push(showValueNames[0]);
+          }
+          return capitalize(chartLabel.join(' '));
         },
         getShowValueNames: () => this.state.report.sections.show.clauses.map(clause => renameEvent(clause.value.name)),
         toastClosed: () => this.update({newCachedData: false}),
