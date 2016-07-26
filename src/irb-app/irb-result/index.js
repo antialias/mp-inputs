@@ -114,6 +114,12 @@ document.registerElement('irb-result', class extends Component {
           return null;
         },
         getShowValueNames: () => this.state.report.sections.show.clauses.map(clause => renameEvent(clause.value.name)),
+        getUniqueShowMathTypes: () => new Set(this.state.report.sections.show.clauses.map(clause => clause.math)),
+        stringifyObjValues: (obj) => {
+          const stringified = {};
+          Object.keys(obj).forEach(key => stringified[key] = JSON.stringify(obj[key]));
+          return stringified;
+        },
         toastClosed: () => this.update({newCachedData: false}),
         toastSelected: () => this.app.query(),
         processResult: result => {

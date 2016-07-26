@@ -5,26 +5,31 @@
     case report.displayOptions.chartType
       when 'bar'
         bar-chart(
-          attributes={
-            'data': JSON.stringify(processedResult),
-            'chart-boundaries': JSON.stringify($helpers.getBoundaries()),
-            'chart-label': JSON.stringify($helpers.getChartLabel()),
-            'chart-options': JSON.stringify($helpers.getChartOptions()),
-            'function-label': JSON.stringify($helpers.getFunctionLabel()),
-            'sorting': JSON.stringify(report.sorting.bar),
-          }
+          attributes=$helpers.stringifyObjValues({
+            'data': processedResult,
+            'chart-boundaries': $helpers.getBoundaries(),
+            'chart-label': $helpers.getChartLabel(),
+            'chart-options': $helpers.getChartOptions(),
+            'function-label': $helpers.getFunctionLabel(),
+            'sorting': report.sorting.bar,
+          })
           onchange=$helpers.barChartChange
         )
       when 'line'
-        line-chart(attributes={data: JSON.stringify(processedResult), chartOptions: JSON.stringify($helpers.getChartOptions())})
+        line-chart(
+          attributes=$helpers.stringifyObjValues({
+            data: processedResult,
+            chartOptions: $helpers.getChartOptions(),
+          })
+        )
       when 'table'
         - const functionLabel = $helpers.getFunctionLabel();
         - const resourceDescription = $helpers.getChartLabel() + (functionLabel ? ` ${functionLabel}` : '');
         table-chart(
-          attributes={
-            data: JSON.stringify(util.extend(processedResult, {resourceDescription: resourceDescription})),
-            sorting: JSON.stringify(report.sorting.table),
-          }
+          attributes=$helpers.stringifyObjValues({
+            data: util.extend(processedResult, {resourceDescription: resourceDescription}),
+            sorting: report.sorting.table,
+          })
           onchange=$helpers.tableChange
         )
   if resultLoading && report.displayOptions.chartType !== 'line'

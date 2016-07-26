@@ -106,7 +106,10 @@ document.registerElement('bar-chart', class extends Component {
     const chartOptions = this.getJSONAttribute('chart-options') || {};
     const chartLabel = this.getJSONAttribute('chart-label') || '';
     const functionLabel = this.getJSONAttribute('function-label') || '';
+    const mathTypes = this.getJSONAttribute('mathTypes') || [];
+    const showValueNames = this.getJSONAttribute('showValueNames') || [];
     const sortConfig = this.getJSONAttribute('sorting');
+
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
     }
