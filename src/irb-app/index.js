@@ -79,7 +79,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           chartType: 'bar',
           plotStyle: 'standard',
           analysis: 'linear',
-          vaue: 'absolute',
+          value: 'absolute',
         },
         sections: new BuilderSections({
           show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
