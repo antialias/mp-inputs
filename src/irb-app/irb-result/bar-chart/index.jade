@@ -28,8 +28,9 @@ mixin sort-axis-button(sortOrder)
         th(colSpan=0)
           irb-bar-chart-header(
             attributes={
-              'chart-max': JSON.stringify(chartMax),
               'chart-label': JSON.stringify(chartLabel),
+              'chart-max': JSON.stringify(chartMax),
+              'display-options': JSON.stringify(displayOptions),
               'function-label': JSON.stringify(functionLabel),
               'headers': JSON.stringify(headersToDisplay),
               'sort-config': JSON.stringify(sortConfig),
@@ -76,8 +77,10 @@ mixin sort-axis-button(sortOrder)
                     each _ in Array(5).fill()
                       .grid-line
                   ul(class={stacked: isStacked})
+                    - const cellValuesSum = util.sum(cell)
                     for value, k in cell
-                      - const percent = isLogarithmic ? Math.log10(value) / Math.log10(chartMax) : value / chartMax;
+                      - const segmentMax = displayOptions.value === 'absolute' ? chartMax : cellValuesSum;
+                      - const percent = isLogarithmic ? Math.log10(value) / Math.log10(segmentMax) : value / segmentMax;
                       - const percentValueString = `${Math.floor(percent * 10000) / 100}%`;
                       - const segmentName = row[j - 1][k]
                       li.chart-bar(

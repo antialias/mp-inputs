@@ -11,8 +11,6 @@
             'chart-label': $helpers.getChartLabel(),
             'display-options': $helpers.getDisplayOptions(),
             'function-label': $helpers.getFunctionLabel(),
-            'math-types': $helpers.getUniqueShowMathTypes(),
-            'show-value-names': $helpers.getShowValueNames(),
             'sorting': report.sorting.bar,
           })
           onchange=$helpers.barChartChange
@@ -20,8 +18,8 @@
       when 'line'
         line-chart(
           attributes=$helpers.stringifyObjValues({
-            data: processedResult,
-            displayOptions: $helpers.getDisplayOptions(),
+            'data': processedResult,
+            'display-options': $helpers.getDisplayOptions(),
           })
         )
       when 'table'

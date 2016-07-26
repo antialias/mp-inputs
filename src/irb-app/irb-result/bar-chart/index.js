@@ -106,8 +106,6 @@ document.registerElement('bar-chart', class extends Component {
     const displayOptions = this.getJSONAttribute('display-options') || {};
     const chartLabel = this.getJSONAttribute( 'chart-label') || '';
     const functionLabel = this.getJSONAttribute('function-label') || '';
-    const mathTypes = this.getJSONAttribute('mathTypes') || [];
-    const showValueNames = this.getJSONAttribute('showValueNames') || [];
     const sortConfig = this.getJSONAttribute('sorting');
 
     if (!this.validSortConfig(headers, sortConfig)) {
@@ -142,17 +140,19 @@ document.registerElement('bar-chart', class extends Component {
 document.registerElement('irb-bar-chart-header', class extends WebComponent {
   createdCallback() {
     this.$el = $('<div>').addClass('bar-chart-container').appendTo(this);
-    this.headers = [];
-    this.chartMax = null;
     this.chartLabel = '';
+    this.chartMax = null;
+    this.displayOptions = {};
     this.functionLabel = '';
+    this.headers = [];
   }
 
   attributeChangedCallback() {
-    this.headers = this.getJSONAttribute('headers') || [];
-    this.chartMax = this.getJSONAttribute('chart-max');
     this.chartLabel = this.getJSONAttribute('chart-label');
+    this.chartMax = this.getJSONAttribute('chart-max');
+    this.displayOptions = this.getJSONAttribute('display-options') || {};
     this.functionLabel = this.getJSONAttribute('function-label');
+    this.headers = this.getJSONAttribute('headers') || [];
     this.sortConfig = this.getJSONAttribute('sort-config');
     this.render();
   }

@@ -56,7 +56,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
 
   attributeChangedCallback() {
     this._data = JSON.parse(this.getAttribute('data') || '{}');
-    this._displayOptions = JSON.parse(this.getAttribute('displayOptions') || '{}');
+    this._displayOptions = JSON.parse(this.getAttribute('display-options') || '{}');
 
     this.renderMPChart();
   }
