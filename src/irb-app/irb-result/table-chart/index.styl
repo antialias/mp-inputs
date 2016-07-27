@@ -24,6 +24,7 @@ border-gray = lighten(background-gray, 30%)
       .fixed-header-cell
         background white
         border-left 2px solid border-gray
+        cursor pointer
         display inline-block
         font-weight bold
         padding 8px 9px 8px 9px
@@ -38,10 +39,15 @@ border-gray = lighten(background-gray, 30%)
           height 10px
           margin-left 5px
           opacity 0
+          transition opacity 0.2s
           width 8px
           &.sort-desc
             background-position -8px 0
           &.sort-active
+            opacity 1
+
+        &:hover
+          .sort-arrows
             opacity 1
 
   .left-table-container
