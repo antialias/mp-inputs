@@ -270,7 +270,15 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     };
 
     if (result) {
+      let numTableHeaders = result.headers.length;
+      if (numTableHeaders > 1) {
+        numTableHeaders--;
+      }
+
       if (currentSortConfig) {
+
+        // update existing sorting config for new results
+
         if (currentSortConfig.bar.sortBy === 'column') {
           let colSortAttrs = currentSortConfig.bar.colSortAttrs.slice(0, result.headers.length);
           for (let i = colSortAttrs.length; i < result.headers.length; i++) {
@@ -282,18 +290,25 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         }
 
         if (currentSortConfig.table.sortBy === 'column') {
-          let numHeaders = result.headers.length;
-          if (numHeaders > 1) {
-            numHeaders--;
-          }
-          let colSortAttrs = currentSortConfig.table.colSortAttrs.slice(0, numHeaders);
-          for (let i = colSortAttrs.length; i < numHeaders; i++) {
+          let colSortAttrs = currentSortConfig.table.colSortAttrs.slice(0, numTableHeaders);
+          for (let i = colSortAttrs.length; i < numTableHeaders; i++) {
             colSortAttrs.push({sortBy: 'label', sortOrder: 'asc'});
           }
           sortConfig.table.colSortAttrs = colSortAttrs;
         } else {
           sortConfig.table = currentSortConfig.table;
         }
+      } else {
+
+        // no existing config; ensure that new config has right number of headers
+
+        for (let i = sortConfig.bar.colSortAttrs.length; i < result.headers.length; i++) {
+          sortConfig.bar.colSortAttrs.push({sortBy: 'value', sortOrder: 'desc'});
+        }
+        for (let i = sortConfig.table.colSortAttrs.length; i < numTableHeaders; i++) {
+          sortConfig.table.colSortAttrs.push({sortBy: 'label', sortOrder: 'asc'});
+        }
+
       }
     }
 

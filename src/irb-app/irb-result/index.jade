@@ -20,10 +20,13 @@
           - resourceDescription = `${util.capitalize(clauses[0].math)} number of ${util.renameEvent(clauses[0].value.name)}`
         else
           - resourceDescription = 'Number of events'
-        table-chart(attributes={
-          data: JSON.stringify($helpers.tableData(result, resourceDescription)),
-          sorting: JSON.stringify(report.sorting.table),
-        })
+        table-chart(
+          attributes={
+            data: JSON.stringify($helpers.tableData(result, resourceDescription)),
+            sorting: JSON.stringify(report.sorting.table),
+          }
+          onchange=$helpers.tableChange
+        )
   if result.loading && report.displayOptions.chartType !== 'line'
     .loader
   mp-toast(

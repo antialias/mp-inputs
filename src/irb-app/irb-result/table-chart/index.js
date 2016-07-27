@@ -24,6 +24,14 @@ document.registerElement('table-chart', class extends Component {
         columnRows: [],
         util,
       },
+
+      helpers: {
+        clickHeader: (headerType, colIdx, colName) => {
+          this.dispatchEvent(new CustomEvent('change', {detail: {
+            headerType, colIdx, colName,
+          }}));
+        },
+      },
     };
   }
 

@@ -4,8 +4,10 @@
   table-manager(data=JSON.stringify({headers, rows, columnHeaders, columnRows}))
   .left-table-container
     .fixed-header
-      for header in headers
-        .fixed-header-cell= header === '$event' ? 'Event' : util.renameProperty(header)
+      for header, idx in headers
+        .fixed-header-cell(
+          onclick=() => $helpers.clickHeader('left', idx, header)
+        )= header === '$event' ? 'Event' : util.renameProperty(header)
     .left-table
       table
         thead
@@ -23,8 +25,10 @@
   if fullWidthTable
     .right-table-container
       .fixed-header
-        for header in columnHeaders
-          .fixed-header-cell= header
+        for header, idx in columnHeaders
+          .fixed-header-cell(
+            onclick=() => $helpers.clickHeader('right', idx, header)
+          )= header
       .right-table
         table
           thead

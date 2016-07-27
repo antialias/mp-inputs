@@ -65,6 +65,15 @@ const CHART_OPTIONS = {
   },
 };
 
+// TMP
+function reverseSortOrder(order) {
+  if (order === 'desc') {
+    return 'asc';
+  } else {
+    return 'desc';
+  }
+}
+
 document.registerElement('irb-result', class extends Component {
   get config() {
     return {
@@ -85,6 +94,35 @@ document.registerElement('irb-result', class extends Component {
           this.config.helpers.filterResults(result),
           {resourceDescription}
         ),
+
+        tableChange: ev => {
+          const {headerType, colIdx, colName} = ev.detail;
+
+          const sortConfig = this.state.report.sorting.table;
+          switch(headerType) {
+            case 'left':
+              if (sortConfig.sortBy === 'column') {
+                // already sorting by group label
+                const col = sortConfig.colSortAttrs[colIdx];
+                col.sortOrder = reverseSortOrder(col.sortOrder);
+              } else {
+                // reset back to grouped sort
+                this.state.report.sorting.table = this.app.sortConfigFor(this.state.result).table;
+              }
+              break;
+            case 'right':
+              if (sortConfig.sortBy === 'value' && sortConfig.sortColumn === colName) {
+                // already sorting by this column value
+                sortConfig.sortOrder = reverseSortOrder(sortConfig.sortOrder);
+              } else {
+                sortConfig.sortBy = 'value';
+                sortConfig.sortColumn = colName;
+                sortConfig.sortOrder = 'desc';
+              }
+              break;
+          }
+          this.app.updateReport();
+        },
       },
       template,
     };
