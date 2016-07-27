@@ -16,15 +16,9 @@
       when 'line'
         line-chart(attributes={data: JSON.stringify($helpers.filterResults(result)), chartOptions: JSON.stringify($helpers.getChartOptions())})
       when 'table'
-        - const clauses = report.sections.show.clauses;
-        - let resourceDescription;
-        if clauses.length === 1
-          - resourceDescription = `${util.capitalize(clauses[0].math)} number of ${util.renameEvent(clauses[0].value.name)}`
-        else
-          - resourceDescription = 'Number of events'
         table-chart(
           attributes={
-            data: JSON.stringify($helpers.tableData(result, resourceDescription)),
+            data: JSON.stringify($helpers.tableData(result, $helpers.getChartLabel())),
             sorting: JSON.stringify(report.sorting.table),
           }
           onchange=$helpers.tableChange
