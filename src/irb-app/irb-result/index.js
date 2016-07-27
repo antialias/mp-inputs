@@ -65,13 +65,8 @@ const CHART_OPTIONS = {
   },
 };
 
-// TMP
 function reverseSortOrder(order) {
-  if (order === 'desc') {
-    return 'asc';
-  } else {
-    return 'desc';
-  }
+  return order === 'desc' ? 'asc' : 'desc';
 }
 
 document.registerElement('irb-result', class extends Component {
