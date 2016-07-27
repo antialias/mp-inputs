@@ -93,6 +93,44 @@ const d4Obj = {
 };
 
 describe('nestedObjectToTableData', function() {
+  it('sorts simple 1-column data by label', function() {
+    const arr = nestedObjectToTableData({
+      'Mexico': 5,
+      'Canada': 12,
+      'US': 7,
+    }, {
+      sortBy: 'column',
+      colSortAttrs: [
+        {
+          sortBy: 'label',
+          sortOrder: 'asc',
+        },
+      ],
+    });
+    expect(arr).to.eql([
+      [{value: 'Canada', sum: 12}, {value: 12}],
+      [{value: 'Mexico', sum: 5 }, {value: 5 }],
+      [{value: 'US',     sum: 7 }, {value: 7 }],
+    ]);
+  });
+
+  it('sorts simple 1-column data by values', function() {
+    const arr = nestedObjectToTableData({
+      'Mexico': 5,
+      'Canada': 12,
+      'US': 7,
+    }, {
+      sortBy: 'value',
+      sortColumn: 'value',
+      sortOrder: 'desc',
+    });
+    expect(arr).to.eql([
+      [{value: 'Canada', sum: 12}, {value: 12}],
+      [{value: 'US',     sum: 7 }, {value: 7 }],
+      [{value: 'Mexico', sum: 5 }, {value: 5 }],
+    ]);
+  });
+
   it('sorts by group labels', function() {
     const arr = nestedObjectToTableData(d2Obj, {
       sortBy: 'column',

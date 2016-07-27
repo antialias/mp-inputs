@@ -119,6 +119,9 @@ function nestedObjectToArrayWithSums(obj, depth) {
     if (depth > 2) {
       child = nestedObjectToArrayWithSums(obj[k], depth - 1);
       currentSum = sum(child.map(c => c[0].sum));
+    } else if (depth === 1) {
+      child = {value: obj[k]};
+      currentSum = child.value;
     } else {
       child = obj[k];
       currentSum = sum(Object.values(child));
