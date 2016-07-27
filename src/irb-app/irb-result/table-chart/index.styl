@@ -27,9 +27,21 @@ border-gray = lighten(background-gray, 30%)
         display inline-block
         font-weight bold
         padding 8px 9px 8px 9px
-
         &:first-child
           border-left 2px solid border-gray
+
+        .sort-arrows
+          background-image url(../../../../assets/charts/sort_arrows_sprite.png)
+          background-repeat no-repeat
+          display inline-block
+          height 10px
+          margin-left 10px
+          opacity 0
+          width 8px
+          &.sort-desc
+            background-position -8px 0
+          &.sort-active
+            opacity 1
 
   .left-table-container
     z-index 2

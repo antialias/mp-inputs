@@ -5,9 +5,9 @@
   .left-table-container
     .fixed-header
       for header, idx in headers
-        .fixed-header-cell(
-          onclick=() => $helpers.clickHeader('left', idx, header)
-        )= header === '$event' ? 'Event' : util.renameProperty(header)
+        .fixed-header-cell(onclick=() => $helpers.clickHeader('left', idx, header))
+          span= header === '$event' ? 'Event' : util.renameProperty(header)
+          .sort-arrows(class=$helpers.leftSortArrowClasses(idx))
     .left-table
       table
         thead
@@ -26,9 +26,9 @@
     .right-table-container
       .fixed-header
         for header, idx in columnHeaders
-          .fixed-header-cell(
-            onclick=() => $helpers.clickHeader('right', idx, header)
-          )= header
+          .fixed-header-cell(onclick=() => $helpers.clickHeader('right', idx, header))
+            span= header
+            .sort-arrows(class=$helpers.rightSortArrowClasses(header))
       .right-table
         table
           thead

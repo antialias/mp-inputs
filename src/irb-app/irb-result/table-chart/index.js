@@ -31,6 +31,28 @@ document.registerElement('table-chart', class extends Component {
             headerType, colIdx, colName,
           }}));
         },
+
+        leftSortArrowClasses: idx => {
+          if (this.sortConfig.sortBy === 'column') {
+            return [
+              'sort-active',
+              `sort-${this.sortConfig.colSortAttrs[idx].sortOrder}`,
+            ];
+          } else {
+            return [];
+          }
+        },
+
+        rightSortArrowClasses: header => {
+          if (this.sortConfig.sortBy === 'value' && this.sortConfig.sortColumn === header) {
+            return [
+              'sort-active',
+              `sort-${this.sortConfig.sortOrder}`,
+            ];
+          } else {
+            return [];
+          }
+        },
       },
     };
   }
@@ -41,6 +63,7 @@ document.registerElement('table-chart', class extends Component {
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
     }
+    this.sortConfig = sortConfig;
 
     series = util.nestedObjectSum(series);
 
