@@ -11,7 +11,7 @@ import { TopEventPropertyValuesQuery, TopPeoplePropertyValuesQuery } from '../mo
 import SegmentationQuery from '../models/queries/segmentation';
 import QueryCache from '../models/queries/query-cache';
 import Report from '../models/report';
-import { nestedObjectCumulative, nestedObjectRolling } from './irb-result/chart-util';
+import { nestedObjectCumulative, nestedObjectRolling, ROLLING_WINDOWS_BY_UNIT } from './irb-result/chart-util';
 
 import './irb-header';
 import './irb-builder';
@@ -256,17 +256,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     if (analysis !== 'logarithmic') {
       if (!this.analysisCache.hasOwnProperty(analysis)) {
         // compute transformation
-        const windowSizes = {
-          hour: 12,
-          day: 7,
-          week: 5,
-          month: 3,
-          quarter: 2,
-        };
-
         const functions = {
           cumulative: nestedObjectCumulative.bind(undefined, result.series),
-          rolling: nestedObjectRolling.bind(undefined, result.series, windowSizes[this.state.report.sections.time.clauses[0].unit]),
+          rolling: nestedObjectRolling.bind(undefined, result.series, ROLLING_WINDOWS_BY_UNIT[this.state.report.sections.time.clauses[0].unit]),
         };
 
         // set cache

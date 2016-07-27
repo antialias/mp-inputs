@@ -1,7 +1,7 @@
 import { Component } from 'panel';
 import { capitalize } from 'mixpanel-common/build/util';
 
-import { filterObjectAtDepth } from './chart-util';
+import { filterObjectAtDepth, ROLLING_WINDOWS_BY_UNIT } from './chart-util';
 import { extend, pick, renameEvent } from '../../util';
 
 import './bar-chart';
@@ -88,6 +88,21 @@ document.registerElement('irb-result', class extends Component {
           const headers = this.state.result.headers;
           if (headers.length === 1 && headers[0] !== '$event' && showValueNames.length == 1) {
             chartLabel.push(showValueNames[0]);
+          }
+
+          switch (this.config.helpers.getChartOptions().analysis) {
+            case 'logarithmic':
+              chartLabel.push('(Logarithmic - base 10)');
+              break;
+            case 'cumulative':
+              chartLabel.push('(Cumulative)');
+              break;
+            case 'rolling': {
+              const unit = this.state.report.sections.time.clauses[0].unit;
+              chartLabel.push(`(Rolling - ${ROLLING_WINDOWS_BY_UNIT[unit]} ${unit})s`);
+              break;
+            }
+            // nothing for 'linear'
           }
           return capitalize(chartLabel.join(' '));
         },
