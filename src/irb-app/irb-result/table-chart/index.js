@@ -5,7 +5,6 @@ import WebComponent from 'webcomponent';
 
 import * as util from '../../../util';
 import {
-  nestedObjectPaths,
   nestedObjectToTableData,
   transpose,
 } from '../chart-util';
@@ -67,25 +66,23 @@ document.registerElement('table-chart', class extends Component {
 
     series = util.nestedObjectSum(series);
 
-    let rows = [];
-    let columnHeaders = [];
-    let columnRows = [];
+    let columnHeaders;
+    let columnRows;
+    let rows = nestedObjectToTableData(series, sortConfig);
+    const rowData = rows.map(row => row.slice(-1)[0]); // last item of each row is data
+    rows = rows.map(row => row.slice(0, -1)); // strip off data items
 
-    if (headers.length <= 1) { // 2 column table with no grouping
-      headers = headers.concat([resourceDescription]);
-      rows = nestedObjectPaths(series).map(row => row.map(value => ({value})));
-
-    } else if (headers.length > 1) { // nested table with last group spread over columns
+    if (headers.length > 1) {
       headers = headers.slice(0, -1);
-      rows = nestedObjectToTableData(series, sortConfig);
-
-      const rowData = rows.map(row => row.slice(-1)[0]); // last item of each row is data
-      rows = rows.map(row => row.slice(0, -1)); // strip off data items
-
-      columnHeaders = util.nestedObjectKeys(series).sort();
+      columnHeaders = util.nestedObjectKeys(series)
+        .sort()
+        .map(header => ({display: header, value: header}));
       columnRows = rowData.map(row =>
-        columnHeaders.map(key => row[key])
+        columnHeaders.map(header => row[header.value])
       );
+    } else {
+      columnHeaders = [{display: resourceDescription, value: 'value'}];
+      columnRows = rowData.map(row => [row.value]);
     }
 
     // add table zebra-striping

@@ -26,15 +26,15 @@
     .right-table-container
       .fixed-header
         for header, idx in columnHeaders
-          .fixed-header-cell(onclick=() => $helpers.clickHeader('right', idx, header))
-            span= header
-            .sort-arrows(class=$helpers.rightSortArrowClasses(header))
+          .fixed-header-cell(onclick=() => $helpers.clickHeader('right', idx, header.value))
+            span= header.display
+            .sort-arrows(class=$helpers.rightSortArrowClasses(header.value))
       .right-table
         table
           thead
             tr
               for header in columnHeaders
-                th= header
+                th= header.display
           tbody
             for row in columnRows
               tr
