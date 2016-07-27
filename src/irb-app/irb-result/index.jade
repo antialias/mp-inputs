@@ -33,6 +33,9 @@
           })
           onchange=$helpers.tableChange
         )
+    if $helpers.showLegend()
+      .legend
+
   if resultLoading && report.displayOptions.chartType !== 'line'
     .loader
   mp-toast(

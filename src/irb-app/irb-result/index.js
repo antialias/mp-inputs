@@ -122,6 +122,21 @@ document.registerElement('irb-result', class extends Component {
         getShowValueNames: () => this.state.report.sections.show.clauses.map(clause => renameEvent(clause.value.name)),
         getUniqueShowMathTypes: () => new Set(this.state.report.sections.show.clauses.map(clause => clause.math)),
         stringifyObjValues: obj => mapObjectKeys(obj, JSON.stringify),
+        showLegend: () => {
+          const showClauses = this.state.report.sections.show.clauses;
+          const chartName = this.selectedChartName();
+          if (chartName === 'Table') {
+            return false;
+          }
+
+          if (this.state.report.sections.group.clauses.length > 0 ||
+              showClauses.length > 1 && chartName !== 'Bar' ||
+              showClauses.length === 1 && showClauses[0].value.name === '$top_events' && chartName === 'line') {
+            return true;
+          }
+
+          return false;
+        },
         toastClosed: () => this.update({newCachedData: false}),
         toastSelected: () => this.app.query(),
         processResult: result => {
