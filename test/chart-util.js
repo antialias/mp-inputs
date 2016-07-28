@@ -237,22 +237,22 @@ describe('nestedObjectToTableData', function() {
 describe('nestedObjectCumulative', function() {
   const sortedNamedD2Obj = {
     US: {
-      aardvark: 8,
-      hyena: 3,
-      hyrax: 7,
-      llama: 1,
+      '2016-06-01': 8,
+      '2016-06-02': 3,
+      '2016-06-03': 7,
+      '2016-06-04': 1,
     },
     Canada: {
-      aardvark: 9,
-      hyena: 3,
-      hyrax: 9,
-      llama: 3,
+      '2016-06-01': 9,
+      '2016-06-02': 3,
+      '2016-06-03': 9,
+      '2016-06-04': 3,
     },
     Mexico: {
-      aardvark: 2,
-      hyena: 5,
-      hyrax: 8,
-      llama: 7,
+      '2016-06-01': 2,
+      '2016-06-02': 5,
+      '2016-06-03': 8,
+      '2016-06-04': 7,
     },
   };
 
@@ -260,22 +260,22 @@ describe('nestedObjectCumulative', function() {
     const arr = nestedObjectCumulative(sortedNamedD2Obj);
     expect(arr).to.eql({
       US: {
-        aardvark: 8,
-        hyena: 11,
-        hyrax: 18,
-        llama: 19,
+        '2016-06-01': 8,
+        '2016-06-02': 11,
+        '2016-06-03': 18,
+        '2016-06-04': 19,
       },
       Canada: {
-        aardvark: 9,
-        hyena: 12,
-        hyrax: 21,
-        llama: 24,
+        '2016-06-01': 9,
+        '2016-06-02': 12,
+        '2016-06-03': 21,
+        '2016-06-04': 24,
       },
       Mexico: {
-        aardvark: 2,
-        hyena: 7,
-        hyrax: 15,
-        llama: 22,
+        '2016-06-01': 2,
+        '2016-06-02': 7,
+        '2016-06-03': 15,
+        '2016-06-04': 22,
       },
     });
   });
@@ -284,18 +284,18 @@ describe('nestedObjectCumulative', function() {
 describe('nestedObjectRolling', function() {
   const sortedNamedD2Obj = {
     US: {
-      aardvark: 8,
-      hyena: 2,
-      hyrax: 2,
-      llama: 8,
-      tapir: 14,
+      '2016-06-01': 8,
+      '2016-06-02': 2,
+      '2016-06-03': 2,
+      '2016-06-04': 8,
+      '2016-06-05': 14,
     },
     Canada: {
-      aardvark: 6,
-      hyena: 3,
-      hyrax: 3,
-      llama: 12,
-      tapir: 6,
+      '2016-06-01': 6,
+      '2016-06-02': 3,
+      '2016-06-03': 3,
+      '2016-06-04': 12,
+      '2016-06-05': 6,
     },
   };
 
@@ -303,18 +303,18 @@ describe('nestedObjectRolling', function() {
     const arr = nestedObjectRolling(sortedNamedD2Obj, 7);
     expect(arr).to.eql({
       US: {
-        aardvark: 8,
-        hyena: 5,
-        hyrax: 4,
-        llama: 5,
-        tapir: 6.8,
+        '2016-06-01': 8,
+        '2016-06-02': 5,
+        '2016-06-03': 4,
+        '2016-06-04': 5,
+        '2016-06-05': 6.8,
       },
       Canada: {
-        aardvark: 6,
-        hyena: 4.5,
-        hyrax: 4,
-        llama: 6,
-        tapir: 6,
+        '2016-06-01': 6,
+        '2016-06-02': 4.5,
+        '2016-06-03': 4,
+        '2016-06-04': 6,
+        '2016-06-05': 6,
       },
     });
   });
@@ -323,18 +323,18 @@ describe('nestedObjectRolling', function() {
     const arr = nestedObjectRolling(sortedNamedD2Obj, 3);
     expect(arr).to.eql({
       US: {
-        aardvark: 8,
-        hyena: 5,
-        hyrax: 4,
-        llama: 4,
-        tapir: 8,
+        '2016-06-01': 8,
+        '2016-06-02': 5,
+        '2016-06-03': 4,
+        '2016-06-04': 4,
+        '2016-06-05': 8,
       },
       Canada: {
-        aardvark: 6,
-        hyena: 4.5,
-        hyrax: 4,
-        llama: 6,
-        tapir: 7,
+        '2016-06-01': 6,
+        '2016-06-02': 4.5,
+        '2016-06-03': 4,
+        '2016-06-04': 6,
+        '2016-06-05': 7,
       },
     });
   });
