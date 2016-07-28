@@ -97,21 +97,21 @@ document.registerElement('irb-result', class extends Component {
             chartLabel.push(showValueNames[0]);
           }
 
+          return capitalize(chartLabel.join(' '));
+        },
+        getFunctionLabel: () => {
           switch (this.config.helpers.getChartOptions().analysis) {
             case 'logarithmic':
-              chartLabel.push('(Logarithmic - base 10)');
-              break;
+              return '(Logarithmic - base 10)';
             case 'cumulative':
-              chartLabel.push('(Cumulative)');
-              break;
+              return '(Cumulative)';
             case 'rolling': {
               const unit = this.state.report.sections.time.clauses[0].unit;
-              chartLabel.push(`(Rolling - ${ROLLING_WINDOWS_BY_UNIT[unit]} ${unit})s`);
-              break;
+              return `(Rolling - ${ROLLING_WINDOWS_BY_UNIT[unit]} ${unit})s`;
             }
-            // nothing for 'linear'
           }
-          return capitalize(chartLabel.join(' '));
+          // nothing for 'linear'
+          return null;
         },
         getShowValueNames: () => this.state.report.sections.show.clauses.map(clause => renameEvent(clause.value.name)),
         toastClosed: () => this.update({newCachedData: false}),

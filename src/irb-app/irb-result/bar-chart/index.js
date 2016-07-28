@@ -27,6 +27,7 @@ document.registerElement('bar-chart', class extends Component {
         chartMax: 0,
         chartOptions: {},
         chartLabel: '',
+        functionLabel: '',
         hoverTooltip: {show: false},
         showValueNames: [],
         util,
@@ -104,6 +105,7 @@ document.registerElement('bar-chart', class extends Component {
     const chartBoundaries = this.getJSONAttribute('chart-boundaries') || {};
     const chartOptions = this.getJSONAttribute('chart-options') || {};
     const chartLabel = this.getJSONAttribute('chart-label') || '';
+    const functionLabel = this.getJSONAttribute('function-label') || '';
     const sortConfig = this.getJSONAttribute('sorting');
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
@@ -119,6 +121,7 @@ document.registerElement('bar-chart', class extends Component {
       chartBoundaries,
       chartOptions,
       chartLabel,
+      functionLabel,
       headers,
       sortConfig,
       rows,
@@ -139,12 +142,14 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
     this.headers = [];
     this.chartMax = null;
     this.chartLabel = '';
+    this.functionLabel = '';
   }
 
   attributeChangedCallback() {
     this.headers = this.getJSONAttribute('headers') || [];
     this.chartMax = this.getJSONAttribute('chart-max');
     this.chartLabel = this.getJSONAttribute('chart-label');
+    this.functionLabel = this.getJSONAttribute('function-label');
     this.sortConfig = this.getJSONAttribute('sort-config');
     this.render();
   }
@@ -169,7 +174,12 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
     ));
     this.$el.append($headers);
 
-    const $axisTitle = $('<div>').addClass('axis-title text').html(this.chartLabel);
+    let chartTitle = this.chartLabel;
+    if (this.functionLabel) {
+      chartTitle += ` ${this.functionLabel}`;
+    }
+
+    const $axisTitle = $('<div>').addClass('axis-title text').html(chartTitle);
 
     let $axis = $('<div class="bar-chart-axis"></div>')
       .on('click', function() {

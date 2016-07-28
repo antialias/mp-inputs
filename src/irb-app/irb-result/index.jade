@@ -10,6 +10,7 @@
             'chart-boundaries': JSON.stringify($helpers.getBoundaries()),
             'chart-label': JSON.stringify($helpers.getChartLabel()),
             'chart-options': JSON.stringify($helpers.getChartOptions()),
+            'function-label': JSON.stringify($helpers.getFunctionLabel()),
             'sorting': JSON.stringify(report.sorting.bar),
           }
           onchange=$helpers.barChartChange
@@ -17,9 +18,10 @@
       when 'line'
         line-chart(attributes={data: JSON.stringify(processedResult), chartOptions: JSON.stringify($helpers.getChartOptions())})
       when 'table'
+        - const resourceDescription = $helpers.getFunctionLabel() ? $helpers.getChartLabel() + ` ${$helpers.getFunctionLabel()}` : $helpers.getChartLabel();
         table-chart(
           attributes={
-            data: JSON.stringify(util.extend(processedResult, {resourceDescription: $helpers.getChartLabel()})),
+            data: JSON.stringify(util.extend(processedResult, {resourceDescription: resourceDescription})),
             sorting: JSON.stringify(report.sorting.table),
           }
           onchange=$helpers.tableChange
