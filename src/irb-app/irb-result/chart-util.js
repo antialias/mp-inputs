@@ -73,7 +73,7 @@ export function nestedObjectRolling(obj, windowSize) {
         }
         window.push(amount);
         sum += amount;
-        amount = sum/window.length;
+        amount = sum / window.length;
       }
 
       newObj[key] = amount;
