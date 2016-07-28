@@ -11,6 +11,16 @@ export function getTextWidth(text, font) {
   return context.measureText(text).width;
 }
 
+// TODO(chi): move to mixpanel-common
+export function mapObjectKeys(obj, callback) {
+  const newObj = {};
+
+  Object.keys(obj).forEach(key => {
+    newObj[key] = callback(obj[key]);
+  });
+
+  return newObj;
+}
 
 /**
  * Compare data likeness of two different objects. Does not handle circular references, functions, or regex.
