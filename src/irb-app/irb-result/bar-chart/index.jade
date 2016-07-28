@@ -75,10 +75,9 @@ mixin sort-axis-button(sortOrder)
                     each _ in Array(5).fill()
                       .grid-line
                   ul(class={stacked: isStacked})
-                    - const toPercentValueString = percent => `${Math.floor(percent * 10000) / 100}%`
                     for value, k in cell
                       - const percent = isLogarithmic ? Math.log10(value) / Math.log10(chartMax) : value / chartMax;
-                      - const percentValueString = toPercentValueString(percent);
+                      - const percentValueString = `${Math.floor(percent * 10000) / 100}%`;
                       - const segmentName = row[j - 1][k]
                       li.chart-bar(
                         style={width: percentValueString}
