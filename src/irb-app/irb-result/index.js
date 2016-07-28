@@ -146,7 +146,6 @@ document.registerElement('irb-result', class extends Component {
             this.app.updateReport();
           }
         },
-        tableData: (processedResult, resourceDescription) => extend(processedResult, {resourceDescription}),
         tableChange: ev => {
           const {headerType, colIdx, colName} = ev.detail;
           const sortConfig = this.state.report.sorting.table;

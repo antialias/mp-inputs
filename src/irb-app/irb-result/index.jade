@@ -19,7 +19,7 @@
       when 'table'
         table-chart(
           attributes={
-            data: JSON.stringify($helpers.tableData(processedResult, $helpers.getChartLabel())),
+            data: JSON.stringify(util.extend(processedResult, {resourceDescription: $helpers.getChartLabel()})),
             sorting: JSON.stringify(report.sorting.table),
           }
           onchange=$helpers.tableChange
