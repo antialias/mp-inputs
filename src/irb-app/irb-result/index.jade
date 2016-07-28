@@ -1,6 +1,6 @@
 .irb-result
   .controls= $component.child('chart-controls')
-  .chart(class={loading: result.loading})
+  .chart(class={loading: resultLoading})
     case report.displayOptions.chartType
       when 'bar'
         bar-chart(
@@ -23,7 +23,7 @@
           }
           onchange=$helpers.tableChange
         )
-  if result.loading && report.displayOptions.chartType !== 'line'
+  if resultLoading && report.displayOptions.chartType !== 'line'
     .loader
   mp-toast(
     attributes={

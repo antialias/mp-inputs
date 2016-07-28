@@ -18,7 +18,7 @@ document.registerElement('irb-header', class extends Component {
         updateReportTitle: ev => this.app.updateReport({title: ev.target.value}),
 
         clickExportCSV: () => {
-          if (!this.state.result.loading) {
+          if (!this.state.resultLoading) {
             this.app.queries.segmentation
               .build(this.state)
               .buildJQLArgs()

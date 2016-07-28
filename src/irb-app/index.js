@@ -114,8 +114,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       result: {
         headers: [],
         series: {},
-        loading: true,
       },
+      resultLoading: true,
       stageClauses: [],
       topEvents: [],
       topEventProperties: [],
@@ -566,8 +566,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     const cacheExpiry = 10; // seconds
 
     if (!cachedResult) {
-      let result = extend(this.state.result, {loading: true});
-      this.update({result});
+      this.update(extend(this.state, {resultLoading: true}));
     }
 
     this.update({newCachedData: false});
@@ -582,7 +581,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           }
         }
         this.updateSeriesData(result);
-        this.update({result: this.transformResult(result, options), newCachedData: false});
+        this.update({result: this.transformResult(result, options), newCachedData: false, resultLoading: false});
         this.updateReport({sorting: this.sortConfigFor(result, this.state.report.sorting)});
       })
       .catch(err => console.error(err));
