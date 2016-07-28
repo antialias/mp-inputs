@@ -8,7 +8,8 @@ export const ROLLING_WINDOWS_BY_UNIT = {
   quarter: 2,
 };
 
-/* Transpose a 2-dimensional array:
+/**
+ * Transpose a 2-dimensional array:
  * [[1, 2, 3],    [[1, 4],
  *  [4, 5, 6]] =>  [2, 5],
  *                 [3, 6]]
@@ -20,7 +21,8 @@ export function transpose(matrix) {
   return matrix;
 }
 
-/* Given an array of values and a start index,
+/**
+ * Given an array of values and a start index,
  * count the number of the value at the start index repeats:
  * countRun(['a', 'a', 'b', 'b', 'b', 'c'], 2) => 3
  */
@@ -30,7 +32,7 @@ export function countRun(row, start) {
   return i - start;
 }
 
-/*
+/**
  * Do a rolling sum of the leaf values of a nested object, in the order of their keys (which are
  * dates).
  */
@@ -48,7 +50,7 @@ export function nestedObjectCumulative(obj) {
   }
 }
 
-/*
+/**
  * Do a rolling average of the leaf values of a nested object, in the order of their keys (which are
  * dates)
  */
@@ -84,7 +86,9 @@ export function nestedObjectRolling(obj, windowSize) {
   }
 }
 
-// Get the max leaf value of a nested object
+/**
+ * Get the max leaf value of a nested object
+ */
 export function nestedObjectMax(obj) {
   if (typeof obj === 'number') { return obj; }
   return Math.max(0, Math.max(...Object.keys(obj).map(key => nestedObjectMax(obj[key]))));
@@ -97,15 +101,8 @@ export function stackedNestedObjectMax(obj) {
   return Math.max(0, Math.max(...Object.keys(obj).map(key => stackedNestedObjectMax(obj[key]))));
 }
 
-/* Collects unique keys at a given level in a nested object:
- * Example (depth=1):
- *   {
- *     a: {x: 1, y: 2}, => ['x', 'y', 'z']
- *     b: {x: 1, z: 2},
- *   }
- */
-
-/* Turn a nested object into a list of "path" arrays,
+/**
+ * Turn a nested object into a list of "path" arrays,
  * which represent all of its key combinations.
  * Example:
  *   {                     [['a', 'x', 1],
