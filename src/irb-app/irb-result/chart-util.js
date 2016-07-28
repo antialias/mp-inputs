@@ -1,4 +1,5 @@
-import { nestedObjectDepth, objectFromPairs, sum } from 'mixpanel-common/util';
+import { mapObjectKeys } from '../../util';
+import { nestedObjectDepth, sum } from 'mixpanel-common/util';
 
 export const ROLLING_WINDOWS_BY_UNIT = {
   hour: 12,
@@ -53,9 +54,7 @@ export function nestedObjectCumulative(obj) {
       return accum;
     }, {});
   } else {
-    return objectFromPairs(Object.keys(obj).map(key => {
-      return [key, nestedObjectCumulative(obj[key])];
-    }));
+    return mapObjectKeys(obj, value => nestedObjectCumulative(value));
   }
 }
 
@@ -107,9 +106,7 @@ export function nestedObjectRolling(obj, windowSize) {
     });
     return newObj;
   } else {
-    return objectFromPairs(Object.keys(obj).map(key => {
-      return [key, nestedObjectRolling(obj[key], windowSize)];
-    }));
+    return mapObjectKeys(obj, value => nestedObjectRolling(value, windowSize));
   }
 }
 
