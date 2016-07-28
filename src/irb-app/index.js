@@ -11,6 +11,7 @@ import { TopEventPropertyValuesQuery, TopPeoplePropertyValuesQuery } from '../mo
 import SegmentationQuery from '../models/queries/segmentation';
 import QueryCache from '../models/queries/query-cache';
 import Report from '../models/report';
+import Result from '../models/result';
 import { nestedObjectCumulative, nestedObjectRolling, ROLLING_WINDOWS_BY_UNIT } from './irb-result/chart-util';
 
 import './irb-header';
@@ -111,10 +112,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       isEditingExtrasMenu: false,
       newCachedData: false,
       resourceTypeFilter: 'all',
-      result: {
+      result: new Result({
         headers: [],
         series: {},
-      },
+      }),
       resultLoading: true,
       stageClauses: [],
       topEvents: [],
@@ -276,7 +277,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       analysis = 'linear';
     }
 
-    return extend(result, {series: this.analysisCache[analysis]});
+    result.series = this.analysisCache[analysis];
+    return result;
   }
 
   loadReport(report) {

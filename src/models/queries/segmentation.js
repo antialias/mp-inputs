@@ -3,6 +3,7 @@ import moment from 'moment';
 import BaseQuery from './base';
 import ExtremaQuery from './extrema';
 import { ShowClause } from '../clause';
+import Result from '../result';
 import main from './segmentation.jql.js';
 import { extend, pick, renameEvent } from '../../util';
 
@@ -460,6 +461,6 @@ export default class SegmentationQuery extends BaseQuery {
     if (queriedEventNames.length > 1 || this.query.segments.length === 0) {
       headers = ['$event'].concat(headers);
     }
-    return {series, headers};
+    return new Result({series, headers});
   }
 }
