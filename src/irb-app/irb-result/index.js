@@ -115,7 +115,6 @@ document.registerElement('irb-result', class extends Component {
             result.series, series => this.state.report.series.data[series], depth
           ),
         }),
-
         barChartChange: ev => {
           const sortProps = ev.detail && ev.detail.type && ev.detail;
           if (sortProps) {
@@ -137,10 +136,7 @@ document.registerElement('irb-result', class extends Component {
           }
         },
 
-        tableData: (result, resourceDescription) => extend(
-          this.config.helpers.filterResults(result),
-          {resourceDescription}
-        ),
+        tableData: (processedResult, resourceDescription) => extend(processedResult, {resourceDescription}),
         tableChange: ev => {
           const {headerType, colIdx, colName} = ev.detail;
           const sortConfig = this.state.report.sorting.table;
