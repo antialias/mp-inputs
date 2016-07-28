@@ -67,6 +67,15 @@ document.registerElement('bar-chart', class extends Component {
         onMouseLeave: () => {
           this.update({hoverTooltip: util.extend(this.state.hoverTooltip, {show: false})});
         },
+        selectColumnSort: (sortBy, sortOrder, colIdx) => {
+          this.update({headerSortPanel: null});
+          this.dispatchEvent(new CustomEvent('change', {
+            detail: {
+              type: 'colSort',
+              sortBy, sortOrder, colIdx,
+            },
+          }));
+        },
       },
     };
   }

@@ -3,10 +3,13 @@
 
 mixin sort-type-button(sortBy, sortOrder, colIdx)
   - const colConfig = sortConfig.sortBy === 'column' && sortConfig.colSortAttrs[colIdx];
-  .sort-type(class={
-    [`sort-${sortBy}-${sortOrder}`]: true,
-    'sort-selected': colConfig && colConfig.sortBy === sortBy && colConfig.sortOrder === sortOrder,
-  })
+  .sort-type(
+    class={
+      [`sort-${sortBy}-${sortOrder}`]: true,
+      'sort-selected': colConfig && colConfig.sortBy === sortBy && colConfig.sortOrder === sortOrder,
+    }
+    onclick=() => $helpers.selectColumnSort(sortBy, sortOrder, colIdx)
+  )
 
 .bar-chart
   table

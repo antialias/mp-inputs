@@ -3,14 +3,17 @@
   .chart(class={loading: result.loading})
     case report.displayOptions.chartType
       when 'bar'
-        bar-chart(attributes={
-          data: JSON.stringify($helpers.filterResults(result)),
-          chartBoundaries: JSON.stringify($helpers.getBoundaries()),
-          chartOptions: JSON.stringify($helpers.getChartOptions()),
-          mathTypes: JSON.stringify($helpers.getUniqueShowMathTypes()),
-          showValueNames: JSON.stringify($helpers.getShowValueNames()),
-          sorting: JSON.stringify(report.sorting.bar),
-        })
+        bar-chart(
+          attributes={
+            data: JSON.stringify($helpers.filterResults(result)),
+            chartBoundaries: JSON.stringify($helpers.getBoundaries()),
+            chartOptions: JSON.stringify($helpers.getChartOptions()),
+            mathTypes: JSON.stringify($helpers.getUniqueShowMathTypes()),
+            showValueNames: JSON.stringify($helpers.getShowValueNames()),
+            sorting: JSON.stringify(report.sorting.bar),
+          }
+          onchange=$helpers.barChartChange
+        )
       when 'line'
         line-chart(attributes={data: JSON.stringify($helpers.filterResults(result)), chartOptions: JSON.stringify($helpers.getChartOptions())})
       when 'table'

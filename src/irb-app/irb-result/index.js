@@ -85,14 +85,23 @@ document.registerElement('irb-result', class extends Component {
             result.series, series => this.state.report.series.data[series], depth
           ),
         }),
+
+        barChartChange: ev => {
+          const sortProps = ev.detail && ev.detail.type === 'colSort' && ev.detail;
+          if (sortProps) {
+            this.state.report.sorting.bar.colSortAttrs[sortProps.colIdx] = pick(sortProps, [
+              'sortBy', 'sortOrder',
+            ]);
+            this.app.updateReport();
+          }
+        },
+
         tableData: (result, resourceDescription) => extend(
           this.config.helpers.filterResults(result),
           {resourceDescription}
         ),
-
         tableChange: ev => {
           const {headerType, colIdx, colName} = ev.detail;
-
           const sortConfig = this.state.report.sorting.table;
           switch(headerType) {
             case 'left':
