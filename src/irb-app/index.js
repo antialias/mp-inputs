@@ -256,13 +256,18 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     if (analysis !== 'logarithmic') {
       if (!this.analysisCache.hasOwnProperty(analysis)) {
         // compute transformation
-        const functions = {
-          cumulative: nestedObjectCumulative.bind(undefined, result.series),
-          rolling: nestedObjectRolling.bind(undefined, result.series, ROLLING_WINDOWS_BY_UNIT[this.state.report.sections.time.clauses[0].unit]),
-        };
+        let newSeries;
+        switch (analysis) {
+          case 'cumulative':
+            newSeries = nestedObjectCumulative(result.series);
+            break;
+          case 'rolling':
+            newSeries = nestedObjectRolling(result.series, ROLLING_WINDOWS_BY_UNIT[this.state.report.sections.time.clauses[0].unit]);
+            break;
+        }
 
         // set cache
-        this.analysisCache[analysis] = functions[analysis]();
+        this.analysisCache[analysis] = newSeries;
       }
     } else {
       // for 'logarithmic', no transformation on the result is needed, we use 'linear' here and
