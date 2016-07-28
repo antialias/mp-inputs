@@ -1,14 +1,6 @@
 import { mapObjectKeys } from '../../util';
 import { nestedObjectDepth, sum } from 'mixpanel-common/util';
 
-export const ROLLING_WINDOWS_BY_UNIT = {
-  hour: 12,
-  day: 7,
-  week: 5,
-  month: 3,
-  quarter: 2,
-};
-
 /**
  * Transpose a 2-dimensional array:
  * [[1, 2, 3],    [[1, 4],

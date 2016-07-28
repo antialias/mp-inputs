@@ -1,7 +1,6 @@
 import { Component } from 'panel';
 import { capitalize } from 'mixpanel-common/util';
 
-import { ROLLING_WINDOWS_BY_UNIT } from './chart-util';
 import { extend, filterObjectAtDepth, pick, renameEvent } from '../../util';
 
 import './bar-chart';
@@ -51,6 +50,14 @@ const VALUE_TOGGLE_AVAILABLE = {
   Table: false,
   'Stacked bar': true,
   'Stacked line': true,
+};
+
+const ROLLING_WINDOWS_BY_UNIT = {
+  hour: 12,
+  day: 7,
+  week: 5,
+  month: 3,
+  quarter: 2,
 };
 
 const CHART_OPTIONS = {
@@ -109,12 +116,16 @@ document.registerElement('irb-result', class extends Component {
         getShowValueNames: () => this.state.report.sections.show.clauses.map(clause => renameEvent(clause.value.name)),
         toastClosed: () => this.update({newCachedData: false}),
         toastSelected: () => this.app.query(),
-        filterResults: (result, depth=2) => ({
-          headers: result.headers,
-          series: filterObjectAtDepth(
-            result.series, series => this.state.report.series.data[series], depth
-          ),
-        }),
+        processResult: result => {
+          result = result.transformed({
+            analysis: this.state.report.displayOptions.analysis,
+            windowSize: ROLLING_WINDOWS_BY_UNIT[this.state.report.sections.time.clauses[0].unit],
+          });
+
+          result.series = filterObjectAtDepth(result.series, series => this.state.report.series.data[series], 2);
+
+          return result;
+        },
         barChartChange: ev => {
           const sortProps = ev.detail && ev.detail.type && ev.detail;
           if (sortProps) {
@@ -135,7 +146,6 @@ document.registerElement('irb-result', class extends Component {
             this.app.updateReport();
           }
         },
-
         tableData: (processedResult, resourceDescription) => extend(processedResult, {resourceDescription}),
         tableChange: ev => {
           const {headerType, colIdx, colName} = ev.detail;

@@ -12,7 +12,6 @@ import SegmentationQuery from '../models/queries/segmentation';
 import QueryCache from '../models/queries/query-cache';
 import Report from '../models/report';
 import Result from '../models/result';
-import { nestedObjectCumulative, nestedObjectRolling, ROLLING_WINDOWS_BY_UNIT } from './irb-result/chart-util';
 
 import './irb-header';
 import './irb-builder';
@@ -239,46 +238,6 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
   updateReport(attrs) {
     this.update({report: Object.assign(this.state.report, attrs)});
-  }
-
-  transformResult(result=this.state.result, options) {
-    // commit 'analysis' and 'value' choices
-
-    // the reason to cache results for different analysis choices isn't so much to save
-    // computation, but rather to always save the result for 'linear' for the same
-    // query. Otherwise, we'd either have to implement 'reverse' transformation (some
-    // transformations might be irreversible too), or go down the 'query' path to come back to
-    // 'linear', when the data was just there before. If we save for 'linear', we might as well
-    // save for all types, which makes going from 'cumulative' to 'rolling' a one step thing
-    // instead of via 'linear'.
-
-    let analysis = (options && options.analysis) || this.state.report.displayOptions.analysis;
-
-    if (analysis !== 'logarithmic') {
-      if (!this.analysisCache.hasOwnProperty(analysis)) {
-        // compute transformation
-        let newSeries;
-        switch (analysis) {
-          case 'cumulative':
-            newSeries = nestedObjectCumulative(result.series);
-            break;
-          case 'rolling':
-            newSeries = nestedObjectRolling(result.series, ROLLING_WINDOWS_BY_UNIT[this.state.report.sections.time.clauses[0].unit]);
-            break;
-        }
-
-        // set cache
-        this.analysisCache[analysis] = newSeries;
-      }
-    } else {
-      // for 'logarithmic', no transformation on the result is needed, we use 'linear' here and
-      // leave it to 'line' and 'bar' to display correctly.
-
-      analysis = 'linear';
-    }
-
-    result.series = this.analysisCache[analysis];
-    return result;
   }
 
   loadReport(report) {
@@ -529,7 +488,6 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       this.query(displayOptions).then(() => this.updateReport({displayOptions})); // update displayOptions after results are committed.
     } else {
       this.updateReport({displayOptions});
-      this.update({result: this.transformResult()});
     }
   }
 
@@ -577,13 +535,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       .then(result => {
         if (!cachedResult) {
           this.queries.segmentationCache.set(query, result, cacheExpiry);
-          if (this.differentResult(result)) {
-            // reset cache for different 'analysis' results by only saving for linear.
-            this.analysisCache = {linear: result.series};
-          }
         }
         this.updateSeriesData(result);
-        this.update({result: this.transformResult(result, options), newCachedData: false, resultLoading: false});
+        this.update({result: result, newCachedData: false, resultLoading: false});
         this.updateReport({sorting: this.sortConfigFor(result, this.state.report.sorting)});
       })
       .catch(err => console.error(err));

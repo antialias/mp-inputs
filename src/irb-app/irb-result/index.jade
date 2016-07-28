@@ -1,7 +1,7 @@
 .irb-result
   .controls= $component.child('chart-controls')
   .chart(class={loading: resultLoading})
-    - const processedResult = $helpers.filterResults(result);
+    - const processedResult = $helpers.processResult(result);
     case report.displayOptions.chartType
       when 'bar'
         bar-chart(
