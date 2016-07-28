@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="21px" height="9px" viewBox="0 0 21 9" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 39.1 (31720) - http://www.bohemiancoding.com/sketch -->
+    <title>val_desc</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Component-/-Sort-A-Z" transform="translate(-58.000000, -15.000000)" fill="#B3B5C3">
+            <g id="Sort">
+                <g>
+                    <g id="val_desc" transform="translate(58.000000, 15.000000)">
+                        <path d="M15.0948,7e-05 L11.5208,8.45607 L13.9668,8.45607 L14.5668,6.95607 L17.8058,6.95607 L18.4168,8.45607 L20.9118,8.45607 L17.3378,7e-05 L15.0948,7e-05 Z M16.1978,2.75807 L17.1338,5.14507 L15.2508,5.14507 L16.1978,2.75807 Z" id="Fill-1"></path>
+                        <polygon id="Fill-2" points="0.144 0.06037 0.144 2.02737 4.21 2.02737 0 6.76437 0 8.45537 7.424 8.45537 7.424 6.48937 3.215 6.48937 7.424 1.75137 7.424 0.06037"></polygon>
+                        <polygon id="Fill-3" points="12.5205 4.45557 10.0205 1.95557 10.0205 3.62257 7.5205 3.62257 7.5205 5.28857 10.0205 5.28857 10.0205 6.95557"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

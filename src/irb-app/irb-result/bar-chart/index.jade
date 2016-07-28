@@ -8,13 +8,24 @@
         th(colSpan=0)
           irb-bar-chart-header(
             attributes={
-              chartMax: JSON.stringify(chartMax),
-              headers: JSON.stringify(headersToDisplay),
-              mathTypes: JSON.stringify(mathTypes),
-              showValueNames: JSON.stringify(showValueNames),
+              'chart-max': JSON.stringify(chartMax),
+              'headers': JSON.stringify(headersToDisplay),
+              'math-types': JSON.stringify(mathTypes),
+              'show-value-names': JSON.stringify(showValueNames),
+              'sort-config': JSON.stringify(sortConfig),
             }
+            onclick=$helpers.headerClick
           )
     tbody
+      tr
+        for col, ci in headersToDisplay
+          td.sort-holder(class={'active-sort-panel': ci === headerSortPanel})
+            .sort-controls
+              .sort-type.sort-label-asc
+              .sort-type.sort-label-desc
+              .sort-type.sort-value-asc
+              .sort-type.sort-value-desc
+        td.sort-holder
       for row, i in rows
         tr
           for cell, j in row

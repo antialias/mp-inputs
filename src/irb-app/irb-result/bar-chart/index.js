@@ -19,6 +19,7 @@ document.registerElement('bar-chart', class extends Component {
       template,
       defaultState: {
         headers: [],
+        headerSortPanel: null,
         rows: [],
         chartBoundaries: {},
         chartMax: 0,
@@ -30,6 +31,14 @@ document.registerElement('bar-chart', class extends Component {
       },
       helpers: {
         getHeaderWidth: (text) => util.getTextWidth(text, 'bold 14px Helvetica'),
+        headerClick: ev => {
+          if (ev.detail && typeof ev.detail.header === 'number') {
+            const headerIdx = ev.detail.header;
+            this.update({
+              headerSortPanel: headerIdx === this.state.headerSortPanel ? null : headerIdx,
+            });
+          }
+        },
         headersToDisplay: () => {
           let headers = null;
           if (this.state.chartOptions.plotStyle == 'stacked') {
@@ -85,6 +94,7 @@ document.registerElement('bar-chart', class extends Component {
       headers,
       mathTypes,
       showValueNames,
+      sortConfig,
       rows,
     });
   }
@@ -108,17 +118,25 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
 
   attributeChangedCallback() {
     this.headers = this.getJSONAttribute('headers') || [];
-    this.chartMax = this.getJSONAttribute('chartMax');
-    this.mathTypes = this.getJSONAttribute('mathTypes') || [];
-    this.showValueNames = this.getJSONAttribute('showValueNames') || [];
+    this.chartMax = this.getJSONAttribute('chart-max');
+    this.mathTypes = this.getJSONAttribute('math-types') || [];
+    this.showValueNames = this.getJSONAttribute('show-value-names') || [];
+    this.sortConfig = this.getJSONAttribute('sort-config');
     this.render();
   }
 
   render() {
     this.$el.empty();
-    let $headers = $(this.headers.map(header =>
+    let headersEl = this;
+    let $headers = $(this.headers.map((header, idx) =>
       $('<div>')
         .addClass('bar-chart-header')
+        .data('header-idx', idx)
+        .on('click', function() {
+          headersEl.dispatchEvent(new CustomEvent('click', {
+            detail: {header: $(this).data('header-idx')},
+          }));
+        })
         .append($('<div>').addClass('text').html(
           header === '$event' ? 'Events' : util.renameProperty(header)
         )).get(0)
