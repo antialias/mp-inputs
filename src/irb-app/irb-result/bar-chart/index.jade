@@ -1,6 +1,13 @@
 - const isStacked = chartOptions.plotStyle == 'stacked';
 - const headersToDisplay = $helpers.headersToDisplay();
 
+mixin sort-type-button(sortBy, sortOrder, colIdx)
+  - const colConfig = sortConfig.sortBy === 'column' && sortConfig.colSortAttrs[colIdx];
+  .sort-type(class={
+    [`sort-${sortBy}-${sortOrder}`]: true,
+    'sort-selected': colConfig && colConfig.sortBy === sortBy && colConfig.sortOrder === sortOrder,
+  })
+
 .bar-chart
   table
     thead
@@ -21,10 +28,10 @@
         for col, ci in headersToDisplay
           td.sort-holder(class={'active-sort-panel': ci === headerSortPanel})
             .sort-controls
-              .sort-type.sort-label-asc
-              .sort-type.sort-label-desc
-              .sort-type.sort-value-asc
-              .sort-type.sort-value-desc
+              +sort-type-button('label', 'asc',  ci)
+              +sort-type-button('label', 'desc', ci)
+              +sort-type-button('value', 'asc',  ci)
+              +sort-type-button('value', 'desc', ci)
         td.sort-holder
       for row, i in rows
         tr

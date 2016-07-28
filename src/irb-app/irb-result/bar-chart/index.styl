@@ -120,19 +120,24 @@
           transition opacity 0.1s
           z-index 1
           .sort-type
+            cursor pointer
             display inline-block
             height 30px
             width 36px
             &:not(:last-child)
               border-right 1px solid background-gray
             &::before
-              background medium-gray
+              background light-gray
               content ''
               display inline-block
               height 10px
               margin-right 6px
               margin-top 10px
               width 22px
+            &.sort-selected::before
+              background medium-gray
+            &:hover::before
+              background blue-300
             &.sort-label-asc::before
               mask url(../../../../assets/charts/sort-label-asc.svg) no-repeat center
             &.sort-label-desc::before
