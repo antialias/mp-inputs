@@ -414,20 +414,3 @@ function flattenNestedObjectToArray(obj) {
   }
 }
 
-function _intoObject(obj, filter, depth) {
-  Object.keys(obj).forEach( key => {
-    if (nestedObjectDepth(obj) === depth) {
-      if (!filter(key)) {
-        delete obj[key];
-      }
-    } else if (typeof obj[key] === 'object') {
-      _intoObject(obj[key], filter, depth);
-    }
-  });
-}
-
-export function filterObjectAtDepth(obj, filter, depth=1) {
-  const newObject = JSON.parse(JSON.stringify(obj));
-  _intoObject(newObject, filter, depth);
-  return newObject;
-}

@@ -1,8 +1,8 @@
 import { Component } from 'panel';
 import { capitalize } from 'mixpanel-common/util';
 
-import { filterObjectAtDepth, ROLLING_WINDOWS_BY_UNIT } from './chart-util';
-import { extend, pick, renameEvent } from '../../util';
+import { ROLLING_WINDOWS_BY_UNIT } from './chart-util';
+import { extend, filterObjectAtDepth, pick, renameEvent } from '../../util';
 
 import './bar-chart';
 import './line-chart';
