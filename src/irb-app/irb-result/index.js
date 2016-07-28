@@ -1,5 +1,5 @@
 import { Component } from 'panel';
-import { capitalize } from 'mixpanel-common/build/util';
+import { capitalize } from 'mixpanel-common/util';
 
 import { filterObjectAtDepth, ROLLING_WINDOWS_BY_UNIT } from './chart-util';
 import { extend, pick, renameEvent } from '../../util';

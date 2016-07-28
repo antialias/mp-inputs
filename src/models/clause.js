@@ -1,7 +1,7 @@
 import moment from 'moment';
 
-import { extend } from 'mixpanel-common/build/util';
-import { debug } from 'mixpanel-common/build/report/util';
+import { extend } from 'mixpanel-common/util';
+import { debug } from 'mixpanel-common/report/util';
 
 export class Clause {
   constructor(attrs={}) {

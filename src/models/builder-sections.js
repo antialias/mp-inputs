@@ -1,5 +1,5 @@
-import { extend, mapValues, pick } from 'mixpanel-common/build/util';
-import { debug } from 'mixpanel-common/build/report/util';
+import { extend, mapValues, pick } from 'mixpanel-common/util';
+import { debug } from 'mixpanel-common/util';
 
 import {
   Section,

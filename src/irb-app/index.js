@@ -1,5 +1,5 @@
-import MPApp from 'mixpanel-common/build/report/mp-app';
-import { extend, pick } from 'mixpanel-common/build/util';
+import MPApp from 'mixpanel-common/report/mp-app';
+import { extend, pick } from 'mixpanel-common/util';
 import * as util from '../util';
 
 import BuilderSections from '../models/builder-sections';
