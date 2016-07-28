@@ -1,5 +1,5 @@
 import MPApp from 'mixpanel-common/report/mp-app';
-import { extend, pick } from 'mixpanel-common/util';
+import { extend } from 'mixpanel-common/util';
 import * as util from '../util';
 
 import BuilderSections from '../models/builder-sections';
@@ -491,10 +491,6 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     }
   }
 
-  differentResult(result) {
-    return !util.isEqual(pick(this.state.result, ['series', 'headers']), result);
-  }
-
   resetToastTimer() {
     if (!this.state.newCachedData) {
       clearTimeout(this.toastTimer);
@@ -505,7 +501,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   _checkForNewResults() {
     this.queries.segmentation.run()
       .then(result=> {
-        if (this.differentResult(result)) {
+        if (!this.state.result.isEqual(result)) {
           this.update({newCachedData: true});
           this.queries.segmentationCache.set(
             this.queries.segmentation.build(this.state).query,

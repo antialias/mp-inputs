@@ -1,9 +1,13 @@
-import { pick } from '../util';
+import { isEqual, pick } from '../util';
 import { nestedObjectCumulative, nestedObjectRolling } from '../irb-app/irb-result/chart-util';
 
 export default class Result {
   constructor(attrs) {
     Object.assign(this, pick(attrs, ['headers', 'series']));
+  }
+
+  isEqual(result) {
+    return isEqual(this.headers, result.headers) && isEqual(this.series, result.series);
   }
 
   transformed(options) {
