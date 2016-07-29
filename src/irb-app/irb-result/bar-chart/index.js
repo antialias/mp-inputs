@@ -32,11 +32,17 @@ document.registerElement('bar-chart', class extends Component {
       helpers: {
         getHeaderWidth: (text) => util.getTextWidth(text, 'bold 14px Helvetica'),
         headerClick: ev => {
-          if (ev.detail && typeof ev.detail.header === 'number') {
-            const headerIdx = ev.detail.header;
-            this.update({
-              headerSortPanel: headerIdx === this.state.headerSortPanel ? null : headerIdx,
-            });
+          if (ev.detail) {
+            if (typeof ev.detail.header === 'number') {
+              const headerIdx = ev.detail.header;
+              this.update({
+                headerSortPanel: headerIdx === this.state.headerSortPanel ? null : headerIdx,
+              });
+            } else if (ev.detail.axis) {
+              this.update({
+                headerSortPanel: this.state.headerSortPanel === 'axis' ? null : 'axis',
+              });
+            }
           }
         },
         headersToDisplay: () => {
@@ -66,6 +72,15 @@ document.registerElement('bar-chart', class extends Component {
         },
         onMouseLeave: () => {
           this.update({hoverTooltip: util.extend(this.state.hoverTooltip, {show: false})});
+        },
+        selectAxisSort: (sortOrder) => {
+          this.update({headerSortPanel: null});
+          this.dispatchEvent(new CustomEvent('change', {
+            detail: {
+              type: 'axisSort',
+              sortOrder,
+            },
+          }));
         },
         selectColumnSort: (sortBy, sortOrder, colIdx) => {
           this.update({headerSortPanel: null});
@@ -164,6 +179,9 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
     const $axisTitle = $('<div>').addClass('axis-title text').html(util.capitalize(chartLabel.join(' ')));
 
     let $axis = $('<div class="bar-chart-axis"></div>')
+      .on('click', function() {
+        headersEl.dispatchEvent(new CustomEvent('click', {detail: {axis: true}}));
+      })
       .append($axisTitle)
       .append($('<div>').addClass('max-value text').html(util.abbreviateNumber(this.chartMax)));
 

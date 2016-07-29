@@ -1,7 +1,7 @@
 - const isStacked = chartOptions.plotStyle == 'stacked';
 - const headersToDisplay = $helpers.headersToDisplay();
 
-mixin sort-type-button(sortBy, sortOrder, colIdx)
+mixin sort-col-button(sortBy, sortOrder, colIdx)
   - const colConfig = sortConfig.sortBy === 'column' && sortConfig.colSortAttrs[colIdx];
   .sort-type(
     class={
@@ -9,6 +9,15 @@ mixin sort-type-button(sortBy, sortOrder, colIdx)
       'sort-selected': colConfig && colConfig.sortBy === sortBy && colConfig.sortOrder === sortOrder,
     }
     onclick=() => $helpers.selectColumnSort(sortBy, sortOrder, colIdx)
+  )
+
+mixin sort-axis-button(sortOrder)
+  .sort-type(
+    class={
+      [`sort-value-${sortOrder}`]: true,
+      'sort-selected': sortConfig && sortConfig.sortBy === 'value' && sortConfig.sortOrder === sortOrder,
+    }
+    onclick=() => $helpers.selectAxisSort(sortOrder)
   )
 
 .bar-chart
@@ -31,11 +40,14 @@ mixin sort-type-button(sortBy, sortOrder, colIdx)
         for col, ci in headersToDisplay
           td.sort-holder(class={'active-sort-panel': ci === headerSortPanel})
             .sort-controls
-              +sort-type-button('label', 'asc',  ci)
-              +sort-type-button('label', 'desc', ci)
-              +sort-type-button('value', 'asc',  ci)
-              +sort-type-button('value', 'desc', ci)
-        td.sort-holder
+              +sort-col-button('label', 'asc',  ci)
+              +sort-col-button('label', 'desc', ci)
+              +sort-col-button('value', 'asc',  ci)
+              +sort-col-button('value', 'desc', ci)
+        td.sort-holder(class={'active-sort-panel': headerSortPanel === 'axis'})
+          .sort-controls
+            +sort-axis-button('asc')
+            +sort-axis-button('desc')
       for row, i in rows
         tr
           for cell, j in row

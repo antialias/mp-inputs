@@ -25,6 +25,7 @@
             border-right 0 none
 
         .bar-chart-header, .bar-chart-axis
+          cursor pointer
           display flex
           padding 10px 0
 
@@ -32,7 +33,6 @@
             align-items center
 
         .bar-chart-header
-          cursor pointer
           .text
             padding-left 15px
 
@@ -131,8 +131,7 @@
               content ''
               display inline-block
               height 10px
-              margin-right 6px
-              margin-top 10px
+              margin 10px 6px 0 6px
               width 22px
             &.sort-selected::before
               background medium-gray
@@ -147,8 +146,9 @@
             &.sort-value-desc::before
               mask url(../../../../assets/charts/sort-value-desc.svg) no-repeat center
         &.active-sort-panel .sort-controls
+          left 50%
           opacity 1
-          transform translate(50%)
+          transform translate(-50%)
 
       &.chart-data
         border none

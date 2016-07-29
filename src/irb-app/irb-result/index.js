@@ -87,11 +87,22 @@ document.registerElement('irb-result', class extends Component {
         }),
 
         barChartChange: ev => {
-          const sortProps = ev.detail && ev.detail.type === 'colSort' && ev.detail;
+          const sortProps = ev.detail && ev.detail.type && ev.detail;
           if (sortProps) {
-            this.state.report.sorting.bar.colSortAttrs[sortProps.colIdx] = pick(sortProps, [
-              'sortBy', 'sortOrder',
-            ]);
+            const barSort = this.state.report.sorting.bar;
+            switch(sortProps.type) {
+              case 'axisSort':
+                barSort.sortBy = 'value';
+                barSort.sortOrder = sortProps.sortOrder;
+                break;
+              case 'colSort':
+                barSort.sortBy = 'column';
+                barSort.colSortAttrs = this.app.sortConfigFor(this.state.result, this.state.report.sorting).bar.colSortAttrs;
+                barSort.colSortAttrs[sortProps.colIdx] = pick(sortProps, [
+                  'sortBy', 'sortOrder',
+                ]);
+                break;
+            }
             this.app.updateReport();
           }
         },
