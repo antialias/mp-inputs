@@ -522,7 +522,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     const cacheExpiry = 10; // seconds
 
     if (!cachedResult) {
-      this.update(extend(this.state, {resultLoading: true}));
+      this.update({resultLoading: true});
     }
 
     this.update({newCachedData: false});
