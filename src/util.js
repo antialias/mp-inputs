@@ -23,7 +23,7 @@ export function mapObjectKeys(obj, callback) {
 }
 
 function _intoObject(obj, filter, depth) {
-  Object.keys(obj).forEach( key => {
+  Object.keys(obj).forEach(key => {
     if (nestedObjectDepth(obj) === depth) {
       if (!filter(key)) {
         delete obj[key];
