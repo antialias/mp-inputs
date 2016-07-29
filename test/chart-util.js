@@ -234,73 +234,49 @@ describe('nestedObjectToTableData', function() {
   });
 });
 
-describe('nestedObjectCumulative', function() {
-  const sortedNamedD2Obj = {
-    US: {
-      '2016-06-01': 8,
-      '2016-06-02': 3,
-      '2016-06-03': 7,
-      '2016-06-04': 1,
-    },
-    Canada: {
-      '2016-06-01': 9,
-      '2016-06-02': 3,
-      '2016-06-03': 9,
-      '2016-06-04': 3,
-    },
-    Mexico: {
-      '2016-06-01': 2,
-      '2016-06-02': 5,
-      '2016-06-03': 8,
-      '2016-06-04': 7,
-    },
-  };
+const timeseriesResultObj = {
+  US: {
+    '2016-06-01': 8,
+    '2016-06-02': 2,
+    '2016-06-03': 2,
+    '2016-06-04': 8,
+    '2016-06-05': 14,
+  },
+  Canada: {
+    '2016-06-01': 6,
+    '2016-06-02': 3,
+    '2016-06-03': 3,
+    '2016-06-04': 12,
+    '2016-06-05': 6,
+  },
+};
 
+
+describe('nestedObjectCumulative', function() {
   it('supports rolling sum on the leaf nodes', function() {
-    const arr = nestedObjectCumulative(sortedNamedD2Obj);
+    const arr = nestedObjectCumulative(timeseriesResultObj);
     expect(arr).to.eql({
       US: {
         '2016-06-01': 8,
-        '2016-06-02': 11,
-        '2016-06-03': 18,
-        '2016-06-04': 19,
+        '2016-06-02': 10,
+        '2016-06-03': 12,
+        '2016-06-04': 20,
+        '2016-06-05': 34,
       },
       Canada: {
-        '2016-06-01': 9,
-        '2016-06-02': 12,
-        '2016-06-03': 21,
+        '2016-06-01': 6,
+        '2016-06-02': 9,
+        '2016-06-03': 12,
         '2016-06-04': 24,
-      },
-      Mexico: {
-        '2016-06-01': 2,
-        '2016-06-02': 7,
-        '2016-06-03': 15,
-        '2016-06-04': 22,
+        '2016-06-05': 30,
       },
     });
   });
 });
 
 describe('nestedObjectRolling', function() {
-  const sortedNamedD2Obj = {
-    US: {
-      '2016-06-01': 8,
-      '2016-06-02': 2,
-      '2016-06-03': 2,
-      '2016-06-04': 8,
-      '2016-06-05': 14,
-    },
-    Canada: {
-      '2016-06-01': 6,
-      '2016-06-02': 3,
-      '2016-06-03': 3,
-      '2016-06-04': 12,
-      '2016-06-05': 6,
-    },
-  };
-
   it('supports rolling average on the leaf nodes without enought data for a window', function() {
-    const arr = nestedObjectRolling(sortedNamedD2Obj, 7);
+    const arr = nestedObjectRolling(timeseriesResultObj, 7);
     expect(arr).to.eql({
       US: {
         '2016-06-01': 8,
@@ -320,7 +296,7 @@ describe('nestedObjectRolling', function() {
   });
 
   it('supports rolling average on the leaf nodes with more data than a window', function() {
-    const arr = nestedObjectRolling(sortedNamedD2Obj, 3);
+    const arr = nestedObjectRolling(timeseriesResultObj, 3);
     expect(arr).to.eql({
       US: {
         '2016-06-01': 8,
