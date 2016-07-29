@@ -18,7 +18,8 @@
       when 'line'
         line-chart(attributes={data: JSON.stringify(processedResult), chartOptions: JSON.stringify($helpers.getChartOptions())})
       when 'table'
-        - const resourceDescription = $helpers.getFunctionLabel() ? $helpers.getChartLabel() + ` ${$helpers.getFunctionLabel()}` : $helpers.getChartLabel();
+        - const functionLabel = $helpers.getFunctionLabel();
+        - const resourceDescription = $helpers.getChartLabel() + (functionLabel ? ` ${functionLabel}` : '');
         table-chart(
           attributes={
             data: JSON.stringify(util.extend(processedResult, {resourceDescription: resourceDescription})),
