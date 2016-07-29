@@ -88,8 +88,10 @@ document.registerElement('bar-chart', class extends Component {
           this.update({headerSortPanel: null});
           this.dispatchEvent(new CustomEvent('change', {
             detail: {
+              colIdx,
+              sortBy,
+              sortOrder,
               type: 'colSort',
-              sortBy, sortOrder, colIdx,
             },
           }));
         },
