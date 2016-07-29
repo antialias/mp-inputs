@@ -147,9 +147,6 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       segmentationCache: new QueryCache(),
     };
 
-    // cache for different analysis choices
-    this.analysisCache = {};
-
     super.attachedCallback(...arguments);
 
     if (this.state.report.id) {
