@@ -101,10 +101,10 @@ document.registerElement('bar-chart', class extends Component {
 
   attributeChangedCallback() {
     let {headers, series} = this.getJSONAttribute('data');
-    const chartBoundaries = this.getJSONAttribute('chartBoundaries') || {};
-    const chartOptions = this.getJSONAttribute('chartOptions') || {};
-    const mathTypes = this.getJSONAttribute('mathTypes') || [];
-    const showValueNames = this.getJSONAttribute('showValueNames') || [];
+    const chartBoundaries = this.getJSONAttribute('chart-boundaries') || {};
+    const chartOptions = this.getJSONAttribute('chart-options') || {};
+    const mathTypes = this.getJSONAttribute('math-types') || [];
+    const showValueNames = this.getJSONAttribute('show-value-names') || [];
     const sortConfig = this.getJSONAttribute('sorting');
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
@@ -213,7 +213,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
   sortIconClass(headerIdx) {
     if (this.sortConfig && this.sortConfig.sortBy === 'column') {
       const colAttrs = this.sortConfig.colSortAttrs[headerIdx];
-      return `sort-icon sort-icon-${colAttrs.sortBy}-${colAttrs.sortOrder}`;
+      return colAttrs ? `sort-icon sort-icon-${colAttrs.sortBy}-${colAttrs.sortOrder}` : '';
     } else {
       return '';
     }

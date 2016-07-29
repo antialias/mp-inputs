@@ -5,12 +5,12 @@
       when 'bar'
         bar-chart(
           attributes={
-            data: JSON.stringify($helpers.filterResults(result)),
-            chartBoundaries: JSON.stringify($helpers.getBoundaries()),
-            chartOptions: JSON.stringify($helpers.getChartOptions()),
-            mathTypes: JSON.stringify($helpers.getUniqueShowMathTypes()),
-            showValueNames: JSON.stringify($helpers.getShowValueNames()),
-            sorting: JSON.stringify(report.sorting.bar),
+            'data': JSON.stringify($helpers.filterResults(result)),
+            'chart-boundaries': JSON.stringify($helpers.getBoundaries()),
+            'chart-options': JSON.stringify($helpers.getChartOptions()),
+            'math-types': JSON.stringify($helpers.getUniqueShowMathTypes()),
+            'show-value-names': JSON.stringify($helpers.getShowValueNames()),
+            'sorting': JSON.stringify(report.sorting.bar),
           }
           onchange=$helpers.barChartChange
         )
