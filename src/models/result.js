@@ -1,5 +1,4 @@
-import { isEqual, pick } from '../util';
-import { nestedObjectCumulative, nestedObjectRolling } from '../irb-app/irb-result/chart-util';
+import { isEqual, nestedObjectCumulative, nestedObjectRolling, pick } from '../util';
 
 export default class Result {
   constructor(attrs) {
