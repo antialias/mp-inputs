@@ -1,6 +1,7 @@
 import moment from 'moment';
 
 import BuilderSections from './builder-sections';
+import Legend from './legend';
 import { extend, pick } from '../util';
 
 // saveable / loadable report metadata
@@ -26,7 +27,7 @@ export default class Report {
   }
 
   static deserialize(data) {
-    return new Report(extend(data, {sections: BuilderSections.deserialize(data.sections)}));
+    return new Report(extend(data, {sections: BuilderSections.deserialize(data.sections), series: new Legend(data.series)}));
   }
 
   serialize() {

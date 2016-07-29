@@ -85,7 +85,7 @@ document.registerElement('show-hide-series-pane-content', class extends PaneCont
             this.config.helpers.renameSeries(value).toLowerCase().indexOf(this.state.report.series.search.toLowerCase()) === 0
           )
         ),
-        resetSeries: () => this.app.updateSeriesData(this.state.result, false),
+        resetSeries: () => this.app.updateSeriesState(this.state.report.series.updateSeriesData(this.state.result, false)),
         selectedSeriesCount: () => Object.values(this.state.report.series.data).filter(Boolean).length,
         seriesData: () => Object.keys(this.state.report.series.data).filter(this.config.helpers.matchesSearch).sort(),
         toggleShowSeries: name => {

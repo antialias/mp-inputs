@@ -5,6 +5,7 @@ import * as util from '../util';
 import BuilderSections from '../models/builder-sections';
 import { ShowSection, TimeSection } from '../models/section';
 import { Clause, ShowClause, TimeClause } from '../models/clause';
+import Legend from '../models/legend';
 import TopEventsQuery from '../models/queries/top-events';
 import { TopEventPropertiesQuery, TopPeoplePropertiesQuery } from '../models/queries/top-properties';
 import { TopEventPropertyValuesQuery, TopPeoplePropertyValuesQuery } from '../models/queries/top-property-values';
@@ -86,12 +87,12 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
           time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
         }),
-        series: {
+        series: new Legend({
           currentSeries: null,
           data: {},
           isEditing: false,
           search: null,
-        },
+        }),
         sorting: this.sortConfigFor(null),
         title: 'Untitled report',
       }),
@@ -160,7 +161,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   // Serialization helpers
 
   get persistenceKey() {
-    return 'irb-94c2faa';
+    return 'irb-a148f47';
   }
 
   toSerializationAttrs() {
@@ -462,7 +463,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
   updateSeriesState(newState) {
     this.resetToastTimer();
-    this.updateReport({series: extend(this.state.report.series, newState)});
+    this.updateReport({series: Object.assign(this.state.report.series, newState)});
   }
 
   startEditingSeries() {
@@ -473,18 +474,6 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.updateSeriesState({
       isEditing: false,
       search: null,
-    });
-  }
-
-  updateSeriesData(result, defaultValue=true, showLimit=48) {
-    const seriesSums = util.combineNestedObjKeys(util.nestedObjectSum(result.series));
-    this.updateSeriesState({
-      data: util.objectFromPairs(
-        Object.keys(seriesSums)
-          .sort((a, b) => seriesSums[b] - seriesSums[a])
-          .map((v, idx) => [v, (idx < showLimit) ? defaultValue : false])
-      ),
-      currentSeries: result.headers[result.headers.length-1] || null,
     });
   }
 
@@ -555,9 +544,12 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         if (!cachedResult) {
           this.queries.segmentationCache.set(query, result, cacheExpiry);
         }
-        this.updateSeriesData(result);
+
         this.update({result: result, newCachedData: false, resultLoading: false});
-        this.updateReport({sorting: this.sortConfigFor(result, this.state.report.sorting)});
+        // BUG: we should only update legend data if it's a different query. it resets for every
+        // query right now.
+        this.updateReport({sorting: this.sortConfigFor(result, this.state.report.sorting),
+                           series: this.state.report.series.updateSeriesData(result)});
       })
       .catch(err => console.error(err));
   }
