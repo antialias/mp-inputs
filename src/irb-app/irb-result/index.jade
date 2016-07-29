@@ -1,38 +1,39 @@
 .irb-result
   .controls= $component.child('chart-controls')
   .chart(class={loading: resultLoading})
-    - const processedResult = $helpers.processResult(result);
-    case report.displayOptions.chartType
-      when 'bar'
-        bar-chart(
-          attributes=$helpers.stringifyObjValues({
-            'data': processedResult,
-            'chart-boundaries': $helpers.getBoundaries(),
-            'chart-label': $helpers.getChartLabel(),
-            'display-options': $helpers.getDisplayOptions(),
-            'function-label': $helpers.getFunctionLabel(),
-            'sorting': report.sorting.bar,
-          })
-          onchange=$helpers.barChartChange
-        )
-      when 'line'
-        line-chart(
-          attributes=$helpers.stringifyObjValues({
-            'data': processedResult,
-            'display-options': $helpers.getDisplayOptions(),
-          })
-        )
-      when 'table'
-        - const functionLabel = $helpers.getFunctionLabel();
-        - const resourceDescription = $helpers.getChartLabel() + (functionLabel ? ` ${functionLabel}` : '');
-        table-chart(
-          attributes=$helpers.stringifyObjValues({
-            'data': util.extend(processedResult, {resourceDescription: resourceDescription}),
-            'display-options': $helpers.getDisplayOptions(),
-            'sorting': report.sorting.table,
-          })
-          onchange=$helpers.tableChange
-        )
+    .main-chart
+      - const processedResult = $helpers.processResult(result);
+      case report.displayOptions.chartType
+        when 'bar'
+          bar-chart(
+            attributes=$helpers.stringifyObjValues({
+              'data': processedResult,
+              'chart-boundaries': $helpers.getBoundaries(),
+              'chart-label': $helpers.getChartLabel(),
+              'display-options': $helpers.getDisplayOptions(),
+              'function-label': $helpers.getFunctionLabel(),
+              'sorting': report.sorting.bar,
+            })
+            onchange=$helpers.barChartChange
+          )
+        when 'line'
+          line-chart(
+            attributes=$helpers.stringifyObjValues({
+              'data': processedResult,
+              'display-options': $helpers.getDisplayOptions(),
+            })
+          )
+        when 'table'
+          - const functionLabel = $helpers.getFunctionLabel();
+          - const resourceDescription = $helpers.getChartLabel() + (functionLabel ? ` ${functionLabel}` : '');
+          table-chart(
+            attributes=$helpers.stringifyObjValues({
+              'data': util.extend(processedResult, {resourceDescription: resourceDescription}),
+              'display-options': $helpers.getDisplayOptions(),
+              'sorting': report.sorting.table,
+            })
+            onchange=$helpers.tableChange
+          )
     if $helpers.showLegend()
       .legend
 
