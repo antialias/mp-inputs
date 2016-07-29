@@ -9,10 +9,11 @@ import {
   renameEvent,
 } from '../../util';
 
+import './chart-controls';
+import './chart-legend';
 import './bar-chart';
 import './line-chart';
 import './table-chart';
-import './chart-controls';
 import './mp-toast';
 
 import template from './index.jade';

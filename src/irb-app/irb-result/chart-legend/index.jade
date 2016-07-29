@@ -1,0 +1,23 @@
+.chart-legend
+  .header legend
+  .body
+    .search
+      focus-input(
+        focusDelay=200
+        oninput=$helpers.searchHandler
+        type='text'
+      )
+    // ul.groups
+    // each group in $helpers.groups()
+    .info
+      .name= util.renameEvent(report.series.currentSeries)
+      .count #{$helpers.selectedSeriesCount()}/#{$helpers.totalSeriesCount()}
+    ul.series-names
+    each series in $helpers.seriesData()
+      li
+        .select-all
+        button.series(
+          class=$helpers.isSeriesShowing(series) ? 'showing' : 'hidden'
+          onclick=() => $helpers.toggleShowSeries(series)
+        )= $helpers.renameSeries(series)
+    // .button.more-or-less(onclick=() => $helpers.onMoreOrLessClicked(group))= 'more'

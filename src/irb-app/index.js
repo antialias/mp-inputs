@@ -161,7 +161,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   // Serialization helpers
 
   get persistenceKey() {
-    return 'irb-a148f47';
+    return 'irb-a148f48';
   }
 
   toSerializationAttrs() {

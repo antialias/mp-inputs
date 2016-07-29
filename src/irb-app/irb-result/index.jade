@@ -35,7 +35,7 @@
             onchange=$helpers.tableChange
           )
     if $helpers.showLegend()
-      .legend
+      .legend= $component.child('chart-legend')
 
   if resultLoading && report.displayOptions.chartType !== 'line'
     .loader
