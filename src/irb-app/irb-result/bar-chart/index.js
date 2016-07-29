@@ -13,6 +13,8 @@ import {
 import template from './index.jade';
 import './index.styl';
 
+const SORT_ICON_WIDTH = 36;
+
 document.registerElement('bar-chart', class extends Component {
   get config() {
     return {
@@ -30,7 +32,7 @@ document.registerElement('bar-chart', class extends Component {
         util,
       },
       helpers: {
-        getHeaderWidth: (text) => util.getTextWidth(text, 'bold 14px Helvetica'),
+        getHeaderWidth: (text) => util.getTextWidth(text, 'bold 14px Helvetica') + SORT_ICON_WIDTH,
         headerClick: ev => {
           if (ev.detail) {
             if (typeof ev.detail.header === 'number') {
@@ -163,7 +165,9 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
         })
         .append($('<div>').addClass('text').html(
           header === '$event' ? 'Events' : util.renameProperty(header)
-        )).get(0)
+        ))
+        .append($('<div>').addClass(headersEl.sortIconClass(idx)))
+        .get(0)
     ));
     this.$el.append($headers);
 
@@ -183,7 +187,9 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
         headersEl.dispatchEvent(new CustomEvent('click', {detail: {axis: true}}));
       })
       .append($axisTitle)
-      .append($('<div>').addClass('max-value text').html(util.abbreviateNumber(this.chartMax)));
+      .append($('<div>').addClass(headersEl.sortIconAxisClass()))
+      .append($('<div>').addClass('max-value text').html(util.abbreviateNumber(this.chartMax)))
+      ;
 
     this.$el.append($axis);
 
@@ -200,5 +206,22 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
       const headerWidths = tableColWidths.slice(0, -1).reduce((sum, width) => sum + width, 0);
       $axis.width(`calc(100% - ${headerWidths}px)`);
     });
+  }
+
+  sortIconClass(headerIdx) {
+    if (this.sortConfig && this.sortConfig.sortBy === 'column') {
+      const colAttrs = this.sortConfig.colSortAttrs[headerIdx];
+      return `sort-icon sort-icon-${colAttrs.sortBy}-${colAttrs.sortOrder}`;
+    } else {
+      return '';
+    }
+  }
+
+  sortIconAxisClass() {
+    if (this.sortConfig && this.sortConfig.sortBy === 'value') {
+      return `sort-icon sort-icon-value-${this.sortConfig.sortOrder}`;
+    } else {
+      return '';
+    }
   }
 });

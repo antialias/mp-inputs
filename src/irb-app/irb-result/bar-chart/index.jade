@@ -3,18 +3,18 @@
 
 mixin sort-col-button(sortBy, sortOrder, colIdx)
   - const colConfig = sortConfig.sortBy === 'column' && sortConfig.colSortAttrs[colIdx];
-  .sort-type(
+  .sort-icon(
     class={
-      [`sort-${sortBy}-${sortOrder}`]: true,
+      [`sort-icon-${sortBy}-${sortOrder}`]: true,
       'sort-selected': colConfig && colConfig.sortBy === sortBy && colConfig.sortOrder === sortOrder,
     }
     onclick=() => $helpers.selectColumnSort(sortBy, sortOrder, colIdx)
   )
 
 mixin sort-axis-button(sortOrder)
-  .sort-type(
+  .sort-icon(
     class={
-      [`sort-value-${sortOrder}`]: true,
+      [`sort-icon-value-${sortOrder}`]: true,
       'sort-selected': sortConfig && sortConfig.sortBy === 'value' && sortConfig.sortOrder === sortOrder,
     }
     onclick=() => $helpers.selectAxisSort(sortOrder)
