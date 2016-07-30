@@ -4,6 +4,7 @@ import * as util from '../../../util';
 import { extend } from 'mixpanel-common/util';
 
 import template from './index.jade';
+import './index.styl';
 
 document.registerElement('chart-legend', class extends Component {
   get config() {
