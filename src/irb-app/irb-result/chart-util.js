@@ -281,16 +281,20 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
 // sort utils for nestedObjectToNestedArray
 const NESTED_ARRAY_SORT_FUNCS = {
   label: {
-    asc:  (a, b) => compareByKey(a, b, 'label'),
-    desc: (a, b) => compareByKey(a, b, 'label') * -1,
+    asc:  (a, b) => compareByLabel(a, b),
+    desc: (a, b) => compareByLabel(a, b) * -1,
   },
   value: {
-    asc:  (a, b) => compareByKey(a, b, 'value'),
-    desc: (a, b) => compareByKey(a, b, 'value') * -1,
+    asc:  (a, b) => compareByValue(a, b),
+    desc: (a, b) => compareByValue(a, b) * -1,
   },
 };
-function compareByKey(a, b, key) {
-  [a, b] = [a[key], b[key]];
+function compareByLabel(a, b) {
+  [a, b] = [a.label.toLowerCase(), b.label.toLowerCase()];
+  return a > b ? 1 : (a < b ? -1 : 0);
+}
+function compareByValue(a, b) {
+  [a, b] = [a.value, b.value];
   return a > b ? 1 : (a < b ? -1 : 0);
 }
 
