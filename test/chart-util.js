@@ -113,6 +113,29 @@ describe('nestedObjectToTableData', function() {
     ]);
   });
 
+  it('ignores case when sorting', function() {
+    const arr = nestedObjectToTableData({
+      'xxx': 1,
+      'AAA': 1,
+      'ZZZ': 1,
+      'Gah': 1,
+    }, {
+      sortBy: 'column',
+      colSortAttrs: [
+        {
+          sortBy: 'label',
+          sortOrder: 'asc',
+        },
+      ],
+    });
+    expect(arr).to.eql([
+      [{value: 'AAA', sum: 1}, {value: 1}],
+      [{value: 'Gah', sum: 1}, {value: 1}],
+      [{value: 'xxx', sum: 1}, {value: 1}],
+      [{value: 'ZZZ', sum: 1}, {value: 1}],
+    ]);
+  });
+
   it('sorts simple 1-column data by values', function() {
     const arr = nestedObjectToTableData({
       'Mexico': 5,
