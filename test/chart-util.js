@@ -268,6 +268,26 @@ describe('nestedObjectToBarChartData', function() {
     ]);
   });
 
+  it('ignores case when sorting a simple object', function() {
+    const arr = nestedObjectToBarChartData({
+      'xxx': 1,
+      'AAA': 1,
+      'ZZZ': 1,
+      'Gah': 1,
+    }, {
+      sortBy: 'column',
+      colSortAttrs: [
+        {
+          sortBy: 'label',
+          sortOrder: 'desc',
+        },
+      ],
+    });
+    expect(arr).to.eql([
+      [['ZZZ', 'xxx', 'Gah', 'AAA'], [1, 1, 1, 1]],
+    ]);
+  });
+
   it('flattens a nested object sorted by column', function() {
     const arr = nestedObjectToBarChartData(d2Obj, {
       sortBy: 'column',
