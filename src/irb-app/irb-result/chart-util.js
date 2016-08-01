@@ -165,7 +165,7 @@ function sortTableColumns(arr, colSortAttrs) {
   }
   return arr
     .sort((a, b) => {
-      [a, b] = [a, b].map(entry => entry[0].value);
+      [a, b] = [a, b].map(entry => entry[0].value.toLowerCase());
       return (a > b ? 1 : (a < b ? -1 : 0)) * (colSortAttrs[0].sortOrder === 'desc' ? -1 : 1);
     });
 }
