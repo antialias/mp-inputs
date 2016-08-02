@@ -309,6 +309,49 @@ describe('nestedObjectToBarChartData', function() {
     ]);
   });
 
+  it('ignores case when sorting a nested object', function() {
+    const arr = nestedObjectToBarChartData({
+      xxx: {
+        LLLama: 1,
+        aardvark: 1,
+        zipliiine: 1,
+      },
+      AAA: {
+        LLLama: 1,
+        aardvark: 1,
+        zipliiine: 1,
+      },
+      Gah: {
+        LLLama: 1,
+        aardvark: 1,
+        zipliiine: 1,
+      },
+      ZZZ: {
+        LLLama: 1,
+        aardvark: 1,
+        zipliiine: 1,
+      },
+    }, {
+      sortBy: 'column',
+      colSortAttrs: [
+        {
+          sortBy: 'label',
+          sortOrder: 'asc',
+        },
+        {
+          sortBy: 'label',
+          sortOrder: 'desc',
+        },
+      ],
+    });
+    expect(arr).to.eql([
+      [{value: 'AAA', sum: 3}, ['zipliiine', 'LLLama', 'aardvark'], [1, 1, 1]],
+      [{value: 'Gah', sum: 3}, ['zipliiine', 'LLLama', 'aardvark'], [1, 1, 1]],
+      [{value: 'xxx', sum: 3}, ['zipliiine', 'LLLama', 'aardvark'], [1, 1, 1]],
+      [{value: 'ZZZ', sum: 3}, ['zipliiine', 'LLLama', 'aardvark'], [1, 1, 1]],
+    ]);
+  });
+
   it('flattens a nested object sorted by final value', function() {
     const arr = nestedObjectToBarChartData(d2Obj, {
       sortBy: 'value',
