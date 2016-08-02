@@ -28,6 +28,8 @@
           cursor pointer
           display flex
           padding 10px 0
+          &:hover .sort-icon::before
+            opacity 1
 
           .text
             align-items center
@@ -253,14 +255,17 @@
     height 20px
     width 36px
     &::before
-      background light-gray
+      background-color light-gray
       content ''
       display inline-block
       height 10px
       margin 5px 6px 0 6px
+      transition background-color 0.1s, opacity 0.1s
       width 22px
+    &:hover::before
+      background-color blue-300
     &.sort-selected::before
-      background medium-gray
+      background-color medium-gray
     &.sort-icon-label-asc::before
       mask url(../../../../assets/charts/sort-label-asc.svg) no-repeat center
     &.sort-icon-label-desc::before
@@ -269,3 +274,6 @@
       mask url(../../../../assets/charts/sort-value-asc.svg) no-repeat center
     &.sort-icon-value-desc::before
       mask url(../../../../assets/charts/sort-value-desc.svg) no-repeat center
+    &.sort-icon-unselected::before
+      mask url(../../../../assets/charts/sort-value-desc.svg) no-repeat center
+      opacity 0

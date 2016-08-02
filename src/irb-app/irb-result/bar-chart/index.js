@@ -212,7 +212,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
       const colAttrs = this.sortConfig.colSortAttrs[headerIdx];
       return colAttrs ? `sort-icon sort-icon-${colAttrs.sortBy}-${colAttrs.sortOrder}` : '';
     } else {
-      return '';
+      return 'sort-icon sort-icon-unselected';
     }
   }
 
@@ -220,7 +220,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
     if (this.sortConfig && this.sortConfig.sortBy === 'value') {
       return `sort-icon sort-icon-value-${this.sortConfig.sortOrder}`;
     } else {
-      return '';
+      return 'sort-icon sort-icon-unselected';
     }
   }
 });
