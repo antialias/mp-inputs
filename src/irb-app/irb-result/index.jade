@@ -25,11 +25,11 @@
       when 'table'
         - const functionLabel = $helpers.getFunctionLabel();
         - const resourceDescription = $helpers.getChartLabel() + (functionLabel ? ` ${functionLabel}` : '');
-        - console.log(report.sorting)
         table-chart(
           attributes=$helpers.stringifyObjValues({
-            data: util.extend(processedResult, {resourceDescription: resourceDescription}),
-            sorting: report.sorting.table,
+            'data': util.extend(processedResult, {resourceDescription: resourceDescription}),
+            'display-options': $helpers.getDisplayOptions(),
+            'sorting': report.sorting.table,
           })
           onchange=$helpers.tableChange
         )

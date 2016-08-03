@@ -1,7 +1,8 @@
 - const fullWidthTable = columnHeaders.length && columnRows.length
+- const isRelativeValue = displayOptions.value == 'relative'
 
 .table-chart(class={'full-width': fullWidthTable})
-  table-manager(data=JSON.stringify({headers, rows, columnHeaders, columnRows}))
+  table-manager(data=JSON.stringify({headers, rows, columnHeaders, columnRows, displayOptions}))
   .left-table-container
     .fixed-header
       for header, idx in headers
@@ -40,6 +41,10 @@
               tr
                 for cell in row
                   if cell || cell === 0
-                    td(rowSpan=cell.rowSpan || 1)= cell.value || cell
+                    - let cellValue = cell.value || cell
+                    if isRelativeValue
+                      - percent = Math.floor(cellValue / chartMax * 10000) / 100
+                      - cellValue = percent == 0 ? '< 0.01%' : `${percent}%`
+                    td(rowSpan=cell.rowSpan || 1)= cellValue
                   else
                     td

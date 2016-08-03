@@ -5,6 +5,7 @@ import WebComponent from 'webcomponent';
 
 import * as util from '../../../util';
 import {
+  nestedObjectMax,
   nestedObjectToTableData,
   transpose,
 } from '../chart-util';
@@ -19,8 +20,10 @@ document.registerElement('table-chart', class extends Component {
       defaultState: {
         headers: [],
         rows: [],
+        chartMax: 0,
         columnHeaders: [],
         columnRows: [],
+        displayOptions: {},
         util,
       },
 
@@ -58,6 +61,7 @@ document.registerElement('table-chart', class extends Component {
 
   attributeChangedCallback() {
     let {headers, series, resourceDescription} = this.getJSONAttribute('data');
+    const displayOptions = this.getJSONAttribute('display-options');
     const sortConfig = this.getJSONAttribute('sorting');
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
@@ -93,11 +97,15 @@ document.registerElement('table-chart', class extends Component {
       });
     });
 
+    const chartMax = nestedObjectMax(series);
+
     this.update({
       headers,
       rows,
+      chartMax,
       columnHeaders,
       columnRows,
+      displayOptions,
     });
   }
 
@@ -137,6 +145,10 @@ document.registerElement('table-manager', class extends WebComponent {
         this.$rightFixedHeader.css('transform', `translateX(-${scrollX}px)`); //
       }
     };
+  }
+
+  attributeChangedCallback() {
+    this.render();
   }
 
   detachedCallback() {

@@ -47,7 +47,7 @@ const AVAILABLE_ANALYSES = {
 const VALUE_TOGGLE_AVAILABLE = {
   Bar: false,
   Line: false,
-  Table: false,
+  Table: true,
   'Stacked bar': true,
   'Stacked line': true,
 };
