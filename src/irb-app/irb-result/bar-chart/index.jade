@@ -65,7 +65,7 @@ mixin sort-axis-button(sortOrder)
                   )
                     if !Array.isArray(cell) || isStacked
                       - const cellLabel = isStacked && rows.length == 1 ? showValueNames[0] : cell.value
-                      span(title=getLabel(cellLabel))= getLabel(cellLabel)
+                      .chart-header-text(title=getLabel(cellLabel))= getLabel(cellLabel)
                     else
                       ul
                         for value in cell
