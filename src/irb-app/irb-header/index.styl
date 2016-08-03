@@ -43,15 +43,19 @@
       background-position center
       background-repeat no-repeat
       border none
+      border-radius 0
       height 25px
-      width 20px
+      width 30px
+      &:not(:last-child)
+        border-right 1px solid light-gray
 
       &.download
         background-image url(../../../assets/dock/export-inactive.svg)
         cursor default
-
         &.enabled
           cursor pointer
-
           &:hover
             background-image url(../../../assets/dock/export.svg)
+
+      &.report-list-button
+        background-image url(../../../assets/dock/report-list.svg)

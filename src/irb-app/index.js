@@ -168,6 +168,38 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     return attrs.sections ? {report: Report.deserialize(attrs)} : {};
   }
 
+  // Report management
+
+  openReportList() {
+    if (this.parentFrame) {
+      this.parentFrame.send('chooseBookmark')
+        .then(bookmarkId => bookmarkId && this.navigate(`report/${bookmarkId}`));
+    }
+  }
+
+  loadReport(report) {
+    const stateUpdate = extend(this.resettableState, report ? {report} : {});
+    this.update(stateUpdate);
+    this.resetTopQueries();
+    return stateUpdate;
+  }
+
+  saveReport() {
+    if (this.parentFrame) {
+      return this.parentFrame.send('saveBookmark', this.state.report.toBookmarkData())
+        .then(bookmark => {
+          const report = Report.fromBookmarkData(bookmark);
+          this.update({savedReports: extend(this.state.savedReports, {[report.id]: report})});
+          this.navigate(`report/${report.id}`, {report});
+        })
+        .catch(err => {
+          console.error(`Error saving: ${err}`);
+        });
+    } else {
+      console.warn('Cannot save report without parent app');
+    }
+  }
+
   // State helpers
 
   hasStageClause() {
@@ -217,31 +249,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     });
   }
 
-  saveReport() {
-    if (this.parentFrame) {
-      return this.parentFrame.send('saveBookmark', this.state.report.toBookmarkData())
-        .then(bookmark => {
-          const report = Report.fromBookmarkData(bookmark);
-          this.update({savedReports: extend(this.state.savedReports, {[report.id]: report})});
-          this.navigate(`report/${report.id}`, {report});
-        })
-        .catch(err => {
-          console.error(`Error saving: ${err}`);
-        });
-    } else {
-      console.warn('Cannot save report without parent app');
-    }
-  }
-
   updateReport(attrs) {
     this.update({report: Object.assign(this.state.report, attrs)});
-  }
-
-  loadReport(report) {
-    const stateUpdate = extend(this.resettableState, report ? {report} : {});
-    this.update(stateUpdate);
-    this.resetTopQueries();
-    return stateUpdate;
   }
 
   resetQuery() {

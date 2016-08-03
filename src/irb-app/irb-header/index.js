@@ -14,6 +14,7 @@ document.registerElement('irb-header', class extends Component {
         focusTitleInput: () => this.update({editingTitle: true}),
 
         refresh: () => this.app.query({useCache: false}),
+        reportListEnabled: () => !!Object.keys(this.state.savedReports).length,
         save: () => this.app.saveReport(),
         updateReportTitle: ev => this.app.updateReport({title: ev.target.value}),
 
@@ -25,6 +26,11 @@ document.registerElement('irb-header', class extends Component {
               .map(queryArgs => queryArgs.then(queryArgs => {
                 this.downloadJQLQuery(queryArgs[1].script, this.state.report.title, queryArgs[1].params);
               }));
+          }
+        },
+        clickReportList: () => {
+          if (this.config.helpers.reportListEnabled()) {
+            this.app.openReportList();
           }
         },
       },

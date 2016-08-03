@@ -12,3 +12,7 @@
       onclick=$helpers.clickExportCSV
       class={enabled: !resultLoading}
     )
+    button.report-list-button(
+      onclick=$helpers.clickReportList
+      class={enabled: $helpers.reportListEnabled()}
+    )
