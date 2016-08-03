@@ -185,6 +185,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
     }
 
     const $axisTitle = $('<div>').addClass('axis-title text').html(chartTitle);
+    const axisMaxValueText = this.displayOptions.value === 'absolute' ? util.abbreviateNumber(this.chartMax) : '100%';
 
     let $axis = $('<div class="bar-chart-axis"></div>')
       .on('click', function() {
@@ -192,8 +193,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
       })
       .append($axisTitle)
       .append($('<div>').addClass(headersEl.sortIconAxisClass()))
-      .append($('<div>').addClass('max-value text').html(util.abbreviateNumber(this.chartMax)))
-      ;
+      .append($('<div>').addClass('max-value text').html(axisMaxValueText));
 
     this.$el.append($axis);
 
