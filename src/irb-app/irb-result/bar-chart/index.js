@@ -175,7 +175,9 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
         .append($('<div>').addClass(headersEl.sortIconClass(idx)))
         .get(0)
     ));
-    this.$el.append($headers);
+    this.$el
+      .addClass('loading')
+      .append($headers);
 
     let chartTitle = this.chartLabel;
     if (this.functionLabel) {
@@ -207,6 +209,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
       // set axis width
       const headerWidths = tableColWidths.slice(0, -1).reduce((sum, width) => sum + width, 0);
       $axis.width(`calc(100% - ${headerWidths}px)`);
+      this.$el.removeClass('loading');
     });
   }
 
