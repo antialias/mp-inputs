@@ -41,7 +41,7 @@ mixin sort-axis-button(sortOrder)
       tr
         for col, ci in headersToDisplay
           td.sort-holder(class={'active-sort-panel': ci === headerSortPanel})
-            if !(isStacked && rows.length === 1)
+            if !(sortConfig.hideFirstSort)
               .sort-controls
                 +sort-col-button('label', 'asc',  ci)
                 +sort-col-button('label', 'desc', ci)
