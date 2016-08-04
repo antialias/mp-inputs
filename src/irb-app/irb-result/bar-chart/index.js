@@ -103,16 +103,14 @@ document.registerElement('bar-chart', class extends Component {
   attributeChangedCallback() {
     let {headers, series} = this.getJSONAttribute('data');
     const chartBoundaries = this.getJSONAttribute('chart-boundaries') || {};
+    const chartLabel = this.getJSONAttribute('chart-label') || '';
     const displayOptions = this.getJSONAttribute('display-options') || {};
-    const chartLabel = this.getJSONAttribute( 'chart-label') || '';
     const functionLabel = this.getJSONAttribute('function-label') || '';
     let sortConfig = this.getJSONAttribute('sorting');
 
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
     }
-
-
 
     series = util.nestedObjectSum(series);
     const rows = nestedObjectToBarChartData(series, sortConfig);
