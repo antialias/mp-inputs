@@ -5,7 +5,6 @@ import WebComponent from 'webcomponent';
 
 import * as util from '../../../util';
 import {
-  nestedObjectMax,
   nestedObjectToTableData,
   transpose,
 } from '../chart-util';
@@ -20,10 +19,10 @@ document.registerElement('table-chart', class extends Component {
       defaultState: {
         headers: [],
         rows: [],
-        chartMax: 0,
         columnHeaders: [],
         columnRows: [],
         displayOptions: {},
+        singleValueColumnSum: null,
         util,
       },
 
@@ -97,15 +96,15 @@ document.registerElement('table-chart', class extends Component {
       });
     });
 
-    const chartMax = nestedObjectMax(series);
+    const singleValueColumnSum = columnHeaders.length === 1 ? util.sum(Object.values(series)) : null;
 
     this.update({
       headers,
       rows,
-      chartMax,
       columnHeaders,
       columnRows,
       displayOptions,
+      singleValueColumnSum,
     });
   }
 
