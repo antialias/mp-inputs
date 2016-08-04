@@ -106,16 +106,20 @@ document.registerElement('bar-chart', class extends Component {
     const displayOptions = this.getJSONAttribute('display-options') || {};
     const chartLabel = this.getJSONAttribute( 'chart-label') || '';
     const functionLabel = this.getJSONAttribute('function-label') || '';
-    const sortConfig = this.getJSONAttribute('sorting');
+    let sortConfig = this.getJSONAttribute('sorting');
 
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
     }
 
+
+
     series = util.nestedObjectSum(series);
     const rows = nestedObjectToBarChartData(series, sortConfig);
 
     const chartMax = displayOptions.plotStyle == 'stacked' ? stackedNestedObjectMax(series) : nestedObjectMax(series);
+
+    sortConfig = util.extend(sortConfig, {hideFirstSort: displayOptions.plotStyle == 'stacked' && rows.length === 1});
 
     this.update({
       chartMax,
@@ -214,7 +218,9 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
   }
 
   sortIconClass(headerIdx) {
-    if (this.sortConfig && this.sortConfig.sortBy === 'column') {
+    if (headerIdx == 0 && this.sortConfig && this.sortConfig.hideFirstSort) {
+      return 'no-sort-icon';
+    } else if (this.sortConfig && this.sortConfig.sortBy === 'column') {
       const colAttrs = this.sortConfig.colSortAttrs[headerIdx];
       return colAttrs ? `sort-icon sort-icon-${colAttrs.sortBy}-${colAttrs.sortOrder}` : '';
     } else {
@@ -223,10 +229,14 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
   }
 
   sortIconAxisClass() {
-    if (this.sortConfig && this.sortConfig.sortBy === 'value') {
-      return `sort-icon sort-icon-value-${this.sortConfig.sortOrder}`;
+    if (this.displayOptions && this.displayOptions.plotStyle == 'stacked') {
+      return this.sortIconClass(this.headers.length);
     } else {
-      return 'sort-icon sort-icon-unselected';
+      if (this.sortConfig && this.sortConfig.sortBy === 'value') {
+        return `sort-icon sort-icon-value-${this.sortConfig.sortOrder}`;
+      } else {
+        return 'sort-icon sort-icon-unselected';
+      }
     }
   }
 });

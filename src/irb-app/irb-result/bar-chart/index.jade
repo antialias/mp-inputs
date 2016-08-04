@@ -41,15 +41,23 @@ mixin sort-axis-button(sortOrder)
       tr
         for col, ci in headersToDisplay
           td.sort-holder(class={'active-sort-panel': ci === headerSortPanel})
-            .sort-controls
-              +sort-col-button('label', 'asc',  ci)
-              +sort-col-button('label', 'desc', ci)
-              +sort-col-button('value', 'asc',  ci)
-              +sort-col-button('value', 'desc', ci)
+            if !(isStacked && rows.length === 1)
+              .sort-controls
+                +sort-col-button('label', 'asc',  ci)
+                +sort-col-button('label', 'desc', ci)
+                +sort-col-button('value', 'asc',  ci)
+                +sort-col-button('value', 'desc', ci)
         td.sort-holder(class={'active-sort-panel': headerSortPanel === 'axis'})
-          .sort-controls
-            +sort-axis-button('asc')
-            +sort-axis-button('desc')
+            .sort-controls
+              if isStacked
+                - const colIdx = rows.length > 1 ? headersToDisplay.length : 0;
+                +sort-col-button('label', 'asc',  colIdx)
+                +sort-col-button('label', 'desc', colIdx)
+                +sort-col-button('value', 'asc',  colIdx)
+                +sort-col-button('value', 'desc', colIdx)
+              else
+                +sort-axis-button('asc')
+                +sort-axis-button('desc')
       for row, i in rows
         tr
           for cell, j in row
