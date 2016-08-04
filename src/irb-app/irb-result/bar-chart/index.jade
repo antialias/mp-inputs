@@ -1,5 +1,6 @@
-- const isStacked = displayOptions.plotStyle == 'stacked';
+- const isStacked = displayOptions.plotStyle === 'stacked';
 - const isLogarithmic = displayOptions.analysis === 'logarithmic';
+- const isValueRelative = displayOptions.value === 'relative';
 - const headersToDisplay = $helpers.headersToDisplay();
 
 mixin sort-col-button(sortBy, sortOrder, colIdx)
@@ -85,26 +86,27 @@ mixin sort-axis-button(sortOrder)
                     each _ in Array(5).fill()
                       .grid-line
                   ul(class={stacked: isStacked})
-                    - const cellValuesSum = util.sum(cell)
-                    - const cellValuesMax = Math.max(...cell)
+                    - const segmentCell = isLogarithmic ? cell.map(value => Math.log10(value)) : cell;
+                    - let segmentMax
+                    if isValueRelative
+                      if isStacked
+                        - segmentMax = util.sum(segmentCell)
+                      else
+                        - segmentMax = Math.max(...segmentCell)
+                    else
+                      - segmentMax = isLogarithmic ? Math.log10(chartMax) : chartMax
                     for value, k in cell
-                      - let segmentMax = chartMax
-                      if displayOptions.value === 'relative'
-                        if isStacked
-                          - segmentMax = cellValuesSum
-                        else
-                          - segmentMax = cellValuesMax
-                      - const percent = isLogarithmic ? Math.log10(value) / Math.log10(segmentMax) : value / segmentMax;
-                      - const percentValueString = `${Math.floor(percent * 10000) / 100}%`;
+                      - const percent = isLogarithmic ? (Math.log10(value) / segmentMax) : (value / segmentMax)
+                      - const percentValueString = `${Math.floor(percent * 10000) / 100}%`
                       - const segmentName = row[j - 1][k]
                       li.chart-bar(
                         style={width: percentValueString}
-                        onmouseenter=(ev) => $helpers.onMouseEnter(ev, segmentName, value, percentValueString)
+                        onmouseenter=(ev) => $helpers.onMouseEnter(ev, segmentName, value, percent < 0.0001 ? '< 0.01%' : percentValueString)
                         onmouseleave=$helpers.onMouseLeave
                       )
                         .background(class=`background-color-${(k % 8) + 1}`)
-                        if value / chartMax > .06
-                          .label= util.abbreviateNumber(value)
+                        if percent > .04
+                          .label= isValueRelative ? percentValueString : util.abbreviateNumber(value)
 
   //- For the hover tool tip to break out of the scroll overflow we are manually calculating where it should be on the screen.
   //- TODO When we change how scrolling works for results: place a tooltip on each li.chart-bar and use CSS to show/hide.
