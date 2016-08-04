@@ -228,7 +228,8 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
 
   sortIconAxisClass() {
     if (this.displayOptions && this.displayOptions.plotStyle == 'stacked') {
-      return this.sortIconClass(this.headers.length);
+      const colAttrs = this.sortConfig.colSortAttrs[this.headers.length - 1];
+      return colAttrs ? `sort-icon sort-icon-${colAttrs.sortBy}-${colAttrs.sortOrder}` : '';
     } else {
       if (this.sortConfig && this.sortConfig.sortBy === 'value') {
         return `sort-icon sort-icon-value-${this.sortConfig.sortOrder}`;
