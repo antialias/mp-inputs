@@ -42,9 +42,13 @@ document.registerElement('bar-chart', class extends Component {
                 headerSortPanel: headerIdx === this.state.headerSortPanel ? null : headerIdx,
               });
             } else if (ev.detail.axis) {
-              this.update({
-                headerSortPanel: this.state.headerSortPanel === 'axis' ? null : 'axis',
-              });
+              if (ev.detail.maxValueText) {
+                this.dispatchEvent(new CustomEvent('change', {detail: ev.detail}));
+              } else {
+                this.update({
+                  headerSortPanel: this.state.headerSortPanel === 'axis' ? null : 'axis',
+                });
+              }
             }
           }
         },
@@ -186,16 +190,25 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
       chartTitle += ` ${this.functionLabel}`;
     }
 
-    const $axisTitle = $('<div>').addClass('axis-title text').html(chartTitle);
-    const axisMaxValueText = this.displayOptions.value === 'absolute' ? util.abbreviateNumber(this.chartMax) : '100%';
+    const $axisTitle = $('<div>')
+      .addClass('axis-title')
+      .append($('<div>').addClass('text').html(chartTitle))
+      .append($('<div>').addClass(headersEl.sortIconAxisClass()));
+
+    const $axisMaxValue = $('<div>')
+      .addClass('text')
+      .on('click', function(ev) {
+        headersEl.dispatchEvent(new CustomEvent('click', {detail: {axis: true, maxValueText: true}}));
+        ev.stopPropagation();
+      })
+      .html(this.displayOptions.value === 'absolute' ? util.abbreviateNumber(this.chartMax) : '100%');
 
     let $axis = $('<div class="bar-chart-axis"></div>')
       .on('click', function() {
         headersEl.dispatchEvent(new CustomEvent('click', {detail: {axis: true}}));
       })
       .append($axisTitle)
-      .append($('<div>').addClass(headersEl.sortIconAxisClass()))
-      .append($('<div>').addClass('max-value text').html(axisMaxValueText));
+      .append($('<div>').addClass('max-value').append($axisMaxValue));
 
     this.$el.append($axis);
 

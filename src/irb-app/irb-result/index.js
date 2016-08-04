@@ -133,23 +133,27 @@ document.registerElement('irb-result', class extends Component {
           return result;
         },
         barChartChange: ev => {
-          const sortProps = ev.detail && ev.detail.type && ev.detail;
-          if (sortProps) {
-            const barSort = this.state.report.sorting.bar;
-            switch(sortProps.type) {
-              case 'axisSort':
-                barSort.sortBy = 'value';
-                barSort.sortOrder = sortProps.sortOrder;
-                break;
-              case 'colSort':
-                barSort.sortBy = 'column';
-                barSort.colSortAttrs = this.app.sortConfigFor(this.state.result, this.state.report.sorting).bar.colSortAttrs;
-                barSort.colSortAttrs[sortProps.colIdx] = pick(sortProps, [
-                  'sortBy', 'sortOrder',
-                ]);
-                break;
+          if (ev.detail) {
+            if (ev.detail.type) {
+              const barSort = this.state.report.sorting.bar;
+              switch(ev.detail.type) {
+                case 'axisSort':
+                  barSort.sortBy = 'value';
+                  barSort.sortOrder = ev.detail.sortOrder;
+                  break;
+                case 'colSort':
+                  barSort.sortBy = 'column';
+                  barSort.colSortAttrs = this.app.sortConfigFor(this.state.result, this.state.report.sorting).bar.colSortAttrs;
+                  barSort.colSortAttrs[ev.detail.colIdx] = pick(ev.detail, [
+                    'sortBy', 'sortOrder',
+                  ]);
+                  break;
+              }
+              this.app.updateReport();
+            } else if (ev.detail.axis && ev.detail.maxValueText) {
+              this.state.report.displayOptions.value = this.state.report.displayOptions.value === 'absolute' ? 'relative' : 'absolute';
+              this.app.updateReport();
             }
-            this.app.updateReport();
           }
         },
         tableChange: ev => {
