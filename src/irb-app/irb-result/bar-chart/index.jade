@@ -88,13 +88,13 @@ mixin sort-axis-button(sortOrder)
                   ul(class={stacked: isStacked})
                     - const segmentCell = isLogarithmic ? cell.map(value => Math.log10(value)) : cell;
                     - let segmentMax
-                    if isValueRelative
-                      if isStacked
-                        - segmentMax = util.sum(segmentCell)
-                      else
-                        - segmentMax = Math.max(...segmentCell)
+                    if isStacked
+                      - segmentMax = util.sum(segmentCell)
                     else
-                      - segmentMax = isLogarithmic ? Math.log10(chartMax) : chartMax
+                      if isValueRelative
+                        - segmentMax = Math.max(...segmentCell)
+                      else
+                        - segmentMax = isLogarithmic ? Math.log10(chartMax) : chartMax
                     for value, k in cell
                       - const percent = isLogarithmic ? (Math.log10(value) / segmentMax) : (value / segmentMax)
                       - const percentValueString = `${Math.floor(percent * 10000) / 100}%`
