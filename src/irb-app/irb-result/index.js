@@ -86,13 +86,13 @@ document.registerElement('irb-result', class extends Component {
         getChartLabel: () => {
           let chartLabel = ['number of'];
           const mathTypes = Array.from(new Set(this.state.report.sections.show.clauses.map(clause => clause.math)));
-          if (mathTypes && mathTypes.length == 1) {
+          if (mathTypes && mathTypes.length === 1) {
             chartLabel.unshift(mathTypes[0]);
           }
 
           const showValueNames = this.config.helpers.getShowValueNames();
           const headers = this.state.result.headers;
-          if (headers.length === 1 && headers[0] !== '$event' && showValueNames.length == 1) {
+          if (headers.length === 1 && headers[0] !== '$event' && showValueNames.length === 1) {
             chartLabel.push(showValueNames[0]);
           }
 

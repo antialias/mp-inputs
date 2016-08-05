@@ -101,7 +101,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
         highchartsOptions.plotOptions.series.stacking = 'percent';
       }
     }
-    if (displayOptions.analysis == 'logarithmic') {
+    if (displayOptions.analysis === 'logarithmic') {
       highchartsOptions.yAxis.type = 'logarithmic';
       highchartsOptions.yAxis.min = LOGARITHMIC_CHART_ZERO_REMAPPING;
     }

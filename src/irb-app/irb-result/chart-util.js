@@ -33,7 +33,7 @@ export function nestedObjectMax(obj) {
 }
 
 export function stackedNestedObjectMax(obj) {
-  if (Object.values(obj).some(k => typeof k == 'number')) {
+  if (Object.values(obj).some(k => typeof k === 'number')) {
     return Object.values(obj).reduce((a, b) => a + b, 0);
   }
   return Math.max(0, Math.max(...Object.keys(obj).map(key => stackedNestedObjectMax(obj[key]))));

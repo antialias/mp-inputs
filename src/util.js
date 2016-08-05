@@ -83,7 +83,7 @@ export function isEqual(x, y) {
   * // {foo: 5, bar: 3, tab: 2}
   */
 export function combineNestedObjKeys(obj, accum={}) {
-  if (Object.values(obj).some(k => typeof k == 'number')) {
+  if (Object.values(obj).some(k => typeof k === 'number')) {
     Object.keys(obj).forEach(k=> accum[k] = accum[k] ? accum[k] + obj[k] : obj[k]);
   } else {
     Object.keys(obj).map(key => combineNestedObjKeys(obj[key], accum));
