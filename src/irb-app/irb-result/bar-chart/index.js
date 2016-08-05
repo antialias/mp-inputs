@@ -151,6 +151,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
     this.displayOptions = {};
     this.functionLabel = '';
     this.headers = [];
+    this.sortConfig = {};
   }
 
   attributeChangedCallback() {
@@ -159,7 +160,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
     this.displayOptions = this.getJSONAttribute('display-options') || {};
     this.functionLabel = this.getJSONAttribute('function-label');
     this.headers = this.getJSONAttribute('headers') || [];
-    this.sortConfig = this.getJSONAttribute('sort-config');
+    this.sortConfig = this.getJSONAttribute('sort-config') || {};
     this.render();
   }
 
@@ -229,26 +230,33 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
   }
 
   sortIconClass(headerIdx) {
-    if (headerIdx === 0 && this.sortConfig && this.sortConfig.hideFirstSort) {
-      return 'no-sort-icon';
-    } else if (this.sortConfig && this.sortConfig.sortBy === 'column') {
-      const colAttrs = this.sortConfig.colSortAttrs[headerIdx];
-      return colAttrs ? `sort-icon sort-icon-${colAttrs.sortBy}-${colAttrs.sortOrder}` : '';
-    } else {
-      return 'sort-icon sort-icon-unselected';
+    let elClass;
+    if (this.sortConfig) {
+      if (this.sortConfig.hideFirstSort && headerIdx === 0) {
+        return 'no-sort-icon';
+      } else if (this.sortConfig.sortBy === 'column') {
+        const colAttrs = this.sortConfig.colSortAttrs[headerIdx];
+        if (colAttrs) {
+          elClass = `sort-icon-${colAttrs.sortBy}-${colAttrs.sortOrder}`;
+        }
+      }
     }
+    return elClass ? elClass + ' sort-icon' : 'sort-icon sort-icon-unselected';
   }
 
   sortIconAxisClass() {
-    if (this.displayOptions && this.displayOptions.plotStyle === 'stacked') {
-      const colAttrs = this.sortConfig.colSortAttrs[this.headers.length - 1];
-      return colAttrs ? `sort-icon sort-icon-${colAttrs.sortBy}-${colAttrs.sortOrder}` : '';
-    } else {
-      if (this.sortConfig && this.sortConfig.sortBy === 'value') {
-        return `sort-icon sort-icon-value-${this.sortConfig.sortOrder}`;
-      } else {
-        return 'sort-icon sort-icon-unselected';
+    let elClass;
+    if (this.sortConfig) {
+      if (this.sortConfig.colSortAttrs && this.displayOptions && this.displayOptions.plotStyle === 'stacked') {
+        const headerIdx = this.sortConfig.hideFirstSort ? 0 : this.headers.length;
+        const colAttrs = this.sortConfig.colSortAttrs[headerIdx];
+        if (colAttrs) {
+          elClass = `sort-icon-${colAttrs.sortBy}-${colAttrs.sortOrder}`;
+        }
+      } else if (this.sortConfig.sortBy === 'value') {
+        elClass = `sort-icon-value-${this.sortConfig.sortOrder}`;
       }
     }
+    return elClass ? elClass + ' sort-icon' : 'sort-icon sort-icon-unselected';
   }
 });
