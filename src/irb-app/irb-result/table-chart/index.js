@@ -147,7 +147,9 @@ document.registerElement('table-manager', class extends WebComponent {
   }
 
   attributeChangedCallback() {
-    this.render();
+    if (this._initialized) {
+      this.render();
+    }
   }
 
   detachedCallback() {
@@ -156,6 +158,7 @@ document.registerElement('table-manager', class extends WebComponent {
   }
 
   render() {
+    this._initialized = true;
     this.$container = $(this).parent();
     this.$left = this.$container.find('.left-table');
     this.$right = this.$container.find('.right-table');
@@ -184,6 +187,7 @@ document.registerElement('table-manager', class extends WebComponent {
       const adjust = isFirefox ? 2 : 0;
       $rightFixedHeaders.eq(i).width($(el).width() - adjust);
     });
+
   }
 
   get data() {
