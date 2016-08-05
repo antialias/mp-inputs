@@ -1,7 +1,13 @@
 import { Component } from 'panel';
 import { capitalize } from 'mixpanel-common/util';
 
-import { extend, filterObjectAtDepth, pick, renameEvent } from '../../util';
+import {
+  extend,
+  filterObjectAtDepth,
+  mapObjectKeys,
+  pick,
+  renameEvent,
+} from '../../util';
 
 import './bar-chart';
 import './line-chart';
@@ -115,11 +121,7 @@ document.registerElement('irb-result', class extends Component {
         },
         getShowValueNames: () => this.state.report.sections.show.clauses.map(clause => renameEvent(clause.value.name)),
         getUniqueShowMathTypes: () => new Set(this.state.report.sections.show.clauses.map(clause => clause.math)),
-        stringifyObjValues: (obj) => {
-          const stringified = {};
-          Object.keys(obj).forEach(key => stringified[key] = JSON.stringify(obj[key]));
-          return stringified;
-        },
+        stringifyObjValues: obj => mapObjectKeys(obj, JSON.stringify),
         toastClosed: () => this.update({newCachedData: false}),
         toastSelected: () => this.app.query(),
         processResult: result => {
