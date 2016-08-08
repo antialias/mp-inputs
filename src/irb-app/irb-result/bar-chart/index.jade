@@ -4,7 +4,7 @@
 - const headersToDisplay = $helpers.headersToDisplay()
 
 mixin sort-col-button(sortBy, sortOrder, colIdx)
-  - const colConfig = sortConfig.sortBy === 'column' && sortConfig.colSortAttrs[colIdx];
+  - const colConfig = sortConfig.sortBy === 'column' && sortConfig.colSortAttrs[colIdx]
   .sort-icon(
     class={
       [`sort-icon-${sortBy}-${sortOrder}`]: true,
@@ -64,8 +64,8 @@ mixin sort-axis-button(sortOrder)
           for cell, j in row
             if cell
               if j < row.length - 1
-                - const headerText = headersToDisplay[j] === '$event' ? 'Events' : util.renameProperty(headersToDisplay[j]);
-                - const getLabel = value => headersToDisplay[j] === '$event' ? util.renameEvent(value) : util.renamePropertyValue(value);
+                - const headerText = headersToDisplay[j] === '$event' ? 'Events' : util.renameProperty(headersToDisplay[j])
+                - const getLabel = value => headersToDisplay[j] === '$event' ? util.renameEvent(value) : util.renamePropertyValue(value)
 
                 if !Array.isArray(cell) || !isStacked || rows.length <= 1
                   td.chart-header(
@@ -86,7 +86,7 @@ mixin sort-axis-button(sortOrder)
                     each _ in Array(5).fill()
                       .grid-line
                   ul(class={stacked: isStacked})
-                    - const segmentCell = isLogarithmic ? cell.map(value => Math.log10(value)) : cell;
+                    - const segmentCell = isLogarithmic ? cell.map(value => Math.log10(value)) : cell
                     - let segmentMax
                     if isStacked
                       - segmentMax = util.sum(segmentCell)

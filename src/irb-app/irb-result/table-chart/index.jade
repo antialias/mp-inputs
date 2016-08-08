@@ -20,7 +20,7 @@
             tr
               for cell, i in row
                 if cell
-                  - const value = headers[i] === '$event' ? util.renameEvent(cell.value) : util.renamePropertyValue(cell.value);
+                  - const value = headers[i] === '$event' ? util.renameEvent(cell.value) : util.renamePropertyValue(cell.value)
                   td(class=cell.odd ? 'odd' : 'even', rowSpan=cell.rowSpan || 1)= value
 
   if fullWidthTable
