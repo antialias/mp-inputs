@@ -479,18 +479,22 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     // for 'unique', 'average' and 'median', 'bar' and 'table' require a different query than
     // 'line'.
     const chartType = displayOptions.chartType;
-    const shouldResetSort = chartType === 'bar' && displayOptions.plotStyle === 'stacked' && this.state.report.sorting.bar.sortBy === 'value';
-    if (this.state.report.sections.show.clauses.some(clause => ['unique', 'average', 'median'].includes(clause.math)) &&
-        (chartType === 'line' && ['bar', 'table'].includes(this.state.report.displayOptions.chartType)
-         || ['bar', 'table'].includes(chartType) && this.state.report.displayOptions.chartType === 'line')) {
-      this.query(displayOptions).then(() => {
-        const sorting = shouldResetSort ? this.sortConfigFor(this.state.result) : extend(this.state.report.sorting);
-        this.updateReport({displayOptions, sorting});
-      }); // update displayOptions after results are committed.
-    } else {
-      const sorting = shouldResetSort ? this.sortConfigFor(this.state.result) : extend(this.state.report.sorting);
+    new Promise(resolve => {
+      const isNotTotal = this.state.report.sections.show.clauses.some(clause => ['unique', 'average', 'median'].includes(clause.math));
+      const isChangingToLineChart = chartType === 'line' && ['bar', 'table'].includes(this.state.report.displayOptions.chartType);
+      const isChangingFromLineChart = ['bar', 'table'].includes(chartType) && this.state.report.displayOptions.chartType === 'line';
+      if (isNotTotal && (isChangingToLineChart || isChangingFromLineChart)) {
+        this.query(displayOptions).then(() => {
+          resolve();
+        }); // update displayOptions after results are committed.
+      } else {
+        resolve();
+      }
+    }).then(() => {
+      const shouldResetSorting = chartType === 'bar' && displayOptions.plotStyle === 'stacked' && this.state.report.sorting.bar.sortBy === 'value';
+      const sorting = shouldResetSorting ? this.sortConfigFor(this.state.result) : this.state.report.sorting;
       this.updateReport({displayOptions, sorting});
-    }
+    });
   }
 
   resetToastTimer() {
