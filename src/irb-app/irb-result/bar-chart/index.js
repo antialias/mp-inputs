@@ -230,7 +230,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
   }
 
   sortIconClass(headerIdx) {
-    let elClass;
+    let elClass = null;
     if (this.sortConfig) {
       if (this.sortConfig.hideFirstSort && headerIdx === 0) {
         return 'no-sort-icon';
@@ -245,7 +245,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
   }
 
   sortIconAxisClass() {
-    let elClass;
+    let elClass = null;
     if (this.sortConfig) {
       if (this.sortConfig.colSortAttrs && this.displayOptions && this.displayOptions.plotStyle === 'stacked') {
         const headerIdx = this.sortConfig.hideFirstSort ? 0 : this.headers.length;
