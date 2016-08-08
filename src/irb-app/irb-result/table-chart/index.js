@@ -187,7 +187,6 @@ document.registerElement('table-manager', class extends WebComponent {
       const adjust = isFirefox ? 2 : 0;
       $rightFixedHeaders.eq(i).width($(el).width() - adjust);
     });
-
   }
 
   get data() {
