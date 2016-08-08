@@ -77,7 +77,7 @@ function timeSegQueries(queryParams) {
   return buildIRBQuery(queryParams).buildJQLArgs().map(queryArgs => queryArgs.then(queryArgs => {
     const irbParams = JSON.parse(queryArgs[1].params);
     const params = {
-      event: irbParams.events[0].event,
+      event: irbParams.selectors[0].event,
       from_date: irbParams.dates.from,
       to_date: irbParams.dates.to,
       type: irbParams.type == 'total' ? 'general' : irbParams.type,
