@@ -114,54 +114,59 @@ function processResults(results, qtype, qi) {
 const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
 
 (async () => {
-  const table = [
-    ['Project', 'Query', 'JQL', 'Seg', 'Raw JQL', 'Raw Seg'],
-  ];
+  try {
+    const table = [
+      ['Project', 'Query', 'JQL', 'Seg', 'Raw JQL', 'Raw Seg'],
+    ];
 
-  for (const query of QUERIES) {
-    const results = {
-      jql: [],
-      seg: [],
-    };
+    for (const query of QUERIES) {
+      const results = {
+        jql: [],
+        seg: [],
+      };
 
-    // get timings in multiple passes
-    for (let pass = 0; pass < PASSES; pass++) {
-      results.jql.push(await all(timeJQLQueries(query)));
-      results.seg.push(await all(timeSegQueries(query)));
-    }
-
-    // process results and add to table
-    for (let qi = 0; qi < results.jql[0].length; qi++) {
-      const processed = {
-        seg: processResults(results, 'seg', qi),
-        jql: processResults(results, 'jql', qi),
+      // get timings in multiple passes
+      for (let pass = 0; pass < PASSES; pass++) {
+        results.jql.push(await all(timeJQLQueries(query)));
+        results.seg.push(await all(timeSegQueries(query)));
       }
-      table.push([
-        String(query.project), query.name,
-        String(processed.jql.avg), String(processed.seg.avg),
-        processed.jql.raw.join(','), processed.seg.raw.join(','),
-      ]);
 
-      for (const queryType of ['jql', 'seg']) {
-        mixpanel.track('Benchmark query', {
-          'Avg latency ms': processed[queryType].avg,
-          'Passes': PASSES,
-          'Project ID': query.project,
-          'Query name': query.name,
-          'Query type': queryType,
-          'Simultaneous queries': query.queries.length,
-        });
+      // process results and add to table
+      for (let qi = 0; qi < results.jql[0].length; qi++) {
+        const processed = {
+          seg: processResults(results, 'seg', qi),
+          jql: processResults(results, 'jql', qi),
+        }
+        table.push([
+          String(query.project), query.name,
+          String(processed.jql.avg), String(processed.seg.avg),
+          processed.jql.raw.join(','), processed.seg.raw.join(','),
+        ]);
+
+        for (const queryType of ['jql', 'seg']) {
+          mixpanel.track('Benchmark query', {
+            'Avg latency ms': processed[queryType].avg,
+            'Passes': PASSES,
+            'Project ID': query.project,
+            'Query name': query.name,
+            'Query type': queryType,
+            'Simultaneous queries': query.queries.length,
+          });
+        }
       }
     }
-  }
-  process.stdout.write('\n\n');
+    process.stdout.write('\n\n');
 
-  // output results
-  const zip = (...rows) => rows[0].map((_, i) => rows.map(row => row[i]));
+    // output results
+    const zip = (...rows) => rows[0].map((_, i) => rows.map(row => row[i]));
 
-  const columnMaxWidths = zip(...table).map(column => Math.max(...column.map(c => c.length)));
+    const columnMaxWidths = zip(...table).map(column => Math.max(...column.map(c => c.length)));
 
-  for (const row of table) {
-    console.log(row.map((s, i) => rightPad(s, columnMaxWidths[i])).join('   '));
+    for (const row of table) {
+      console.log(row.map((s, i) => rightPad(s, columnMaxWidths[i])).join('   '));
+    }
+  } catch(e) {
+    console.error(e.stack);
+    process.exit(1);
   }
 })();
