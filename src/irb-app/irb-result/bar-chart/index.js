@@ -241,7 +241,7 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
         }
       }
     }
-    return elClass ? elClass + ' sort-icon' : 'sort-icon sort-icon-unselected';
+    return `sort-icon ${elClass || 'sort-icon-unselected'}`;
   }
 
   sortIconAxisClass() {
@@ -257,6 +257,6 @@ document.registerElement('irb-bar-chart-header', class extends WebComponent {
         elClass = `sort-icon-value-${this.sortConfig.sortOrder}`;
       }
     }
-    return elClass ? elClass + ' sort-icon' : 'sort-icon sort-icon-unselected';
+    return `sort-icon ${elClass || 'sort-icon-unselected'}`;
   }
 });
