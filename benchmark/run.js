@@ -1,3 +1,4 @@
+import os from 'os';
 import Mixpanel from 'mixpanel';
 import fetch from 'node-fetch';
 
@@ -151,6 +152,7 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
             'Query name': query.name,
             'Query type': queryType,
             'Simultaneous queries': query.queries.length,
+            'Host name': os.hostname(),
           });
         }
       }
