@@ -1,4 +1,4 @@
-/* global Events, People, join, module, params, _*/
+/* global Events, People, join, mixpanel, module, params, _*/
 
 // parameterized JQL segmentation query
 //
@@ -264,7 +264,7 @@ function main() {
       return row.key.slice(1);
     };
     if (params.type === 'unique') {
-      query = query.groupByUser(groups, function() {return 1;})
+      query = query.groupByUser(groups, mixpanel.reducer.noop())
         .groupBy([sliceOffDistinctId], countWithSampling);
     } else {
       var operatorFuncs = {
