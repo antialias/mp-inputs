@@ -124,19 +124,27 @@ document.registerElement('irb-result', class extends Component {
         getUniqueShowMathTypes: () => new Set(this.state.report.sections.show.clauses.map(clause => clause.math)),
         stringifyObjValues: obj => mapObjectKeys(obj, JSON.stringify),
         showLegend: () => {
+          const chartName = this.selectedChartName().toLowerCase();
           const showClauses = this.state.report.sections.show.clauses;
-          const chartName = this.selectedChartName();
-          if (chartName === 'Table') {
-            return false;
+          const groupClauses = this.state.report.sections.group.clauses;
+          let shouldShow = false;
+          console.log(showClauses, groupClauses)
+
+          if (chartName.includes('bar')) {
+            if (groupClauses.length > 0) {
+              shouldShow = true;
+            } else if (chartName === 'stacked bar' && showClauses.length > 1) {
+              shouldShow = true;
+            }
+          } else if (chartName.includes('line')) {
+            if (groupClauses.length > 0 || showClauses.length > 1) {
+              shouldShow = true;
+            } else if (chartName === 'line' && showClauses[0].value.name === '$top_events') {
+              shouldShow = true;
+            }
           }
 
-          if (this.state.report.sections.group.clauses.length > 0 ||
-              showClauses.length > 1 && chartName !== 'Bar' ||
-              showClauses.length === 1 && showClauses[0].value.name === '$top_events' && chartName === 'line') {
-            return true;
-          }
-
-          return false;
+          return shouldShow;
         },
         toastClosed: () => this.update({newCachedData: false}),
         toastSelected: () => this.app.query(),
