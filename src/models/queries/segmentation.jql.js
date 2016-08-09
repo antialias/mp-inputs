@@ -248,7 +248,7 @@ function main() {
   };
   if (params.needsPeopleData) {
     query = join(Events(queryParams), People(), {selectors: params.selectors})
-      .filter(function(tuple) { return tuple.event; });
+      .filter(function(tuple) { return !!tuple.event; });
   } else {
     queryParams.event_selectors = params.selectors;
     query = Events(queryParams);
