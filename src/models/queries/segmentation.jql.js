@@ -273,7 +273,7 @@ function main() {
         },
         median: function(list) {
           var median;
-          list = list.sort();
+          list = list.sort(function(a, b) {return a - b;});
           var length = list.length;
           if (length % 2 === 0) {
             median = (list[length / 2 - 1] + list[length / 2]) / 2;
