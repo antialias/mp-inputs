@@ -159,7 +159,7 @@ function filterToArbSelectorString(filter) {
 
 class JQLQuery {
   constructor(showClause, state, options={}) {
-    this.chartType = options.chartType || state.report.chartType;
+    this.chartType = options.chartType || state.report.displayOptions.chartType;
     this.customEvents = options.customEvents || [];
 
     const ev = showClause.value;
