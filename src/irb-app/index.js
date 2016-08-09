@@ -491,12 +491,12 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   updateDisplayOptions(displayOptions) {
-    // for 'unique', 'average' and 'median', 'bar' and 'table' require a different query than
+    // for 'min', 'max', 'unique', 'average' and 'median', 'bar' and 'table' require a different query than
     // 'line'.
     const chartType = displayOptions.chartType;
     Promise.resolve()
       .then(() => {
-        const isNotTotal = this.state.report.sections.show.clauses.some(clause => ['unique', 'average', 'median'].includes(clause.math));
+        const isNotTotal = this.state.report.sections.show.clauses.some(clause => ['min', 'max', 'unique', 'average', 'median'].includes(clause.math));
         const isChangingToLineChart = chartType === 'line' && ['bar', 'table'].includes(this.state.report.displayOptions.chartType);
         const isChangingFromLineChart = ['bar', 'table'].includes(chartType) && this.state.report.displayOptions.chartType === 'line';
         return isNotTotal && (isChangingToLineChart || isChangingFromLineChart) && this.query(displayOptions);

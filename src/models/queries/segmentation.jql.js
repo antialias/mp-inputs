@@ -282,6 +282,12 @@ function main() {
           }
           return median;
         },
+        min: function(list) {
+          return _.min(list);
+        },
+        max: function(list) {
+          return _.max(list);
+        },
       };
 
       var countWithSamplingForGroupByUser = function(count, events) {
