@@ -135,6 +135,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         ),
       });
     }
+    if (this.parentFrame) {
+      this.parentFrame.addHandler('deleteBookmark', this.deleteReport.bind(this));
+    }
 
     this.queries = {
       topEvents: new TopEventsQuery(),
@@ -174,6 +177,15 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     if (this.parentFrame) {
       this.parentFrame.send('chooseBookmark')
         .then(bookmarkId => bookmarkId && this.navigate(`report/${bookmarkId}`));
+    }
+  }
+
+  deleteReport(reportId) {
+    delete this.state.savedReports[reportId];
+    if (this.state.report.id === reportId) {
+      this.navigate('');
+    } else {
+      this.update();
     }
   }
 
