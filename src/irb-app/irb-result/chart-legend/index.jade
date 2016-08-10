@@ -8,7 +8,7 @@
         type='text'
       )
     .info
-      .name= util.renameEvent(report.series.currentSeries)
+      .name= util.renameProperty(report.series.currentSeries)
       .count #{$helpers.selectedSeriesCount()}/#{$helpers.totalSeriesCount()}
     ul.series-names
       each series in $helpers.seriesData()
@@ -18,4 +18,4 @@
             onclick=() => $helpers.toggleShowSeries(series)
           )
             .icon
-            .label= $helpers.renameSeries(series)
+            .label= $helpers.renameSeriesValue(series)

@@ -14,7 +14,8 @@ document.registerElement('chart-legend', class extends Component {
       helpers: {
         searchHandler: ev => this.app.updateSeriesState({search: ev.target.value}),
         isSeriesShowing: name => this.state.report.series.data[name],
-        renameSeries: name => this.state.report.series.currentSeries === '$event' ? util.renameEvent(name) : util.renamePropertyValue(name),
+        renameSeriesTitle: name => util.renameProperty(name),
+        renameSeriesValue: name => this.state.report.series.currentSeries === '$event' ? util.renameEvent(name) : util.renamePropertyValue(name),
         matchesSearch: value => (
           this.state.report.series && (
             !this.state.report.series.search ||
@@ -23,7 +24,7 @@ document.registerElement('chart-legend', class extends Component {
         ),
         resetSeries: () => this.app.updateSeriesState(this.state.report.series.updateSeriesData(this.state.result, false)),
         selectedSeriesCount: () => Object.values(this.state.report.series.data).filter(Boolean).length,
-        seriesData: () => Object.keys(this.state.report.series.data).filter(this.config.helpers.matchesSearch).sort(),
+        seriesData: () => Object.keys(this.state.report.series.data).filter(this.config.helpers.matchesSearch),
         toggleShowSeries: name => {
           const currentData = this.state.report.series.data;
           if (currentData.hasOwnProperty(name)) {
