@@ -241,6 +241,47 @@ function main() {
     return Math.round(count);
   };
 
+  var sliceOffDistinctId = function(row) {
+    return row.key.slice(1);
+  };
+
+  var operatorFuncs = {
+    total: function(list) {
+      return _.reduce(list, function(sum, num) { return sum + num; });
+    },
+    average: function(list) {
+      return list.reduce(function(prev, curr) { return prev + curr; }) / list.length;
+    },
+    median: function(list) {
+      var median;
+      list = list.sort(function(a, b) { return a - b; });
+      var length = list.length;
+      if (length % 2 === 0) {
+        median = (list[length / 2 - 1] + list[length / 2]) / 2;
+      } else {
+        median = list[(length - 1) / 2];
+      }
+      return median;
+    },
+    min: function(list) {
+      return _.min(list);
+    },
+    max: function(list) {
+      return _.max(list);
+    },
+  };
+
+  var toList = function(accumulators, items) {
+    var output = items.map(item => item.value);
+    output = _.flatten(output);
+    _.each(accumulators, function(a) {
+      _.each(a, function(item) {
+        output.push(item);
+      });
+    });
+    return output;
+  };
+
   var query;
   var queryParams = {
     from_date: params.dates.from,
@@ -257,70 +298,55 @@ function main() {
   if (params.filters && params.filters.length) {
     query = query.filter(filterByParams);
   }
-  if (params.type === 'total') {
-    query = query.groupBy(groups, countWithSampling);
-  } else {
-    var sliceOffDistinctId = function(row) {
-      return row.key.slice(1);
-    };
-    if (params.type === 'unique') {
-      query = query.groupByUser(groups, mixpanel.reducer.noop())
-        .groupBy([sliceOffDistinctId], countWithSampling);
-    } else {
-      var operatorFuncs = {
-        average: function(list) {
-          return list.reduce(function(prev, curr) {return prev + curr;}) / list.length;
-        },
-        median: function(list) {
-          var median;
-          list = list.sort(function(a, b) {return a - b;});
-          var length = list.length;
-          if (length % 2 === 0) {
-            median = (list[length / 2 - 1] + list[length / 2]) / 2;
-          } else {
-            median = list[(length - 1) / 2];
-          }
-          return median;
-        },
-        min: function(list) {
-          return _.min(list);
-        },
-        max: function(list) {
-          return _.max(list);
-        },
-      };
 
-      var countWithSamplingForGroupByUser = function(count, events) {
-        count = count || 0;
-        for (var i = 0; i < events.length; i++) {
-          var ev = events[i].event || events[i];
-          if (ev.sampling_factor && ev.sampling_factor <= 1.0) {
-            count += 1.0 / ev.sampling_factor;
-          } else {
-            count++;
+  if (params.property) {
+    if (params.property.resourceType === 'people') {
+      var toPropertyListForGroupByUser = function(list, events) {
+        list = list || [];
+        _.each(events, eventData => {
+          var property = getEvent(eventData).properties[params.property.value];
+          if (property && _.isNumber(property)) {
+            list.push(property);
           }
-        }
-        return Math.round(count);
-      };
-
-      var toList = function(accumulators, items) {
-        var output = items.map(function(item) { return item.value; });
-        _.each(accumulators, function(a) {
-          _.each(a, function(item) {
-            output.push(item);
-          });
         });
-        return output;
       };
 
-      query = query.groupByUser(groups, countWithSamplingForGroupByUser)
+      query = query.groupByUser(groups, toPropertyListForGroupByUser)
         .groupBy([sliceOffDistinctId], toList)
         .map(function(item) {
           item.value = operatorFuncs[params.type](item.value);
           return item;
         });
+    } else {
+
     }
+  } else if (params.type === 'total') {
+    query = query.groupBy(groups, countWithSampling);
+  } else if (params.type === 'unique') {
+    query = query.groupByUser(groups, mixpanel.reducer.noop())
+      .groupBy([sliceOffDistinctId], countWithSampling);
+  } else {
+    var countWithSamplingForGroupByUser = function(count, events) {
+      count = count || 0;
+      for (var i = 0; i < events.length; i++) {
+        var ev = events[i].event || events[i];
+        if (ev.sampling_factor && ev.sampling_factor <= 1.0) {
+          count += 1.0 / ev.sampling_factor;
+        } else {
+          count++;
+        }
+      }
+      return Math.round(count);
+    };
+
+    query = query.groupByUser(groups, countWithSamplingForGroupByUser)
+      .groupBy([sliceOffDistinctId], toList)
+      .map(function(item) {
+        item.value = operatorFuncs[params.type](item.value);
+        return item;
+      });
   }
+
   return query;
 }
 

@@ -199,6 +199,8 @@ class JQLQuery {
       this.unit = 'all';
     }
 
+    this.property = (showClause.property && pick(showClause.property, ['value', 'resourceType'])) || null;
+
     this.displayNames = {};
   }
 
@@ -348,6 +350,7 @@ export default class SegmentationQuery extends BaseQuery {
           .filter(filter => isFilterValid(filter))
           .map(filter => filterToParams(filter)),
         type: jqlQuery.type,
+        property: jqlQuery.property,
       };
 
       scriptParams.groups = groups;
