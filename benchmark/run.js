@@ -29,7 +29,7 @@ function buildIRBQuery(queryParams) {
   const irbQuery = new SegmentationQuery([]);
   const state = {
     report: {
-      chartType: 'line',
+      displayOptions: { chartType: 'line' },
       sections: new BuilderSections({
         show: new ShowSection(...queryParams.queries.map(q =>
           new ShowClause({
