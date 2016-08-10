@@ -1,39 +1,6 @@
-/* global Events, People, join, module, params, _*/
+/* global Events, People, join, params, _*/
 
-// parameterized JQL segmentation query
-//
-// sample params format:
-// {
-//   dates: {
-//     from: '2016-05-04',
-//     to: '2016-05-05',
-//     unit: 'hour',
-//   },
-//   events: [
-//     {
-//       event: 'Viewed report',
-//     },
-//   ],
-//   filters: [
-//     {
-//       prop: '$browser',
-//       operator: 'equals',
-//       expected: ['Chrome'],
-//     },
-//     {
-//       prop: 'mp_country_code',
-//       operator: 'is set',
-//     },
-//   ],
-//   groups: [
-//    '$browser',
-//    'mp_country_code',
-//    '$city',
-//    'tab',
-//   ],
-// }
-
-function main() {
+function main() { // eslint-disable-line no-unused-vars
   if (params.filters && params.filters.length) {
     // String
     var stringContains = function(actual, expected) {
@@ -311,8 +278,3 @@ function main() {
   }
   return query;
 }
-
-// ===== JQL CODE ENDS
-// anything below this line will not be sent to the JQL backend
-
-module.exports = main;
