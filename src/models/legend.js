@@ -11,7 +11,7 @@ export default class Legend {
       data: objectFromPairs(
         Object.keys(seriesSums)
           .sort((a, b) => seriesSums[b] - seriesSums[a])
-          .map((v, idx) => [v, (idx < showLimit) ? defaultValue : false])
+          .map((v, idx) => [v, !showLimit || (idx < showLimit) ? defaultValue : false])
       ),
       currentSeries: result.headers[result.headers.length-1] || null,
     });

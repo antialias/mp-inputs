@@ -21,11 +21,11 @@ document.registerElement('chart-legend', class extends Component {
         ),
         renameSeriesValue: name => this.state.report.legend.currentSeries === '$event' ? util.renameEvent(name) : util.renamePropertyValue(name),
         resetLegend: () => {
-          this.app.updateLegendState(this.state.report.legend.updateLegendData(this.state.result, !this.config.helpers.allSeriesSelected()));
+          this.app.updateLegendState(this.state.report.legend.updateLegendData(this.state.result, !this.config.helpers.allSeriesSelected(), null));
         },
         searchHandler: ev => this.app.updateLegendState({search: ev.target.value}),
         selectedSeriesCount: () => Object.values(this.state.report.legend.data).filter(Boolean).length,
-        seriesData: () => Object.keys(this.state.report.legend.data).filter(this.config.helpers.matchesSearch),
+        seriesData: () => Object.keys(this.state.report.legend.data).filter(this.config.helpers.matchesSearch).sort(),
         toggleShowSeries: name => {
           const currentData = this.state.report.legend.data;
           if (currentData.hasOwnProperty(name)) {
