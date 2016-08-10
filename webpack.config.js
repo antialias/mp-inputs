@@ -24,10 +24,6 @@ var webpackConfig = {
         loaders: [babelLoader, 'virtual-jade'],
       },
       {
-        test: /\.jql\.js$/,
-        loader: 'raw',
-      },
-      {
         test: /\.js$/,
         exclude: /node_modules|\.jql\.js$/,
         loader: babelLoader,

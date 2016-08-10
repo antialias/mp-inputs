@@ -1,6 +1,39 @@
-/* global Events, People, join, params, _*/
+/* global Events, People, join, module, params, _*/
 
-function main() { // eslint-disable-line no-unused-vars
+// parameterized JQL segmentation query
+//
+// sample params format:
+// {
+//   dates: {
+//     from: '2016-05-04',
+//     to: '2016-05-05',
+//     unit: 'hour',
+//   },
+//   events: [
+//     {
+//       event: 'Viewed report',
+//     },
+//   ],
+//   filters: [
+//     {
+//       prop: '$browser',
+//       operator: 'equals',
+//       expected: ['Chrome'],
+//     },
+//     {
+//       prop: 'mp_country_code',
+//       operator: 'is set',
+//     },
+//   ],
+//   groups: [
+//    '$browser',
+//    'mp_country_code',
+//    '$city',
+//    'tab',
+//   ],
+// }
+
+function main() {
   if (params.filters && params.filters.length) {
     // String
     var stringContains = function(actual, expected) {
@@ -38,10 +71,16 @@ function main() { // eslint-disable-line no-unused-vars
 
     // List
     var listContains = function(actual, expected) {
-      return actual && actual.indexOf && actual.map(a => String(a)).indexOf(String(expected)) !== -1;
+      return actual &&
+        actual.indexOf &&
+        actual.map(function(a) { return String(a); }).indexOf(String(expected)) !== -1;
     };
 
-    var negate = f => (...args) => !f(...args);
+    var negate = function(f) {
+      return function() {
+        return !f.apply(null, arguments);
+      };
+    };
     var filterTests = {
       'contains':              stringContains,
       'does not contain':      negate(stringContains),
@@ -259,7 +298,7 @@ function main() { // eslint-disable-line no-unused-vars
       };
 
       var toList = function(accumulators, items) {
-        var output = items.map(item => item.value);
+        var output = items.map(function(item) { return item.value; });
         _.each(accumulators, function(a) {
           _.each(a, function(item) {
             output.push(item);
@@ -278,3 +317,8 @@ function main() { // eslint-disable-line no-unused-vars
   }
   return query;
 }
+
+// ===== JQL CODE ENDS
+// anything below this line will not be sent to the JQL backend
+
+module.exports = main;
