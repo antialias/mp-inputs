@@ -5,7 +5,7 @@ import ExtremaQuery from './extrema';
 import { ShowClause } from '../clause';
 import Result from '../result';
 import main from './segmentation.jql.js';
-import { extend, pick, renameEvent } from '../../util';
+import { capitalize, extend, pick, renameEvent } from '../../util';
 
 const MS_IN_HOUR = 60 * 60 * 1000;
 const MS_IN_DAY = MS_IN_HOUR * 24;
@@ -378,16 +378,34 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   preprocessNameConflicts() {
+    const displayName = (name, jqlQuery) => {
+      const operation = jqlQuery.type;
+      const event = renameEvent(name);
+      let display;
+      if (jqlQuery.property) {
+        display = `${operation} of ${jqlQuery.property.value} on ${event}`;
+      } else {
+        display = `${operation} number of ${event}`;
+      }
+
+      return capitalize(display);
+    };
     let jqlQueries = this.query.jqlQueries;
     for (let i = 0; i < jqlQueries.length - 1; i++) {
       for (let j = i + 1; j < jqlQueries.length; j++) {
         jqlQueries[i].eventNames().forEach(name => {
           const names = jqlQueries[j].eventNames();
           if (names.includes(name)) {
-            var index = jqlQueries.indexOf(jqlQueries[i]);
-            jqlQueries[i].displayNames[name] = `${renameEvent(name)} (${jqlQueries[i].type.toUpperCase()}) #${index + 1}`;
-            index = jqlQueries.indexOf(jqlQueries[j]);
-            jqlQueries[j].displayNames[name] = `${renameEvent(name)} (${jqlQueries[j].type.toUpperCase()}) #${index + 1}`;
+            var displayNameI = displayName(name, jqlQueries[i]);
+            var displayNameJ = displayName(name, jqlQueries[j]);
+
+            if (displayNameI === displayNameJ) {
+              displayNameI += ` #${jqlQueries.indexOf(jqlQueries[i]) + 1}`;
+              displayNameJ += ` #${jqlQueries.indexOf(jqlQueries[j]) + 1}`;
+            }
+
+            jqlQueries[i].displayNames[name] = displayNameI;
+            jqlQueries[j].displayNames[name] = displayNameJ;
           }
         });
       }
