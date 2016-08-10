@@ -145,7 +145,9 @@ document.registerElement('irb-result', class extends Component {
             windowSize: ROLLING_WINDOWS_BY_UNIT[this.state.report.sections.time.clauses[0].unit],
           });
 
-          result.series = filterObjectAtDepth(result.series, series => this.state.report.legend.data[series], 2);
+          if (this.config.helpers.showLegend()) {
+            result.series = filterObjectAtDepth(result.series, series => this.state.report.legend.data[series], 2);
+          }
 
           return result;
         },
