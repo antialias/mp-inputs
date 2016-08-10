@@ -300,7 +300,25 @@ function main() {
   }
 
   if (params.property) {
-    if (params.property.resourceType === 'people') {
+    if (params.property.resourceType === 'event') {
+      var toPropertyList = function(accumulators, events) {
+        var list = [];
+        _.each(accumulators, function(a) {
+          _.each(a, function(prop) {
+            list.push(prop);
+          });
+        });
+        _.each(events, eventData => {
+          var property = getEvent(eventData).properties[params.property.value];
+          if (property && _.isNumber(property)) {
+            list.push(property);
+          }
+        });
+        return list;
+      };
+
+      query = query.groupBy(groups, toPropertyList);
+    } else {
       var toPropertyListForGroupByUser = function(list, events) {
         list = list || [];
         _.each(events, eventData => {
@@ -312,14 +330,13 @@ function main() {
       };
 
       query = query.groupByUser(groups, toPropertyListForGroupByUser)
-        .groupBy([sliceOffDistinctId], toList)
-        .map(function(item) {
-          item.value = operatorFuncs[params.type](item.value);
-          return item;
-        });
-    } else {
-
+        .groupBy([sliceOffDistinctId], toList);
     }
+
+    query = query.map(function(item) {
+      item.value = operatorFuncs[params.type](item.value);
+      return item;
+    });
   } else if (params.type === 'total') {
     query = query.groupBy(groups, countWithSampling);
   } else if (params.type === 'unique') {
