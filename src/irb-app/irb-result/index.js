@@ -130,17 +130,9 @@ document.registerElement('irb-result', class extends Component {
           let shouldShow = false;
 
           if (chartName.includes('bar')) {
-            if (groupClauses.length > 0) {
-              shouldShow = true;
-            } else if (chartName === 'stacked bar' && showClauses.length > 1) {
-              shouldShow = true;
-            }
+            shouldShow = groupClauses.length > 0 || (chartName === 'stacked bar' && showClauses.length > 1);
           } else if (chartName.includes('line')) {
-            if (groupClauses.length > 0 || showClauses.length > 1) {
-              shouldShow = true;
-            } else if (chartName === 'line' && showClauses[0].value.name === '$top_events') {
-              shouldShow = true;
-            }
+            shouldShow = groupClauses.length > 0 || showClauses.length > 1 || (chartName === 'line' && showClauses[0].value.name === '$top_events');
           }
 
           return shouldShow;
