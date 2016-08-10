@@ -1,5 +1,0 @@
-ul.toggle-view
-  li(class={selected: report.series.isEditing})
-    button.show-hide(onclick=$helpers.startEditingSeries)
-  if report.series.isEditing
-    .pane-container= $component.child('show-hide-series-pane')
