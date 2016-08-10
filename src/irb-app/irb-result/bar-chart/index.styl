@@ -21,12 +21,6 @@
           &.loading
             visibility hidden
 
-          & > div
-            border-right 1px solid lighten(background-gray, 50%)
-
-          &:last-child
-            border-right 0 none
-
         .bar-chart-header, .bar-chart-axis
           cursor pointer
           display flex
@@ -38,6 +32,7 @@
             line-height 40px
 
         .bar-chart-header
+          border-right 1px solid lighten(background-gray, 50%)
 
           .text
             padding-left 15px

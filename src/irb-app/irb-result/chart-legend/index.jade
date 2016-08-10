@@ -1,5 +1,5 @@
 .chart-legend
-  .header legend
+  .header Legend
   .body
     .search
       focus-input(
@@ -7,17 +7,15 @@
         oninput=$helpers.searchHandler
         type='text'
       )
-    // ul.groups
-    // each group in $helpers.groups()
     .info
       .name= util.renameEvent(report.series.currentSeries)
       .count #{$helpers.selectedSeriesCount()}/#{$helpers.totalSeriesCount()}
-    // .select-all
     ul.series-names
       each series in $helpers.seriesData()
         li
           button.series(
             class=$helpers.isSeriesShowing(series) ? 'showing' : 'hidden'
             onclick=() => $helpers.toggleShowSeries(series)
-          )= $helpers.renameSeries(series)
-    // .button.more-or-less(onclick=() => $helpers.onMoreOrLessClicked(group))= 'more'
+          )
+            .icon
+            .label= $helpers.renameSeries(series)

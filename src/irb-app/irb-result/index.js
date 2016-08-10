@@ -128,7 +128,6 @@ document.registerElement('irb-result', class extends Component {
           const showClauses = this.state.report.sections.show.clauses;
           const groupClauses = this.state.report.sections.group.clauses;
           let shouldShow = false;
-          console.log(showClauses, groupClauses)
 
           if (chartName.includes('bar')) {
             if (groupClauses.length > 0) {
