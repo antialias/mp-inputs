@@ -16,4 +16,8 @@ export default class Legend {
       currentSeries: result.headers[result.headers.length-1] || null,
     });
   }
+
+  unselectedCount() {
+    return Object.values(this.data).filter(value => !value).length;
+  }
 }

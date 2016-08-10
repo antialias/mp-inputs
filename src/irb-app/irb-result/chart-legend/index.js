@@ -10,19 +10,20 @@ document.registerElement('chart-legend', class extends Component {
   get config() {
     return {
       template,
-      defaultState: {util},
       helpers: {
-        searchHandler: ev => this.app.updateSeriesState({search: ev.target.value}),
+        allSeriesSelected: () => !this.state.report.series.unselectedCount(),
         isSeriesShowing: name => this.state.report.series.data[name],
-        renameSeriesTitle: name => util.renameProperty(name),
-        renameSeriesValue: name => this.state.report.series.currentSeries === '$event' ? util.renameEvent(name) : util.renamePropertyValue(name),
         matchesSearch: value => (
           this.state.report.series && (
             !this.state.report.series.search ||
             this.config.helpers.renameSeries(value).toLowerCase().indexOf(this.state.report.series.search.toLowerCase()) === 0
           )
         ),
-        resetSeries: () => this.app.updateSeriesState(this.state.report.series.updateSeriesData(this.state.result, false)),
+        renameSeriesValue: name => this.state.report.series.currentSeries === '$event' ? util.renameEvent(name) : util.renamePropertyValue(name),
+        resetSeries: () => {
+          this.app.updateSeriesState(this.state.report.series.updateSeriesData(this.state.result, !this.config.helpers.allSeriesSelected()));
+        },
+        searchHandler: ev => this.app.updateSeriesState({search: ev.target.value}),
         selectedSeriesCount: () => Object.values(this.state.report.series.data).filter(Boolean).length,
         seriesData: () => Object.keys(this.state.report.series.data).filter(this.config.helpers.matchesSearch),
         toggleShowSeries: name => {
