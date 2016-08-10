@@ -90,7 +90,6 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         series: new Legend({
           currentSeries: null,
           data: {},
-          isEditing: false,
           search: null,
         }),
         sorting: this.sortConfigFor(null),
@@ -463,7 +462,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
   updateSeriesState(newState) {
     this.resetToastTimer();
-    this.updateReport({series: Object.assign(this.state.report.series, newState)});
+    this.updateReport({series: extend(this.state.report.series, newState)});
   }
 
   startEditingSeries() {
@@ -548,8 +547,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         this.update({result: result, newCachedData: false, resultLoading: false});
         // BUG: we should only update legend data if it's a different query. it resets for every
         // query right now.
-        this.updateReport({sorting: this.sortConfigFor(result, this.state.report.sorting),
-                           series: this.state.report.series.updateSeriesData(result)});
+        this.updateReport({
+          sorting: this.sortConfigFor(result, this.state.report.sorting),
+          series: this.state.report.series.updateSeriesData(result),
+        });
       })
       .catch(err => console.error(err));
   }
