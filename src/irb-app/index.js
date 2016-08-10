@@ -87,7 +87,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
           time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
         }),
-        series: new Legend({
+        legend: new Legend({
           currentSeries: null,
           data: {},
           search: null,
@@ -460,20 +460,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.updateSection(this.state.report.sections[sectionType].removeClause(clauseIndex));
   }
 
-  updateSeriesState(newState) {
+  updateLegendState(newState) {
     this.resetToastTimer();
-    this.updateReport({series: extend(this.state.report.series, newState)});
-  }
-
-  startEditingSeries() {
-    this.updateSeriesState({isEditing: true});
-  }
-
-  stopEditingSeries() {
-    this.updateSeriesState({
-      isEditing: false,
-      search: null,
-    });
+    // we use Object.assign to retain the Legend model object
+    this.updateReport({legend: Object.assign(this.state.report.legend, newState)});
   }
 
   stopEditingChartToggle() {
@@ -549,7 +539,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         // query right now.
         this.updateReport({
           sorting: this.sortConfigFor(result, this.state.report.sorting),
-          series: this.state.report.series.updateSeriesData(result),
+          legend: this.state.report.legend.updateLegendData(result),
         });
       })
       .catch(err => console.error(err));

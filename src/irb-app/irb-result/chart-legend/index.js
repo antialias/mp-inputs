@@ -11,30 +11,30 @@ document.registerElement('chart-legend', class extends Component {
     return {
       template,
       helpers: {
-        allSeriesSelected: () => !this.state.report.series.unselectedCount(),
-        isSeriesShowing: name => this.state.report.series.data[name],
+        allSeriesSelected: () => !this.state.report.legend.unselectedCount(),
+        isSeriesShowing: name => this.state.report.legend.data[name],
         matchesSearch: value => (
-          this.state.report.series && (
-            !this.state.report.series.search ||
-            this.config.helpers.renameSeries(value).toLowerCase().indexOf(this.state.report.series.search.toLowerCase()) === 0
+          this.state.report.legend && (
+            !this.state.report.legend.search ||
+            this.config.helpers.renameSeries(value).toLowerCase().indexOf(this.state.report.legend.search.toLowerCase()) === 0
           )
         ),
-        renameSeriesValue: name => this.state.report.series.currentSeries === '$event' ? util.renameEvent(name) : util.renamePropertyValue(name),
-        resetSeries: () => {
-          this.app.updateSeriesState(this.state.report.series.updateSeriesData(this.state.result, !this.config.helpers.allSeriesSelected()));
+        renameSeriesValue: name => this.state.report.legend.currentSeries === '$event' ? util.renameEvent(name) : util.renamePropertyValue(name),
+        resetLegend: () => {
+          this.app.updateLegendState(this.state.report.legend.updateLegendData(this.state.result, !this.config.helpers.allSeriesSelected()));
         },
-        searchHandler: ev => this.app.updateSeriesState({search: ev.target.value}),
-        selectedSeriesCount: () => Object.values(this.state.report.series.data).filter(Boolean).length,
-        seriesData: () => Object.keys(this.state.report.series.data).filter(this.config.helpers.matchesSearch),
+        searchHandler: ev => this.app.updateLegendState({search: ev.target.value}),
+        selectedSeriesCount: () => Object.values(this.state.report.legend.data).filter(Boolean).length,
+        seriesData: () => Object.keys(this.state.report.legend.data).filter(this.config.helpers.matchesSearch),
         toggleShowSeries: name => {
-          const currentData = this.state.report.series.data;
+          const currentData = this.state.report.legend.data;
           if (currentData.hasOwnProperty(name)) {
             const newSeriesValue = {};
             newSeriesValue[name] = !currentData[name];
-            this.app.updateSeriesState({data: extend(currentData, newSeriesValue)});
+            this.app.updateLegendState({data: extend(currentData, newSeriesValue)});
           }
         },
-        totalSeriesCount: () => Object.keys(this.state.report.series.data).length,
+        totalSeriesCount: () => Object.keys(this.state.report.legend.data).length,
       },
     };
   }

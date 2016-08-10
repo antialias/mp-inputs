@@ -7,7 +7,7 @@
         oninput=$helpers.searchHandler
         type='text'
       )
-    - const formattedSeriesName = util.renameProperty(report.series.currentSeries)
+    - const formattedSeriesName = util.renameProperty(report.legend.currentSeries)
     .info
       .name= formattedSeriesName
       .count #{$helpers.selectedSeriesCount()}/#{$helpers.totalSeriesCount()}
@@ -15,7 +15,7 @@
       li
         button.select-all(
           class={showing: $helpers.allSeriesSelected()}
-          onclick=$helpers.resetSeries
+          onclick=$helpers.resetLegend
         )
           .icon
           .label= `Select all ${formattedSeriesName} segments`

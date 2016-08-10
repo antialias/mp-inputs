@@ -16,7 +16,7 @@ export default class Report {
       // visualization params
       'displayOptions',
       'sections',
-      'series',
+      'legend',
       'sorting',
     ]));
 
@@ -27,7 +27,10 @@ export default class Report {
   }
 
   static deserialize(data) {
-    return new Report(extend(data, {sections: BuilderSections.deserialize(data.sections), series: new Legend(data.series)}));
+    return new Report(extend(data, {
+      sections: BuilderSections.deserialize(data.sections),
+      legend: new Legend(data.legend),
+    }));
   }
 
   serialize() {
@@ -35,7 +38,7 @@ export default class Report {
       sections: this.sections.serialize(),
     }, pick(this, [
       'displayOptions',
-      'series',
+      'legend',
       'sorting',
       'title',
     ]));
