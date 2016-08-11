@@ -273,7 +273,6 @@ function main() {
 
   var toList = function(accumulators, items) {
     var output = items.map(item => item.value);
-    output = _.flatten(output);
     _.each(accumulators, function(a) {
       _.each(a, function(item) {
         output.push(item);
@@ -309,32 +308,19 @@ function main() {
           });
         });
         _.each(events, eventData => {
-          var property = getEvent(eventData).properties[params.property.value];
-          if (property && _.isNumber(property)) {
-            list.push(property);
-          }
+          list.push(getEvent(eventData).properties[params.property.value]);
         });
         return list;
       };
 
       query = query.groupBy(groups, toPropertyList);
     } else {
-      var toPropertyListForGroupByUser = function(list, events) {
-        list = list || [];
-        _.each(events, eventData => {
-          var property = getEvent(eventData).properties[params.property.value];
-          if (property && _.isNumber(property)) {
-            list.push(property);
-          }
-        });
-      };
-
-      query = query.groupByUser(groups, toPropertyListForGroupByUser)
+      query = query.groupByUser(groups, function(accumulators, events) { return events[0].user.properties[params.property.value]; })
         .groupBy([sliceOffDistinctId], toList);
     }
 
     query = query.map(function(item) {
-      item.value = operatorFuncs[params.type](item.value);
+      item.value = operatorFuncs[params.type](_.filter(item.value, v => v && _.isNumber(v)));
       return item;
     });
   } else if (params.type === 'total') {
