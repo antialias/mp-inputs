@@ -345,6 +345,7 @@ export default class SegmentationQuery extends BaseQuery {
           to:   (new Date(this.query.to)).toISOString().split('T')[0],
           unit: jqlQuery.unit,
         },
+        groups: groups,
         filters:
         this.query.filters
           .filter(filter => isFilterValid(filter))
@@ -352,8 +353,6 @@ export default class SegmentationQuery extends BaseQuery {
         type: jqlQuery.type,
         property: jqlQuery.property,
       };
-
-      scriptParams.groups = groups;
 
       // As we need more helper data this should be moved down a level in the params
       const hasPeopleFilters = scriptParams.filters.concat(scriptParams.groups).concat([scriptParams.property])
