@@ -12,7 +12,7 @@ import './filter-property-value-pane-content';
 import './group-property-pane-content';
 import './show-pane-content';
 
-import './builder-pane.styl';
+import './index.styl';
 
 export class BuilderPane extends Pane {
   get filterPropertyValuePaneContent() {

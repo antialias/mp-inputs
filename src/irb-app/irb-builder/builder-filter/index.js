@@ -5,7 +5,7 @@ import { Component } from 'panel';
 import { renameProperty } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
-import { BuilderPane } from '../controls/builder-pane';
+import { BuilderPane } from '../builder-pane';
 
 import template from './index.jade';
 import './index.styl';
