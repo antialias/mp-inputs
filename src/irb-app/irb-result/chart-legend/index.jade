@@ -1,24 +1,25 @@
 .chart-legend
   .header Legend
+  .search
+    focus-input(
+      attributes={placeholder: 'search'}
+      focusDelay=200
+      oninput=$helpers.searchHandler
+    )
   .body
-    .search
-      focus-input(
-        focusDelay=200
-        oninput=$helpers.searchHandler
-        type='text'
-      )
     - const formattedSeriesName = util.renameProperty(report.legend.currentSeries)
     .info
       .name= formattedSeriesName
       .count #{$helpers.selectedSeriesCount()}/#{$helpers.totalSeriesCount()}
     ul.series-names
-      li
-        button.select-all(
-          class={showing: $helpers.allSeriesSelected()}
-          onclick=$helpers.resetLegend
-        )
-          .icon
-          .label= `Select all ${formattedSeriesName} segments`
+      if !$helpers.isSearchActive()
+        li
+          button.select-all(
+            class={showing: $helpers.allSeriesSelected()}
+            onclick=$helpers.resetLegend
+          )
+            .icon
+            .label= `Select all ${formattedSeriesName} segments`
       each series in $helpers.seriesData()
         li
           button.series(
@@ -26,4 +27,11 @@
             onclick=() => $helpers.toggleShowSeries(series)
           )
             .icon
-            .label= $helpers.renameSeriesValue(series)
+            if $helpers.isSearchActive()
+              -const label = $helpers.renameSeriesValue(series)
+              .label.search-result
+                span.slice.matches-search=label.slice(0, report.legend.search.length)
+                span.slice=label.slice(report.legend.search.length)
+
+            else
+              .label= $helpers.renameSeriesValue(series)

@@ -7,6 +7,9 @@ document.registerElement('focus-input', class extends WebComponent {
     this.inputEl = document.createElement('input');
     this.inputEl.type = 'text';
     this.inputEl.value = this.value;
+    if (this.placeholder) {
+      this.inputEl.placeholder = this.placeholder;
+    }
   }
 
   attachedCallback() {
@@ -26,6 +29,13 @@ document.registerElement('focus-input', class extends WebComponent {
     this.focusInputEl();
   }
   */
+
+  attributeChangedCallback() {
+    this.placeholder = this.getAttribute('placeholder');
+    if (this.placeholder) {
+      this.inputEl.placeholder = this.placeholder;
+    }
+  }
 
   detachedCallback() {
     CHANGE_EVENTS.forEach(evName => this.inputEl.removeEventListener(evName, this.changeHandler));

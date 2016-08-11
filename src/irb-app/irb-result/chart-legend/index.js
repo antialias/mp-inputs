@@ -13,10 +13,11 @@ document.registerElement('chart-legend', class extends Component {
       helpers: {
         allSeriesSelected: () => !this.state.report.legend.unselectedCount(),
         isSeriesShowing: name => this.state.report.legend.data[name],
+        isSearchActive: () => !!this.state.report.legend.search,
         matchesSearch: value => (
           this.state.report.legend && (
             !this.state.report.legend.search ||
-            this.config.helpers.renameSeries(value).toLowerCase().indexOf(this.state.report.legend.search.toLowerCase()) === 0
+            this.config.helpers.renameSeriesValue(value).toLowerCase().indexOf(this.state.report.legend.search.toLowerCase()) === 0
           )
         ),
         renameSeriesValue: name => this.state.report.legend.currentSeries === '$event' ? util.renameEvent(name) : util.renamePropertyValue(name),

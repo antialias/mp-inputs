@@ -2,7 +2,7 @@ import { combineNestedObjKeys, nestedObjectSum, objectFromPairs, pick  } from '.
 
 export default class Legend {
   constructor(attrs) {
-    Object.assign(this, pick(attrs, ['currentSeries', 'data', 'search']));
+    Object.assign(this, pick(attrs, ['currentSeries', 'data']));
   }
 
   updateLegendData(result, defaultValue=true, showLimit=48) {
