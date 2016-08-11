@@ -103,7 +103,7 @@ export function nestedObjectSum(obj) {
   } else {
     return objectFromPairs(Object.keys(obj).map(key => {
       return [key, nestedObjectSum(obj[key])];
-    }));
+    }).filter(key=>key[1] !== 0));
   }
 }
 
