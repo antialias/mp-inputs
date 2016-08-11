@@ -356,8 +356,8 @@ export default class SegmentationQuery extends BaseQuery {
       scriptParams.groups = groups;
 
       // As we need more helper data this should be moved down a level in the params
-      const hasPeopleFilters = scriptParams.filters.concat(scriptParams.groups)
-        .some(param => param.resourceType === 'people');
+      const hasPeopleFilters = scriptParams.filters.concat(scriptParams.groups).concat([scriptParams.property])
+        .some(param => param && param.resourceType === 'people');
       const hasUserSelectors = scriptParams.selectors
         .some(es => es.selector && es.selector.includes('user['));
       scriptParams.needsPeopleData = hasPeopleFilters || hasUserSelectors;
