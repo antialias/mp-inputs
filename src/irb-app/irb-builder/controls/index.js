@@ -29,7 +29,7 @@ class ControlComponent extends Component {
 
   get constants() {
     return {
-      paneWidth: 400,
+      paneWidth: 450,
       paneHeight: 340,
     };
   }
