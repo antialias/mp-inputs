@@ -31,61 +31,6 @@
     flex-grow 1
     height 100%
 
-    button
-      align-items center
-      background none
-      border none
-      display flex
-      padding 3px 10px
-      width 100%
-
-      .icon
-        border 1px solid light-gray
-        border-radius 3px
-        flex 0 0 12px
-        height 12px
-        margin-right 10px
-
-      .label
-        color light-gray
-        font 500 12px font-helvetica-neue
-        text-align left
-
-        &.search-result
-            .slice
-              color lighten(light-gray, 10%)
-
-            .matches-search
-              color dark-gray
-
-      &.series
-        .label
-          ellipsis()
-
-      &.select-all
-        align-items flex-start
-
-        .label
-          color medium-gray
-
-      &.showing
-        .label
-          color medium-gray
-
-        .icon
-          background url(../../../../assets/properties/checkbox-checked.svg) no-repeat center
-          border-color light-gray
-
-      &:hover
-        .label
-          color dark-gray
-
-          .slice
-            color dark-gray
-
-        .icon
-          border-color medium-gray
-
     .info
       display flex
       height 25px
@@ -102,3 +47,62 @@
 
       .count
         font-size 10px
+
+    .series-names
+      max-height 300px
+      overflow-y scroll
+
+      button
+        align-items center
+        background none
+        border none
+        display flex
+        padding 3px 10px
+        width 100%
+
+        .icon
+          border 1px solid light-gray
+          border-radius 3px
+          flex 0 0 12px
+          height 12px
+          margin-right 10px
+
+        .label
+          color light-gray
+          font 500 12px font-helvetica-neue
+          text-align left
+
+          &.search-result
+              .slice
+                color lighten(light-gray, 10%)
+
+              .matches-search
+                color dark-gray
+
+        &.series
+          .label
+            ellipsis()
+
+        &.select-all
+          align-items flex-start
+
+          .label
+            color medium-gray
+
+        &.showing
+          .label
+            color medium-gray
+
+          .icon
+            background url(../../../../assets/properties/checkbox-checked.svg) no-repeat center
+            border-color light-gray
+
+        &:hover
+          .label
+            color dark-gray
+
+            .slice
+              color dark-gray
+
+          .icon
+            border-color medium-gray
