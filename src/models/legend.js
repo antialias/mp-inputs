@@ -5,6 +5,10 @@ export default class Legend {
     Object.assign(this, pick(attrs, ['currentSeries', 'data']));
   }
 
+  update(attrs) {
+    return Object.assign(this, attrs);
+  }
+
   updateLegendData(result, defaultValue=true, showLimit=48) {
     const seriesSums = combineNestedObjKeys(nestedObjectSum(result.series));
     return Object.assign(this, {

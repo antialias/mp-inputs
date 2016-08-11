@@ -462,8 +462,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
   updateLegendState(newState) {
     this.resetToastTimer();
-    // we use Object.assign to retain the Legend model object
-    this.updateReport({legend: Object.assign(this.state.report.legend, newState)});
+    this.updateReport({legend: this.state.report.legend.update(newState)});
   }
 
   stopEditingChartToggle() {
