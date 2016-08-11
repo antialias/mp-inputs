@@ -101,9 +101,9 @@ export function nestedObjectSum(obj) {
   if (typeof sum === 'number') {
     return sum;
   } else {
-    return objectFromPairs(Object.keys(obj).map(key => {
-      return [key, nestedObjectSum(obj[key])];
-    }).filter(key=>key[1] !== 0));
+    return objectFromPairs(Object.keys(obj)
+      .map(key => [key, nestedObjectSum(obj[key])])
+      .filter(key => key[1] !== 0));
   }
 }
 

@@ -535,8 +535,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         }
 
         this.update({result: result, newCachedData: false, resultLoading: false});
-        // BUG: we should only update legend data if it's a different query. it resets for every
-        // query right now.
+        // TODO: Handle searching better by only updating legend data on different queries
         this.updateReport({
           sorting: this.sortConfigFor(result, this.state.report.sorting),
           legend: this.state.report.legend.updateLegendData(result),
