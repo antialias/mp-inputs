@@ -13,10 +13,7 @@
   ul.column.toggle.resource-type
     for resourceType in $component.resourceTypeChoices
       li(
-        class={
-          selected: resourceType === selectedResourceType,
-          disabled: resourceType !== 'all',
-        }
+        class={selected: resourceType === selectedResourceType}
         onclick=() => $helpers.updateStageClause({resourceType})
       )= util.capitalize(resourceType)
   ul.column.resource-value

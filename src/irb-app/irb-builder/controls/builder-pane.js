@@ -6,13 +6,12 @@ import {
 } from '../../../util';
 
 import { Pane, PaneContent } from '../../pane';
-import { Clause, FilterClause, ShowClause, TimeClause } from '../../../models/clause';
+import { Clause, FilterClause, TimeClause } from '../../../models/clause';
 import Dropdown from '../../widgets/dropdown';
 import Toggle from '../../widgets/toggle';
 
 import propertyPaneContentTemplate from './property-pane-content.jade';
 import propertyValuePaneContentTemplate from './property-value-pane-content.jade';
-import showPaneContentTemplate from '../controls/show-pane-content.jade';
 
 import './builder-pane.styl';
 
@@ -42,49 +41,7 @@ export class BuilderPane extends Pane {
       },
     };
   }
-
-  get showPaneContent() {
-    return {
-      tag: 'show-pane-content',
-      constants: {
-        header: 'Show',
-      },
-    };
-  }
 }
-
-document.registerElement('show-pane-content', class extends PaneContent {
-  get config() {
-    return extend(super.config, {
-      template: showPaneContentTemplate,
-      helpers: extend(super.config.helpers, {
-        onArrowClick: (ev, value) => {
-          ev.stopPropagation();
-          this.app.updateStageClause({value});
-          this.app.startAddingClause('group');
-          window.requestAnimationFrame(() =>
-            this.app.updateStageClause({paneIndex: 1})
-          );
-        },
-      }),
-    });
-  }
-
-  get constants() {
-    return extend(super.constants, {
-      mathChoices: ShowClause.MATH_TYPES,
-      eventChoices: [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS, ...this.state.topEvents],
-    });
-  }
-
-  get section() {
-    return 'show';
-  }
-
-  get resourceTypeChoices() {
-    return ShowClause.RESOURCE_TYPES;
-  }
-});
 
 document.registerElement('group-property-pane-content', class extends PaneContent {
   get config() {

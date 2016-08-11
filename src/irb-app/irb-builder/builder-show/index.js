@@ -8,6 +8,8 @@ import { BuilderPane } from '../controls/builder-pane';
 import template from './index.jade';
 import './index.styl';
 
+import './show-pane-content';
+
 document.registerElement('builder-show', class extends Component {
   get config() {
     return {template};
@@ -45,6 +47,15 @@ document.registerElement('show-edit-control', class extends EditControl {
 document.registerElement('show-pane', class extends BuilderPane {
   get section() {
     return 'show';
+  }
+
+  get showPaneContent() {
+    return {
+      tag: 'show-pane-content',
+      constants: {
+        header: 'Show',
+      },
+    };
   }
 
   get subpanes() {
