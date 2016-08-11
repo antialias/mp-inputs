@@ -82,7 +82,7 @@ document.registerElement('show-pane-content', class extends PaneContent {
   }
 
   get resourceTypeChoices() {
-    return Clause.RESOURCE_TYPES;
+    return ShowClause.RESOURCE_TYPES;
   }
 });
 

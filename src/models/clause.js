@@ -98,6 +98,7 @@ ShowClause.ALL_EVENTS = ShowClause.prototype.ALL_EVENTS = {
 ShowClause.MATH_TYPES = ShowClause.prototype.MATH_TYPES = [
   'total', 'unique', 'average', 'median',
 ];
+ShowClause.RESOURCE_TYPES = ShowClause.prototype.RESOURCE_TYPES = ['all', 'events', 'properties'];
 
 const PROPERTY_TYPES = [
   'string', 'number', 'datetime', 'boolean', 'list',
