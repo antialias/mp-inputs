@@ -17,7 +17,7 @@
         onclick=() => $helpers.updateStageClause({resourceType})
       )= util.capitalize(resourceType)
   ul.column.resource-value
-    for value in $component.constants.eventChoices
+    for value in $component.eventChoices
       if $helpers.matchesSearch(util.renameEvent(value.name))
         li(
           class={selected: value.name === selectedValueName, custom: !!value.custom}
