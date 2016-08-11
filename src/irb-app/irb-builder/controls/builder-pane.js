@@ -13,6 +13,8 @@ import Toggle from '../../widgets/toggle';
 import propertyPaneContentTemplate from './property-pane-content.jade';
 import propertyValuePaneContentTemplate from './property-value-pane-content.jade';
 
+import './show-pane-content';
+
 import './builder-pane.styl';
 
 export class BuilderPane extends Pane {
@@ -38,6 +40,15 @@ export class BuilderPane extends Pane {
       tag: 'group-property-pane-content',
       constants: {
         header: 'Properties',
+      },
+    };
+  }
+
+  get showPaneContent() {
+    return {
+      tag: 'show-pane-content',
+      constants: {
+        header: 'Show',
       },
     };
   }
