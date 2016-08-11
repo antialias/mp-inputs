@@ -121,6 +121,45 @@ export class GroupClause extends EventsPropertiesClause {
 GroupClause.prototype.TYPE = 'group';
 GroupClause.FILTER_TYPES = GroupClause.prototype.FILTER_TYPES = PROPERTY_TYPES;
 
+// Time constants
+const HOURS = 'last 96 hours';
+const WEEK = 'last week';
+const MONTH = 'last 30 days';
+const QUARTER = 'last quarter';
+const YEAR = 'last 12 months';
+const CUSTOM = 'Custom date range ...';
+const RANGES = {
+  HOURS, WEEK, MONTH, QUARTER, YEAR, CUSTOM,
+};
+const RANGE_CHOICES = [
+  HOURS, WEEK, MONTH, QUARTER, YEAR, CUSTOM,
+];
+const UNIT_CHOICES = [
+  'hour', 'day', 'week', 'month', 'quarter', 'year',
+];
+const RANGE_TO_VALUE_AND_UNIT = {
+  [RANGES.HOURS]:   {value: 96, unit: 'hour' },
+  [RANGES.WEEK]:    {value: 7,  unit: 'day'  },
+  [RANGES.MONTH]:   {value: 30, unit: 'day'  },
+  [RANGES.QUARTER]: {value: 12, unit: 'week' },
+  [RANGES.YEAR]:    {value: 12, unit: 'month'},
+};
+const UNIT_AND_VALUE_TO_RANGE = {
+  hour: {
+    96: RANGES.HOURS,
+  },
+  day: {
+    7: RANGES.WEEK,
+    30: RANGES.MONTH,
+  },
+  week: {
+    12: RANGES.QUARTER,
+  },
+  month: {
+    12: RANGES.YEAR,
+  },
+};
+
 export class TimeClause extends Clause {
   constructor(attrs={}) {
     super(...arguments);
@@ -193,44 +232,10 @@ export class TimeClause extends Clause {
     return (unitVals && unitVals[value]) || null;
   }
 }
+TimeClause.RANGE_CHOICES = RANGE_CHOICES;
+TimeClause.RANGES = TimeClause.prototype.RANGES = RANGES;
 TimeClause.TYPE = TimeClause.prototype.TYPE = 'time';
-TimeClause.UNIT_CHOICES = TimeClause.prototype.UNIT_CHOICES = [
-  'hour', 'day', 'week', 'month', 'quarter', 'year',
-];
-const HOURS = 'last 96 hours';
-const WEEK = 'last week';
-const MONTH = 'last 30 days';
-const QUARTER = 'last quarter';
-const YEAR = 'last 12 months';
-const CUSTOM = 'Custom date range ...';
-TimeClause.RANGES = TimeClause.prototype.RANGES = {
-  HOURS, WEEK, MONTH, QUARTER, YEAR, CUSTOM,
-};
-TimeClause.RANGE_CHOICES = [
-  HOURS, WEEK, MONTH, QUARTER, YEAR, CUSTOM,
-];
-const RANGE_TO_VALUE_AND_UNIT = {
-  [TimeClause.RANGES.HOURS]:   {value: 96, unit: 'hour' },
-  [TimeClause.RANGES.WEEK]:    {value: 7,  unit: 'day'  },
-  [TimeClause.RANGES.MONTH]:   {value: 30, unit: 'day'  },
-  [TimeClause.RANGES.QUARTER]: {value: 12, unit: 'week' },
-  [TimeClause.RANGES.YEAR]:    {value: 12, unit: 'month'},
-};
-const UNIT_AND_VALUE_TO_RANGE = {
-  hour: {
-    96: TimeClause.RANGES.HOURS,
-  },
-  day: {
-    7: TimeClause.RANGES.WEEK,
-    30: TimeClause.RANGES.MONTH,
-  },
-  week: {
-    12: TimeClause.RANGES.QUARTER,
-  },
-  month: {
-    12: TimeClause.RANGES.YEAR,
-  },
-};
+TimeClause.UNIT_CHOICES = TimeClause.prototype.UNIT_CHOICES = UNIT_CHOICES;
 
 export class FilterClause extends EventsPropertiesClause {
   constructor(attrs={}) {

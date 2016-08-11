@@ -34,6 +34,10 @@
 // }
 
 function main() {
+  var getEvent = function(eventData) {
+    return eventData.event || eventData;
+  };
+
   if (params.filters && params.filters.length) {
     // String
     var stringContains = function(actual, expected) {
@@ -120,10 +124,6 @@ function main() {
     };
   }
 
-  var getEvent = function(eventData) {
-    return eventData.event || eventData;
-  };
-
   var groups = [];
   if (params.outputName) {
     groups.push(function() {
@@ -134,16 +134,16 @@ function main() {
   }
 
   if (params.groups) {
-    var getPropertyPath = function(group) {
-      return getPropertyPaths(group).join('.');
-    };
-
     var getPropertyPaths = function(group) {
       var paths = [];
       if (params.needsPeopleData) {
         paths.push(group.resourceType === 'people' ? 'user' : 'event');
       }
       return paths.concat('properties', group.value);
+    };
+
+    var getPropertyPath = function(group) {
+      return getPropertyPaths(group).join('.');
     };
 
     groups = groups.concat(params.groups.map(function(group) {

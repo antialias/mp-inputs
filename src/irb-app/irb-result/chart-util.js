@@ -73,39 +73,6 @@ export function nestedObjectPaths(obj, depth=0) {
 }
 
 /**
- * Format rows for nested table display. Calculates rowspans and intermediate sums, and sorts
- * according to given config. See tests for detailed examples.
- *
- * @example
- * nestedObjectToTableData({US: {llama: 5, aardvark: 8}}, {
- *   sortBy: 'column',
- *   colSortAttrs: [{sortBy: 'label', sortOrder: 'asc'}],
- * });
- * // [
- * //   [{value: 'US', sum: 13}, {llama: 5, aardvark: 8}],
- * // ]
- */
-export function nestedObjectToTableData(obj, sortConfig) {
-  const objDepth = nestedObjectDepth(obj);
-  let arr = nestedObjectToArrayWithSums(obj, objDepth);
-
-  switch(sortConfig.sortBy) {
-    case 'column':
-      arr = sortTableColumns(arr, sortConfig.colSortAttrs);
-      arr = expandTableHeaderRows(arr, objDepth);
-      break;
-    case 'value':
-      arr = expandTableHeaderRows(arr, objDepth, false);
-      arr = arr.sort((a, b) => {
-        [a, b] = [a, b].map(entry => entry[entry.length - 1][sortConfig.sortColumn] || 0);
-        return (a > b ? 1 : (a < b ? -1 : 0)) * (sortConfig.sortOrder === 'desc' ? -1 : 1);
-      });
-      break;
-  }
-  return arr;
-}
-
-/**
  * Helper for nestedObjectToTableData.
  * Converts data object into nested array structure (with subgroup sums),
  * which can subsequently be sorted.
@@ -171,29 +138,38 @@ function sortTableColumns(arr, colSortAttrs) {
 }
 
 /**
- * Format rows for nested display. Calculates rowspans and intermediate sums, and sorts
- * according to given config. Final numeric value/key pairs become parallel arrays for
- * inclusion in a single table cell. See tests for detailed examples.
+ * Format rows for nested table display. Calculates rowspans and intermediate sums, and sorts
+ * according to given config. See tests for detailed examples.
  *
  * @example
- * nestedObjectToBarChartData({US: {llama: 5, aardvark: 8}}, {
+ * nestedObjectToTableData({US: {llama: 5, aardvark: 8}}, {
  *   sortBy: 'column',
- *   colSortAttrs: [
- *     {sortBy: 'value', sortOrder: 'asc'},
- *     {sortBy: 'value', sortOrder: 'desc'},
- *   ],
+ *   colSortAttrs: [{sortBy: 'label', sortOrder: 'asc'}],
  * });
  * // [
- * //   [{value: 'US', sum: 13}, ['aardvark', 'llama'], [8, 5]],
+ * //   [{value: 'US', sum: 13}, {llama: 5, aardvark: 8}],
  * // ]
  */
-export function nestedObjectToBarChartData(obj, sortConfig) {
-  if (typeof obj === 'object') {
-    return nestedArrayToBarChartData(nestedObjectToNestedArray(obj, sortConfig));
-  } else {
-    return [];
+export function nestedObjectToTableData(obj, sortConfig) {
+  const objDepth = nestedObjectDepth(obj);
+  let arr = nestedObjectToArrayWithSums(obj, objDepth);
+
+  switch(sortConfig.sortBy) {
+    case 'column':
+      arr = sortTableColumns(arr, sortConfig.colSortAttrs);
+      arr = expandTableHeaderRows(arr, objDepth);
+      break;
+    case 'value':
+      arr = expandTableHeaderRows(arr, objDepth, false);
+      arr = arr.sort((a, b) => {
+        [a, b] = [a, b].map(entry => entry[entry.length - 1][sortConfig.sortColumn] || 0);
+        return (a > b ? 1 : (a < b ? -1 : 0)) * (sortConfig.sortOrder === 'desc' ? -1 : 1);
+      });
+      break;
   }
+  return arr;
 }
+
 function nestedArrayToBarChartData(arr) {
   if (!arr[0].children) {
 
@@ -238,6 +214,60 @@ function nestedArrayToBarChartData(arr) {
 }
 
 /**
+ * Internal util supporting 'sort by final value' functionality of
+ * nestedObjectToNestedArray. Expands nested subgroups into new rows.
+ *
+ * @example
+ * flattenNestedObjectToArray({US: {llama: 5, aardvark: 8}});
+ * // [
+ * //   {label: 'US', value: 5, children: [{label: 'llama', value: 5}]},
+ * //   {label: 'US', value: 8, children: [{label: 'aardvark', value: 8}]},
+ * // ]
+ */
+function flattenNestedObjectToArray(obj) {
+  if (typeof obj === 'number') {
+    return obj;
+  } else {
+    return Object.keys(obj)
+      .map(label => {
+        let entry;
+        const value = obj[label];
+        if (typeof value === 'object') {
+          entry = flattenNestedObjectToArray(value).map(child => ({
+            label: label,
+            children: [child],
+            value: child.value,
+          }));
+        } else {
+          entry = {label, value};
+        }
+        return entry;
+      })
+      .reduce((a, b) => a.concat(b), []);
+  }
+}
+
+// sort utils for nestedObjectToNestedArray
+function compareByLabel(a, b) {
+  [a, b] = [a.label.toLowerCase(), b.label.toLowerCase()];
+  return a > b ? 1 : (a < b ? -1 : 0);
+}
+function compareByValue(a, b) {
+  [a, b] = [a.value, b.value];
+  return a > b ? 1 : (a < b ? -1 : 0);
+}
+const NESTED_ARRAY_SORT_FUNCS = {
+  label: {
+    asc:  (a, b) => compareByLabel(a, b),
+    desc: (a, b) => compareByLabel(a, b) * -1,
+  },
+  value: {
+    asc:  (a, b) => compareByValue(a, b),
+    desc: (a, b) => compareByValue(a, b) * -1,
+  },
+};
+
+/**
  * Helper for nestedObjectToBarChartData. Turns a nested object with numeric leaves
  * into a nested array with rows sorted according to given multi-level config.
  * See tests for examples.
@@ -278,57 +308,27 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
   return arr;
 }
 
-// sort utils for nestedObjectToNestedArray
-const NESTED_ARRAY_SORT_FUNCS = {
-  label: {
-    asc:  (a, b) => compareByLabel(a, b),
-    desc: (a, b) => compareByLabel(a, b) * -1,
-  },
-  value: {
-    asc:  (a, b) => compareByValue(a, b),
-    desc: (a, b) => compareByValue(a, b) * -1,
-  },
-};
-function compareByLabel(a, b) {
-  [a, b] = [a.label.toLowerCase(), b.label.toLowerCase()];
-  return a > b ? 1 : (a < b ? -1 : 0);
-}
-function compareByValue(a, b) {
-  [a, b] = [a.value, b.value];
-  return a > b ? 1 : (a < b ? -1 : 0);
-}
-
 /**
- * Internal util supporting 'sort by final value' functionality of
- * nestedObjectToNestedArray. Expands nested subgroups into new rows.
+ * Format rows for nested display. Calculates rowspans and intermediate sums, and sorts
+ * according to given config. Final numeric value/key pairs become parallel arrays for
+ * inclusion in a single table cell. See tests for detailed examples.
  *
  * @example
- * flattenNestedObjectToArray({US: {llama: 5, aardvark: 8}});
+ * nestedObjectToBarChartData({US: {llama: 5, aardvark: 8}}, {
+ *   sortBy: 'column',
+ *   colSortAttrs: [
+ *     {sortBy: 'value', sortOrder: 'asc'},
+ *     {sortBy: 'value', sortOrder: 'desc'},
+ *   ],
+ * });
  * // [
- * //   {label: 'US', value: 5, children: [{label: 'llama', value: 5}]},
- * //   {label: 'US', value: 8, children: [{label: 'aardvark', value: 8}]},
+ * //   [{value: 'US', sum: 13}, ['aardvark', 'llama'], [8, 5]],
  * // ]
  */
-function flattenNestedObjectToArray(obj) {
-  if (typeof obj === 'number') {
-    return obj;
+export function nestedObjectToBarChartData(obj, sortConfig) {
+  if (typeof obj === 'object') {
+    return nestedArrayToBarChartData(nestedObjectToNestedArray(obj, sortConfig));
   } else {
-    return Object.keys(obj)
-      .map(label => {
-        let entry;
-        const value = obj[label];
-        if (typeof value === 'object') {
-          entry = flattenNestedObjectToArray(value).map(child => ({
-            label: label,
-            children: [child],
-            value: child.value,
-          }));
-        } else {
-          entry = {label, value};
-        }
-        return entry;
-      })
-      .reduce((a, b) => a.concat(b), []);
+    return [];
   }
 }
-
