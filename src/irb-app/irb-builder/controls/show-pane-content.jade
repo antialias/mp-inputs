@@ -7,10 +7,7 @@
   ul.column.toggle.math
     for math in $component.constants.mathChoices
       li(
-        class={
-          selected: math === selectedMath,
-          disabled: math === 'sum',
-        }
+        class={selected: math === selectedMath}
         onclick=() => $helpers.updateStageClause({math})
       )= util.capitalize(math)
   ul.column.toggle.resource-type

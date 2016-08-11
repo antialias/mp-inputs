@@ -96,7 +96,7 @@ ShowClause.ALL_EVENTS = ShowClause.prototype.ALL_EVENTS = {
   custom: false,
 };
 ShowClause.MATH_TYPES = ShowClause.prototype.MATH_TYPES = [
-  'total', 'unique', 'average', 'sum', 'median',
+  'total', 'unique', 'average', 'median',
 ];
 
 const PROPERTY_TYPES = [
