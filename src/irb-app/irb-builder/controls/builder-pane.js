@@ -1,17 +1,14 @@
 import {
   extend,
-  removeByValue,
   renameProperty,
-  renamePropertyValue,
 } from '../../../util';
 
-import { Pane, PaneContent } from '../../pane';
+import { Pane } from '../../pane';
 import { FilterClause, TimeClause } from '../../../models/clause';
 import Dropdown from '../../widgets/dropdown';
 import Toggle from '../../widgets/toggle';
 
-import propertyValuePaneContentTemplate from './property-value-pane-content.jade';
-
+import './filter-property-value-pane-content';
 import './group-property-pane-content';
 import './show-pane-content';
 
@@ -54,48 +51,6 @@ export class BuilderPane extends Pane {
   }
 }
 
-document.registerElement('filter-property-value-pane-content', class extends PaneContent {
-  get config() {
-    return extend(super.config, {
-      template: propertyValuePaneContentTemplate,
-
-      helpers: extend(super.config.helpers, {
-        getDoneLabel: () => this.app.isAddingClause() ? 'Add' : 'Update',
-        getEqualsMatches: () =>
-          this.config.helpers.getValueMatches(this.app.activeStageClause.filterSearch),
-        getValueMatches: (string, invert) =>
-          this.state.topPropertyValues
-            .filter(value => !string || renamePropertyValue(value).toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert),
-        toggleStringEqualsValueSelected: value => {
-          const clause = this.app.activeStageClause;
-          const selected = (clause && clause.filterValue) || [];
-          let filterValue;
-
-          if (selected.indexOf(value) === -1) {
-            filterValue = [...selected, value];
-          } else {
-            filterValue = removeByValue(selected, value);
-          }
-
-          this.app.updateStageClause({filterValue});
-        },
-        showPropertyValues: () => this.app.hasStageClause() && !this.app.activeStageClause.filterOperatorIsSetOrNotSet,
-        stopEditingClause: () => this.app.stopEditingClause(),
-        updateDate: ev => ev.detail && this.app.updateStageClause({filterValue: ev.detail}),
-        updateStageClause: clauseData => this.app.updateStageClause(clauseData),
-      }),
-    });
-  }
-
-  get filterTypeChoices() {
-    return FilterClause.FILTER_TYPES;
-  }
-
-  get section() {
-    return 'filter';
-  }
-});
-
 document.registerElement('operator-dropdown', class extends Dropdown {
   get choices() {
     const clause = this.app.activeStageClause;
@@ -126,7 +81,6 @@ document.registerElement('operator-dropdown', class extends Dropdown {
     });
   }
 });
-
 
 document.registerElement('date-unit-dropdown', class extends Dropdown {
   get config() {
