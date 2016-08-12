@@ -23,13 +23,19 @@ export function mapObjectKeys(obj, callback) {
 }
 
 function _intoObject(obj, filter, depth) {
-  Object.keys(obj).forEach(key => {
-    if (nestedObjectDepth(obj) === depth) {
+  if (nestedObjectDepth(obj) === depth) {
+    Object.keys(obj).forEach(key => {
       if (!filter(key)) {
         delete obj[key];
       }
-    } else if (typeof obj[key] === 'object') {
+    });
+  }
+  Object.keys(obj).forEach(key => {
+    if (typeof obj[key] === 'object') {
       _intoObject(obj[key], filter, depth);
+      if (!Object.keys(obj[key]).length) {
+        delete obj[key];
+      }
     }
   });
 }
