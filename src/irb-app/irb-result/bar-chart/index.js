@@ -117,8 +117,6 @@ document.registerElement('bar-chart', class extends Component {
     }
 
     series = util.nestedObjectSum(series);
-    // if series object is empty pass zero so chart will be cleared
-    series = Object.keys(series).length ? series : 0;
     const rows = nestedObjectToBarChartData(series, sortConfig);
 
     const chartMax = displayOptions.plotStyle === 'stacked' ? stackedNestedObjectMax(series) : nestedObjectMax(series);

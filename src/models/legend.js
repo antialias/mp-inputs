@@ -2,7 +2,7 @@ import { combineNestedObjKeys, nestedObjectSum, objectFromPairs, pick  } from '.
 
 export default class Legend {
   constructor(attrs) {
-    Object.assign(this, pick(attrs, ['currentSeries', 'data']));
+    Object.assign(this, pick(attrs, ['currentSeries', 'data', 'newData']));
   }
 
   update(attrs) {
@@ -10,15 +10,32 @@ export default class Legend {
   }
 
   updateLegendData(result, defaultValue=true, showLimit=48) {
-    const seriesSums = combineNestedObjKeys(nestedObjectSum(result.series));
-    return Object.assign(this, {
-      data: objectFromPairs(
-        Object.keys(seriesSums)
-          .sort((a, b) => seriesSums[b] - seriesSums[a])
-          .map((v, idx) => [v, !showLimit || (idx < showLimit) ? defaultValue : false])
-      ),
-      currentSeries: result.headers[result.headers.length-1] || null,
-    });
+    const data = [];
+    const segments = result.headers.slice();
+    let nsum = nestedObjectSum(result.series);
+
+    while (segments.length) {
+      let seriesName = segments.pop();
+      let seriesData = null;
+      if (!data.length) {
+        const seriesSums = combineNestedObjKeys(nsum);
+        seriesData = objectFromPairs(
+          Object.keys(seriesSums)
+            .sort((a, b) => seriesSums[b] - seriesSums[a])
+            .map((v, idx) => [v, !showLimit || (idx < showLimit) ? defaultValue : false])
+        );
+      } else {
+        nsum = nestedObjectSum(nsum);
+        seriesData = objectFromPairs(Object.keys(nsum).map(v => [v, defaultValue]));
+      }
+      data.push({
+        currentSeries: seriesName,
+        data: seriesData,
+        seriesData,
+        seriesName,
+      });
+    }
+    return Object.assign(this, data[0], {newData: data});
   }
 
   unselectedCount() {
