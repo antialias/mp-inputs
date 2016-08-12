@@ -22,27 +22,28 @@ export function mapObjectKeys(obj, callback) {
   return newObj;
 }
 
-function _intoObject(obj, filter, depth) {
-  if (nestedObjectDepth(obj) === depth) {
+function _filterIntoObject(obj, filter) {
+  const depth = nestedObjectDepth(obj);
+  if (depth > 1) {
     Object.keys(obj).forEach(key => {
-      if (!filter(key)) {
+      if (!filter(key, depth)) {
         delete obj[key];
       }
     });
-  }
-  Object.keys(obj).forEach(key => {
-    if (typeof obj[key] === 'object') {
-      _intoObject(obj[key], filter, depth);
-      if (!Object.keys(obj[key]).length) {
-        delete obj[key];
+    Object.keys(obj).forEach(key => {
+      if (typeof obj[key] === 'object') {
+        _filterIntoObject(obj[key], filter);
+        if (!Object.keys(obj[key]).length) {
+          delete obj[key];
+        }
       }
-    }
-  });
+    });
+  }
 }
 
-export function filterObjectAtDepth(obj, filter, depth=1) {
+export function filterObject(obj, filter) {
   const newObject = JSON.parse(JSON.stringify(obj));
-  _intoObject(newObject, filter, depth);
+  _filterIntoObject(newObject, filter);
   return newObject;
 }
 
@@ -187,4 +188,17 @@ export function nestedObjectRolling(obj, windowSize) {
   } else {
     return mapObjectKeys(obj, value => nestedObjectRolling(value, windowSize));
   }
+}
+
+
+export function uniqueObjKeysAtDepth(obj, depth) {
+  const keys = new Set();
+  const newObject = JSON.parse(JSON.stringify(obj));
+  _filterIntoObject(newObject, (value, d) => {
+    if (d === depth) {
+      keys.add(value);
+    }
+    return true;
+  });
+  return Array.from(keys);
 }

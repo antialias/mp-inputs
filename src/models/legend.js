@@ -1,4 +1,10 @@
-import { combineNestedObjKeys, nestedObjectSum, objectFromPairs, pick  } from '../util';
+import {
+  combineNestedObjKeys,
+  nestedObjectSum,
+  objectFromPairs,
+  pick,
+  uniqueObjKeysAtDepth,
+} from '../util';
 
 export default class Legend {
   constructor(attrs) {
@@ -17,21 +23,21 @@ export default class Legend {
   updateLegendData(result, defaultValue=true, showLimit=48) {
     const data = [];
     const segments = result.headers.slice();
-    let nsum = nestedObjectSum(result.series);
+    const sumNestedResults = nestedObjectSum(result.series);
 
-    while (segments.length) {
-      let seriesName = segments.pop();
+    for (let i = segments.length - 1; i >= 0; i--) {
+      let seriesName = segments[i];
       let seriesData = null;
+
       if (!data.length) {
-        const seriesSums = combineNestedObjKeys(nsum);
+        const completeSeriesTotals = combineNestedObjKeys(sumNestedResults);
         seriesData = objectFromPairs(
-          Object.keys(seriesSums)
-            .sort((a, b) => seriesSums[b] - seriesSums[a])
+          Object.keys(completeSeriesTotals)
+            .sort((a, b) => completeSeriesTotals[b] - completeSeriesTotals[a])
             .map((v, idx) => [v, !showLimit || (idx < showLimit) ? defaultValue : false])
         );
       } else {
-        nsum = nestedObjectSum(nsum);
-        seriesData = objectFromPairs(Object.keys(nsum).map(v => [v, defaultValue]));
+        seriesData = objectFromPairs(uniqueObjKeysAtDepth(sumNestedResults, segments.length - i).map(v => [v, defaultValue]));
       }
       data.push({
         seriesData,

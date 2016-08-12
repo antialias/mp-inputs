@@ -3,7 +3,7 @@ import { capitalize } from 'mixpanel-common/util';
 
 import {
   extend,
-  filterObjectAtDepth,
+  filterObject,
   mapObjectKeys,
   pick,
   renameEvent,
@@ -146,7 +146,7 @@ document.registerElement('irb-result', class extends Component {
           });
 
           if (this.config.helpers.showLegend()) {
-            result.series = filterObjectAtDepth(result.series, series => this.state.report.legend.data[series], 2);
+            result.series = filterObject(result.series, (value, depth) => this.state.report.legend.data[depth - 2].seriesData[value]);
           }
 
           return result;
