@@ -88,8 +88,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
         }),
         legend: new Legend({
-          currentSeries: null,
-          data: {},
+          data: [],
           search: null,
         }),
         sorting: this.sortConfigFor(null),
@@ -463,6 +462,11 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   updateLegendState(newState) {
     this.resetToastTimer();
     this.updateReport({legend: this.state.report.legend.update(newState)});
+  }
+
+  updateLegendSeriesAtIndex(sereiesIdx, attrs) {
+    this.resetToastTimer();
+    this.updateReport({legend: this.state.report.legend.updateSeriesAtIndex(sereiesIdx, attrs)});
   }
 
   stopEditingChartToggle() {

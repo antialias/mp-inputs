@@ -35,16 +35,18 @@
 
     //-         else
     //-           .label= $helpers.renameSeriesValue(series)
-    each series in report.legend.newData
+    each series, seriesIdx in report.legend.data
       - const formattedSeriesName = util.renameProperty(series.seriesName)
       .legend-series
         .info
           .name= formattedSeriesName
+          .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
         ul.series-names
           each value in Object.keys(series.seriesData)
             li
               button.series(
-                class={showing: true}
+                class={showing: $helpers.isSeriesValueShowing(seriesIdx, value)}
+                onclick=() => $helpers.toggleShowSeriesValue(seriesIdx, value)
               )
                 .icon
-                .label= $helpers.renameSeriesValue(value)
+                .label= $helpers.renameSeriesValue(seriesIdx, value)

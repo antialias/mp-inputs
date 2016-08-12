@@ -2,11 +2,16 @@ import { combineNestedObjKeys, nestedObjectSum, objectFromPairs, pick  } from '.
 
 export default class Legend {
   constructor(attrs) {
-    Object.assign(this, pick(attrs, ['currentSeries', 'data', 'newData']));
+    Object.assign(this, pick(attrs, ['data']));
   }
 
   update(attrs) {
     return Object.assign(this, attrs);
+  }
+
+  updateSeriesAtIndex(seriesIdx, attrs) {
+    Object.assign(this.data[seriesIdx].seriesData, attrs);
+    return this;
   }
 
   updateLegendData(result, defaultValue=true, showLimit=48) {
@@ -29,13 +34,11 @@ export default class Legend {
         seriesData = objectFromPairs(Object.keys(nsum).map(v => [v, defaultValue]));
       }
       data.push({
-        currentSeries: seriesName,
-        data: seriesData,
         seriesData,
         seriesName,
       });
     }
-    return Object.assign(this, data[0], {newData: data});
+    return Object.assign(this, {data});
   }
 
   unselectedCount() {
