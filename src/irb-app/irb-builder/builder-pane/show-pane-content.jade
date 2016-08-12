@@ -17,11 +17,26 @@
         onclick=() => $helpers.updateStageClause({resourceType})
       )= util.capitalize(resourceType)
   ul.column.resource-value
-    for value in $component.eventChoices
-      if $helpers.matchesSearch(util.renameEvent(value.name))
-        li(
-          class={selected: value.name === selectedValueName, custom: !!value.custom}
-          onclick=() => $helpers.updateStageClause({value}, true)
-        )
-          = util.renameEvent(value.name)
-          button(onclick=ev => $helpers.onArrowClick(ev, value)).next-arrow ›
+
+    if $helpers.showResource('events', selectedResourceType)
+      li.resource-title Events
+      for value in $component.eventChoices
+        if $helpers.matchesSearch(util.renameEvent(value.name))
+          li(
+            class={selected: value.name === selectedValueName, custom: !!value.custom}
+            onclick=() => $helpers.updateStageClause({value}, true)
+          )
+            = util.renameEvent(value.name)
+            button.next-arrow(onclick=ev => $helpers.onArrowClick(ev, value)) ›
+
+    if $helpers.showResource('properties', selectedResourceType)
+      li.resource-title Event properties
+      for property in topEventProperties
+        if $helpers.matchesSearch(util.renameProperty(property.name))
+          li.property(
+            class=[`type-${property.type}`, property.resourceType]
+            class={selected: property.name === selectedValueName}
+            onclick=() => $helpers.selectProperty(property)
+          )
+            = util.renameProperty(property.name)
+            button.next-arrow(onclick=ev => $helpers.onArrowClick(ev, property)) ›

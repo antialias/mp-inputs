@@ -17,6 +17,9 @@ document.registerElement('show-pane-content', class extends PaneContent {
             this.app.updateStageClause({paneIndex: 1})
           );
         },
+        showResource: (resourceType, selectedResourceType) => {
+          return selectedResourceType === 'all' || selectedResourceType === resourceType;
+        },
       }),
     });
   }
