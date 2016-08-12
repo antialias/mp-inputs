@@ -1,6 +1,6 @@
 import { ShowClause } from '../../../models/clause';
 import { PaneContent } from '../../pane';
-import { extend } from '../../../util';
+import { extend, renameEvent } from '../../../util';
 
 import template from './show-pane-content.jade';
 
@@ -31,7 +31,12 @@ document.registerElement('show-pane-content', class extends PaneContent {
   }
 
   get eventChoices() {
-    return [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS, ...this.state.topEvents];
+    const topEvents = this.state.topEvents.slice().sort((a, b) => {
+      a = renameEvent(a.name).toLowerCase();
+      b = renameEvent(b.name).toLowerCase();
+      return a > b ? 1 : a < b ? -1 : 0;
+    });
+    return [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS, ...topEvents];
   }
 
   get section() {
