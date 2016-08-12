@@ -35,3 +35,6 @@ include ./mixins.jade
       li.resource-title Event properties
       for property in topEventProperties
         +property-entry(property, property.name === selectedValueName)
+      li.resource-title People properties
+      for property in topPeopleProperties
+        +property-entry(property, property.name === selectedValueName)
