@@ -1,3 +1,5 @@
+include ./mixins.jade
+
 - const selectedMath = $helpers.getActiveClauseProperty('math');
 - const selectedResourceType = $helpers.getActiveClauseProperty('resourceType');
 - const selectedValue = $helpers.getActiveClauseProperty('value');
@@ -32,11 +34,4 @@
     if $helpers.showResource('properties', selectedResourceType)
       li.resource-title Event properties
       for property in topEventProperties
-        if $helpers.matchesSearch(util.renameProperty(property.name))
-          li.property(
-            class=[`type-${property.type}`, property.resourceType]
-            class={selected: property.name === selectedValueName}
-            onclick=() => $helpers.selectProperty(property)
-          )
-            = util.renameProperty(property.name)
-            button.next-arrow(onclick=ev => $helpers.onArrowClick(ev, property)) ›
+        +property-entry(property, property.name === selectedValueName)

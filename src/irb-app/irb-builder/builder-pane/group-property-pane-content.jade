@@ -1,3 +1,5 @@
+include ./mixins.jade
+
 .property.pane-content
   ul.column.toggle.resource-type
     for resourceType in $component.resourceTypeChoices
@@ -7,11 +9,4 @@
       )= util.capitalize(resourceType)
   ul.column.resource-value
     for property in $helpers.topProperties()
-      if $helpers.matchesSearch(util.renameProperty(property.name))
-        li.property(
-          class=[`type-${property.type}`, property.resourceType]
-          class={selected: $helpers.isSelectedProperty(property)}
-          onclick=() => $helpers.selectProperty(property)
-        )
-          = util.renameProperty(property.name)
-          button.next-arrow(onclick=ev => $helpers.onArrowClick(ev, property)) ›
+      +property-entry(property, $helpers.isSelectedProperty(property))

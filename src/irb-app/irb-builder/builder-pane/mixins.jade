@@ -1,0 +1,9 @@
+mixin property-entry(property, selected)
+  if $helpers.matchesSearch(util.renameProperty(property.name))
+    li.property(
+      class=[`type-${property.type}`, property.resourceType]
+      class={selected}
+      onclick=() => $helpers.selectProperty(property)
+    )
+      = util.renameProperty(property.name)
+      button.next-arrow(onclick=ev => $helpers.onArrowClick(ev, property)) ›
