@@ -33,8 +33,8 @@ include ./mixins.jade
 
     if $helpers.showResource('properties', selectedResourceType)
       li.resource-title Event properties
-      for property in topEventProperties
+      for property in $component.eventPropertyChoices
         +property-entry(property, property.name === selectedValueName)
       li.resource-title People properties
-      for property in topPeopleProperties
+      for property in $component.peoplePropertyChoices
         +property-entry(property, property.name === selectedValueName)

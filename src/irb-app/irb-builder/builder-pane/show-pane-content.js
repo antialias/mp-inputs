@@ -1,6 +1,6 @@
 import { ShowClause } from '../../../models/clause';
 import { PaneContent } from '../../pane';
-import { extend, renameEvent } from '../../../util';
+import { extend, renameEvent, renameProperty } from '../../../util';
 
 import template from './show-pane-content.jade';
 
@@ -39,11 +39,29 @@ document.registerElement('show-pane-content', class extends PaneContent {
     return [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS, ...topEvents];
   }
 
+  get eventPropertyChoices() {
+    return this._propsForDisplay(this.state.topEventProperties);
+  }
+
+  get peoplePropertyChoices() {
+    return this._propsForDisplay(this.state.topPeopleProperties);
+  }
+
   get section() {
     return 'show';
   }
 
   get resourceTypeChoices() {
     return ShowClause.RESOURCE_TYPES;
+  }
+
+  _propsForDisplay(props) {
+    return props
+      .filter(prop => prop.type === 'number')
+      .sort((a, b) => {
+        a = renameProperty(a.name).toLowerCase();
+        b = renameProperty(b.name).toLowerCase();
+        return a > b ? 1 : a < b ? -1 : 0;
+      });
   }
 });
