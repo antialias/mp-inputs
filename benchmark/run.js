@@ -11,8 +11,9 @@ import SegmentationQuery from '../src/models/queries/segmentation';
 import QUERIES from './queries';
 
 const API_BASE = process.env.API_BASE || 'https://mixpanel.com';
-const PASSES = Number(process.env.PASSES || 3);
+const SEGMENTATION_API_BASE = `${API_BASE}/api/2.0/segmentation`;
 const DEBUG = (process.env.DEBUG || '').toLowerCase() === 'true';
+const PASSES = Number(process.env.PASSES || 3);
 
 const all = Promise.all.bind(Promise);
 const debugLog = function() {
@@ -84,7 +85,7 @@ function timeSegQueries(queryParams) {
       type: irbParams.type == 'total' ? 'general' : irbParams.type,
       unit: irbParams.dates.unit,
     };
-    return timeQuery(`${API_BASE}/api/2.0/segmentation?${urlencodeParams(params)}`, {
+    return timeQuery(`${SEGMENTATION_API_BASE}?${urlencodeParams(params)}`, {
       headers: {'Authorization': authHeader(queryParams)},
     });
   }));
