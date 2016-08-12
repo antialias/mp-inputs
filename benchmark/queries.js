@@ -52,13 +52,13 @@ const QUERIES = [
     },
   },
   {
-    name: 'high-cardinality numeric groupBys',
+    name: '1 high-cardinality numeric groupBy',
     project: 620033,
     queries: [
       {events: ['Export request finished']},
     ],
     time: {
-      range: TimeClause.RANGES.HOURS,
+      range: TimeClause.RANGES.YEAR,
     },
     groups: [
       {
@@ -66,13 +66,57 @@ const QUERIES = [
         resourceType: 'event',
         filterType: 'number',
       },
-      {
-        value: 'decompressed / scped * 100',
-        resourceType: 'event',
-        filterType: 'number',
-      },
     ],
   },
+  // {
+  //   name: 'simple segmentation',
+  //   project: 620033,
+  //   queries: [
+  //     {events: ['Export request finished']},
+  //   ],
+  //   time: {
+  //     range: TimeClause.RANGES.HOURS,
+  //   },
+  // },
+  // {
+  //   name: '1 string groupBys',
+  //   project: 620033,
+  //   queries: [
+  //     {events: ['Export request finished']},
+  //   ],
+  //   time: {
+  //     range: TimeClause.RANGES.HOURS,
+  //   },
+  //   groups: [
+  //     {
+  //       value: 'auth',
+  //       resourceType: 'event',
+  //       filterType: 'string',
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: '2 string groupBys',
+  //   project: 620033,
+  //   queries: [
+  //     {events: ['Export request finished']},
+  //   ],
+  //   time: {
+  //     range: TimeClause.RANGES.HOURS,
+  //   },
+  //   groups: [
+  //     {
+  //       value: 'auth',
+  //       resourceType: 'event',
+  //       filterType: 'string',
+  //     },
+  //     {
+  //       value: 'host',
+  //       resourceType: 'event',
+  //       filterType: 'string',
+  //     },
+  //   ],
+  // },
 ];
 for (const query of QUERIES) {
   query.apiSecret = API_SECRETS[query.project];
