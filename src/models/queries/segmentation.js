@@ -92,7 +92,7 @@ function filterToArbSelectorString(filter) {
   let value = filter.filterValue;
   const dateUnit = filter.dateUnit;
 
-  property = `(${filter.resourceType === 'event' ? 'property' : 'user'}["${property}"])`;
+  property = `(${filter.resourceType === 'event' ? 'properties' : 'user'}["${property}"])`;
 
   if (typeof value === 'string') {
     value = `"${value}"`;
