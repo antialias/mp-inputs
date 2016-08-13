@@ -47,7 +47,7 @@ export default class Legend {
     return Object.assign(this, {data});
   }
 
-  unselectedCount() {
-    return Object.values(this.data).filter(value => !value).length;
+  unselectedCount(seriesIdx) {
+    return Object.values(this.data[seriesIdx].seriesData).filter(value => !value).length;
   }
 }

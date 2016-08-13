@@ -42,6 +42,13 @@
           .name= formattedSeriesName
           .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
         ul.series-names
+          li
+            button.select-all(
+              class={showing: $helpers.allSeriesSelected(seriesIdx)}
+              onclick=() => $helpers.toggleAllSeriesValue(seriesIdx)
+            )
+              .icon
+              .label= `Select all ${formattedSeriesName} segments`
           each value in Object.keys(series.seriesData)
             li
               button.series(
