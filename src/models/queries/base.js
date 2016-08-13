@@ -1,3 +1,4 @@
+/* global MP */
 export default class BaseQuery {
   constructor() {
     this.query = null; // used to check for obsolete queries
@@ -51,7 +52,7 @@ export default class BaseQuery {
   }
 
   MPApiQuery() {
-    return window.MP.api.query(this.buildUrl(), this.buildParams(), this.buildOptions());
+    return MP.api.query(this.buildUrl(), this.buildParams(), this.buildOptions());
   }
 
   executeQuery() {

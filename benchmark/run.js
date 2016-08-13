@@ -1,3 +1,5 @@
+import './MPApiStub';
+
 import os from 'os';
 import Mixpanel from 'mixpanel';
 import fetch from 'node-fetch';
@@ -126,6 +128,9 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
         jql: [],
         seg: [],
       };
+
+      // inject apiSecret into global context
+      global.MP.apiSecret = query.apiSecret;
 
       // get timings in multiple passes
       for (let pass = 0; pass < PASSES; pass++) {
