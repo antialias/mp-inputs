@@ -17,9 +17,19 @@ document.registerElement('show-pane-content', class extends PaneContent {
             this.app.updateStageClause({paneIndex: 1})
           );
         },
+        onPropertyArrowClick: (ev, property) => {
+          ev.stopPropagation();
+          this.app.updateStageClause({value: property.name});
+          this.app.startAddingClause('show');
+          window.requestAnimationFrame(() =>
+            this.app.updateStageClause({paneIndex: 1})
+          );
+        },
         showResource: (resourceType, selectedResourceType) => {
           return selectedResourceType === 'all' || selectedResourceType === resourceType;
         },
+        // TODO selectProperty = commit prop with "All Events"
+        // selectProperty: prop => $helpers.updateStageClause({value: prop.name}, true),
       }),
     });
   }

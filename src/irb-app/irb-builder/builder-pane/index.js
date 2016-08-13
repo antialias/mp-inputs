@@ -8,6 +8,7 @@ import { FilterClause, TimeClause } from '../../../models/clause';
 import Dropdown from '../../widgets/dropdown';
 import Toggle from '../../widgets/toggle';
 
+import './event-pane-content';
 import './filter-property-value-pane-content';
 import './group-property-pane-content';
 import './show-pane-content';
@@ -15,6 +16,15 @@ import './show-pane-content';
 import './index.styl';
 
 export class BuilderPane extends Pane {
+  get eventPaneContent() {
+    return {
+      tag: 'event-pane-content',
+      constants: {
+        header: 'Show',
+      },
+    };
+  }
+
   get filterPropertyValuePaneContent() {
     return {
       tag: 'filter-property-value-pane-content',

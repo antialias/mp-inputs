@@ -1,0 +1,12 @@
+- const selectedValue = $helpers.getActiveClauseProperty('value');
+- const selectedValueName = selectedValue && selectedValue.name;
+
+.event-pane-content
+  ul.column.resource-value
+    for value in $component.eventChoices
+      if $helpers.matchesSearch(util.renameEvent(value.name))
+        li(
+          class={selected: value.name === selectedValueName, custom: !!value.custom}
+          onclick=() => $helpers.updateStageClause({value}, true)
+        )
+          = util.renameEvent(value.name)

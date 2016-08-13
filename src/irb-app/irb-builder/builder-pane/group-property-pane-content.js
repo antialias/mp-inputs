@@ -38,7 +38,7 @@ document.registerElement('group-property-pane-content', class extends PaneConten
             });
           }
         },
-        onArrowClick: (ev, property) => {
+        onPropertyArrowClick: (ev, property) => {
           ev.stopPropagation();
           this.config.helpers.paneHandler(property, false);
         },

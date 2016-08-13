@@ -6,4 +6,4 @@ mixin property-entry(property, selected)
       onclick=() => $helpers.selectProperty(property)
     )
       = util.renameProperty(property.name)
-      button.next-arrow(onclick=ev => $helpers.onArrowClick(ev, property)) ›
+      button.next-arrow(onclick=ev => $helpers.onPropertyArrowClick(ev, property)) ›

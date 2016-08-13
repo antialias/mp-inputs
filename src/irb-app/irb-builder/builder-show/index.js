@@ -48,10 +48,11 @@ document.registerElement('show-pane', class extends BuilderPane {
   }
 
   get subpanes() {
-    return [
-      this.showPaneContent,
+    const stagedClause = this.state.stageClauses[0];
+    const propStaged = stagedClause && typeof stagedClause.value === 'string';
+    return [this.showPaneContent].concat(propStaged ? this.eventPaneContent : [
       this.groupPropertyPaneContent,
       this.filterPropertyValuePaneContent,
-    ];
+    ]);
   }
 });
