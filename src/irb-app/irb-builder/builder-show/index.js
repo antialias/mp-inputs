@@ -49,7 +49,7 @@ document.registerElement('show-pane', class extends BuilderPane {
 
   get subpanes() {
     const stagedClause = this.state.stageClauses[0];
-    const propStaged = stagedClause && typeof stagedClause.value === 'string';
+    const propStaged = stagedClause && !!stagedClause.value.resourceType;
     return [this.showPaneContent].concat(propStaged ? this.eventPaneContent : [
       this.groupPropertyPaneContent,
       this.filterPropertyValuePaneContent,

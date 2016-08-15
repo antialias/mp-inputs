@@ -19,7 +19,7 @@ document.registerElement('show-pane-content', class extends PaneContent {
         },
         onPropertyArrowClick: (ev, property) => {
           ev.stopPropagation();
-          this.app.updateStageClause({value: property.name});
+          this.app.updateStageClause({value: property});
           this.app.startAddingClause('show');
           window.requestAnimationFrame(() =>
             this.app.updateStageClause({paneIndex: 1})

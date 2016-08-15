@@ -426,7 +426,15 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         if (clause === newClauses[0] && typeof this.state.stageClauseIndex === 'number') {
           newSection = reportAttrs.sections[newClause.TYPE].replaceClause(this.state.stageClauseIndex, newClause);
         } else {
-          newSection = reportAttrs.sections[newClause.TYPE].appendClause(newClause);
+          if (clause === newClauses[1] && newClause.TYPE === 'show' && newClauses[0].TYPE === 'show') {
+            // operator on property + event
+            const joinedClause = reportAttrs.sections.show.clauses[0].extend({});
+            joinedClause.property = joinedClause.value;
+            joinedClause.value = newClause.value;
+            newSection = reportAttrs.sections.show.replaceClause(0, joinedClause);
+          } else {
+            newSection = reportAttrs.sections[newClause.TYPE].appendClause(newClause);
+          }
         }
         reportAttrs.sections = reportAttrs.sections.replaceSection(newSection);
       });
