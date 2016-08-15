@@ -170,6 +170,16 @@ export function nestedObjectToTableData(obj, sortConfig) {
   return arr;
 }
 
+function _headerRowSpan(obj) {
+  if (!obj.children || !obj.children[0].children) {
+    return 1;
+  } else if (obj.children[0].children[0].children) {
+    return sum(obj.children.map(_headerRowSpan));
+  } else {
+    return obj.children.length;
+  }
+}
+
 function nestedArrayToBarChartData(arr) {
   if (!arr[0].children) {
 
@@ -193,7 +203,7 @@ function nestedArrayToBarChartData(arr) {
           const childData = nestedArrayToBarChartData([child]);
           for (const row of childData) {
             if (!rowCount++) {
-              let rowSpan = childData.length * entry.children.length;
+              let rowSpan = _headerRowSpan(entry);
               header = {
                 value: entry.label,
                 sum: entry.value,
