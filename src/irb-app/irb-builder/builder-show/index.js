@@ -1,6 +1,6 @@
 import { Component } from 'panel';
 
-import { capitalize, renameEvent } from '../../../util';
+import { capitalize, renameEvent, renameProperty } from '../../../util';
 
 import { AddControl, EditControl } from '../controls';
 import { BuilderPane } from '../builder-pane';
@@ -33,7 +33,12 @@ document.registerElement('show-edit-control', class extends EditControl {
   get label() {
     const clause = this.state.report.sections.getClause('show', this.clauseIndex);
     const math = capitalize(clause.math);
-    return [math, ' number of ', renameEvent(clause.value.name)];
+    const evName = renameEvent(clause.value.name);
+    if (clause.property) {
+      return [math, ' of ', renameProperty(clause.property.name), ' on ', evName];
+    } else {
+      return [math, ' number of ', evName];
+    }
   }
 
   get isRemoveable() {
