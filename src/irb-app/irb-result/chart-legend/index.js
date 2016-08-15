@@ -13,6 +13,13 @@ document.registerElement('chart-legend', class extends Component {
         allSeriesSelected: seriesIdx => !this.state.report.legend.unselectedCount(seriesIdx),
         isSeriesValueShowing: (seriesIdx, name) => this.state.report.legend.data[seriesIdx].seriesData[name],
         isSearchActive: () => !!this.state.report.legend.search,
+        legendDataToDisplay: () => {
+          const seriesData = this.state.report.legend.data.map((series, idx) => ({
+            seriesName: series.seriesName,
+            seriesValues: Object.keys(series.seriesData).filter(value => this.config.helpers.matchesSearch(value, idx)).sort(),
+          }));
+          return seriesData.some(series => series.seriesValues.length) ? seriesData : [];
+        },
         matchesSearch: (value, seriesIdx) => (
           this.state.report.legend && (
             !this.state.report.legend.search ||

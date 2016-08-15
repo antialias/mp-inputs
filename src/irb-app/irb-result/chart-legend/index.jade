@@ -7,8 +7,11 @@
       oninput=$helpers.searchHandler
     )
   .body
-    each series, seriesIdx in report.legend.data
-      - const formattedSeriesName = util.renameProperty(series.seriesName)
+    -const legendDataToDisplay = $helpers.legendDataToDisplay()
+    if !legendDataToDisplay.length
+      .no-result= 'No results match this search'
+    each series, seriesIdx in legendDataToDisplay
+      -const formattedSeriesName = util.renameProperty(series.seriesName)
       .legend-series
         .info
           .name= formattedSeriesName
@@ -22,7 +25,9 @@
               )
                 .icon
                 .label= `Select all ${formattedSeriesName} segments`
-          each value in $helpers.seriesValues(series, seriesIdx)
+          if !series.seriesValues.length
+            .no-result= 'No matches'
+          each value in series.seriesValues
             li
               button.series(
                 class={showing: $helpers.isSeriesValueShowing(seriesIdx, value)}
