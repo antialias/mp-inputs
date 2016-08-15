@@ -18,6 +18,10 @@ export const MS_BY_UNIT = {
   year: MS_IN_DAY * 365,
 };
 
+export function toArbSelectorPropertyToken(resourceType, property) {
+  return `${resourceType === 'event' ? 'properties' : 'user'}["${property}"]`;
+}
+
 function isFilterValid(filter) {
   if (!filter.value) {
     return false;
@@ -92,7 +96,7 @@ function filterToArbSelectorString(filter) {
   let value = filter.filterValue;
   const dateUnit = filter.dateUnit;
 
-  property = `(${filter.resourceType === 'event' ? 'properties' : 'user'}["${property}"])`;
+  property = `(${toArbSelectorPropertyToken(filter.resourceType, property)})`;
 
   if (typeof value === 'string') {
     value = `"${value}"`;

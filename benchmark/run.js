@@ -7,7 +7,7 @@ import fetch from 'node-fetch';
 import BuilderSections from '../src/models/builder-sections';
 import { ShowClause, TimeClause, GroupClause } from '../src/models/clause';
 import { ShowSection, TimeSection, GroupSection } from '../src/models/section';
-import { MS_BY_UNIT } from '../src/models/queries/segmentation';
+import { MS_BY_UNIT, toArbSelectorPropertyToken } from '../src/models/queries/segmentation';
 import SegmentationQuery from '../src/models/queries/segmentation';
 
 import { API_BASE, authHeader, urlencodeParams } from './util';
@@ -99,7 +99,7 @@ function timeSegQueries(queryParams) {
           }
           const property = irbParams.property;
           Object.assign(params, {
-            on: `number(${property.resourceType === 'event' ? 'properties' : 'user'}["${property.value}"])`,
+            on: `number(${toArbSelectorPropertyToken(property.resourceType, property.value)})`,
             limit: 150,
             buckets: 12,
             allow_more_buckets: false,
@@ -111,7 +111,7 @@ function timeSegQueries(queryParams) {
         break;
       case 1:
         Object.assign(params, {
-          on: `${groups[0].resourceType === 'event' ? 'properties' : 'user'}["${groups[0].value}"]`,
+          on: toArbSelectorPropertyToken(groups[0].resourceType, groups[0].value),
           limit: 150,
         });
         if (groups[0].filterType === 'number') {
@@ -120,8 +120,8 @@ function timeSegQueries(queryParams) {
         break;
       case 2:
         Object.assign(params, {
-          outer: `${groups[0].resourceType === 'event' ? 'properties' : 'user'}["${groups[0].value}"]`,
-          inner: `${groups[1].resourceType === 'event' ? 'properties' : 'user'}["${groups[1].value}"]`,
+          outer: toArbSelectorPropertyToken(groups[0].resourceType, groups[0].value),
+          inner: toArbSelectorPropertyToken(groups[1].resourceType, groups[1].value),
           limit: 25,
         });
         if (groups[0].filterType === 'number') {
