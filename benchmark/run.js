@@ -44,9 +44,9 @@ function buildIRBQuery(queryParams) {
       }),
     },
   };
-  const groups = queryParams.group;
+  const groups = queryParams.groups;
   if (groups) {
-    state.report.sections.group = new GroupSection(groups.map(g => new GroupClause(g)));
+    state.report.sections.group = new GroupSection(...groups.map(g => new GroupClause(g)));
   }
   irbQuery.query = irbQuery.buildQuery(state);
   return irbQuery;
@@ -84,10 +84,49 @@ function timeSegQueries(queryParams) {
       event: irbParams.selectors[0].event,
       from_date: irbParams.dates.from,
       to_date: irbParams.dates.to,
-      type: irbParams.type == 'total' ? 'general' : irbParams.type,
+      type: irbParams.type == 'total' ? 'general' : irbParams.type, // TODO: should be just 'general'
       unit: irbParams.dates.unit,
     };
-    return timeQuery(`${SEGMENTATION_API_BASE}?${urlencodeParams(params)}`, {
+    let url = SEGMENTATION_API_BASE;
+    const groups = irbParams.groups;
+    switch (groups.length) {
+      case 0:
+        break;
+      case 1:
+        Object.assign(params, {
+          on: `${groups[0].resourceType === 'event' ? 'properties' : 'user'}["${groups[0].value}"]`,
+          limit: 150,
+        });
+        if (groups[0].filterType === 'number') {
+          url = `${url}/numeric`;
+        }
+        break;
+      case 2:
+        Object.assign(params, {
+          outer: `${groups[0].resourceType === 'event' ? 'properties' : 'user'}["${groups[0].value}"]`,
+          inner: `${groups[1].resourceType === 'event' ? 'properties' : 'user'}["${groups[1].value}"]`,
+          limit: 25,
+        });
+        if (groups[0].filterType === 'number') {
+          params.outer_modifer = 'numeric';
+        }
+        if (groups[1].filterType === 'number') {
+          params.inner_modifer = 'numeric';
+        }
+        if (groups[0].filterType === 'number' || groups[1].filterType === 'number') {
+          Object.assign(params, {
+            buckets: 12,
+            allow_more_buckets: false,
+        });
+
+        }
+        url = `${url}/multiseg`;
+        break;
+      default:
+        console.error("At most 2 levels of groupBys is supported by Segmentation.");
+        process.exit(1);
+    }
+    return timeQuery(`${url}?${urlencodeParams(params)}`, {
       headers: {'Authorization': authHeader(queryParams)},
     });
   }));
