@@ -29,7 +29,14 @@ document.registerElement('chart-legend', class extends Component {
         renameSeriesValue: (seriesIdx, name) => (
           this.state.report.legend.data[seriesIdx].seriesName === '$event' ? util.renameEvent(name) : util.renamePropertyValue(name)
         ),
-        searchHandler: ev => this.app.updateLegendState({search: ev.target.value}),
+        searchHandler: ev => {
+          if (ev.target.value) {
+            this.state.report.legend.showAllSeries();
+          } else {
+            this.state.report.legend.setDefaultSeriesShowing();
+          }
+          this.app.updateLegendState({search: ev.target.value});
+        },
         selectedSeriesCount: idx => Object.values(this.state.report.legend.data[idx].seriesData).filter(Boolean).length,
         seriesValues: (series, seriesIdx) => Object.keys(series.seriesData).filter(value => this.config.helpers.matchesSearch(value, seriesIdx)).sort(),
         toggleAllSeriesValue: seriesIdx => {

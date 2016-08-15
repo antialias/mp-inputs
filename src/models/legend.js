@@ -11,6 +11,31 @@ export default class Legend {
     Object.assign(this, pick(attrs, ['data']));
   }
 
+  get seriesShowing() {
+    if (!this._seriesShowing) {
+      this._seriesShowing = this.data.map((_, idx) => !idx);
+    }
+    return this._seriesShowing;
+  }
+
+  setDefaultSeriesShowing() {
+    this._seriesShowing = null;
+  }
+
+  showAllSeries() {
+    this._seriesShowing = this._seriesShowing.map(() => true);
+  }
+
+  isSeriesShowing(seriesIdx) {
+    return this.seriesShowing[seriesIdx];
+  }
+
+  toggleShowSeries(seriesIdx) {
+    if (this.seriesShowing && this.seriesShowing.length >= seriesIdx) {
+      this.seriesShowing[seriesIdx] = !this.seriesShowing[seriesIdx];
+    }
+  }
+
   update(attrs) {
     return Object.assign(this, attrs);
   }

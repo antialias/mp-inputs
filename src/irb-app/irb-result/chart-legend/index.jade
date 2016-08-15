@@ -12,11 +12,11 @@
       .no-result= 'No results match this search'
     each series, seriesIdx in legendDataToDisplay
       -const formattedSeriesName = util.renameProperty(series.seriesName)
-      .legend-series
-        .info
+      .legend-series(class={closed: !report.legend.isSeriesShowing(seriesIdx)})
+        .info(onclick=() => report.legend.toggleShowSeries(seriesIdx))
           .name= formattedSeriesName
           .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
-        ul.series-names
+        ul.series-values
           if !$helpers.isSearchActive()
             li
               button.select-all(
