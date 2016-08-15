@@ -42,18 +42,25 @@
           .name= formattedSeriesName
           .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
         ul.series-names
-          li
-            button.select-all(
-              class={showing: $helpers.allSeriesSelected(seriesIdx)}
-              onclick=() => $helpers.toggleAllSeriesValue(seriesIdx)
-            )
-              .icon
-              .label= `Select all ${formattedSeriesName} segments`
-          each value in Object.keys(series.seriesData)
+          if !$helpers.isSearchActive()
+            li
+              button.select-all(
+                class={showing: $helpers.allSeriesSelected(seriesIdx)}
+                onclick=() => $helpers.toggleAllSeriesValue(seriesIdx)
+              )
+                .icon
+                .label= `Select all ${formattedSeriesName} segments`
+          each value in $helpers.seriesValues(series, seriesIdx)
             li
               button.series(
                 class={showing: $helpers.isSeriesValueShowing(seriesIdx, value)}
                 onclick=() => $helpers.toggleShowSeriesValue(seriesIdx, value)
               )
                 .icon
-                .label= $helpers.renameSeriesValue(seriesIdx, value)
+                -const label = $helpers.renameSeriesValue(seriesIdx, value)
+                if $helpers.isSearchActive()
+                  .label.search-result
+                    span.slice.matches-search=label.slice(0, report.legend.search.length)
+                    span.slice=label.slice(report.legend.search.length)
+                else
+                  .label= label

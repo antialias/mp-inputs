@@ -13,10 +13,10 @@ document.registerElement('chart-legend', class extends Component {
         allSeriesSelected: seriesIdx => !this.state.report.legend.unselectedCount(seriesIdx),
         isSeriesValueShowing: (seriesIdx, name) => this.state.report.legend.data[seriesIdx].seriesData[name],
         isSearchActive: () => !!this.state.report.legend.search,
-        matchesSearch: value => (
+        matchesSearch: (value, seriesIdx) => (
           this.state.report.legend && (
             !this.state.report.legend.search ||
-            this.config.helpers.renameSeriesValue(value).toLowerCase().indexOf(this.state.report.legend.search.toLowerCase()) === 0
+            this.config.helpers.renameSeriesValue(seriesIdx, value).toLowerCase().indexOf(this.state.report.legend.search.toLowerCase()) === 0
           )
         ),
         renameSeriesValue: (seriesIdx, name) => (
@@ -24,7 +24,7 @@ document.registerElement('chart-legend', class extends Component {
         ),
         searchHandler: ev => this.app.updateLegendState({search: ev.target.value}),
         selectedSeriesCount: idx => Object.values(this.state.report.legend.data[idx].seriesData).filter(Boolean).length,
-        seriesData: () => Object.keys(this.state.report.legend.data).filter(this.config.helpers.matchesSearch).sort(),
+        seriesValues: (series, seriesIdx) => Object.keys(series.seriesData).filter(value => this.config.helpers.matchesSearch(value, seriesIdx)).sort(),
         toggleAllSeriesValue: seriesIdx => {
           const seriesData = this.state.report.legend.data[seriesIdx].seriesData;
           const newValue = !this.config.helpers.allSeriesSelected(seriesIdx);
