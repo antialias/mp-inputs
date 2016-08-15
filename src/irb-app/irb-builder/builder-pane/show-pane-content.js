@@ -28,8 +28,12 @@ document.registerElement('show-pane-content', class extends PaneContent {
         showResource: (resourceType, selectedResourceType) => {
           return selectedResourceType === 'all' || selectedResourceType === resourceType;
         },
-        // TODO selectProperty = commit prop with "All Events"
-        // selectProperty: prop => $helpers.updateStageClause({value: prop.name}, true),
+        selectProperty: property => {
+          // commit property selection with "All Events"
+          this.app.updateStageClause({value: property});
+          this.app.startAddingClause('show');
+          this.config.helpers.updateStageClause({value: ShowClause.ALL_EVENTS}, true);
+        },
       }),
     });
   }
