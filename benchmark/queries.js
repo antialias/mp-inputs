@@ -5,7 +5,7 @@ import { TimeClause } from '../src/models/clause';
 // { projectID: secret, projectID: secret, ... }
 const API_SECRETS = JSON.parse(fs.readFileSync('/etc/secrets/irb/project-secrets.json', 'utf8'));
 
-const QUERIES = [
+let QUERIES = [
   {
     name: '2 simultaneous',
     project: 3,
@@ -68,63 +68,89 @@ const QUERIES = [
       },
     ],
   },
-  // {
-  //   name: 'simple segmentation',
-  //   project: 620033,
-  //   queries: [
-  //     {events: ['Export request finished']},
-  //   ],
-  //   time: {
-  //     range: TimeClause.RANGES.HOURS,
-  //   },
-  // },
-  // {
-  //   name: '1 string groupBys',
-  //   project: 620033,
-  //   queries: [
-  //     {events: ['Export request finished']},
-  //   ],
-  //   time: {
-  //     range: TimeClause.RANGES.HOURS,
-  //   },
-  //   groups: [
-  //     {
-  //       value: 'auth',
-  //       resourceType: 'event',
-  //       filterType: 'string',
-  //     },
-  //   ],
-  // },
-  // {
-  //   name: '2 string groupBys',
-  //   project: 620033,
-  //   queries: [
-  //     {events: ['Export request finished']},
-  //   ],
-  //   time: {
-  //     range: TimeClause.RANGES.HOURS,
-  //   },
-  //   groups: [
-  //     {
-  //       value: 'auth',
-  //       resourceType: 'event',
-  //       filterType: 'string',
-  //     },
-  //     {
-  //       value: 'host',
-  //       resourceType: 'event',
-  //       filterType: 'string',
-  //     },
-  //   ],
-  // },
-].concat(['average', 'total', 'min', 'max'].map(type => {
+  {
+    name: '2 high-cardinality numeric groupBys',
+    project: 620033,
+    queries: [
+      {events: ['Export request finished']},
+    ],
+    time: {
+      range: TimeClause.RANGES.YEAR,
+    },
+    groups: [
+      {
+        value: 'date_range',
+        resourceType: 'event',
+        filterType: 'number',
+      },
+      {
+        value: 'decompressed / scped * 100',
+        resourceType: 'event',
+        filterType: 'number',
+      },
+    ],
+  },
+  {
+    name: '1 string groupBy',
+    project: 620033,
+    queries: [
+      {events: ['Export request finished']},
+    ],
+    time: {
+      range: TimeClause.RANGES.HOURS,
+    },
+    groups: [
+      {
+        value: 'auth',
+        resourceType: 'event',
+        filterType: 'string',
+      },
+    ],
+  },
+  {
+    name: '2 string groupBy',
+    project: 620033,
+    queries: [
+      {events: ['Export request finished']},
+    ],
+    time: {
+      range: TimeClause.RANGES.HOURS,
+    },
+    groups: [
+      {
+        value: 'auth',
+        resourceType: 'event',
+        filterType: 'string',
+      },
+      {
+        value: 'host',
+        resourceType: 'event',
+        filterType: 'string',
+      },
+    ],
+  },
+];
+
+const OPERATORS_AVAILABLE_FOR_QUERY_TYPE = {
+  average: { JQL: true, Seg: true },
+  total: { JQL: true, Seg: true },
+  min: { JQL: true, Seg: true },
+  max: { JQL: true, Seg: true },
+  unique: { JQL: false, Seg: false },
+  median: { JQL: true, Seg: false },
+}
+
+// operators for numeric properties
+QUERIES = QUERIES.concat(Object.keys(OPERATORS_AVAILABLE_FOR_QUERY_TYPE).map(operator => {
   return {
-    name: `${type} of 'unsent' on 'batch' in the ${TimeClause.RANGES.HOURS}`,
+    disableForJQL: !OPERATORS_AVAILABLE_FOR_QUERY_TYPE[operator]['JQL'],
+    disableForSeg: !OPERATORS_AVAILABLE_FOR_QUERY_TYPE[operator]['Seg'],
+    name: `${operator} of 'unsent' on 'batch' in the ${TimeClause.RANGES.HOURS}`,
     project: 258190,
     queries: [
       {
         events: ['batch'],
-        type: type,
+        type: operator,
         property: {
           value: 'unsent',
           resourceType: 'event',
