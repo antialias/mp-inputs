@@ -7,34 +7,6 @@
       oninput=$helpers.searchHandler
     )
   .body
-    //- - const formattedSeriesName = util.renameProperty(report.legend.currentSeries)
-    //- .info
-    //-   .name= formattedSeriesName
-    //-   .count #{$helpers.selectedSeriesCount()}/#{$helpers.totalSeriesCount()}
-    //- ul.series-names
-    //-   if !$helpers.isSearchActive()
-    //-     li
-    //-       button.select-all(
-    //-         class={showing: $helpers.allSeriesSelected()}
-    //-         onclick=$helpers.resetLegend
-    //-       )
-    //-         .icon
-    //-         .label= `Select all ${formattedSeriesName} segments`
-    //-   each series in $helpers.seriesData()
-    //-     li
-    //-       button.series(
-    //-         class={showing: $helpers.isSeriesShowing(series)}
-    //-         onclick=() => $helpers.toggleShowSeries(series)
-    //-       )
-    //-         .icon
-    //-         if $helpers.isSearchActive()
-    //-           -const label = $helpers.renameSeriesValue(series)
-    //-           .label.search-result
-    //-             span.slice.matches-search=label.slice(0, report.legend.search.length)
-    //-             span.slice=label.slice(report.legend.search.length)
-
-    //-         else
-    //-           .label= $helpers.renameSeriesValue(series)
     each series, seriesIdx in report.legend.data
       - const formattedSeriesName = util.renameProperty(series.seriesName)
       .legend-series
