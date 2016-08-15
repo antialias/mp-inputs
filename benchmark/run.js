@@ -10,9 +10,9 @@ import { ShowSection, TimeSection, GroupSection } from '../src/models/section';
 import { MS_BY_UNIT } from '../src/models/queries/segmentation';
 import SegmentationQuery from '../src/models/queries/segmentation';
 
+import { API_BASE, authHeader, urlencodeParams } from './util';
 import QUERIES from './queries';
 
-const API_BASE = process.env.API_BASE || 'https://mixpanel.com';
 const SEGMENTATION_API_BASE = `${API_BASE}/api/2.0/segmentation`;
 const DEBUG = (process.env.DEBUG || '').toLowerCase() === 'true';
 const PASSES = Number(process.env.PASSES || 3);
@@ -52,16 +52,6 @@ function buildIRBQuery(queryParams) {
   return irbQuery;
 }
 
-function authHeader(queryParams) {
-  return `Basic ${new Buffer(queryParams.apiSecret + ':', 'binary').toString('base64')}`;
-}
-
-function urlencodeParams(params) {
-  return Object.keys(params)
-    .reduce((items, pkey) => items.concat(`${pkey}=${encodeURIComponent(params[pkey])}`), [])
-    .join('&');
-}
-
 function timeJQLQueries(queryParams) {
   return buildIRBQuery(queryParams).buildJQLArgs().map(queryArgs => queryArgs.then(queryArgs => {
     const [url, params, options] = queryArgs;
@@ -69,7 +59,7 @@ function timeJQLQueries(queryParams) {
       headers: {
         'Accept': 'application/json, text/plain, */*',
         'Content-Type': 'x-www-form-urlencoded',
-        'Authorization': authHeader(queryParams),
+        'Authorization': authHeader(queryParams.apiSecret),
       },
       method: 'POST',
       body: urlencodeParams(params),
@@ -127,7 +117,7 @@ function timeSegQueries(queryParams) {
         process.exit(1);
     }
     return timeQuery(`${url}?${urlencodeParams(params)}`, {
-      headers: {'Authorization': authHeader(queryParams)},
+      headers: {'Authorization': authHeader(queryParams.apiSecret)},
     });
   }));
 }
