@@ -193,8 +193,9 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
 
       // get timings in multiple passes
       for (let pass = 0; pass < PASSES; pass++) {
-        results.jql.push(await all(timeJQLQueries(query)));
-        results.seg.push(await all(timeSegQueries(query)));
+        // use -1 to represent not available
+        results.jql.push(query.disableForJQL ? [-1] : await all(timeJQLQueries(query)));
+        results.seg.push(query.disableForSeg ? [-1] : await all(timeSegQueries(query)));
       }
 
       // process results and add to table
