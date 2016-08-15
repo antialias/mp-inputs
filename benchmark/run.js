@@ -49,13 +49,17 @@ function buildIRBQuery(queryParams) {
   if (groups) {
     state.report.sections.group = new GroupSection(...groups.map(g => new GroupClause(g)));
   }
+  debugLog(state.report.sections.show);
+  debugLog(state.report.sections.group);
   irbQuery.query = irbQuery.buildQuery(state);
+  debugLog(irbQuery.query);
   return irbQuery;
 }
 
 function timeJQLQueries(queryParams) {
   return buildIRBQuery(queryParams).buildJQLArgs().map(queryArgs => queryArgs.then(queryArgs => {
     const [url, params, options] = queryArgs;
+    debugLog(params.params);    // JQL params
     return timeQuery(`${API_BASE}/${url}`, {
       headers: {
         'Accept': 'application/json, text/plain, */*',
@@ -78,6 +82,7 @@ function timeSegQueries(queryParams) {
       type: 'general',
       unit: irbParams.dates.unit,
     };
+    debugLog(irbParams);        // IRB params
     let url = SEGMENTATION_API_BASE;
     const groups = irbParams.groups;
     if (irbParams.property && groups.length > 0) {
@@ -138,6 +143,7 @@ function timeSegQueries(queryParams) {
         console.error("At most 2 levels of groupBys is supported by Segmentation.");
         process.exit(1);
     }
+    debugLog(params);           // segmentation params
     return timeQuery(`${url}?${urlencodeParams(params)}`, {
       headers: {'Authorization': authHeader(queryParams.apiSecret)},
     });
@@ -146,10 +152,12 @@ function timeSegQueries(queryParams) {
 
 async function timeQuery(url, params) {
   const start = new Date();
+  debugLog(url);
   const responseData = await (await fetch(url, params)).json();
 
   process.stdout.write('.');
   debugLog(responseData);
+  responseData.data && debugLog(responseData.data.values); // segmentation values
   if (responseData.error) {
     console.error(responseData);
     process.exit(1);
