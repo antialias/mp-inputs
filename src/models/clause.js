@@ -74,12 +74,13 @@ export class ShowClause extends EventsPropertiesClause {
   constructor(attrs={}) {
     super(...arguments);
     this.math = attrs.math || 'total';
+    this.property = attrs.property || null;
     this.value = this.value || null;
   }
 
   get attrs() {
-    const { math } = this;
-    return extend(super.attrs, {math});
+    const {math, property} = this;
+    return extend(super.attrs, {math, property});
   }
 
   get valid() {
