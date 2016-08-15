@@ -76,6 +76,7 @@ export class ShowClause extends EventsPropertiesClause {
     this.math = attrs.math || 'total';
     this.property = attrs.property || null;
     this.value = this.value || null;
+    this.property = attrs.property || null;
   }
 
   get attrs() {

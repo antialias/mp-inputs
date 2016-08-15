@@ -38,6 +38,7 @@ function buildIRBQuery(queryParams) {
           new ShowClause({
             math: q.type,
             value: {name: q.events[0]},
+            property: q.property,
           })
         )),
         time: new TimeSection(new TimeClause({range: queryParams.time.range})),
@@ -74,13 +75,34 @@ function timeSegQueries(queryParams) {
       event: irbParams.selectors[0].event,
       from_date: irbParams.dates.from,
       to_date: irbParams.dates.to,
-      type: irbParams.type == 'total' ? 'general' : irbParams.type, // TODO: should be just 'general'
+      type: 'general',
       unit: irbParams.dates.unit,
     };
     let url = SEGMENTATION_API_BASE;
     const groups = irbParams.groups;
+    if (irbParams.property && groups.length > 0) {
+      console.error('Segmentation only supports operators on numeric properties with no groupBys.');
+      process.exit(1);
+    }
+
     switch (groups.length) {
       case 0:
+        if (irbParams.property) {
+          if (['unique', 'median'].includes(irbParams.type)) {
+            console.error(`Segmentation does not support ${irbParams.type} for numeric properties.`);
+            process.exit(1);
+          }
+          const property = irbParams.property;
+          Object.assign(params, {
+            on: `number(${property.resourceType === 'event' ? 'properties' : 'user'}["${property.value}"])`,
+            limit: 150,
+            buckets: 12,
+            allow_more_buckets: false,
+          });
+
+          const type = irbParams.type === 'total' ? 'sum' : irbParams.type;
+          url = `${url}/${type}`;
+        }
         break;
       case 1:
         Object.assign(params, {

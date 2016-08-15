@@ -117,7 +117,25 @@ const QUERIES = [
   //     },
   //   ],
   // },
-];
+].concat(['average', 'total', 'min', 'max'].map(type => {
+  return {
+    name: `${type} of 'unsent' on 'batch' in the ${TimeClause.RANGES.HOURS}`,
+    project: 258190,
+    queries: [
+      {
+        events: ['batch'],
+        type: type,
+        property: {
+          value: 'unsent',
+          resourceType: 'event',
+        }
+      },
+    ],
+    time: {
+      range: TimeClause.RANGES.HOURS,
+    },
+  };
+}));
 for (const query of QUERIES) {
   query.apiSecret = API_SECRETS[query.project];
 }
