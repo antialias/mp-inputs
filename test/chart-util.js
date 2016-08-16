@@ -1,95 +1,16 @@
 import expect from 'expect.js';
 
 import {
+  d2Obj,
+  d3Obj,
+  d4Obj,
+} from './sample-data';
+
+import {
   nestedObjectToNestedArray,
   nestedObjectToBarChartData,
   nestedObjectToTableData,
 } from '../src/irb-app/irb-result/chart-util';
-
-const d2Obj = {
-  US: {
-    llama: 5,
-    aardvark: 8,
-  },
-  Canada: {
-    llama: 13,
-    aardvark: 6,
-  },
-  Mexico: {
-    llama: 35,
-    aardvark: 7,
-  },
-};
-
-const d3Obj = {
-  US: {
-    llama: {
-      red: 3,
-      blue: 2,
-    },
-    aardvark: {
-      red: 2,
-      blue: 6,
-    },
-  },
-  Canada: {
-    llama: {
-      red: 10,
-      blue: 3,
-    },
-    aardvark: {
-      red: 1,
-      blue: 5,
-    },
-  },
-};
-
-const d4Obj = {
-  bunnies: {
-    US: {
-      llama: {
-        red: 3,
-        blue: 2,
-      },
-      aardvark: {
-        red: 2,
-        blue: 16,
-      },
-    },
-    Canada: {
-      llama: {
-        red: 10,
-        blue: 13,
-      },
-      aardvark: {
-        red: 1,
-        blue: 5,
-      },
-    },
-  },
-  kittens: {
-    US: {
-      llama: {
-        red: 3,
-        blue: 12,
-      },
-      aardvark: {
-        red: 2,
-        blue: 6,
-      },
-    },
-    Canada: {
-      llama: {
-        red: 10,
-        blue: 3,
-      },
-      aardvark: {
-        red: 1,
-        blue: 15,
-      },
-    },
-  },
-};
 
 describe('nestedObjectToTableData', function() {
   it('sorts simple 1-column data by label', function() {

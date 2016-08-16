@@ -1,27 +1,14 @@
 import expect from 'expect.js';
 
 import {
+  timeseriesResultObj,
+} from './sample-data';
+
+import {
+  filterObject,
   nestedObjectCumulative,
   nestedObjectRolling,
 } from '../src/util';
-
-const timeseriesResultObj = {
-  US: {
-    '2016-06-01': 8,
-    '2016-06-02': 2,
-    '2016-06-03': 2,
-    '2016-06-04': 8,
-    '2016-06-05': 14,
-  },
-  Canada: {
-    '2016-06-01': 6,
-    '2016-06-02': 3,
-    '2016-06-03': 3,
-    '2016-06-04': 12,
-    '2016-06-05': 6,
-  },
-};
-
 
 describe('nestedObjectCumulative', function() {
   it('supports rolling sum on the leaf nodes', function() {
