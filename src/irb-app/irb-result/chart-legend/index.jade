@@ -26,7 +26,7 @@
                 .icon(class={color: seriesIdx === 0})
                 .label= `Select all ${formattedSeriesName} segments`
           if !series.seriesValues.length
-            .no-result= 'No matches'
+            .no-result= 'No results'
           each value in series.seriesValues
             li
               button.series(
