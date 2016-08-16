@@ -23,7 +23,7 @@
                 class={showing: $helpers.allSeriesSelected(seriesIdx)}
                 onclick=() => $helpers.toggleAllSeriesValue(seriesIdx)
               )
-                .icon
+                .icon(class={color: seriesIdx === 0})
                 .label= `Select all ${formattedSeriesName} segments`
           if !series.seriesValues.length
             .no-result= 'No matches'
@@ -33,7 +33,7 @@
                 class={showing: $helpers.isSeriesValueShowing(seriesIdx, value)}
                 onclick=() => $helpers.toggleShowSeriesValue(seriesIdx, value)
               )
-                .icon
+                .icon(class={color: seriesIdx === 0})
                 - const label = $helpers.renameSeriesValue(seriesIdx, value)
                 if $helpers.isSearchActive()
                   .label.search-result
