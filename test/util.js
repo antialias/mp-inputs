@@ -9,6 +9,7 @@ import {
   filterObject,
   nestedObjectCumulative,
   nestedObjectRolling,
+  uniqueObjKeysAtDepth,
 } from '../src/util';
 
 describe('filterObject', function() {
@@ -135,4 +136,19 @@ describe('nestedObjectRolling', function() {
       },
     });
   });
+});
+
+describe('uniqueObjKeysAtDepth', function() {
+  it('produces unique keys for lowest depth', function() {
+    const arr = uniqueObjKeysAtDepth(d4Obj, 1);
+    expect(arr).to.have.length(2);
+    expect(arr).to.contain('blue', 'red');
+  });
+
+  it('produces unique keys for top level', function() {
+    const arr = uniqueObjKeysAtDepth(d4Obj, 4);
+    expect(arr).to.have.length(2);
+    expect(arr).to.contain('bunnies', 'kittens');
+  });
+
 });
