@@ -69,6 +69,8 @@ export default class Legend {
         seriesName,
       });
     }
+
+    this.setDefaultSeriesShowing();
     return Object.assign(this, {data});
   }
 
