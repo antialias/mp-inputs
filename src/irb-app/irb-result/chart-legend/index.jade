@@ -7,11 +7,11 @@
       oninput=$helpers.searchHandler
     )
   .body
-    -const legendDataToDisplay = $helpers.legendDataToDisplay()
+    - const legendDataToDisplay = $helpers.legendDataToDisplay()
     if !legendDataToDisplay.length
       .no-result= 'No results match this search'
     each series, seriesIdx in legendDataToDisplay
-      -const formattedSeriesName = util.renameProperty(series.seriesName)
+      - const formattedSeriesName = util.renameProperty(series.seriesName)
       .legend-series(class={closed: !report.legend.isSeriesShowing(seriesIdx)})
         .info(onclick=() => report.legend.toggleShowSeries(seriesIdx))
           .name= formattedSeriesName
@@ -34,7 +34,7 @@
                 onclick=() => $helpers.toggleShowSeriesValue(seriesIdx, value)
               )
                 .icon
-                -const label = $helpers.renameSeriesValue(seriesIdx, value)
+                - const label = $helpers.renameSeriesValue(seriesIdx, value)
                 if $helpers.isSearchActive()
                   .label.search-result
                     span.slice.matches-search=label.slice(0, report.legend.search.length)

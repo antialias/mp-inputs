@@ -48,8 +48,7 @@ document.registerElement('chart-legend', class extends Component {
         toggleShowSeriesValue: (seriesIdx, name) => {
           const seriesData = this.state.report.legend.data[seriesIdx].seriesData;
           if (seriesData.hasOwnProperty(name)) {
-            const newSeriesValue = {[name]: !seriesData[name]};
-            this.app.updateLegendSeriesAtIndex(seriesIdx, newSeriesValue);
+            this.app.updateLegendSeriesAtIndex(seriesIdx, {[name]: !seriesData[name]});
           }
         },
         totalSeriesCount: idx => Object.keys(this.state.report.legend.data[idx].seriesData).length,
