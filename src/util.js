@@ -24,21 +24,19 @@ export function mapObjectKeys(obj, callback) {
 
 function _filterIntoObject(obj, filter) {
   const depth = nestedObjectDepth(obj);
-  if (depth > 1) {
-    Object.keys(obj).forEach(key => {
-      if (!filter(key, depth)) {
+  Object.keys(obj).forEach(key => {
+    if (!filter(key, depth)) {
+      delete obj[key];
+    }
+  });
+  Object.keys(obj).forEach(key => {
+    if (typeof obj[key] === 'object') {
+      _filterIntoObject(obj[key], filter);
+      if (!Object.keys(obj[key]).length) {
         delete obj[key];
       }
-    });
-    Object.keys(obj).forEach(key => {
-      if (typeof obj[key] === 'object') {
-        _filterIntoObject(obj[key], filter);
-        if (!Object.keys(obj[key]).length) {
-          delete obj[key];
-        }
-      }
-    });
-  }
+    }
+  });
 }
 
 export function filterObject(obj, filter) {
@@ -190,15 +188,22 @@ export function nestedObjectRolling(obj, windowSize) {
   }
 }
 
+function _callbackIntoObject(obj, callback) {
+  const depth = nestedObjectDepth(obj);
+  Object.keys(obj).forEach(key => callback(key, obj, depth));
+  Object.keys(obj).forEach(key => {
+    if (typeof obj[key] === 'object') {
+      _callbackIntoObject(obj[key], callback);
+    }
+  });
+}
 
 export function uniqueObjKeysAtDepth(obj, depth) {
   const keys = new Set();
-  const newObject = JSON.parse(JSON.stringify(obj));
-  _filterIntoObject(newObject, (value, d) => {
+  _callbackIntoObject(obj, (value, parentObj, d) => {
     if (d === depth) {
       keys.add(value);
     }
-    return true;
   });
   return Array.from(keys);
 }
