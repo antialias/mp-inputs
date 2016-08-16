@@ -1,6 +1,7 @@
 import expect from 'expect.js';
 
 import {
+  d4Obj,
   timeseriesResultObj,
 } from './sample-data';
 
@@ -9,6 +10,68 @@ import {
   nestedObjectCumulative,
   nestedObjectRolling,
 } from '../src/util';
+
+describe('filterObject', function() {
+  it('filters one value at lowest depth', function() {
+    const arr = filterObject(d4Obj, (value, depth) => depth === 1 ? value !== 'red' : 'false');
+    expect(arr).to.eql({
+      bunnies: {
+        US: {
+          llama:{'blue':2},
+          aardvark:{'blue':16}
+        },
+        Canada:{
+          llama:{'blue':13},
+          aardvark:{'blue':5}
+        }
+      },
+      kittens:{
+        US:{
+          llama:{'blue':12},
+          aardvark:{'blue':6}
+        },
+        Canada:{
+          llama:{'blue':3},
+          aardvark:{'blue':15}
+        }
+      }
+    });
+  });
+
+  it('filters all values at middle depth', function() {
+    const arr = filterObject(d4Obj, (value, depth) => depth === 3 ? !['US', 'Canada'].includes(value) : 'false');
+    expect(arr).to.be.empty();
+  });
+
+  it('filters one value at top level', function() {
+    const arr = filterObject(d4Obj, (value, depth) => depth === 4 ? value !== 'kittens' : 'false');
+    expect(arr).to.eql({
+      "bunnies": {
+        "Canada": {
+          "aardvark": {
+            "blue": 5,
+            "red": 1,
+          },
+          "llama": {
+            "blue": 13,
+            "red": 10,
+          },
+        },
+        "US": {
+          "aardvark": {
+            "blue": 16,
+            "red": 2,
+          },
+          "llama": {
+            "blue": 2,
+            "red": 3,
+          },
+        },
+      }
+    });
+  });
+
+});
 
 describe('nestedObjectCumulative', function() {
   it('supports rolling sum on the leaf nodes', function() {
