@@ -71,7 +71,6 @@ describe('filterObject', function() {
       }
     });
   });
-
 });
 
 describe('nestedObjectCumulative', function() {
@@ -150,5 +149,4 @@ describe('uniqueObjKeysAtDepth', function() {
     expect(arr).to.have.length(2);
     expect(arr).to.contain('bunnies', 'kittens');
   });
-
 });
