@@ -3,7 +3,7 @@ import expect from 'expect.js';
 import {
   d4Obj,
   timeseriesResultObj,
-} from './sample-data';
+} from './fixtures';
 
 import {
   filterObject,

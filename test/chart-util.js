@@ -4,7 +4,7 @@ import {
   d2Obj,
   d3Obj,
   d4Obj,
-} from './sample-data';
+} from './fixtures';
 
 import {
   nestedObjectToNestedArray,
