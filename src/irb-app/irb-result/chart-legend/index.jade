@@ -11,11 +11,11 @@
     if !legendDataToDisplay.length
       .no-result= 'No results match this search'
     each series, seriesIdx in legendDataToDisplay
-      - const formattedSeriesName = util.renameProperty(series.seriesName)
       - const isSeriesShowing = report.legend.isSeriesShowing(seriesIdx)
-      .legend-series(class={closed: !isSeriesShowing})
+      - const seriesDisplayOption = $helpers.seriesDisplayOption(seriesIdx)
+      .legend-series(class=report.legend.getSeriesDisplayAtIndex(seriesIdx))
         .info(onclick=() => report.legend.toggleShowSeries(seriesIdx))
-          .name= formattedSeriesName
+          .name= util.renameProperty(series.seriesName)
           .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
         ul.series-values
           if isSeriesShowing
@@ -26,7 +26,7 @@
                   onclick=() => $helpers.toggleAllSeriesValue(seriesIdx)
                 )
                   .icon(class={color: seriesIdx === 0})
-                  .label= `Select all ${formattedSeriesName} segments`
+                  .label= `Select all`
             if !series.seriesValues.length
               .no-result= 'No results'
             each value in series.seriesValues
@@ -46,3 +46,5 @@
                   if series.seriesName !== '$event'
                     .delete-wrapper
                       .delete(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value)) X
+      if isSeriesShowing && seriesDisplayOption
+        .display-option(onclick=() => report.legend.toggleSeriesDisplaySetting(seriesIdx))= seriesDisplayOption

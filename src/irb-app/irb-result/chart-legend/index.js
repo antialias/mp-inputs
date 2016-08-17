@@ -27,10 +27,13 @@ document.registerElement('chart-legend', class extends Component {
         isSeriesValueShowing: (seriesIdx, name) => this.state.report.legend.data[seriesIdx].seriesData[name],
         isSearchActive: () => !!this.state.report.legend.search,
         legendDataToDisplay: () => {
-          const seriesData = this.state.report.legend.data.map((series, idx) => ({
-            seriesName: series.seriesName,
-            seriesValues: Object.keys(series.seriesData).filter(value => this.config.helpers.matchesSearch(value, idx)).sort(),
-          }));
+          const seriesData = this.state.report.legend.data.map((series, idx) => {
+            const seriesValues = Object.keys(series.seriesData).filter(value => this.config.helpers.matchesSearch(value, idx)).sort();
+            if (this.state.report.legend.getSeriesDisplayAtIndex(idx) === 'minimized') {
+              seriesValues.splice(12);
+            }
+            return {seriesName: series.seriesName, seriesValues};
+          });
           return seriesData.some(series => series.seriesValues.length) ? seriesData : [];
         },
         matchesSearch: (value, seriesIdx) => (
@@ -51,7 +54,18 @@ document.registerElement('chart-legend', class extends Component {
           this.app.updateLegendState({search: ev.target.value});
         },
         selectedSeriesCount: idx => Object.values(this.state.report.legend.data[idx].seriesData).filter(Boolean).length,
-        seriesValues: (series, seriesIdx) => Object.keys(series.seriesData).filter(value => this.config.helpers.matchesSearch(value, seriesIdx)).sort(),
+        seriesDisplayOption: idx => {
+          let label = null;
+          switch (this.state.report.legend.getSeriesDisplayAtIndex(idx)) {
+            case 'minimized':
+              label = 'More';
+              break;
+            case 'expanded':
+              label = 'Less';
+              break;
+          }
+          return label;
+        },
         toggleAllSeriesValue: seriesIdx => {
           const seriesData = this.state.report.legend.data[seriesIdx].seriesData;
           const newValue = !this.config.helpers.allSeriesSelected(seriesIdx);

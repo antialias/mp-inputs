@@ -11,11 +11,23 @@ export default class Legend {
     Object.assign(this, pick(attrs, ['data']));
   }
 
+  _seriesDisplaySetting(series) {
+    return Object.keys(series.seriesData).length > 20 ? 'minimized' : 'all';
+  }
+
+  getSeriesDisplayAtIndex(seriesIdx) {
+    return this.seriesShowing[seriesIdx] || null;
+  }
+
   get seriesShowing() {
     if (!this._seriesShowing) {
-      this._seriesShowing = this.data.map((_, idx) => !idx);
+      this._seriesShowing = this.data.map((series, idx) => idx === 0 ? this._seriesDisplaySetting(series) : 'hidden');
     }
     return this._seriesShowing;
+  }
+
+  set seriesShowing(value) {
+    this._seriesShowing = value;
   }
 
   setDefaultSeriesShowing() {
@@ -23,16 +35,24 @@ export default class Legend {
   }
 
   showAllSeries() {
-    this._seriesShowing = this._seriesShowing.map(() => true);
+    this.seriesShowing = this.seriesShowing.map(() => 'all');
   }
 
   isSeriesShowing(seriesIdx) {
-    return this.seriesShowing[seriesIdx];
+    return this.seriesShowing[seriesIdx] !== 'hidden';
   }
 
   toggleShowSeries(seriesIdx) {
     if (this.seriesShowing && this.seriesShowing.length >= seriesIdx) {
-      this.seriesShowing[seriesIdx] = !this.seriesShowing[seriesIdx];
+      this.seriesShowing[seriesIdx] = this.isSeriesShowing(seriesIdx) ? 'hidden' : this._seriesDisplaySetting(this.data[seriesIdx]);
+    }
+  }
+
+  toggleSeriesDisplaySetting(seriesIdx) {
+    if (['minimized', 'expanded'].includes(this.seriesShowing[seriesIdx])) {
+      const oldDisplaySetting = this.seriesShowing[seriesIdx];
+      this.seriesShowing = this.seriesShowing.map(displaySetting => displaySetting === 'expanded' ? 'minimized' : displaySetting);
+      this.seriesShowing[seriesIdx] = oldDisplaySetting === 'minimized' ? 'expanded' : 'minimized';
     }
   }
 
