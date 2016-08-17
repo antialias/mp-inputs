@@ -1,6 +1,6 @@
 import { ShowClause } from '../../../models/clause';
 import { PaneContent } from '../../pane';
-import { extend, renameEvent, renameProperty } from '../../../util';
+import { extend, renameEvent, renameProperty, sorted } from '../../../util';
 
 import template from './show-pane-content.jade';
 
@@ -70,12 +70,8 @@ document.registerElement('show-pane-content', class extends PaneContent {
   }
 
   _propsForDisplay(props) {
-    return props
-      .filter(prop => prop.type === 'number')
-      .sort((a, b) => {
-        a = renameProperty(a.name).toLowerCase();
-        b = renameProperty(b.name).toLowerCase();
-        return a > b ? 1 : a < b ? -1 : 0;
-      });
+    return sorted(props.filter(prop => prop.type === 'number'), {
+      transform: prop => renameProperty(prop.name).toLowerCase(),
+    });
   }
 });

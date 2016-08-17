@@ -1,5 +1,8 @@
 import { Component } from 'panel';
 
+import { ShowClause } from '../../models/clause';
+import { renameEvent, sorted } from '../../util';
+
 import './focus-input';
 
 import template from './index.jade';
@@ -60,5 +63,12 @@ export class PaneContent extends Component {
 
   isPaneActive() {
     return this.isAttributeEnabled('is-pane-active');
+  }
+
+  get eventChoices() {
+    const topEvents = sorted(this.state.topEvents, {
+      transform: ev => renameEvent(ev.name).toLowerCase(),
+    });
+    return [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS, ...topEvents];
   }
 }
