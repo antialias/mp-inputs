@@ -24,6 +24,8 @@ document.registerElement('chart-legend', class extends Component {
           }));
           this.app.commitStageClause();
         },
+        isAnySeriesLargeSearch: legendData => legendData.some(series => this.config.helpers.isSeriesLargeSearchResult(series)),
+        isSeriesLargeSearchResult: series => this.config.helpers.isSearchActive() && series.seriesValues.length > 12,
         isSeriesValueShowing: (seriesIdx, name) => this.state.report.legend.data[seriesIdx].seriesData[name],
         isSearchActive: () => !!this.state.report.legend.search,
         legendDataToDisplay: () => {

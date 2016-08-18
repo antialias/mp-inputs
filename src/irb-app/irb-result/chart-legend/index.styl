@@ -3,7 +3,7 @@
   background-color lighten(background-gray, 75%)
   display flex
   flex-direction column
-  height 100%
+  height 900px
 
   .header
     background-color #fff
@@ -42,6 +42,9 @@
 
   .body
     border-left 1px solid lighten(background-gray, 25%)
+    display flex
+    padding-bottom 10px
+    flex-direction column
     flex-grow 1
     height 100%
 
@@ -52,6 +55,7 @@
       box-sizing border-box
       color dark-gray
       cursor pointer
+      flex 0 0 auto
       font-size 10px
       margin 10px
       padding 5px
@@ -61,9 +65,27 @@
       width calc(100% - 20px)
 
     .legend-series
+      display flex
+      flex 0 0 auto
+      flex-direction column
+      &.all, &.minimized
+        flex 0 1 auto
+      &.expanded
+        flex 2 1
+      &.sibling-expanded
+        &.all, &.minimized
+          flex 1 1
+      &.sibling-large-search
+        flex 0 1 auto
+        &.large-search-result
+          flex 1 1 auto
+        &.hidden
+          flex 0 0 auto
+
       .info
         cursor pointer
         display flex
+        flex 0 0 auto
         height 25px
         justify-content space-between
         padding 0 10px
@@ -88,10 +110,6 @@
 
         .count
           font-size 10px
-
-      &.expanded
-        .series-values
-          max-height 400px
 
       .series-values
         overflow-y scroll

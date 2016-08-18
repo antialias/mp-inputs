@@ -1,3 +1,8 @@
+- const legendDataToDisplay = $helpers.legendDataToDisplay()
+- const isSearchActive = $helpers.isSearchActive()
+- const isSiblingExpanded = report.legend.isAnyDisplayExpanded()
+- const isSiblingLargeSearch = $helpers.isAnySeriesLargeSearch(legendDataToDisplay)
+
 .chart-legend
   .header Legend
   .search
@@ -7,20 +12,26 @@
       oninput=$helpers.searchHandler
     )
   .body
-    - const legendDataToDisplay = $helpers.legendDataToDisplay()
     if !legendDataToDisplay.length
       .no-result= 'No results match this search'
     each series, seriesIdx in legendDataToDisplay
       - const isSeriesShowing = report.legend.isSeriesShowing(seriesIdx)
       - const seriesDisplay = report.legend.getSeriesDisplayAtIndex(seriesIdx)
       - const seriesDisplayLabel = $helpers.seriesDisplayOption(seriesIdx)
-      .legend-series(class=seriesDisplay)
+      .legend-series(
+        class=seriesDisplay
+        class={
+          'sibling-expanded': isSiblingExpanded,
+          'large-search-result': $helpers.isSeriesLargeSearchResult(series),
+          'sibling-large-search': isSiblingLargeSearch,
+        }
+      )
         .info(onclick=() => report.legend.toggleShowSeries(seriesIdx))
           .name= util.renameProperty(series.seriesName)
           .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
         ul.series-values
           if isSeriesShowing
-            if !$helpers.isSearchActive()
+            if !isSearchActive
               li
                 button.select-all(
                   class={showing: $helpers.allSeriesSelected(seriesIdx)}
@@ -38,7 +49,7 @@
                 )
                   .icon(class={color: seriesIdx === 0})
                   - const label = $helpers.renameSeriesValue(seriesIdx, value)
-                  if $helpers.isSearchActive()
+                  if isSearchActive
                     .label.search-result
                       span.slice.matches-search=label.slice(0, report.legend.search.length)
                       span.slice=label.slice(report.legend.search.length)

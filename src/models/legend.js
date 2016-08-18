@@ -11,6 +11,10 @@ export default class Legend {
     Object.assign(this, pick(attrs, ['data']));
   }
 
+  isAnyDisplayExpanded() {
+    return this.seriesShowing.some(displaySetting => displaySetting === 'expanded');
+  }
+
   _seriesDisplaySetting(series) {
     return Object.keys(series.seriesData).length > 20 ? 'minimized' : 'all';
   }
