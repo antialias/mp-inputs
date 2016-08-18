@@ -12,8 +12,9 @@
       .no-result= 'No results match this search'
     each series, seriesIdx in legendDataToDisplay
       - const isSeriesShowing = report.legend.isSeriesShowing(seriesIdx)
-      - const seriesDisplayOption = $helpers.seriesDisplayOption(seriesIdx)
-      .legend-series(class=report.legend.getSeriesDisplayAtIndex(seriesIdx))
+      - const seriesDisplay = report.legend.getSeriesDisplayAtIndex(seriesIdx)
+      - const seriesDisplayLabel = $helpers.seriesDisplayOption(seriesIdx)
+      .legend-series(class=seriesDisplay)
         .info(onclick=() => report.legend.toggleShowSeries(seriesIdx))
           .name= util.renameProperty(series.seriesName)
           .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
