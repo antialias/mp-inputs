@@ -1,4 +1,4 @@
-import './MPApiStub';
+import './mp-api-polyfill';
 
 import os from 'os';
 import Mixpanel from 'mixpanel';
@@ -13,9 +13,9 @@ import SegmentationQuery from '../src/models/queries/segmentation';
 import { API_BASE, authHeader, urlencodeParams } from './util';
 import QUERIES from './queries';
 
-const SEGMENTATION_API_BASE = `${API_BASE}/api/2.0/segmentation`;
 const DEBUG = (process.env.DEBUG || '').toLowerCase() === 'true';
 const PASSES = Number(process.env.PASSES || 3);
+const SEGMENTATION_API_BASE = `${API_BASE}/api/2.0/segmentation`;
 
 const all = Promise.all.bind(Promise);
 const debugLog = function() {
@@ -32,7 +32,7 @@ function buildIRBQuery(queryParams) {
   const irbQuery = new SegmentationQuery([]);
   const state = {
     report: {
-      displayOptions: { chartType: 'line' },
+      displayOptions: {chartType: 'line'},
       sections: new BuilderSections({
         show: new ShowSection(...queryParams.queries.map(q =>
           new ShowClause({
@@ -134,8 +134,7 @@ function timeSegQueries(queryParams) {
           Object.assign(params, {
             buckets: 12,
             allow_more_buckets: false,
-        });
-
+          });
         }
         url = `${url}/multiseg`;
         break;
@@ -193,9 +192,8 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
 
       // get timings in multiple passes
       for (let pass = 0; pass < PASSES; pass++) {
-        // use -1 to represent not available
-        results.jql.push(query.disableForJQL ? [-1] : await all(timeJQLQueries(query)));
-        results.seg.push(query.disableForSeg ? [-1] : await all(timeSegQueries(query)));
+        results.jql.push(query.disableForJQL ? [NaN] : await all(timeJQLQueries(query)));
+        results.seg.push(query.disableForSeg ? [NaN] : await all(timeSegQueries(query)));
       }
 
       // process results and add to table
@@ -211,6 +209,7 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
         ]);
 
         for (const queryType of ['jql', 'seg']) {
+          debugLog(processed[queryType].avg);
           mixpanel.track('Benchmark query', {
             'Avg latency ms': processed[queryType].avg,
             'Passes': PASSES,

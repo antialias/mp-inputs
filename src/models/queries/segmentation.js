@@ -212,6 +212,19 @@ class JQLQuery {
     return this.outputName ? [this.outputName] : this.events.map(ev => ev.event);
   }
 
+  displayName(name) {
+    const operation = this.type;
+    const event = renameEvent(name);
+    let display;
+    if (this.property) {
+      display = `${operation} of ${this.property.value} on ${event}`;
+    } else {
+      display = `${operation} number of ${event}`;
+    }
+
+    return capitalize(display);
+  }
+
   // convert custom event data struct to format for JQL selectors:
   // [{event: 'foo', selector: 'bar'}, {event: 'foo', selector: 'bar'}]
   // including merging nested custom events
@@ -381,26 +394,14 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   preprocessNameConflicts() {
-    const displayName = (name, jqlQuery) => {
-      const operation = jqlQuery.type;
-      const event = renameEvent(name);
-      let display;
-      if (jqlQuery.property) {
-        display = `${operation} of ${jqlQuery.property.value} on ${event}`;
-      } else {
-        display = `${operation} number of ${event}`;
-      }
-
-      return capitalize(display);
-    };
     let jqlQueries = this.query.jqlQueries;
     for (let i = 0; i < jqlQueries.length - 1; i++) {
       for (let j = i + 1; j < jqlQueries.length; j++) {
         jqlQueries[i].eventNames().forEach(name => {
           const names = jqlQueries[j].eventNames();
           if (names.includes(name)) {
-            var displayNameI = displayName(name, jqlQueries[i]);
-            var displayNameJ = displayName(name, jqlQueries[j]);
+            var displayNameI = jqlQueries[i].displayName(name);
+            var displayNameJ = jqlQueries[j].displayName(name);
 
             if (displayNameI === displayNameJ) {
               displayNameI += ` #${jqlQueries.indexOf(jqlQueries[i]) + 1}`;

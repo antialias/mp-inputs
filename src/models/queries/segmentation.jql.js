@@ -254,7 +254,7 @@ function main() {
     },
     median: function(list) {
       var median;
-      list = list.sort(function(a, b) { return a - b; });
+      list.sort(function(a, b) { return a - b; });
       var length = list.length;
       if (length % 2 === 0) {
         median = (list[length / 2 - 1] + list[length / 2]) / 2;
@@ -272,7 +272,7 @@ function main() {
   };
 
   var toList = function(accumulators, items) {
-    var output = items.map(item => item.value);
+    var output = items.map(function(item) { return item.value; });
     _.each(accumulators, function(a) {
       _.each(a, function(item) {
         output.push(item);
@@ -307,7 +307,7 @@ function main() {
             list.push(prop);
           });
         });
-        _.each(events, eventData => {
+        _.each(events, function(eventData) {
           list.push(getEvent(eventData).properties[params.property.value]);
         });
         return list;
@@ -315,12 +315,13 @@ function main() {
 
       query = query.groupBy(groups, toPropertyList);
     } else {
-      query = query.groupByUser(groups, function(accumulators, events) { return events[0].user.properties[params.property.value]; })
-        .groupBy([sliceOffDistinctId], toList);
+      query = query.groupByUser(groups, function(accumulators, events) {
+        return events[0].user.properties[params.property.value];
+      }).groupBy([sliceOffDistinctId], toList);
     }
 
     query = query.map(function(item) {
-      item.value = operatorFuncs[params.type](_.filter(item.value, v => v && _.isNumber(v)));
+      item.value = operatorFuncs[params.type](_.filter(item.value, function(v) { return v && _.isNumber(v); }));
       return item;
     });
   } else if (params.type === 'total') {

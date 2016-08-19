@@ -131,7 +131,7 @@ let QUERIES = [
   },
 ];
 
-const OPERATORS_AVAILABLE_FOR_QUERY_TYPE = {
+const NUMERIC_PROPERTY_OPERATORS_AVAILABLE_FOR_QUERY_TYPE = {
   average: { JQL: true, Seg: true },
   total: { JQL: true, Seg: true },
   min: { JQL: true, Seg: true },
@@ -141,10 +141,10 @@ const OPERATORS_AVAILABLE_FOR_QUERY_TYPE = {
 }
 
 // operators for numeric properties
-QUERIES = QUERIES.concat(Object.keys(OPERATORS_AVAILABLE_FOR_QUERY_TYPE).map(operator => {
+QUERIES = QUERIES.concat(Object.keys(NUMERIC_PROPERTY_OPERATORS_AVAILABLE_FOR_QUERY_TYPE).map(operator => {
   return {
-    disableForJQL: !OPERATORS_AVAILABLE_FOR_QUERY_TYPE[operator]['JQL'],
-    disableForSeg: !OPERATORS_AVAILABLE_FOR_QUERY_TYPE[operator]['Seg'],
+    disableForJQL: !NUMERIC_PROPERTY_OPERATORS_AVAILABLE_FOR_QUERY_TYPE[operator]['JQL'],
+    disableForSeg: !NUMERIC_PROPERTY_OPERATORS_AVAILABLE_FOR_QUERY_TYPE[operator]['Seg'],
     name: `${operator} of 'unsent' on 'batch' in the ${TimeClause.RANGES.HOURS}`,
     project: 258190,
     queries: [
