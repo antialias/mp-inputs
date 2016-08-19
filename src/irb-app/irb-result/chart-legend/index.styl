@@ -42,11 +42,9 @@
 
   .body
     border-left 1px solid lighten(background-gray, 25%)
-    display flex
+    height 500px
+    overflow-y scroll
     padding-bottom 10px
-    flex-direction column
-    flex 0 0 800px
-    height 100%
 
     .display-option
       background-color #fff
@@ -55,7 +53,6 @@
       box-sizing border-box
       color dark-gray
       cursor pointer
-      flex 0 0 auto
       font-size 10px
       margin 10px
       padding 5px
@@ -65,27 +62,9 @@
       width calc(100% - 20px)
 
     .legend-series
-      display flex
-      flex 0 0 auto
-      flex-direction column
-      &.all, &.minimized
-        flex 0 1 auto
-      &.expanded
-        flex 2 1
-      &.sibling-expanded
-        &.all, &.minimized
-          flex 1 1
-      &.sibling-large-search
-        flex 0 1 auto
-        &.large-search-result
-          flex 1 1 auto
-        &.hidden
-          flex 0 0 auto
-
       .info
         cursor pointer
         display flex
-        flex 0 0 auto
         height 25px
         justify-content space-between
         padding 0 10px
@@ -112,8 +91,6 @@
           font-size 10px
 
       .series-values
-        overflow-y scroll
-
         button
           align-items center
           background none
