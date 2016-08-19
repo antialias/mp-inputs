@@ -26,7 +26,7 @@ include ./mixins.jade
         if $helpers.matchesSearch(util.renameEvent(value.name))
           li(
             class={selected: value.name === selectedValueName, custom: !!value.custom}
-            onclick=() => $helpers.updateStageClause({value}, true)
+            onclick=() => $helpers.updateStageClause({property: null, value}, true)
           )
             = util.renameEvent(value.name)
             button.next-arrow(onclick=ev => $helpers.onArrowClick(ev, value)) ›
