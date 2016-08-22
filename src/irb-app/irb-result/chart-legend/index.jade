@@ -1,7 +1,4 @@
 - const legendDataToDisplay = $helpers.legendDataToDisplay()
-- const isSearchActive = $helpers.isSearchActive()
-- const isSiblingExpanded = report.legend.isAnyDisplayExpanded()
-- const isSiblingLargeSearch = $helpers.isAnySeriesLargeSearch(legendDataToDisplay)
 
 .chart-legend
   .header Legend
@@ -11,23 +8,19 @@
       focusDelay=200
       oninput=$helpers.searchHandler
     )
-  .body
-    if !legendDataToDisplay.length
-      .no-result= 'No results match this search'
-    each series, seriesIdx in legendDataToDisplay
-      - const isSeriesShowing = report.legend.isSeriesShowing(seriesIdx)
-      - const seriesDisplay = report.legend.getSeriesDisplayAtIndex(seriesIdx)
-      - const seriesDisplayLabel = $helpers.seriesDisplayOption(seriesIdx)
-      .legend-series(
-        class=seriesDisplay
-        class={
-          'sibling-expanded': isSiblingExpanded,
-          'large-search-result': $helpers.isSeriesLargeSearchResult(series),
-          'sibling-large-search': isSiblingLargeSearch,
-        }
-      )
-        .info(onclick=() => report.legend.toggleShowSeries(seriesIdx))
-          .name= util.renameProperty(series.seriesName)
+  sticky-scroll(attributes={
+    'legend-data': JSON.stringify(legendDataToDisplay),
+    'showing': JSON.stringify(report.legend.seriesShowing),
+  })
+    .body
+      if !legendDataToDisplay.length
+        .no-result= 'No results match this search'
+      each series, seriesIdx in legendDataToDisplay
+        - const isSeriesShowing = report.legend.isSeriesShowing(seriesIdx)
+        - const seriesDisplay = report.legend.getSeriesDisplayAtIndex(seriesIdx)
+        - const seriesDisplayLabel = $helpers.seriesDisplayOption(seriesIdx)
+        .info.sticky-title(onclick=() => report.legend.toggleShowSeries(seriesIdx))
+          .name(class={showing: isSeriesShowing})= util.renameProperty(series.seriesName)
           .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
         ul.series-values
           if isSeriesShowing
@@ -58,5 +51,5 @@
                   if series.seriesName !== '$event'
                     .delete-wrapper
                       .delete(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value)) X
-      if isSeriesShowing && seriesDisplayOption
-        .display-option(onclick=() => report.legend.toggleSeriesDisplaySetting(seriesIdx))= seriesDisplayOption
+        if isSeriesShowing && seriesDisplayLabel
+          .display-option(onclick=() => report.legend.toggleSeriesDisplaySetting(seriesIdx))= seriesDisplayLabel

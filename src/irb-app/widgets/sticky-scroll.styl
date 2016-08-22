@@ -1,0 +1,35 @@
+@import "../../stylesheets/common"
+
+sticky-scroll
+  height 400px
+  position relative
+  overflow-y scroll
+
+  .sticky-header
+    left 1px // grab from body border-left in future
+    position absolute
+    // visibility hidden
+    z-index 1
+
+    .sticky-title
+      box-sizing border-box
+      left 0
+      position absolute
+      top 0
+      width 100%
+
+
+
+  .body
+    background-color lighten(background-gray, 75%)
+    border-left 1px solid lighten(background-gray, 25%)
+    box-sizing border-box
+    height 100%
+    position absolute
+    width 100%
+
+  &.sticky
+    overflow-y hidden
+
+    .body
+      overflow-y scroll

@@ -1,6 +1,7 @@
 import { Component } from 'panel';
 
 import * as util from '../../../util';
+import '../../widgets/sticky-scroll';
 
 import template from './index.jade';
 import './index.styl';
