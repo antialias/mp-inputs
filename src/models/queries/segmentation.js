@@ -5,7 +5,7 @@ import ExtremaQuery from './extrema';
 import { ShowClause } from '../clause';
 import Result from '../result';
 import main from './segmentation.jql.js';
-import { capitalize, extend, pick, renameEvent } from '../../util';
+import { capitalize, extend, pick, renameEvent, renameProperty } from '../../util';
 
 const MS_IN_HOUR = 60 * 60 * 1000;
 const MS_IN_DAY = MS_IN_HOUR * 24;
@@ -217,7 +217,7 @@ class JQLQuery {
     const event = renameEvent(name);
     let display;
     if (this.property) {
-      display = `${operation} of ${this.property.name} on ${event}`;
+      display = `${operation} of ${renameProperty(this.property.name)} on ${event}`;
     } else {
       display = `${operation} number of ${event}`;
     }
