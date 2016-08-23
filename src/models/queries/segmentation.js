@@ -203,7 +203,7 @@ class JQLQuery {
       this.unit = 'all';
     }
 
-    this.property = (showClause.property && pick(showClause.property, ['value', 'resourceType'])) || null;
+    this.property = (showClause.property && pick(showClause.property, ['name', 'resourceType'])) || null;
 
     this.displayNames = {};
   }
@@ -217,7 +217,7 @@ class JQLQuery {
     const event = renameEvent(name);
     let display;
     if (this.property) {
-      display = `${operation} of ${this.property.value} on ${event}`;
+      display = `${operation} of ${this.property.name} on ${event}`;
     } else {
       display = `${operation} number of ${event}`;
     }

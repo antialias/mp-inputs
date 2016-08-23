@@ -99,7 +99,7 @@ function timeSegQueries(queryParams) {
           }
           const property = irbParams.property;
           Object.assign(params, {
-            on: `number(${toArbSelectorPropertyToken(property.resourceType, property.value)})`,
+            on: `number(${toArbSelectorPropertyToken(property.resourceType, property.name)})`,
             limit: 150,
             buckets: 12,
             allow_more_buckets: false,

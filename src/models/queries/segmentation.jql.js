@@ -299,7 +299,14 @@ function main() {
   }
 
   if (params.property) {
-    if (params.property.resourceType === 'event') {
+    if (params.property.resourceType === 'people') {
+      query = query.groupByUser(groups, function(accumulators, events) {
+        var eventData = _.find(events, function(eventData) {
+          return !!eventData.user;
+        });
+        return eventData ? eventData.user.properties[params.property.name] : eventData;
+      }).groupBy([sliceOffDistinctId], toList);
+    } else {
       var toPropertyList = function(accumulators, events) {
         var list = [];
         _.each(accumulators, function(a) {
@@ -308,16 +315,12 @@ function main() {
           });
         });
         _.each(events, function(eventData) {
-          list.push(getEvent(eventData).properties[params.property.value]);
+          list.push(getEvent(eventData).properties[params.property.name]);
         });
         return list;
       };
 
       query = query.groupBy(groups, toPropertyList);
-    } else {
-      query = query.groupByUser(groups, function(accumulators, events) {
-        return events[0].user.properties[params.property.value];
-      }).groupBy([sliceOffDistinctId], toList);
     }
 
     query = query.map(function(item) {

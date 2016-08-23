@@ -152,7 +152,7 @@ QUERIES = QUERIES.concat(Object.keys(NUMERIC_PROPERTY_OPERATORS_AVAILABLE_FOR_QU
         events: ['batch'],
         type: operator,
         property: {
-          value: 'unsent',
+          name: 'unsent',
           resourceType: 'event',
         }
       },

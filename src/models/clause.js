@@ -98,7 +98,7 @@ ShowClause.ALL_EVENTS = ShowClause.prototype.ALL_EVENTS = {
   custom: false,
 };
 ShowClause.MATH_TYPES = ShowClause.prototype.MATH_TYPES = [
-  'total', 'unique', 'average', 'median',
+  'total', 'unique', 'average', 'median', 'min', 'max',
 ];
 ShowClause.RESOURCE_TYPES = ShowClause.prototype.RESOURCE_TYPES = ['all', 'events', 'properties'];
 
