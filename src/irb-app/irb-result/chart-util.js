@@ -336,7 +336,7 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
  * // ]
  */
 export function nestedObjectToBarChartData(obj, sortConfig) {
-  if (typeof obj === 'object') {
+  if (typeof obj === 'object' && Object.keys(obj).length) {
     return nestedArrayToBarChartData(nestedObjectToNestedArray(obj, sortConfig));
   } else {
     return [];

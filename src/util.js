@@ -97,7 +97,7 @@ export function combineNestedObjKeys(obj, accum={}) {
 }
 
 /**
- * Sum the leaf values of a nested object,
+ * Sum the leaf values of a nested object, but filter out those whose value is 0.
  * constructing a new object with depth 1 less than the original
  */
 export function nestedObjectSum(obj) {
