@@ -166,9 +166,9 @@ async function timeQuery(url, params) {
 }
 
 function processResults(results, qtype, qi) {
-  const mss = results[qtype].map(res => res[qi]);
+  const mss = results[qtype].map(res => res[qi]).filter(time => time !== null);
   return {
-    avg: Math.round(mss.reduce((sum, n) => sum + n) / mss.length),
+    avg: mss.length ? Math.round(mss.reduce((sum, n) => sum + n) / mss.length) : null,
     raw: mss,
   };
 }
@@ -192,8 +192,8 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
 
       // get timings in multiple passes
       for (let pass = 0; pass < PASSES; pass++) {
-        results.jql.push(query.disableForJQL ? [NaN] : await all(timeJQLQueries(query)));
-        results.seg.push(query.disableForSeg ? [NaN] : await all(timeSegQueries(query)));
+        results.jql.push(query.disableForJQL ? [null] : await all(timeJQLQueries(query)));
+        results.seg.push(query.disableForSeg ? [null] : await all(timeSegQueries(query)));
       }
 
       // process results and add to table
