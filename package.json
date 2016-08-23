@@ -29,7 +29,7 @@
   "dependencies": {
     "babel-polyfill": "^6.7.4",
     "framesg": "^0.1.2",
-    "mixpanel-common": "^0.8.2",
+    "mixpanel-common": "^0.9.1",
     "moment": "^2.13.0",
     "panel": "^0.8.5",
     "pikaday": "^1.4.0",
