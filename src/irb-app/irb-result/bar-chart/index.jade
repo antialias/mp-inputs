@@ -104,7 +104,7 @@ mixin sort-axis-button(sortOrder)
                         onmouseenter=(ev) => $helpers.onMouseEnter(ev, segmentName, value, percent < 0.0001 ? '< 0.01%' : percentValueString)
                         onmouseleave=$helpers.onMouseLeave
                       )
-                        .background(class=`background-color-${(k % 8) + 1}`)
+                        .bar-color(class=`bar-color-${(k % 8) + 1}`)
                         if percent > .04
                           .label= isValueRelative ? percentValueString : util.abbreviateNumber(value)
 
