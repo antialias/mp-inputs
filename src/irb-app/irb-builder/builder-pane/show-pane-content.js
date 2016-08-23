@@ -21,6 +21,8 @@ document.registerElement('show-pane-content', class extends PaneContent {
           ev.stopPropagation();
           this.app.updateStageClause({value: property});
           this.app.startAddingClause('show');
+          // search key shouldn't be propagated to event selection pane.
+          this.app.activeStageClause.search = '';
           window.requestAnimationFrame(() =>
             this.app.updateStageClause({paneIndex: 1})
           );
