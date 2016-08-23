@@ -324,7 +324,8 @@ function main() {
     }
 
     query = query.map(function(item) {
-      item.value = operatorFuncs[params.type](_.filter(item.value, function(v) { return v && _.isNumber(v); }));
+      item.value = _.filter(item.value, function(v) { return v && _.isNumber(v); });
+      item.value = item.value.length ? operatorFuncs[params.type](item.value) : 0;
       return item;
     });
   } else if (params.type === 'total') {
