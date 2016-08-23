@@ -428,10 +428,11 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         } else {
           if (clause === newClauses[1] && newClause.TYPE === 'show' && newClauses[0].TYPE === 'show') {
             // operator on property + event
-            const joinedClause = reportAttrs.sections.show.clauses[0].extend({});
+            const showClauseIdx = reportAttrs.sections.show.clauses.length - 1;
+            const joinedClause = reportAttrs.sections.show.clauses[showClauseIdx].extend({});
             joinedClause.property = joinedClause.value;
             joinedClause.value = newClause.value;
-            newSection = reportAttrs.sections.show.replaceClause(0, joinedClause);
+            newSection = reportAttrs.sections.show.replaceClause(showClauseIdx, joinedClause);
           } else {
             newSection = reportAttrs.sections[newClause.TYPE].appendClause(newClause);
           }
