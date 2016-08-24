@@ -168,6 +168,8 @@ function main() {
     }));
   }
 
+  // TODO(dmitry, chi) use mixpanel.event_strftime() instead:
+  // https://docs.google.com/document/d/1u8iNUhGyFIyIN7xpPkhgdorITuj4BBUYTs0SLwetzA8/edit#heading=h.csmrukb98pb9
   var timeUnitGroupByFunc;
   switch(params.dates.unit) {
     case 'all':
@@ -208,6 +210,8 @@ function main() {
       };
       params.dates.from = getFirstOfMonth(params.dates.from);
       break;
+    // TODO(dmitry,chi) mixpanel.event_strftime() does not currently support "quarter".
+    // Use mixpanel.numeric_bucket() on event.time instead?
     case 'quarter':
       var getStartOfQuarter = function(date) {
         date = new Date(date);
@@ -225,6 +229,8 @@ function main() {
   }
   groups.push(timeUnitGroupByFunc);
 
+  // TODO(dmitry, chi) use mixpanel.reducer.count({with_sampling: true})
+  // https://docs.google.com/document/d/1u8iNUhGyFIyIN7xpPkhgdorITuj4BBUYTs0SLwetzA8/edit#heading=h.cb8sr1s1dow
   var countWithSampling = function(counts, events) {
     var count = 0;
     for (var i = 0; i < events.length; i++) {
@@ -241,17 +247,22 @@ function main() {
     return Math.round(count);
   };
 
+  // TODO(dmitry, chi) use mixpanel.slice()
+  // https://docs.google.com/document/d/1u8iNUhGyFIyIN7xpPkhgdorITuj4BBUYTs0SLwetzA8/edit#heading=h.ipjo3e54gdd2
   var sliceOffDistinctId = function(row) {
     return row.key.slice(1);
   };
 
   var operatorFuncs = {
+    // TODO(dmitry, chi) use mixpanel.reducer.sum()
     total: function(list) {
       return _.reduce(list, function(sum, num) { return sum + num; });
     },
+    // TODO(dmitry, chi) use mixpanel.reducer.numeric_summary()
     average: function(list) {
       return list.reduce(function(prev, curr) { return prev + curr; }) / list.length;
     },
+    // TODO(dmitry, chi) use mixpanel.reducer.numeric_percentiles(50)
     median: function(list) {
       var median;
       list.sort(function(a, b) { return a - b; });
@@ -263,14 +274,19 @@ function main() {
       }
       return median;
     },
+    // TODO(dmitry, chi) use mixpanel.reducer.min()
     min: function(list) {
       return _.min(list);
     },
+    // TODO(dmitry, chi) use mixpanel.reducer.min()
     max: function(list) {
       return _.max(list);
     },
   };
 
+  // TODO(dmitry,chi) instead of collecting all source in a list and applying
+  // post-processing, use one of streaming reducers JQL provides:
+  // https://docs.google.com/document/d/1u8iNUhGyFIyIN7xpPkhgdorITuj4BBUYTs0SLwetzA8/edit#heading=h.cb8sr1s1dow
   var toList = function(accumulators, items) {
     var output = items.map(function(item) { return item.value; });
     _.each(accumulators, function(a) {
@@ -287,6 +303,9 @@ function main() {
     to_date: params.dates.to,
   };
   if (params.needsPeopleData) {
+    // TODO(dmitry,chi) instead of filtering on tuples with event being set, use
+    // left join:
+    // https://docs.google.com/document/d/1u8iNUhGyFIyIN7xpPkhgdorITuj4BBUYTs0SLwetzA8/edit#heading=h.ydojn9viwz60
     query = join(Events(queryParams), People(), {selectors: params.selectors})
       .filter(function(tuple) { return !!tuple.event; });
   } else {
@@ -295,6 +314,7 @@ function main() {
   }
 
   if (params.filters && params.filters.length) {
+    // TODO(dmitry,chi) Use event selectors instead of a javascript filter function.
     query = query.filter(filterByParams);
   }
 
@@ -323,6 +343,8 @@ function main() {
       query = query.groupBy(groups, toPropertyList);
     }
 
+    // TODO(dmitry, chi) this .map() step becomes unnecessary if a built-in numeric
+    // reducer is used.
     query = query.map(function(item) {
       item.value = _.filter(item.value, function(v) { return v && _.isNumber(v); });
       item.value = item.value.length ? operatorFuncs[params.type](item.value) : 0;
@@ -334,6 +356,8 @@ function main() {
     query = query.groupByUser(groups, mixpanel.reducer.noop())
       .groupBy([sliceOffDistinctId], countWithSampling);
   } else {
+    // TODO(dmitry, chi) use mixpanel.reducer.count({with_sampling_factor:true})
+    // https://docs.google.com/document/d/1u8iNUhGyFIyIN7xpPkhgdorITuj4BBUYTs0SLwetzA8/edit#heading=h.cb8sr1s1dow
     var countWithSamplingForGroupByUser = function(count, events) {
       count = count || 0;
       for (var i = 0; i < events.length; i++) {
@@ -349,6 +373,8 @@ function main() {
 
     query = query.groupByUser(groups, countWithSamplingForGroupByUser)
       .groupBy([sliceOffDistinctId], toList)
+      // TODO(dmitry, chi) this .map() step becomes unnecessary if a built-in numeric
+      // reducer is used.
       .map(function(item) {
         item.value = operatorFuncs[params.type](item.value);
         return item;
