@@ -1630,6 +1630,8 @@ filter-property-pane-content .pane-content ul.resource-value {
   text-overflow: ellipsis;
 }
 .bar-chart table td.chart-header li {
+  line-height: 22px;
+  margin-bottom: 8px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -1702,8 +1704,8 @@ filter-property-pane-content .pane-content ul.resource-value {
 }
 .bar-chart table td.chart-data li {
   cursor: pointer;
-  height: 20px;
-  margin-bottom: 2px;
+  height: 22px;
+  margin-bottom: 8px;
   min-width: 1px;
   position: relative;
   text-align: right;
@@ -1712,36 +1714,36 @@ filter-property-pane-content .pane-content ul.resource-value {
       -ms-user-select: none;
           user-select: none;
 }
-.bar-chart table td.chart-data li .background {
-  background: #646670;
+.bar-chart table td.chart-data li .bar-color {
+  background: #3b99f0;
   height: 100%;
   position: absolute;
   width: 100%;
   z-index: 0;
 }
-.bar-chart table td.chart-data li .background.background-color-1 {
-  background: #646670;
+.bar-chart table td.chart-data li .bar-color.bar-color-1 {
+  background: #23588c;
 }
-.bar-chart table td.chart-data li .background.background-color-2 {
-  background: #727480;
+.bar-chart table td.chart-data li .bar-color.bar-color-2 {
+  background: #106eca;
 }
-.bar-chart table td.chart-data li .background.background-color-3 {
-  background: #81838f;
+.bar-chart table td.chart-data li .bar-color.bar-color-3 {
+  background: #4ba8ff;
 }
-.bar-chart table td.chart-data li .background.background-color-4 {
-  background: #91939d;
+.bar-chart table td.chart-data li .bar-color.bar-color-4 {
+  background: #24d2ef;
 }
-.bar-chart table td.chart-data li .background.background-color-5 {
-  background: #a1a2ab;
+.bar-chart table td.chart-data li .bar-color.bar-color-5 {
+  background: #47b6ac;
 }
-.bar-chart table td.chart-data li .background.background-color-6 {
-  background: #b0b2b9;
+.bar-chart table td.chart-data li .bar-color.bar-color-6 {
+  background: #106eca;
 }
-.bar-chart table td.chart-data li .background.background-color-7 {
-  background: #c0c1c7;
+.bar-chart table td.chart-data li .bar-color.bar-color-7 {
+  background: #f2af34;
 }
-.bar-chart table td.chart-data li .background.background-color-8 {
-  background: #d0d1d5;
+.bar-chart table td.chart-data li .bar-color.bar-color-8 {
+  background: #ffd209;
 }
 .bar-chart table td.chart-data li .label {
   color: #fff;
