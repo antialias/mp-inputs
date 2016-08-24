@@ -375,6 +375,45 @@ describe('barDataToColorNumbers', function() {
       armadillo: 2,
     });
   });
+
+  it('handles deeply nested charts', function() {
+    const arr = nestedObjectToBarChartData(d4Obj, {
+      sortBy: 'column',
+      colSortAttrs: [
+        {
+          sortBy: 'label',
+          sortOrder: 'desc',
+        },
+        {
+          sortBy: 'value',
+          sortOrder: 'asc',
+        },
+        {
+          sortBy: 'value',
+          sortOrder: 'desc',
+        },
+        {
+          sortBy: 'label',
+          sortOrder: 'asc',
+        },
+      ],
+    });
+    expect(barDataToColorNumbers(arr, 3)).to.eql({
+      blue: 1,
+      red: 2,
+    });
+  });
+
+  it('handles charts sorted by final value', function() {
+    const arr = nestedObjectToBarChartData(d2Obj, {
+      sortBy: 'value',
+      sortOrder: 'desc',
+    });
+    expect(barDataToColorNumbers(arr, 3)).to.eql({
+      llama: 1,
+      aardvark: 2,
+    });
+  });
 });
 
 describe('nestedObjectToNestedArray', function() {
