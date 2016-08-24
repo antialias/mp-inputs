@@ -83,7 +83,7 @@ mixin sort-axis-button(sortOrder)
               else
                 td.chart-data
                   .chart-grid
-                    each _ in Array(5).fill()
+                    each _ in Array(8).fill()
                       .grid-line
                   ul(class={stacked: isStacked})
                     - const segmentCell = isLogarithmic ? cell.map(value => Math.log10(value)) : cell
