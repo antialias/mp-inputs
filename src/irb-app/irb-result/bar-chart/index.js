@@ -5,6 +5,7 @@ import WebComponent from 'webcomponent';
 
 import * as util from '../../../util';
 import {
+  barDataToColorNumbers,
   nestedObjectMax,
   nestedObjectToBarChartData,
   stackedNestedObjectMax,
@@ -118,20 +119,22 @@ document.registerElement('bar-chart', class extends Component {
 
     series = util.nestedObjectSum(series);
     const rows = nestedObjectToBarChartData(series, sortConfig);
+    const barColors = barDataToColorNumbers(rows, 8);
 
     const chartMax = displayOptions.plotStyle === 'stacked' ? stackedNestedObjectMax(series) : nestedObjectMax(series);
 
     sortConfig = util.extend(sortConfig, {hideFirstSort: displayOptions.plotStyle === 'stacked' && rows.length === 1});
 
     this.update({
+      barColors,
+      chartLabel,
       chartMax,
       chartBoundaries,
       displayOptions,
-      chartLabel,
       functionLabel,
       headers,
-      sortConfig,
       rows,
+      sortConfig,
     });
   }
 
