@@ -230,6 +230,8 @@ function main() {
   }
   groups.push(timeUnitGroupByFunc);
 
+  groups = [mixpanel.multiple_keys(groups)];
+
   // TODO(dmitry, chi) use mixpanel.reducer.count({with_sampling: true})
   // https://docs.google.com/document/d/1u8iNUhGyFIyIN7xpPkhgdorITuj4BBUYTs0SLwetzA8/edit#heading=h.cb8sr1s1dow
   var countWithSampling = function(counts, events) {
