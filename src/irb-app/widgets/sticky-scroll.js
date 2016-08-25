@@ -1,5 +1,7 @@
 import WebComponent from 'webcomponent';
 
+import * as util from '../../util';
+
 import './sticky-scroll.styl';
 
 document.registerElement('sticky-scroll', class extends WebComponent {
@@ -13,8 +15,10 @@ document.registerElement('sticky-scroll', class extends WebComponent {
     this.firstScroll = true;
     this.stickyBody = null;
     this.stickyHeader = null;
-
-    this.addEventListener('scroll', ()=>{
+    this.onBodyScrollHandler = util.debounce(() => {
+      this.updateIfInitialized();
+    });
+    this.onFirstScrollHandler = ()=> {
       if (this.firstScroll) {
         if (!this.className.includes(' sticky')) {
           this.className += ' sticky';
@@ -27,11 +31,16 @@ document.registerElement('sticky-scroll', class extends WebComponent {
         this.render();
         this.firstScroll = false;
 
-        this.stickyBody.addEventListener('scroll', ()=>{
-          this.updateIfInitialized();
-        });
+        this.stickyBody.addEventListener('scroll', this.onBodyScrollHandler);
       }
-    });
+    };
+
+    this.addEventListener('scroll', this.onFirstScrollHandler);
+  }
+
+  detachedCallback(){
+    this.stickyBody.removeEventListener('scroll', this.onBodyScrollHandler);
+    this.removeEventListener('scroll', this.onFirstScrollHandler);
   }
 
   render() {
