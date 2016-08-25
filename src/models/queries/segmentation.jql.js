@@ -136,11 +136,11 @@ function main() {
 
   if (params.groups) {
     var getPropertyPaths = function(group) {
-      var paths = [];
+      var paths = ['properties', group.value];
       if (params.needsPeopleData) {
-        paths.push(group.resourceType === 'people' ? 'user' : 'event');
+        paths.unshift(group.resourceType === 'people' ? 'user' : 'event');
       }
-      return paths.concat('properties', group.value);
+      return paths;
     };
 
     var getPropertyPath = function(group) {

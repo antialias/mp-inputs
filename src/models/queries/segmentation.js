@@ -343,9 +343,7 @@ export default class SegmentationQuery extends BaseQuery {
           /* eslint-enable camelcase */
         };
         state.interval = (state.to.getTime() - state.from.getTime()) / MS_BY_UNIT.day + 1;
-        extremaQuery.build(state).run().then(result => {
-          resolve(extend(segment, result));
-        });
+        extremaQuery.build(state).run().then(result => resolve(extend(segment, result)));
       } else {
         resolve(segment);
       }
