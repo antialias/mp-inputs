@@ -30,7 +30,6 @@ document.registerElement('sticky-scroll', class extends WebComponent {
         this.appendChild(this.stickyHeader);
         this.render();
         this.firstScroll = false;
-
         this.stickyBody.addEventListener('scroll', this.onBodyScrollHandler);
       }
     };
@@ -41,6 +40,15 @@ document.registerElement('sticky-scroll', class extends WebComponent {
   detachedCallback(){
     this.stickyBody.removeEventListener('scroll', this.onBodyScrollHandler);
     this.removeEventListener('scroll', this.onFirstScrollHandler);
+  }
+
+  hideTitle(title) {
+    title.style.marginTop = `-${title.offsetHeight}px`;
+  }
+
+  moveTitleAtIndex(idx, px) {
+    const title = this.headerStickyTitles[idx];
+    title.style.marginTop = `${px}px`;
   }
 
   render() {
@@ -61,6 +69,10 @@ document.registerElement('sticky-scroll', class extends WebComponent {
       this.headerStickyTitles.forEach(title => title.style.marginTop = `-${title.offsetHeight}px`);
       this.updateStuckHeader();
     }
+  }
+
+  showTitle(title) {
+    title.style.marginTop = '';
   }
 
   updateIfInitialized() {
@@ -85,18 +97,5 @@ document.registerElement('sticky-scroll', class extends WebComponent {
         this.hideTitle(title);
       }
     });
-  }
-
-  hideTitle(title) {
-    title.style.marginTop = `-${title.offsetHeight}px`;
-  }
-
-  showTitle(title) {
-    title.style.marginTop = '';
-  }
-
-  moveTitleAtIndex(idx, px) {
-    const title = this.headerStickyTitles[idx];
-    title.style.marginTop = `${px}px`;
   }
 });
