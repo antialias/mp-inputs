@@ -37,6 +37,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
       routes: {
         'report/:reportId': this.routeHandlers.load,
+        'reset':            this.routeHandlers.reset,
         '':                 this.routeHandlers.index,
       },
 
@@ -68,6 +69,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           }
         }
         return stateUpdate;
+      },
+
+      reset: (stateUpdate={}) => {
+        return this.navigate('', extend(stateUpdate, this.resetQuery()));
       },
 
     });
