@@ -4,10 +4,9 @@ import './sticky-scroll.styl';
 
 document.registerElement('sticky-scroll', class extends WebComponent {
   attributeChangedCallback(){
-    if (!this.firstScroll) {
-      this.needsRender = true;
-      this.render();
-    }
+    window.requestAnimationFrame(() => {
+      this.updateIfInitialized();
+    });
   }
 
   createdCallback() {
@@ -29,9 +28,7 @@ document.registerElement('sticky-scroll', class extends WebComponent {
         this.firstScroll = false;
 
         this.stickyBody.addEventListener('scroll', ()=>{
-          if (this.needsRender) {
-            this.render();
-          }
+          this.updateIfInitialized();
         });
       }
     });
@@ -54,6 +51,12 @@ document.registerElement('sticky-scroll', class extends WebComponent {
     if (this.headerStickyTitles.length) {
       this.headerStickyTitles.forEach(title => title.style.marginTop = `-${title.offsetHeight}px`);
       this.updateStuckHeader();
+    }
+  }
+
+  updateIfInitialized() {
+    if (!this.firstScroll) {
+      this.render();
     }
   }
 
@@ -87,5 +90,4 @@ document.registerElement('sticky-scroll', class extends WebComponent {
     const title = this.headerStickyTitles[idx];
     title.style.marginTop = `${px}px`;
   }
-
 });

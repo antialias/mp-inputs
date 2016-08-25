@@ -19,7 +19,7 @@
         - const isSeriesShowing = report.legend.isSeriesShowing(seriesIdx)
         - const seriesDisplay = report.legend.getSeriesDisplayAtIndex(seriesIdx)
         - const seriesDisplayLabel = $helpers.seriesDisplayOption(seriesIdx)
-        .info.sticky-title(onclick=() => report.legend.toggleShowSeries(seriesIdx))
+        .sticky-title.info(onclick=() => report.legend.toggleShowSeries(seriesIdx))
           .name(class={showing: isSeriesShowing})= util.renameProperty(series.seriesName)
           .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
         ul.series-values
