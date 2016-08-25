@@ -26,4 +26,18 @@ export default class ExtremaQuery extends BaseQuery {
   buildUrl() {
     return 'api/2.0/segmentation/extrema';
   }
+
+  processResults(result) {
+    if (!result.cardinality || result.cardinality !== 'high') {
+      return {};
+    }
+    const bucket_size = result.bucket_size >= 1 ? result.bucket_size : Math.floor(result.multiplier * result.bucket_size);
+    const num_buckets = Math.floor((result.max - result.min) / bucket_size);
+    const buckets = [];
+    for (let i = 0; i < num_buckets + 2; i++) {
+      buckets.push(Math.floor(result.min + bucket_size * i));
+    }
+
+    return {buckets};
+  }
 }

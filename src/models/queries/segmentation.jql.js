@@ -149,19 +149,8 @@ function main() {
 
     groups = groups.concat(params.groups.map(function(group) {
       var jqlGroup;
-      if (group.cardinality && group.cardinality === 'high') {
-        jqlGroup =  function(eventData) {
-          const property = getPropertyPaths(group).reduce(function(property, path) {
-            return property[path];
-          }, eventData);
-          const bucketSize = group.bucket_size;
-          const min = Math.floor(group.min);
-
-          const low = Math.floor((property - min) / bucketSize) * bucketSize + min;
-          const high = low + bucketSize;
-
-          return `${low} - ${high}`;
-        };
+      if (group.buckets) {
+        jqlGroup = mixpanel.numeric_bucket(getPropertyPath(group), group.buckets);
       } else {
         jqlGroup = getPropertyPath(group);
       }
