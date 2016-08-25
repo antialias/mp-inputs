@@ -284,7 +284,7 @@ export default class SegmentationQuery extends BaseQuery {
     // data global to all JQL queries.
     const segments = sections.group.clauses.map(clause => pick(clause, ['value', 'resourceType', 'filterType']));
 
-    const filters = sections.filter.clauses.map(clause => clause.attrs);
+    const filters = sections.filter.clauses.map(clause => clause.attrs).filter(filter => isFilterValid(filter));
 
     const time = sections.time.clauses[0];
     const unit = time.unit;
@@ -334,7 +334,6 @@ export default class SegmentationQuery extends BaseQuery {
           event: eventName,
           on: `${action}["${segment.value}"]`,
           where: this.query.filters
-            .filter(filter => isFilterValid(filter))
             .map(filter => filterToArbSelectorString(filter))
             .join(' and '),
           allow_more_buckets: false,
@@ -365,7 +364,6 @@ export default class SegmentationQuery extends BaseQuery {
         groups: groups,
         filters:
         this.query.filters
-          .filter(filter => isFilterValid(filter))
           .map(filter => filterToParams(filter)),
         type: jqlQuery.type,
         property: jqlQuery.property,
