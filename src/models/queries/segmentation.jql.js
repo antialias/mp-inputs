@@ -321,6 +321,8 @@ function main() {
   if (params.property) {
     if (params.property.resourceType === 'people') {
       query = query.groupByUser(groups, function(accumulators, events) {
+        // TODO(dmitry, chi) use join(Events(), People(), {type:"left"}).groupByUser(mixpanel.reducer.any())
+        // instead.
         var eventData = _.find(events, function(eventData) {
           return !!eventData.user;
         });
