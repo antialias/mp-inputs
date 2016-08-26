@@ -1446,6 +1446,28 @@ filter-property-pane-content .pane-content ul.resource-value {
 .chart-legend .body .legend-series .series-values button .label.search-result .matches-search {
   color: #646670;
 }
+.chart-legend .body .legend-series .series-values button .delete-wrapper {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 0 10px;
+      -ms-flex: 1 0 10px;
+          flex: 1 0 10px;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  visibility: hidden;
+}
+.chart-legend .body .legend-series .series-values button .delete-wrapper .delete {
+  width: 10px;
+  color: #c4c8d6;
+}
+.chart-legend .body .legend-series .series-values button .delete-wrapper .delete:hover {
+  color: #646670;
+}
 .chart-legend .body .legend-series .series-values button.series .label {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1475,6 +1497,9 @@ filter-property-pane-content .pane-content ul.resource-value {
 }
 .chart-legend .body .legend-series .series-values button:hover .icon {
   border-color: #92949d;
+}
+.chart-legend .body .legend-series .series-values button:hover .delete-wrapper {
+  visibility: visible;
 }
 .chart-legend .body .legend-series.closed .name:before {
   -webkit-transform: rotate(-90deg);
