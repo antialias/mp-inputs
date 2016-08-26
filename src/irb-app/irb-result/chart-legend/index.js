@@ -17,7 +17,7 @@ document.registerElement('chart-legend', class extends Component {
           const groupProperties = util.pick(groupClauses[groupClauses.length - seriesIdx - 1], ['value', 'filterType', 'resourceType']);
           this.app.startAddingClause('filter');
           this.app.updateStageClause(util.extend(groupProperties, {
-            filterOperator: 'does not equal',
+            filterOperator: value === 'null' ? 'is set' : 'does not equal',
             filterValue: [value],
           }));
           this.app.commitStageClause();
