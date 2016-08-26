@@ -345,8 +345,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.update({isEditingExtrasMenu: false});
   }
 
-  startAddingClause(sectionType) {
-    this.update({stageClauses: this.state.stageClauses.concat(Clause.create(sectionType))});
+  startAddingClause(sectionType, attrs={}) {
+    this.update({stageClauses: this.state.stageClauses.concat(Clause.create(sectionType, attrs))});
   }
 
   startEditingClause(sectionType, clauseIndex) {
