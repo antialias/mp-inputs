@@ -6,9 +6,7 @@ import './sticky-scroll.styl';
 
 document.registerElement('sticky-scroll', class extends WebComponent {
   attributeChangedCallback(){
-    window.requestAnimationFrame(() => {
-      this.updateIfInitialized();
-    });
+    window.requestAnimationFrame(() => this.updateIfInitialized());
   }
 
   createdCallback() {
