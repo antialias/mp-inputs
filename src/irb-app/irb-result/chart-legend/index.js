@@ -14,7 +14,10 @@ document.registerElement('chart-legend', class extends Component {
         deleteToFilter: (ev, seriesIdx, value) => {
           ev.stopPropagation();
           const groupClauses = this.state.report.sections.group.clauses;
-          const groupProperties = util.pick(groupClauses[groupClauses.length - seriesIdx - 1], ['value', 'filterType', 'resourceType']);
+          const groupProperties = util.pick(
+            groupClauses[groupClauses.length - seriesIdx - 1],
+            ['value', 'filterType', 'resourceType']
+          );
           this.app.startAddingClause('filter', util.extend(groupProperties, {
             filterOperator: value === 'null' ? 'is set' : 'does not equal',
             filterValue: [value],
