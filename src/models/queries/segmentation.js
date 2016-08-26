@@ -54,41 +54,6 @@ function isFilterValid(filter) {
   return true;
 }
 
-function filterToParams(filter) {
-  const params = {
-    prop: filter.value,
-    dataType: filter.filterType,
-    operator: filter.filterOperator,
-    resourceType: filter.resourceType,
-    expected: filter.filterValue,
-  };
-  switch(params.dataType) {
-    case 'datetime': {
-      // add date params and convert from relative to absolute
-      params.dateUnit = filter.filterDateUnit;
-      const unitMS = MS_BY_UNIT[params.dateUnit];
-      if (params.operator === 'was on') {
-        // convert 'was on' to 'was between'
-        params.operator = 'was between';
-        params.expected = [params.expected, params.expected];
-      }
-      if (params.operator === 'was between') {
-        params.expected = [
-          Number(moment.utc(params.expected[0])),
-          Number(moment.utc(params.expected[1]).add(1, 'day')) - 1,
-        ];
-      } else {
-        params.expected = new Date(new Date().getTime() - (params.expected * unitMS)).getTime();
-      }
-      break;
-    }
-    case 'list':
-      params.operator = `list ${params.operator}`;
-      break;
-  }
-  return params;
-}
-
 function filterToArbSelectorString(filter) {
   let property = filter.value;
   const type = filter.filterType;
@@ -284,7 +249,11 @@ export default class SegmentationQuery extends BaseQuery {
     // data global to all JQL queries.
     const segments = sections.group.clauses.map(clause => pick(clause, ['value', 'resourceType', 'filterType']));
 
-    const filters = sections.filter.clauses.map(clause => clause.attrs).filter(filter => isFilterValid(filter));
+    const filters = sections.filter.clauses
+      .map(clause => clause.attrs)
+      .filter(filter => isFilterValid(filter))
+      .map(filter => filterToArbSelectorString(filter))
+      .join(' and ');
 
     const time = sections.time.clauses[0];
     const unit = time.unit;
@@ -333,9 +302,7 @@ export default class SegmentationQuery extends BaseQuery {
           to: new Date(this.query.to),
           event: eventName,
           on: `${action}["${segment.value}"]`,
-          where: this.query.filters
-            .map(filter => filterToArbSelectorString(filter))
-            .join(' and '),
+          where: this.query.filters,
           allow_more_buckets: false,
           allow_fewer_buckets: true,
           buckets: 12,
@@ -354,7 +321,15 @@ export default class SegmentationQuery extends BaseQuery {
     return this.buildGroups(jqlQuery).then(groups => {
       // base params
       const scriptParams = {
-        selectors: jqlQuery.events,
+        // filters are global to all show clauses.
+        selectors: jqlQuery.events.map(selector => {
+          if (selector.selector) {
+            selector.selector += ` and ${this.query.filters}`;
+          } else {
+            selector.selector = this.query.filters;
+          }
+          return selector;
+        }),
         outputName: jqlQuery.outputName,
         dates: {
           from: (new Date(this.query.from)).toISOString().split('T')[0],
@@ -362,15 +337,12 @@ export default class SegmentationQuery extends BaseQuery {
           unit: jqlQuery.unit,
         },
         groups: groups,
-        filters:
-        this.query.filters
-          .map(filter => filterToParams(filter)),
         type: jqlQuery.type,
         property: jqlQuery.property,
       };
 
       // As we need more helper data this should be moved down a level in the params
-      const hasPeopleFilters = scriptParams.filters.concat(scriptParams.groups).concat([scriptParams.property])
+      const hasPeopleFilters = scriptParams.groups.concat([scriptParams.property])
         .some(param => param && param.resourceType === 'people');
       const hasUserSelectors = scriptParams.selectors
         .some(es => es.selector && es.selector.includes('user['));

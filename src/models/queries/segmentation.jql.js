@@ -15,17 +15,6 @@
 //       event: 'Viewed report',
 //     },
 //   ],
-//   filters: [
-//     {
-//       prop: '$browser',
-//       operator: 'equals',
-//       expected: ['Chrome'],
-//     },
-//     {
-//       prop: 'mp_country_code',
-//       operator: 'is set',
-//     },
-//   ],
 //   groups: [
 //    '$browser',
 //    'mp_country_code',
@@ -38,92 +27,6 @@ function main() {
   var getEvent = function(eventData) {
     return eventData.event || eventData;
   };
-
-  if (params.filters && params.filters.length) {
-    // String
-    var stringContains = function(actual, expected) {
-      return String(actual).toLowerCase().indexOf(expected.toLowerCase()) !== -1;
-    };
-    var stringEquals = function(actual, expectedList) {
-      actual = String(actual).toLowerCase();
-      return expectedList.some(function(expectedVal) { return actual === String(expectedVal).toLowerCase(); });
-    };
-    var isSet = function(actual) {
-      return typeof actual !== 'undefined' && actual !== null;
-    };
-
-    // Integer / Date
-    var between = function(actual, expected) {
-      return typeof actual === 'number' && actual > expected[0] && actual < expected[1];
-    };
-    var betweenIncl = function(actual, expected) {
-      return actual >= expected[0] && actual <= expected[1];
-    };
-    var equalNum = function(actual, expected) {
-      return actual === expected;
-    };
-    var greaterThan = function(actual, expected) {
-      return actual > expected;
-    };
-    var lessThan = function(actual, expected) {
-      return actual < expected;
-    };
-
-    // Boolean
-    var isTruthy = function(actual) {
-      return !!actual;
-    };
-
-    // List
-    var listContains = function(actual, expected) {
-      return actual &&
-        actual.indexOf &&
-        actual.map(function(a) { return String(a); }).indexOf(String(expected)) !== -1;
-    };
-
-    var negate = function(f) {
-      return function() {
-        return !f.apply(null, arguments);
-      };
-    };
-    var filterTests = {
-      'contains':              stringContains,
-      'does not contain':      negate(stringContains),
-      'equals':                stringEquals,
-      'does not equal':        negate(stringEquals),
-      'is set':                isSet,
-      'is not set':            negate(isSet),
-
-      'is between':            between,
-      'is equal to':           equalNum,
-      'is greater than':       greaterThan,
-      'is less than':          lessThan,
-
-      'was between':           betweenIncl,
-      'was less than':         greaterThan,
-      'was more than':         lessThan,
-
-      'is true':               isTruthy,
-      'is false':              negate(isTruthy),
-
-      'list contains':         listContains,
-      'list does not contain': negate(listContains),
-    };
-
-    var filterByParams = function(eventData) {
-      for (var filter of params.filters) {
-        var dataToFilter = filter.resourceType === 'people' ? eventData.user : getEvent(eventData);
-        var filterTest = filterTests[filter.operator];
-        if (!filterTest) {
-          throw `Unknown filter operator: "${filter.operator}"`;
-        }
-        if (!dataToFilter || !filterTest(filter.prop ? dataToFilter.properties[filter.prop] : dataToFilter.name, filter.expected)) {
-          return false;
-        }
-      }
-      return true;
-    };
-  }
 
   var groups = [];
   if (params.outputName) {
@@ -303,11 +206,6 @@ function main() {
   } else {
     queryParams.event_selectors = params.selectors;
     query = Events(queryParams);
-  }
-
-  if (params.filters && params.filters.length) {
-    // TODO(dmitry,chi) Use event selectors instead of a javascript filter function.
-    query = query.filter(filterByParams);
   }
 
   if (params.property) {
