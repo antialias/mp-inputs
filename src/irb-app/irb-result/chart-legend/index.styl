@@ -113,6 +113,18 @@
                 .matches-search
                   color dark-gray
 
+          .delete-wrapper
+             display flex
+             flex 1 0 10px
+             justify-content flex-end
+             visibility hidden
+
+             .delete
+               width 10px
+               color light-gray
+               &:hover
+                 color dark-gray
+
           &.series
             .label
               ellipsis()
@@ -140,6 +152,9 @@
 
             .icon
               border-color medium-gray
+
+            .delete-wrapper
+               visibility visible
 
       &.closed
         .name:before

@@ -43,3 +43,6 @@
                       span.slice=label.slice(report.legend.search.length)
                   else
                     .label= label
+                  if series.seriesName !== '$event'
+                    .delete-wrapper
+                      .delete(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value))= 'X'

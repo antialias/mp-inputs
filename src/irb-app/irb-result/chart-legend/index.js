@@ -11,6 +11,17 @@ document.registerElement('chart-legend', class extends Component {
       template,
       helpers: {
         allSeriesSelected: seriesIdx => !this.state.report.legend.unselectedCount(seriesIdx),
+        deleteToFilter: (ev, seriesIdx, value) => {
+          ev.stopPropagation();
+          const groupClauses = this.state.report.sections.group.clauses;
+          const groupProperties = util.pick(groupClauses[groupClauses.length - seriesIdx - 1], ['value', 'filterType', 'resourceType']);
+          this.app.startAddingClause('filter');
+          this.app.updateStageClause(util.extend(groupProperties, {
+            filterOperator: 'does not equal',
+            filterValue: [value],
+          }));
+          this.app.commitStageClause();
+        },
         isSeriesValueShowing: (seriesIdx, name) => this.state.report.legend.data[seriesIdx].seriesData[name],
         isSearchActive: () => !!this.state.report.legend.search,
         legendDataToDisplay: () => {
