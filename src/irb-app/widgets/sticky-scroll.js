@@ -18,13 +18,11 @@ document.registerElement('sticky-scroll', class extends WebComponent {
     });
     this.onFirstScrollHandler = ()=> {
       if (this.firstScroll) {
-        if (!this.className.includes(' sticky')) {
-          this.className += ' sticky';
-        }
+        this.classList.add('sticky');
         this.stickyBody = this.querySelector('.body');
         this.stickyHeader = document.createElement('div');
         this.stickyHeader.style.width = `${this.stickyBody.clientWidth}px`;
-        this.stickyHeader.className = 'sticky-header';
+        this.stickyHeader.classList.add('sticky-header');
         this.appendChild(this.stickyHeader);
         this.render();
         this.firstScroll = false;
