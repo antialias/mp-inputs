@@ -13,7 +13,9 @@ document.registerElement('sticky-scroll', class extends WebComponent {
     this.firstScroll = true;
     this.stickyBody = null;
     this.stickyHeader = null;
-    this.onBodyScrollHandler = debounce(() => this.updateIfInitialized(), 10, {leading: true, trailing: true});
+    this.stuckTitle = null;
+
+    this.onBodyScrollHandler = debounce(() => this.updateStuckHeader(), 10, {leading: true, trailing: true});
     this.onFirstScrollHandler = ()=> {
       if (this.firstScroll) {
         this.classList.add('sticky');
@@ -37,11 +39,14 @@ document.registerElement('sticky-scroll', class extends WebComponent {
   }
 
   hideTitle(title) {
+    title.classList.remove('stuck');
     title.style.marginTop = `-${title.offsetHeight}px`;
   }
 
   moveTitleAtIndex(idx, px) {
     const title = this.headerStickyTitles[idx];
+    title.classList.add('stuck');
+    this.stuckTitle = title;
     title.style.marginTop = `${px}px`;
   }
 
@@ -66,6 +71,8 @@ document.registerElement('sticky-scroll', class extends WebComponent {
   }
 
   showTitle(title) {
+    title.classList.add('stuck');
+    this.stuckTitle = title;
     title.style.marginTop = '';
   }
 
@@ -76,20 +83,23 @@ document.registerElement('sticky-scroll', class extends WebComponent {
   }
 
   updateStuckHeader() {
-    const bodyScrollTop = this.stickyBody.scrollTop;
-    const titleDistances = this.bodyStickyTitles.map(title => title.offsetTop - bodyScrollTop);
-    const headerHeight = '25'; //this.currentHeaderHeight();
-    this.headerStickyTitles.forEach((title, idx) => {
-      if (titleDistances[idx] <= headerHeight && (titleDistances[idx + 1] >= headerHeight || !titleDistances[idx + 1])) {
-        if (titleDistances[idx] <= 0) {
-          this.showTitle(title);
+    if (this.headerStickyTitles.length) {
+      const bodyScrollTop = this.stickyBody.scrollTop;
+      const titleDistances = this.bodyStickyTitles.map(title => title.offsetTop - bodyScrollTop);
+      this.stuckTitle = this.stuckTitle || this.headerStickyTitles[0];
+      const headerHeight = this.stuckTitle.offsetHeight;
+      this.headerStickyTitles.forEach((title, idx) => {
+        if (titleDistances[idx] <= headerHeight && (titleDistances[idx + 1] >= headerHeight || !titleDistances[idx + 1])) {
+          if (titleDistances[idx] <= 0) {
+            this.showTitle(title);
+          } else {
+            this.hideTitle(title);
+            this.moveTitleAtIndex(idx - 1, titleDistances[idx] - headerHeight);
+          }
         } else {
           this.hideTitle(title);
-          this.moveTitleAtIndex(idx - 1, titleDistances[idx] - headerHeight);
         }
-      } else {
-        this.hideTitle(title);
-      }
-    });
+      });
+    }
   }
 });
