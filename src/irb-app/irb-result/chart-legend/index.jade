@@ -8,10 +8,7 @@
       focusDelay=200
       oninput=$helpers.searchHandler
     )
-  sticky-scroll(attributes={
-    'legend-data': JSON.stringify(legendDataToDisplay),
-    'showing': JSON.stringify(report.legend.seriesShowing),
-  })
+  sticky-scroll(attributes={'refresh-data': JSON.stringify({showing: report.legend.seriesShowing, legendDataToDisplay})})
     .body
       if !legendDataToDisplay.length
         .no-result= 'No results match this search'
