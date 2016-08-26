@@ -207,21 +207,3 @@ export function uniqueObjKeysAtDepth(obj, depth) {
   });
   return Array.from(keys);
 }
-
-export function debounce(func, delay=100) {
-  return function() {
-    this._debounceLock = this._debounceLock || false;
-    this._lastCallRun = false;
-    if (!this._debounceLock) {
-      func();
-      this._debounceLock = true;
-      this._lastCallRun = true;
-    }
-    setTimeout(() => {
-      this._debounceLock = false;
-      if (!this._lastCallRun) {
-        func();
-      }
-    }, delay);
-  };
-}

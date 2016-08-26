@@ -1,6 +1,6 @@
 import WebComponent from 'webcomponent';
 
-import * as util from '../../util';
+import debounce from 'lodash/debounce';
 
 import './sticky-scroll.styl';
 
@@ -13,9 +13,7 @@ document.registerElement('sticky-scroll', class extends WebComponent {
     this.firstScroll = true;
     this.stickyBody = null;
     this.stickyHeader = null;
-    this.onBodyScrollHandler = util.debounce(() => {
-      this.updateIfInitialized();
-    });
+    this.onBodyScrollHandler = debounce(() => this.updateIfInitialized(), 10, {leading: true, trailing: true});
     this.onFirstScrollHandler = ()=> {
       if (this.firstScroll) {
         this.classList.add('sticky');
