@@ -249,7 +249,7 @@ export default class SegmentationQuery extends BaseQuery {
     // data global to all JQL queries.
     const segments = sections.group.clauses.map(clause => pick(clause, ['value', 'resourceType', 'filterType']));
 
-    const filters = sections.filter.clauses
+    const filterArbSelectors = sections.filter.clauses
       .map(clause => clause.attrs)
       .filter(filter => isFilterValid(filter))
       .map(filter => filterToArbSelectorString(filter))
@@ -266,7 +266,7 @@ export default class SegmentationQuery extends BaseQuery {
       from = to - MS_BY_UNIT[unit] * time.value;
     }
 
-    return {jqlQueries, segments, filters, from, to};
+    return {jqlQueries, segments, filterArbSelectors, from, to};
   }
 
   buildUrl() {
@@ -302,7 +302,7 @@ export default class SegmentationQuery extends BaseQuery {
           to: new Date(this.query.to),
           event: eventName,
           on: `${action}["${segment.value}"]`,
-          where: this.query.filters,
+          where: this.query.filterArbSelectors,
           allow_more_buckets: false,
           allow_fewer_buckets: true,
           buckets: 12,
@@ -321,12 +321,12 @@ export default class SegmentationQuery extends BaseQuery {
     return this.buildGroups(jqlQuery).then(groups => {
       // base params
       const scriptParams = {
-        // filters are global to all show clauses.
+        // filter clauses are global to all show clauses.
         selectors: jqlQuery.events.map(selector => {
           if (selector.selector) {
-            selector.selector += ` and ${this.query.filters}`;
+            selector.selector += ` and ${this.query.filterArbSelectors}`;
           } else {
-            selector.selector = this.query.filters;
+            selector.selector = this.query.filterArbSelectors;
           }
           return selector;
         }),
