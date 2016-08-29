@@ -1,6 +1,6 @@
 - const isStacked = displayOptions.plotStyle === 'stacked'
 - const isLogarithmic = displayOptions.analysis === 'logarithmic'
-- const isValueRelative = displayOptions.value === 'relative'
+- const isValueAbsolute = displayOptions.value === 'absolute'
 - const headersToDisplay = $helpers.headersToDisplay()
 
 mixin sort-col-button(sortBy, sortOrder, colIdx)
@@ -88,13 +88,13 @@ mixin sort-axis-button(sortOrder)
                   ul(class={stacked: isStacked})
                     - const segmentCell = isLogarithmic ? cell.map(value => Math.log10(value)) : cell
                     - let segmentMax
-                    if isStacked
-                      - segmentMax = util.sum(segmentCell)
+                    if isValueAbsolute
+                      - segmentMax = isLogarithmic ? Math.log10(chartMax) : chartMax
                     else
-                      if isValueRelative
-                        - segmentMax = Math.max(...segmentCell)
+                      if isStacked
+                          - segmentMax = util.sum(segmentCell)
                       else
-                        - segmentMax = isLogarithmic ? Math.log10(chartMax) : chartMax
+                          - segmentMax = Math.max(...segmentCell)
                     for value, k in cell
                       - const percent = isLogarithmic ? (Math.log10(value) / segmentMax) : (value / segmentMax)
                       - const percentValueString = `${Math.floor(percent * 10000) / 100}%`
@@ -108,7 +108,7 @@ mixin sort-axis-button(sortOrder)
                           [`bar-color-${barColors[segmentName]}`]: row.length > 2,
                         })
                         if percent > .04
-                          .label= isValueRelative ? percentValueString : util.abbreviateNumber(value)
+                          .label= isValueAbsolute ? util.abbreviateNumber(value) : percentValueString
 
   //- For the hover tool tip to break out of the scroll overflow we are manually calculating where it should be on the screen.
   //- TODO When we change how scrolling works for results: place a tooltip on each li.chart-bar and use CSS to show/hide.
