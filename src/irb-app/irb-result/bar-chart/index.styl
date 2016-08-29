@@ -8,7 +8,6 @@ bar-bottom = 8px
     width 100%
 
     thead
-      border-bottom 1px solid border-gray
       position relative
       z-index 1
 
@@ -41,6 +40,8 @@ bar-bottom = 8px
 
           .text
             padding-left 15px
+          .sort-icon
+            margin-left auto
 
         .bar-chart-axis
           justify-content flex-end
@@ -67,6 +68,12 @@ bar-bottom = 8px
 
     tbody
       min-height 300px
+
+      tr
+        &:not(:last-child)
+          border-bottom 1px solid border-gray
+        &:nth-child(odd)
+          background-color grey-100
 
     th, td
       white-space nowrap
@@ -273,7 +280,7 @@ bar-bottom = 8px
     height 100%
     width 36px
     &::before
-      background-color light-gray
+      background-color grey-500
       content ''
       display inline-block
       height 100%
