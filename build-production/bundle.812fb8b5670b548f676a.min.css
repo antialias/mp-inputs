@@ -9,13 +9,16 @@
   display: -ms-flexbox;
   display: flex;
   height: 60px;
-  margin: 0 24px;
-  padding-top: 10px;
+  padding: 5px 20px;
+  background-color: #f0f3f5;
+  border-radius: 5px 5px 0 0;
+  box-shadow: inset 0px 1px #fff;
 }
 .irb-header auto-sizing-input {
   display: inline-block;
 }
 .irb-header auto-sizing-input input {
+  background-color: inherit;
   border: none;
   color: #92949d;
   font-size: 20px;
@@ -1048,6 +1051,7 @@ filter-property-pane-content .pane-content ul.resource-value {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
+  border-bottom: 1px solid #d8e0e7;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1056,6 +1060,10 @@ filter-property-pane-content .pane-content ul.resource-value {
   -webkit-justify-content: flex-end;
       -ms-flex-pack: end;
           justify-content: flex-end;
+  padding: 10px;
+  background-color: #f0f3f5;
+  border-radius: 5px 5px 0 0;
+  box-shadow: inset 0px 1px #fff;
 }
 .groups .group {
   margin: 0 5px;
@@ -1349,6 +1357,7 @@ sticky-scroll.sticky .body {
 }
 .chart-legend {
   background-color: #f8f9f9;
+  border-radius: 0 0 5px 0;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1361,9 +1370,12 @@ sticky-scroll.sticky .body {
   height: 100%;
 }
 .chart-legend .header {
-  background-color: #fff;
-  border: 1px solid #ebecef;
-  border-right: 0 none;
+  background-color: #f0f3f5;
+  border: 1px solid #d8e0e7;
+  border-right: none;
+  border-top: none;
+  color: #9cacbb;
+  font-size: 12px;
   height: 40px;
   line-height: 40px;
   padding-left: 15px;
@@ -1602,8 +1614,6 @@ sticky-scroll.sticky .body {
   width: 100%;
 }
 .bar-chart table thead {
-  border-top: 1px solid #ebecef;
-  border-bottom: 1px solid #ebecef;
   position: relative;
   z-index: 1;
 }
@@ -1613,10 +1623,13 @@ sticky-scroll.sticky .body {
   padding: 0;
 }
 .bar-chart table thead irb-bar-chart-header .bar-chart-container {
+  background-color: #f0f3f5;
+  color: #9cacbb;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  font-size: 12px;
 }
 .bar-chart table thead irb-bar-chart-header .bar-chart-container.loading {
   visibility: hidden;
@@ -1643,10 +1656,13 @@ sticky-scroll.sticky .body {
   line-height: 40px;
 }
 .bar-chart table thead irb-bar-chart-header .bar-chart-header {
-  border-right: 1px solid #f2f2f4;
+  border-right: 1px solid #d8e0e7;
 }
 .bar-chart table thead irb-bar-chart-header .bar-chart-header .text {
   padding-left: 15px;
+}
+.bar-chart table thead irb-bar-chart-header .bar-chart-header .sort-icon {
+  margin-left: auto;
 }
 .bar-chart table thead irb-bar-chart-header .bar-chart-axis {
   -webkit-box-pack: end;
@@ -1690,6 +1706,12 @@ sticky-scroll.sticky .body {
 .bar-chart table tbody {
   min-height: 300px;
 }
+.bar-chart table tbody tr:not(:last-child) {
+  border-bottom: 1px solid #d8e0e7;
+}
+.bar-chart table tbody tr:nth-child(odd) {
+  background-color: #f0f3f5;
+}
 .bar-chart table th,
 .bar-chart table td {
   white-space: nowrap;
@@ -1705,8 +1727,9 @@ sticky-scroll.sticky .body {
   border-bottom-color: transparent;
 }
 .bar-chart table td {
-  border: 2px solid #f2f2f4;
+  border: 1px dotted #d8e0e7;
   border-bottom-color: #f8f9f9;
+  border-top: none;
   color: #92949d;
   font-size: 12px;
   padding: 12px;
@@ -1790,8 +1813,7 @@ sticky-scroll.sticky .body {
 }
 .bar-chart table td.chart-data {
   border: none;
-  padding: 0;
-  padding-top: 12px;
+  padding: 12px 20px 0 0;
   position: relative;
 }
 .bar-chart table td.chart-data .chart-grid {
@@ -1933,7 +1955,7 @@ sticky-scroll.sticky .body {
   width: 36px;
 }
 .bar-chart .sort-icon::before {
-  background-color: #c4c8d6;
+  background-color: #9cacbb;
   content: '';
   display: inline-block;
   height: 100%;
@@ -2194,12 +2216,7 @@ sticky-scroll.sticky .body {
   width: 10%;
 }
 .irb-result {
-  padding: 24px;
-  padding-top: 0;
   position: relative;
-}
-.irb-result .controls {
-  margin-bottom: 15px;
 }
 .irb-result .controls::after {
   content: "";
@@ -2286,10 +2303,14 @@ sticky-scroll.sticky .body {
   margin-left: 10px;
 }
 .irb-app {
+  border-radius: 5px;
+  margin-bottom: 0;
+}
+.irb-main-panel {
   background-color: #fff;
   border-radius: 5px;
+  box-shadow: 0px 1px 1.8px 0.2px rgba(69,81,113,0.15);
   margin: 20px;
-  margin-bottom: 0;
 }
 /* http://meyerweb.com/eric/tools/css/reset/
    v2.0 | 20110126
