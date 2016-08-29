@@ -1,4 +1,6 @@
 .irb-app
-  = $component.child('irb-header')
-  = $component.child('irb-builder')
-  = $component.child('irb-result')
+  .irb-main-panel
+    = $component.child('irb-header')
+    = $component.child('irb-builder')
+  .irb-main-panel
+    = $component.child('irb-result')
