@@ -30,7 +30,7 @@
                   onclick=() => $helpers.toggleAllSeriesValue(seriesIdx)
                 )
                   .icon(class={color: seriesIdx === 0})
-                  .label= `Select all`
+                  .label Select all
             if !series.seriesValues.length
               .no-result= 'No results'
             each value in series.seriesValues

@@ -51,7 +51,7 @@ document.registerElement('sticky-scroll', class extends WebComponent {
   }
 
   render() {
-    this.bodyStickyTitles = [].slice.call(this.stickyBody.getElementsByClassName('sticky-title'));
+    this.bodyStickyTitles = [...this.stickyBody.getElementsByClassName('sticky-title')];
     while (this.stickyHeader.hasChildNodes()) {
       this.stickyHeader.removeChild(this.stickyHeader.lastChild);
     }

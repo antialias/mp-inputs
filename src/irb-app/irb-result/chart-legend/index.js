@@ -31,7 +31,9 @@ document.registerElement('chart-legend', class extends Component {
         isSearchActive: () => !!this.state.report.legend.search,
         legendDataToDisplay: () => {
           const seriesData = this.state.report.legend.data.map((series, idx) => {
-            const seriesValues = Object.keys(series.seriesData).filter(value => this.config.helpers.matchesSearch(value, idx)).sort();
+            const seriesValues = Object.keys(series.seriesData)
+              .filter(value => this.config.helpers.matchesSearch(value, idx))
+              .sort();
             if (this.state.report.legend.getSeriesDisplayAtIndex(idx) === 'minimized') {
               seriesValues.splice(12);
             }
