@@ -60,7 +60,7 @@ mixin sort-axis-button(sortOrder)
               +sort-axis-button('asc')
               +sort-axis-button('desc')
       for row, i in rows
-        - const isMultiColor = row.length > 2 || isStacked;
+        - const isMultiColor = row.length > 2 || isStacked
         tr
           for cell, j in row
             if cell
