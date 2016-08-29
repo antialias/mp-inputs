@@ -133,6 +133,13 @@
           .label
             ellipsis()
 
+        &.search-result
+            .slice
+              color lighten(light-gray, 10%)
+
+            .matches-search
+              color dark-gray
+
       .delete-wrapper
          display flex
          flex 1 0 10px
@@ -143,13 +150,6 @@
           width 10px
           color light-gray
           &:hover
-            color dark-gray
-
-      &.search-result
-          .slice
-            color lighten(light-gray, 10%)
-
-          .matches-search
             color dark-gray
 
       &.series
