@@ -33,9 +33,11 @@ document.registerElement('sticky-scroll', class extends WebComponent {
     this.addEventListener('scroll', this.onFirstScrollHandler);
   }
 
-  detachedCallback(){
-    this.stickyBody.removeEventListener('scroll', this.onBodyScrollHandler);
+  detachedCallback() {
     this.removeEventListener('scroll', this.onFirstScrollHandler);
+    if (this.stickyBody) {
+      this.stickyBody.removeEventListener('scroll', this.onBodyScrollHandler);
+    }
   }
 
   hideTitle(title) {
