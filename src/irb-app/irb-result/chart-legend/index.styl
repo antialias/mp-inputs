@@ -1,4 +1,7 @@
 @import "../../../stylesheets/common"
+
+legend-left-padding = 15px
+
 .chart-legend
   background-color #f9fafc
   border-radius 0 0 5px 0
@@ -15,7 +18,7 @@
     font-size 12px
     height 40px
     line-height 40px
-    padding-left 15px
+    padding-left legend-left-padding
 
   .search
     border-left 1px solid lighten(background-gray, 25%)
@@ -26,7 +29,7 @@
       content ''
       display block
       height 100%
-      left 16px
+      left legend-left-padding
       mask url(../../../../assets/charts/search.svg) no-repeat center
       position absolute
       width 16px
@@ -43,7 +46,7 @@
       font 500 13px font-helvetica-neue
       margin 0
       padding 0
-      padding-left 39px
+      padding-left legend-left-padding + 24px
       height 36px
       width 100%
       &::placeholder
@@ -61,22 +64,25 @@
   .no-result
     color #838ca2
     font-size 13px
-    padding 16px 30px
+    padding 15px 25px 15px 30px
 
   .display-option
     background-color #fff
-    border 1px solid light-gray
-    border-radius 3px
+    border 1px solid #d5ddec
+    border-radius 4px
     box-sizing border-box
-    color dark-gray
+    box-shadow 0 1px 2px 0 rgba(0, 0, 0, 0.05), inset 0 0 0 2px rgba(255, 255, 255, 0.17)
+    color #7e879e
     cursor pointer
-    font-size 10px
-    margin 10px
-    padding 5px
+    font-size 11px
+    font-weight bold
+    height 30px
+    line-height 30px
+    margin 9px 17px 0 legend-left-padding
+    padding 0 5px
     text-align center
     text-transform uppercase
-    user-select none
-    width calc(100% - 20px)
+    width calc(100% - 17px - legend-left-padding)
 
   .info
     stick-title-height = 40px
@@ -85,7 +91,7 @@
     display flex
     height stick-title-height
     justify-content space-between
-    padding 0 10px 0 16px
+    padding 0 10px 0 legend-left-padding
 
     .name, .count
       line-height stick-title-height
@@ -116,12 +122,15 @@
       font-size 12px
 
   .series-values
+    .no-result
+      padding 0 30px
+
     button
       align-items center
       background none
       border none
       display flex
-      padding 6px 0 6px 16px
+      padding 6px 0 6px legend-left-padding
       width 100%
 
       .icon

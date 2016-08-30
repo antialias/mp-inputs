@@ -21,7 +21,7 @@ document.registerElement('sticky-scroll', class extends WebComponent {
         this.classList.add('sticky');
         this.stickyBody = this.querySelector('.body');
         this.stickyHeader = document.createElement('div');
-        this.stickyHeader.style.width = `${this.stickyBody.clientWidth}px`;
+        this.setWidth();
         this.stickyHeader.classList.add('sticky-header');
         this.appendChild(this.stickyHeader);
         this.render();
@@ -62,6 +62,7 @@ document.registerElement('sticky-scroll', class extends WebComponent {
       title.onclick = this.bodyStickyTitles[idx].onclick;
       this.stickyHeader.appendChild(title);
     });
+    this.setWidth();
     this.resetStickyHeaders();
   }
 
@@ -70,6 +71,10 @@ document.registerElement('sticky-scroll', class extends WebComponent {
       this.headerStickyTitles.forEach(title => title.style.marginTop = `-${title.offsetHeight}px`);
       this.updateStuckHeader();
     }
+  }
+
+  setWidth() {
+    this.stickyHeader.style.width = `${this.stickyBody.clientWidth}px`;
   }
 
   showTitle(title) {
