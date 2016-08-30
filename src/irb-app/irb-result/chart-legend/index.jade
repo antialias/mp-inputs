@@ -3,58 +3,59 @@
 
 .chart-legend
   .header Legend
-  .search(class={active: isSearchActive})
-    focus-input(
-      attributes={placeholder: 'search'}
-      focusDelay=200
-      oninput=$helpers.searchHandler
+  .content-wrapper
+    .search(class={active: isSearchActive})
+      focus-input(
+        attributes={placeholder: 'search'}
+        focusDelay=200
+        oninput=$helpers.searchHandler
+      )
+    sticky-scroll(
+      attributes={'refresh-data': JSON.stringify({showing: report.legend.seriesShowing, legendDataToDisplay})}
+      class={results: legendDataToDisplay.length}
     )
-  sticky-scroll(
-    attributes={'refresh-data': JSON.stringify({showing: report.legend.seriesShowing, legendDataToDisplay})}
-    class={results: legendDataToDisplay.length}
-  )
-    .body
-      if !legendDataToDisplay.length
-        .no-result Your search didn't return any results
-      each series, seriesIdx in legendDataToDisplay
-        - const isSeriesShowing = report.legend.isSeriesShowing(seriesIdx)
-        - const seriesDisplay = report.legend.getSeriesDisplayAtIndex(seriesIdx)
-        - const seriesDisplayLabel = $helpers.seriesDisplayOption(seriesIdx)
-        .sticky-title.info(onclick=() => report.legend.toggleShowSeries(seriesIdx))
-          .name(class={showing: isSeriesShowing})= util.renameProperty(series.seriesName)
-          .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
-        ul.series-values
-          if isSeriesShowing
-            if !isSearchActive
-              li
-                button.select-all(
-                  class={showing: $helpers.allSeriesSelected(seriesIdx)}
-                  onclick=() => $helpers.toggleAllSeriesValue(seriesIdx)
-                )
-                  .series-icon
-                  .label Select all
-            if !series.seriesValues.length
-              .no-result= 'No results'
-            each value in series.seriesValues
-              - const showing = $helpers.isSeriesValueShowing(seriesIdx, value)
-              li
-                button.series(
-                  class={showing}
-                  onclick=() => $helpers.toggleShowSeriesValue(seriesIdx, value)
-                )
-                  .series-icon(class={
-                    color: seriesIdx === 0,
-                    [`data-color-${report.legend.getColorForSeries(value)}`]: showing && seriesIdx === 0,
-                  })
-                  - const label = $helpers.renameSeriesValue(seriesIdx, value)
-                  if isSearchActive
-                    .label.search-result
-                      span.slice.matches-search=label.slice(0, report.legend.search.length)
-                      span.slice=label.slice(report.legend.search.length)
-                  else
-                    .label= label
-                  if series.seriesName !== '$event'
-                    .delete-wrapper
-                      .delete(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value)) X
-        if isSeriesShowing && seriesDisplayLabel
-          .display-option(onclick=() => report.legend.toggleSeriesDisplaySetting(seriesIdx))= seriesDisplayLabel
+      .body
+        if !legendDataToDisplay.length
+          .no-result Your search didn't return any results
+        each series, seriesIdx in legendDataToDisplay
+          - const isSeriesShowing = report.legend.isSeriesShowing(seriesIdx)
+          - const seriesDisplay = report.legend.getSeriesDisplayAtIndex(seriesIdx)
+          - const seriesDisplayLabel = $helpers.seriesDisplayOption(seriesIdx)
+          .sticky-title.info(onclick=() => report.legend.toggleShowSeries(seriesIdx))
+            .name(class={showing: isSeriesShowing})= util.renameProperty(series.seriesName)
+            .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
+          ul.series-values
+            if isSeriesShowing
+              if !isSearchActive
+                li
+                  button.select-all(
+                    class={showing: $helpers.allSeriesSelected(seriesIdx)}
+                    onclick=() => $helpers.toggleAllSeriesValue(seriesIdx)
+                  )
+                    .series-icon
+                    .label Select all
+              if !series.seriesValues.length
+                .no-result= 'No results'
+              each value in series.seriesValues
+                - const showing = $helpers.isSeriesValueShowing(seriesIdx, value)
+                li
+                  button.series(
+                    class={showing}
+                    onclick=() => $helpers.toggleShowSeriesValue(seriesIdx, value)
+                  )
+                    .series-icon(class={
+                      color: seriesIdx === 0,
+                      [`data-color-${report.legend.getColorForSeries(value)}`]: showing && seriesIdx === 0,
+                    })
+                    - const label = $helpers.renameSeriesValue(seriesIdx, value)
+                    if isSearchActive
+                      .label.search-result
+                        span.slice.matches-search=label.slice(0, report.legend.search.length)
+                        span.slice=label.slice(report.legend.search.length)
+                    else
+                      .label= label
+                    if series.seriesName !== '$event'
+                      .delete-wrapper
+                        .delete(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value)) X
+          if isSeriesShowing && seriesDisplayLabel
+            .display-option(onclick=() => report.legend.toggleSeriesDisplaySetting(seriesIdx))= seriesDisplayLabel
