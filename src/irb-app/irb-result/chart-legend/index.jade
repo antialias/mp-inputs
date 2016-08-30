@@ -14,7 +14,7 @@
   })
     .body
       if !legendDataToDisplay.length
-        .no-result= 'No results match this search'
+        .no-result Your search didn't return any results
       each series, seriesIdx in legendDataToDisplay
         - const isSeriesShowing = report.legend.isSeriesShowing(seriesIdx)
         - const seriesDisplay = report.legend.getSeriesDisplayAtIndex(seriesIdx)

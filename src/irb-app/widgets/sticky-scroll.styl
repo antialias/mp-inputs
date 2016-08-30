@@ -2,18 +2,16 @@
 
 sticky-scroll, .body // force scroll style to handle autohidden scrollBars
   &::-webkit-scrollbar
+    border-radius 4px
+    background-color #e7ecf0
     -webkit-appearance none
-
-  &::-webkit-scrollbar:vertical
-    width 11px
-
-  &::-webkit-scrollbar:horizontal
-    height 11px
+    width 8px
 
   &::-webkit-scrollbar-thumb
+    border 10px solid white
     border-radius 8px
-    border 2px solid white
-    background-color rgba(0, 0, 0, .5)
+    border 0 none
+    background-color #c0ccd5
 
 sticky-scroll
   box-sizing border-box

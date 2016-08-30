@@ -41,6 +41,7 @@
   .results
     background-color lighten(background-gray, 75%)
     border-left 1px solid lighten(background-gray, 25%)
+    margin-right 6px
 
   .no-result
     color medium-gray
@@ -64,27 +65,29 @@
     width calc(100% - 20px)
 
   .info
+    stick-title-height = 40px
     background-color lighten(background-gray, 75%)
     cursor pointer
     display flex
-    height 25px
+    height stick-title-height
     justify-content space-between
-    padding 0 10px
+    padding 0 10px 0 16px
 
     .name, .count
-      line-height 25px
+      line-height stick-title-height
 
     .name
       ellipsis()
-      color dark-gray
-      font-size 12px
+      color #4c6072
+      font-size 13px
+      font-weight bold
 
       &:before
         background medium-gray
         content ''
         display inline-block
         height 10px
-        margin-right 5px
+        margin-right 6px
         mask url(../../../../assets/chart-controls/caret-dropdown.svg) no-repeat center
         transition transform .25s
         transform rotate(-90deg)
@@ -95,7 +98,8 @@
           transform rotate(0)
 
     .count
-      font-size 10px
+      color #7e879e
+      font-size 12px
 
   .series-values
     button
@@ -103,46 +107,35 @@
       background none
       border none
       display flex
-      padding 3px 10px
+      padding 6px 0 6px 16px
       width 100%
 
       .icon
         background-color #fff
-        border 1px solid light-gray
+        border 1px solid #d3dee8
         border-radius 3px
-        flex 0 0 12px
-        height 12px
-        margin-right 10px
+        box-sizing border-box
+        flex 0 0 18px
+        height 18px
+        margin-right 11px
 
         &:before
-          background medium-gray
+          background #4c6072
           content ''
           display none
           width 100%
           height 100%
           mask url(../../../../assets/properties/check.svg) no-repeat center
 
-        &.color
-          background-color light-gray
-
-          &:before
-            background #fff
-
       .label
-        color light-gray
+        color #858ea4
         font 500 12px font-helvetica-neue
         text-align left
 
-        &.series
-          .label
-            ellipsis()
-
         &.search-result
-            .slice
-              color lighten(light-gray, 10%)
-
             .matches-search
-              color dark-gray
+              color #4c6072
+              font-weight 600
 
       .delete-wrapper
          display flex
@@ -160,24 +153,23 @@
         .label
           ellipsis()
 
-      &.select-all
-        align-items flex-start
-
-        .label
-          color medium-gray
-
       &.showing
         .label
-          color medium-gray
           transform rotate(0)
 
         .icon
           &:before
             display inline-block
 
+          &.color
+            border 0 none
+            background-color light-gray
+            &:before
+              background #fff
+
       &:hover
         .label
-          color dark-gray
+          color #4c6072
 
         .delete-wrapper
            visibility visible
@@ -187,7 +179,4 @@
           transform rotate(-90deg)
 
           .slice
-            color dark-gray
-
-        .icon
-          border-color medium-gray
+            color #4c6072
