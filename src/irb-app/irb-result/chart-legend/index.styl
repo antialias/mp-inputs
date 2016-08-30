@@ -2,6 +2,8 @@
 
 legend-left-padding = 15px
 
+label-dark-gray = #4c6072
+
 .chart-legend
   background-color #f9fafc
   border-radius 0 0 5px 0
@@ -48,14 +50,14 @@ legend-left-padding = 15px
       width 16px
 
     &.active:before
-      background-color #4c6072
+      background-color label-dark-gray
 
 
     input
       background-color #fff
       border 0
       box-sizing border-box
-      color #4c6072
+      color label-dark-gray
       font 500 13px font-helvetica-neue
       margin 0
       padding 0
@@ -110,7 +112,7 @@ legend-left-padding = 15px
 
     .name
       ellipsis()
-      color #4c6072
+      color label-dark-gray
       font-size 13px
       font-weight bold
 
@@ -131,6 +133,7 @@ legend-left-padding = 15px
 
     .count
       color #7e879e
+      padding-top 1px
       font-size 12px
 
   .series-values
@@ -155,7 +158,7 @@ legend-left-padding = 15px
         margin-right 11px
 
         &:before
-          background-color #4c6072
+          background-color label-dark-gray
           content ''
           display none
           width 100%
@@ -169,7 +172,7 @@ legend-left-padding = 15px
 
         &.search-result
             .matches-search
-              color #4c6072
+              color label-dark-gray
               font-weight 600
 
       .delete-wrapper
@@ -203,7 +206,7 @@ legend-left-padding = 15px
 
       &:hover
         .label
-          color #4c6072
+          color label-dark-gray
 
         .delete-wrapper
            visibility visible
@@ -213,4 +216,4 @@ legend-left-padding = 15px
           transform rotate(-90deg)
 
           .slice
-            color #4c6072
+            color label-dark-gray
