@@ -2,6 +2,7 @@
 
 legend-left-padding = 15px
 
+label-medium-gray = #7e879e
 label-dark-gray = #4c6072
 
 .chart-legend
@@ -86,7 +87,7 @@ label-dark-gray = #4c6072
     border-radius 4px
     box-sizing border-box
     box-shadow 0 1px 2px 0 rgba(0, 0, 0, 0.05), inset 0 0 0 2px rgba(255, 255, 255, 0.17)
-    color #7e879e
+    color label-medium-gray
     cursor pointer
     font-size 11px
     font-weight bold
@@ -121,18 +122,18 @@ label-dark-gray = #4c6072
         content ''
         display inline-block
         height 10px
-        margin-right 6px
-        mask url(../../../../assets/chart-controls/caret-dropdown.svg) no-repeat center
+        margin-right 5px
+        mask url(../../../../assets/chart-controls/twirl-caret.svg) center center/16px 16px no-repeat
         transition transform .25s
         transform rotate(-90deg)
-        width 10px
+        width 8px
 
       &.showing
         &:before
           transform rotate(0)
 
     .count
-      color #7e879e
+      color label-medium-gray
       padding-top 1px
       font-size 12px
 
