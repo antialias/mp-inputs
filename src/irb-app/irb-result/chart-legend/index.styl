@@ -189,11 +189,14 @@ label-dark-gray = #4c6072
          justify-content flex-end
          visibility hidden
 
-        .delete
-          width 10px
-          color light-gray
+        .delete-icon
+          background-color #9cacbb
+          width 12px
+          height 12px
+          margin-right 5px
+          mask url(../../../../assets/chart-controls/x.svg) center center/12px 12px  no-repeat
           &:hover
-            color dark-gray
+            background-color label-dark-gray
 
       &.series
         .label

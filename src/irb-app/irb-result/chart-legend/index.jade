@@ -56,6 +56,6 @@
                       .label= label
                     if series.seriesName !== '$event'
                       .delete-wrapper
-                        .delete(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value)) X
+                        .delete-icon(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value))
           if isSeriesShowing && seriesDisplayLabel
             .display-option(onclick=() => report.legend.toggleSeriesDisplaySetting(seriesIdx))= seriesDisplayLabel
