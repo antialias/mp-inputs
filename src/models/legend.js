@@ -19,8 +19,28 @@ export default class Legend {
     return Object.keys(series.seriesData).length > 20 ? 'minimized' : 'all';
   }
 
+  buildColorMap(numColors=8) {
+    this._colorMap = {};
+    let colorIdx = 0;
+    const showingData = Object.keys(this.data[0].seriesData).filter(series => this.data[0].seriesData[series]);
+    showingData.forEach(series => {
+      this._colorMap[series] = this._colorMap[series] || (colorIdx++ % numColors) + 1;
+    });
+    return this._colorMap;
+  }
+
+
   getSeriesDisplayAtIndex(seriesIdx) {
     return this.seriesShowing[seriesIdx] || null;
+  }
+
+  get colorMap() {
+    this._colorMap = this._colorMap || {};
+    return this._colorMap;
+  }
+
+  getColorForSeries(series) {
+    return this._colorMap[series];
   }
 
   get seriesShowing() {
@@ -66,6 +86,7 @@ export default class Legend {
 
   updateSeriesAtIndex(seriesIdx, attrs) {
     Object.assign(this.data[seriesIdx].seriesData, attrs);
+    this.buildColorMap();
     return this;
   }
 
@@ -94,6 +115,7 @@ export default class Legend {
       });
     }
 
+    this.buildColorMap();
     this.setDefaultSeriesShowing();
     return Object.assign(this, {data});
   }

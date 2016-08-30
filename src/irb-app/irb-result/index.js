@@ -146,11 +146,11 @@ document.registerElement('irb-result', class extends Component {
           });
 
           if (this.config.helpers.showLegend()) {
+            this.state.report.legend.buildColorMap();
             result.series = filterObject(result.series, (value, depth) => (
               depth > 1 ? this.state.report.legend.data[depth - 2].seriesData[value] : true
             ));
           }
-
           return result;
         },
         barChartChange: ev => {

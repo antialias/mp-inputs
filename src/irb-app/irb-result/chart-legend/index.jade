@@ -9,9 +9,10 @@
       focusDelay=200
       oninput=$helpers.searchHandler
     )
-  sticky-scroll.results(attributes={
-    'refresh-data': JSON.stringify({showing: report.legend.seriesShowing, legendDataToDisplay})
-  })
+  sticky-scroll(
+    attributes={'refresh-data': JSON.stringify({showing: report.legend.seriesShowing, legendDataToDisplay})}
+    class={results: legendDataToDisplay.length}
+  )
     .body
       if !legendDataToDisplay.length
         .no-result Your search didn't return any results
@@ -30,17 +31,21 @@
                   class={showing: $helpers.allSeriesSelected(seriesIdx)}
                   onclick=() => $helpers.toggleAllSeriesValue(seriesIdx)
                 )
-                  .icon(class={color: seriesIdx === 0})
+                  .series-icon
                   .label Select all
             if !series.seriesValues.length
               .no-result= 'No results'
             each value in series.seriesValues
+              - const showing = $helpers.isSeriesValueShowing(seriesIdx, value)
               li
                 button.series(
-                  class={showing: $helpers.isSeriesValueShowing(seriesIdx, value)}
+                  class={showing}
                   onclick=() => $helpers.toggleShowSeriesValue(seriesIdx, value)
                 )
-                  .icon(class={color: seriesIdx === 0})
+                  .series-icon(class={
+                    color: seriesIdx === 0,
+                    [`data-color-${report.legend.getColorForSeries(value)}`]: showing && seriesIdx === 0,
+                  })
                   - const label = $helpers.renameSeriesValue(seriesIdx, value)
                   if isSearchActive
                     .label.search-result

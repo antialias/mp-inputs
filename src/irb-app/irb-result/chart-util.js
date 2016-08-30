@@ -342,14 +342,3 @@ export function nestedObjectToBarChartData(obj, sortConfig) {
     return [];
   }
 }
-
-export function barDataToColorNumbers(rows, numColors) {
-  const colorMap = {};
-  let colorIdx = 0;
-  rows.forEach(row => {
-    row[row.length - 2].forEach(label => {
-      colorMap[label] = colorMap[label] || (colorIdx++ % numColors) + 1;
-    });
-  });
-  return colorMap;
-}

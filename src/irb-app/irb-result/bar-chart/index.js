@@ -5,7 +5,6 @@ import WebComponent from 'webcomponent';
 
 import * as util from '../../../util';
 import {
-  barDataToColorNumbers,
   nestedObjectMax,
   nestedObjectToBarChartData,
   stackedNestedObjectMax,
@@ -26,6 +25,7 @@ document.registerElement('bar-chart', class extends Component {
         rows: [],
         chartBoundaries: {},
         chartMax: 0,
+        dataColorMap: {},
         displayOptions: {},
         chartLabel: '',
         functionLabel: '',
@@ -107,6 +107,7 @@ document.registerElement('bar-chart', class extends Component {
 
   attributeChangedCallback() {
     let {headers, series} = this.getJSONAttribute('data');
+    const dataColorMap = this.getJSONAttribute('data-color-map') || {};
     const chartBoundaries = this.getJSONAttribute('chart-boundaries') || {};
     const chartLabel = this.getJSONAttribute('chart-label') || '';
     const displayOptions = this.getJSONAttribute('display-options') || {};
@@ -119,17 +120,16 @@ document.registerElement('bar-chart', class extends Component {
 
     series = util.nestedObjectSum(series);
     const rows = nestedObjectToBarChartData(series, sortConfig);
-    const barColors = barDataToColorNumbers(rows, 8);
 
     const chartMax = displayOptions.plotStyle === 'stacked' ? stackedNestedObjectMax(series) : nestedObjectMax(series);
 
     sortConfig = util.extend(sortConfig, {hideFirstSort: displayOptions.plotStyle === 'stacked' && rows.length === 1});
 
     this.update({
-      barColors,
       chartLabel,
       chartMax,
       chartBoundaries,
+      dataColorMap,
       displayOptions,
       functionLabel,
       headers,
