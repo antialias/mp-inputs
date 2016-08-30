@@ -32,7 +32,7 @@
                     class={showing: $helpers.allSeriesSelected(seriesIdx)}
                     onclick=() => $helpers.toggleAllSeriesValue(seriesIdx)
                   )
-                    .series-icon
+                    .select-icon.select-all-icon
                     .label Select all
               if !series.seriesValues.length
                 .no-result= 'No results'
@@ -43,7 +43,7 @@
                     class={showing}
                     onclick=() => $helpers.toggleShowSeriesValue(seriesIdx, value)
                   )
-                    .series-icon(class={
+                    .select-icon.series-icon(class={
                       color: seriesIdx === 0,
                       [`data-color-${report.legend.getColorForSeries(value)}`]: showing && seriesIdx === 0,
                     })

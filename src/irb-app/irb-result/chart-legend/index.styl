@@ -148,7 +148,7 @@ label-dark-gray = #4c6072
       padding 6px 0 6px legend-left-padding
       width 100%
 
-      .series-icon
+      .select-icon
         background-color #fff
         border 1px solid #d3dee8
         border-radius 3px
@@ -163,7 +163,15 @@ label-dark-gray = #4c6072
           display none
           width 100%
           height 100%
+
+      .series-icon
+        &:before
           mask url(../../../../assets/properties/check.svg) no-repeat center
+
+      .select-all-icon
+        &:before
+          display inline-block
+          mask url(../../../../assets/chart-controls/dash.svg) center center/12px 12px  no-repeat
 
       .label
         color #858ea4
@@ -195,7 +203,7 @@ label-dark-gray = #4c6072
         .label
           transform rotate(0)
 
-        .series-icon
+        .select-icon
           &:before
             display inline-block
 
@@ -203,6 +211,10 @@ label-dark-gray = #4c6072
             border 0 none
             &:before
               background-color #fff
+
+          &.select-all-icon
+            &:before
+              mask url(../../../../assets/properties/check.svg) no-repeat center
 
       &:hover
         .label
