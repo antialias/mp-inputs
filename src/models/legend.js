@@ -21,11 +21,13 @@ export default class Legend {
 
   buildColorMap(numColors=8) {
     this._colorMap = {};
-    let colorIdx = 0;
-    const showingData = Object.keys(this.data[0].seriesData).filter(series => this.data[0].seriesData[series]);
-    showingData.forEach(series => {
-      this._colorMap[series] = this._colorMap[series] || (colorIdx++ % numColors) + 1;
-    });
+    if (this.data && this.data.length) {
+      let colorIdx = 0;
+      const showingData = Object.keys(this.data[0].seriesData).filter(series => this.data[0].seriesData[series]);
+      showingData.forEach(series => {
+        this._colorMap[series] = this._colorMap[series] || (colorIdx++ % numColors) + 1;
+      });
+    }
   }
 
 
