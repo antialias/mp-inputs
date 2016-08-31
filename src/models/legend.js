@@ -26,7 +26,6 @@ export default class Legend {
     showingData.forEach(series => {
       this._colorMap[series] = this._colorMap[series] || (colorIdx++ % numColors) + 1;
     });
-    return this._colorMap;
   }
 
 
