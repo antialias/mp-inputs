@@ -7,7 +7,6 @@ import {
 } from './fixtures';
 
 import {
-  barDataToColorNumbers,
   nestedObjectToNestedArray,
   nestedObjectToBarChartData,
   nestedObjectToTableData,
@@ -347,72 +346,6 @@ describe('nestedObjectToBarChartData', function() {
       [null,                                    {value: 'Canada', sum: 29, rowSpan: 2}, {value: 'llama',    sum: 23}, ['blue', 'red'], [13, 10]],
       [null,                                    null,                                   {value: 'aardvark', sum: 6 }, ['blue', 'red'], [5,  1 ]],
     ]);
-  });
-});
-
-describe('barDataToColorNumbers', function() {
-  const simpleBarChart = [[
-    ['aardvark', 'llama', 'capybara', 'gerbil', 'armadillo'],
-    [18,          15,      14,        9,        5          ],
-  ]];
-
-  it('orders based on chart sorting', function() {
-    expect(barDataToColorNumbers(simpleBarChart, 8)).to.eql({
-      aardvark: 1,
-      llama: 2,
-      capybara: 3,
-      gerbil: 4,
-      armadillo: 5,
-    });
-  });
-
-  it('repeats after running out of numbers', function() {
-    expect(barDataToColorNumbers(simpleBarChart, 3)).to.eql({
-      aardvark: 1,
-      llama: 2,
-      capybara: 3,
-      gerbil: 1,
-      armadillo: 2,
-    });
-  });
-
-  it('handles deeply nested charts', function() {
-    const arr = nestedObjectToBarChartData(d4Obj, {
-      sortBy: 'column',
-      colSortAttrs: [
-        {
-          sortBy: 'label',
-          sortOrder: 'desc',
-        },
-        {
-          sortBy: 'value',
-          sortOrder: 'asc',
-        },
-        {
-          sortBy: 'value',
-          sortOrder: 'desc',
-        },
-        {
-          sortBy: 'label',
-          sortOrder: 'asc',
-        },
-      ],
-    });
-    expect(barDataToColorNumbers(arr, 3)).to.eql({
-      blue: 1,
-      red: 2,
-    });
-  });
-
-  it('handles charts sorted by final value', function() {
-    const arr = nestedObjectToBarChartData(d2Obj, {
-      sortBy: 'value',
-      sortOrder: 'desc',
-    });
-    expect(barDataToColorNumbers(arr, 3)).to.eql({
-      llama: 1,
-      aardvark: 2,
-    });
   });
 });
 
