@@ -5,17 +5,22 @@ import { d2ResultsObj } from './fixtures';
 import Legend from '../src/models/legend';
 
 describe('Legend', function() {
-  context('with default values', function() {
-    const legend = new Legend({});
-    legend.updateLegendData(d2ResultsObj);
+  beforeEach(function() {
+    this.legend = new Legend({});
+  });
 
-    it('only expand first series', function() {
-      expect(legend.seriesShowing).to.eql(['all', 'hidden']);
+  context('with default values', function() {
+    beforeEach(function() {
+      this.legend.updateLegendData(d2ResultsObj);
     });
 
-    it('first 48 keys default to true', function() {
-      expect(legend.data[0].seriesName).to.eql('$browser');
-      expect(legend.data[0].seriesData).to.eql({
+    it('only expands the first series', function() {
+      expect(this.legend.seriesShowing).to.eql(['all', 'hidden']);
+    });
+
+    it('sets the first 48 keys with highest numerical value to true', function() {
+      expect(this.legend.data[0].seriesName).to.eql('$browser');
+      expect(this.legend.data[0].seriesData).to.eql({
         Chrome: true,
         Safari: true,
         Firefox: true,
@@ -23,9 +28,9 @@ describe('Legend', function() {
       });
     });
 
-    it('orders series values', function() {
-      legend.buildColorMap();
-      expect(legend.colorMap).to.eql({
+    it('orders from highest numerical value to lowest', function() {
+      this.legend.buildColorMap();
+      expect(this.legend.colorMap).to.eql({
         Chrome: 1,
         Safari: 2,
         Firefox: 3,
@@ -34,8 +39,8 @@ describe('Legend', function() {
     });
 
     it('repeats after running out of numbers', function() {
-      legend.buildColorMap(2);
-      expect(legend.colorMap).to.eql({
+      this.legend.buildColorMap(2);
+      expect(this.legend.colorMap).to.eql({
         Chrome: 1,
         Safari: 2,
         Firefox: 1,
@@ -44,14 +49,15 @@ describe('Legend', function() {
     });
   });
 
-  context('with limited default values', function() {
-    const legend = new Legend({});
-    legend.updateLegendData(d2ResultsObj, true, 2);
-    legend.buildColorMap();
+  context('with a showLimit of 2', function() {
+    beforeEach(function(){
+      this.legend.updateLegendData(d2ResultsObj, true, 2);
+      this.legend.buildColorMap();
+    });
 
-    it('first 2 keys default to true', function() {
-      expect(legend.data[0].seriesName).to.eql('$browser');
-      expect(legend.data[0].seriesData).to.eql({
+    it('sets the two highest numerical values to the default state', function() {
+      expect(this.legend.data[0].seriesName).to.eql('$browser');
+      expect(this.legend.data[0].seriesData).to.eql({
         Chrome: true,
         Safari: true,
         Firefox: false,
@@ -59,8 +65,8 @@ describe('Legend', function() {
       });
     });
 
-    it('only give numbers to showing values', function() {
-      expect(legend.colorMap).to.eql({
+    it('gives color numbers to showing values', function() {
+      expect(this.legend.colorMap).to.eql({
         Chrome: 1,
         Safari: 2,
       });
