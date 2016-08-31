@@ -41,7 +41,7 @@ document.registerElement('irb-header', class extends Component {
   downloadJQLQuery(script, filename, scriptParams) {
     const parameters = {
       script: script.replace(/\r/g, '').replace(/\n/g, '\r\n'),
-      download_file: `${filename}.csv`,
+      download_file: `${filename}.csv`, // eslint-disable-line camelcase
       params: scriptParams,
       format: 'csv',
     };

@@ -1,4 +1,5 @@
 /* global Events, People, join, mixpanel, module, params, _*/
+/* eslint camelcase:0 */
 
 // parameterized JQL segmentation query
 //

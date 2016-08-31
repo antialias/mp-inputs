@@ -328,6 +328,7 @@ export default class SegmentationQuery extends BaseQuery {
         const action = segment.resourceType === 'people' ? 'user' : 'properties';
         let extremaQuery = new ExtremaQuery();
         let state = {
+          /* eslint-disable camelcase */
           from: new Date(this.query.from),
           to: new Date(this.query.to),
           event: eventName,
@@ -339,6 +340,7 @@ export default class SegmentationQuery extends BaseQuery {
           allow_more_buckets: false,
           allow_fewer_buckets: true,
           buckets: 12,
+          /* eslint-enable camelcase */
         };
         state.interval = (state.to.getTime() - state.from.getTime()) / MS_BY_UNIT.day + 1;
         extremaQuery.build(state).run().then(result => {
