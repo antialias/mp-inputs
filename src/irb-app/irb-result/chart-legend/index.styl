@@ -3,7 +3,6 @@
 legend-left-padding = 15px
 
 label-medium-gray = #7e879e
-label-dark-gray = #4c6072
 
 .chart-legend
   background-color #f9fafc
@@ -41,7 +40,7 @@ label-dark-gray = #4c6072
     border-bottom 1px solid #dde8ef
     position relative
     &:before
-      background-color #9cacbb
+      background-color grey-500
       content ''
       display block
       height 100%
@@ -51,14 +50,14 @@ label-dark-gray = #4c6072
       width 16px
 
     &.active:before
-      background-color label-dark-gray
+      background-color grey-900
 
 
     input
       background-color #fff
       border 0
       box-sizing border-box
-      color label-dark-gray
+      color grey-900
       font 500 13px font-helvetica-neue
       margin 0
       padding 0
@@ -113,9 +112,10 @@ label-dark-gray = #4c6072
 
     .name
       ellipsis()
-      color label-dark-gray
+      color grey-900
       font-size 13px
       font-weight bold
+      padding-right 5px
 
       &:before
         background medium-gray
@@ -159,7 +159,7 @@ label-dark-gray = #4c6072
         margin-right 11px
 
         &:before
-          background-color label-dark-gray
+          background-color grey-900
           content ''
           display none
           width 100%
@@ -181,7 +181,7 @@ label-dark-gray = #4c6072
 
         &.search-result
             .matches-search
-              color label-dark-gray
+              color grey-900
               font-weight 600
 
       .delete-wrapper
@@ -191,13 +191,13 @@ label-dark-gray = #4c6072
          visibility hidden
 
         .delete-icon
-          background-color #9cacbb
+          background-color grey-500
           width 12px
           height 12px
           margin-right 5px
           mask url(../../../../assets/chart-controls/x.svg) center center/12px 12px  no-repeat
           &:hover
-            background-color label-dark-gray
+            background-color grey-900
 
       &.series
         .label
@@ -222,7 +222,7 @@ label-dark-gray = #4c6072
 
       &:hover
         .label
-          color label-dark-gray
+          color grey-900
 
         .delete-wrapper
            visibility visible
@@ -232,4 +232,4 @@ label-dark-gray = #4c6072
           transform rotate(-90deg)
 
           .slice
-            color label-dark-gray
+            color grey-900
