@@ -48,7 +48,7 @@
                   )
                     .select-icon.series-icon(class={
                       color: seriesIdx === 0,
-                      [`data-color-${report.legend.getColorForSeries(value)}`]: showing && seriesIdx === 0,
+                      [`segment-color-${report.legend.getColorForSeries(value)}`]: showing && seriesIdx === 0,
                     })
                     - const label = $helpers.renameSeriesValue(seriesIdx, value)
                     if isSearchActive

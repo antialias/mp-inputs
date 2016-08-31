@@ -25,7 +25,7 @@ document.registerElement('bar-chart', class extends Component {
         rows: [],
         chartBoundaries: {},
         chartMax: 0,
-        dataColorMap: {},
+        segmentColorMap: {},
         displayOptions: {},
         chartLabel: '',
         functionLabel: '',
@@ -107,7 +107,7 @@ document.registerElement('bar-chart', class extends Component {
 
   attributeChangedCallback() {
     let {headers, series} = this.getJSONAttribute('data');
-    const dataColorMap = this.getJSONAttribute('data-color-map') || {};
+    const segmentColorMap = this.getJSONAttribute('segment-color-map') || {};
     const chartBoundaries = this.getJSONAttribute('chart-boundaries') || {};
     const chartLabel = this.getJSONAttribute('chart-label') || '';
     const displayOptions = this.getJSONAttribute('display-options') || {};
@@ -129,7 +129,7 @@ document.registerElement('bar-chart', class extends Component {
       chartLabel,
       chartMax,
       chartBoundaries,
-      dataColorMap,
+      segmentColorMap,
       displayOptions,
       functionLabel,
       headers,

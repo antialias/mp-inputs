@@ -106,7 +106,7 @@ mixin sort-axis-button(sortOrder)
                         onmouseleave=$helpers.onMouseLeave
                       )
                         .bar-color(class={
-                          [`data-color-${dataColorMap[segmentName]}`]: isMultiColor,
+                          [`segment-color-${segmentColorMap[segmentName]}`]: isMultiColor,
                         })
                         if percent > .04
                           .label= isValueAbsolute ? util.abbreviateNumber(value) : percentValueString
