@@ -18,8 +18,10 @@ document.registerElement('sticky-scroll', class extends WebComponent {
     this.onBodyScrollHandler = debounce(() => this.updateStuckHeader(), 10, {leading: true, trailing: true});
     this.onFirstScrollHandler = ()=> {
       if (this.firstScroll) {
-        this.classList.add('sticky');
+        this.style.overflowY = 'hidden';
         this.stickyBody = this.querySelector('.body');
+        this.stickyBody.style.overflowY = 'auto';
+        this.stickyBody.scrollTop = this.scrollTop;
         this.stickyHeader = document.createElement('div');
         this.setWidth();
         this.stickyHeader.classList.add('sticky-header');
