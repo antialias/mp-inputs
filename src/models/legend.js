@@ -30,7 +30,6 @@ export default class Legend {
     }
   }
 
-
   getSeriesDisplayAtIndex(seriesIdx) {
     return this.seriesShowing[seriesIdx] || null;
   }

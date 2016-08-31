@@ -12,7 +12,7 @@
       )
     sticky-scroll(
       attributes={'refresh-data': JSON.stringify({showing: report.legend.seriesShowing, legendDataToDisplay})}
-      class={results: legendDataToDisplay.length}
+      class={'has-results': legendDataToDisplay.length}
     )
       .body
         if !legendDataToDisplay.length
