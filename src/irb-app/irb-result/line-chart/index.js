@@ -63,18 +63,55 @@ document.registerElement('mp-line-chart', class extends WebComponent {
 
   createChartOptions() {
     const displayOptions = this._displayOptions || {};
+    const axisOptions = {
+      endOnTick: true,
+      lineWidth: 1,
+      lineColor: '#e5e7ef',
+      minPadding: 0,
+      maxPadding: 0,
+      showLastLabel: false,
+      showFirstLabel: false,
+      startOnTick: true,
+    };
     const highchartsOptions = {
+      xAxis: util.extend(axisOptions, {
+        endOnTick: false,
+        startOnTick: false,
+      }),
+      yAxis: util.extend(axisOptions, {
+        showFirstLabel: true,
+      }),
       chart: {
+        margin: [0,0],
+        spacing: [0, 0, 23, 28],
         type: 'line',
       },
       plotOptions: {
         series: {
           fillOpacity: 0.7,
           marker: {
-            enabled: false,
-            symbol: 'url()',
+            enabled: null,
+            hover: {
+              enabled: true,
+              lineWidth: 0,
+              lineWidthPlus: 0,
+            },
           },
           stacking: null,
+        },
+        line: {
+          lineWidth: 3,
+          states: {
+            hover: {
+              lineWidth: 3,
+              lineWidthPlus: 0,
+            },
+          },
+          marker: {
+            hover: {
+              enabled: true,
+            },
+          },
         },
       },
       tooltip: {
@@ -90,7 +127,6 @@ document.registerElement('mp-line-chart', class extends WebComponent {
           return tooltip.join('');
         },
       },
-      yAxis: {},
     };
 
     if (displayOptions.plotStyle === 'stacked') {
@@ -105,7 +141,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
       highchartsOptions.yAxis.type = 'logarithmic';
       highchartsOptions.yAxis.min = LOGARITHMIC_CHART_ZERO_REMAPPING;
     }
-    return { highchartsOptions, chartType: 'line' };
+    return { highchartsOptions, chartType: 'line', MPstyling: false };
   }
 
   renderMPChart() {
