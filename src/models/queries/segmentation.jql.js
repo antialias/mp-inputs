@@ -38,16 +38,10 @@ function main() {
   }
 
   if (params.groups) {
-    var getPropertyPaths = function(group) {
-      var paths = ['properties', group.value];
-      if (params.needsPeopleData) {
-        paths.unshift(group.resourceType === 'people' ? 'user' : 'event');
-      }
-      return paths;
-    };
-
     var getPropertyPath = function(group) {
-      return getPropertyPaths(group).join('.');
+      return (params.needsPeopleData ? [group.resourceType === 'people' ? 'user' : 'event'] : [])
+        .concat(['properties', group.value])
+        .join('.');
     };
 
     groups = groups.concat(params.groups.map(function(group) {
