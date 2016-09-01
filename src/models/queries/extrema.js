@@ -1,6 +1,21 @@
 import BaseQuery from './base';
 import { extend, pick } from '../../util';
 
+export function extremaResultToBuckets(result) {
+  if (!result.cardinality || result.cardinality !== 'high') {
+    return {};
+  }
+  const bucketSize = result.bucket_size >= 1 ?
+    result.bucket_size : Math.floor(result.multiplier * result.bucket_size); // eslint-disable-line camelcase
+  const numBuckets = Math.floor((result.max - result.min) / bucketSize);
+  const buckets = [];
+  for (let i = 0; i < numBuckets + 2; i++) {
+    buckets.push(Math.floor(result.min + bucketSize * i));
+  }
+
+  return {buckets};
+}
+
 export default class ExtremaQuery extends BaseQuery {
   buildQuery(state) {
     return state;
@@ -28,16 +43,6 @@ export default class ExtremaQuery extends BaseQuery {
   }
 
   processResults(result) {
-    if (!result.cardinality || result.cardinality !== 'high') {
-      return {};
-    }
-    const bucket_size = result.bucket_size >= 1 ? result.bucket_size : Math.floor(result.multiplier * result.bucket_size);
-    const num_buckets = Math.floor((result.max - result.min) / bucket_size);
-    const buckets = [];
-    for (let i = 0; i < num_buckets + 2; i++) {
-      buckets.push(Math.floor(result.min + bucket_size * i));
-    }
-
-    return {buckets};
+    return extremaResultToBuckets(result);
   }
 }
