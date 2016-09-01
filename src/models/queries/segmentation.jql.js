@@ -63,25 +63,21 @@ function main() {
     }));
   }
 
-  // TODO(dmitry, chi) use mixpanel.event_strftime() instead:
-  // https://docs.google.com/document/d/1u8iNUhGyFIyIN7xpPkhgdorITuj4BBUYTs0SLwetzA8/edit#heading=h.csmrukb98pb9
-  var timeUnitGroupByFunc;
+  // TODO(chi): do we want to keep the 'reset from_date back to the first day of unit' behavior for
+  // month and quarter?
+  var timeUnitGroupBySelector;
   switch(params.dates.unit) {
     case 'all':
-      timeUnitGroupByFunc = function() { return 'all'; };
+      timeUnitGroupBySelector = function() { return 'all'; };
       break;
     case 'hour':
-      timeUnitGroupByFunc = function(eventData) {
-        var dateMatch = (new Date(getEvent(eventData).time)).toISOString().match(/(.+)T(\d\d):/);
-        return `${dateMatch[1]} ${dateMatch[2]}:00:00`;
-      };
+      timeUnitGroupBySelector = mixpanel.event_strftime('%F %H');
       break;
     case 'day':
-      timeUnitGroupByFunc = function(eventData) {
-        return (new Date(getEvent(eventData).time)).toISOString().split('T')[0];
-      };
+      timeUnitGroupBySelector = mixpanel.event_strftime('%F');
       break;
     case 'week':
+      // TODO(chi): consider just '%G'
       var getMonday = function(date) {
         date = new Date(date);
         var day = date.getDay();
@@ -89,9 +85,7 @@ function main() {
         date.setDate(date.getDate() - offset);
         return date.toISOString().split('T')[0];
       };
-      timeUnitGroupByFunc = function(eventData) {
-        return getMonday(getEvent(eventData).time);
-      };
+      timeUnitGroupBySelector = mixpanel.event_strftime('%Y %W');
       params.dates.from = getMonday(params.dates.from);
       break;
     case 'month':
@@ -100,13 +94,9 @@ function main() {
         date.setDate(1);
         return date.toISOString().split('T')[0];
       };
-      timeUnitGroupByFunc = function(eventData) {
-        return getFirstOfMonth(getEvent(eventData).time);
-      };
+      timeUnitGroupBySelector = mixpanel.event_strftime('%Y-%m');
       params.dates.from = getFirstOfMonth(params.dates.from);
       break;
-    // TODO(dmitry,chi) mixpanel.event_strftime() does not currently support "quarter".
-    // Use mixpanel.numeric_bucket() on event.time instead?
     case 'quarter':
       var getStartOfQuarter = function(date) {
         date = new Date(date);
@@ -116,13 +106,20 @@ function main() {
         }
         return date.toISOString().split('T')[0].replace(/(\d+)-\d\d-\d\d/, '$1-' + qMonth + '-01');
       };
-      timeUnitGroupByFunc = function(eventData) {
-        return getStartOfQuarter(getEvent(eventData).time);
-      };
+      var quarterStarts = [];
+      var lastQuarterStart = new Date(getStartOfQuarter(params.dates.to));
+      for (var quarterStart = new Date(getStartOfQuarter(params.dates.from));
+           quarterStart <= lastQuarterStart;
+           quarterStart.setMonth(quarterStart.getMonth + 3)) {
+        quarterStarts.push(quarterStart.getTime());
+      }
+      timeUnitGroupBySelector = mixpanel.numeric_bucket(function(eventData) {
+        return getEvent(eventData).time;
+      }, quarterStarts);
       params.dates.from = getStartOfQuarter(params.dates.from);
       break;
   }
-  groups.push(timeUnitGroupByFunc);
+  groups.push(timeUnitGroupBySelector);
 
   groups = [mixpanel.multiple_keys(groups)];
 
