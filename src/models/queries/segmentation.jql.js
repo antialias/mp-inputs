@@ -132,48 +132,28 @@ function main() {
     return row.key.slice(1);
   };
 
-  var operatorFuncs = {
-    // TODO(dmitry, chi) use mixpanel.reducer.sum()
-    total: function(list) {
-      return _.reduce(list, function(sum, num) { return sum + num; });
+  var reducerFuncs = {
+    average: mixpanel.reducer.numeric_summary(function(item) { return item.value; }),
+    max: mixpanel.reducer.max('value'),
+    median: mixpanel.reducer.numeric_percentiles('value', [50]),
+    min: mixpanel.reducer.min('value'),
+    total: mixpanel.reducer.sum('value'),
+  };
+
+  var postprocessFuncs = {
+    average: function(item) {
+      item.value = item.value.sum / item.value.count;
+      return item;
     },
-    // TODO(dmitry, chi) use mixpanel.reducer.numeric_summary()
-    average: function(list) {
-      return list.reduce(function(prev, curr) { return prev + curr; }) / list.length;
-    },
-    // TODO(dmitry, chi) use mixpanel.reducer.numeric_percentiles(50)
-    median: function(list) {
-      var median;
-      list.sort(function(a, b) { return a - b; });
-      var length = list.length;
-      if (length % 2 === 0) {
-        median = (list[length / 2 - 1] + list[length / 2]) / 2;
-      } else {
-        median = list[(length - 1) / 2];
-      }
-      return median;
-    },
-    // TODO(dmitry, chi) use mixpanel.reducer.min()
-    min: function(list) {
-      return _.min(list);
-    },
-    // TODO(dmitry, chi) use mixpanel.reducer.min()
-    max: function(list) {
-      return _.max(list);
+    median: function(item) {
+      item.value = item.value[0].value;
+      return item;
     },
   };
 
-  // TODO(dmitry,chi) instead of collecting all source in a list and applying
-  // post-processing, use one of streaming reducers JQL provides:
-  // https://docs.google.com/document/d/1u8iNUhGyFIyIN7xpPkhgdorITuj4BBUYTs0SLwetzA8/edit#heading=h.cb8sr1s1dow
-  var toList = function(accumulators, items) {
-    var output = items.map(function(item) { return item.value; });
-    _.each(accumulators, function(a) {
-      _.each(a, function(item) {
-        output.push(item);
-      });
-    });
-    return output;
+  postprocessFuncs.max = postprocessFuncs.min = function(item) {
+    item.value = item.value.value;
+    return item;
   };
 
   var query;
@@ -192,40 +172,17 @@ function main() {
     query = Events(queryParams);
   }
 
-  if (params.property) {
-    if (params.property.resourceType === 'people') {
-      query = query.groupByUser(groups, function(accumulators, events) {
-        // TODO(dmitry, chi) use join(Events(), People(), {type:"left"}).groupByUser(mixpanel.reducer.any())
-        // instead.
-        var eventData = _.find(events, function(eventData) {
-          return !!eventData.user;
-        });
-        return eventData ? eventData.user.properties[params.property.name] : eventData;
-      }).groupBy([sliceOffDistinctId], toList);
-    } else {
-      var toPropertyList = function(accumulators, events) {
-        var list = [];
-        _.each(accumulators, function(a) {
-          _.each(a, function(prop) {
-            list.push(prop);
-          });
-        });
-        _.each(events, function(eventData) {
-          list.push(getEvent(eventData).properties[params.property.name]);
-        });
-        return list;
-      };
-
-      query = query.groupBy(groups, toPropertyList);
-    }
-
-    // TODO(dmitry, chi) this .map() step becomes unnecessary if a built-in numeric
-    // reducer is used.
-    query = query.map(function(item) {
-      item.value = _.filter(item.value, function(v) { return v && _.isNumber(v); });
-      item.value = item.value.length ? operatorFuncs[params.type](item.value) : 0;
-      return item;
-    });
+  if (params.property && params.property.resourceType === 'people') {
+    query = query.groupByUser(groups, function(accumulators, events) {
+      // TODO(dmitry, chi) use join(Events(), People(), {type:"left"}).groupByUser(mixpanel.reducer.any())
+      // instead.
+      var eventData = _.find(events, function(eventData) {
+        return !!eventData.user;
+      });
+      return eventData && _.isNumber(eventData.user.properties[params.property.name]) ? _.isNumber(eventData.user.properties[params.property.name]) : null;
+    }).groupBy([sliceOffDistinctId], reducerFuncs[params.type]);
+  } else if (params.property && params.property.resourceType === 'events') {
+    query = query.groupBy(groups, reducerFuncs[params.type]);
   } else if (params.type === 'total') {
     query = query.groupBy(groups, mixpanel.reducer.count({account_for_sampling: true}));
   } else if (params.type === 'unique') {
@@ -233,13 +190,10 @@ function main() {
       .groupBy([sliceOffDistinctId], mixpanel.reducer.count());
   } else {
     query = query.groupByUser(groups, mixpanel.reducer.count({account_for_sampling: true}))
-      .groupBy([sliceOffDistinctId], toList)
-      // TODO(dmitry, chi) this .map() step becomes unnecessary if a built-in numeric
-      // reducer is used.
-      .map(function(item) {
-        item.value = operatorFuncs[params.type](item.value);
-        return item;
-      });
+      .groupBy([sliceOffDistinctId], reducerFuncs[params.type]);
+  }
+  if (_.keys(postprocessFuncs).includes(params.type)) {
+    query = query.map(postprocessFuncs[params.type]);
   }
 
   if (groupsToReduceByIndex.length > 0) {
