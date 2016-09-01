@@ -126,24 +126,6 @@ function main() {
 
   groups = [mixpanel.multiple_keys(groups)];
 
-  // TODO(dmitry, chi) use mixpanel.reducer.count({with_sampling: true})
-  // https://docs.google.com/document/d/1u8iNUhGyFIyIN7xpPkhgdorITuj4BBUYTs0SLwetzA8/edit#heading=h.cb8sr1s1dow
-  var countWithSampling = function(counts, events) {
-    var count = 0;
-    for (var i = 0; i < events.length; i++) {
-      var ev = getEvent(events[i]);
-      if (ev.sampling_factor && ev.sampling_factor <= 1.0) {
-        count += 1.0 / ev.sampling_factor;
-      } else {
-        count++;
-      }
-    }
-    for (i = 0; i < counts.length; i++) {
-      count += counts[i];
-    }
-    return Math.round(count);
-  };
-
   // TODO(dmitry, chi) use mixpanel.slice()
   // https://docs.google.com/document/d/1u8iNUhGyFIyIN7xpPkhgdorITuj4BBUYTs0SLwetzA8/edit#heading=h.ipjo3e54gdd2
   var sliceOffDistinctId = function(row) {
@@ -245,27 +227,12 @@ function main() {
       return item;
     });
   } else if (params.type === 'total') {
-    query = query.groupBy(groups, countWithSampling);
+    query = query.groupBy(groups, mixpanel.reducer.count({account_for_sampling: true}));
   } else if (params.type === 'unique') {
     query = query.groupByUser(groups, mixpanel.reducer.noop())
-      .groupBy([sliceOffDistinctId], countWithSampling);
+      .groupBy([sliceOffDistinctId], mixpanel.reducer.count());
   } else {
-    // TODO(dmitry, chi) use mixpanel.reducer.count({with_sampling_factor:true})
-    // https://docs.google.com/document/d/1u8iNUhGyFIyIN7xpPkhgdorITuj4BBUYTs0SLwetzA8/edit#heading=h.cb8sr1s1dow
-    var countWithSamplingForGroupByUser = function(count, events) {
-      count = count || 0;
-      for (var i = 0; i < events.length; i++) {
-        var ev = events[i].event || events[i];
-        if (ev.sampling_factor && ev.sampling_factor <= 1.0) {
-          count += 1.0 / ev.sampling_factor;
-        } else {
-          count++;
-        }
-      }
-      return Math.round(count);
-    };
-
-    query = query.groupByUser(groups, countWithSamplingForGroupByUser)
+    query = query.groupByUser(groups, mixpanel.reducer.count({account_for_sampling: true}))
       .groupBy([sliceOffDistinctId], toList)
       // TODO(dmitry, chi) this .map() step becomes unnecessary if a built-in numeric
       // reducer is used.
