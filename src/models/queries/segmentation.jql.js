@@ -45,19 +45,20 @@ function main() {
     }
   });
 
-  if (params.groups) {
-    var getPropertyPath = function(group) {
-      return (params.needsPeopleData ? [group.resourceType === 'people' ? 'user' : 'event'] : [])
-        .concat(['properties', group.value])
-        .join('.');
-    };
+  var getPropertyPaths = function(propertyName, propertyResourceType) {
+    var paths = [];
+    if (params.needsPeopleData) {
+      paths.push(propertyResourceType === 'people' ? 'user' : 'event');
+    }
+    return paths.concat('properties', propertyName);
+  };
 
+  if (params.groups) {
     groups = groups.concat(params.groups.map(function(group) {
       var jqlGroup;
+      jqlGroup = getPropertyPaths(group.value, group.resourceType).join('.');
       if (group.buckets) {
-        jqlGroup = mixpanel.numeric_bucket(getPropertyPath(group), group.buckets);
-      } else {
-        jqlGroup = getPropertyPath(group);
+        jqlGroup = mixpanel.numeric_bucket(jqlGroup, group.buckets);
       }
       return jqlGroup;
     }));
@@ -129,12 +130,28 @@ function main() {
     return row.key.slice(1);
   };
 
-  var reducerFuncs = {
-    average: mixpanel.reducer.numeric_summary(function(item) { return item.value; }),
-    max: mixpanel.reducer.max('value'),
-    median: mixpanel.reducer.numeric_percentiles('value', [50]),
-    min: mixpanel.reducer.min('value'),
-    total: mixpanel.reducer.sum('value'),
+  var reducerFuncs = function(type, accessor=function(item) { return item.value; }) {
+    var reducerFunc;
+    switch (type) {
+      case 'average':
+        // TODO(chi) numeric_summary doesn't support non-function accessor yet, otherwise 'accessor'
+        // can be 'value'
+        reducerFunc = mixpanel.reducer.numeric_summary(accessor);
+        break;
+      case 'max':
+        reducerFunc = mixpanel.reducer.max(accessor);
+        break;
+      case 'median':
+        reducerFunc = mixpanel.reducer.numeric_percentiles(accessor, [50]);
+        break;
+      case 'min':
+        reducerFunc = mixpanel.reducer.min(accessor);
+        break;
+      case 'total':
+        reducerFunc = mixpanel.reducer.sum(accessor);
+        break;
+    }
+    return reducerFunc;
   };
 
   var postprocessFuncs = {
@@ -169,17 +186,80 @@ function main() {
     query = Events(queryParams);
   }
 
-  if (params.property && params.property.resourceType === 'people') {
-    query = query.groupByUser(groups, function(accumulators, events) {
-      // TODO(dmitry, chi) use join(Events(), People(), {type:"left"}).groupByUser(mixpanel.reducer.any())
-      // instead.
-      var eventData = _.find(events, function(eventData) {
-        return !!eventData.user;
-      });
-      return eventData && _.isNumber(eventData.user.properties[params.property.name]) ? _.isNumber(eventData.user.properties[params.property.name]) : null;
-    }).groupBy([sliceOffDistinctId], reducerFuncs[params.type]);
-  } else if (params.property && params.property.resourceType === 'events') {
-    query = query.groupBy(groups, reducerFuncs[params.type]);
+  var needPostprocess = true;
+  if (params.property) {
+    var accessorFuncFactory = function(defaultValue) {
+      return function(eventData) {
+        if (!eventData) {
+          return defaultValue;
+        }
+
+        var property = getPropertyPaths(params.property.name, params.property.resourceType)
+          .reduce(function(property, path) {
+            return property[path];
+          }, eventData);
+
+        return _.isNumber(property) ? property : defaultValue;
+      };
+    };
+    var accessorFuncs = {
+      min: accessorFuncFactory(Number.MAX_VALUE),
+    };
+    // TODO(chi): Have the accessor return any number for 'average' or 'median' when the property
+    // isn't a number yields inaccurate result. The fundamental issue is what do do when a numeric
+    // property of a user isn't numeric?
+    accessorFuncs.average = accessorFuncs.median = accessorFuncs.max = accessorFuncs.total = accessorFuncFactory(0);
+    if (params.property.resourceType === 'people') {
+      query = query.groupByUser(groups, function(accumulators, events) {
+        // TODO(dmitry, chi) use join(Events(), People(), {type:"left"}).groupByUser(mixpanel.reducer.any())
+        // instead.
+        return _.find(events, function(eventData) {
+          return !!eventData.user;
+        });
+      }).groupBy([sliceOffDistinctId], reducerFuncs(params.type, accessorFuncs[params.type]));
+    } else {
+      if (!['min', 'max'].includes(params.type)) {
+        query = query.groupBy(groups, reducerFuncs(params.type, accessorFuncs[params.type]));
+      } else {
+        // TODO(chi): mixpanel.reducer.min/max cannot be used on events directly yet, so we are
+        // still on the old way when it comes to these types.
+
+        var operatorFuncs = {
+          // TODO(dmitry, chi) use mixpanel.reducer.min()
+          min: function(list) {
+            return _.min(list);
+          },
+          // TODO(dmitry, chi) use mixpanel.reducer.min()
+          max: function(list) {
+            return _.max(list);
+          },
+        };
+
+        var toPropertyList = function(accumulators, events) {
+          var list = [];
+          _.each(accumulators, function(a) {
+            _.each(a, function(prop) {
+              list.push(prop);
+            });
+          });
+          _.each(events, function(eventData) {
+            list.push(getEvent(eventData).properties[params.property.name]);
+          });
+          return list;
+        };
+
+        query = query.groupBy(groups, toPropertyList);
+
+        // TODO(dmitry, chi) this .map() step becomes unnecessary if a built-in numeric
+        // reducer is used.
+        query = query.map(function(item) {
+          item.value = _.filter(item.value, function(v) { return v && _.isNumber(v); });
+          item.value = item.value.length ? operatorFuncs[params.type](item.value) : 0;
+          return item;
+        });
+        needPostprocess = false;
+      }
+    }
   } else if (params.type === 'total') {
     query = query.groupBy(groups, mixpanel.reducer.count({account_for_sampling: true}));
   } else if (params.type === 'unique') {
@@ -187,9 +267,9 @@ function main() {
       .groupBy([sliceOffDistinctId], mixpanel.reducer.count());
   } else {
     query = query.groupByUser(groups, mixpanel.reducer.count({account_for_sampling: true}))
-      .groupBy([sliceOffDistinctId], reducerFuncs[params.type]);
+      .groupBy([sliceOffDistinctId], reducerFuncs(params.type));
   }
-  if (_.keys(postprocessFuncs).includes(params.type)) {
+  if (_.keys(postprocessFuncs).includes(params.type) && needPostprocess) {
     query = query.map(postprocessFuncs[params.type]);
   }
 
