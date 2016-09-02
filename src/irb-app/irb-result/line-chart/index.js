@@ -1,5 +1,6 @@
 /* global $ */
 
+import moment from 'moment';
 import { Component } from 'panel';
 import WebComponent from 'webcomponent';
 
@@ -61,6 +62,30 @@ document.registerElement('mp-line-chart', class extends WebComponent {
     this.renderMPChart();
   }
 
+  tooltipFormatter() {
+    const timeUnit = this._displayOptions.timeUnit;
+    const timeFormatting = {
+      'hour': 'MMM D[,] ha',
+      'day': 'MMM D',
+      'week': 'MMM D',
+      'month': 'MMMM YYYY',
+      'quarter': 'MMM Do YYYY',
+      'year': 'YYYY',
+    };
+    return function() {
+      return `
+        <div class="title">${this.series.name}</div>
+        <div class="results">
+          <div class="absolute">
+            <span class="date">${moment(this.x).format(timeFormatting[timeUnit])}: </span>
+            <span class="count">${this.y}</span>
+          </div>
+          ${this.percentage ? `<div class="percent">${Math.round(this.percentage * 10) / 10}%</div>` : ''}
+        </div>
+      `;
+    };
+  }
+
   createChartOptions() {
     const displayOptions = this._displayOptions || {};
     const axisOptions = {
@@ -117,25 +142,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
       tooltip: {
         borderWidth: 0,
         crosshairs: [true],
-        formatter: function() {
-          const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
-            'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
-          ];
-          const date = new Date(this.x);
-          const tooltip = [`
-            <div class="title"> ${this.series.name}</div>
-              <div class="results">
-                <div class="absolute">
-                  <span class="date">${monthNames[date.getMonth()]} ${date.getDay()}: </span>
-                  <span class="count">${this.y}</span>
-                </div>
-          `];
-          if (this.percentage) {
-            tooltip.push(`<div class="percent">${Math.round(this.percentage * 10) / 10}%</div>`);
-          }
-          tooltip.push('</div>');
-          return tooltip.join('');
-        },
+        formatter: this.tooltipFormatter(),
       },
     };
 
