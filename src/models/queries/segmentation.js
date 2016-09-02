@@ -19,7 +19,7 @@ export const MS_BY_UNIT = {
 };
 
 export function toArbSelectorPropertyToken(resourceType, property) {
-  return `${resourceType === 'event' ? 'properties' : 'user'}["${property}"]`;
+  return `${resourceType === 'events' ? 'properties' : 'user'}["${property}"]`;
 }
 
 function isFilterValid(filter) {

@@ -63,7 +63,7 @@ let QUERIES = [
     groups: [
       {
         value: 'date_range',
-        resourceType: 'event',
+        resourceType: 'events',
         filterType: 'number',
       },
     ],
@@ -80,12 +80,12 @@ let QUERIES = [
     groups: [
       {
         value: 'date_range',
-        resourceType: 'event',
+        resourceType: 'events',
         filterType: 'number',
       },
       {
         value: 'decompressed / scped * 100',
-        resourceType: 'event',
+        resourceType: 'events',
         filterType: 'number',
       },
     ],
@@ -102,7 +102,7 @@ let QUERIES = [
     groups: [
       {
         value: 'auth',
-        resourceType: 'event',
+        resourceType: 'events',
         filterType: 'string',
       },
     ],
@@ -119,12 +119,12 @@ let QUERIES = [
     groups: [
       {
         value: 'auth',
-        resourceType: 'event',
+        resourceType: 'events',
         filterType: 'string',
       },
       {
         value: 'host',
-        resourceType: 'event',
+        resourceType: 'events',
         filterType: 'string',
       },
     ],
@@ -153,7 +153,7 @@ QUERIES = QUERIES.concat(Object.keys(NUMERIC_PROPERTY_OPERATORS_AVAILABLE_FOR_QU
         type: operator,
         property: {
           name: 'unsent',
-          resourceType: 'event',
+          resourceType: 'events',
         }
       },
     ],
