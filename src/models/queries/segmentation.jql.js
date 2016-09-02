@@ -130,12 +130,13 @@ function main() {
     return row.key.slice(1);
   };
 
-  var reducerFuncs = function(type, accessor=function(item) { return item.value; }) {
+  var reducerFuncs = function(type, accessor) {
+    accessor = accessor || function(item) { return item.value; };
     var reducerFunc;
     switch (type) {
       case 'average':
-        // TODO(chi) numeric_summary doesn't support non-function accessor yet, otherwise 'accessor'
-        // can be 'value'
+        // TODO(chi) numeric_summary doesn't support non-function accessors yet, otherwise
+        // 'accessor's default value can be just 'value'
         reducerFunc = mixpanel.reducer.numeric_summary(accessor);
         break;
       case 'max':
