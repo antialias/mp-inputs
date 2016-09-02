@@ -94,8 +94,6 @@ document.registerElement('mp-line-chart', class extends WebComponent {
       lineColor: '#e5e7ef',
       minPadding: 0,
       maxPadding: 0,
-      showLastLabel: false,
-      showFirstLabel: false,
       startOnTick: true,
     };
     const highchartsOptions = {
@@ -105,10 +103,15 @@ document.registerElement('mp-line-chart', class extends WebComponent {
       }),
       yAxis: util.extend(axisOptions, {
         showFirstLabel: true,
+        showLastLabel: false,
       }),
       chart: {
-        margin: [0,0],
-        spacing: [0, 0, 23, 28],
+        marginTop: 0,
+        marginRight: 0,
+        marginBottom: null,
+        marginLeft: null,
+        spacingBottom: 30,
+        spacingLeft: 28,
         type: 'line',
       },
       plotOptions: {
@@ -118,8 +121,6 @@ document.registerElement('mp-line-chart', class extends WebComponent {
             enabled: null,
             hover: {
               enabled: true,
-              lineWidth: 0,
-              lineWidthPlus: 0,
             },
           },
           stacking: null,
@@ -128,7 +129,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
           lineWidth: 3,
           states: {
             hover: {
-              lineWidth: 3,
+              lineWidth: 4,
               lineWidthPlus: 0,
             },
           },
@@ -141,7 +142,6 @@ document.registerElement('mp-line-chart', class extends WebComponent {
       },
       tooltip: {
         borderWidth: 0,
-        crosshairs: [true],
         formatter: this.tooltipFormatter(),
       },
     };
