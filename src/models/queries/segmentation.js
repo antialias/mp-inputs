@@ -422,7 +422,6 @@ export default class SegmentationQuery extends BaseQuery {
     results.forEach(r => baseDateResults[r.key[r.key.length-1]] = 0);
 
     if (results) {
-      results = results.filter(result => !result.key.includes('NaN - NaN'));
       series = results.reduce((seriesObj, item) => {
         // transform item.key array into nested obj,
         // with item.value at the deepest level
