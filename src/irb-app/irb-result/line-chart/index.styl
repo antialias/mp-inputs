@@ -1,27 +1,43 @@
 @import "../../../stylesheets/common"
 
-.highcharts-tooltip span
-  padding 0 5px
+.highcharts-tooltip
+  & > rect
+    visibility hidden
+    border-radius 4px
 
-  div
-    color medium-gray
-    font 700 11px font-helvetica-neue
-    max-width 200px
-    padding 5px
-    text-align center
+  & > span
+    background-color #fff
+    box-shadow 0 1px 10px 0 rgba(9, 42, 62, 0.18)
+    border-radius 4px
+    overflow hidden
 
-    &.title
-      border-bottom 1px solid light-gray
-      overflow hidden
-
-    &.results
-      display flex
-      padding 0
-
-    &.percent
+    div
       color medium-gray
-      font-weight 400
-      flex-grow 1
+      font 14px font-helvetica-neue
+      max-width 200px
+      text-align center
 
-    &.count
-      flex-grow 1
+      &.title
+        background-color gray
+        color #fff
+        overflow hidden
+        padding 10px 16px
+
+      &.results
+        color #434e5a
+        display flex
+        padding 10px 15px
+
+        .absolute
+          flex-grow 1
+          text-align left
+
+          .count
+            font-weight 700
+
+        .percent
+          color medium-gray
+          font-weight 400
+          flex-grow 1
+
+

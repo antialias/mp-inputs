@@ -115,11 +115,21 @@ document.registerElement('mp-line-chart', class extends WebComponent {
         },
       },
       tooltip: {
-        borderColor: '#c4c8d6',
-        borderRadius: 3,
+        borderWidth: 0,
         crosshairs: [true],
         formatter: function() {
-          const tooltip = [`<div class="title"> ${this.series.name}</div><div class="results"><div class="count">${this.y}</div>`];
+          const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June',
+            'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec',
+          ];
+          const date = new Date(this.x);
+          const tooltip = [`
+            <div class="title"> ${this.series.name}</div>
+              <div class="results">
+                <div class="absolute">
+                  <span class="date">${monthNames[date.getMonth()]} ${date.getDay()}: </span>
+                  <span class="count">${this.y}</span>
+                </div>
+          `];
           if (this.percentage) {
             tooltip.push(`<div class="percent">${Math.round(this.percentage * 10) / 10}%</div>`);
           }
