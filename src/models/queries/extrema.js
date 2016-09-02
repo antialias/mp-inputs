@@ -5,8 +5,10 @@ export function extremaResultToBuckets(result) {
   if (!result.cardinality || result.cardinality !== 'high') {
     return {};
   }
-  const bucketSize = result.bucket_size >= 1 ?
-    result.bucket_size : Math.floor(result.multiplier * result.bucket_size); // eslint-disable-line camelcase
+  let bucketSize = result.bucket_size; // eslint-disable-line camelcase
+  if (bucketSize < 1) {
+    bucketSize = Math.floor(result.multiplier * bucketSize);
+  }
   const numBuckets = Math.floor((result.max - result.min) / bucketSize);
   const buckets = [];
   for (let i = 0; i < numBuckets + 2; i++) {
