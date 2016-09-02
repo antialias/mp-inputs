@@ -114,6 +114,16 @@ document.registerElement('mp-line-chart', class extends WebComponent {
         spacingLeft: 28,
         type: 'line',
       },
+      colors: [ // taken from order in irb-result/index.styl
+        '#23588c',
+        '#106eca',
+        '#4ba8ff',
+        '#24d2ef',
+        '#47b6ac',
+        '#106eca',
+        '#f2af34',
+        '#ffd209',
+      ],
       plotOptions: {
         series: {
           fillOpacity: 0.7,
@@ -158,7 +168,12 @@ document.registerElement('mp-line-chart', class extends WebComponent {
       highchartsOptions.yAxis.type = 'logarithmic';
       highchartsOptions.yAxis.min = LOGARITHMIC_CHART_ZERO_REMAPPING;
     }
-    return { highchartsOptions, chartType: 'line', MPstyling: false };
+    return {
+      chartType: 'line',
+      MPstyling: false,
+      lineLimit: false,
+      highchartsOptions,
+    };
   }
 
   renderMPChart() {
