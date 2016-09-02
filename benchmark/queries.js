@@ -58,7 +58,7 @@ let QUERIES = [
       {events: ['Export request finished']},
     ],
     time: {
-      range: TimeClause.RANGES.YEAR,
+      range: TimeClause.RANGES.MONTH,
     },
     groups: [
       {
@@ -75,7 +75,7 @@ let QUERIES = [
       {events: ['Export request finished']},
     ],
     time: {
-      range: TimeClause.RANGES.YEAR,
+      range: TimeClause.RANGES.MONTH,
     },
     groups: [
       {
