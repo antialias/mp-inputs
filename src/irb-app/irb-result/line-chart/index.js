@@ -19,6 +19,7 @@ document.registerElement('line-chart', class extends Component {
     return {
       template,
       defaultState: {
+        chartLabel: null,
         data: {},
         util,
       },
@@ -27,11 +28,13 @@ document.registerElement('line-chart', class extends Component {
 
   attributeChangedCallback() {
     let { headers, series } = JSON.parse(this.getAttribute('data')) || {};
+    const chartLabel = JSON.parse(this.getAttribute('chart-label')) || null;
 
     if (headers && series) {
       this.update({
         // transform nested object into single-level object:
         // {'a': {'b': {'c': 5}}} => {'a / b / c': 5}
+        chartLabel,
         data: util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
           [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
         )),

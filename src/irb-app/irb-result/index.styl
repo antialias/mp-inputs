@@ -1,5 +1,7 @@
 @import "../../stylesheets/common"
 
+legend-width = 174px
+
 .irb-result
   position relative
 
@@ -8,8 +10,6 @@
 
   .chart
     display flex
-    align-items stretch
-
     width 100%
     transition opacity .2s
 
@@ -44,11 +44,11 @@
 
     .main-chart
       flex 1 1
-      width 100%
+      width "calc(100% - %s)" % legend-width
 
     .legend
-      flex 0 1 174px
-      width 172px
+      flex 0 0 legend-width
+      z-index 1
 
   .loader
     loader()

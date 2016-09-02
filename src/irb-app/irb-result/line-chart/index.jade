@@ -1,4 +1,7 @@
-mp-line-chart(attributes={
-  'data':JSON.stringify(data),
-  'display-options':JSON.stringify(displayOptions),
-})
+.line-chart-container
+  .header.line-chart-header= chartLabel
+  .line-chart
+    mp-line-chart(attributes={
+      'data':JSON.stringify(data),
+      'display-options':JSON.stringify(displayOptions),
+    })
