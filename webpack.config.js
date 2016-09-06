@@ -44,6 +44,11 @@ var webpackConfig = {
       ROLLBAR_TOKEN: JSON.stringify('f1363513be0a42d1951b4f4e153996ec'),
     }),
   ],
+  resolve: {
+    alias: {
+      'assets': path.join(__dirname, 'assets'),
+    },
+  },
   resolveLoader: {
     root: path.join(__dirname, 'node_modules'),
   },
