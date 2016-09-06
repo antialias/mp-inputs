@@ -48,6 +48,18 @@ loader()
     100%
       transform rotate(360deg)
 
+pane-icon(filename)
+  &::before
+    background-image unquote('url(~assets/properties/types/' + filename + '.svg)')
+    background-position center
+    background-repeat no-repeat
+    content ''
+    height 14px
+    position absolute
+    left 8px
+    top 7px
+    width 20px
+
 panel-top()
   background-color header-gray
   border-radius 5px 5px 0 0

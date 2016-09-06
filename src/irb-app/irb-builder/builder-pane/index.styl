@@ -122,20 +122,10 @@ group-property-pane-content
       width 328px
 
       li
-        &::before
-          background-position center
-          background-repeat no-repeat
-          content ''
-          height 14px
-          position absolute
-          left 8px
-          top 7px
-          width 20px
-
-        &.events::before
-          background-image url(../../../../assets/properties/types/event.svg)
-        &.people::before
-          background-image url(../../../../assets/properties/types/people.svg)
+        &.events
+          pane-icon('event')
+        &.people
+          pane-icon('people')
 
 
 filter-property-value-pane-content
@@ -192,4 +182,3 @@ filter-property-value-pane-content
 
         &.type-datetime button
           background-image url(../../../../assets/properties/types/datetime.svg)
-
