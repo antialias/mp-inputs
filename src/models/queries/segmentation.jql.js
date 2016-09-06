@@ -189,13 +189,13 @@ function main() {
 
   var needPostprocess = true;
   if (params.property) {
-    var accessorFuncFactory = function(defaultValue) {
+    var accessNumericPropertyOrReturnDefaultValue = function(propertyName, propertyResourceType, defaultValue) {
       return function(eventData) {
         if (!eventData) {
           return defaultValue;
         }
 
-        var property = getPropertyPaths(params.property.name, params.property.resourceType)
+        var property = getPropertyPaths(propertyName, propertyResourceType)
           .reduce(function(property, path) {
             return property[path];
           }, eventData);
@@ -204,12 +204,13 @@ function main() {
       };
     };
     var accessorFuncs = {
-      min: accessorFuncFactory(Number.MAX_VALUE),
+      min: accessNumericPropertyOrReturnDefaultValue(params.property.name, params.property.resourceType, Number.MAX_VALUE),
     };
     // TODO(chi): Have the accessor return any number for 'average' or 'median' when the property
     // isn't a number yields inaccurate result. The fundamental issue is what do do when a numeric
-    // property of a user isn't numeric?
-    accessorFuncs.average = accessorFuncs.median = accessorFuncs.max = accessorFuncs.total = accessorFuncFactory(0);
+    // property of a user is non-existent or not numeric?
+    accessorFuncs.average = accessorFuncs.median = accessorFuncs.max = accessorFuncs.total =
+      accessNumericPropertyOrReturnDefaultValue(params.property.name, params.property.resourceType, 0);
     if (params.property.resourceType === 'people') {
       query = query.groupByUser(groups, function(accumulators, events) {
         // TODO(dmitry, chi) use join(Events(), People(), {type:"left"}).groupByUser(mixpanel.reducer.any())
@@ -223,14 +224,14 @@ function main() {
         query = query.groupBy(groups, reducerFuncs(params.type, accessorFuncs[params.type]));
       } else {
         // TODO(chi): mixpanel.reducer.min/max cannot be used on events directly yet, so we are
-        // still on the old way when it comes to these types.
+        // still on the old way for these types.
 
         var operatorFuncs = {
           // TODO(dmitry, chi) use mixpanel.reducer.min()
           min: function(list) {
             return _.min(list);
           },
-          // TODO(dmitry, chi) use mixpanel.reducer.min()
+          // TODO(dmitry, chi) use mixpanel.reducer.max()
           max: function(list) {
             return _.max(list);
           },
