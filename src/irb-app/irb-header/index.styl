@@ -37,27 +37,27 @@
     margin-left auto
 
     button
-      background-color transparent
+      background-color grey-700
       background-position center
       background-repeat no-repeat
       border none
       border-radius 0
       height 25px
       width 30px
+      &:hover
+        background-color grey-500
 
       &.refresh-query
-        background-image url("~assets/dock/refresh.svg")
+        mask url("~assets/dock/refresh.svg") no-repeat center
 
       &.reset-query
-        background-image url("~assets/dock/reset.svg")
+        mask url("~assets/dock/reset.svg") no-repeat center
 
       &.download
-        background-image url("~assets/dock/export-inactive.svg")
+        mask url("~assets/dock/export.svg") no-repeat center
         cursor default
         &.enabled
           cursor pointer
-          &:hover
-            background-image url("~assets/dock/export.svg")
 
       &.report-list-button
-        background-image url("~assets/dock/report-list.svg")
+        mask url("~assets/dock/report-list.svg") no-repeat center
