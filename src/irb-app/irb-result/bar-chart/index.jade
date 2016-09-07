@@ -108,8 +108,8 @@ mixin sort-axis-button(sortOrder)
                         .bar-color(class={
                           [`segment-color-${segmentColorMap[segmentName]}`]: isMultiColor,
                         })
-                        if percent > .04
-                          .label= isValueAbsolute ? util.abbreviateNumber(value) : percentValueString
+                        .bar-text-nudger
+                        .label= isValueAbsolute ? util.abbreviateNumber(value) : percentValueString
 
   //- For the hover tool tip to break out of the scroll overflow we are manually calculating where it should be on the screen.
   //- TODO When we change how scrolling works for results: place a tooltip on each li.chart-bar and use CSS to show/hide.
