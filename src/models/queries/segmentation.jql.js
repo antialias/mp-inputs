@@ -195,12 +195,12 @@ function main() {
           return defaultValue;
         }
 
-        var property = getPropertyPaths(property.name, property.resourcetype)
-          .reduce(function(property, path) {
-            return property[path];
+        var prop = getPropertyPaths(property.name, property.resourceType)
+          .reduce(function(prop, path) {
+            return prop[path];
           }, eventData);
 
-        return _.isNumber(property) ? property : defaultValue;
+        return _.isNumber(prop) ? prop : defaultValue;
       };
     };
     var accessorFuncs = {
