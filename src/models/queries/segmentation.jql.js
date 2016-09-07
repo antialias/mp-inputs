@@ -111,7 +111,7 @@ function main() {
       var lastQuarterStart = new Date(getStartOfQuarter(params.dates.to));
       for (var quarterStart = new Date(getStartOfQuarter(params.dates.from));
            quarterStart <= lastQuarterStart;
-           quarterStart.setMonth(quarterStart.getMonth + 3)) {
+           quarterStart.setMonth(quarterStart.getMonth() + 3)) {
         quarterStarts.push(quarterStart.getTime());
       }
       timeUnitGroupBySelector = mixpanel.numeric_bucket(function(eventData) {
@@ -189,13 +189,13 @@ function main() {
 
   var needPostprocess = true;
   if (params.property) {
-    var accessNumericPropertyOrReturnDefaultValue = function(propertyName, propertyResourceType, defaultValue) {
+    var accessNumericPropertyOrReturnDefaultValue = function(property, defaultValue) {
       return function(eventData) {
         if (!eventData) {
           return defaultValue;
         }
 
-        var property = getPropertyPaths(propertyName, propertyResourceType)
+        var property = getPropertyPaths(property.name, property.resourcetype)
           .reduce(function(property, path) {
             return property[path];
           }, eventData);
@@ -204,13 +204,13 @@ function main() {
       };
     };
     var accessorFuncs = {
-      min: accessNumericPropertyOrReturnDefaultValue(params.property.name, params.property.resourceType, Number.MAX_VALUE),
+      min: accessNumericPropertyOrReturnDefaultValue(params.property, Number.MAX_VALUE),
     };
     // TODO(chi): Have the accessor return any number for 'average' or 'median' when the property
     // isn't a number yields inaccurate result. The fundamental issue is what do do when a numeric
     // property of a user is non-existent or not numeric?
     accessorFuncs.average = accessorFuncs.median = accessorFuncs.max = accessorFuncs.total =
-      accessNumericPropertyOrReturnDefaultValue(params.property.name, params.property.resourceType, 0);
+      accessNumericPropertyOrReturnDefaultValue(params.property, 0);
     if (params.property.resourceType === 'people') {
       query = query.groupByUser(groups, function(accumulators, events) {
         // TODO(dmitry, chi) use join(Events(), People(), {type:"left"}).groupByUser(mixpanel.reducer.any())
