@@ -17,23 +17,26 @@ bar-bottom = 8px
 
       irb-bar-chart-header
         .bar-chart-container
+          align-items center
           background-color header-gray
           color grey-500
           display flex
           font-size 12px
+          height 40px
 
           &.loading
             visibility hidden
 
         .bar-chart-header, .bar-chart-axis
+          align-items center
           cursor pointer
           display flex
+          height 100%
           &:hover .sort-icon::before
             opacity 1
 
           .text
             align-items center
-            line-height 40px
 
         .bar-chart-header
           border-right 1px solid border-gray
@@ -61,7 +64,11 @@ bar-bottom = 8px
             width 25%
 
             .text
-              padding 0 15px
+              background-color #fff
+              border 1px solid border-gray
+              border-radius 4px
+              margin-right 10px
+              padding 4px 6px
 
     thead, tbody
       display block
