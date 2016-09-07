@@ -14,6 +14,8 @@ document.registerElement('irb-header', class extends Component {
         focusTitleInput: () => this.update({editingTitle: true}),
 
         refresh: () => this.app.query({useCache: false}),
+        reset: () => this.app.navigate('', this.app.resetQuery()),
+
         reportListEnabled: () => !!Object.keys(this.state.savedReports).length,
         save: () => this.app.saveReport(),
         updateReportTitle: ev => this.app.updateReport({title: ev.target.value}),

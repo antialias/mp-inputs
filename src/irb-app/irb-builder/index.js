@@ -10,12 +10,6 @@ import './index.styl';
 
 document.registerElement('irb-builder', class extends Component {
   get config() {
-    return {
-      template,
-
-      helpers: {
-        reset: () => this.app.navigate('', this.app.resetQuery()),
-      },
-    };
+    return {template};
   }
 });

@@ -8,6 +8,7 @@
   button.save-report(class={active: editingTitle} onclick=$helpers.save) Save
   .loading-dock
     button.refresh-query(onclick=$helpers.refresh)
+    button.reset-query(onclick=$helpers.reset)
     button.download(
       onclick=$helpers.clickExportCSV
       class={enabled: !resultLoading}
