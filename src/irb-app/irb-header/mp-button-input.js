@@ -39,7 +39,8 @@ document.registerElement('mp-button-input', class extends Component {
   }
 
   get value() {
-    return this.inputEl ? this.inputEl.value : '';
+    const inputEl = this.inputEl;
+    return inputEl ? inputEl.value : '';
   }
 
   set value(val) {
