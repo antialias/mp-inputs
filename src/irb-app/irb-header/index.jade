@@ -1,11 +1,9 @@
 .irb-header
-  auto-sizing-input(
+  mp-button-input(
     value=report.title
-    onblur=$helpers.blurTitleInput
-    onchange=$helpers.updateReportTitle
-    onfocus=$helpers.focusTitleInput
+    attributes={buttonText: 'Save'}
+    onchange=$helpers.updateTitle
   )
-  button.save-report(class={active: editingTitle} onclick=$helpers.save) Save
   .loading-dock
     button.refresh-query(onclick=$helpers.refresh)
     button.reset-query(onclick=$helpers.reset)

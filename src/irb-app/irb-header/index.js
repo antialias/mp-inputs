@@ -1,7 +1,7 @@
 import { Component } from 'panel';
 import { downloadData } from 'mixpanel-common/report/util';
 
-import './auto-sizing-input';
+import './mp-button-input';
 
 import template from './index.jade';
 import './index.styl';
@@ -10,15 +10,18 @@ document.registerElement('irb-header', class extends Component {
   get config() {
     return {
       helpers: {
-        blurTitleInput: () => this.update({editingTitle: false}),
-        focusTitleInput: () => this.update({editingTitle: true}),
-
         refresh: () => this.app.query({useCache: false}),
         reset: () => this.app.navigate('', this.app.resetQuery()),
 
         reportListEnabled: () => !!Object.keys(this.state.savedReports).length,
-        save: () => this.app.saveReport(),
-        updateReportTitle: ev => this.app.updateReport({title: ev.target.value}),
+        updateTitle: ev => {
+          if (ev.detail) {
+            this.app.updateReport({title: ev.detail.value});
+            if (ev.detail.save) {
+              this.app.saveReport();
+            }
+          }
+        },
 
         clickExportCSV: () => {
           if (!this.state.resultLoading) {

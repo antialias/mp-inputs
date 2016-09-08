@@ -1,0 +1,14 @@
+.mp-button-input
+  input(
+    class={active}
+    maxlength=50
+    type="text"
+    value=inputValue
+    onchange=$helpers.inputChange
+    onblur=$helpers.blur
+    onfocus=$helpers.focus
+  )
+  button.input-button(
+    class={active}
+    onclick=$helpers.click
+  )= $component.getAttribute('buttonText')
