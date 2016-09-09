@@ -19,7 +19,7 @@ header-height = 48px
 
   .pane
     position absolute
-    width 450px
+    width 500px
 
   .header
     color white
@@ -83,13 +83,13 @@ header-height = 48px
       width 100%
 
   .content
-    height 300px
+    height 372px
 
     .pane-content-view
       height 100%
 
   .search + .content
-    height 270px
+    height 327px
 
   .content
     ul.column
@@ -106,9 +106,13 @@ header-height = 48px
         border-right 1px solid light-gray
 
       &.toggle
-        font-size 12px
+        font-size 11px
+        font-weight 500
+        line-height 1.8
         text-transform uppercase
         width 100px
+        &.resource-type
+          width 112px
 
       li
         cursor pointer
@@ -129,6 +133,9 @@ header-height = 48px
           pointer-events none
 
       &.resource-value li
+        font-size 13px
+        font-weight 500
+        line-height 1.5
         overflow hidden
         padding-left 32px
         padding-right 32px

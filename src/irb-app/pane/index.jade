@@ -34,8 +34,8 @@ mixin paneContent(contentData, isPaneActive, paneIndex)
     - const activePaneIndex = $helpers.activePaneIndex()
     for subpane, paneIndex in $component.subpanes
       .pane(style={
-        '-webkit-transform': `translateX(${(paneIndex - activePaneIndex) * 450}px)`,
-        transform: `translateX(${(paneIndex - activePaneIndex) * 450}px)`,
+        '-webkit-transform': `translateX(${(paneIndex - activePaneIndex) * 500}px)`,
+        transform: `translateX(${(paneIndex - activePaneIndex) * 500}px)`,
       })
         +paneContent(subpane, paneIndex === activePaneIndex, paneIndex)
   else
