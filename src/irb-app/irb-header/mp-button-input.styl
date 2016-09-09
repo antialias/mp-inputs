@@ -2,12 +2,19 @@
 
 border-curve = 3px
 
+active-input()
+  background-color #fff
+  border 1px solid border-gray
+  outline none
+
 mp-button-input
   display inline-block
   position relative
 
   .mp-button-input
     width 310px
+    &:hover input
+      active-input()
 
   input
     background-color inherit
@@ -20,9 +27,7 @@ mp-button-input
     padding 0 20px
     width 270px
     &:focus, &:hover
-      background-color #fff
-      border 1px solid border-gray
-      outline none
+      active-input()
     &.active
       border-right none
       padding-right 10px
@@ -33,6 +38,7 @@ mp-button-input
     border 1px solid blue-700
     border-radius 0 border-curve border-curve 0
     color #fff
+    cursor text
     font-weight bold
     height 38px
     opacity 0
@@ -43,4 +49,5 @@ mp-button-input
     transition opacity 0.3s
     width 72px
     &.active
+      cursor pointer
       opacity 1

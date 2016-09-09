@@ -21,7 +21,11 @@ document.registerElement('mp-button-input', class extends Component {
 
         click: ev => {
           ev.stopPropagation();
-          this.dispatchChange({save: true});
+          if (this.state.active) {
+            this.dispatchChange({save: true});
+          } else {
+            this.inputEl.focus();
+          }
         },
       },
       template,
