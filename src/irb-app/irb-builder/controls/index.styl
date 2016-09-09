@@ -3,21 +3,26 @@
 .irb-control
   button.modify
     background transparent
-    border 1px solid light-gray
-    color dark-gray
+    border 1px solid grey-500
+    color grey-900
     font-size 16px
     font-weight 500
     margin-top -1px
     padding 8px 10px
 
     &:hover
-      color darken(dark-gray, 30%)
-      border-color medium-gray
+      color blue-300
 
   &.noun button.modify
     border-width 0
-    border-bottom-width 1px
+    border-bottom 1px dotted grey-500
+    color blue-300
     padding 8px 0
+    &:hover
+      border-bottom 1px solid blue-300
+
+    .preposition
+      color blue-300
 
   &.verb button.modify
     border-radius 2px
