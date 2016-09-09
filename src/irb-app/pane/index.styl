@@ -1,5 +1,7 @@
 @import "../../stylesheets/common"
 
+header-height = 48px
+
 .pane-view
   background white
   border-radius 3px
@@ -10,8 +12,8 @@
 
   &::before // header background color
     content ''
-    background medium-gray
-    height 40px
+    background blue-300
+    height header-height
     width 100%
     position absolute
 
@@ -21,9 +23,12 @@
 
   .header
     color white
-    line-height 40px
+    font-size 15px
+    font-weight bold
+    line-height header-height
     position relative
     text-align center
+    text-transform uppercase
     width 100%
 
     .back
@@ -32,6 +37,7 @@
       left 0
       padding 6px 8px
       position absolute
+      top 6px
       transform scaleX(-1)
 
       &::before
