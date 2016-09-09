@@ -8,7 +8,7 @@
       if clauseIndex
         .preposition and
       .clause.comparison
-        .header
+        .clause-header
           h3= 'Show' + (report.sections.show.clauses.length === 1 ? '' : ' ' + (clauseIndex + 1))
         .control-container= $component.child('show-edit-control', {attributes: {'clause-index': clauseIndex}})
         if clauseIndex === report.sections.show.clauses.length - 1
