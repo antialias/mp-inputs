@@ -34,7 +34,7 @@
         background-position center
         background-repeat no-repeat
         border none
-        color light-gray
+        color grey-700
         display flex
         font-weight 600
         height 30px
@@ -42,8 +42,11 @@
         padding 0
         white-space nowrap
 
-        &:hover, &.selected
-          color medium-gray
+        &:hover
+          color blue-300
+
+        &.selected
+          color grey-900
 
         &.dropdown
           border-left 1px solid transparent
@@ -90,9 +93,8 @@
           line-height 25px
           text-transform uppercase
 
-
         .button-option
-          color light-gray
+          color grey-700
           font-weight 700
           font-size 10px
           height 25px
@@ -103,14 +105,14 @@
           width 100%
 
           &:hover
-            color medium-gray
+            color blue-300
 
           &.selected
-            color dark-gray
+            color grey-900
 
       .icon
         &:before
-          background light-gray
+          background grey-700
           content ''
           display inline-block
           height 10px
@@ -118,10 +120,10 @@
           width 10px
 
         &:hover:before
-          background medium-gray
+          background blue-300
 
         &.selected:before
-          background dark-gray
+          background grey-900
 
         &.line
           &:before
@@ -173,16 +175,16 @@
 
   .extras-menu
     button.extras-menu
-      background medium-gray
+      background grey-700
       height 30px
       width 30px
       mask url("~assets/extras-menu/ellipsis.svg") no-repeat center
 
       &:hover
-        background medium-gray
+        background blue-300
 
       &.selected
-        background dark-gray
+        background grey-900
 
     .extras-menu-options
       display flex
