@@ -8,10 +8,10 @@
   .filter-tabs
     for typeChoice in $component.filterTypeChoices
       .filter-tab(class=`type-${typeChoice}` class={selected: typeChoice === selectedType})
-        .filter-button-wrapper
-          button(
-            onclick=() => $helpers.updateStageClause({filterType: typeChoice, filterValue: null, filterSearch: null, editing: null})
-          )= util.renamePropertyType(typeChoice)
+        .filter-button-wrapper(
+          onclick=() => $helpers.updateStageClause({filterType: typeChoice, filterValue: null, filterSearch: null, editing: null})
+        )
+          button= util.renamePropertyType(typeChoice)
 
   if selectedType
 

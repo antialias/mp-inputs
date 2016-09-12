@@ -128,31 +128,61 @@ group-property-pane-content
           pane-icon('people')
 
 
+filter-icon(filename)
+  position relative
+  &::before
+    background-image unquote('url(~assets/properties/types/' + filename + '.svg)')
+    background-position center
+    background-repeat no-repeat
+    content ''
+    height 20px
+    left 10px
+    position absolute
+    top 12px
+    width 20px
+
 filter-property-value-pane-content
   .pane-content
     .filter-tabs
+      position relative
       width 100%
+      &::before
+        border-bottom 1px solid border-gray
+        bottom 0
+        content ''
+        left 0
+        position absolute
+        width 100%
 
       .filter-tab
         display inline-block
         border 1px solid transparent
+        border-bottom none
         border-top none
+        position relative
         transition background-color .2s, border-color .2s
 
         .filter-button-wrapper
-          border-bottom 1px solid border-gray
+          cursor pointer
 
-        &:hover, &.selected
-          button
-            color grey-900
+        &:hover button
+          color blue-300
 
         &.selected
           border-left 1px solid border-gray
           border-right 1px solid border-gray
+          &::after
+            border-bottom 1px solid #fff
+            bottom 0
+            content ''
+            left 0
+            position absolute
+            width 100%
           .filter-button-wrapper
             border-bottom 1px solid transparent
             button
               border-left-color transparent
+              color grey-900
           & + .filter-tab
             button
               border-left-color transparent
@@ -171,9 +201,7 @@ filter-property-value-pane-content
           background lighten(background-gray, 50%)
 
         button
-          background transparent 18px 18px no-repeat
-          background-position-x 15px
-          background-position-y 15px
+          background-color transparent
           border 1px solid transparent
           border-left-color border-gray
           color grey-700
@@ -184,35 +212,31 @@ filter-property-value-pane-content
           margin 10px 0
           padding 0
           text-align center
+          text-indent 11px
           transition color .1s
           width 100%
 
         &.type-string
-          button
-            background-image url("~assets/properties/types/string.svg")
           .filter-button-wrapper
+            filter-icon('string')
             width 98px
 
         &.type-number
-          button
-            background-image url("~assets/properties/types/number.svg")
           .filter-button-wrapper
+            filter-icon('number')
             width 103px
 
         &.type-datetime
-          button
-            background-image url("~assets/properties/types/datetime.svg")
           .filter-button-wrapper
+            filter-icon('datetime')
             width 82px
 
         &.type-boolean
-          button
-            background-image url("~assets/properties/types/boolean.svg")
           .filter-button-wrapper
+            filter-icon('boolean')
             width 124px
 
         &.type-list
-          button
-            background-image url("~assets/properties/types/list.svg")
           .filter-button-wrapper
+            filter-icon('list')
             width 85px
