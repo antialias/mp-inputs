@@ -1,7 +1,7 @@
 .irb-result
   .controls= $component.child('chart-controls')
   .chart(
-    class=report.displayOptions.chartType
+    class=`${report.displayOptions.chartType}-chart-type`
     class={loading: resultLoading}
   )
     .main-chart
