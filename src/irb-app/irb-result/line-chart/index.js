@@ -72,7 +72,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
       'day': 'MMM D',
       'week': 'MMM D',
       'month': 'MMMM YYYY',
-      'quarter': 'MMM Do YYYY',
+      'quarter': '[Q]Q YYYY',
       'year': 'YYYY',
     };
     return function() {
