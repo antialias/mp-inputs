@@ -130,55 +130,89 @@ group-property-pane-content
 
 filter-property-value-pane-content
   .pane-content
-    table.tabs
-      &, tr
-        width 100%
+    .filter-tabs
+      width 100%
 
-      td
-        border 1px solid light-gray
+      .filter-tab
+        display inline-block
+        border 1px solid transparent
         border-top none
         transition background-color .2s, border-color .2s
 
-        &:first-child
-          border-left none
-
-        &:last-child
-          border-right none
+        .filter-button-wrapper
+          border-bottom 1px solid border-gray
 
         &:hover, &.selected
           button
-            color medium-gray
+            color grey-900
 
         &.selected
-          border-bottom-color white
+          border-left 1px solid border-gray
+          border-right 1px solid border-gray
+          .filter-button-wrapper
+            border-bottom 1px solid transparent
+            button
+              border-left-color transparent
+          & + .filter-tab
+            button
+              border-left-color transparent
+
+        &:first-child
+          border-left none
+          button
+            border-left none
+
+        &:last-child
+          border-right none
+          button
+            border-right none
 
         &:not(.selected)
           background lighten(background-gray, 50%)
 
         button
-          background transparent 8px 7px no-repeat;
-          border none
-          color light-gray
-          font-size 12px
-          height 29px
+          background transparent 18px 18px no-repeat
+          background-position-x 15px
+          background-position-y 15px
+          border 1px solid transparent
+          border-left-color border-gray
+          color grey-700
+          font-size 13px
+          font-weight 500
+          height 22px
           line-height 12px
-          padding 6px 0 5px 0
-          text-align left
-          text-indent 29px
+          margin 10px 0
+          padding 0
+          text-align center
           transition color .1s
           width 100%
 
-        &.type-string button
-          background-image url("~assets/properties/types/string.svg")
+        &.type-string
+          button
+            background-image url("~assets/properties/types/string.svg")
+          .filter-button-wrapper
+            width 98px
 
-        &.type-number button
-          background-image url("~assets/properties/types/number.svg")
+        &.type-number
+          button
+            background-image url("~assets/properties/types/number.svg")
+          .filter-button-wrapper
+            width 103px
 
-        &.type-boolean button
-          background-image url("~assets/properties/types/boolean.svg")
+        &.type-datetime
+          button
+            background-image url("~assets/properties/types/datetime.svg")
+          .filter-button-wrapper
+            width 82px
 
-        &.type-list button
-          background-image url("~assets/properties/types/list.svg")
+        &.type-boolean
+          button
+            background-image url("~assets/properties/types/boolean.svg")
+          .filter-button-wrapper
+            width 124px
 
-        &.type-datetime button
-          background-image url("~assets/properties/types/datetime.svg")
+        &.type-list
+          button
+            background-image url("~assets/properties/types/list.svg")
+          .filter-button-wrapper
+            width 85px
