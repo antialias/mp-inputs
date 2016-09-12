@@ -23,9 +23,9 @@
         when 'line'
           line-chart(
             attributes=$helpers.stringifyObjValues({
+              'chart-label': $helpers.getChartLabel(),
               'data': processedResult,
               'display-options': $helpers.getDisplayOptions(),
-              'chart-label': $helpers.getChartLabel(),
             })
           )
         when 'table'

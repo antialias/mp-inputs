@@ -105,10 +105,10 @@ document.registerElement('irb-result', class extends Component {
 
           return capitalize(chartLabel.join(' '));
         },
-        getDisplayOptions: () => (extend(
+        getDisplayOptions: () => extend(
           pick(this.state.report.displayOptions, ['analysis', 'plotStyle', 'value']),
           {timeUnit: this.state.report.sections.time.clauses[0].unit}
-        )),
+        ),
         getFunctionLabel: () => {
           switch (this.config.helpers.getDisplayOptions().analysis) {
             case 'logarithmic':

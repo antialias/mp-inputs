@@ -173,9 +173,9 @@ document.registerElement('mp-line-chart', class extends WebComponent {
     }
     return {
       chartType: 'line',
-      MPstyling: false,
-      lineLimit: false,
       highchartsOptions,
+      lineLimit: false,
+      MPstyling: false,
     };
   }
 
