@@ -23,12 +23,14 @@ include ./mixins.jade
     if $helpers.showResource('events', selectedResourceType)
       li.resource-title Events
       for value in $component.eventChoices
-        if $helpers.matchesSearch(util.renameEvent(value.name))
+        - const valueName = util.renameEvent(value.name)
+        if $helpers.matchesSearch(valueName)
           li(
             class={selected: value.name === selectedValueName, custom: !!value.custom}
             onclick=() => $helpers.updateStageClause({property: null, value}, true)
+            title=valueName
           )
-            = util.renameEvent(value.name)
+            = valueName
             button.next-arrow(onclick=ev => $helpers.onArrowClick(ev, value)) ›
 
     if $helpers.showResource('properties', selectedResourceType)
