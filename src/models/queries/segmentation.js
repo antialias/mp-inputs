@@ -324,7 +324,9 @@ export default class SegmentationQuery extends BaseQuery {
         // filter clauses are global to all show clauses.
         selectors: jqlQuery.events.map(selector => {
           if (selector.selector) {
-            selector.selector += ` and ${this.query.filterArbSelectors}`;
+            if (this.query.filterArbSelectors) {
+              selector.selector += ` and ${this.query.filterArbSelectors}`;
+            }
           } else {
             selector.selector = this.query.filterArbSelectors;
           }
