@@ -131,15 +131,15 @@ group-property-pane-content
 filter-icon(filename)
   position relative
   &::before
-    background-image unquote('url(~assets/properties/types/' + filename + '.svg)')
+    mask unquote('url(~mixpanel-common/assets/icons/' + filename + '.svg)') no-repeat center
     background-position center
     background-repeat no-repeat
     content ''
-    height 20px
-    left 10px
+    height 18px
+    left 12px
     position absolute
     top 12px
-    width 20px
+    width 18px
 
 filter-property-value-pane-content
   .pane-content
@@ -165,8 +165,11 @@ filter-property-value-pane-content
         .filter-button-wrapper
           cursor pointer
 
-        &:hover button
-          color blue-300
+        &:hover
+          button
+            color blue-300
+          .filter-button-wrapper::before
+            background-color blue-300
 
         &.selected
           border-left 1px solid border-gray
@@ -183,9 +186,17 @@ filter-property-value-pane-content
             button
               border-left-color transparent
               color grey-900
+            &::before
+              background-color grey-900
           & + .filter-tab
             button
               border-left-color transparent
+
+        &:not(.selected)
+          background lighten(background-gray, 50%)
+          &:not(:hover)
+            .filter-button-wrapper::before
+              background-color grey-500
 
         &:first-child
           border-left none
@@ -196,9 +207,6 @@ filter-property-value-pane-content
           border-right none
           button
             border-right none
-
-        &:not(.selected)
-          background lighten(background-gray, 50%)
 
         button
           background-color transparent
@@ -212,31 +220,31 @@ filter-property-value-pane-content
           margin 10px 0
           padding 0
           text-align center
-          text-indent 11px
+          text-indent 16px
           transition color .1s
           width 100%
 
         &.type-string
           .filter-button-wrapper
-            filter-icon('string')
+            filter-icon('type_text')
             width 98px
 
         &.type-number
           .filter-button-wrapper
-            filter-icon('number')
+            filter-icon('type_number')
             width 103px
 
         &.type-datetime
           .filter-button-wrapper
-            filter-icon('datetime')
+            filter-icon('type_date')
             width 82px
 
         &.type-boolean
           .filter-button-wrapper
-            filter-icon('boolean')
+            filter-icon('type_boolean')
             width 124px
 
         &.type-list
           .filter-button-wrapper
-            filter-icon('list')
+            filter-icon('type_list')
             width 85px
