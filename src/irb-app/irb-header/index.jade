@@ -5,13 +5,15 @@
     onchange=$helpers.updateTitle
   )
   .loading-dock
-    button.refresh-query(onclick=$helpers.refresh)
-    button.reset-query(onclick=$helpers.reset)
+    button.refresh-query(onclick=$helpers.refresh title="Refresh results")
+    button.reset-query(onclick=$helpers.reset title="Reset query")
     button.download(
       onclick=$helpers.clickExportCSV
       class={enabled: !resultLoading}
+      title="Download CSV"
     )
     button.report-list-button(
       onclick=$helpers.clickReportList
       class={enabled: $helpers.reportListEnabled()}
+      title="Saved reports"
     )
