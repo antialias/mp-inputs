@@ -33,6 +33,9 @@ document.registerElement('filter-property-value-pane-content', class extends Pan
 
           this.app.updateStageClause({filterValue});
         },
+        selectFilterType: typeChoice => this.app.updateStageClause({
+          filterType: typeChoice, filterValue: null, filterSearch: null, editing: null,
+        }),
         showPropertyValues: () => this.app.hasStageClause() && !this.app.activeStageClause.filterOperatorIsSetOrNotSet,
         stopEditingClause: () => this.app.stopEditingClause(),
         updateDate: ev => ev.detail && this.app.updateStageClause({filterValue: ev.detail}),
