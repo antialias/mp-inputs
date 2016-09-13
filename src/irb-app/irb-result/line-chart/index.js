@@ -83,7 +83,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
             <span class="date">${moment(this.x).format(timeFormatting[timeUnit])}: </span>
             <span class="count">${this.y}</span>
           </div>
-          ${this.percentage ? `<div class="percent">${Math.round(this.percentage * 10) / 10}%</div>` : ''}
+          ${this.percentage ? `<div class="percent">${util.formatPercent(this.percentage * .01)}</div>` : ''}
         </div>
       `;
     };

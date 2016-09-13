@@ -44,8 +44,8 @@
                   if cell || cell === 0
                     - let cellValue = cell.value || cell
                     if isRelativeValue
-                      - percent = Math.floor(cellValue / segmentMax * 10000) / 100
-                      - cellValue = percent === 0 ? '< 0.01%' : `${percent}%`
+                      - percent = util.formatPercent(cellValue / segmentMax)
+                      - cellValue = percent === '0%' ? '< 0.01%' : percent
                     td(rowSpan=cell.rowSpan || 1)= cellValue
                   else
                     td

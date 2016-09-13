@@ -98,7 +98,7 @@ mixin sort-axis-button(sortOrder)
                         - segmentMax = Math.max(...segmentCell)
                     for value, k in cell
                       - const percent = isLogarithmic ? (Math.log10(value) / segmentMax) : (value / segmentMax)
-                      - const percentValueString = `${Math.floor(percent * 10000) / 100}%`
+                      - const percentValueString = util.formatPercent(percent)
                       - const segmentName = row[j - 1][k]
                       li.chart-bar(
                         style={width: percentValueString}
