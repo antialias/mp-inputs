@@ -48,18 +48,18 @@ loader()
     100%
       transform rotate(360deg)
 
-pane-icon(filename, icon-color=grey-500)
+svg-icon(filename, pos-left=8px, pos-top=7px, icon-color=grey-500)
   &::before
     mask unquote('url(~mixpanel-common/assets/icons/' + filename + '.svg)') no-repeat center
     background-color icon-color
     background-position center
     background-repeat no-repeat
     content ''
-    height 16px
+    height 18px
     position absolute
-    left 8px
-    top 7px
-    width 16px
+    left pos-left
+    top pos-top
+    width 18px
 
 panel-top()
   background-color header-gray
