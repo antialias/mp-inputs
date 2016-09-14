@@ -103,6 +103,9 @@ chart-toggle-icon(filename)
           white-space nowrap
           width 100%
 
+          &::before
+            background-color grey-700
+
           &:hover
             background-color grey-100
             color blue-300
@@ -127,28 +130,42 @@ chart-toggle-icon(filename)
           chart-toggle-icon('table')
 
         &.linear
-          &:before
-            mask url("~assets/extras-menu/linear.svg") no-repeat center
+          chart-toggle-icon('analysis_linear')
 
         &.rolling
-          &:before
-            mask url("~assets/extras-menu/rolling.svg") no-repeat center
+          chart-toggle-icon('analysis_rolling')
 
         &.logarithmic
-          &:before
-            mask url("~assets/extras-menu/logarithmic.svg") no-repeat center
+          chart-toggle-icon('analysis_logarithmic')
 
         &.cumulative
-          &:before
-            mask url("~assets/extras-menu/cumulative.svg") no-repeat center
+          chart-toggle-icon('analysis_cumulative')
 
         &.absolute
-          &:before
+          &::before
+            // TODO replace with chart-toggle-icon
             mask url("~assets/extras-menu/pound.svg") no-repeat center
+            background-position center
+            background-repeat no-repeat
+            content ''
+            height 22px
+            left 16px
+            position absolute
+            top 0
+            width 22px
 
         &.relative
-          &:before
+          &::before
+            // TODO replace with chart-toggle-icon
             mask url("~assets/extras-menu/percent.svg") no-repeat center
+            background-position center
+            background-repeat no-repeat
+            content ''
+            height 22px
+            left 16px
+            position absolute
+            top 0
+            width 22px
 
         &:hover, &.stacked:hover
           &::before
@@ -166,7 +183,7 @@ chart-toggle-icon(filename)
 
   .extras-menu
     button.extras-menu
-      background grey-700
+      background-color grey-700
       height 30px
       width 30px
       mask url("~assets/extras-menu/ellipsis.svg") no-repeat center
@@ -177,34 +194,37 @@ chart-toggle-icon(filename)
       &.selected
         background grey-900
 
-    .extras-menu-options
+    .options.extras-menu-options
       display flex
+      padding-bottom 18px
 
       .disabled
         opacity .5
         pointer-events none
 
-      .analysis
-        border-right 1px light-gray solid
-        padding-right 15px
-
-      .value
-        padding-left 15px
+      .analysis ul
+        border-right 1px solid grey-200
 
       .section
         flex-grow 1
 
         li
+          border none
+          height inherit
           justify-content flex-start
 
           button
-            height 24px
-            padding 0px
+            height inherit
+            margin 0
+            padding 6px 48px
             text-transform capitalize
 
+            &.button-option.icon::before
+              top 7px
+
         .title
-          color dark-gray
-          font-size 11px
+          color grey-900
+          font-size 12px
           font-weight bold
-          padding 6px 0px
+          padding 6px 18px
           text-transform uppercase
