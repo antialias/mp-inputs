@@ -15,7 +15,6 @@ ul.chart-toggle
         button.dropdown(onclick=() => $helpers.onDropdownClick(chartType))
       if isEditingCurrentStyle
         .chart-style.options
-          .chart-type-title= chartType
           each plotStyle in styleChoicesForChartType
             button.button-option.icon(
               class=[chartType, plotStyle]
