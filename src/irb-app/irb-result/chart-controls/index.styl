@@ -1,5 +1,11 @@
 @import "../../../stylesheets/common"
 
+chart-toggle-icon(filename)
+  svg-icon(filename, 8px, 5px, grey-700)
+  &.button-option::before
+    left 16px
+    top 2px
+
 .groups
   align-items center
   border-bottom 1px solid border-gray
@@ -65,18 +71,18 @@
             background medium-gray
 
         &.label
-          padding 0 10px
+          padding 0 10px 0 34px
 
         &::before, &::after
           content none
 
       .options
         background-color white
-        border-radius 3px
+        border-radius 4px
         box-shadow 0 7px 18px 0 rgba(121,124,135,0.26)
         margin-top 3px
         min-width 100px
-        padding 16px 0
+        padding 16px 0 4px 0
         position absolute
         right -1px
         top 30px
@@ -86,11 +92,13 @@
 
         .button-option
           color grey-700
-          font-weight 700
+          font-weight bold
           font-size 12px
           height 25px
           line-height 25px
-          padding 0 24px
+          margin-bottom 12px
+          padding 0 24px 0 48px
+          position relative
           text-align left
           white-space nowrap
           width 100%
@@ -103,37 +111,20 @@
             color grey-900
 
       .icon
-        &:before
-          background grey-700
-          content ''
-          display inline-block
-          height 10px
-          margin-right 10px
-          width 10px
-
-        &:hover:before
-          background blue-300
-
-        &.selected:before
-          background grey-900
-
         &.line
-          &:before
-            mask url("~assets/chart-controls/line.svg") no-repeat center
+          chart-toggle-icon('line')
 
-          &.stacked:before
-            mask url("~assets/chart-controls/line-stacked.svg") no-repeat center
+          &.stacked
+            chart-toggle-icon('line_stacked')
 
         &.bar
-          &:before
-            mask url("~assets/chart-controls/bar.svg") no-repeat center
+          chart-toggle-icon('bar')
 
-          &.stacked:before
-            mask url("~assets/chart-controls/bar-stacked.svg") no-repeat center
+          &.stacked
+            chart-toggle-icon('bar_stacked')
 
         &.table
-          &:before
-            mask url("~assets/chart-controls/table.svg") no-repeat center
+          chart-toggle-icon('table')
 
         &.linear
           &:before
@@ -158,6 +149,14 @@
         &.relative
           &:before
             mask url("~assets/extras-menu/percent.svg") no-repeat center
+
+        &:hover, &.stacked:hover
+          &::before
+            background-color blue-300
+
+        &.selected, &.stacked.selected
+          &::before
+            background-color grey-900
 
       &.chart-type:hover, &.editing
         border-color light-gray
