@@ -9,6 +9,8 @@ import {
   nestedObjectPaths,
 } from '../chart-util';
 
+
+import commonCSS from '!!style!css?camelCase!stylus!../../../stylesheets/common.styl';
 import template from './index.jade';
 import './index.styl';
 
@@ -118,14 +120,14 @@ document.registerElement('mp-line-chart', class extends WebComponent {
         type: 'line',
       },
       colors: [ // taken from order in irb-result/index.styl
-        '#23588c',
-        '#106eca',
-        '#4ba8ff',
-        '#24d2ef',
-        '#47b6ac',
-        '#106eca',
-        '#f2af34',
-        '#ffd209',
+        commonCSS.segmentColor1,
+        commonCSS.segmentColor2,
+        commonCSS.segmentColor3,
+        commonCSS.segmentColor4,
+        commonCSS.segmentColor5,
+        commonCSS.segmentColor6,
+        commonCSS.segmentColor7,
+        commonCSS.segmentColor8,
       ],
       plotOptions: {
         series: {
