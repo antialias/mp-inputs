@@ -9,7 +9,6 @@ import {
   nestedObjectPaths,
 } from '../chart-util';
 
-
 import commonCSS from '!!style!css?camelCase!stylus!../../../stylesheets/common.styl';
 import template from './index.jade';
 import './index.styl';
@@ -30,7 +29,7 @@ document.registerElement('line-chart', class extends Component {
 
   attributeChangedCallback() {
     let { headers, series } = JSON.parse(this.getAttribute('data')) || {};
-    const chartLabel = JSON.parse(this.getAttribute('chart-label')) || null;
+    const chartLabel = JSON.parse(this.getAttribute('chart-label'));
 
     if (headers && series) {
       this.update({
@@ -73,7 +72,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
       'hour': 'MMM D[,] ha',
       'day': 'MMM D',
       'week': 'MMM D',
-      'month': 'MMMM YYYY',
+      'month': 'MMM YYYY',
       'quarter': '[Q]Q YYYY',
       'year': 'YYYY',
     };
@@ -96,20 +95,12 @@ document.registerElement('mp-line-chart', class extends WebComponent {
     const axisOptions = {
       endOnTick: true,
       lineWidth: 1,
-      lineColor: '#e5e7ef',
+      lineColor: commonCSS.grey150,
       minPadding: 0,
       maxPadding: 0,
       startOnTick: true,
     };
     const highchartsOptions = {
-      xAxis: util.extend(axisOptions, {
-        endOnTick: false,
-        startOnTick: false,
-      }),
-      yAxis: util.extend(axisOptions, {
-        showFirstLabel: true,
-        showLastLabel: false,
-      }),
       chart: {
         marginTop: 0,
         marginRight: 0,
@@ -119,7 +110,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
         spacingLeft: 28,
         type: 'line',
       },
-      colors: [ // taken from order in irb-result/index.styl
+      colors: [
         commonCSS.segmentColor1,
         commonCSS.segmentColor2,
         commonCSS.segmentColor3,
@@ -130,40 +121,51 @@ document.registerElement('mp-line-chart', class extends WebComponent {
         commonCSS.segmentColor8,
       ],
       plotOptions: {
-        series: {
-          fillOpacity: 0.7,
+        line: {
+          lineWidth: 3,
           marker: {
-            enabled: null,
             hover: {
               enabled: true,
             },
           },
-          stacking: null,
-        },
-        line: {
-          lineWidth: 3,
           states: {
             hover: {
               lineWidth: 4,
               lineWidthPlus: 0,
             },
           },
+        },
+        series: {
+          fillOpacity: 1,
           marker: {
+            enabled: null,
             hover: {
               enabled: true,
             },
+            lineWidth: 2,
+            symbol: 'circle',
           },
+          shadow: false,
+          stacking: null,
         },
       },
       tooltip: {
         borderWidth: 0,
         formatter: this.tooltipFormatter(),
       },
+      xAxis: util.extend(axisOptions, {
+        endOnTick: false,
+        startOnTick: false,
+      }),
+      yAxis: util.extend(axisOptions, {
+        showFirstLabel: true,
+        showLastLabel: false,
+      }),
     };
 
     if (displayOptions.plotStyle === 'stacked') {
       highchartsOptions.plotOptions.series.stacking = 'normal';
-      highchartsOptions.plotOptions.series.lineWidth = 0;
+      highchartsOptions.plotOptions.series.fillOpacity = 0.2;
       highchartsOptions.chart.type = 'area';
       if (displayOptions.value === 'relative') {
         highchartsOptions.plotOptions.series.stacking = 'percent';
