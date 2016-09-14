@@ -1,9 +1,14 @@
 @import "../../../stylesheets/common"
 
-.show-pane-content
+.pane-view .content .show-pane-content
   height 100%
   overflow hidden
   white-space nowrap
 
-  ul.resource-value
-    width 286px
+  ul
+    &.math, &.resource-type
+      li:hover
+        background-color transparent
+
+    &.resource-value
+      width 286px
