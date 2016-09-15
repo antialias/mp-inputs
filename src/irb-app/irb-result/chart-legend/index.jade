@@ -54,8 +54,7 @@
                     - const label = $helpers.renameSeriesValue(seriesIdx, value)
                     if isSearchActive
                       .label.search-result
-                        span.slice.matches-search=label.slice(0, report.legend.search.length)
-                        span.slice=label.slice(report.legend.search.length)
+                        span= label
                     else
                       .label= label
                       .delete-wrapper
