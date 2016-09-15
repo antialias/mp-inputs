@@ -47,6 +47,7 @@ var webpackConfig = {
   resolve: {
     alias: {
       'assets': path.join(__dirname, 'assets'),
+      'tracking': path.join(__dirname, 'src/tracking.js'),
     },
   },
   resolveLoader: {
