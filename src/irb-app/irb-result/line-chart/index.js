@@ -78,7 +78,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
     };
     return function() {
       return `
-        <div class="title">${this.series.name}</div>
+        <div class="title" style="background-color: ${this.series.color};">${this.series.name}</div>
         <div class="results">
           <div class="absolute">
             <span class="date">${moment(this.x).format(timeFormatting[timeUnit])}: </span>
