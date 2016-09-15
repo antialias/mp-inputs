@@ -142,30 +142,10 @@ chart-toggle-icon(filename)
           chart-toggle-icon('analysis_cumulative')
 
         &.absolute
-          &::before
-            // TODO replace with chart-toggle-icon
-            mask url("~assets/extras-menu/pound.svg") no-repeat center
-            background-position center
-            background-repeat no-repeat
-            content ''
-            height 22px
-            left 16px
-            position absolute
-            top 7px
-            width 22px
+          chart-toggle-icon('value_absolute')
 
         &.relative
-          &::before
-            // TODO replace with chart-toggle-icon
-            mask url("~assets/extras-menu/percent.svg") no-repeat center
-            background-position center
-            background-repeat no-repeat
-            content ''
-            height 22px
-            left 16px
-            position absolute
-            top 7px
-            width 22px
+          chart-toggle-icon('value_relative')
 
         &:hover, &.stacked:hover
           &::before
