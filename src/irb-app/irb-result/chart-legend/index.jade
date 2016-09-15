@@ -1,5 +1,6 @@
 - const legendDataToDisplay = $helpers.legendDataToDisplay()
 - const isSearchActive = $helpers.isSearchActive()
+- const isMultiColor = !(report.displayOptions.chartType === 'bar' && report.displayOptions.plotStyle === 'standard' && legendDataToDisplay.length === 1)
 
 .chart-legend
   .header Legend
@@ -47,7 +48,7 @@
                     onclick=() => $helpers.toggleShowSeriesValue(seriesIdx, value)
                   )
                     .select-icon.series-icon(class={
-                      color: seriesIdx === 0,
+                      color: seriesIdx === 0 && isMultiColor,
                       [`segment-color-${report.legend.getColorForSeries(value)}`]: showing && seriesIdx === 0,
                     })
                     - const label = $helpers.renameSeriesValue(seriesIdx, value)
