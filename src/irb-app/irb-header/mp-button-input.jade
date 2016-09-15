@@ -10,5 +10,6 @@
   )
   button.input-button(
     class={active}
-    onclick=$helpers.click
+    onclick=$helpers.clickSave
+    onmousedown=$helpers.buttonMousedown
   )= $component.getAttribute('buttonText')

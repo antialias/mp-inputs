@@ -19,10 +19,18 @@ document.registerElement('mp-button-input', class extends Component {
           this.dispatchChange();
         },
 
-        click: ev => {
+        buttonMousedown: ev => {
+          if (this.state.active) {
+            // don't let input blur until we save!
+            ev.preventDefault();
+          }
+        },
+
+        clickSave: ev => {
           ev.stopPropagation();
           if (this.state.active) {
             this.dispatchChange({save: true});
+            this.inputEl.blur();
           } else {
             this.inputEl.focus();
           }
