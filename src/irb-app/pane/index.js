@@ -1,7 +1,7 @@
 import { Component } from 'panel';
 
 import { ShowClause } from '../../models/clause';
-import { renameEvent, sorted } from '../../util';
+import { matchesStringFilter, renameEvent, sorted } from '../../util';
 
 import './focus-input';
 
@@ -45,12 +45,7 @@ export class PaneContent extends Component {
       helpers: {
         commitStageClause: () => this.app.commitStageClause(),
         getActiveClauseProperty: property => this.app.hasStageClause() ? this.app.activeStageClause[property] : false,
-        matchesSearch: value => (
-          this.app.hasStageClause() && (
-            !this.app.activeStageClause.search ||
-            value.toLowerCase().indexOf(this.app.activeStageClause.search.toLowerCase()) === 0
-          )
-        ),
+        matchesSearch: value => this.app.hasStageClause() && matchesStringFilter(value, this.app.activeStageClause.search),
         updateStageClause: (clauseData, commit) => {
           this.app.updateStageClause(clauseData);
           if (commit) {

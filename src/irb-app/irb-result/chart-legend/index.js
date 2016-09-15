@@ -1,6 +1,12 @@
 import { Component } from 'panel';
 
-import * as util from '../../../util';
+import {
+  extend,
+  matchesStringFilter,
+  renameEvent,
+  renamePropertyValue,
+  pick,
+} from '../../../util';
 import '../../widgets/sticky-scroll';
 
 import template from './index.jade';
@@ -15,11 +21,11 @@ document.registerElement('chart-legend', class extends Component {
         deleteToFilter: (ev, seriesIdx, value) => {
           ev.stopPropagation();
           const groupClauses = this.state.report.sections.group.clauses;
-          const groupProperties = util.pick(
+          const groupProperties = pick(
             groupClauses[groupClauses.length - seriesIdx - 1],
             ['value', 'filterType', 'resourceType']
           );
-          this.app.startAddingClause('filter', util.extend(groupProperties, {
+          this.app.startAddingClause('filter', extend(groupProperties, {
             filterOperator: value === 'null' ? 'is set' : 'does not equal',
             filterValue: [value],
           }));
@@ -41,14 +47,11 @@ document.registerElement('chart-legend', class extends Component {
           });
           return seriesData.some(series => series.seriesValues.length) ? seriesData : [];
         },
-        matchesSearch: (value, seriesIdx) => (
-          this.state.report.legend && (
-            !this.state.report.legend.search ||
-            this.config.helpers.renameSeriesValue(seriesIdx, value).toLowerCase().indexOf(this.state.report.legend.search.toLowerCase()) === 0
-          )
+        matchesSearch: (value, seriesIdx) => this.state.report.legend && matchesStringFilter(
+          this.config.helpers.renameSeriesValue(seriesIdx, value), this.state.report.legend.search
         ),
         renameSeriesValue: (seriesIdx, name) => (
-          this.state.report.legend.data[seriesIdx].seriesName === '$event' ? util.renameEvent(name) : util.renamePropertyValue(name)
+          this.state.report.legend.data[seriesIdx].seriesName === '$event' ? renameEvent(name) : renamePropertyValue(name)
         ),
         searchHandler: ev => {
           if (ev.target.value) {
