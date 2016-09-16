@@ -2,6 +2,8 @@ import MPApp from 'mixpanel-common/report/mp-app';
 import { extend } from 'mixpanel-common/util';
 import * as util from '../util';
 
+import { mixpanel } from 'tracking';
+
 import BuilderSections from '../models/builder-sections';
 import { ShowSection, TimeSection } from '../models/section';
 import { Clause, ShowClause, TimeClause } from '../models/clause';
@@ -224,6 +226,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
   get activeStageClause() {
     return this.hasStageClause() ? this.state.stageClauses[this.state.stageClauses.length - 1] : null;
+  }
+
+  numberOfSectionClauses(section) {
+    return this.state.report.sections[section] && this.state.report.sections[section].clauses.length || 0;
   }
 
   originStageClauseType() {
@@ -549,10 +555,15 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
     this.update({newCachedData: false});
     this.resetToastTimer();
+    let queryDuration = null;
+    const queryStartTime = window.performance.now();
+    const queryEventProperties = {};
     return this.queries.segmentation.run(cachedResult)
       .then(result => {
         if (!cachedResult) {
+          queryDuration = Math.round((window.performance.now() - queryStartTime) * 1000) / 1000000;
           this.queries.segmentationCache.set(query, result, cacheExpiry);
+          queryEventProperties['duration (seconds)'] = queryDuration;
         }
 
         this.update({result: result, newCachedData: false, resultLoading: false});
@@ -561,6 +572,11 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           sorting: this.sortConfigFor(result, this.state.report.sorting),
           legend: this.state.report.legend.updateLegendData(result),
         });
+        mixpanel.track('Run Query', extend(queryEventProperties, {
+          'number of Compare clauses': this.numberOfSectionClauses('show'),
+          'number of Group By clauses': this.numberOfSectionClauses('group'),
+          'number of Filter clauses': this.numberOfSectionClauses('filter'),
+        }));
       })
       .catch(err => console.error(err));
   }
