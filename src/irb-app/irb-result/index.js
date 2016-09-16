@@ -142,7 +142,7 @@ document.registerElement('irb-result', class extends Component {
         },
         toastClosed: () => this.update({newCachedData: false}),
         toastSelected: () => {
-          mixpanel.track('Refresh Report from Toast');
+          mixpanel.track('Refresh Report', {'toast': true});
           this.app.query();
         },
         processResult: result => {
