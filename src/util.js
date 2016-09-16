@@ -212,6 +212,14 @@ export function formatPercent(decimal, precision=2) {
   return (Math.round(decimal * Math.pow(10, precision + 2)) / Math.pow(10, precision)) + '%';
 }
 
+/**
+ * Determine whether a string contains all whitespace-separated terms in a
+ * given filter string (for UI search bars).
+ * @param {string} str - string to search
+ * @param {string} filterStr - string with filter/search terms
+ * @example
+ * matchesStringFilter('my example string', 'ex my'); // true
+ */
 export function matchesStringFilter(str, filterStr) {
   str = str.toLowerCase();
   const searchTerms = (filterStr || '').trim().toLowerCase().split(' ').filter(Boolean);
