@@ -1,6 +1,8 @@
 import { Component } from 'panel';
 import { capitalize } from 'mixpanel-common/util';
 
+import { mixpanel } from 'tracking';
+
 import {
   extend,
   filterObject,
@@ -163,6 +165,7 @@ document.registerElement('irb-result', class extends Component {
           if (ev.detail) {
             if (ev.detail.type) {
               const barSort = this.state.report.sorting.bar;
+              const colIdx = ev.detail.colIdx;
               switch(ev.detail.type) {
                 case 'axisSort':
                   barSort.sortBy = 'value';
@@ -171,11 +174,12 @@ document.registerElement('irb-result', class extends Component {
                 case 'colSort':
                   barSort.sortBy = 'column';
                   barSort.colSortAttrs = this.app.sortConfigFor(this.state.result, this.state.report.sorting).bar.colSortAttrs;
-                  barSort.colSortAttrs[ev.detail.colIdx] = pick(ev.detail, [
+                  barSort.colSortAttrs[colIdx] = pick(ev.detail, [
                     'sortBy', 'sortOrder',
                   ]);
                   break;
               }
+              this.trackSort(ev.detail.type, barSort, colIdx);
               this.app.updateReport();
             } else if (ev.detail.axis && ev.detail.maxValueText) {
               this.state.report.displayOptions.value = this.state.report.displayOptions.value === 'absolute' ? 'relative' : 'absolute';
@@ -208,6 +212,7 @@ document.registerElement('irb-result', class extends Component {
               }
               break;
           }
+          this.trackSort(headerType, sortConfig, colIdx);
           this.app.updateReport();
         },
       },
@@ -225,6 +230,26 @@ document.registerElement('irb-result', class extends Component {
 
   styleChoicesForChartType(type) {
     return Object.keys(CHART_OPTIONS[type]);
+  }
+
+  trackSort(group, sortConfig, colIdx) {
+    const eventProperties = {};
+    switch (group) {
+      case 'colSort':
+      case 'left':
+        eventProperties['sort by'] = sortConfig.colSortAttrs[colIdx].sortBy;
+        eventProperties['sort order'] = sortConfig.colSortAttrs[colIdx].sortOrder;
+        eventProperties['sort group'] = sortConfig.sortBy;
+        eventProperties['sort column index'] = colIdx;
+        break;
+      case 'axisSort':
+      case 'right':
+        eventProperties['sort by'] = sortConfig.sortBy;
+        eventProperties['sort order'] = sortConfig.sortOrder;
+        eventProperties['sort group'] = 'axis';
+        break;
+    }
+    mixpanel.track('Sort', eventProperties);
   }
 
   isAnalysisEnabled(analysis, chartName=this.selectedChartName()) {
