@@ -87,6 +87,11 @@ describe('matchesStringFilter', function() {
   it('returns false for non-matches', function() {
     expect(matchesStringFilter('ac', 'abcdefg')).to.be.false;
   });
+
+  it('is case-insensitive', function() {
+    expect(matchesStringFilter('dEf', 'abcdefg')).to.be.true;
+    expect(matchesStringFilter('dEF', 'abCDEfg')).to.be.true;
+  });
 });
 
 describe('nestedObjectCumulative', function() {
