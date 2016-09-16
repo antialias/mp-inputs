@@ -213,5 +213,5 @@ export function formatPercent(decimal, precision=2) {
 }
 
 export function matchesStringFilter(str, filterStr) {
-  return !filterStr || str.toLowerCase().indexOf(filterStr.toLowerCase()) !== -1;
+  return !filterStr || str.toLowerCase().includes(filterStr.toLowerCase());
 }
