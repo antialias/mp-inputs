@@ -7,6 +7,7 @@ import {
 
 import {
   filterObject,
+  matchesStringFilter,
   nestedObjectCumulative,
   nestedObjectRolling,
   uniqueObjKeysAtDepth,
@@ -70,6 +71,21 @@ describe('filterObject', function() {
         },
       }
     });
+  });
+});
+
+describe('matchesStringFilter', function() {
+  it('matches at the beginning of a string', function() {
+    expect(matchesStringFilter('abc', 'abcdefg')).to.be.true;
+  });
+
+  it('matches in the middle/end of a string', function() {
+    expect(matchesStringFilter('def', 'abcdefg')).to.be.true;
+    expect(matchesStringFilter('efg', 'abcdefg')).to.be.true;
+  });
+
+  it('returns false for non-matches', function() {
+    expect(matchesStringFilter('ac', 'abcdefg')).to.be.false;
   });
 });
 
