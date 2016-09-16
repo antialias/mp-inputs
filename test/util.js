@@ -92,6 +92,12 @@ describe('matchesStringFilter', function() {
     expect(matchesStringFilter('abcdefg', 'dEf')).to.be.ok();
     expect(matchesStringFilter('abCDEfg', 'dEF')).to.be.ok();
   });
+
+  it('ignores whitespace padding', function() {
+    expect(matchesStringFilter('abcdefg', '   def')).to.be.ok();
+    expect(matchesStringFilter('abcdefg', 'abc   ')).to.be.ok();
+    expect(matchesStringFilter('abcdefg', '  abc ')).to.be.ok();
+  });
 });
 
 describe('nestedObjectCumulative', function() {
