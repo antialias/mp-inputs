@@ -229,7 +229,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   numberOfSectionClauses(section) {
-    return this.state.report.sections[section] && this.state.report.sections[section].clauses.length || 0;
+    const reportSection = this.state.report.sections[section];
+    return reportSection && reportSection.clauses.length || 0;
   }
 
   originStageClauseType() {
