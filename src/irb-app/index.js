@@ -199,6 +199,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     const stateUpdate = extend(this.resettableState, report ? {report} : {});
     this.update(stateUpdate);
     this.resetTopQueries();
+    mixpanel.track('Loaded Report', {
+      'report title': report.title,
+    });
     return stateUpdate;
   }
 
@@ -207,6 +210,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       return this.parentFrame.send('saveBookmark', this.state.report.toBookmarkData())
         .then(bookmark => {
           const report = Report.fromBookmarkData(bookmark);
+          mixpanel.track('Saved Report', {
+            'new report': !this.state.savedReports.hasOwnProperty(report.id),
+            'report title': report.title,
+          });
           this.update({savedReports: extend(this.state.savedReports, {[report.id]: report})});
           this.navigate(`report/${report.id}`, {report});
         })
