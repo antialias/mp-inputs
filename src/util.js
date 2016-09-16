@@ -213,6 +213,7 @@ export function formatPercent(decimal, precision=2) {
 }
 
 export function matchesStringFilter(str, filterStr) {
-  filterStr = (filterStr || '').trim();
-  return !filterStr || str.toLowerCase().includes(filterStr.toLowerCase());
+  str = str.toLowerCase();
+  const searchTerms = (filterStr || '').trim().toLowerCase().split(' ').filter(Boolean);
+  return searchTerms.every(term => str.includes(term));
 }

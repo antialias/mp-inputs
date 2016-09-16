@@ -103,6 +103,16 @@ describe('matchesStringFilter', function() {
     expect(matchesStringFilter('abcdefg', '')).to.be.ok();
     expect(matchesStringFilter('abcdefg', null)).to.be.ok();
   });
+
+  it('matches when all space-separated terms match', function() {
+    expect(matchesStringFilter('abcdefg', 'abc efg')).to.be.ok();
+    expect(matchesStringFilter('abcdefg', 'abc   efg')).to.be.ok();
+    expect(matchesStringFilter('abcdefg', '  abc   efg   ')).to.be.ok();
+  });
+
+  it('does not matches when one or more space-separated terms do not match', function() {
+    expect(matchesStringFilter('abcdefg', 'abc xxx')).not.to.be.ok();
+  });
 });
 
 describe('nestedObjectCumulative', function() {
