@@ -1,5 +1,7 @@
 import { Component } from 'panel';
 
+import { mixpanel } from 'tracking';
+
 import {
   extend,
   renameEvent,
@@ -8,6 +10,7 @@ import {
   pick,
   sorted,
 } from '../../../util';
+
 import '../../widgets/sticky-scroll';
 
 import template from './index.jade';
@@ -21,6 +24,7 @@ document.registerElement('chart-legend', class extends Component {
         allSeriesSelected: seriesIdx => !this.state.report.legend.unselectedCount(seriesIdx),
         deleteToFilter: (ev, seriesIdx, value) => {
           ev.stopPropagation();
+          mixpanel.track('Legend - delete');
           const groupClauses = this.state.report.sections.group.clauses;
           const groupProperties = pick(
             groupClauses[groupClauses.length - seriesIdx - 1],
@@ -63,6 +67,9 @@ document.registerElement('chart-legend', class extends Component {
         searchHandler: ev => {
           if (ev.target.value) {
             this.state.report.legend.showAllSeries();
+            if (!this.state.report.legend.search) {
+              mixpanel.track('Legend - search');
+            }
           } else {
             this.state.report.legend.setDefaultSeriesShowing();
           }
@@ -86,11 +93,21 @@ document.registerElement('chart-legend', class extends Component {
           const newValue = !this.config.helpers.allSeriesSelected(seriesIdx);
           Object.keys(seriesData).forEach(key => seriesData[key] = newValue);
           this.app.updateLegendSeriesAtIndex(seriesIdx, seriesData);
+          if (newValue) {
+            mixpanel.track('Legend - show all');
+          } else {
+            mixpanel.track('Legend - hide all');
+          }
         },
         toggleShowSeriesValue: (seriesIdx, name) => {
           const seriesData = this.state.report.legend.data[seriesIdx].seriesData;
           if (seriesData.hasOwnProperty(name)) {
             this.app.updateLegendSeriesAtIndex(seriesIdx, {[name]: !seriesData[name]});
+            if (seriesData[name]) {
+              mixpanel.track('Legend - show');
+            } else {
+              mixpanel.track('Legend - hide');
+            }
           }
         },
         totalSeriesCount: idx => Object.keys(this.state.report.legend.data[idx].seriesData).length,
