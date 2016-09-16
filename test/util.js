@@ -76,21 +76,21 @@ describe('filterObject', function() {
 
 describe('matchesStringFilter', function() {
   it('matches at the beginning of a string', function() {
-    expect(matchesStringFilter('abc', 'abcdefg')).to.be.true;
+    expect(matchesStringFilter('abcdefg', 'abc')).to.be.ok();
   });
 
   it('matches in the middle/end of a string', function() {
-    expect(matchesStringFilter('def', 'abcdefg')).to.be.true;
-    expect(matchesStringFilter('efg', 'abcdefg')).to.be.true;
+    expect(matchesStringFilter('abcdefg', 'def')).to.be.ok();
+    expect(matchesStringFilter('abcdefg', 'efg')).to.be.ok();
   });
 
   it('returns false for non-matches', function() {
-    expect(matchesStringFilter('ac', 'abcdefg')).to.be.false;
+    expect(matchesStringFilter('abcdefg', 'ac')).not.to.be.ok();
   });
 
   it('is case-insensitive', function() {
-    expect(matchesStringFilter('dEf', 'abcdefg')).to.be.true;
-    expect(matchesStringFilter('dEF', 'abCDEfg')).to.be.true;
+    expect(matchesStringFilter('abcdefg', 'dEf')).to.be.ok();
+    expect(matchesStringFilter('abCDEfg', 'dEF')).to.be.ok();
   });
 });
 
