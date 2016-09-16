@@ -98,6 +98,11 @@ describe('matchesStringFilter', function() {
     expect(matchesStringFilter('abcdefg', 'abc   ')).to.be.ok();
     expect(matchesStringFilter('abcdefg', '  abc ')).to.be.ok();
   });
+
+  it('matches when no filter string is passed', function() {
+    expect(matchesStringFilter('abcdefg', '')).to.be.ok();
+    expect(matchesStringFilter('abcdefg', null)).to.be.ok();
+  });
 });
 
 describe('nestedObjectCumulative', function() {
