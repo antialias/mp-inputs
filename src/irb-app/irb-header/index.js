@@ -1,6 +1,8 @@
 import { Component } from 'panel';
 import { downloadData } from 'mixpanel-common/report/util';
 
+import { mixpanel } from 'tracking';
+
 import './mp-button-input';
 
 import template from './index.jade';
@@ -10,8 +12,14 @@ document.registerElement('irb-header', class extends Component {
   get config() {
     return {
       helpers: {
-        refresh: () => this.app.query({useCache: false}),
-        reset: () => this.app.navigate('', this.app.resetQuery()),
+        refresh: () => {
+          mixpanel.track('Refresh Report');
+          this.app.query({useCache: false});
+        },
+        reset: () => {
+          mixpanel.track('Reset Report');
+          this.app.navigate('', this.app.resetQuery());
+        },
 
         reportListEnabled: () => !!Object.keys(this.state.savedReports).length,
         updateTitle: ev => {
