@@ -7,7 +7,7 @@ import {
 
 import {
   filterObject,
-  matchesStringFilter,
+  stringFilterMatches,
   nestedObjectCumulative,
   nestedObjectRolling,
   uniqueObjKeysAtDepth,
@@ -74,44 +74,52 @@ describe('filterObject', function() {
   });
 });
 
-describe('matchesStringFilter', function() {
+describe('stringFilterMatches', function() {
   it('matches at the beginning of a string', function() {
-    expect(matchesStringFilter('abcdefg', 'abc')).to.be.ok();
+    expect(stringFilterMatches('abcdefg', 'abc')).to.eql(['abc', 'defg']);
   });
 
   it('matches in the middle/end of a string', function() {
-    expect(matchesStringFilter('abcdefg', 'def')).to.be.ok();
-    expect(matchesStringFilter('abcdefg', 'efg')).to.be.ok();
+    expect(stringFilterMatches('abcdefg', 'def')).to.eql(['', 'abc', 'def', 'g']);
+    expect(stringFilterMatches('abcdefg', 'efg')).to.eql(['', 'abcd', 'efg', '']);
   });
 
-  it('returns false for non-matches', function() {
-    expect(matchesStringFilter('abcdefg', 'ac')).not.to.be.ok();
+  it('returns null for non-matches', function() {
+    expect(stringFilterMatches('abcdefg', 'ac')).to.eql(null);
   });
 
   it('is case-insensitive', function() {
-    expect(matchesStringFilter('abcdefg', 'dEf')).to.be.ok();
-    expect(matchesStringFilter('abCDEfg', 'dEF')).to.be.ok();
+    expect(stringFilterMatches('abcdefg', 'dEf')).to.eql(['', 'abc', 'def', 'g']);
+    expect(stringFilterMatches('abCDEfg', 'dEF')).to.eql(['', 'abC', 'DEf', 'g']);
   });
 
   it('ignores whitespace padding', function() {
-    expect(matchesStringFilter('abcdefg', '   def')).to.be.ok();
-    expect(matchesStringFilter('abcdefg', 'abc   ')).to.be.ok();
-    expect(matchesStringFilter('abcdefg', '  abc ')).to.be.ok();
+    expect(stringFilterMatches('abcdefg', '   def')).to.eql(['', 'abc', 'def', 'g']);
+    expect(stringFilterMatches('abcdefg', 'abc   ')).to.eql(['abc', 'defg']);
+    expect(stringFilterMatches('abcdefg', '  abc ')).to.eql(['abc', 'defg']);
   });
 
   it('matches when no filter string is passed', function() {
-    expect(matchesStringFilter('abcdefg', '')).to.be.ok();
-    expect(matchesStringFilter('abcdefg', null)).to.be.ok();
+    expect(stringFilterMatches('abcdefg', '')).to.eql(['', 'abcdefg']);
+    expect(stringFilterMatches('abcdefg', null)).to.eql(['', 'abcdefg']);
   });
 
   it('matches when all space-separated terms match', function() {
-    expect(matchesStringFilter('abcdefg', 'abc efg')).to.be.ok();
-    expect(matchesStringFilter('abcdefg', 'abc   efg')).to.be.ok();
-    expect(matchesStringFilter('abcdefg', '  abc   efg   ')).to.be.ok();
+    expect(stringFilterMatches('abcdefg', 'abc efg')).to.eql(['abc', 'd', 'efg', '']);
+    expect(stringFilterMatches('abcdefg', 'abc   efg')).to.eql(['abc', 'd', 'efg', '']);
+    expect(stringFilterMatches('abcdefg', '  abc   efg   ')).to.eql(['abc', 'd', 'efg', '']);
   });
 
-  it('does not matches when one or more space-separated terms do not match', function() {
-    expect(matchesStringFilter('abcdefg', 'abc xxx')).not.to.be.ok();
+  it('matches out of order', function() {
+    expect(stringFilterMatches('abcdefg', 'efg abc')).to.eql(['abc', 'd', 'efg', '']);
+  });
+
+  it('merges contiguous matches', function() {
+    expect(stringFilterMatches('abcdefg', 'efg bcd')).to.eql(['', 'a', 'bcdefg', '']);
+  });
+
+  it('does not match when one or more space-separated terms do not match', function() {
+    expect(stringFilterMatches('abcdefg', 'abc xxx')).to.eql(null);
   });
 });
 
