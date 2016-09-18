@@ -175,11 +175,7 @@ function main() {
     to_date: params.dates.to,
   };
   if (params.needsPeopleData) {
-    // TODO(dmitry,chi) instead of filtering on tuples with event being set, use
-    // left join:
-    // https://docs.google.com/document/d/1u8iNUhGyFIyIN7xpPkhgdorITuj4BBUYTs0SLwetzA8/edit#heading=h.ydojn9viwz60
-    query = join(Events(queryParams), People(), {selectors: params.selectors})
-      .filter(function(tuple) { return !!tuple.event; });
+    query = join(Events(queryParams), People(), {selectors: params.selectors, type: 'left'});
   } else {
     queryParams.event_selectors = params.selectors;
     query = Events(queryParams);
@@ -210,13 +206,8 @@ function main() {
     accessorFuncs.average = accessorFuncs.median = accessorFuncs.max = accessorFuncs.total =
       accessNumericPropertyOrReturnDefaultValue(propertyPaths, 0);
     if (params.property.resourceType === 'people') {
-      query = query.groupByUser(groups, function(accumulators, events) {
-        // TODO(dmitry, chi) use join(Events(), People(), {type:"left"}).groupByUser(mixpanel.reducer.any())
-        // instead.
-        return _.find(events, function(eventData) {
-          return !!eventData.user;
-        });
-      }).groupBy([mixpanel.slice('key', 1)], reducerFuncs(params.type, accessorFuncs[params.type]));
+      query = query.groupByUser(groups, mixpanel.reducer.any())
+        .groupBy([mixpanel.slice('key', 1)], reducerFuncs(params.type, accessorFuncs[params.type]));
       postprocessPaths = ['value'].concat(propertyPaths);
     } else {
       query = query.groupBy(groups, reducerFuncs(params.type, accessorFuncs[params.type]));
