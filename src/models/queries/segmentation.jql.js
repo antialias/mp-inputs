@@ -141,7 +141,7 @@ function main() {
     return reducerFunc;
   };
 
-  var postprocessFuncs = function(type, propertyPaths) {
+  var postprocessFuncs = function(type, paths) {
     var postprocessFunc;
     switch (type) {
       case 'average':
@@ -152,11 +152,10 @@ function main() {
         break;
       case 'max':
       case 'min':
-        propertyPaths = propertyPaths || ['value'];
         postprocessFunc = function(item) {
-          item.value = propertyPaths.reduce(function(prop, path) {
+          item.value = paths.reduce(function(prop, path) {
             return prop[path];
-          }, item.value);
+          }, item);
           return item;
         };
         break;
@@ -186,6 +185,7 @@ function main() {
     query = Events(queryParams);
   }
 
+  var postprocessPaths = ['value.value'];
   if (params.property) {
     var propertyPaths = ['value'].concat(getPropertyPaths(params.property.name, params.property.resourceType));
     var accessNumericPropertyOrReturnDefaultValue = function(paths, defaultValue) {
@@ -217,8 +217,10 @@ function main() {
           return !!eventData.user;
         });
       }).groupBy([mixpanel.slice('key', 1)], reducerFuncs(params.type, accessorFuncs[params.type]));
+      postprocessPaths = ['value'].concat(propertyPaths);
     } else {
       query = query.groupBy(groups, reducerFuncs(params.type, accessorFuncs[params.type]));
+      postprocessPaths = propertyPaths;
     }
   } else if (params.type === 'total') {
     query = query.groupBy(groups, mixpanel.reducer.count({account_for_sampling: true}));
@@ -230,10 +232,7 @@ function main() {
       .groupBy([mixpanel.slice('key', 1)], reducerFuncs(params.type));
   }
   if (!['total', 'unique'].includes(params.type)) {
-    query = query.map(postprocessFuncs(
-      params.type,
-      params.property ? getPropertyPaths(params.property.name, params.property.resourceType) : null
-    ));
+    query = query.map(postprocessFuncs(params.type, postprocessPaths));
   }
 
   return query;
