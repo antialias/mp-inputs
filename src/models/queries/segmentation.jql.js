@@ -24,10 +24,6 @@
 // }
 
 function main() {
-  var getEvent = function(eventData) {
-    return eventData.event || eventData;
-  };
-
   var groups = [];
   if (params.outputName) {
     groups.push(function() {
@@ -106,9 +102,7 @@ function main() {
            quarterStart.setMonth(quarterStart.getMonth() + 3)) {
         quarterStarts.push(quarterStart.getTime());
       }
-      timeUnitGroupBySelector = mixpanel.numeric_bucket(function(eventData) {
-        return getEvent(eventData).time;
-      }, quarterStarts);
+      timeUnitGroupBySelector = mixpanel.numeric_bucket(params.needsPeopleData ? 'event.time' : 'time', quarterStarts);
       params.dates.from = getStartOfQuarter(params.dates.from);
       break;
   }
