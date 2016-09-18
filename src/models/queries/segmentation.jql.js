@@ -187,28 +187,28 @@ function main() {
   }
 
   if (params.property) {
-    var accessNumericPropertyOrReturnDefaultValue = function(property, defaultValue) {
+    var propertyPaths = ['value'].concat(getPropertyPaths(params.property.name, params.property.resourceType));
+    var accessNumericPropertyOrReturnDefaultValue = function(paths, defaultValue) {
       return function(eventData) {
         if (!eventData) {
           return defaultValue;
         }
 
-        var prop = getPropertyPaths(property.name, property.resourceType)
-          .reduce(function(prop, path) {
-            return prop[path];
-          }, eventData);
+        var prop = paths.reduce(function(prop, path) {
+          return prop && prop[path];
+        }, eventData);
 
         return _.isNumber(prop) ? prop : defaultValue;
       };
     };
     var accessorFuncs = {
-      min: accessNumericPropertyOrReturnDefaultValue(params.property, Number.MAX_VALUE),
+      min: accessNumericPropertyOrReturnDefaultValue(propertyPaths, Number.MAX_VALUE),
     };
     // TODO(chi): Have the accessor return any number for 'average' or 'median' when the property
     // isn't a number yields inaccurate result. The fundamental issue is what do do when a numeric
     // property of a user is non-existent or not numeric?
     accessorFuncs.average = accessorFuncs.median = accessorFuncs.max = accessorFuncs.total =
-      accessNumericPropertyOrReturnDefaultValue(params.property, 0);
+      accessNumericPropertyOrReturnDefaultValue(propertyPaths, 0);
     if (params.property.resourceType === 'people') {
       query = query.groupByUser(groups, function(accumulators, events) {
         // TODO(dmitry, chi) use join(Events(), People(), {type:"left"}).groupByUser(mixpanel.reducer.any())
