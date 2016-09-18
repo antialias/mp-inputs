@@ -155,7 +155,7 @@ function main() {
         postprocessFunc = function(item) {
           item.value = paths.reduce(function(prop, path) {
             return prop[path];
-          }, item);
+          }, item.value);
           return item;
         };
         break;
@@ -181,9 +181,10 @@ function main() {
     query = Events(queryParams);
   }
 
-  var postprocessPaths = ['value.value'];
+  var propertyPaths = ['value'];
   if (params.property) {
-    var propertyPaths = ['value'].concat(getPropertyPaths(params.property.name, params.property.resourceType));
+    propertyPaths = getPropertyPaths(params.property.name, params.property.resourceType);
+    // TODO(chi): use mixpanel.to_number
     var accessNumericPropertyOrReturnDefaultValue = function(paths, defaultValue) {
       return function(eventData) {
         if (!eventData) {
@@ -197,21 +198,25 @@ function main() {
         return _.isNumber(prop) ? prop : defaultValue;
       };
     };
-    var accessorFuncs = {
-      min: accessNumericPropertyOrReturnDefaultValue(propertyPaths, Number.MAX_VALUE),
-    };
     // TODO(chi): Have the accessor return any number for 'average' or 'median' when the property
     // isn't a number yields inaccurate result. The fundamental issue is what do do when a numeric
     // property of a user is non-existent or not numeric?
-    accessorFuncs.average = accessorFuncs.median = accessorFuncs.max = accessorFuncs.total =
-      accessNumericPropertyOrReturnDefaultValue(propertyPaths, 0);
+    var accessorFuncs = function(type, paths) {
+      switch (type) {
+        case 'average':
+        case 'max':
+        case 'median':
+          return accessNumericPropertyOrReturnDefaultValue(paths, 0);
+        case 'min':
+          return accessNumericPropertyOrReturnDefaultValue(paths, Number.MAX_VALUE);
+      }
+    };
     if (params.property.resourceType === 'people') {
+      propertyPaths = ['value'].concat(propertyPaths);
       query = query.groupByUser(groups, mixpanel.reducer.any())
-        .groupBy([mixpanel.slice('key', 1)], reducerFuncs(params.type, accessorFuncs[params.type]));
-      postprocessPaths = ['value'].concat(propertyPaths);
+        .groupBy([mixpanel.slice('key', 1)], reducerFuncs(params.type, accessorFuncs(params.type, propertyPaths)));
     } else {
-      query = query.groupBy(groups, reducerFuncs(params.type, accessorFuncs[params.type]));
-      postprocessPaths = propertyPaths;
+      query = query.groupBy(groups, reducerFuncs(params.type, accessorFuncs(params.type, propertyPaths)));
     }
   } else if (params.type === 'total') {
     query = query.groupBy(groups, mixpanel.reducer.count({account_for_sampling: true}));
@@ -223,7 +228,7 @@ function main() {
       .groupBy([mixpanel.slice('key', 1)], reducerFuncs(params.type));
   }
   if (!['total', 'unique'].includes(params.type)) {
-    query = query.map(postprocessFuncs(params.type, postprocessPaths));
+    query = query.map(postprocessFuncs(params.type, propertyPaths));
   }
 
   return query;
