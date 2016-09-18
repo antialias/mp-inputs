@@ -116,12 +116,6 @@ function main() {
 
   groups = [mixpanel.multiple_keys(groups)];
 
-  // TODO(dmitry, chi) use mixpanel.slice()
-  // https://docs.google.com/document/d/1u8iNUhGyFIyIN7xpPkhgdorITuj4BBUYTs0SLwetzA8/edit#heading=h.ipjo3e54gdd2
-  var sliceOffDistinctId = function(row) {
-    return row.key.slice(1);
-  };
-
   var reducerFuncs = function(type, accessor) {
     accessor = accessor || function(item) { return item.value; };
     var reducerFunc;
@@ -210,7 +204,7 @@ function main() {
         return _.find(events, function(eventData) {
           return !!eventData.user;
         });
-      }).groupBy([sliceOffDistinctId], reducerFuncs(params.type, accessorFuncs[params.type]));
+      }).groupBy([mixpanel.slice('key', 1)], reducerFuncs(params.type, accessorFuncs[params.type]));
     } else {
       if (!['min', 'max'].includes(params.type)) {
         query = query.groupBy(groups, reducerFuncs(params.type, accessorFuncs[params.type]));
@@ -258,10 +252,10 @@ function main() {
     query = query.groupBy(groups, mixpanel.reducer.count({account_for_sampling: true}));
   } else if (params.type === 'unique') {
     query = query.groupByUser(groups, mixpanel.reducer.noop())
-      .groupBy([sliceOffDistinctId], mixpanel.reducer.count());
+      .groupBy([mixpanel.slice('key', 1)], mixpanel.reducer.count());
   } else {
     query = query.groupByUser(groups, mixpanel.reducer.count({account_for_sampling: true}))
-      .groupBy([sliceOffDistinctId], reducerFuncs(params.type));
+      .groupBy([mixpanel.slice('key', 1)], reducerFuncs(params.type));
   }
   if (_.keys(postprocessFuncs).includes(params.type) && needPostprocess) {
     query = query.map(postprocessFuncs[params.type]);
