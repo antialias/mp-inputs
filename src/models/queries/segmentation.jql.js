@@ -141,20 +141,33 @@ function main() {
     return reducerFunc;
   };
 
-  var postprocessFuncs = {
-    average: function(item) {
-      item.value = item.value.sum / item.value.count;
-      return item;
-    },
-    median: function(item) {
-      item.value = item.value[0].value;
-      return item;
-    },
-  };
-
-  postprocessFuncs.max = postprocessFuncs.min = function(item) {
-    item.value = item.value.value;
-    return item;
+  var postprocessFuncs = function(type, propertyPaths) {
+    var postprocessFunc;
+    switch (type) {
+      case 'average':
+        postprocessFunc = function(item) {
+          item.value = item.value.sum / item.value.count;
+          return item;
+        };
+        break;
+      case 'max':
+      case 'min':
+        propertyPaths = propertyPaths || ['value'];
+        postprocessFunc = function(item) {
+          item.value = propertyPaths.reduce(function(prop, path) {
+            return prop[path];
+          }, item.value);
+          return item;
+        };
+        break;
+      case 'median':
+        postprocessFunc = function(item) {
+          item.value = item.value[0].value;
+          return item;
+        };
+        break;
+    }
+    return postprocessFunc;
   };
 
   var query;
@@ -173,7 +186,6 @@ function main() {
     query = Events(queryParams);
   }
 
-  var needPostprocess = true;
   if (params.property) {
     var accessNumericPropertyOrReturnDefaultValue = function(property, defaultValue) {
       return function(eventData) {
@@ -206,47 +218,7 @@ function main() {
         });
       }).groupBy([mixpanel.slice('key', 1)], reducerFuncs(params.type, accessorFuncs[params.type]));
     } else {
-      if (!['min', 'max'].includes(params.type)) {
-        query = query.groupBy(groups, reducerFuncs(params.type, accessorFuncs[params.type]));
-      } else {
-        // TODO(chi): mixpanel.reducer.min/max cannot be used on events directly yet, so we are
-        // still on the old way for these types.
-
-        var operatorFuncs = {
-          // TODO(dmitry, chi) use mixpanel.reducer.min()
-          min: function(list) {
-            return _.min(list);
-          },
-          // TODO(dmitry, chi) use mixpanel.reducer.max()
-          max: function(list) {
-            return _.max(list);
-          },
-        };
-
-        var toPropertyList = function(accumulators, events) {
-          var list = [];
-          _.each(accumulators, function(a) {
-            _.each(a, function(prop) {
-              list.push(prop);
-            });
-          });
-          _.each(events, function(eventData) {
-            list.push(getEvent(eventData).properties[params.property.name]);
-          });
-          return list;
-        };
-
-        query = query.groupBy(groups, toPropertyList);
-
-        // TODO(dmitry, chi) this .map() step becomes unnecessary if a built-in numeric
-        // reducer is used.
-        query = query.map(function(item) {
-          item.value = _.filter(item.value, function(v) { return v && _.isNumber(v); });
-          item.value = item.value.length ? operatorFuncs[params.type](item.value) : 0;
-          return item;
-        });
-        needPostprocess = false;
-      }
+      query = query.groupBy(groups, reducerFuncs(params.type, accessorFuncs[params.type]));
     }
   } else if (params.type === 'total') {
     query = query.groupBy(groups, mixpanel.reducer.count({account_for_sampling: true}));
@@ -257,8 +229,11 @@ function main() {
     query = query.groupByUser(groups, mixpanel.reducer.count({account_for_sampling: true}))
       .groupBy([mixpanel.slice('key', 1)], reducerFuncs(params.type));
   }
-  if (_.keys(postprocessFuncs).includes(params.type) && needPostprocess) {
-    query = query.map(postprocessFuncs[params.type]);
+  if (!['total', 'unique'].includes(params.type)) {
+    query = query.map(postprocessFuncs(
+      params.type,
+      params.property ? getPropertyPaths(params.property.name, params.property.resourceType) : null
+    ));
   }
 
   return query;
