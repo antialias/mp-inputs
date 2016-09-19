@@ -16,10 +16,18 @@
 //     },
 //   ],
 //   groups: [
-//    '$browser',
-//    'mp_country_code',
-//    '$city',
-//    'tab',
+//     {
+//       value: '$browser_version',
+//       resourceType: 'number'
+//     },
+//     {
+//       value: 'mp_country_code',
+//       resourceType: 'string'
+//     },
+//     {
+//       value: '$city',
+//       resourceType: 'string'
+//     }
 //   ],
 // }
 
