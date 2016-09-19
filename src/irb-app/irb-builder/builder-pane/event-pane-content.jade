@@ -1,12 +1,17 @@
+include ./mixins.jade
+
 - const selectedValue = $helpers.getActiveClauseProperty('value');
 - const selectedValueName = selectedValue && selectedValue.name;
 
 .event-pane-content
   ul.column.resource-value
     for value in $component.eventChoices
-      if !!$helpers.searchMatches(util.renameEvent(value.name))
+      - const valueName = util.renameEvent(value.name)
+      - const matches = $helpers.searchMatches(valueName)
+      if !!matches
         li(
           class={selected: value.name === selectedValueName, custom: !!value.custom}
           onclick=() => $helpers.updateStageClause({value}, true)
+          title=valueName
         )
-          = util.renameEvent(value.name)
+          +highlight-matches(matches)
