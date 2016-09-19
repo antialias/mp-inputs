@@ -1,7 +1,5 @@
 import { Component } from 'panel';
 
-import { mixpanel } from 'tracking';
-
 import {
   extend,
   renameEvent,
@@ -24,7 +22,7 @@ document.registerElement('chart-legend', class extends Component {
         allSeriesSelected: seriesIdx => !this.state.report.legend.unselectedCount(seriesIdx),
         deleteToFilter: (ev, seriesIdx, value) => {
           ev.stopPropagation();
-          mixpanel.track('Legend - delete');
+          this.app.trackWithReportInfo('Legend - delete');
           const groupClauses = this.state.report.sections.group.clauses;
           const groupProperties = pick(
             groupClauses[groupClauses.length - seriesIdx - 1],
@@ -68,7 +66,7 @@ document.registerElement('chart-legend', class extends Component {
           if (ev.target.value) {
             this.state.report.legend.showAllSeries();
             if (!this.state.report.legend.search) {
-              mixpanel.track('Legend - search');
+              this.app.trackWithReportInfo('Legend - search');
             }
           } else {
             this.state.report.legend.setDefaultSeriesShowing();
@@ -94,9 +92,9 @@ document.registerElement('chart-legend', class extends Component {
           Object.keys(seriesData).forEach(key => seriesData[key] = newValue);
           this.app.updateLegendSeriesAtIndex(seriesIdx, seriesData);
           if (newValue) {
-            mixpanel.track('Legend - show all');
+            this.app.trackWithReportInfo('Legend - show all');
           } else {
-            mixpanel.track('Legend - hide all');
+            this.app.trackWithReportInfo('Legend - hide all');
           }
         },
         toggleShowSeriesValue: (seriesIdx, name) => {
@@ -104,9 +102,9 @@ document.registerElement('chart-legend', class extends Component {
           if (seriesData.hasOwnProperty(name)) {
             this.app.updateLegendSeriesAtIndex(seriesIdx, {[name]: !seriesData[name]});
             if (seriesData[name]) {
-              mixpanel.track('Legend - show');
+              this.app.trackWithReportInfo('Legend - show');
             } else {
-              mixpanel.track('Legend - hide');
+              this.app.trackWithReportInfo('Legend - hide');
             }
           }
         },

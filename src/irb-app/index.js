@@ -2,7 +2,7 @@ import MPApp from 'mixpanel-common/report/mp-app';
 import { extend } from 'mixpanel-common/util';
 import * as util from '../util';
 
-import { mixpanel } from 'tracking';
+import { mixpanel } from '../tracking.js';
 
 import BuilderSections from '../models/builder-sections';
 import { ShowSection, TimeSection } from '../models/section';
@@ -199,7 +199,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     const stateUpdate = extend(this.resettableState, report ? {report} : {});
     this.update(stateUpdate);
     this.resetTopQueries();
-    mixpanel.track('Loaded Report', {
+    this.trackWithReportInfo('Loaded Report', {
       'report title': report.title,
     });
     return stateUpdate;
@@ -210,7 +210,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       return this.parentFrame.send('saveBookmark', this.state.report.toBookmarkData())
         .then(bookmark => {
           const report = Report.fromBookmarkData(bookmark);
-          mixpanel.track('Saved Report', {
+          this.trackWithReportInfo('Saved Report', {
             'new report': !this.state.savedReports.hasOwnProperty(report.id),
             'report title': report.title,
           });
@@ -256,6 +256,15 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       this.originStageClauseType() === sectionType &&
       this.state.stageClauseIndex === clauseIndex
     );
+  }
+
+  trackWithReportInfo(eventName, properties) {
+    mixpanel.track(eventName, extend({
+      'chart info: type': this.state.report.displayOptions.chartType,
+      'chart info: style': this.state.report.displayOptions.plotStyle,
+      'chart info: analysis': this.state.report.displayOptions.analysis,
+      'chart info: value': this.state.report.displayOptions.value,
+    }, properties));
   }
 
   // State modifiers
@@ -580,7 +589,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           sorting: this.sortConfigFor(result, this.state.report.sorting),
           legend: this.state.report.legend.updateLegendData(result),
         });
-        mixpanel.track('Run Query', extend(queryEventProperties, {
+        this.trackWithReportInfo('Run Query', extend(queryEventProperties, {
           'number of Compare clauses': this.numberOfSectionClauses('show'),
           'number of Group By clauses': this.numberOfSectionClauses('group'),
           'number of Filter clauses': this.numberOfSectionClauses('filter'),

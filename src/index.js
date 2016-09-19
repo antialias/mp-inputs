@@ -6,7 +6,7 @@ import 'webcomponents.js/webcomponents-lite';
 
 import Framesg from 'framesg';
 
-import { mixpanel, rollbar } from 'tracking';
+import { mixpanel, rollbar } from './tracking.js';
 
 import './irb-app';
 

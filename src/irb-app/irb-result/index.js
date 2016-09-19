@@ -1,8 +1,6 @@
 import { Component } from 'panel';
 import { capitalize } from 'mixpanel-common/util';
 
-import { mixpanel } from 'tracking';
-
 import {
   extend,
   filterObject,
@@ -144,7 +142,7 @@ document.registerElement('irb-result', class extends Component {
         },
         toastClosed: () => this.update({newCachedData: false}),
         toastSelected: () => {
-          mixpanel.track('Refresh Report', {'toast': true});
+          this.app.trackWithReportInfo('Refresh Report', {'toast': true});
           this.app.query();
         },
         processResult: result => {
@@ -249,7 +247,7 @@ document.registerElement('irb-result', class extends Component {
         eventProperties['sort group'] = 'axis';
         break;
     }
-    mixpanel.track('Sort', eventProperties);
+    this.app.trackWithReportInfo('Sort', eventProperties);
   }
 
   isAnalysisEnabled(analysis, chartName=this.selectedChartName()) {
