@@ -1,3 +1,7 @@
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
+}
 mp-button-input {
   display: inline-block;
   position: relative;
@@ -53,6 +57,10 @@ mp-button-input button.input-button {
 mp-button-input button.input-button.active {
   cursor: pointer;
   opacity: 1;
+}
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
 }
 .irb-header {
   -webkit-box-align: center;
@@ -337,6 +345,10 @@ http://nicolasgallagher.com/micro-clearfix-hack/
 }
 
 
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
+}
 .irb-control button.modify {
   background: transparent;
   border: 1px solid #9cacbb;
@@ -418,6 +430,10 @@ show-edit-control .irb-control {
 }
 group-edit-control .irb-control {
   min-width: 65px;
+}
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
 }
 .pane-view {
   background: #fff;
@@ -651,6 +667,10 @@ group-edit-control .irb-control {
   transition: transform 0.2s;
   transition: transform 0.2s, -webkit-transform 0.2s;
 }
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
+}
 .dropdown {
   position: relative;
 }
@@ -712,6 +732,10 @@ group-edit-control .irb-control {
   opacity: 0;
   pointer-events: none;
 }
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
+}
 .toggle-widget li {
   display: inline-block;
   margin-right: 6px;
@@ -759,6 +783,10 @@ group-edit-control .irb-control {
 }
 .toggle-widget li.selected button::after {
   background: #92949d;
+}
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
 }
 .pane-content {
   position: relative;
@@ -1094,6 +1122,10 @@ filter-property-value-pane-content .pane-content .filter-tabs .filter-tab button
   transition: color 0.1s;
   width: 100%;
 }
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
+}
 .pane-view .content .show-pane-content {
   height: 100%;
   overflow: hidden;
@@ -1105,6 +1137,10 @@ filter-property-value-pane-content .pane-content .filter-tabs .filter-tab button
 }
 .pane-view .content .show-pane-content ul.resource-value {
   width: 286px;
+}
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
 }
 .clause .header-controls {
   display: inline-block;
@@ -1133,6 +1169,10 @@ filter-property-value-pane-content .pane-content .filter-tabs .filter-tab button
 }
 .clause:hover button.reorder {
   opacity: 1;
+}
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
 }
 time-pane .content {
   height: auto;
@@ -1190,6 +1230,10 @@ time-pane .content {
 .custom-date-pane-content .date-unit-select .toggle li.selected {
   color: #646670;
 }
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
+}
 filter-add-control .irb-control button.modify {
   padding: 7px 8px;
 }
@@ -1209,6 +1253,10 @@ filter-property-pane-content .pane-content {
 }
 filter-property-pane-content .pane-content ul.resource-value {
   width: 328px;
+}
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
 }
 .irb-builder {
   font-size: 16px;
@@ -1277,6 +1325,10 @@ filter-property-pane-content .pane-content ul.resource-value {
 .irb-builder .section.disabled {
   opacity: 0.3;
   pointer-events: none;
+}
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
 }
 .groups {
   -webkit-box-align: center;
@@ -1676,6 +1728,10 @@ filter-property-pane-content .pane-content ul.resource-value {
   padding: 6px 18px;
   text-transform: uppercase;
 }
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
+}
 sticky-scroll {
   box-sizing: border-box;
   overflow-y: auto;
@@ -1697,6 +1753,10 @@ sticky-scroll .body {
   height: 100%;
   position: absolute;
   width: 100%;
+}
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
 }
 .chart-legend .has-results {
   height: 400px;
@@ -1933,10 +1993,6 @@ sticky-scroll .body {
   font: 500 12px 'Helvetica Neue', Helvetica, Arial, sans-serif;
   text-align: left;
 }
-.chart-legend .series-values button .label.search-result .matches-search {
-  color: #4c6072;
-  font-weight: 600;
-}
 .chart-legend .series-values button .delete-wrapper {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1952,7 +2008,7 @@ sticky-scroll .body {
           justify-content: flex-end;
   visibility: hidden;
 }
-.chart-legend .series-values button .delete-icon {
+.chart-legend .series-values button .delete-wrapper .delete-icon {
   background-color: #9cacbb;
   height: 12px;
   margin-right: 5px;
@@ -1960,7 +2016,7 @@ sticky-scroll .body {
           mask: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjIuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAxNiAxNiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTYgMTY7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZGlzcGxheTpub25lO30KCS5zdDF7ZGlzcGxheTppbmxpbmU7ZmlsbDpub25lO3N0cm9rZTojNkU4NTlEO3N0cm9rZS13aWR0aDo0O3N0cm9rZS1taXRlcmxpbWl0OjEwO30KCS5zdDJ7ZmlsbDojNkU4NTlEO30KPC9zdHlsZT4KPGcgaWQ9Im9yaWdpbmFsX2FydHdvcmsiIGNsYXNzPSJzdDAiPgoJPGxpbmUgY2xhc3M9InN0MSIgeDE9IjEzIiB5MT0iMTMiIHgyPSIzIiB5Mj0iMyIvPgoJPGxpbmUgY2xhc3M9InN0MSIgeDE9IjEzIiB5MT0iMyIgeDI9IjMiIHkyPSIxMyIvPgo8L2c+CjxnIGlkPSJleHBhbmRlZCI+Cgk8cG9seWdvbiBjbGFzcz0ic3QyIiBwb2ludHM9IjE0LjQsNC40IDExLjYsMS42IDgsNS4yIDQuNCwxLjYgMS42LDQuNCA1LjIsOCAxLjYsMTEuNiA0LjQsMTQuNCA4LDEwLjggMTEuNiwxNC40IDE0LjQsMTEuNiAxMC44LDggCgkJCSIvPgo8L2c+Cjwvc3ZnPgo=) center center/12px 12px no-repeat;
   width: 12px;
 }
-.chart-legend .series-values button .delete-icon:hover {
+.chart-legend .series-values button .delete-wrapper .delete-icon:hover {
   background-color: #4c6072;
 }
 .chart-legend .series-values button.is-event {
@@ -2001,8 +2057,12 @@ sticky-scroll .body {
   -webkit-transform: rotate(-90deg);
           transform: rotate(-90deg);
 }
-.chart-legend .series-values button.hidden .name:before .slice {
+.chart-legend .series-values button.hidden .name:before .substr {
   color: #4c6072;
+}
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
 }
 .bar-chart table {
   width: 100%;
@@ -2381,6 +2441,10 @@ sticky-scroll .body {
           mask: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjEycHgiIGhlaWdodD0iMTBweCIgdmlld0JveD0iMCAwIDEyIDEwIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogICAgPCEtLSBHZW5lcmF0b3I6IFNrZXRjaCAzOS4xICgzMTcyMCkgLSBodHRwOi8vd3d3LmJvaGVtaWFuY29kaW5nLmNvbS9za2V0Y2ggLS0+CiAgICA8dGl0bGU+YmFyX2Rlc2M8L3RpdGxlPgogICAgPGRlc2M+Q3JlYXRlZCB3aXRoIFNrZXRjaC48L2Rlc2M+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iU3ltYm9scyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPGcgaWQ9IkNvbXBvbmVudC0vLVNvcnQtQS1aIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTA3LjAwMDAwMCwgLTE0LjAwMDAwMCkiIGZpbGw9IiNCM0I1QzMiPgogICAgICAgICAgICA8ZyBpZD0iU29ydCI+CiAgICAgICAgICAgICAgICA8Zz4KICAgICAgICAgICAgICAgICAgICA8ZyBpZD0iYmFyX2Rlc2MiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwNy4wMDAwMDAsIDE0LjAwMDAwMCkiPgogICAgICAgICAgICAgICAgICAgICAgICA8cG9seWdvbiBpZD0iRmlsbC0xIiBwb2ludHM9IjAgMiAxMiAyIDEyIDAgMCAwIj48L3BvbHlnb24+CiAgICAgICAgICAgICAgICAgICAgICAgIDxwb2x5Z29uIGlkPSJGaWxsLTIiIHBvaW50cz0iMCA2IDggNiA4IDMuOTk5IDAgMy45OTkiPjwvcG9seWdvbj4KICAgICAgICAgICAgICAgICAgICAgICAgPHBvbHlnb24gaWQ9IkZpbGwtMyIgcG9pbnRzPSIwIDEwIDQgMTAgNCA4IDAgOCI+PC9wb2x5Z29uPgogICAgICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgICAgIDwvZz4KICAgICAgICAgICAgPC9nPgogICAgICAgIDwvZz4KICAgIDwvZz4KPC9zdmc+) no-repeat center;
   opacity: 0;
 }
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
+}
 .line-chart-container {
   display: -webkit-box;
   display: -webkit-flex;
@@ -2467,6 +2531,10 @@ sticky-scroll .body {
   -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
+}
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
 }
 .table-chart {
   border: 2px solid #ecedf0;
@@ -2611,6 +2679,10 @@ sticky-scroll .body {
 .table-chart.scrolled-y .fixed-header {
   box-shadow: 0 2px 10px -2px #92949d;
 }
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
+}
 .toast {
   background-color: #fff;
   border: 1px solid #c4c8d6;
@@ -2656,6 +2728,10 @@ sticky-scroll .body {
   background-size: 12px;
   margin-left: 2%;
   width: 10%;
+}
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
 }
 .irb-result {
   position: relative;
@@ -2772,6 +2848,10 @@ sticky-scroll .body {
   margin-top: -60px;
   margin-left: 10px;
 }
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
+}
 .irb-app {
   border-radius: 5px;
   margin-bottom: 0;
@@ -2855,6 +2935,10 @@ h3 {
 }
 a {
     outline: none;
+}
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
 }
 body {
   background-color: #e4e5e9;
