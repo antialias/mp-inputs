@@ -31,8 +31,7 @@ include ./mixins.jade
             onclick=() => $helpers.updateStageClause({property: null, value}, true)
             title=valueName
           )
-            for substr, si in matches
-              span.substr(class={'matches-search': !(si % 2)})= substr
+            +highlight-matches(matches)
             button.next-arrow(onclick=ev => $helpers.onArrowClick(ev, value)) ›
 
     if $helpers.showResource('properties', selectedResourceType)

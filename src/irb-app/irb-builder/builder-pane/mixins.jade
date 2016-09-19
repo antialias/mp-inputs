@@ -1,9 +1,13 @@
+include ../../mixins.jade
+
 mixin property-entry(property, selected)
-  if !!$helpers.searchMatches(util.renameProperty(property.name))
+  - const propName = util.renameProperty(property.name)
+  - const matches = $helpers.searchMatches(propName)
+  if !!matches
     li.property(
       class=[`type-${property.type}`, property.resourceType]
       class={selected}
       onclick=() => $helpers.selectProperty(property)
     )
-      = util.renameProperty(property.name)
+      +highlight-matches(matches)
       button.next-arrow(onclick=ev => $helpers.onPropertyArrowClick(ev, property)) ›

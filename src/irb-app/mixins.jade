@@ -1,0 +1,3 @@
+mixin highlight-matches(matches)
+  for substr, si in matches
+    span.substr(class={'matches-search': !(si % 2)})= substr

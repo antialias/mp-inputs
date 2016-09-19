@@ -1,3 +1,5 @@
+include ../../mixins.jade
+
 - const legendDataToDisplay = $helpers.legendDataToDisplay()
 - const isSearchActive = $helpers.isSearchActive()
 - const isMultiColor = !(report.displayOptions.chartType === 'bar' && report.displayOptions.plotStyle === 'standard' && legendDataToDisplay.length === 1)
@@ -53,8 +55,7 @@
                     })
                     if isSearchActive
                       .label.search-result
-                        for substr, si in value.matches
-                          span.substr(class={'matches-search': !(si % 2)})= substr
+                        +highlight-matches(value.matches)
                     else
                       - const label = $helpers.renameSeriesValue(seriesIdx, value.text)
                       .label= label
