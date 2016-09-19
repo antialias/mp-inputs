@@ -143,34 +143,6 @@ function main() {
     return reducerFunc;
   };
 
-  var postprocessFuncs = function(type, paths) {
-    var postprocessFunc;
-    switch (type) {
-      case 'average':
-        postprocessFunc = function(item) {
-          item.value = item.value.sum / item.value.count;
-          return item;
-        };
-        break;
-      case 'max':
-      case 'min':
-        postprocessFunc = function(item) {
-          item.value = paths.reduce(function(prop, path) {
-            return prop[path];
-          }, item.value);
-          return item;
-        };
-        break;
-      case 'median':
-        postprocessFunc = function(item) {
-          item.value = item.value[0].value;
-          return item;
-        };
-        break;
-    }
-    return postprocessFunc;
-  };
-
   var query;
   var queryParams = {
     from_date: params.dates.from,
@@ -230,6 +202,34 @@ function main() {
       .groupBy([mixpanel.slice('key', 1)], reducerFuncs(params.type));
   }
   if (!['total', 'unique'].includes(params.type)) {
+    var postprocessFuncs = function(type, paths) {
+      var postprocessFunc;
+      switch (type) {
+      case 'average':
+        postprocessFunc = function(item) {
+          item.value = item.value.sum / item.value.count;
+          return item;
+        };
+        break;
+      case 'max':
+      case 'min':
+        postprocessFunc = function(item) {
+          item.value = paths.reduce(function(prop, path) {
+            return prop[path];
+          }, item.value);
+          return item;
+        };
+        break;
+      case 'median':
+        postprocessFunc = function(item) {
+          item.value = item.value[0].value;
+          return item;
+        };
+        break;
+      }
+      return postprocessFunc;
+    };
+
     query = query.map(postprocessFuncs(params.type, propertyPaths));
   }
 
