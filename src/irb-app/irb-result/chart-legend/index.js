@@ -2,10 +2,11 @@ import { Component } from 'panel';
 
 import {
   extend,
-  matchesStringFilter,
   renameEvent,
   renamePropertyValue,
+  stringFilterMatches,
   pick,
+  sorted,
 } from '../../../util';
 import '../../widgets/sticky-scroll';
 
@@ -37,9 +38,18 @@ document.registerElement('chart-legend', class extends Component {
         isSearchActive: () => !!this.state.report.legend.search,
         legendDataToDisplay: () => {
           const seriesData = this.state.report.legend.data.map((series, idx) => {
-            const seriesValues = Object.keys(series.seriesData)
-              .filter(value => this.config.helpers.matchesSearch(value, idx))
-              .sort();
+            let seriesValues = Object.keys(series.seriesData)
+              .map(text => this.config.helpers.renameSeriesValue(idx, text))
+              .map(text => {
+                const matches = this.state.report.legend && stringFilterMatches(
+                  text, this.state.report.legend.search
+                );
+                return matches ? {text, matches} : null;
+              })
+              .filter(Boolean);
+            seriesValues = sorted(seriesValues, {
+              transform: v => v.text.toLowerCase(),
+            });
             if (this.state.report.legend.getSeriesDisplayAtIndex(idx) === 'minimized') {
               seriesValues.splice(12);
             }
@@ -47,9 +57,6 @@ document.registerElement('chart-legend', class extends Component {
           });
           return seriesData.some(series => series.seriesValues.length) ? seriesData : [];
         },
-        matchesSearch: (value, seriesIdx) => this.state.report.legend && matchesStringFilter(
-          this.config.helpers.renameSeriesValue(seriesIdx, value), this.state.report.legend.search
-        ),
         renameSeriesValue: (seriesIdx, name) => (
           this.state.report.legend.data[seriesIdx].seriesName === '$event' ? renameEvent(name) : renamePropertyValue(name)
         ),

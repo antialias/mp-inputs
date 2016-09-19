@@ -38,24 +38,25 @@
               if !series.seriesValues.length
                 .no-result= 'No results'
               each value in series.seriesValues
-                - const showing = $helpers.isSeriesValueShowing(seriesIdx, value)
+                - const showing = $helpers.isSeriesValueShowing(seriesIdx, value.text)
                 li
                   button.series(
                     class={
                       'is-event': series.seriesName === '$event',
                       showing,
                     }
-                    onclick=() => $helpers.toggleShowSeriesValue(seriesIdx, value)
+                    onclick=() => $helpers.toggleShowSeriesValue(seriesIdx, value.text)
                   )
                     .select-icon.series-icon(class={
                       color: seriesIdx === 0 && isMultiColor,
-                      [`segment-color-${report.legend.getColorForSeries(value)}`]: showing && seriesIdx === 0,
+                      [`segment-color-${report.legend.getColorForSeries(value.text)}`]: showing && seriesIdx === 0,
                     })
-                    - const label = $helpers.renameSeriesValue(seriesIdx, value)
                     if isSearchActive
                       .label.search-result
-                        span= label
+                        for substr, si in value.matches
+                          span.substr(class={'matches-search': !(si % 2)})= substr
                     else
+                      - const label = $helpers.renameSeriesValue(seriesIdx, value.text)
                       .label= label
                       .delete-wrapper
                         .delete-icon(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value))

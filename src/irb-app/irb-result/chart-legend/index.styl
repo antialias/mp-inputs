@@ -185,7 +185,12 @@ label-medium-gray = #7e879e
         font 500 12px font-helvetica-neue
         text-align left
 
-      .delete-wrapper
+        &.search-result
+            .matches-search
+              color grey-900
+              font-weight 600
+
+       .delete-wrapper
          display flex
          flex 1 0 10px
          justify-content flex-end
@@ -236,3 +241,7 @@ label-medium-gray = #7e879e
       &.hidden
         .name:before
           transform rotate(-90deg)
+
+          .substr
+            color grey-900
+
