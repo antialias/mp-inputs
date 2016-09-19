@@ -4,7 +4,7 @@
 .event-pane-content
   ul.column.resource-value
     for value in $component.eventChoices
-      if $helpers.matchesSearch(util.renameEvent(value.name))
+      if !!$helpers.searchMatches(util.renameEvent(value.name))
         li(
           class={selected: value.name === selectedValueName, custom: !!value.custom}
           onclick=() => $helpers.updateStageClause({value}, true)

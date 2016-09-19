@@ -24,7 +24,7 @@ include ./mixins.jade
       li.resource-title Events
       for value in $component.eventChoices
         - const valueName = util.renameEvent(value.name)
-        if $helpers.matchesSearch(valueName)
+        if !!$helpers.searchMatches(valueName)
           li(
             class={selected: value.name === selectedValueName, custom: !!value.custom}
             onclick=() => $helpers.updateStageClause({property: null, value}, true)

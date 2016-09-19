@@ -1,5 +1,5 @@
 mixin property-entry(property, selected)
-  if $helpers.matchesSearch(util.renameProperty(property.name))
+  if !!$helpers.searchMatches(util.renameProperty(property.name))
     li.property(
       class=[`type-${property.type}`, property.resourceType]
       class={selected}
