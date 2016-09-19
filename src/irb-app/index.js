@@ -486,6 +486,11 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   moveClause(sectionType, clauseIndex, offset) {
+    this.trackWithReportInfo('Reorder Group Clause', {
+      'current position': clauseIndex,
+      'new position': clauseIndex + offset,
+      'reorder direction': offset === 1 ? 'right' : 'left',
+    });
     const section = this.state.report.sections[sectionType];
     const clause = section.clauses[clauseIndex];
 
@@ -497,6 +502,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   removeClause(sectionType, clauseIndex) {
+    this.trackWithReportInfo('Remove Clause', {
+      'clause type': sectionType,
+      'clause index': clauseIndex,
+    });
     this.updateSection(this.state.report.sections[sectionType].removeClause(clauseIndex));
   }
 
