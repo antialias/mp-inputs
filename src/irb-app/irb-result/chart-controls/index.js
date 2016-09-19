@@ -28,7 +28,16 @@ document.registerElement('chart-toggle', class extends Component {
         selectedPlotStyle: type => this.state.chartToggle[type].plotStyle,
         styleChoicesForChartType: type => this.IRBResult.styleChoicesForChartType(type),
         onDropdownClick: editingType => this.app.updateChartToggle({editingType}),
-        onStyleClick: (chartType, plotStyle) => this.IRBResult.updateDisplayOptions({chartType, plotStyle}),
+        onStyleClick: (chartType, plotStyle) => {
+          const displayOptions = this.state.report.displayOptions;
+          if (displayOptions.chartType !== chartType || displayOptions.plotStyle !== plotStyle) {
+            this.app.trackWithReportInfo('Chart Options - Changed Chart Type', {
+              'new chart type': chartType,
+              'new plot style': plotStyle,
+            });
+          }
+          this.IRBResult.updateDisplayOptions({chartType, plotStyle})
+        },
       },
     };
   }
