@@ -235,11 +235,6 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     return this.hasStageClause() ? this.state.stageClauses[this.state.stageClauses.length - 1] : null;
   }
 
-  numberOfSectionClauses(section) {
-    const reportSection = this.state.report.sections[section];
-    return reportSection && reportSection.clauses.length || 0;
-  }
-
   originStageClauseType() {
     return this.hasStageClause() && this.state.stageClauses[0].TYPE;
   }
@@ -259,12 +254,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   trackWithReportInfo(eventName, properties) {
-    mixpanel.track(eventName, extend({
-      'chart info: type': this.state.report.displayOptions.chartType,
-      'chart info: style': this.state.report.displayOptions.plotStyle,
-      'chart info: analysis': this.state.report.displayOptions.analysis,
-      'chart info: value': this.state.report.displayOptions.value,
-    }, properties));
+    mixpanel.track(eventName, extend(this.state.report.toTrackingData(), properties));
   }
 
   // State modifiers
@@ -605,11 +595,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           sorting: this.sortConfigFor(result, this.state.report.sorting),
           legend: this.state.report.legend.updateLegendData(result),
         });
-        this.trackWithReportInfo('Run Query', extend(queryEventProperties, {
-          'number of Compare clauses': this.numberOfSectionClauses('show'),
-          'number of Group By clauses': this.numberOfSectionClauses('group'),
-          'number of Filter clauses': this.numberOfSectionClauses('filter'),
-        }));
+        this.trackWithReportInfo('Run Query', queryEventProperties);
       })
       .catch(err => console.error(err));
   }

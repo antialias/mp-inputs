@@ -60,4 +60,31 @@ export default class Report {
     }
     return bm;
   }
+
+  _listOfSectionValues(section) {
+    const reportSection = this.sections[section];
+    return reportSection && reportSection.clauses.map(clause => clause.TYPE === 'show' ? clause.value.name : clause.value);
+  }
+
+  toTrackingData() {
+    const compareClauses = this._listOfSectionValues('show');
+    const groupClauses = this._listOfSectionValues('group');
+    const filterClauses = this._listOfSectionValues('filter');
+    const timeClause = this.sections['time'].clauses[0];
+
+    return {
+      'chart info: type': this.displayOptions.chartType,
+      'chart info: style': this.displayOptions.plotStyle,
+      'chart info: analysis': this.displayOptions.analysis,
+      'chart info: value': this.displayOptions.value,
+      'chart info: list of Compare clauses': compareClauses,
+      'chart info: list of Group By clauses': groupClauses,
+      'chart info: list of Filter clauses': filterClauses,
+      'chart info: # of Compare clauses': compareClauses.length,
+      'chart info: # of Group By clauses': groupClauses.length,
+      'chart info: # of Filter clauses': filterClauses.length,
+      'chart info: time unit': timeClause.unit,
+      'chart info: time value': timeClause.value,
+    }
+  }
 }
