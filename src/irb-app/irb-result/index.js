@@ -180,7 +180,12 @@ document.registerElement('irb-result', class extends Component {
               this.trackSort(ev.detail.type, barSort, colIdx);
               this.app.updateReport();
             } else if (ev.detail.axis && ev.detail.maxValueText) {
-              this.state.report.displayOptions.value = this.state.report.displayOptions.value === 'absolute' ? 'relative' : 'absolute';
+              const newValue = this.state.report.displayOptions.value === 'absolute' ? 'relative' : 'absolute';
+              this.app.trackWithReportInfo('Chart Options - Changed Value Display', {
+                'from bar chart toggle': true,
+                'new analysis type': newValue,
+              });
+              this.state.report.displayOptions.value = this.state.report.displayOptions.value === newValue;
               this.app.updateReport();
             }
           }

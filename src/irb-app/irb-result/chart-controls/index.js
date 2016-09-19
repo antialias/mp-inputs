@@ -55,8 +55,14 @@ document.registerElement('extras-menu', class extends Component {
         isAnalysisDisabled: analysis => !this.IRBResult.isAnalysisEnabled(analysis),
         isValueToggleDisabled: () => !this.IRBResult.isValueToggleEnabled(),
         startEditingExtrasMenu: () => this.update({isEditingExtrasMenu: true}),
-        onAnalysisClick: analysis => this.IRBResult.updateDisplayOptions({analysis}),
-        onValueClick: value => this.IRBResult.updateDisplayOptions({value}),
+        onAnalysisClick: analysis => {
+          this.app.trackWithReportInfo('Chart Options - Changed Analysis', {'new analysis type': analysis});
+          this.IRBResult.updateDisplayOptions({analysis});
+        },
+        onValueClick: value => {
+          this.app.trackWithReportInfo('Chart Options - Changed Value Display', {'new analysis type': value});
+          this.IRBResult.updateDisplayOptions({value});
+        },
       },
     };
   }
