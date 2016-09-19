@@ -451,7 +451,8 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       newClauses.filter(clause => clause.valid).forEach(clause => {
         const newClause = clause.extend({paneIndex: 0});
         let newSection = null;
-        if (clause === newClauses[0] && typeof this.state.stageClauseIndex === 'number') {
+        const isEditingClause = clause === newClauses[0] && typeof this.state.stageClauseIndex === 'number';
+        if (isEditingClause) {
           newSection = reportAttrs.sections[newClause.TYPE].replaceClause(this.state.stageClauseIndex, newClause);
         } else {
           if (clause === newClauses[1] && newClause.TYPE === 'show' && newClauses[0].TYPE === 'show') {
@@ -470,6 +471,12 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           }
         }
         reportAttrs.sections = reportAttrs.sections.replaceSection(newSection);
+        let clauseProperties = clause.serialize();
+        if (typeof clauseProperties.value === 'object') {
+          clauseProperties = extend(clauseProperties, clauseProperties.value);
+          delete clauseProperties.value;
+        }
+        this.app.trackWithReportInfo(`${isEditingClause ? 'Edit' : 'Add'} ${clause.formattedType()} Clause`, clauseProperties)
       });
 
       this.updateReport(reportAttrs);

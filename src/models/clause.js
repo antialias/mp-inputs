@@ -27,6 +27,10 @@ export class Clause {
     return this.validate(Clause.create(this.TYPE, extend(this.attrs, attrs)));
   }
 
+  formattedType() {
+    return TYPE_FORMAT_NAME[this.TYPE];
+  }
+
   serialize() {
     return this.attrs;
   }
@@ -46,6 +50,12 @@ export class Clause {
   }
 }
 Clause.RESOURCE_TYPES = Clause.prototype.RESOURCE_TYPES = ['all', 'events', 'people'];
+const TYPE_FORMAT_NAME = {
+  'show': 'Compare',
+  'group': 'Group By',
+  'filter': 'Filter',
+  'time': 'Time',
+};
 
 export class EventsPropertiesClause extends Clause {
   constructor(attrs={}) {
