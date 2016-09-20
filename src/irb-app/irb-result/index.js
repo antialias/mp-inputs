@@ -187,7 +187,7 @@ document.registerElement('irb-result', class extends Component {
             } else if (ev.detail.axis && ev.detail.maxValueText) {
               const reportTrackingData = this.state.report.toTrackingData();
               const newValue = this.state.report.displayOptions.value === 'absolute' ? 'relative' : 'absolute';
-              this.state.report.displayOptions.value = this.state.report.displayOptions.value === newValue;
+              this.state.report.displayOptions.value = newValue;
               this.app.updateReport();
               this.app.trackEvent(
                 'Chart Options - Changed Value Display',
