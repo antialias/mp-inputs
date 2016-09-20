@@ -73,18 +73,18 @@ export default class Report {
     const timeClause = this.sections['time'].clauses[0];
 
     return {
-      'chart info: type': this.displayOptions.chartType,
-      'chart info: style': this.displayOptions.plotStyle,
-      'chart info: analysis': this.displayOptions.analysis,
-      'chart info: value': this.displayOptions.value,
-      'chart info: list of Compare clauses': compareClauses,
-      'chart info: list of Group By clauses': groupClauses,
-      'chart info: list of Filter clauses': filterClauses,
-      'chart info: # of Compare clauses': compareClauses.length,
-      'chart info: # of Group By clauses': groupClauses.length,
-      'chart info: # of Filter clauses': filterClauses.length,
-      'chart info: time unit': timeClause.unit,
-      'chart info: time value': timeClause.value,
+      'report info: type': this.displayOptions.chartType,
+      'report info: style': this.displayOptions.plotStyle,
+      'report info: analysis': this.displayOptions.analysis,
+      'report info: value': this.displayOptions.value,
+      'report info: list of Compare clauses': compareClauses,
+      'report info: list of Group By clauses': groupClauses,
+      'report info: list of Filter clauses': filterClauses,
+      'report info: # of Compare clauses': compareClauses.length,
+      'report info: # of Group By clauses': groupClauses.length,
+      'report info: # of Filter clauses': filterClauses.length,
+      'report info: time unit': timeClause.unit,
+      'report info: time value': timeClause.value,
     }
   }
 }
