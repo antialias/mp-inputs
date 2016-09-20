@@ -72,7 +72,7 @@ export default class Report {
     const filterClauses = this._listOfSectionValues('filter');
     const timeClause = this.sections['time'].clauses[0];
 
-    return {
+    const trackingData = {
       'report info: title': this.title,
       'report info: type': this.displayOptions.chartType,
       'report info: style': this.displayOptions.plotStyle,
@@ -87,5 +87,9 @@ export default class Report {
       'report info: time unit': timeClause.unit,
       'report info: time value': timeClause.value,
     };
+    if (this.id) {
+      trackingData['report id'] = this.id;
+    }
+    return trackingData;
   }
 }
