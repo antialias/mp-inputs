@@ -22,7 +22,7 @@ document.registerElement('chart-legend', class extends Component {
         allSeriesSelected: seriesIdx => !this.state.report.legend.unselectedCount(seriesIdx),
         deleteToFilter: (ev, seriesIdx, value) => {
           ev.stopPropagation();
-          this.app.trackWithReportInfo('Legend - delete');
+          this.app.trackWithReportInfo('Legend - Delete');
           const groupClauses = this.state.report.sections.group.clauses;
           const groupProperties = pick(
             groupClauses[groupClauses.length - seriesIdx - 1],
@@ -66,7 +66,7 @@ document.registerElement('chart-legend', class extends Component {
           if (ev.target.value) {
             this.state.report.legend.showAllSeries();
             if (!this.state.report.legend.search) {
-              this.app.trackWithReportInfo('Legend - search');
+              this.app.trackWithReportInfo('Legend - Search');
             }
           } else {
             this.state.report.legend.setDefaultSeriesShowing();
@@ -92,9 +92,9 @@ document.registerElement('chart-legend', class extends Component {
           Object.keys(seriesData).forEach(key => seriesData[key] = newValue);
           this.app.updateLegendSeriesAtIndex(seriesIdx, seriesData);
           if (newValue) {
-            this.app.trackWithReportInfo('Legend - show all');
+            this.app.trackWithReportInfo('Legend - Show All');
           } else {
-            this.app.trackWithReportInfo('Legend - hide all');
+            this.app.trackWithReportInfo('Legend - Hide All');
           }
         },
         toggleShowSeriesValue: (seriesIdx, name) => {
@@ -102,9 +102,9 @@ document.registerElement('chart-legend', class extends Component {
           if (seriesData.hasOwnProperty(name)) {
             this.app.updateLegendSeriesAtIndex(seriesIdx, {[name]: !seriesData[name]});
             if (seriesData[name]) {
-              this.app.trackWithReportInfo('Legend - show');
+              this.app.trackWithReportInfo('Legend - Show');
             } else {
-              this.app.trackWithReportInfo('Legend - hide');
+              this.app.trackWithReportInfo('Legend - Hide');
             }
           }
         },

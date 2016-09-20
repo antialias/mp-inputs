@@ -252,7 +252,7 @@ document.registerElement('irb-result', class extends Component {
         eventProperties['sort group'] = 'axis';
         break;
     }
-    this.app.trackWithReportInfo('Sort', eventProperties);
+    this.app.trackWithReportInfo('Chart Options - Sort', eventProperties);
   }
 
   isAnalysisEnabled(analysis, chartName=this.selectedChartName()) {

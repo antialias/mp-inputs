@@ -199,7 +199,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     const stateUpdate = extend(this.resettableState, report ? {report} : {});
     this.update(stateUpdate);
     this.resetTopQueries();
-    this.trackWithReportInfo('Loaded Report', {
+    this.trackWithReportInfo('Load Report', {
       'report title': report.title,
     });
     return stateUpdate;
@@ -210,7 +210,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       return this.parentFrame.send('saveBookmark', this.state.report.toBookmarkData())
         .then(bookmark => {
           const report = Report.fromBookmarkData(bookmark);
-          this.trackWithReportInfo('Saved Report', {
+          this.trackWithReportInfo('Save Report', {
             'new report': !this.state.savedReports.hasOwnProperty(report.id),
             'report title': report.title,
           });
@@ -466,7 +466,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           clauseProperties = extend(clauseProperties, clauseProperties.value);
           delete clauseProperties.value;
         }
-        this.app.trackWithReportInfo(`${isEditingClause ? 'Edit' : 'Add'} ${clause.formattedType()} Clause`, clauseProperties)
+        this.app.trackWithReportInfo(`Builder - ${isEditingClause ? 'Edit' : 'Add'} ${clause.formattedType()} Clause`, clauseProperties)
       });
 
       this.updateReport(reportAttrs);
@@ -483,7 +483,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   moveClause(sectionType, clauseIndex, offset) {
-    this.trackWithReportInfo('Reorder Group Clause', {
+    this.trackWithReportInfo('Builder - Reorder Group Clause', {
       'current position': clauseIndex,
       'new position': clauseIndex + offset,
       'reorder direction': offset === 1 ? 'right' : 'left',
@@ -499,7 +499,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   removeClause(sectionType, clauseIndex) {
-    this.trackWithReportInfo('Remove Clause', {
+    this.trackWithReportInfo('Builder - Remove Clause', {
       'clause type': sectionType,
       'clause index': clauseIndex,
     });
