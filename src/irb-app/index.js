@@ -200,9 +200,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     const stateUpdate = extend(this.resettableState, report ? {report} : {});
     this.update(stateUpdate);
     this.resetTopQueries();
-    this.trackEvent('Load Report', extend(reportTrackingData, {
-      'report title': report.title,
-    }));
+    if (report && report.title) {
+      reportTrackingData['report title'] = report.title;
+    }
+    this.trackEvent('Load Report', reportTrackingData);
     return stateUpdate;
   }
 

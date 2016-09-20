@@ -73,6 +73,7 @@ export default class Report {
     const timeClause = this.sections['time'].clauses[0];
 
     return {
+      'report info: title': this.title,
       'report info: type': this.displayOptions.chartType,
       'report info: style': this.displayOptions.plotStyle,
       'report info: analysis': this.displayOptions.analysis,
