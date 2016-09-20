@@ -207,14 +207,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   loadReport(report) {
-    const reportTrackingData = this.state.report.toTrackingData();
     const stateUpdate = extend(this.resettableState, report ? {report} : {});
     this.update(stateUpdate);
     this.resetTopQueries();
-    if (report && report.title) {
-      reportTrackingData['report title'] = report.title;
-    }
-    this.trackEvent('Load Report', reportTrackingData);
+    this.trackEvent('Load Report', report ? report.toTrackingData() : {});
     return stateUpdate;
   }
 
