@@ -8,7 +8,6 @@ import {
   pick,
   sorted,
 } from '../../../util';
-
 import '../../widgets/sticky-scroll';
 
 import template from './index.jade';
@@ -70,10 +69,7 @@ document.registerElement('chart-legend', class extends Component {
           if (ev.target.value) {
             this.state.report.legend.showAllSeries();
             if (!this.state.report.legend.search) {
-              this.app.trackEvent(
-                'Legend - Search',
-                this.state.report.toTrackingData()
-              );
+              this.app.trackEvent('Legend - Search', this.state.report.toTrackingData());
             }
           } else {
             this.state.report.legend.setDefaultSeriesShowing();
