@@ -22,7 +22,7 @@ document.registerElement('chart-legend', class extends Component {
         allSeriesSelected: seriesIdx => !this.state.report.legend.unselectedCount(seriesIdx),
         deleteToFilter: (ev, seriesIdx, value) => {
           ev.stopPropagation();
-          this.app.trackWithReportInfo('Legend - Delete', {'deleted value': value.text});
+          const reportTrackingData = this.state.report.toTrackingData();
           const groupClauses = this.state.report.sections.group.clauses;
           const groupProperties = pick(
             groupClauses[groupClauses.length - seriesIdx - 1],
@@ -33,6 +33,10 @@ document.registerElement('chart-legend', class extends Component {
             filterValue: [value],
           }));
           this.app.commitStageClause();
+          this.app.trackEvent(
+            'Legend - Delete',
+            extend(reportTrackingData, {'deleted value': value.text})
+          );
         },
         isAnySeriesLargeSearch: legendData => legendData.some(series => this.config.helpers.isSeriesLargeSearchResult(series)),
         isSeriesLargeSearchResult: series => this.config.helpers.isSearchActive() && series.seriesValues.length > 12,
@@ -66,7 +70,10 @@ document.registerElement('chart-legend', class extends Component {
           if (ev.target.value) {
             this.state.report.legend.showAllSeries();
             if (!this.state.report.legend.search) {
-              this.app.trackWithReportInfo('Legend - Search');
+              this.app.trackEvent(
+                'Legend - Search',
+                this.state.report.toTrackingData()
+              );
             }
           } else {
             this.state.report.legend.setDefaultSeriesShowing();
@@ -87,17 +94,19 @@ document.registerElement('chart-legend', class extends Component {
           return label;
         },
         toggleAllSeriesValue: seriesIdx => {
+          const reportTrackingData = this.state.report.toTrackingData();
           const seriesData = this.state.report.legend.data[seriesIdx].seriesData;
           const newValue = !this.config.helpers.allSeriesSelected(seriesIdx);
           Object.keys(seriesData).forEach(key => seriesData[key] = newValue);
           this.app.updateLegendSeriesAtIndex(seriesIdx, seriesData);
-          this.app.trackWithReportInfo(`Legend - ${newValue ? 'Show' : 'Hide'} All`);
+          this.app.trackEvent(`Legend - ${newValue ? 'Show' : 'Hide'} All`, reportTrackingData);
         },
         toggleShowSeriesValue: (seriesIdx, name) => {
           const seriesData = this.state.report.legend.data[seriesIdx].seriesData;
           if (seriesData.hasOwnProperty(name)) {
+            const reportTrackingData = this.state.report.toTrackingData();
             this.app.updateLegendSeriesAtIndex(seriesIdx, {[name]: !seriesData[name]});
-            this.app.trackWithReportInfo(`Legend - ${seriesData[name] ? 'Show' : 'Hide'}`);
+            this.app.trackEvent(`Legend - ${seriesData[name] ? 'Show' : 'Hide'}`, reportTrackingData);
           }
         },
         totalSeriesCount: idx => Object.keys(this.state.report.legend.data[idx].seriesData).length,

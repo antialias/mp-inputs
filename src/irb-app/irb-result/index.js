@@ -142,8 +142,12 @@ document.registerElement('irb-result', class extends Component {
         },
         toastClosed: () => this.update({newCachedData: false}),
         toastSelected: () => {
-          this.app.trackWithReportInfo('Refresh Report', {'toast': true});
+          const reportTrackingData = this.state.report.toTrackingData();
           this.app.query();
+          this.app.trackEvent(
+            'Refresh Report',
+            extend(reportTrackingData, {'toast': true})
+          );
         },
         processResult: result => {
           result = result.transformed({
@@ -162,6 +166,7 @@ document.registerElement('irb-result', class extends Component {
         barChartChange: ev => {
           if (ev.detail) {
             if (ev.detail.type) {
+              const reportTrackingData = this.state.report.toTrackingData();
               const barSort = this.state.report.sorting.bar;
               const colIdx = ev.detail.colIdx;
               switch(ev.detail.type) {
@@ -177,20 +182,25 @@ document.registerElement('irb-result', class extends Component {
                   ]);
                   break;
               }
-              this.trackSort(ev.detail.type, barSort, colIdx);
               this.app.updateReport();
+              this.trackSort(reportTrackingData, ev.detail.type, barSort, colIdx);
             } else if (ev.detail.axis && ev.detail.maxValueText) {
+              const reportTrackingData = this.state.report.toTrackingData();
               const newValue = this.state.report.displayOptions.value === 'absolute' ? 'relative' : 'absolute';
-              this.app.trackWithReportInfo('Chart Options - Changed Value Display', {
-                'from bar chart toggle': true,
-                'new analysis type': newValue,
-              });
               this.state.report.displayOptions.value = this.state.report.displayOptions.value === newValue;
               this.app.updateReport();
+              this.app.trackEvent(
+                'Chart Options - Changed Value Display',
+                extend(reportTrackingData, {
+                  'from bar chart toggle': true,
+                  'new analysis type': newValue,
+                })
+              );
             }
           }
         },
         tableChange: ev => {
+          const reportTrackingData = this.state.report.toTrackingData();
           const {headerType, colIdx, colName} = ev.detail;
           const sortConfig = this.state.report.sorting.table;
           switch(headerType) {
@@ -215,8 +225,8 @@ document.registerElement('irb-result', class extends Component {
               }
               break;
           }
-          this.trackSort(headerType, sortConfig, colIdx);
           this.app.updateReport();
+          this.trackSort(reportTrackingData, headerType, sortConfig, colIdx);
         },
       },
       template,
@@ -235,7 +245,7 @@ document.registerElement('irb-result', class extends Component {
     return Object.keys(CHART_OPTIONS[type]);
   }
 
-  trackSort(group, sortConfig, colIdx) {
+  trackSort(reportProperties, group, sortConfig, colIdx) {
     const eventProperties = {};
     switch (group) {
       case 'colSort':
@@ -252,7 +262,7 @@ document.registerElement('irb-result', class extends Component {
         eventProperties['sort group'] = 'axis';
         break;
     }
-    this.app.trackWithReportInfo('Chart Options - Sort', eventProperties);
+    this.app.trackEvent('Chart Options - Sort', extend(reportProperties, eventProperties));
   }
 
   isAnalysisEnabled(analysis, chartName=this.selectedChartName()) {

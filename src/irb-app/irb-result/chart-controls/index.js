@@ -29,14 +29,18 @@ document.registerElement('chart-toggle', class extends Component {
         styleChoicesForChartType: type => this.IRBResult.styleChoicesForChartType(type),
         onDropdownClick: editingType => this.app.updateChartToggle({editingType}),
         onStyleClick: (chartType, plotStyle) => {
+          const reportTrackingData = this.state.report.toTrackingData();
           const displayOptions = this.state.report.displayOptions;
-          if (displayOptions.chartType !== chartType || displayOptions.plotStyle !== plotStyle) {
-            this.app.trackWithReportInfo('Chart Options - Changed Chart Type', {
-              'new chart type': chartType,
-              'new plot style': plotStyle,
-            });
-          }
           this.IRBResult.updateDisplayOptions({chartType, plotStyle});
+          if (displayOptions.chartType !== chartType || displayOptions.plotStyle !== plotStyle) {
+            this.app.trackEvent(
+              'Chart Options - Changed Chart Type',
+              extend(reportTrackingData, {
+                'new chart type': chartType,
+                'new plot style': plotStyle,
+              })
+            );
+          }
         },
       },
     };
@@ -65,12 +69,20 @@ document.registerElement('extras-menu', class extends Component {
         isValueToggleDisabled: () => !this.IRBResult.isValueToggleEnabled(),
         startEditingExtrasMenu: () => this.update({isEditingExtrasMenu: true}),
         onAnalysisClick: analysis => {
-          this.app.trackWithReportInfo('Chart Options - Changed Analysis', {'new analysis type': analysis});
+          const reportTrackingData = this.state.report.toTrackingData();
           this.IRBResult.updateDisplayOptions({analysis});
+          this.app.trackEvent(
+            'Chart Options - Changed Analysis',
+            extend(reportTrackingData, {'new analysis type': analysis})
+          );
         },
         onValueClick: value => {
-          this.app.trackWithReportInfo('Chart Options - Changed Value Display', {'new analysis type': value});
+          const reportTrackingData = this.state.report.toTrackingData();
           this.IRBResult.updateDisplayOptions({value});
+          this.app.trackEvent(
+            'Chart Options - Changed Value Display',
+            extend(reportTrackingData, {'new analysis type': value})
+          );
         },
       },
     };

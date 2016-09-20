@@ -196,26 +196,28 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   loadReport(report) {
+    const reportTrackingData = this.state.report.toTrackingData();
     const stateUpdate = extend(this.resettableState, report ? {report} : {});
     this.update(stateUpdate);
     this.resetTopQueries();
-    this.trackWithReportInfo('Load Report', {
+    this.trackEvent('Load Report', extend(reportTrackingData, {
       'report title': report.title,
-    });
+    }));
     return stateUpdate;
   }
 
   saveReport() {
     if (this.parentFrame) {
+      const reportTrackingData = this.state.report.toTrackingData();
       return this.parentFrame.send('saveBookmark', this.state.report.toBookmarkData())
         .then(bookmark => {
           const report = Report.fromBookmarkData(bookmark);
-          this.trackWithReportInfo('Save Report', {
-            'new report': !this.state.savedReports.hasOwnProperty(report.id),
-            'report title': report.title,
-          });
           this.update({savedReports: extend(this.state.savedReports, {[report.id]: report})});
           this.navigate(`report/${report.id}`, {report});
+          this.trackEvent('Save Report', extend(reportTrackingData, {
+            'new report': !this.state.savedReports.hasOwnProperty(report.id),
+            'report title': report.title,
+          }));
         })
         .catch(err => {
           console.error(`Error saving: ${err}`);
@@ -253,9 +255,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     );
   }
 
-  trackWithReportInfo(eventName, properties) {
+  trackEvent(eventName, properties) {
     try {
-      mixpanel.track(eventName, extend(this.state.report.toTrackingData(), properties));
+      mixpanel.track(eventName, properties);
     } catch (e) {
       rollbar.error('tracking error', e);
     }
@@ -438,6 +440,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   commitStageClause() {
+    const reportTrackingData = this.state.report.toTrackingData();
     const newClauses = this.state.stageClauses;
     const reportAttrs = extend(this.state.report);
 
@@ -470,9 +473,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           clauseProperties = extend(clauseProperties, clauseProperties.value);
           delete clauseProperties.value;
         }
-        this.app.trackWithReportInfo(
+        this.trackEvent(
           `Builder - ${isEditingClause ? 'Edit' : 'Add'} ${clause.formattedType()} Clause`,
-          clauseProperties
+          extend(reportTrackingData, clauseProperties)
         );
       });
 
@@ -490,11 +493,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   moveClause(sectionType, clauseIndex, offset) {
-    this.trackWithReportInfo('Builder - Reorder Group Clause', {
-      'current position': clauseIndex,
-      'new position': clauseIndex + offset,
-      'reorder direction': offset === 1 ? 'right' : 'left',
-    });
+    const reportTrackingData = this.state.report.toTrackingData();
     const section = this.state.report.sections[sectionType];
     const clause = section.clauses[clauseIndex];
 
@@ -503,14 +502,20 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         .removeClause(clauseIndex)
         .insertClause(clauseIndex + offset, clause)
     );
+    this.trackEvent('Builder - Reorder Group Clause', extend(reportTrackingData, {
+      'current position': clauseIndex,
+      'new position': clauseIndex + offset,
+      'reorder direction': offset === 1 ? 'right' : 'left',
+    }));
   }
 
   removeClause(sectionType, clauseIndex) {
-    this.trackWithReportInfo('Builder - Remove Clause', {
+    const reportTrackingData = this.state.report.toTrackingData();
+    this.updateSection(this.state.report.sections[sectionType].removeClause(clauseIndex));
+    this.trackEvent('Builder - Remove Clause', extend(reportTrackingData, {
       'clause type': sectionType,
       'clause index': clauseIndex,
-    });
-    this.updateSection(this.state.report.sections[sectionType].removeClause(clauseIndex));
+    }));
   }
 
   updateLegendState(newState) {
@@ -574,6 +579,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   query(options={}) {
+    const reportTrackingData = this.state.report.toTrackingData();
     options = Object.assign({useCache: true}, options);
     const query = this.queries.segmentation.build(this.state, options).query;
     const cachedResult = options.useCache && this.queries.segmentationCache.get(query);
@@ -600,7 +606,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           sorting: this.sortConfigFor(result, this.state.report.sorting),
           legend: this.state.report.legend.updateLegendData(result),
         });
-        this.trackWithReportInfo('Run Query', queryEventProperties);
+        this.trackEvent('Run Query', extend(reportTrackingData, queryEventProperties));
       })
       .catch(err => console.error(err));
   }
