@@ -466,7 +466,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           clauseProperties = extend(clauseProperties, clauseProperties.value);
           delete clauseProperties.value;
         }
-        this.app.trackWithReportInfo(`Builder - ${isEditingClause ? 'Edit' : 'Add'} ${clause.formattedType()} Clause`, clauseProperties)
+        this.app.trackWithReportInfo(
+          `Builder - ${isEditingClause ? 'Edit' : 'Add'} ${clause.formattedType()} Clause`,
+          clauseProperties
+        );
       });
 
       this.updateReport(reportAttrs);
