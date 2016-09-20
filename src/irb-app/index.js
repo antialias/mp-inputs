@@ -2,7 +2,7 @@ import MPApp from 'mixpanel-common/report/mp-app';
 import { extend } from 'mixpanel-common/util';
 import * as util from '../util';
 
-import { mixpanel } from '../tracking.js';
+import { mixpanel } from '../tracking';
 
 import BuilderSections from '../models/builder-sections';
 import { ShowSection, TimeSection } from '../models/section';
