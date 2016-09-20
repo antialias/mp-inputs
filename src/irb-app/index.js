@@ -182,12 +182,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   openReportList() {
     if (this.parentFrame) {
       this.parentFrame.send('chooseBookmark')
-        .then(bookmarkId => {
-          if (bookmarkId) {
-            this.navigate(`report/${bookmarkId}`);
-            this.trackEvent('Load Report', this.state.report.toTrackingData());
-          }
-        });
+        .then(bookmarkId => bookmarkId && this.navigate(`report/${bookmarkId}`));
     }
   }
 
@@ -201,9 +196,14 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   loadReport(report) {
+    const reportTrackingData = this.state.report.toTrackingData();
     const stateUpdate = extend(this.resettableState, report ? {report} : {});
     this.update(stateUpdate);
     this.resetTopQueries();
+    if (report && report.title) {
+      reportTrackingData['report title'] = report.title;
+    }
+    this.trackEvent('Load Report', reportTrackingData);
     return stateUpdate;
   }
 
