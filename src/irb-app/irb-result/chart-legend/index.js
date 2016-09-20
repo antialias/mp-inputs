@@ -22,7 +22,7 @@ document.registerElement('chart-legend', class extends Component {
         allSeriesSelected: seriesIdx => !this.state.report.legend.unselectedCount(seriesIdx),
         deleteToFilter: (ev, seriesIdx, value) => {
           ev.stopPropagation();
-          this.app.trackWithReportInfo('Legend - Delete');
+          this.app.trackWithReportInfo('Legend - Delete', {'deleted value': value.text});
           const groupClauses = this.state.report.sections.group.clauses;
           const groupProperties = pick(
             groupClauses[groupClauses.length - seriesIdx - 1],
