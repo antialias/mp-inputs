@@ -3,6 +3,13 @@ import moment from 'moment';
 import { extend } from 'mixpanel-common/util';
 import { debug } from 'mixpanel-common/report/util';
 
+const TYPE_FORMAT_NAME = {
+  'show': 'Compare',
+  'group': 'Group By',
+  'filter': 'Filter',
+  'time': 'Time',
+};
+
 export class Clause {
   constructor(attrs={}) {
     this.paneIndex = attrs.paneIndex || 0;
@@ -50,12 +57,6 @@ export class Clause {
   }
 }
 Clause.RESOURCE_TYPES = Clause.prototype.RESOURCE_TYPES = ['all', 'events', 'people'];
-const TYPE_FORMAT_NAME = {
-  'show': 'Compare',
-  'group': 'Group By',
-  'filter': 'Filter',
-  'time': 'Time',
-};
 
 export class EventsPropertiesClause extends Clause {
   constructor(attrs={}) {

@@ -11,12 +11,12 @@ document.registerElement('irb-header', class extends Component {
     return {
       helpers: {
         refresh: () => {
-          this.app.trackWithReportInfo('Refresh Report');
           this.app.query({useCache: false});
+          this.app.trackWithReportInfo('Refresh Report');
         },
         reset: () => {
-          this.app.trackWithReportInfo('Reset Report');
           this.app.navigate('', this.app.resetQuery());
+          this.app.trackWithReportInfo('Reset Report');
         },
 
         reportListEnabled: () => !!Object.keys(this.state.savedReports).length,

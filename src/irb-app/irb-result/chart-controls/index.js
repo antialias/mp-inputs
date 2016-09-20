@@ -36,7 +36,7 @@ document.registerElement('chart-toggle', class extends Component {
               'new plot style': plotStyle,
             });
           }
-          this.IRBResult.updateDisplayOptions({chartType, plotStyle})
+          this.IRBResult.updateDisplayOptions({chartType, plotStyle});
         },
       },
     };

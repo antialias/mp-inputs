@@ -2,7 +2,7 @@ import MPApp from 'mixpanel-common/report/mp-app';
 import { extend } from 'mixpanel-common/util';
 import * as util from '../util';
 
-import { mixpanel } from '../tracking';
+import { mixpanel, rollbar } from '../tracking';
 
 import BuilderSections from '../models/builder-sections';
 import { ShowSection, TimeSection } from '../models/section';
@@ -254,7 +254,11 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   trackWithReportInfo(eventName, properties) {
-    mixpanel.track(eventName, extend(this.state.report.toTrackingData(), properties));
+    try {
+      mixpanel.track(eventName, extend(this.state.report.toTrackingData(), properties));
+    } catch (e) {
+      rollbar.error('tracking error', e);
+    }
   }
 
   // State modifiers
@@ -581,15 +585,13 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
     this.update({newCachedData: false});
     this.resetToastTimer();
-    let queryDuration = null;
     const queryStartTime = window.performance.now();
-    let queryEventProperties = {'cached query': cachedResult};
+    const queryEventProperties = {'cached query': cachedResult};
     return this.queries.segmentation.run(cachedResult)
       .then(result => {
         if (!cachedResult) {
-          queryDuration = Math.round((window.performance.now() - queryStartTime) * 1000) / 1000000;
           this.queries.segmentationCache.set(query, result, cacheExpiry);
-          queryEventProperties['duration (seconds)'] = queryDuration;
+          queryEventProperties['duration (seconds)'] = util.performanceDiffInSeconds(queryStartTime);
         }
 
         this.update({result: result, newCachedData: false, resultLoading: false});

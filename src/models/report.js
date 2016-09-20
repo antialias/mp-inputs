@@ -85,6 +85,6 @@ export default class Report {
       'report info: # of Filter clauses': filterClauses.length,
       'report info: time unit': timeClause.unit,
       'report info: time value': timeClause.value,
-    }
+    };
   }
 }
