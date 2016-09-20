@@ -193,12 +193,17 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   }
 
   deleteReport(reportId) {
+    const report = this.state.savedReports[reportId];
+    const trackingData = report ? report.toTrackingData() : {};
+
     delete this.state.savedReports[reportId];
     if (this.state.report.id === reportId) {
       this.navigate('');
     } else {
       this.update();
     }
+
+    this.trackEvent('Delete Report', trackingData);
   }
 
   loadReport(report) {
