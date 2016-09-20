@@ -91,21 +91,13 @@ document.registerElement('chart-legend', class extends Component {
           const newValue = !this.config.helpers.allSeriesSelected(seriesIdx);
           Object.keys(seriesData).forEach(key => seriesData[key] = newValue);
           this.app.updateLegendSeriesAtIndex(seriesIdx, seriesData);
-          if (newValue) {
-            this.app.trackWithReportInfo('Legend - Show All');
-          } else {
-            this.app.trackWithReportInfo('Legend - Hide All');
-          }
+          this.app.trackWithReportInfo(`Legend - ${newValue ? 'Show' : 'Hide'} All`);
         },
         toggleShowSeriesValue: (seriesIdx, name) => {
           const seriesData = this.state.report.legend.data[seriesIdx].seriesData;
           if (seriesData.hasOwnProperty(name)) {
             this.app.updateLegendSeriesAtIndex(seriesIdx, {[name]: !seriesData[name]});
-            if (seriesData[name]) {
-              this.app.trackWithReportInfo('Legend - Show');
-            } else {
-              this.app.trackWithReportInfo('Legend - Hide');
-            }
+            this.app.trackWithReportInfo(`Legend - ${seriesData[name] ? 'Show' : 'Hide'}`);
           }
         },
         totalSeriesCount: idx => Object.keys(this.state.report.legend.data[idx].seriesData).length,
