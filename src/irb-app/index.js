@@ -182,7 +182,13 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   openReportList() {
     if (this.parentFrame) {
       this.parentFrame.send('chooseBookmark')
-        .then(bookmarkId => bookmarkId && this.navigate(`report/${bookmarkId}`));
+        .then(bookmarkId => {
+          if (bookmarkId) {
+            this.navigate(`report/${bookmarkId}`);
+            this.trackEvent('Report list - select report', {'report id': bookmarkId});
+          }
+        });
+      this.trackEvent('Report list - open');
     }
   }
 
