@@ -583,7 +583,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.resetToastTimer();
     let queryDuration = null;
     const queryStartTime = window.performance.now();
-    const queryEventProperties = {};
+    let queryEventProperties = {'cached query': cachedResult};
     return this.queries.segmentation.run(cachedResult)
       .then(result => {
         if (!cachedResult) {
