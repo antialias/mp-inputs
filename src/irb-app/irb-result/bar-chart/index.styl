@@ -195,7 +195,6 @@ bar-bottom = 8px
           height bar-height
           margin-bottom bar-bottom
           min-width 1px
-          overflow hidden
           position relative
           text-align right
           user-select none
@@ -203,23 +202,30 @@ bar-bottom = 8px
           .bar-color
             background blue-500
             height 100%
-            position absolute
+            position relative
             width 100%
             z-index 0
 
-          .bar-text-nudger
-            float left
-            height 100%
-            width 1px
+          .label-wrapper
+            height bar-height
+            overflow hidden
+            position absolute
+            top 0
+            width 100%
 
-          .label
-            color white
-            float right
-            font-size 12px
-            line-height 20.5px
-            padding 1px 8px
-            position relative
-            z-index 1
+            .bar-text-nudger
+              float left
+              height 100%
+              width 1px
+
+            .label
+              color white
+              float right
+              font-size 12px
+              line-height 20.5px
+              padding 1px 8px
+              position relative
+              z-index 1
 
   .hover-label
     position absolute
