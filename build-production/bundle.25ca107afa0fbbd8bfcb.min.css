@@ -2312,7 +2312,6 @@ span.substr.matches-search {
   height: 22px;
   margin-bottom: 8px;
   min-width: 1px;
-  overflow: hidden;
   position: relative;
   text-align: right;
   -webkit-user-select: none;
@@ -2323,16 +2322,23 @@ span.substr.matches-search {
 .bar-chart table td.chart-data li .bar-color {
   background: #3b99f0;
   height: 100%;
-  position: absolute;
+  position: relative;
   width: 100%;
   z-index: 0;
 }
-.bar-chart table td.chart-data li .bar-text-nudger {
+.bar-chart table td.chart-data li .label-wrapper {
+  height: 22px;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+.bar-chart table td.chart-data li .label-wrapper .bar-text-nudger {
   float: left;
   height: 100%;
   width: 1px;
 }
-.bar-chart table td.chart-data li .label {
+.bar-chart table td.chart-data li .label-wrapper .label {
   color: #fff;
   float: right;
   font-size: 12px;
