@@ -12,7 +12,7 @@ export default class BaseQuery {
   run(cachedResult) {
     const query = this.query;
 
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       if (this.valid) {
         if (cachedResult) {
           resolve(cachedResult);
@@ -23,7 +23,7 @@ export default class BaseQuery {
                 resolve(this.processResults(rawResults));
               }
             })
-            .catch(err => console.error(err));
+            .catch(reject);
         }
       } else {
         resolve(this.processResults(null));

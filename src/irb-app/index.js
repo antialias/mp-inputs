@@ -601,6 +601,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.resetToastTimer();
     const queryStartTime = window.performance.now();
     const queryEventProperties = {'cached': !!cachedResult};
+
+    this.trackEvent('Query Start', extend(reportTrackingData, queryEventProperties));
+
     return this.queries.segmentation.run(cachedResult)
       .then(result => {
         if (!cachedResult) {
@@ -614,8 +617,13 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           sorting: this.sortConfigFor(result, this.state.report.sorting),
           legend: this.state.report.legend.updateLegendData(result),
         });
-        this.trackEvent('Run Query', extend(reportTrackingData, queryEventProperties));
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        queryEventProperties['error'] = err;
+      })
+      .then(() => {
+        this.trackEvent('Query Finish', extend(reportTrackingData, queryEventProperties));
+      });
   }
 });
