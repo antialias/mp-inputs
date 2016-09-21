@@ -59,7 +59,7 @@ include ../../mixins.jade
                     else
                       - const label = $helpers.renameSeriesValue(seriesIdx, value.text)
                       .label= label
-                      .delete-wrapper
-                        .delete-icon(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value.text))
+                    .delete-wrapper
+                      .delete-icon(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value.text))
           if isSeriesShowing && seriesDisplayLabel
             .display-option(onclick=() => report.legend.toggleSeriesDisplaySetting(seriesIdx))= seriesDisplayLabel
