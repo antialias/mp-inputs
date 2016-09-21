@@ -600,7 +600,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.update({newCachedData: false});
     this.resetToastTimer();
     const queryStartTime = window.performance.now();
-    const queryEventProperties = {'cached query': cachedResult};
+    const queryEventProperties = {'cached': !!cachedResult};
     return this.queries.segmentation.run(cachedResult)
       .then(result => {
         if (!cachedResult) {
