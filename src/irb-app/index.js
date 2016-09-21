@@ -605,7 +605,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       .then(result => {
         if (!cachedResult) {
           this.queries.segmentationCache.set(query, result, cacheExpiry);
-          queryEventProperties['duration (seconds)'] = util.performanceDiffInSeconds(queryStartTime);
+          queryEventProperties['latency ms'] = Math.round(window.performance.now() - queryStartTime);
         }
 
         this.update({result: result, newCachedData: false, resultLoading: false});

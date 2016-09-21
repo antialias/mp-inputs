@@ -267,7 +267,3 @@ export function stringFilterMatches(str, filterStr) {
 
   return matches;
 }
-
-export function performanceDiffInSeconds(startTime) {
-  return Math.round((window.performance.now() - startTime) * 1000) / 1000000;
-}
