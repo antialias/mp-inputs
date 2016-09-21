@@ -69,8 +69,10 @@ if (process.env.NODE_ENV === 'development') {
       }),
       new ExtractTextPlugin('build-development/bundle.css'),
       new HtmlWebpackPlugin({
-        template: 'index-dev.template.html',
+        template: 'index.template.html',
         filename: 'index-dev.html',
+        platformScriptUrl: '/libs/mixpanel-platform/build/mixpanel-platform.min.js?a=1',
+        platformStyleUrl: '/libs/mixpanel-platform/build/mixpanel-platform.min.css?a=1',
       }),
     ]),
   });
@@ -90,6 +92,8 @@ if (process.env.NODE_ENV === 'development') {
       new HtmlWebpackPlugin({
         template: 'index.template.html',
         filename: 'index.html',
+        platformScriptUrl: 'https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js?a=1',
+        platformStyleUrl: 'https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css?a=1',
       }),
       //new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
     ]),
