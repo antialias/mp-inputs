@@ -20,15 +20,21 @@ export default class Legend {
     return Object.keys(series.seriesData).length > 20 ? 'minimized' : 'all';
   }
 
-  buildColorMap(numColors=8) {
-    this._colorMap = {};
-    if (this.data && this.data.length) {
+  _buildColorMap(mapName, data, numColors) {
+    this[mapName] = {};
+    if (data) {
       let colorIdx = 0;
-      const showingData = Object.keys(this.data[0].seriesData).filter(series => this.data[0].seriesData[series]);
-      showingData.forEach(series => {
-        this._colorMap[series] = this._colorMap[series] || (colorIdx++ % numColors) + 1;
-      });
+      Object.keys(data)
+        .filter(series => data[series])
+        .forEach(series => {
+          this[mapName][series] = this[mapName][series] || (colorIdx++ % numColors) + 1;
+        });
     }
+  }
+
+  buildColorMap(numColors=8) {
+    this._buildColorMap('_colorMap', this.data[0].seriesData, numColors);
+    this._buildColorMap('_flattenedColorMap', this.data[0].flattenedData, numColors);
   }
 
   getSeriesDisplayAtIndex(seriesIdx) {

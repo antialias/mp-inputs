@@ -38,13 +38,19 @@ document.registerElement('chart-legend', class extends Component {
           );
         },
         isAnySeriesLargeSearch: legendData => legendData.some(series => this.config.helpers.isSeriesLargeSearchResult(series)),
+        isLineChart: () => this.state.report.displayOptions.chartType === 'line',
         isSeriesLargeSearchResult: series => this.config.helpers.isSearchActive() && series.seriesValues.length > 12,
-        isSeriesValueShowing: (seriesIdx, name) => this.state.report.legend.data[seriesIdx].seriesData[name],
+        isSeriesValueShowing: (seriesIdx, name) => {
+          const dataKey = this.config.helpers.isLineChart() ? 'flattenedData' : 'seriesData';
+          return this.state.report.legend.data[seriesIdx][dataKey][name];
+        },
         isSearchActive: () => !!this.state.report.legend.search,
         legendDataToDisplay: () => {
           const legend = this.state.report.legend;
-          const seriesData = legend.data.map((series, idx) => {
-            let seriesValues = Object.keys(series.seriesData)
+          const isLineChart = this.config.helpers.isLineChart();
+          const data = isLineChart ? [legend.data[0]] : legend.data;
+          const seriesData = data.map((series, idx) => {
+            let seriesValues = Object.keys(series[isLineChart ? 'flattenedData' : 'seriesData'])
               .map(originalValue => {
                 const formattedText = this.config.helpers.renameSeriesValue(idx, originalValue);
                 const matches = legend && stringFilterMatches(
