@@ -44,16 +44,16 @@ document.registerElement('chart-legend', class extends Component {
         legendDataToDisplay: () => {
           const seriesData = this.state.report.legend.data.map((series, idx) => {
             let seriesValues = Object.keys(series.seriesData)
-              .map(text => this.config.helpers.renameSeriesValue(idx, text))
-              .map(text => {
+              .map(originalValue => {
+                const formattedText = this.config.helpers.renameSeriesValue(idx, originalValue);
                 const matches = this.state.report.legend && stringFilterMatches(
-                  text, this.state.report.legend.search
+                  formattedText, this.state.report.legend.search
                 );
-                return matches ? {text, matches} : null;
+                return matches ? {formattedText, matches, originalValue} : null;
               })
               .filter(Boolean);
             seriesValues = sorted(seriesValues, {
-              transform: v => v.text.toLowerCase(),
+              transform: v => v.formattedText.toLowerCase(),
             });
             if (this.state.report.legend.getSeriesDisplayAtIndex(idx) === 'minimized') {
               seriesValues.splice(12);

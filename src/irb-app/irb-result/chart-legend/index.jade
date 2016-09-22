@@ -40,26 +40,25 @@ include ../../mixins.jade
               if !series.seriesValues.length
                 .no-result= 'No results'
               each value in series.seriesValues
-                - const showing = $helpers.isSeriesValueShowing(seriesIdx, value.text)
+                - const showing = $helpers.isSeriesValueShowing(seriesIdx, value.originalValue)
                 li
                   button.series(
                     class={
                       'is-event': series.seriesName === '$event',
                       showing,
                     }
-                    onclick=() => $helpers.toggleShowSeriesValue(seriesIdx, value.text)
+                    onclick=() => $helpers.toggleShowSeriesValue(seriesIdx, value.originalValue)
                   )
                     .select-icon.series-icon(class={
                       color: seriesIdx === 0 && isMultiColor,
-                      [`segment-color-${report.legend.getColorForSeries(value.text)}`]: showing && seriesIdx === 0,
+                      [`segment-color-${report.legend.getColorForSeries(value.originalValue)}`]: showing && seriesIdx === 0,
                     })
                     if isSearchActive
                       .label.search-result
                         +highlight-matches(value.matches)
                     else
-                      - const label = $helpers.renameSeriesValue(seriesIdx, value.text)
-                      .label= label
+                      .label= value.formattedText
                     .delete-wrapper
-                      .delete-icon(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value.text))
+                      .delete-icon(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value.originalValue))
           if isSeriesShowing && seriesDisplayLabel
             .display-option(onclick=() => report.legend.toggleSeriesDisplaySetting(seriesIdx))= seriesDisplayLabel
