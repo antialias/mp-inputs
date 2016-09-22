@@ -277,13 +277,16 @@ export function stringFilterMatches(str, filterStr) {
  * // {'US California': 1, 'US New York': 2}
  */
  // TO DO: create tests
-export function flattenNestedDict(obj, parentKey=null, results={}){
+export function flattenNestedDict(obj, parentKeys=[], results={}){
   Object.keys(obj).forEach(key => {
-    const newParentKey = !parentKey ? key : `${parentKey} ${key}`;
+    const newParentKey = parentKeys.concat(key);
     if (typeof obj[key] === 'object') {
       flattenNestedDict(obj[key], newParentKey, results);
     } else {
-      results[newParentKey] = obj[key];
+      results[newParentKey.join(' ')] = {
+        value: obj[key],
+        path: newParentKey,
+      };
     }
   });
   return results;

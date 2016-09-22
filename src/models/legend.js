@@ -1,5 +1,6 @@
 import {
   combineNestedObjKeys,
+  flattenNestedDict,
   nestedObjectSum,
   objectFromPairs,
   pick,
@@ -90,29 +91,39 @@ export default class Legend {
     return this;
   }
 
+  _sortAndLimitSeries(series, defaultValue, showLimit) {
+    return objectFromPairs(
+      Object.keys(series)
+        .sort((a, b) => {
+          if (typeof a === 'object' && typeof b === 'object') {
+            return b.value - a.value;
+          }
+          return series[b] - series[a];
+        })
+        .map((v, idx) => [v, !showLimit || (idx < showLimit) ? defaultValue : false])
+    );
+  }
+
   updateLegendData(result, defaultValue=true, showLimit=48) {
-    const data = [];
+    let data = [];
     const segments = result.headers.slice();
     const sumNestedResults = nestedObjectSum(result.series);
 
     for (let i = segments.length - 1; i >= 0; i--) {
       let seriesName = segments[i];
-      let seriesData = null;
 
       if (!data.length) {
-        const completeSeriesTotals = combineNestedObjKeys(sumNestedResults);
-        seriesData = objectFromPairs(
-          Object.keys(completeSeriesTotals)
-            .sort((a, b) => completeSeriesTotals[b] - completeSeriesTotals[a])
-            .map((v, idx) => [v, !showLimit || (idx < showLimit) ? defaultValue : false])
-        );
+        data.push({
+          flattenedData: this._sortAndLimitSeries(flattenNestedDict(sumNestedResults), defaultValue, showLimit),
+          seriesData: this._sortAndLimitSeries(combineNestedObjKeys(sumNestedResults), defaultValue, showLimit),
+          seriesName,
+        });
       } else {
-        seriesData = objectFromPairs(uniqueObjKeysAtDepth(sumNestedResults, segments.length - i).map(v => [v, defaultValue]));
+        data.push({
+          seriesData: objectFromPairs(uniqueObjKeysAtDepth(sumNestedResults, segments.length - i).map(v => [v, defaultValue])),
+          seriesName,
+        });
       }
-      data.push({
-        seriesData,
-        seriesName,
-      });
     }
 
     this.buildColorMap();
