@@ -42,12 +42,13 @@ document.registerElement('chart-legend', class extends Component {
         isSeriesValueShowing: (seriesIdx, name) => this.state.report.legend.data[seriesIdx].seriesData[name],
         isSearchActive: () => !!this.state.report.legend.search,
         legendDataToDisplay: () => {
-          const seriesData = this.state.report.legend.data.map((series, idx) => {
+          const legend = this.state.report.legend;
+          const seriesData = legend.data.map((series, idx) => {
             let seriesValues = Object.keys(series.seriesData)
               .map(originalValue => {
                 const formattedText = this.config.helpers.renameSeriesValue(idx, originalValue);
-                const matches = this.state.report.legend && stringFilterMatches(
-                  formattedText, this.state.report.legend.search
+                const matches = legend && stringFilterMatches(
+                  formattedText,legend.search
                 );
                 return matches ? {formattedText, matches, originalValue} : null;
               })
@@ -55,7 +56,7 @@ document.registerElement('chart-legend', class extends Component {
             seriesValues = sorted(seriesValues, {
               transform: v => v.formattedText.toLowerCase(),
             });
-            if (this.state.report.legend.getSeriesDisplayAtIndex(idx) === 'minimized') {
+            if (legend.getSeriesDisplayAtIndex(idx) === 'minimized') {
               seriesValues.splice(12);
             }
             return {seriesName: series.seriesName, seriesValues};
