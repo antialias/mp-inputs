@@ -154,14 +154,17 @@ document.registerElement('irb-result', class extends Component {
             analysis: this.state.report.displayOptions.analysis,
             windowSize: ROLLING_WINDOWS_BY_UNIT[this.state.report.sections.time.clauses[0].unit],
           });
-          const chartType = this.state.report.displayOptions.chartType;
+          const isFlattenedData = this.state.report.displayOptions.chartType === 'line';
           if (this.config.helpers.showLegend()) {
-            this.state.report.legend.buildColorMap();
-            if (chartType !== 'line') {
-              result.series = filterObject(result.series, (value, depth) => (
-                depth > 1 ? this.state.report.legend.data[depth - 2].seriesData[value] : true
-              ));
-            }
+            const legend = this.state.report.legend;
+            legend.buildColorMap();
+            result.series = filterObject(result.series, (value, depth, parentKeys) => {
+              if (isFlattenedData) {
+                return depth === 2 ? legend.data[0].flattenedData[parentKeys.concat(value).join(' ')] : true;
+              } else {
+                return depth > 1 ? legend.data[depth - 2].seriesData[value] : true;
+              }
+            });
           }
           return result;
         },
