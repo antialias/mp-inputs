@@ -34,8 +34,20 @@ export default class Legend {
   }
 
   buildColorMap(numColors=8) {
-    this._buildColorMap('_colorMap',  this.dataKeyForSeriesData, numColors);
-    this._buildColorMap('_flattenedColorMap', this.dataKeyForFlatData, numColors);
+    const data = this.data[0];
+    if (data){
+      if (!data.flattenedData || !data.seriesData) {
+        Object.assign(this.data[0], {
+          flattenedData: {},
+          flattenedDataPaths: {},
+          flattenedDataSortedKeys: [],
+          seriesDataSortedKeys: [],
+        });
+      } else {
+        this._buildColorMap('_colorMap',  this.dataKeyForSeriesData, numColors);
+        this._buildColorMap('_flattenedColorMap', this.dataKeyForFlatData, numColors);
+      }
+    }
   }
 
   getSeriesDisplayAtIndex(seriesIdx) {
@@ -145,9 +157,10 @@ export default class Legend {
       data.push(dataSegment);
     }
 
+    this.data = data;
     this.buildColorMap();
     this.setDefaultSeriesShowing();
-    return Object.assign(this, {data});
+    return this;
   }
 
   unselectedCount(seriesIdx, dataKey) {
