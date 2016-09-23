@@ -22,16 +22,16 @@ export function mapObjectKeys(obj, callback) {
   return newObj;
 }
 
-function _filterIntoObject(obj, filter) {
+function _filterIntoObject(obj, filter, parentKeys=[]) {
   const depth = nestedObjectDepth(obj);
   Object.keys(obj).forEach(key => {
-    if (!filter(key, depth)) {
+    if (!filter(key, depth, parentKeys)) {
       delete obj[key];
     }
   });
   Object.keys(obj).forEach(key => {
     if (typeof obj[key] === 'object') {
-      _filterIntoObject(obj[key], filter);
+      _filterIntoObject(obj[key], filter, parentKeys.concat(key));
       if (!Object.keys(obj[key]).length) {
         delete obj[key];
       }
