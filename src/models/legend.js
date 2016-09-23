@@ -103,9 +103,7 @@ export default class Legend {
   _sortAndLimitSeries(series, defaultValue, showLimit) {
     const sortedKeys = sorted(Object.keys(series), {
       order: 'desc',
-      transform: item => (
-        typeof series[item] === 'object' ? series[item].value : series[item]
-      ),
+      transform: item => series[item],
     });
     return [
       sortedKeys,
@@ -120,29 +118,28 @@ export default class Legend {
 
     for (let i = segments.length - 1; i >= 0; i--) {
       let seriesName = segments[i];
+      const dataSegment = {seriesName};
 
       if (!data.length) {
-        let [flattenedDataSortedKeys, flattenedData] = this._sortAndLimitSeries(
-          flattenNestedDict(sumNestedResults, {
-            transformKeyName: keys => keys.map(key => renameProperty(renameEvent(key))).join(' '),
-          }),
+        const resultsFlattened = flattenNestedDict(sumNestedResults, {
+          transformKeyName: keys => keys.map(key => renameProperty(renameEvent(key))).join(' '),
+        });
+
+        dataSegment.flattenedDataPaths = resultsFlattened.paths;
+        [ dataSegment.flattenedDataSortedKeys, dataSegment.flattenedData ] = this._sortAndLimitSeries(
+          resultsFlattened.values,
           defaultValue,
           showLimit
         );
-        let [seriesDataSortedKeys, seriesData] = this._sortAndLimitSeries(combineNestedObjKeys(sumNestedResults), defaultValue, showLimit);
-        data.push({
-          flattenedData,
-          flattenedDataSortedKeys,
-          seriesData,
-          seriesDataSortedKeys,
-          seriesName,
-        });
+        [ dataSegment.seriesDataSortedKeys, dataSegment.seriesData ] = this._sortAndLimitSeries(
+          combineNestedObjKeys(sumNestedResults),
+          defaultValue,
+          showLimit
+        );
       } else {
-        data.push({
-          seriesData: objectFromPairs(uniqueObjKeysAtDepth(sumNestedResults, segments.length - i).map(v => [v, defaultValue])),
-          seriesName,
-        });
+        dataSegment.seriesData = objectFromPairs(uniqueObjKeysAtDepth(sumNestedResults, segments.length - i).map(v => [v, defaultValue]));
       }
+      data.push(dataSegment);
     }
 
     this.buildColorMap();
