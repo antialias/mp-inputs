@@ -56,7 +56,7 @@ document.registerElement('chart-legend', class extends Component {
                 let formattedText = null;
                 if (isFlattenedData) {
                   let dataPath = legend.data[0].flattenedDataPaths[originalValue];
-                  formattedText = dataPath.map((value, idx) => this.config.helpers.renameSeriesValue(idx, value));
+                  formattedText = dataPath.map((value, idx) => this.config.helpers.renameSeriesValue(dataPath.length - 1 - idx, value));
                   const allMatches = formattedText.map(text => stringFilterMatches(
                     text, legend.search
                   ));
