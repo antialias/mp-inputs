@@ -4,6 +4,7 @@ import {
   nestedObjectSum,
   objectFromPairs,
   pick,
+  sorted,
   uniqueObjKeysAtDepth,
 } from '../util';
 
@@ -20,12 +21,12 @@ export default class Legend {
     return Object.keys(series.seriesData).length > 20 ? 'minimized' : 'all';
   }
 
-  _buildColorMap(mapName, data, numColors) {
+  _buildColorMap(mapName, dataKey, numColors) {
     this[mapName] = {};
-    if (data) {
+    if (this.data && this.data.length) {
       let colorIdx = 0;
-      Object.keys(data)
-        .filter(series => data[series])
+      this.data[0][`${dataKey}SortedKeys`]
+        .filter(series => this.data[0][dataKey][series])
         .forEach(series => {
           this[mapName][series] = this[mapName][series] || (colorIdx++ % numColors) + 1;
         });
@@ -33,8 +34,8 @@ export default class Legend {
   }
 
   buildColorMap(numColors=8) {
-    this._buildColorMap('_colorMap', this.data[0].seriesData, numColors);
-    this._buildColorMap('_flattenedColorMap', this.data[0].flattenedData, numColors);
+    this._buildColorMap('_colorMap', 'seriesData', numColors);
+    this._buildColorMap('_flattenedColorMap', 'flattenedData', numColors);
   }
 
   getSeriesDisplayAtIndex(seriesIdx) {
@@ -98,16 +99,16 @@ export default class Legend {
   }
 
   _sortAndLimitSeries(series, defaultValue, showLimit) {
-    return objectFromPairs(
-      Object.keys(series)
-        .sort((a, b) => {
-          if (typeof a === 'object' && typeof b === 'object') {
-            return b.value - a.value;
-          }
-          return series[b] - series[a];
-        })
-        .map((v, idx) => [v, !showLimit || (idx < showLimit) ? defaultValue : false])
-    );
+    const sortedKeys = sorted(Object.keys(series), {
+      order: 'desc',
+      transform: item => (
+        typeof series[item] === 'object' ? series[item].value : series[item]
+      ),
+    });
+    return [
+      sortedKeys,
+      objectFromPairs(sortedKeys.map((v, idx) => [v, !showLimit || (idx < showLimit) ? defaultValue : false])),
+    ];
   }
 
   updateLegendData(result, defaultValue=true, showLimit=48) {
@@ -119,9 +120,13 @@ export default class Legend {
       let seriesName = segments[i];
 
       if (!data.length) {
+        let [flattenedDataSortedKeys, flattenedData] = this._sortAndLimitSeries(flattenNestedDict(sumNestedResults), defaultValue, showLimit);
+        let [seriesDataSortedKeys, seriesData] = this._sortAndLimitSeries(combineNestedObjKeys(sumNestedResults), defaultValue, showLimit);
         data.push({
-          flattenedData: this._sortAndLimitSeries(flattenNestedDict(sumNestedResults), defaultValue, showLimit),
-          seriesData: this._sortAndLimitSeries(combineNestedObjKeys(sumNestedResults), defaultValue, showLimit),
+          flattenedData,
+          flattenedDataSortedKeys,
+          seriesData,
+          seriesDataSortedKeys,
           seriesName,
         });
       } else {
