@@ -46,19 +46,37 @@ document.registerElement('chart-legend', class extends Component {
         isSearchActive: () => !!this.state.report.legend.search,
         legendDataToDisplay: () => {
           const legend = this.state.report.legend;
-          const data = this.config.helpers.isFlattenedData() ? [legend.data[0]] : legend.data;
+          const isFlattenedData = this.config.helpers.isFlattenedData();
+          const data = isFlattenedData ? [legend.data[0]] : legend.data;
+
           const seriesData = data.map((series, idx) => {
             let seriesValues = Object.keys(series[this.legendDataKey])
               .map(originalValue => {
-                const formattedText = this.config.helpers.renameSeriesValue(idx, originalValue);
-                const matches = legend && stringFilterMatches(
-                  formattedText,legend.search
-                );
+                let matches = null;
+                let formattedText = null;
+                if (isFlattenedData) {
+                  let dataPath = legend.data[0].flattenedDataPaths[originalValue];
+                  formattedText = dataPath.map((value, idx) => this.config.helpers.renameSeriesValue(idx, value));
+                  const allMatches = formattedText.map(text => stringFilterMatches(
+                    text, legend.search
+                  ));
+                  if (allMatches.some(Boolean)) {
+                    matches = [];
+                    allMatches.forEach((match, idx) => matches.push(match || ['', formattedText[idx]]));
+                  }
+                } else {
+                  formattedText = this.config.helpers.renameSeriesValue(idx, originalValue);
+                  matches = legend && stringFilterMatches(
+                    formattedText,legend.search
+                  );
+                }
                 return matches ? {formattedText, matches, originalValue} : null;
               })
               .filter(Boolean);
             seriesValues = sorted(seriesValues, {
-              transform: v => v.formattedText.toLowerCase(),
+              transform: v => (
+                isFlattenedData ? v.formattedText.join(' ').toLowerCase() : v.formattedText.toLowerCase()
+              ),
             });
             if (legend.getSeriesDisplayAtIndex(idx) === 'minimized') {
               seriesValues.splice(12);

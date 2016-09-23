@@ -57,9 +57,19 @@ include ../../mixins.jade
                     })
                     if isSearchActive
                       .label.search-result
-                        +highlight-matches(value.matches)
+                        if isFlattenedData
+                          for match in value.matches
+                            .flattened-segment
+                              +highlight-matches(match)
+                        else
+                          +highlight-matches(value.matches)
                     else
-                      .label= value.formattedText
+                      if isFlattenedData
+                        .label
+                          for text in value.formattedText
+                            .flattened-segment= text
+                      else
+                        .label= value.formattedText
                     if !isFlattenedData
                       .delete-wrapper
                         .delete-icon(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value.originalValue))

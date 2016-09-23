@@ -152,7 +152,7 @@ label-medium-gray = #7e879e
       padding 0 30px
 
     button
-      align-items center
+      align-items flex-start
       background none
       border none
       display flex
@@ -189,6 +189,14 @@ label-medium-gray = #7e879e
         font 500 12px font-helvetica-neue
         text-align left
 
+        .flattened-segment
+          line-height 18px
+
+          &:not(:first-child)::before
+            content "/ "
+            display inline
+
+
       .delete-wrapper
         display flex
         flex 1 0 10px
@@ -210,8 +218,9 @@ label-medium-gray = #7e879e
          display none
 
       &.series
-        .label
+        .label, .label .flattened-segment
           ellipsis()
+
 
       &.showing
         .label
