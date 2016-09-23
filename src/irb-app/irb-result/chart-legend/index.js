@@ -18,7 +18,7 @@ document.registerElement('chart-legend', class extends Component {
     return {
       template,
       helpers: {
-        allSeriesSelected: seriesIdx => !this.state.report.legend.unselectedCount(seriesIdx, this.config.helpers.getLegendDataKey()),
+        allSeriesSelected: seriesIdx => !this.state.report.legend.unselectedCount(seriesIdx, this.legendDataKey),
         deleteToFilter: (ev, seriesIdx, value) => {
           ev.stopPropagation();
           const reportTrackingData = this.state.report.toTrackingData();
@@ -37,19 +37,18 @@ document.registerElement('chart-legend', class extends Component {
             extend(reportTrackingData, {'deleted value': value.text})
           );
         },
-        getLegendDataKey: () => this.config.helpers.isLineChart() ? 'flattenedData' : 'seriesData',
         isAnySeriesLargeSearch: legendData => legendData.some(series => this.config.helpers.isSeriesLargeSearchResult(series)),
-        isLineChart: () => this.state.report.displayOptions.chartType === 'line',
+        isFlattenedData: () => this.state.report.displayOptions.chartType === 'line',
         isSeriesLargeSearchResult: series => this.config.helpers.isSearchActive() && series.seriesValues.length > 12,
         isSeriesValueShowing: (seriesIdx, name) => {
-          return this.state.report.legend.data[seriesIdx][this.config.helpers.getLegendDataKey()][name];
+          return this.state.report.legend.data[seriesIdx][this.legendDataKey][name];
         },
         isSearchActive: () => !!this.state.report.legend.search,
         legendDataToDisplay: () => {
           const legend = this.state.report.legend;
-          const data = this.config.helpers.isLineChart() ? [legend.data[0]] : legend.data;
+          const data = this.config.helpers.isFlattenedData() ? [legend.data[0]] : legend.data;
           const seriesData = data.map((series, idx) => {
-            let seriesValues = Object.keys(series[this.config.helpers.getLegendDataKey()])
+            let seriesValues = Object.keys(series[this.legendDataKey])
               .map(originalValue => {
                 const formattedText = this.config.helpers.renameSeriesValue(idx, originalValue);
                 const matches = legend && stringFilterMatches(
@@ -97,7 +96,7 @@ document.registerElement('chart-legend', class extends Component {
         },
         toggleAllSeriesValue: seriesIdx => {
           const reportTrackingData = this.state.report.toTrackingData();
-          const dataKey = this.config.helpers.getLegendDataKey();
+          const dataKey = this.legendDataKey;
           const seriesData = this.state.report.legend.data[seriesIdx][dataKey];
           const newValue = !this.config.helpers.allSeriesSelected(seriesIdx);
           Object.keys(seriesData).forEach(key => seriesData[key] = newValue);
@@ -105,7 +104,7 @@ document.registerElement('chart-legend', class extends Component {
           this.app.trackEvent(`Legend - ${newValue ? 'Show' : 'Hide'} All`, reportTrackingData);
         },
         toggleShowSeriesValue: (seriesIdx, name) => {
-          const dataKey = this.config.helpers.getLegendDataKey();
+          const dataKey = this.legendDataKey;
           const seriesData = this.state.report.legend.data[seriesIdx][dataKey];
           if (seriesData.hasOwnProperty(name)) {
             const reportTrackingData = this.state.report.toTrackingData();
@@ -114,9 +113,13 @@ document.registerElement('chart-legend', class extends Component {
           }
         },
         totalSeriesCount: idx => (
-          Object.keys(this.state.report.legend.data[idx][this.config.helpers.getLegendDataKey()]).length
+          Object.keys(this.state.report.legend.data[idx][this.legendDataKey]).length
         ),
       },
     };
+  }
+
+  get legendDataKey() {
+    return this.config.helpers.isFlattenedData() ? 'flattenedData' : 'seriesData';
   }
 });

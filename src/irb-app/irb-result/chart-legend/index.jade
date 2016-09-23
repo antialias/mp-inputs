@@ -3,7 +3,7 @@ include ../../mixins.jade
 - const legendDataToDisplay = $helpers.legendDataToDisplay()
 - const isSearchActive = $helpers.isSearchActive()
 - const isMultiColor = !(report.displayOptions.chartType === 'bar' && report.displayOptions.plotStyle === 'standard' && legendDataToDisplay.length === 1)
-- const isFlattenedData = $helpers.isLineChart()
+- const isFlattenedData = $helpers.isFlattenedData()
 
 .chart-legend
   .header Legend
