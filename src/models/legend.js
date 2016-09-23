@@ -36,8 +36,8 @@ export default class Legend {
   }
 
   buildColorMap(numColors=8) {
-    this._buildColorMap('_colorMap', 'seriesData', numColors);
-    this._buildColorMap('_flattenedColorMap', 'flattenedData', numColors);
+    this._buildColorMap('_colorMap',  this.dataKeyForSeriesData, numColors);
+    this._buildColorMap('_flattenedColorMap', this.dataKeyForFlatData, numColors);
   }
 
   getSeriesDisplayAtIndex(seriesIdx) {
@@ -47,6 +47,14 @@ export default class Legend {
   get colorMap() {
     this._colorMap = this._colorMap || {};
     return this._colorMap;
+  }
+
+  get dataKeyForSeriesData() {
+    return 'seriesData';
+  }
+
+  get dataKeyForFlatData() {
+    return 'flattenedData';
   }
 
   getColorForSeries(series, flattenedData=false) {

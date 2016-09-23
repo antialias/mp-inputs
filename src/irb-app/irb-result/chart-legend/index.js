@@ -120,6 +120,7 @@ document.registerElement('chart-legend', class extends Component {
   }
 
   get legendDataKey() {
-    return this.config.helpers.isFlattenedData() ? 'flattenedData' : 'seriesData';
+    const legend = this.state.report.legend;
+    return this.config.helpers.isFlattenedData() ? legend.dataKeyForFlatData : legend.dataKeyForSeriesData;
   }
 });
