@@ -18,7 +18,7 @@ document.registerElement('chart-legend', class extends Component {
     return {
       template,
       helpers: {
-        allSeriesSelected: seriesIdx => !this.state.report.legend.unselectedCount(seriesIdx),
+        allSeriesSelected: seriesIdx => !this.state.report.legend.unselectedCount(seriesIdx, this.config.helpers.getLegendDataKey()),
         deleteToFilter: (ev, seriesIdx, value) => {
           ev.stopPropagation();
           const reportTrackingData = this.state.report.toTrackingData();
@@ -37,20 +37,19 @@ document.registerElement('chart-legend', class extends Component {
             extend(reportTrackingData, {'deleted value': value.text})
           );
         },
+        getLegendDataKey: () => this.config.helpers.isLineChart() ? 'flattenedData' : 'seriesData',
         isAnySeriesLargeSearch: legendData => legendData.some(series => this.config.helpers.isSeriesLargeSearchResult(series)),
         isLineChart: () => this.state.report.displayOptions.chartType === 'line',
         isSeriesLargeSearchResult: series => this.config.helpers.isSearchActive() && series.seriesValues.length > 12,
         isSeriesValueShowing: (seriesIdx, name) => {
-          const dataKey = this.config.helpers.isLineChart() ? 'flattenedData' : 'seriesData';
-          return this.state.report.legend.data[seriesIdx][dataKey][name];
+          return this.state.report.legend.data[seriesIdx][this.config.helpers.getLegendDataKey()][name];
         },
         isSearchActive: () => !!this.state.report.legend.search,
         legendDataToDisplay: () => {
           const legend = this.state.report.legend;
-          const isLineChart = this.config.helpers.isLineChart();
-          const data = isLineChart ? [legend.data[0]] : legend.data;
+          const data = this.config.helpers.isLineChart() ? [legend.data[0]] : legend.data;
           const seriesData = data.map((series, idx) => {
-            let seriesValues = Object.keys(series[isLineChart ? 'flattenedData' : 'seriesData'])
+            let seriesValues = Object.keys(series[this.config.helpers.getLegendDataKey()])
               .map(originalValue => {
                 const formattedText = this.config.helpers.renameSeriesValue(idx, originalValue);
                 const matches = legend && stringFilterMatches(
@@ -83,7 +82,7 @@ document.registerElement('chart-legend', class extends Component {
           }
           this.app.updateLegendState({search: ev.target.value});
         },
-        selectedSeriesCount: idx => Object.values(this.state.report.legend.data[idx].seriesData).filter(Boolean).length,
+        selectedSeriesCount: idx => (Object.values(this.state.report.legend.data[idx].seriesData).filter(Boolean).length),
         seriesDisplayOption: idx => {
           let label = null;
           switch (this.state.report.legend.getSeriesDisplayAtIndex(idx)) {
@@ -98,21 +97,25 @@ document.registerElement('chart-legend', class extends Component {
         },
         toggleAllSeriesValue: seriesIdx => {
           const reportTrackingData = this.state.report.toTrackingData();
-          const seriesData = this.state.report.legend.data[seriesIdx].seriesData;
+          const dataKey = this.config.helpers.getLegendDataKey();
+          const seriesData = this.state.report.legend.data[seriesIdx][dataKey];
           const newValue = !this.config.helpers.allSeriesSelected(seriesIdx);
           Object.keys(seriesData).forEach(key => seriesData[key] = newValue);
-          this.app.updateLegendSeriesAtIndex(seriesIdx, seriesData);
+          this.app.updateLegendSeriesAtIndex(seriesIdx, dataKey, seriesData);
           this.app.trackEvent(`Legend - ${newValue ? 'Show' : 'Hide'} All`, reportTrackingData);
         },
         toggleShowSeriesValue: (seriesIdx, name) => {
-          const seriesData = this.state.report.legend.data[seriesIdx].seriesData;
+          const dataKey = this.config.helpers.getLegendDataKey();
+          const seriesData = this.state.report.legend.data[seriesIdx][dataKey];
           if (seriesData.hasOwnProperty(name)) {
             const reportTrackingData = this.state.report.toTrackingData();
-            this.app.updateLegendSeriesAtIndex(seriesIdx, {[name]: !seriesData[name]});
+            this.app.updateLegendSeriesAtIndex(seriesIdx, dataKey, {[name]: !seriesData[name]});
             this.app.trackEvent(`Legend - ${seriesData[name] ? 'Show' : 'Hide'}`, reportTrackingData);
           }
         },
-        totalSeriesCount: idx => Object.keys(this.state.report.legend.data[idx].seriesData).length,
+        totalSeriesCount: idx => (
+          Object.keys(this.state.report.legend.data[idx][this.config.helpers.getLegendDataKey()]).length
+        ),
       },
     };
   }

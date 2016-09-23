@@ -531,9 +531,9 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     this.updateReport({legend: this.state.report.legend.update(newState)});
   }
 
-  updateLegendSeriesAtIndex(sereiesIdx, attrs) {
+  updateLegendSeriesAtIndex(sereiesIdx, dataKey, attrs) {
     this.resetToastTimer();
-    this.updateReport({legend: this.state.report.legend.updateSeriesAtIndex(sereiesIdx, attrs)});
+    this.updateReport({legend: this.state.report.legend.updateSeriesAtIndex(sereiesIdx, dataKey, attrs)});
   }
 
   stopEditingChartToggle() {

@@ -3,6 +3,7 @@ include ../../mixins.jade
 - const legendDataToDisplay = $helpers.legendDataToDisplay()
 - const isSearchActive = $helpers.isSearchActive()
 - const isMultiColor = !(report.displayOptions.chartType === 'bar' && report.displayOptions.plotStyle === 'standard' && legendDataToDisplay.length === 1)
+- const isFlattenedData = $helpers.isLineChart()
 
 .chart-legend
   .header Legend
@@ -24,9 +25,10 @@ include ../../mixins.jade
           - const isSeriesShowing = report.legend.isSeriesShowing(seriesIdx)
           - const seriesDisplay = report.legend.getSeriesDisplayAtIndex(seriesIdx)
           - const seriesDisplayLabel = $helpers.seriesDisplayOption(seriesIdx)
-          .sticky-title.info(onclick=() => report.legend.toggleShowSeries(seriesIdx))
-            .name(class={showing: isSeriesShowing})= util.renameProperty(series.seriesName)
-            .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
+          if !isFlattenedData
+            .sticky-title.info(onclick=() => report.legend.toggleShowSeries(seriesIdx))
+              .name(class={showing: isSeriesShowing})= util.renameProperty(series.seriesName)
+              .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
           ul.series-values
             if isSeriesShowing
               if !isSearchActive
@@ -51,14 +53,15 @@ include ../../mixins.jade
                   )
                     .select-icon.series-icon(class={
                       color: seriesIdx === 0 && isMultiColor,
-                      [`segment-color-${report.legend.getColorForSeries(value.originalValue)}`]: showing && seriesIdx === 0,
+                      [`segment-color-${report.legend.getColorForSeries(value.originalValue, isFlattenedData)}`]: showing && seriesIdx === 0,
                     })
                     if isSearchActive
                       .label.search-result
                         +highlight-matches(value.matches)
                     else
                       .label= value.formattedText
-                    .delete-wrapper
-                      .delete-icon(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value.originalValue))
+                    if !isFlattenedData
+                      .delete-wrapper
+                        .delete-icon(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value.originalValue))
           if isSeriesShowing && seriesDisplayLabel
             .display-option(onclick=() => report.legend.toggleSeriesDisplaySetting(seriesIdx))= seriesDisplayLabel

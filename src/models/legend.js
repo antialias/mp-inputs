@@ -46,8 +46,8 @@ export default class Legend {
     return this._colorMap;
   }
 
-  getColorForSeries(series) {
-    return this._colorMap[series];
+  getColorForSeries(series, flattenedData=false) {
+    return this[flattenedData ? '_flattenedColorMap' : '_colorMap'][series];
   }
 
   get seriesShowing() {
@@ -91,8 +91,8 @@ export default class Legend {
     return Object.assign(this, attrs);
   }
 
-  updateSeriesAtIndex(seriesIdx, attrs) {
-    Object.assign(this.data[seriesIdx].seriesData, attrs);
+  updateSeriesAtIndex(seriesIdx, dataKey, attrs) {
+    Object.assign(this.data[seriesIdx][dataKey], attrs);
     this.buildColorMap();
     return this;
   }
@@ -137,7 +137,7 @@ export default class Legend {
     return Object.assign(this, {data});
   }
 
-  unselectedCount(seriesIdx) {
-    return Object.values(this.data[seriesIdx].seriesData).filter(value => !value).length;
+  unselectedCount(seriesIdx, dataKey) {
+    return Object.values(this.data[seriesIdx][dataKey]).filter(value => !value).length;
   }
 }
