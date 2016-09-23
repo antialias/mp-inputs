@@ -4,6 +4,8 @@ import {
   nestedObjectSum,
   objectFromPairs,
   pick,
+  renameEvent,
+  renameProperty,
   sorted,
   uniqueObjKeysAtDepth,
 } from '../util';
@@ -120,7 +122,13 @@ export default class Legend {
       let seriesName = segments[i];
 
       if (!data.length) {
-        let [flattenedDataSortedKeys, flattenedData] = this._sortAndLimitSeries(flattenNestedDict(sumNestedResults), defaultValue, showLimit);
+        let [flattenedDataSortedKeys, flattenedData] = this._sortAndLimitSeries(
+          flattenNestedDict(sumNestedResults, {
+            transformKeyName: keys => keys.map(key => renameProperty(renameEvent(key))).join(' '),
+          }),
+          defaultValue,
+          showLimit
+        );
         let [seriesDataSortedKeys, seriesData] = this._sortAndLimitSeries(combineNestedObjKeys(sumNestedResults), defaultValue, showLimit);
         data.push({
           flattenedData,
