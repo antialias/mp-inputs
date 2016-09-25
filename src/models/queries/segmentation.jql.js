@@ -118,7 +118,7 @@ function main() {
 
   groups = [mixpanel.multiple_keys(groups)];
 
-  var reducerFuncs = function(type, accessor) {
+  var getReducerFunc = function(type, accessor) {
     accessor = accessor || function(item) { return item.value; };
     var reducerFunc;
     switch (type) {
@@ -175,22 +175,25 @@ function main() {
     // TODO(chi): Have the accessor return any number for 'average' or 'median' when the property
     // isn't a number yields inaccurate result. The fundamental issue is what do do when a numeric
     // property of a user is non-existent or not numeric?
-    var accessorFuncs = function(type, paths) {
+    var getAccessorFunc = function(type, paths) {
       switch (type) {
         case 'average':
         case 'max':
         case 'median':
+        case 'total':
           return accessNumericPropertyOrReturnDefaultValue(paths, 0);
         case 'min':
           return accessNumericPropertyOrReturnDefaultValue(paths, Number.MAX_VALUE);
+        default:
+          throw new Error('Unsupported type in getAccessorFunc');
       }
     };
     if (params.property.resourceType === 'people') {
       propertyPaths = ['value'].concat(propertyPaths);
       query = query.groupByUser(groups, mixpanel.reducer.any())
-        .groupBy([mixpanel.slice('key', 1)], reducerFuncs(params.type, accessorFuncs(params.type, propertyPaths)));
+        .groupBy([mixpanel.slice('key', 1)], getReducerFunc(params.type, getAccessorFunc(params.type, propertyPaths)));
     } else {
-      query = query.groupBy(groups, reducerFuncs(params.type, accessorFuncs(params.type, propertyPaths)));
+      query = query.groupBy(groups, getReducerFunc(params.type, getAccessorFunc(params.type, propertyPaths)));
     }
   } else if (params.type === 'total') {
     query = query.groupBy(groups, mixpanel.reducer.count({account_for_sampling: true}));
@@ -199,38 +202,40 @@ function main() {
       .groupBy([mixpanel.slice('key', 1)], mixpanel.reducer.count());
   } else {
     query = query.groupByUser(groups, mixpanel.reducer.count({account_for_sampling: true}))
-      .groupBy([mixpanel.slice('key', 1)], reducerFuncs(params.type));
+      .groupBy([mixpanel.slice('key', 1)], getReducerFunc(params.type));
   }
   if (!['total', 'unique'].includes(params.type)) {
-    var postprocessFuncs = function(type, paths) {
+    var getPostprocessFunc = function(type, paths) {
       var postprocessFunc;
       switch (type) {
-      case 'average':
-        postprocessFunc = function(item) {
-          item.value = item.value.sum / item.value.count;
-          return item;
-        };
-        break;
-      case 'max':
-      case 'min':
-        postprocessFunc = function(item) {
-          item.value = paths.reduce(function(prop, path) {
-            return prop[path];
-          }, item.value);
-          return item;
-        };
-        break;
-      case 'median':
-        postprocessFunc = function(item) {
-          item.value = item.value[0].value;
-          return item;
-        };
-        break;
+        case 'average':
+          postprocessFunc = function(item) {
+            item.value = item.value.sum / item.value.count;
+            return item;
+          };
+          break;
+        case 'max':
+        case 'min':
+          postprocessFunc = function(item) {
+            item.value = paths.reduce(function(prop, path) {
+              return prop[path];
+            }, item.value);
+            return item;
+          };
+          break;
+        case 'median':
+          postprocessFunc = function(item) {
+            item.value = item.value[0].value;
+            return item;
+          };
+          break;
+        default:
+          throw new Error('Unsupported type in getAccessorFunc');
       }
       return postprocessFunc;
     };
 
-    query = query.map(postprocessFuncs(params.type, propertyPaths));
+    query = query.map(getPostprocessFunc(params.type, propertyPaths));
   }
 
   return query;
