@@ -48,6 +48,7 @@ export default class Legend {
         this._buildColorMap('_flattenedColorMap', this.dataKeyForFlatData, numColors);
       }
     }
+    return this;
   }
 
   getSeriesDisplayAtIndex(seriesIdx) {
@@ -84,10 +85,12 @@ export default class Legend {
 
   setDefaultSeriesShowing() {
     this._seriesShowing = null;
+    return this;
   }
 
   showAllSeries() {
     this.seriesShowing = this.seriesShowing.map(() => 'all');
+    return this;
   }
 
   isSeriesShowing(seriesIdx) {
@@ -98,6 +101,7 @@ export default class Legend {
     if (this.seriesShowing && this.seriesShowing.length >= seriesIdx) {
       this.seriesShowing[seriesIdx] = this.isSeriesShowing(seriesIdx) ? 'hidden' : this._seriesDisplaySetting(this.data[seriesIdx]);
     }
+    return this;
   }
 
   toggleSeriesDisplaySetting(seriesIdx) {
@@ -106,6 +110,7 @@ export default class Legend {
       this.seriesShowing = this.seriesShowing.map(displaySetting => displaySetting === 'expanded' ? 'minimized' : displaySetting);
       this.seriesShowing[seriesIdx] = oldDisplaySetting === 'minimized' ? 'expanded' : 'minimized';
     }
+    return this;
   }
 
   update(attrs) {
@@ -157,10 +162,9 @@ export default class Legend {
       data.push(dataSegment);
     }
 
-    this.data = data;
-    this.buildColorMap();
-    this.setDefaultSeriesShowing();
-    return this;
+    return Object.assign(this, {data})
+      .buildColorMap()
+      .setDefaultSeriesShowing();
   }
 
   unselectedCount(seriesIdx, dataKey) {
