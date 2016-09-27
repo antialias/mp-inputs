@@ -273,16 +273,16 @@ export function stringFilterMatches(str, filterStr) {
  * @param {string} obj - nested object to be flattened
  * @returns {Dict} with all nested keys seperated by spaces
  * @example
- * flattenNestedDict({'US': {'California': 1, 'New York' : 2}});
+ * flattenNestedObjectToPath({'US': {'California': 1, 'New York' : 2}});
  * // {'US California': 1, 'US New York': 2}
  */
  // TO DO: create tests
-export function flattenNestedDict(obj, options={}, parentKeys=[], results=null){
+export function flattenNestedObjectToPath(obj, options={}, parentKeys=[], results=null){
   results = results || {values: {}, paths: {}};
   Object.keys(obj).forEach(key => {
     const newParentKey = parentKeys.concat(key);
     if (typeof obj[key] === 'object') {
-      results = flattenNestedDict(obj[key], options, newParentKey, results);
+      results = flattenNestedObjectToPath(obj[key], options, newParentKey, results);
     } else {
       const resultName = options.transformKeyName ? options.transformKeyName(newParentKey) : newParentKey.join(' ');
       results.values[resultName] = obj[key];

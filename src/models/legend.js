@@ -1,6 +1,6 @@
 import {
   combineNestedObjKeys,
-  flattenNestedDict,
+  flattenNestedObjectToPath,
   nestedObjectSum,
   objectFromPairs,
   pick,
@@ -145,7 +145,7 @@ export default class Legend {
       const dataSegment = {seriesName};
 
       if (!data.length) {
-        const resultsFlattened = flattenNestedDict(sumNestedResults);
+        const resultsFlattened = flattenNestedObjectToPath(sumNestedResults);
         const flatResults = this._sortAndLimitSeries(resultsFlattened.values, defaultValue, showLimit);
         const seriesResults = this._sortAndLimitSeries(combineNestedObjKeys(sumNestedResults), defaultValue, showLimit);
         Object.assign(dataSegment, {
