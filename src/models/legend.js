@@ -128,13 +128,11 @@ export default class Legend {
       order: 'desc',
       transform: item => series[item],
     });
-    return [
-      sortedKeys,
-      sortedKeys.reduce((obj, key, idx) => {
-        obj[key] = idx < showLimit ? defaultValue : false;
-        return obj;
-      }, {}),
-    ];
+    const defaultStates = sortedKeys.reduce((obj, key, idx) => {
+      obj[key] = idx < showLimit ? defaultValue : false;
+      return obj;
+    }, {});
+    return {sortedKeys, defaultStates};
   }
 
   updateLegendData(result, defaultValue=true, showLimit=48) {
@@ -148,17 +146,15 @@ export default class Legend {
 
       if (!data.length) {
         const resultsFlattened = flattenNestedDict(sumNestedResults);
-        dataSegment.flattenedDataPaths = resultsFlattened.paths;
-        [ dataSegment.flattenedDataSortedKeys, dataSegment.flattenedData ] = this._sortAndLimitSeries(
-          resultsFlattened.values,
-          defaultValue,
-          showLimit
-        );
-        [ dataSegment.seriesDataSortedKeys, dataSegment.seriesData ] = this._sortAndLimitSeries(
-          combineNestedObjKeys(sumNestedResults),
-          defaultValue,
-          showLimit
-        );
+        const flatResults = this._sortAndLimitSeries(resultsFlattened.values, defaultValue, showLimit);
+        const seriesResults = this._sortAndLimitSeries(combineNestedObjKeys(sumNestedResults), defaultValue, showLimit);
+        Object.assign(dataSegment, {
+          flattenedData: flatResults.defaultStates,
+          flattenedDataPaths: resultsFlattened.paths,
+          flattenedDataSortedKeys: flatResults.sortedKeys,
+          seriesData: seriesResults.defaultStates,
+          seriesDataSortedKeys: seriesResults.sortedKeys,
+        });
       } else {
         dataSegment.seriesData = objectFromPairs(uniqueObjKeysAtDepth(sumNestedResults, segments.length - i).map(v => [v, defaultValue]));
       }
