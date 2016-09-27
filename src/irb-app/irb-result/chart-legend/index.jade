@@ -56,21 +56,22 @@ include ../../mixins.jade
                       [`segment-color-${report.legend.getColorForSeries(value.originalValue, isFlattenedData)}`]: showing && seriesIdx === 0,
                     })
                     if isFlattenedData
+                      - const dataTitle = value.formattedText.join(' / ');
                       if isSearchActive
-                        .label.search-result
+                        .label.search-result(title=dataTitle)
                           for match in value.matches
                             .flattened-segment
                               +highlight-matches(match)
                       else
-                        .label
+                        .label(title=dataTitle)
                           for text in value.formattedText
                             .flattened-segment= text
                     else
                       if isSearchActive
-                        .label.search-result
+                        .label.search-result(title=value.formattedText)
                           +highlight-matches(value.matches)
                       else
-                        .label= value.formattedText
+                        .label(title=value.formattedText)= value.formattedText
                       .delete-wrapper
                         .delete-icon(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value.originalValue))
           if isSeriesShowing && seriesDisplayLabel
