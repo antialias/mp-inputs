@@ -276,7 +276,6 @@ export function stringFilterMatches(str, filterStr) {
  * flattenNestedObjectToPath({'US': {'California': 1, 'New York' : 2}});
  * // {'US California': 1, 'US New York': 2}
  */
- // TO DO: create tests
 export function flattenNestedObjectToPath(obj, options={}, parentKeys=[], results=null){
   results = results || {values: {}, paths: {}};
   Object.keys(obj).forEach(key => {
