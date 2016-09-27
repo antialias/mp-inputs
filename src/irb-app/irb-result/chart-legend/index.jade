@@ -55,22 +55,22 @@ include ../../mixins.jade
                       color: seriesIdx === 0 && isMultiColor,
                       [`segment-color-${report.legend.getColorForSeries(value.originalValue, isFlattenedData)}`]: showing && seriesIdx === 0,
                     })
-                    if isSearchActive
-                      .label.search-result
-                        if isFlattenedData
+                    if isFlattenedData
+                      if isSearchActive
+                        .label.search-result
                           for match in value.matches
                             .flattened-segment
                               +highlight-matches(match)
-                        else
-                          +highlight-matches(value.matches)
-                    else
-                      if isFlattenedData
+                      else
                         .label
                           for text in value.formattedText
                             .flattened-segment= text
+                    else
+                      if isSearchActive
+                        .label.search-result
+                          +highlight-matches(value.matches)
                       else
                         .label= value.formattedText
-                    if !isFlattenedData
                       .delete-wrapper
                         .delete-icon(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value.originalValue))
           if isSeriesShowing && seriesDisplayLabel
