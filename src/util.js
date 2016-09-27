@@ -282,11 +282,12 @@ export function flattenNestedDict(obj, options={}, parentKeys=[], results=null){
   Object.keys(obj).forEach(key => {
     const newParentKey = parentKeys.concat(key);
     if (typeof obj[key] === 'object') {
-      flattenNestedDict(obj[key], options, newParentKey, results);
+      results = flattenNestedDict(obj[key], options, newParentKey, results);
     } else {
       const resultName = options.transformKeyName ? options.transformKeyName(newParentKey) : newParentKey.join(' ');
       results.values[resultName] = obj[key];
       results.paths[resultName] = newParentKey;
+      return results;
     }
   });
   return results;
