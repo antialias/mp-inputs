@@ -130,7 +130,10 @@ export default class Legend {
     });
     return [
       sortedKeys,
-      objectFromPairs(sortedKeys.map((v, idx) => [v, !showLimit || (idx < showLimit) ? defaultValue : false])),
+      sortedKeys.reduce((obj, key, idx) => {
+        obj[key] = idx < showLimit ? defaultValue : false;
+        return obj;
+      }, {}),
     ];
   }
 

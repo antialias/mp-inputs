@@ -99,7 +99,7 @@ document.registerElement('chart-legend', class extends Component {
           }
           this.app.updateLegendState({search: ev.target.value});
         },
-        selectedSeriesCount: idx => (Object.values(this.state.report.legend.data[idx].seriesData).filter(Boolean).length),
+        selectedSeriesCount: idx => Object.values(this.state.report.legend.data[idx].seriesData).filter(Boolean).length,
         seriesDisplayOption: idx => {
           let label = null;
           switch (this.state.report.legend.getSeriesDisplayAtIndex(idx)) {
