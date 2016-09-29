@@ -27,7 +27,9 @@ document.registerElement('chart-toggle', class extends Component {
         formattedChartName: (type, style) => this.IRBResult.formattedChartName(type, style),
         selectedPlotStyle: type => this.state.chartToggle[type].plotStyle,
         styleChoicesForChartType: type => this.IRBResult.styleChoicesForChartType(type),
-        onDropdownClick: editingType => this.app.updateChartToggle({editingType}),
+        onDropdownClick: type => this.app.updateChartToggle({
+          editingType: this.state.chartToggle.editingType === type ? null : type,
+        }),
         onStyleClick: (chartType, plotStyle) => {
           const reportTrackingData = this.state.report.toTrackingData();
           const displayOptions = this.state.report.displayOptions;
