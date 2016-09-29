@@ -6,13 +6,14 @@ ul.chart-toggle
     li.chart-type(class=chartType class={
       editing: isEditingCurrentStyle
     })
-      button.label.icon(
-        class=[chartType, selectedPlotStyle]
-        class={selected: chartType == report.displayOptions.chartType}
-        onclick=() => $helpers.onStyleClick(chartType, selectedPlotStyle)
-      )= $helpers.formattedChartName(chartType, selectedPlotStyle)
-      if styleChoicesForChartType.length > 1
-        button.dropdown(onclick=() => $helpers.onDropdownClick(chartType))
+      .toggle-button
+        button.label.icon(
+          class=[chartType, selectedPlotStyle]
+          class={selected: chartType == report.displayOptions.chartType}
+          onclick=() => $helpers.onStyleClick(chartType, selectedPlotStyle)
+        )= $helpers.formattedChartName(chartType, selectedPlotStyle)
+        if styleChoicesForChartType.length > 1
+          button.dropdown(onclick=() => $helpers.onDropdownClick(chartType))
       if isEditingCurrentStyle
         .chart-style.options
           each plotStyle in styleChoicesForChartType

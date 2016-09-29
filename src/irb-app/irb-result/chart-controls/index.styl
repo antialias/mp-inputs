@@ -1,7 +1,12 @@
 @import "../../../stylesheets/common"
 
+toggle-height = 34px
+
 chart-toggle-icon(filename)
-  svg-icon(filename, 8px, 5px, grey-700)
+  svg-icon(filename, 15px, 0, grey-700)
+  &.label::before
+    height 100%
+
   &.button-option::before
     left 16px
     top 7px
@@ -16,150 +21,197 @@ chart-toggle-icon(filename)
 
   .chart-control
     margin 0 5px
+    position relative
 
     ul.chart-toggle
+      border-radius 3px
+      border solid 1px transparent
       display flex
 
-    li
-      border 1px solid transparent
-      border-radius 3px
+      &:hover
+        border-color border-gray
+        box-shadow 0 1px 2px 0 rgba(0, 0, 0, 0.05)
+
+        .chart-type
+          border-color border-gray
+
+          &:after
+            content none
+
+    .chart-type
+      border-right 1px solid transparent
       display flex
-      height 30px
       justify-content flex-end
       position relative
-      z-index 2
+      z-index 3
+
+      &:after
+        background-color #d3dee8
+        content ''
+        display block
+        height 28px
+        margin 3px 0
+        position absolute
+        right -1px
+        width 1px
+
+      &:first-child
+        border-bottom-left-radius 3px
+        border-top-left-radius 3px
+
+      &:last-child
+        border-right none
+        border-bottom-right-radius 3px
+        border-top-right-radius 3px
+
+        &:after
+          content none
+
+      &:hover
+        background-color #f5f6f8
+
+    button
+      align-items center
+      background none
+      background-color initial
+      background-position center
+      background-repeat no-repeat
+      border none
+      color grey-700
+      display flex
+      font-weight 600
+      height 100%
+      justify-content center
+      padding 0
+      white-space nowrap
+
+      &:hover
+        color blue-300
 
       &.selected
-        background-color initial
-        border-color dark-gray
+        color grey-900
+
+      &::before, &::after
+        content none
+
+    .toggle-button
+      display flex
 
       button
-        align-items center
-        background none
-        background-color initial
-        background-position center
-        background-repeat no-repeat
-        border none
-        color grey-700
-        display flex
-        font-weight 600
-        height 30px
-        justify-content center
-        padding 0
-        white-space nowrap
-
-        &:hover
-          color blue-300
-
-        &.selected
-          color grey-900
-
         &.dropdown
-          border-left 1px solid transparent
           padding 0
           width 20px
 
           &:before
-            content ''
             background light-gray
-            width 10px
+            content ''
+            display block
             height 10px
-            display inline-block
             mask url("~assets/chart-controls/caret-dropdown.svg") no-repeat center
+            mask-size 100% auto
+            width 10px
 
           &:hover:before
             background medium-gray
 
         &.label
           font-size 12px
-          padding 0 10px 0 34px
+          padding-left 42px
+          padding-right 5px
+          line-height toggle-height
 
-        &::before, &::after
-          content none
+        &:last-child
+          &.label
+            padding-right 15px
 
-      .options
-        background-color white
-        border-radius 4px
-        box-shadow 0 7px 18px 0 rgba(121,124,135,0.26)
-        margin-top 3px
-        min-width 100px
-        padding 16px 0
-        position absolute
-        right -1px
-        top 30px
+          &.dropdown
+            padding-right 10px
+            width 30px
 
-        button
-          justify-content flex-start
+    .options
+      background-color white
+      border-radius 4px
+      box-shadow 0 7px 18px 0 rgba(121,124,135,0.26)
+      margin-top 2px
+      min-width 100px
+      padding 16px 0
+      position absolute
+      left 0
+      top toggle-height
+      z-index 3
 
-        .button-option
-          color grey-700
-          font-weight bold
-          font-size 12px
-          height inherit
-          line-height 25px
-          padding 6px 24px 6px 48px
-          position relative
-          text-align left
-          white-space nowrap
-          width 100%
+      button
+        justify-content flex-start
 
-          &::before
-            background-color grey-700
+      .button-option
+        color grey-700
+        font-weight bold
+        font-size 12px
+        height inherit
+        line-height 25px
+        padding 6px 24px 6px 48px
+        position relative
+        text-align left
+        white-space nowrap
+        width 100%
 
-          &:hover
-            background-color grey-100
-            color blue-300
+        &::before
+          background-color grey-700
 
-          &.selected
-            color grey-900
+        &:hover
+          background-color grey-100
+          color blue-300
 
-      .icon
-        &.line
-          chart-toggle-icon('line')
+        &.selected
+          color grey-900
 
-          &.stacked
-            chart-toggle-icon('line_stacked')
+    .icon
+      &.line
+        chart-toggle-icon('line')
 
-        &.bar
-          chart-toggle-icon('bar')
+        &.stacked
+          chart-toggle-icon('line_stacked')
 
-          &.stacked
-            chart-toggle-icon('bar_stacked')
+      &.bar
+        chart-toggle-icon('bar')
 
-        &.table
-          chart-toggle-icon('table')
+        &.stacked
+          chart-toggle-icon('bar_stacked')
 
-        &.linear
-          chart-toggle-icon('analysis_linear')
+      &.table
+        chart-toggle-icon('table')
 
-        &.rolling
-          chart-toggle-icon('analysis_rolling')
+      &.linear
+        chart-toggle-icon('analysis_linear')
 
-        &.logarithmic
-          chart-toggle-icon('analysis_logarithmic')
+      &.rolling
+        chart-toggle-icon('analysis_rolling')
 
-        &.cumulative
-          chart-toggle-icon('analysis_cumulative')
+      &.logarithmic
+        chart-toggle-icon('analysis_logarithmic')
 
-        &.absolute
-          chart-toggle-icon('value_absolute')
+      &.cumulative
+        chart-toggle-icon('analysis_cumulative')
 
-        &.relative
-          chart-toggle-icon('value_relative')
+      &.absolute
+        chart-toggle-icon('value_absolute')
 
-        &:hover, &.stacked:hover
-          &::before
-            background-color blue-300
+      &.relative
+        chart-toggle-icon('value_relative')
 
-        &.selected, &.stacked.selected
-          &::before
-            background-color grey-900
+      &:hover, &.stacked:hover
+        &::before
+          background-color blue-300
 
-      &.chart-type:hover, &.editing
+      &.selected, &.stacked.selected
+        &::before
+          background-color grey-900
+
+    &.chart-type:hover, &.editing
+      border-color light-gray
+
+      button.dropdown
         border-color light-gray
-
-        button.dropdown
-          border-color light-gray
 
   .extras-menu
     button.extras-menu
