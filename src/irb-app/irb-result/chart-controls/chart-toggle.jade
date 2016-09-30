@@ -1,11 +1,12 @@
-ul.chart-toggle
+ul.chart-toggle(class={'editing-charttype': chartToggle.editingType})
   for chartType in $helpers.chartTypes()
     - const isEditingCurrentStyle = chartToggle.editingType === chartType
     - const selectedPlotStyle = $helpers.selectedPlotStyle(chartType)
     - const styleChoicesForChartType = $helpers.styleChoicesForChartType(chartType)
-    li.chart-type(class=chartType class={
-      editing: isEditingCurrentStyle
-    })
+    li.chart-type(
+      class=chartType
+      class={editing: isEditingCurrentStyle}
+    )
       .toggle-button
         button.label.icon(
           class=[chartType, selectedPlotStyle]
