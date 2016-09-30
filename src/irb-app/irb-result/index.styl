@@ -125,3 +125,27 @@ min-bar-chart-height = 600px
   .toast
     margin-top -60px
     margin-left 10px
+
+#app.sticky-chart-headers
+  .main-chart
+    flex 0 0 auto
+
+    thead
+      border-bottom 1px solid border-gray
+      position fixed
+      top 0
+      width "calc(100vw - 20px - 20px - %s)" % legend-width
+      z-index 2
+
+    tbody
+      margin-top 40px
+
+  .legend
+    position fixed
+    top 0
+    right 20px // padding from app
+    height 100vh
+    width legend-width
+
+    sticky-scroll
+      height 100%

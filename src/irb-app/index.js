@@ -163,6 +163,24 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     }
   }
 
+  createdCallback() {
+    window.requestAnimationFrame(() => {
+      const app = document.querySelector('#app');
+      let chart = null;
+      let isStickyChartHeader = false;
+      app.addEventListener('scroll', () => {
+        chart = chart || this.querySelector('.chart');
+        const shouldBeSticky = chart.getBoundingClientRect().top <= 0
+        if (shouldBeSticky !== isStickyChartHeader) {
+          app.classList.toggle('sticky-chart-headers');
+          isStickyChartHeader = shouldBeSticky;
+        }
+      });
+    });
+
+    super.createdCallback(...arguments);
+  }
+
   // Serialization helpers
 
   get persistenceKey() {
