@@ -8,6 +8,7 @@
       - const processedResult = $helpers.processResult(result);
       case report.displayOptions.chartType
         when 'bar'
+          .extras-menu-container.chart-control= $component.child('extras-menu')
           bar-chart(
             attributes=$helpers.stringifyObjValues({
               'data': processedResult,
@@ -21,6 +22,7 @@
             onchange=$helpers.barChartChange
           )
         when 'line'
+          .extras-menu-container.chart-control= $component.child('extras-menu')
           line-chart(
             attributes=$helpers.stringifyObjValues({
               'chart-label': $helpers.getChartLabel(),
