@@ -130,6 +130,14 @@ min-bar-chart-height = 600px
   .main-chart
     flex 0 0 auto
 
+    .extras-menu-container
+      z-index 3
+
+      .toggle-view > li
+        position fixed
+        right "calc(%s + 20px)" % legend-width
+        top 0
+
     thead
       border-bottom 1px solid border-gray
       position fixed
