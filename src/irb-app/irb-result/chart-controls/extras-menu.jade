@@ -2,7 +2,7 @@ ul.toggle-view
   li(class={selected: isEditingExtrasMenu})
     button.extras-menu(
       class={selected: isEditingExtrasMenu}
-      onclick=$helpers.startEditingExtrasMenu
+      onclick=$helpers.onClickExtrasMenu
     )
     if isEditingExtrasMenu
       .extras-menu-options.options

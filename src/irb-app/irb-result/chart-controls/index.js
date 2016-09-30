@@ -69,10 +69,11 @@ document.registerElement('extras-menu', class extends Component {
         valueChoices: () => VALUE_CHOICES,
         isAnalysisDisabled: analysis => !this.IRBResult.isAnalysisEnabled(analysis),
         isValueToggleDisabled: () => !this.IRBResult.isValueToggleEnabled(),
-        startEditingExtrasMenu: () => this.update({isEditingExtrasMenu: true}),
+        onClickExtrasMenu: () => this.update({isEditingExtrasMenu: !this.state.isEditingExtrasMenu}),
         onAnalysisClick: analysis => {
           const reportTrackingData = this.state.report.toTrackingData();
           this.IRBResult.updateDisplayOptions({analysis});
+          this.app.stopEditingExtrasMenu();
           this.app.trackEvent(
             'Chart Options - Changed Analysis',
             extend(reportTrackingData, {'new analysis type': analysis})
@@ -81,6 +82,7 @@ document.registerElement('extras-menu', class extends Component {
         onValueClick: value => {
           const reportTrackingData = this.state.report.toTrackingData();
           this.IRBResult.updateDisplayOptions({value});
+          this.app.stopEditingExtrasMenu();
           this.app.trackEvent(
             'Chart Options - Changed Value Display',
             extend(reportTrackingData, {'new analysis type': value})
