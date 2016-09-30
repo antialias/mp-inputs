@@ -212,48 +212,66 @@ chart-toggle-icon(filename)
     button.dropdown
       border-color light-gray
 
+      .extras-menu-container
+        z-index 2
+
+        .extras-menu
+          margin 5px 0
+          position absolute
+          right 0
+
 .extras-menu-container
-  button.extras-menu
-    background-color grey-700
-    height 30px
-    width 30px
-    mask url("~assets/extras-menu/ellipsis.svg") no-repeat center
-    mask-size auto 16px
+  z-index 2
 
-    &:hover
-      background blue-300
+  .toggle-view > li
+      position absolute
+      right 0
 
-    &.selected
-      background grey-900
+button.extras-menu
+  background-color grey-700
+  height 30px
+  margin 5px 0
+  mask url("~assets/extras-menu/ellipsis.svg") no-repeat center
+  mask-size auto 16px
+  width 30px
 
-  .options.extras-menu-options
-    display flex
-    padding-bottom 18px
+  &:hover
+    background blue-300
 
-    .disabled
-      opacity .5
-      pointer-events none
+  &.selected
+    background grey-900
 
-    .analysis ul
-      border-right 1px solid grey-200
+.options.extras-menu-options
+  display flex
+  left auto
+  padding-bottom 18px
+  right 0
+  top 40px
 
-    .section
-      flex-grow 1
+  .disabled
+    opacity .5
+    pointer-events none
 
-      li
-        border none
+  .analysis ul
+    border-right 1px solid grey-200
+
+  .section
+    flex-grow 1
+
+    li
+      border none
+      height inherit
+      justify-content flex-start
+
+      button
         height inherit
-        justify-content flex-start
+        margin 0
+        padding 6px 48px
+        text-transform capitalize
 
-        button
-          height inherit
-          margin 0
-          padding 6px 48px
-          text-transform capitalize
-
-      .title
-        color grey-900
-        font-size 12px
-        font-weight bold
-        padding 6px 18px
-        text-transform uppercase
+    .title
+      color grey-900
+      font-size 12px
+      font-weight bold
+      padding 6px 18px
+      text-transform uppercase
