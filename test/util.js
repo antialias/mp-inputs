@@ -79,7 +79,7 @@ describe('filterObject', function() {
 
 
 describe('flattenNestedObjectToPath', function() {
-  it('flattens an 2d object to values and paths', function() {
+  it('flattens a 2d object to values and paths', function() {
     const obj = flattenNestedObjectToPath(d2Obj);
     expect(obj).to.eql({
       'paths': {
@@ -119,7 +119,7 @@ describe('flattenNestedObjectToPath', function() {
     });
   });
 
-  it('flattens an 3d object to values and paths', function() {
+  it('flattens a 3d object to values and paths', function() {
     const obj = flattenNestedObjectToPath(d3Obj);
     expect(obj).to.eql({
       'paths': {
@@ -177,7 +177,7 @@ describe('flattenNestedObjectToPath', function() {
     });
   });
 
-  it('flattens an 2d object to values and paths', function() {
+  it('flattens a 2d object to values and paths with a custom key', function() {
     const obj = flattenNestedObjectToPath(d2Obj, {
       transformKeyName: keys => keys.map((key, idx) => `${idx + 1}) ${key},`).join(' '),
     });
