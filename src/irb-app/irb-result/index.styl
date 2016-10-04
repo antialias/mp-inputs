@@ -12,8 +12,34 @@ legend-width = 174px
     display flex
     width 100%
     transition opacity .2s
+    
+    .highcharts-tooltip, .content
+      .title
+        font 14px font-helvetica-neue
+        background #3b99f0
+        color #fff
+        overflow hidden
+        padding 10px 16px
+      
+      .results
+        color #434e5a
+        display flex
+        padding 10px 15px
+      
+      
+        .absolute
+          flex-grow 1
+          text-align left
+        
+          .count
+            font-weight 700
+        
+        .percent
+          color medium-gray
+          font-weight 400
+          flex-grow 1
 
-    .bar-color, .series-icon.color
+    .bar-color, .series-icon.color, .title
       &.segment-color-1
         background segment-color-1
 
@@ -46,6 +72,7 @@ legend-width = 174px
       flex 1 1
       position relative
       width "calc(100% - %s)" % legend-width
+    
 
     .legend
       flex 0 0 legend-width
