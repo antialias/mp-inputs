@@ -102,8 +102,6 @@ mixin sort-axis-button(sortOrder)
                       - const segmentName = row[j - 1][k]
                       li.chart-bar(
                         style={width: percentValueString}
-                        onmouseenter=(ev) => $helpers.onMouseEnter(ev, segmentName, value, percent < 0.0001 ? '< 0.01%' : percentValueString)
-                        onmouseleave=$helpers.onMouseLeave
                       )
                         .bar-color(class={
                           [`segment-color-${segmentColorMap[segmentName]}`]: isMultiColor,
@@ -114,14 +112,10 @@ mixin sort-axis-button(sortOrder)
 
   //- For the hover tool tip to break out of the scroll overflow we are manually calculating where it should be on the screen.
   //- TODO When we change how scrolling works for results: place a tooltip on each li.chart-bar and use CSS to show/hide.
-  if hoverTooltip.show
-    .hover-label(
-      style={top: hoverTooltip.cssTop, left: hoverTooltip.cssLeft}
-      onmouseenter=$helpers.onMouseEnter
-      onmouseleave=$helpers.onMouseLeave
-    )
-      .content
-        .title= hoverTooltip.name
-        .results
-          .count= hoverTooltip.value
-          .percent= hoverTooltip.percent
+ 
+ //- keeping this to reference css cleanup
+  //-     .content
+  //-       .title= hoverTooltip.name
+  //-       .results
+  //-         .count= hoverTooltip.value
+  //-         .percent= hoverTooltip.percent
