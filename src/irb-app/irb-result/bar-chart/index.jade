@@ -115,13 +115,3 @@ mixin sort-axis-button(sortOrder)
                         .label-wrapper
                           .bar-text-nudger
                           .label= isValueAbsolute ? util.abbreviateNumber(value) : percentValueString
-
-  //- For the hover tool tip to break out of the scroll overflow we are manually calculating where it should be on the screen.
-  //- TODO When we change how scrolling works for results: place a tooltip on each li.chart-bar and use CSS to show/hide.
- 
- //- keeping this to reference css cleanup
-  //-     .content
-  //-       .title= hoverTooltip.name
-  //-       .results
-  //-         .count= hoverTooltip.value
-  //-         .percent= hoverTooltip.percent
