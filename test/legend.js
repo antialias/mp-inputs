@@ -51,7 +51,7 @@ describe('Legend', function() {
         'Mac OS X Safari',
         'Windows Firefox',
         'Mac OS X Firefox',
-        'Windows Opera'
+        'Windows Opera',
       ]);
     });
 

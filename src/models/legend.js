@@ -35,7 +35,7 @@ export default class Legend {
 
   buildColorMap(numColors=8) {
     const data = this.data[0];
-    if (data){
+    if (data) {
       if (!data.flattenedData || !data.seriesData) {
         Object.assign(this.data[0], {
           flattenedData: {},
