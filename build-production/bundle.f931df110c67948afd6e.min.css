@@ -1884,6 +1884,9 @@ span.substr.matches-search {
       -ms-flex-positive: 1;
           flex-grow: 1;
 }
+.line-chart-type .chart-legend .has-results .select-all {
+  margin-top: 5px;
+}
 .chart-legend {
   background-color: #f9fafc;
   border-radius: 0 0 5px 0;
@@ -2067,10 +2070,10 @@ span.substr.matches-search {
   padding: 0 30px;
 }
 .chart-legend .series-values button {
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -webkit-box-align: start;
+  -webkit-align-items: flex-start;
+      -ms-flex-align: start;
+          align-items: flex-start;
   background: none;
   border: none;
   display: -webkit-box;
@@ -2111,7 +2114,15 @@ span.substr.matches-search {
 .chart-legend .series-values button .label {
   color: #858ea4;
   font: 500 12px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  line-height: 18px;
   text-align: left;
+}
+.chart-legend .series-values button .label .flattened-segment {
+  line-height: 18px;
+}
+.chart-legend .series-values button .label .flattened-segment:not(:first-child)::before {
+  content: "/ ";
+  display: inline;
 }
 .chart-legend .series-values button .delete-wrapper {
   display: -webkit-box;
@@ -2145,7 +2156,8 @@ span.substr.matches-search {
 .chart-legend .series-values button.is-event .delete-wrapper {
   display: none;
 }
-.chart-legend .series-values button.series .label {
+.chart-legend .series-values button.series .label,
+.chart-legend .series-values button.series .label .flattened-segment {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
