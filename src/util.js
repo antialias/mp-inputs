@@ -271,7 +271,7 @@ export function stringFilterMatches(str, filterStr) {
 /**
  * Flatten a nested object to show all possible paths + corresponding values of that object
  * @param {string} obj - nested object to be flattened
- * @returns {Dict} with all nested keys seperated by spaces
+ * @returns {object} with all nested keys seperated by spaces
  * @example
  * flattenNestedObjectToPath({'US': {'California': 1, 'New York' : 2}});
  * // {'US California': 1, 'US New York': 2}
