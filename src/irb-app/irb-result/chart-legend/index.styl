@@ -1,6 +1,7 @@
 @import "../../../stylesheets/common"
 
 legend-left-padding = 15px
+label-line-height = 18px
 
 label-medium-gray = #7e879e
 
@@ -11,8 +12,12 @@ label-medium-gray = #7e879e
 .line-chart-type .chart-legend
   display flex
   flex-direction column
+
   .has-results
     flex-grow 1
+
+    .select-all
+      margin-top 5px
 
 .chart-legend
   background-color grey-50
@@ -164,8 +169,8 @@ label-medium-gray = #7e879e
         border 1px solid border-gray
         border-radius 3px
         box-sizing border-box
-        flex 0 0 18px
-        height 18px
+        flex 0 0 label-line-height
+        height label-line-height
         margin-right 11px
 
         &:before
@@ -187,10 +192,11 @@ label-medium-gray = #7e879e
       .label
         color #858ea4
         font 500 12px font-helvetica-neue
+        line-height label-line-height
         text-align left
 
         .flattened-segment
-          line-height 18px
+          line-height label-line-height
 
           &:not(:first-child)::before
             content "/ "
