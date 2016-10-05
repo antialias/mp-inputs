@@ -61,8 +61,7 @@ document.registerElement('chart-legend', class extends Component {
                     text, legend.search
                   ));
                   if (allMatches.some(Boolean)) {
-                    matches = [];
-                    allMatches.forEach((match, idx) => matches.push(match || ['', formattedText[idx]]));
+                    matches = allMatches.map((match, idx) => match || ['', formattedText[idx]]);
                   }
                 } else {
                   formattedText = this.config.helpers.renameSeriesValue(idx, originalValue);
