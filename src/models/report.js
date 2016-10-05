@@ -54,7 +54,7 @@ export default class Report {
   }
 
   toBookmarkData() {
-    let bm = extend({name: this.title}, this.serialize());
+    let bm = extend({name: this.title, icon: this.displayOptions.chartType}, this.serialize());
     if (this.id) {
       bm.id = this.id;
     }
