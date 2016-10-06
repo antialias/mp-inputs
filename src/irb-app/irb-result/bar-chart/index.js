@@ -23,7 +23,6 @@ document.registerElement('bar-chart', class extends Component {
         headers: [],
         headerSortPanel: null,
         rows: [],
-        chartBoundaries: {},
         chartMax: 0,
         segmentColorMap: {},
         displayOptions: {},
@@ -90,7 +89,6 @@ document.registerElement('bar-chart', class extends Component {
   attributeChangedCallback() {
     let {headers, series} = this.getJSONAttribute('data');
     const segmentColorMap = this.getJSONAttribute('segment-color-map') || {};
-    const chartBoundaries = this.getJSONAttribute('chart-boundaries') || {};
     const chartLabel = this.getJSONAttribute('chart-label') || '';
     const displayOptions = this.getJSONAttribute('display-options') || {};
     const functionLabel = this.getJSONAttribute('function-label') || '';
@@ -110,7 +108,6 @@ document.registerElement('bar-chart', class extends Component {
     this.update({
       chartLabel,
       chartMax,
-      chartBoundaries,
       segmentColorMap,
       displayOptions,
       functionLabel,

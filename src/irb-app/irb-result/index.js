@@ -89,7 +89,6 @@ document.registerElement('irb-result', class extends Component {
   get config() {
     return {
       helpers: {
-        getBoundaries: () => pick(this.getBoundingClientRect(), ['top', 'left']),
         getChartLabel: () => {
           let chartLabel = ['number of'];
           const mathTypes = Array.from(new Set(this.state.report.sections.show.clauses.map(clause => clause.math)));
