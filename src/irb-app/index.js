@@ -167,13 +167,24 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     window.requestAnimationFrame(() => {
       const app = document.querySelector('#app');
       let chart = null;
+      let legend = null;
       let isStickyChartHeader = false;
       app.addEventListener('scroll', () => {
         chart = chart || this.querySelector('.chart');
-        const shouldBeSticky = chart.getBoundingClientRect().top <= 0
+        legend = legend || this.querySelector('.legend');
+        const shouldBeSticky = chart.getBoundingClientRect().top <= 0;
         if (shouldBeSticky !== isStickyChartHeader) {
           app.classList.toggle('sticky-chart-headers');
           isStickyChartHeader = shouldBeSticky;
+        } else if (shouldBeSticky) {
+          const distFromBottom =  app.scrollHeight - (app.scrollTop + app.offsetHeight);
+
+          const appBottomMargin = 20 // padding on .irb-main-panel
+          if (distFromBottom < appBottomMargin) {
+            legend.style.height = `calc(100vh - ${appBottomMargin - distFromBottom}px)`
+          } else {
+            legend.style.height = '';
+          }
         }
       });
     });
