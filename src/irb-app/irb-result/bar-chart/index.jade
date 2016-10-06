@@ -100,20 +100,21 @@ mixin sort-axis-button(sortOrder)
                       - const percent = isLogarithmic ? (Math.log10(value) / segmentMax) : (value / segmentMax)
                       - const percentValueString = util.formatPercent(percent)
                       - const segmentName = row[j - 1][k]
+                      - const segmentColorClassName = `segment-color-${segmentColorMap[segmentName]}`
                       li.chart-bar(
                         style={width: percentValueString}
                       )
                         .hover-label
                           .content
                             .title(class={
-                          [`segment-color-${segmentColorMap[segmentName]}`]: isMultiColor,
-                        })= segmentName
+                              [segmentColorClassName]: isMultiColor,
+                            })= segmentName
                             .results
                               .absolute
                                 .count= value
                               .percent= percentValueString
                         .bar-color(class={
-                          [`segment-color-${segmentColorMap[segmentName]}`]: isMultiColor,
+                          [segmentColorClassName]: isMultiColor,
                         })
                         .label-wrapper
                           .bar-text-nudger
