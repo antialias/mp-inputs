@@ -106,16 +106,12 @@ mixin sort-axis-button(sortOrder)
                       )
                         .hover-label
                           .content
-                            .title(class={
-                              [segmentColorClassName]: isMultiColor,
-                            })= segmentName
+                            .title(class={[segmentColorClassName]: isMultiColor})= segmentName
                             .results
                               .absolute
                                 .count= value
                               .percent= percentValueString
-                        .bar-color(class={
-                          [segmentColorClassName]: isMultiColor,
-                        })
+                        .bar-color(class={[segmentColorClassName]: isMultiColor})
                         .label-wrapper
                           .bar-text-nudger
                           .label= isValueAbsolute ? util.abbreviateNumber(value) : percentValueString
