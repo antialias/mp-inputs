@@ -1,3 +1,4 @@
+import debounce from 'lodash/debounce';
 import MPApp from 'mixpanel-common/report/mp-app';
 import { extend } from 'mixpanel-common/util';
 import * as util from '../util';
@@ -169,7 +170,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       let chart = null;
       let legend = null;
       let isStickyChartHeader = false;
-      app.addEventListener('scroll', () => {
+      app.addEventListener('scroll', debounce(() => {
         chart = chart || this.querySelector('.chart');
         legend = legend || this.querySelector('.legend');
         const shouldBeSticky = chart.getBoundingClientRect().top <= 0;
@@ -178,15 +179,14 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           isStickyChartHeader = shouldBeSticky;
         } else if (shouldBeSticky) {
           const distFromBottom =  app.scrollHeight - (app.scrollTop + app.offsetHeight);
-
-          const appBottomMargin = 20 // padding on .irb-main-panel
+          const appBottomMargin = 20; // padding on .irb-main-panel
           if (distFromBottom < appBottomMargin) {
-            legend.style.height = `calc(100vh - ${appBottomMargin - distFromBottom}px)`
+            legend.style.height = `calc(100vh - ${appBottomMargin - distFromBottom}px)`;
           } else {
             legend.style.height = '';
           }
         }
-      });
+      }, 10, {leading: true, trailing: true}));
     });
 
     super.createdCallback(...arguments);
