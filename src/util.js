@@ -5,8 +5,8 @@ export * from 'mixpanel-common/util';
 export * from 'mixpanel-common/report/util';
 
 export function getTextWidth(text, font) {
-  const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'));
-  let context = canvas.getContext('2d');
+  const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement(`canvas`));
+  let context = canvas.getContext(`2d`);
   context.font = font;
   return context.measureText(text).width;
 }
@@ -30,7 +30,7 @@ function _filterIntoObject(obj, filter, parentKeys=[]) {
     }
   });
   Object.keys(obj).forEach(key => {
-    if (typeof obj[key] === 'object') {
+    if (typeof obj[key] === `object`) {
       _filterIntoObject(obj[key], filter, parentKeys.concat(key));
       if (!Object.keys(obj[key]).length) {
         delete obj[key];
@@ -88,7 +88,7 @@ export function isEqual(x, y) {
  * // {foo: 5, bar: 3, tab: 2}
  */
 export function combineNestedObjKeys(obj, accum={}) {
-  if (Object.values(obj).some(k => typeof k === 'number')) {
+  if (Object.values(obj).some(k => typeof k === `number`)) {
     Object.keys(obj).forEach(k=> accum[k] = accum[k] ? accum[k] + obj[k] : obj[k]);
   } else {
     Object.keys(obj).map(key => combineNestedObjKeys(obj[key], accum));
@@ -103,7 +103,7 @@ export function combineNestedObjKeys(obj, accum={}) {
 export function nestedObjectSum(obj) {
   const sum = Object.values(obj).reduce((accum, val) => accum + val, 0);
 
-  if (typeof sum === 'number') {
+  if (typeof sum === `number`) {
     return sum;
   } else {
     return objectFromPairs(Object.keys(obj)
@@ -126,7 +126,7 @@ export function nestedObjectSum(obj) {
  * // }
  */
 export function nestedObjectCumulative(obj) {
-  if (Object.values(obj).every(value => typeof value === 'number')) {
+  if (Object.values(obj).every(value => typeof value === `number`)) {
     return Object.keys(obj).sort().reduce((accum, key) => {
       const reversedKeys = Object.keys(accum).sort().reverse();
       accum[key] = (reversedKeys.length ? accum[reversedKeys[0]] : 0) + obj[key];
@@ -159,7 +159,7 @@ export function nestedObjectCumulative(obj) {
  * // }
  */
 export function nestedObjectRolling(obj, windowSize) {
-  if (Object.values(obj).every(value => typeof value === 'number')) {
+  if (Object.values(obj).every(value => typeof value === `number`)) {
     let found = false;
     const window = [];
     let sum = 0;
@@ -192,7 +192,7 @@ function _callbackIntoObject(obj, callback) {
   const depth = nestedObjectDepth(obj);
   Object.keys(obj).forEach(key => callback(key, obj, depth));
   Object.keys(obj).forEach(key => {
-    if (typeof obj[key] === 'object') {
+    if (typeof obj[key] === `object`) {
       _callbackIntoObject(obj[key], callback);
     }
   });
@@ -209,7 +209,7 @@ export function uniqueObjKeysAtDepth(obj, depth) {
 }
 
 export function formatPercent(decimal, precision=2) {
-  return (Math.round(decimal * Math.pow(10, precision + 2)) / Math.pow(10, precision)) + '%';
+  return (Math.round(decimal * Math.pow(10, precision + 2)) / Math.pow(10, precision)) + `%`;
 }
 
 /**
@@ -228,12 +228,12 @@ export function stringFilterMatches(str, filterStr) {
   // ensure there's a non-empty filter
   filterStr = filterStr && filterStr.trim();
   if (!filterStr) {
-    return ['', str];
+    return [``, str];
   }
 
   // prepare string and filter for search conditions
   const matchStr = str.toLowerCase();
-  const searchTerms = filterStr.toLowerCase().split(' ').filter(Boolean);
+  const searchTerms = filterStr.toLowerCase().split(` `).filter(Boolean);
 
   // find all matching positions
   const matchPositions = Array(str.length).fill(false);
@@ -251,8 +251,8 @@ export function stringFilterMatches(str, filterStr) {
   const matches = [];
   let i = 0;
   while (i < matchPositions.length) {
-    let matchStr = '';
-    let nonMatchStr = '';
+    let matchStr = ``;
+    let nonMatchStr = ``;
 
     while (i < matchPositions.length && matchPositions[i]) {
       matchStr += str[i++];
@@ -280,10 +280,10 @@ export function flattenNestedObjectToPath(obj, options={}, parentKeys=[], result
   results = results || {values: {}, paths: {}};
   Object.keys(obj).forEach(key => {
     const newParentKey = parentKeys.concat(key);
-    if (typeof obj[key] === 'object') {
+    if (typeof obj[key] === `object`) {
       results = flattenNestedObjectToPath(obj[key], options, newParentKey, results);
     } else {
-      const resultName = options.transformKeyName ? options.transformKeyName(newParentKey) : newParentKey.join(' ');
+      const resultName = options.transformKeyName ? options.transformKeyName(newParentKey) : newParentKey.join(` `);
       results.values[resultName] = obj[key];
       results.paths[resultName] = newParentKey;
       return results;

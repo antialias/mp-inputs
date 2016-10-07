@@ -4,9 +4,9 @@ import template from './index.jade';
 
 import './index.styl';
 
-document.registerElement('mp-toast', class extends Component {
+document.registerElement(`mp-toast`, class extends Component {
   attributeChangedCallback() {
-    if (this.getAttribute('showToast') === 'true') {
+    if (this.getAttribute(`showToast`) === `true`) {
       this.update({showToast: true});
     }
   }
@@ -19,13 +19,13 @@ document.registerElement('mp-toast', class extends Component {
       helpers: {
         eatToast: () => {
           this.update({showToast: false});
-          this.dispatchEvent(new Event('select'));
+          this.dispatchEvent(new Event(`select`));
         },
-        getMessage: () => this.getAttribute('message'),
-        getSelectText: () => this.getAttribute('select-text'),
+        getMessage: () => this.getAttribute(`message`),
+        getSelectText: () => this.getAttribute(`select-text`),
         trashToast: () => {
           this.update({showToast: false});
-          this.dispatchEvent(new Event('close'));
+          this.dispatchEvent(new Event(`close`));
         },
       },
       template,

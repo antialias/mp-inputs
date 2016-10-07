@@ -27,9 +27,9 @@ export default class QueryCache {
     return params.map(param => {
       let value = query[param];
       if (query[param] instanceof Date) {
-        value = query[param].toISOString().split(':').slice(0, -1).join(':');
+        value = query[param].toISOString().split(`:`).slice(0, -1).join(`:`);
       }
-      return param + ':' + JSON.stringify(value);
-    }).join(',');
+      return param + `:` + JSON.stringify(value);
+    }).join(`,`);
   }
 }

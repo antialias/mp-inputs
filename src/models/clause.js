@@ -4,10 +4,10 @@ import { extend } from 'mixpanel-common/util';
 import { debug } from 'mixpanel-common/report/util';
 
 const TYPE_FORMAT_NAME = {
-  'show': 'Compare',
-  'group': 'Group By',
-  'filter': 'Filter',
-  'time': 'Time',
+  'show': `Compare`,
+  'group': `Group By`,
+  'filter': `Filter`,
+  'time': `Time`,
 };
 
 export class Clause {
@@ -17,10 +17,10 @@ export class Clause {
 
   static create(sectionType, attrs) {
     switch (sectionType) {
-      case 'show': return new ShowClause(attrs);
-      case 'group': return new GroupClause(attrs);
-      case 'filter': return new FilterClause(attrs);
-      case 'time': return new TimeClause(attrs);
+      case `show`: return new ShowClause(attrs);
+      case `group`: return new GroupClause(attrs);
+      case `filter`: return new FilterClause(attrs);
+      case `time`: return new TimeClause(attrs);
     }
   }
 
@@ -43,7 +43,7 @@ export class Clause {
   }
 
   get valid() {
-    return typeof this.paneIndex === 'number' && this.paneIndex >= 0;
+    return typeof this.paneIndex === `number` && this.paneIndex >= 0;
   }
 
   validate(newClause) {
@@ -56,14 +56,14 @@ export class Clause {
     return newClause;
   }
 }
-Clause.RESOURCE_TYPES = Clause.prototype.RESOURCE_TYPES = ['all', 'events', 'people'];
+Clause.RESOURCE_TYPES = Clause.prototype.RESOURCE_TYPES = [`all`, `events`, `people`];
 
 export class EventsPropertiesClause extends Clause {
   constructor(attrs={}) {
     super(...arguments);
     this.value = attrs.value || null;
     this.resourceType = attrs.resourceType || Clause.RESOURCE_TYPES[0];
-    this.search = attrs.search || '';
+    this.search = attrs.search || ``;
   }
 
   get attrs() {
@@ -76,7 +76,7 @@ export class EventsPropertiesClause extends Clause {
       super.valid &&
       !!this.value &&
       this.RESOURCE_TYPES.indexOf(this.resourceType) !== -1 &&
-      typeof this.search === 'string'
+      typeof this.search === `string`
     );
   }
 }
@@ -84,7 +84,7 @@ export class EventsPropertiesClause extends Clause {
 export class ShowClause extends EventsPropertiesClause {
   constructor(attrs={}) {
     super(...arguments);
-    this.math = attrs.math || 'total';
+    this.math = attrs.math || `total`;
     this.property = attrs.property || null;
     this.value = this.value || null;
   }
@@ -98,22 +98,22 @@ export class ShowClause extends EventsPropertiesClause {
     return super.valid && this.MATH_TYPES.indexOf(this.math) !== -1;
   }
 }
-ShowClause.TYPE = ShowClause.prototype.TYPE = 'show';
+ShowClause.TYPE = ShowClause.prototype.TYPE = `show`;
 ShowClause.TOP_EVENTS = ShowClause.prototype.TOP_EVENTS = {
-  name: '$top_events',
+  name: `$top_events`,
   custom: false,
 };
 ShowClause.ALL_EVENTS = ShowClause.prototype.ALL_EVENTS = {
-  name: '$all_events',
+  name: `$all_events`,
   custom: false,
 };
 ShowClause.MATH_TYPES = ShowClause.prototype.MATH_TYPES = [
-  'total', 'unique', 'average', 'median', 'min', 'max',
+  `total`, `unique`, `average`, `median`, `min`, `max`,
 ];
-ShowClause.RESOURCE_TYPES = ShowClause.prototype.RESOURCE_TYPES = ['all', 'events', 'properties'];
+ShowClause.RESOURCE_TYPES = ShowClause.prototype.RESOURCE_TYPES = [`all`, `events`, `properties`];
 
 const PROPERTY_TYPES = [
-  'string', 'number', 'datetime', 'boolean', 'list',
+  `string`, `number`, `datetime`, `boolean`, `list`,
 ];
 export class GroupClause extends EventsPropertiesClause {
   constructor(attrs={}) {
@@ -131,16 +131,16 @@ export class GroupClause extends EventsPropertiesClause {
     return extend(super.attrs, {filterType: this.filterType});
   }
 }
-GroupClause.prototype.TYPE = 'group';
+GroupClause.prototype.TYPE = `group`;
 GroupClause.FILTER_TYPES = GroupClause.prototype.FILTER_TYPES = PROPERTY_TYPES;
 
 // Time constants
-const HOURS = 'last 96 hours';
-const WEEK = 'last week';
-const MONTH = 'last 30 days';
-const QUARTER = 'last quarter';
-const YEAR = 'last 12 months';
-const CUSTOM = 'Custom date range ...';
+const HOURS = `last 96 hours`;
+const WEEK = `last week`;
+const MONTH = `last 30 days`;
+const QUARTER = `last quarter`;
+const YEAR = `last 12 months`;
+const CUSTOM = `Custom date range ...`;
 const RANGES = {
   HOURS, WEEK, MONTH, QUARTER, YEAR, CUSTOM,
 };
@@ -148,14 +148,14 @@ const RANGE_CHOICES = [
   HOURS, WEEK, MONTH, QUARTER, YEAR, CUSTOM,
 ];
 const UNIT_CHOICES = [
-  'hour', 'day', 'week', 'month', 'quarter', 'year',
+  `hour`, `day`, `week`, `month`, `quarter`, `year`,
 ];
 const RANGE_TO_VALUE_AND_UNIT = {
-  [RANGES.HOURS]:   {value: 96, unit: 'hour' },
-  [RANGES.WEEK]:    {value: 7,  unit: 'day'  },
-  [RANGES.MONTH]:   {value: 30, unit: 'day'  },
-  [RANGES.QUARTER]: {value: 12, unit: 'week' },
-  [RANGES.YEAR]:    {value: 12, unit: 'month'},
+  [RANGES.HOURS]:   {value: 96, unit: `hour` },
+  [RANGES.WEEK]:    {value: 7,  unit: `day`  },
+  [RANGES.MONTH]:   {value: 30, unit: `day`  },
+  [RANGES.QUARTER]: {value: 12, unit: `week` },
+  [RANGES.YEAR]:    {value: 12, unit: `month`},
 };
 const UNIT_AND_VALUE_TO_RANGE = {
   hour: {
@@ -206,20 +206,20 @@ export class TimeClause extends Clause {
       this.UNIT_CHOICES.indexOf(this.unit) !== -1 &&
       this.value &&
       (
-        (typeof this.value === 'number' && this.value > 0) ||
+        (typeof this.value === `number` && this.value > 0) ||
         (this.value instanceof Date && this.value < new Date()) ||
         (
           Array.isArray(this.value) &&
           this.value.length === 2 &&
           (
             (
-              (typeof this.value[0] === 'string' && moment.utc(this.value[0]).isBefore(moment.utc())) &&
-              (typeof this.value[1] === 'string' && moment.utc(this.value[1]).isBefore(moment.utc()))
+              (typeof this.value[0] === `string` && moment.utc(this.value[0]).isBefore(moment.utc())) &&
+              (typeof this.value[1] === `string` && moment.utc(this.value[1]).isBefore(moment.utc()))
             )
             ||
             (
-              (typeof this.value[0] === 'number' && this.value[0] > 0) &&
-              (typeof this.value[1] === 'number' && this.value[1] > 0)
+              (typeof this.value[0] === `number` && this.value[0] > 0) &&
+              (typeof this.value[1] === `number` && this.value[1] > 0)
             )
             ||
             (
@@ -247,7 +247,7 @@ export class TimeClause extends Clause {
 }
 TimeClause.RANGE_CHOICES = RANGE_CHOICES;
 TimeClause.RANGES = TimeClause.prototype.RANGES = RANGES;
-TimeClause.TYPE = TimeClause.prototype.TYPE = 'time';
+TimeClause.TYPE = TimeClause.prototype.TYPE = `time`;
 TimeClause.UNIT_CHOICES = TimeClause.prototype.UNIT_CHOICES = UNIT_CHOICES;
 
 export class FilterClause extends EventsPropertiesClause {
@@ -297,46 +297,46 @@ export class FilterClause extends EventsPropertiesClause {
   }
 
   get filterOperatorIsSetOrNotSet() {
-    return this.filterOperator === 'is set' || this.filterOperator === 'is not set';
+    return this.filterOperator === `is set` || this.filterOperator === `is not set`;
   }
 
   get isEditingFilterOperator() {
-    return this.editing === 'filterOperator';
+    return this.editing === `filterOperator`;
   }
 
   get isEditingFilterDateUnit() {
-    return this.editing === 'filterDateUnit';
+    return this.editing === `filterDateUnit`;
   }
 }
-FilterClause.TYPE = FilterClause.prototype.TYPE = 'filter';
+FilterClause.TYPE = FilterClause.prototype.TYPE = `filter`;
 FilterClause.FILTER_OPERATORS = FilterClause.prototype.FILTER_OPERATORS = {
   string: [
-    'equals',
-    'does not equal',
-    'contains',
-    'does not contain',
-    'is set',
-    'is not set',
+    `equals`,
+    `does not equal`,
+    `contains`,
+    `does not contain`,
+    `is set`,
+    `is not set`,
   ],
   number: [
-    'is between',
-    'is equal to',
-    'is less than',
-    'is greater than',
+    `is between`,
+    `is equal to`,
+    `is less than`,
+    `is greater than`,
   ],
   datetime: [
-    'was less than',
-    'was more than',
-    'was on',
-    'was between',
+    `was less than`,
+    `was more than`,
+    `was on`,
+    `was between`,
   ],
   boolean: [
-    'is true',
-    'is false',
+    `is true`,
+    `is false`,
   ],
   list: [
-    'contains',
-    'does not contain',
+    `contains`,
+    `does not contain`,
   ],
 };
 FilterClause.FILTER_TYPES = FilterClause.prototype.FILTER_TYPES = PROPERTY_TYPES;

@@ -8,13 +8,13 @@ import {
 
 import template from './filter-property-value-pane-content.jade';
 
-document.registerElement('filter-property-value-pane-content', class extends PaneContent {
+document.registerElement(`filter-property-value-pane-content`, class extends PaneContent {
   get config() {
     return extend(super.config, {
       template,
 
       helpers: extend(super.config.helpers, {
-        getDoneLabel: () => this.app.isAddingClause() ? 'Add' : 'Update',
+        getDoneLabel: () => this.app.isAddingClause() ? `Add` : `Update`,
         getEqualsMatches: () =>
           this.config.helpers.getValueMatches(this.app.activeStageClause.filterSearch),
         getValueMatches: (string, invert) =>
@@ -49,6 +49,6 @@ document.registerElement('filter-property-value-pane-content', class extends Pan
   }
 
   get section() {
-    return 'filter';
+    return `filter`;
   }
 });

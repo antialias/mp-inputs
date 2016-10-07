@@ -4,15 +4,15 @@ import { extend } from '../../../util';
 
 import template from './group-property-pane-content.jade';
 
-document.registerElement('group-property-pane-content', class extends PaneContent {
+document.registerElement(`group-property-pane-content`, class extends PaneContent {
   get config() {
     return extend(super.config, {
       template,
 
       helpers: extend(super.config.helpers, {
         isSelectedProperty: property => (
-          super.config.helpers.getActiveClauseProperty('value') === property.name &&
-          super.config.helpers.getActiveClauseProperty('resourceType') === property.resourceType
+          super.config.helpers.getActiveClauseProperty(`value`) === property.name &&
+          super.config.helpers.getActiveClauseProperty(`resourceType`) === property.resourceType
         ),
         paneHandler: (property, shouldClosePane) => {
           const filterType = property.type;
@@ -27,8 +27,8 @@ document.registerElement('group-property-pane-content', class extends PaneConten
           // - requestAnimationFrame allows the add pane to be re-rendered as an
           //   edit pane, and still show the css animation sliding to the new pane
           if (!shouldClosePane) {
-            if (this.app.originStageClauseType() !== 'filter') {
-              this.app.startAddingClause('filter', {paneIndex});
+            if (this.app.originStageClauseType() !== `filter`) {
+              this.app.startAddingClause(`filter`, {paneIndex});
             } else if (value !== originalValue) {
               this.app.updateStageClause({filterValue: null});
             }
@@ -42,12 +42,12 @@ document.registerElement('group-property-pane-content', class extends PaneConten
           ev.stopPropagation();
           this.config.helpers.paneHandler(property, false);
         },
-        selectProperty: property => this.config.helpers.paneHandler(property, this.app.originStageClauseType() !== 'filter'),
+        selectProperty: property => this.config.helpers.paneHandler(property, this.app.originStageClauseType() !== `filter`),
         topProperties: () => {
           switch (this.state.resourceTypeFilter) {
-            case 'events':
+            case `events`:
               return this.state.topEventProperties;
-            case 'people':
+            case `people`:
               return this.state.topPeopleProperties;
             default:
               return this.state.topEventProperties.concat(this.state.topPeopleProperties).sort((a, b) => b.count - a.count);
@@ -63,6 +63,6 @@ document.registerElement('group-property-pane-content', class extends PaneConten
   }
 
   get section() {
-    return 'group';
+    return `group`;
   }
 });

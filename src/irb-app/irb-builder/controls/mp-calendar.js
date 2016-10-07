@@ -4,7 +4,7 @@ import WebComponent from 'webcomponent';
 
 import './mp-calendar.styl';
 
-document.registerElement('mp-calendar', class extends WebComponent {
+document.registerElement(`mp-calendar`, class extends WebComponent {
   createdCallback() {
     this.selectedStr = [];
   }
@@ -39,28 +39,28 @@ document.registerElement('mp-calendar', class extends WebComponent {
 
   init() {
     this._initialized = true;
-    this.innerHTML = '';
+    this.innerHTML = ``;
     this.startDate = this.endDate = null;
 
-    this.rangeSelect = this.isAttributeEnabled('range');
+    this.rangeSelect = this.isAttributeEnabled(`range`);
     const numInputs = this.rangeSelect ? 2 : 1;
     this.inputs = Array(numInputs).fill().map((x, idx) => {
       const el = {};
 
-      el.input = document.createElement('input');
-      el.input.className = 'mp-pikaday-input';
+      el.input = document.createElement(`input`);
+      el.input.className = `mp-pikaday-input`;
 
       el.picker = new Pikaday({
         bound: false,
-        container: document.getElementsByClassName('calendar-hook')[0],
+        container: document.getElementsByClassName(`calendar-hook`)[0],
         field: el.input,
         numberOfMonths: 2,
         onSelect: date => this.selectDate(date, idx),
       });
       el.picker.hide();
 
-      el.input.addEventListener('focus', () => el.picker.show());
-      el.input.addEventListener('blur', () => el.picker.hide());
+      el.input.addEventListener(`focus`, () => el.picker.show());
+      el.input.addEventListener(`blur`, () => el.picker.hide());
 
       this.appendChild(el.input);
 
@@ -77,7 +77,7 @@ document.registerElement('mp-calendar', class extends WebComponent {
   emitChange() {
     if (this.rangeSelect) {
       if (this.startDate && this.endDate) {
-        this.dispatchEvent(new CustomEvent('change', {
+        this.dispatchEvent(new CustomEvent(`change`, {
           detail: [
             this.formatDate(this.startDate),
             this.formatDate(this.endDate),
@@ -85,7 +85,7 @@ document.registerElement('mp-calendar', class extends WebComponent {
         }));
       }
     } else {
-      this.dispatchEvent(new CustomEvent('change', {
+      this.dispatchEvent(new CustomEvent(`change`, {
         detail: this.formatDate(this.startDate),
       }));
     }

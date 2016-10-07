@@ -13,7 +13,7 @@ import '../../widgets/sticky-scroll';
 import template from './index.jade';
 import './index.styl';
 
-document.registerElement('chart-legend', class extends Component {
+document.registerElement(`chart-legend`, class extends Component {
   get config() {
     return {
       template,
@@ -25,20 +25,20 @@ document.registerElement('chart-legend', class extends Component {
           const groupClauses = this.state.report.sections.group.clauses;
           const groupProperties = pick(
             groupClauses[groupClauses.length - seriesIdx - 1],
-            ['value', 'filterType', 'resourceType']
+            [`value`, `filterType`, `resourceType`]
           );
-          this.app.startAddingClause('filter', extend(groupProperties, {
-            filterOperator: value === 'null' ? 'is set' : 'does not equal',
+          this.app.startAddingClause(`filter`, extend(groupProperties, {
+            filterOperator: value === `null` ? `is set` : `does not equal`,
             filterValue: [value],
           }));
           this.app.commitStageClause();
           this.app.trackEvent(
-            'Legend - Delete',
+            `Legend - Delete`,
             extend(reportTrackingData, {'deleted value': value.text})
           );
         },
         isAnySeriesLargeSearch: legendData => legendData.some(series => this.config.helpers.isSeriesLargeSearchResult(series)),
-        isFlattenedData: () => this.state.report.displayOptions.chartType === 'line',
+        isFlattenedData: () => this.state.report.displayOptions.chartType === `line`,
         isSeriesLargeSearchResult: series => this.config.helpers.isSearchActive() && series.seriesValues.length > 12,
         isSeriesValueShowing: (seriesIdx, name) => {
           return this.state.report.legend.data[seriesIdx][this.legendDataKey][name];
@@ -61,7 +61,7 @@ document.registerElement('chart-legend', class extends Component {
                     text, legend.search
                   ));
                   if (allMatches.some(Boolean)) {
-                    matches = allMatches.map((match, idx) => match || ['', formattedText[idx]]);
+                    matches = allMatches.map((match, idx) => match || [``, formattedText[idx]]);
                   }
                 } else {
                   formattedText = this.config.helpers.renameSeriesValue(idx, originalValue);
@@ -74,10 +74,10 @@ document.registerElement('chart-legend', class extends Component {
               .filter(Boolean);
             seriesValues = sorted(seriesValues, {
               transform: v => (
-                isFlattenedData ? v.formattedText.join(' ').toLowerCase() : v.formattedText.toLowerCase()
+                isFlattenedData ? v.formattedText.join(` `).toLowerCase() : v.formattedText.toLowerCase()
               ),
             });
-            if (legend.getSeriesDisplayAtIndex(idx) === 'minimized') {
+            if (legend.getSeriesDisplayAtIndex(idx) === `minimized`) {
               seriesValues.splice(12);
             }
             return {seriesName: series.seriesName, seriesValues};
@@ -85,13 +85,13 @@ document.registerElement('chart-legend', class extends Component {
           return seriesData.some(series => series.seriesValues.length) ? seriesData : [];
         },
         renameSeriesValue: (seriesIdx, name) => (
-          this.state.report.legend.data[seriesIdx].seriesName === '$event' ? renameEvent(name) : renamePropertyValue(name)
+          this.state.report.legend.data[seriesIdx].seriesName === `$event` ? renameEvent(name) : renamePropertyValue(name)
         ),
         searchHandler: ev => {
           if (ev.target.value) {
             this.state.report.legend.showAllSeries();
             if (!this.state.report.legend.search) {
-              this.app.trackEvent('Legend - Search', this.state.report.toTrackingData());
+              this.app.trackEvent(`Legend - Search`, this.state.report.toTrackingData());
             }
           } else {
             this.state.report.legend.setDefaultSeriesShowing();
@@ -102,11 +102,11 @@ document.registerElement('chart-legend', class extends Component {
         seriesDisplayOption: idx => {
           let label = null;
           switch (this.state.report.legend.getSeriesDisplayAtIndex(idx)) {
-            case 'minimized':
-              label = 'More';
+            case `minimized`:
+              label = `More`;
               break;
-            case 'expanded':
-              label = 'Less';
+            case `expanded`:
+              label = `Less`;
               break;
           }
           return label;
@@ -118,7 +118,7 @@ document.registerElement('chart-legend', class extends Component {
           const newValue = !this.config.helpers.allSeriesSelected(seriesIdx);
           Object.keys(seriesData).forEach(key => seriesData[key] = newValue);
           this.app.updateLegendSeriesAtIndex(seriesIdx, dataKey, seriesData);
-          this.app.trackEvent(`Legend - ${newValue ? 'Show' : 'Hide'} All`, reportTrackingData);
+          this.app.trackEvent(`Legend - ${newValue ? `Show` : `Hide`} All`, reportTrackingData);
         },
         toggleShowSeriesValue: (seriesIdx, name) => {
           const dataKey = this.legendDataKey;
@@ -126,7 +126,7 @@ document.registerElement('chart-legend', class extends Component {
           if (seriesData.hasOwnProperty(name)) {
             const reportTrackingData = this.state.report.toTrackingData();
             this.app.updateLegendSeriesAtIndex(seriesIdx, dataKey, {[name]: !seriesData[name]});
-            this.app.trackEvent(`Legend - ${seriesData[name] ? 'Show' : 'Hide'}`, reportTrackingData);
+            this.app.trackEvent(`Legend - ${seriesData[name] ? `Show` : `Hide`}`, reportTrackingData);
           }
         },
         totalSeriesCount: idx => (

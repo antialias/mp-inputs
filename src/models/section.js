@@ -31,10 +31,10 @@ export class Section {
 
   static create(sectionType, attrs) {
     switch (sectionType) {
-      case 'show': return new ShowSection(attrs);
-      case 'group': return new GroupSection(attrs);
-      case 'filter': return new FilterSection(attrs);
-      case 'time': return new TimeSection(attrs);
+      case `show`: return new ShowSection(attrs);
+      case `group`: return new GroupSection(attrs);
+      case `filter`: return new FilterSection(attrs);
+      case `time`: return new TimeSection(attrs);
     }
   }
 
@@ -85,7 +85,7 @@ export class ShowSection extends Section {
       this.clauses.every(clause => clause instanceof ShowClause);
   }
 }
-ShowSection.TYPE = ShowSection.prototype.TYPE = 'show';
+ShowSection.TYPE = ShowSection.prototype.TYPE = `show`;
 
 export class GroupSection extends Section {
   get valid() {
@@ -93,7 +93,7 @@ export class GroupSection extends Section {
       this.clauses.every(clause => clause instanceof GroupClause);
   }
 }
-GroupSection.TYPE = GroupSection.prototype.TYPE = 'group';
+GroupSection.TYPE = GroupSection.prototype.TYPE = `group`;
 
 export class FilterSection extends Section {
   get valid() {
@@ -101,7 +101,7 @@ export class FilterSection extends Section {
       this.clauses.every(clause => clause instanceof FilterClause);
   }
 }
-FilterSection.TYPE = FilterSection.prototype.TYPE = 'filter';
+FilterSection.TYPE = FilterSection.prototype.TYPE = `filter`;
 
 export class TimeSection extends Section {
   get valid() {
@@ -110,4 +110,4 @@ export class TimeSection extends Section {
       this.clauses.every(clause => clause instanceof TimeClause);
   }
 }
-TimeSection.TYPE = TimeSection.prototype.TYPE = 'time';
+TimeSection.TYPE = TimeSection.prototype.TYPE = `time`;

@@ -10,43 +10,43 @@ import { BuilderPane } from '../builder-pane';
 import template from './index.jade';
 import './index.styl';
 
-document.registerElement('builder-group', class extends Component {
+document.registerElement(`builder-group`, class extends Component {
   get config() {
     return {
       template,
       helpers: {
-        moveClause: (clauseIndex, offset) => this.app.moveClause('group', clauseIndex, offset),
+        moveClause: (clauseIndex, offset) => this.app.moveClause(`group`, clauseIndex, offset),
       },
     };
   }
 });
 
 // controls
-document.registerElement('group-add-control', class extends AddControl {
+document.registerElement(`group-add-control`, class extends AddControl {
   get section() {
-    return 'group';
+    return `group`;
   }
 
   get label() {
-    return 'Group by';
+    return `Group by`;
   }
 });
 
-document.registerElement('group-edit-control', class extends EditControl {
+document.registerElement(`group-edit-control`, class extends EditControl {
   get section() {
-    return 'group';
+    return `group`;
   }
 
   get label() {
-    const clause = this.state.report.sections.getClause('group', this.clauseIndex);
+    const clause = this.state.report.sections.getClause(`group`, this.clauseIndex);
     return clause && renameProperty(clause.value);
   }
 });
 
 // dropdown content
-document.registerElement('group-pane', class extends BuilderPane {
+document.registerElement(`group-pane`, class extends BuilderPane {
   get section() {
-    return 'group';
+    return `group`;
   }
 
   get subpanes() {

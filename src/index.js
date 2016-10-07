@@ -19,11 +19,11 @@ if (API_LOCAL && !STANDALONE) {
 }
 
 const initIRB = () => new Promise(resolve => {
-  const IRB = document.createElement('irb-app');
+  const IRB = document.createElement(`irb-app`);
   if (STANDALONE) {
     resolve(IRB);
   } else {
-    const parentFrame = new Framesg(window.parent, 'mp-app', {
+    const parentFrame = new Framesg(window.parent, `mp-app`, {
       startApp: parentData => {
         mixpanel.identify(parentData.user_id);
         mixpanel.register({
@@ -31,7 +31,7 @@ const initIRB = () => new Promise(resolve => {
           'Project ID': parentData.project_id,
           'User ID':    parentData.user_id,
         });
-        mixpanel.track('Viewed report');
+        mixpanel.track(`Viewed report`);
         mixpanel.people.set({
           '$email': parentData.user_email,
           '$name': parentData.user_name,
@@ -52,4 +52,4 @@ const initIRB = () => new Promise(resolve => {
   }
 });
 
-initIRB().then(IRB => document.getElementById('app').appendChild(IRB));
+initIRB().then(IRB => document.getElementById(`app`).appendChild(IRB));

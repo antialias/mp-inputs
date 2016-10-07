@@ -25,7 +25,7 @@ import './index.styl';
 
 const MINUTE_MS = 1000 * 60;
 
-document.registerElement('irb-app', class IRBApp extends MPApp {
+document.registerElement(`irb-app`, class IRBApp extends MPApp {
   get config() {
     return {
       defaultState: extend(
@@ -53,7 +53,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       load: (stateUpdate={}, reportId) => {
         const report = this.state.savedReports && this.state.savedReports[Number(reportId)];
         if (!report) {
-          return this.navigate('');
+          return this.navigate(``);
         } else {
           if (!stateUpdate.report) {
             stateUpdate = extend(stateUpdate, this.loadReport(report));
@@ -74,7 +74,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       },
 
       reset: (stateUpdate={}) => {
-        return this.navigate('', extend(stateUpdate, this.resetQuery()));
+        return this.navigate(``, extend(stateUpdate, this.resetQuery()));
       },
 
     });
@@ -85,10 +85,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     return {
       report: new Report({
         displayOptions: {
-          chartType: 'bar',
-          plotStyle: 'standard',
-          analysis: 'linear',
-          value: 'absolute',
+          chartType: `bar`,
+          plotStyle: `standard`,
+          analysis: `linear`,
+          value: `absolute`,
         },
         sections: new BuilderSections({
           show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
@@ -99,24 +99,24 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           search: null,
         }),
         sorting: this.sortConfigFor(null),
-        title: 'Untitled report',
+        title: `Untitled report`,
       }),
 
       chartToggle: {
         editingType: null,
         bar: {
-          plotStyle: 'standard',
+          plotStyle: `standard`,
         },
         line: {
-          plotStyle: 'standard',
+          plotStyle: `standard`,
         },
         table: {
-          plotStyle: 'standard',
+          plotStyle: `standard`,
         },
       },
       isEditingExtrasMenu: false,
       newCachedData: false,
-      resourceTypeFilter: 'all',
+      resourceTypeFilter: `all`,
       result: new Result({
         headers: [],
         series: {},
@@ -142,7 +142,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       });
     }
     if (this.parentFrame) {
-      this.parentFrame.addHandler('deleteBookmark', this.deleteReport.bind(this));
+      this.parentFrame.addHandler(`deleteBookmark`, this.deleteReport.bind(this));
     }
 
     this.queries = {
@@ -166,7 +166,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   // Serialization helpers
 
   get persistenceKey() {
-    return 'irb-de8ae95';
+    return `irb-de8ae95`;
   }
 
   toSerializationAttrs() {
@@ -181,14 +181,14 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
   openReportList() {
     if (this.parentFrame) {
-      this.parentFrame.send('chooseBookmark')
+      this.parentFrame.send(`chooseBookmark`)
         .then(bookmarkId => {
           if (bookmarkId) {
             this.navigate(`report/${bookmarkId}`);
-            this.trackEvent('Report list - select report', {'report id': bookmarkId});
+            this.trackEvent(`Report list - select report`, {'report id': bookmarkId});
           }
         });
-      this.trackEvent('Report list - open');
+      this.trackEvent(`Report list - open`);
     }
   }
 
@@ -198,31 +198,31 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
     delete this.state.savedReports[reportId];
     if (this.state.report.id === reportId) {
-      this.navigate('');
+      this.navigate(``);
     } else {
       this.update();
     }
 
-    this.trackEvent('Delete Report', trackingData);
+    this.trackEvent(`Delete Report`, trackingData);
   }
 
   loadReport(report) {
     const stateUpdate = extend(this.resettableState, report ? {report} : {});
     this.update(stateUpdate);
     this.resetTopQueries();
-    this.trackEvent('Load Report', report ? report.toTrackingData() : {});
+    this.trackEvent(`Load Report`, report ? report.toTrackingData() : {});
     return stateUpdate;
   }
 
   saveReport() {
     if (this.parentFrame) {
       const reportTrackingData = this.state.report.toTrackingData();
-      return this.parentFrame.send('saveBookmark', this.state.report.toBookmarkData())
+      return this.parentFrame.send(`saveBookmark`, this.state.report.toBookmarkData())
         .then(bookmark => {
           const report = Report.fromBookmarkData(bookmark);
           this.update({savedReports: extend(this.state.savedReports, {[report.id]: report})});
           this.navigate(`report/${report.id}`, {report});
-          this.trackEvent('Save Report', extend(reportTrackingData, {
+          this.trackEvent(`Save Report`, extend(reportTrackingData, {
             'new report': !this.state.savedReports.hasOwnProperty(report.id),
             'report title': report.title,
           }));
@@ -231,7 +231,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
           console.error(`Error saving: ${err}`);
         });
     } else {
-      console.warn('Cannot save report without parent app');
+      console.warn(`Cannot save report without parent app`);
     }
   }
 
@@ -252,7 +252,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   isAddingClause(sectionType) {
     return (
       this.originStageClauseType() === sectionType &&
-      typeof this.state.stageClauseIndex !== 'number'
+      typeof this.state.stageClauseIndex !== `number`
     );
   }
 
@@ -267,7 +267,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     try {
       mixpanel.track(eventName, properties);
     } catch (e) {
-      rollbar.error('tracking error', e);
+      rollbar.error(`tracking error`, e);
     }
   }
 
@@ -303,20 +303,20 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
   sortConfigFor(result, currentSortConfig=null) {
     let sortConfig = {
       bar: {
-        sortBy: 'column',
+        sortBy: `column`,
         colSortAttrs: [
           {
-            sortBy: 'value',
-            sortOrder: 'desc',
+            sortBy: `value`,
+            sortOrder: `desc`,
           },
         ],
       },
       table: {
-        sortBy: 'column',
+        sortBy: `column`,
         colSortAttrs: [
           {
-            sortBy: 'label',
-            sortOrder: 'asc',
+            sortBy: `label`,
+            sortOrder: `asc`,
           },
         ],
       },
@@ -332,20 +332,20 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
         // update existing sorting config for new results
 
-        if (currentSortConfig.bar.sortBy === 'column') {
+        if (currentSortConfig.bar.sortBy === `column`) {
           let colSortAttrs = currentSortConfig.bar.colSortAttrs.slice(0, result.headers.length);
           for (let i = colSortAttrs.length; i < result.headers.length; i++) {
-            colSortAttrs.push({sortBy: 'value', sortOrder: 'desc'});
+            colSortAttrs.push({sortBy: `value`, sortOrder: `desc`});
           }
           sortConfig.bar.colSortAttrs = colSortAttrs;
         } else {
           sortConfig.bar = currentSortConfig.bar;
         }
 
-        if (currentSortConfig.table.sortBy === 'column') {
+        if (currentSortConfig.table.sortBy === `column`) {
           let colSortAttrs = currentSortConfig.table.colSortAttrs.slice(0, numTableHeaders);
           for (let i = colSortAttrs.length; i < numTableHeaders; i++) {
-            colSortAttrs.push({sortBy: 'label', sortOrder: 'asc'});
+            colSortAttrs.push({sortBy: `label`, sortOrder: `asc`});
           }
           sortConfig.table.colSortAttrs = colSortAttrs;
         } else {
@@ -356,10 +356,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         // no existing config; ensure that new config has right number of headers
 
         for (let i = sortConfig.bar.colSortAttrs.length; i < result.headers.length; i++) {
-          sortConfig.bar.colSortAttrs.push({sortBy: 'value', sortOrder: 'desc'});
+          sortConfig.bar.colSortAttrs.push({sortBy: `value`, sortOrder: `desc`});
         }
         for (let i = sortConfig.table.colSortAttrs.length; i < numTableHeaders; i++) {
-          sortConfig.table.colSortAttrs.push({sortBy: 'label', sortOrder: 'asc'});
+          sortConfig.table.colSortAttrs.push({sortBy: `label`, sortOrder: `asc`});
         }
 
       }
@@ -383,14 +383,14 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
 
     if (stageClauses.length) {
       for (const clause of stageClauses) {
-        clause.search = '';
+        clause.search = ``;
       }
       this.update({
         stageClauses,
         stageClauseIndex: clauseIndex,
       });
     } else {
-      throw new Error('app.startEditingClause error: invalid clauseIndex provided');
+      throw new Error(`app.startEditingClause error: invalid clauseIndex provided`);
     }
   }
 
@@ -400,7 +400,7 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     const newState = {
       stageClauses: [],
       stageClauseIndex: null,
-      resourceTypeFilter: 'all',
+      resourceTypeFilter: `all`,
     };
 
     this.update(newState);
@@ -421,13 +421,13 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     let newState = {stageClauses};
 
     // query new property values if we're setting a new filter property
-    if (this.activeStageClause.TYPE === 'filter' && clauseData.value) {
+    if (this.activeStageClause.TYPE === `filter` && clauseData.value) {
       let topPropertyValues = null;
       switch (clauseData.resourceType) {
-        case 'people':
+        case `people`:
           topPropertyValues = this.queries.topPeoplePropertyValues;
           break;
-        case 'events':
+        case `events`:
           topPropertyValues = this.queries.topEventPropertyValues;
           break;
       }
@@ -456,14 +456,14 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       newClauses.filter(clause => clause.valid).forEach(clause => {
         const newClause = clause.extend({paneIndex: 0});
         let newSection = null;
-        const isEditingClause = clause === newClauses[0] && typeof this.state.stageClauseIndex === 'number';
+        const isEditingClause = clause === newClauses[0] && typeof this.state.stageClauseIndex === `number`;
         if (isEditingClause) {
           newSection = reportAttrs.sections[newClause.TYPE].replaceClause(this.state.stageClauseIndex, newClause);
         } else {
-          if (clause === newClauses[1] && newClause.TYPE === 'show' && newClauses[0].TYPE === 'show') {
+          if (clause === newClauses[1] && newClause.TYPE === `show` && newClauses[0].TYPE === `show`) {
             // operator on property + event
             let showClauseIdx = this.state.stageClauseIndex;
-            if (typeof showClauseIdx !== 'number') {
+            if (typeof showClauseIdx !== `number`) {
               // newly-appended clause
               showClauseIdx = reportAttrs.sections.show.clauses.length - 1;
             }
@@ -477,12 +477,12 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         }
         reportAttrs.sections = reportAttrs.sections.replaceSection(newSection);
         let clauseProperties = clause.serialize();
-        if (typeof clauseProperties.value === 'object') {
+        if (typeof clauseProperties.value === `object`) {
           clauseProperties = extend(clauseProperties, clauseProperties.value);
           delete clauseProperties.value;
         }
         this.trackEvent(
-          `Builder - ${isEditingClause ? 'Edit' : 'Add'} ${clause.formattedType()} Clause`,
+          `Builder - ${isEditingClause ? `Edit` : `Add`} ${clause.formattedType()} Clause`,
           extend(reportTrackingData, clauseProperties)
         );
       });
@@ -510,17 +510,17 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
         .removeClause(clauseIndex)
         .insertClause(clauseIndex + offset, clause)
     );
-    this.trackEvent('Builder - Reorder Group Clause', extend(reportTrackingData, {
+    this.trackEvent(`Builder - Reorder Group Clause`, extend(reportTrackingData, {
       'current position': clauseIndex,
       'new position': clauseIndex + offset,
-      'reorder direction': offset === 1 ? 'right' : 'left',
+      'reorder direction': offset === 1 ? `right` : `left`,
     }));
   }
 
   removeClause(sectionType, clauseIndex) {
     const reportTrackingData = this.state.report.toTrackingData();
     this.updateSection(this.state.report.sections[sectionType].removeClause(clauseIndex));
-    this.trackEvent('Builder - Remove Clause', extend(reportTrackingData, {
+    this.trackEvent(`Builder - Remove Clause`, extend(reportTrackingData, {
       'clause type': sectionType,
       'clause index': clauseIndex,
     }));
@@ -550,13 +550,13 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     const chartType = displayOptions.chartType;
     Promise.resolve()
       .then(() => {
-        const isNotTotal = this.state.report.sections.show.clauses.some(clause => ['min', 'max', 'unique', 'average', 'median'].includes(clause.math));
-        const isChangingToLineChart = chartType === 'line' && ['bar', 'table'].includes(this.state.report.displayOptions.chartType);
-        const isChangingFromLineChart = ['bar', 'table'].includes(chartType) && this.state.report.displayOptions.chartType === 'line';
+        const isNotTotal = this.state.report.sections.show.clauses.some(clause => [`min`, `max`, `unique`, `average`, `median`].includes(clause.math));
+        const isChangingToLineChart = chartType === `line` && [`bar`, `table`].includes(this.state.report.displayOptions.chartType);
+        const isChangingFromLineChart = [`bar`, `table`].includes(chartType) && this.state.report.displayOptions.chartType === `line`;
         return isNotTotal && (isChangingToLineChart || isChangingFromLineChart) && this.query(displayOptions);
       })
       .then(() => {
-        const shouldResetSorting = chartType === 'bar' && displayOptions.plotStyle === 'stacked' && this.state.report.sorting.bar.sortBy === 'value';
+        const shouldResetSorting = chartType === `bar` && displayOptions.plotStyle === `stacked` && this.state.report.sorting.bar.sortBy === `value`;
         const sorting = shouldResetSorting ? this.sortConfigFor(this.state.result) : this.state.report.sorting;
         this.updateReport({displayOptions, sorting});
       });
@@ -602,13 +602,13 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
     const queryStartTime = window.performance.now();
     const queryEventProperties = {'cached': !!cachedResult};
 
-    this.trackEvent('Query Start', extend(reportTrackingData, queryEventProperties));
+    this.trackEvent(`Query Start`, extend(reportTrackingData, queryEventProperties));
 
     return this.queries.segmentation.run(cachedResult)
       .then(result => {
         if (!cachedResult) {
           this.queries.segmentationCache.set(query, result, cacheExpiry);
-          queryEventProperties['latency ms'] = Math.round(window.performance.now() - queryStartTime);
+          queryEventProperties[`latency ms`] = Math.round(window.performance.now() - queryStartTime);
         }
 
         this.update({result: result, newCachedData: false, resultLoading: false});
@@ -620,10 +620,10 @@ document.registerElement('irb-app', class IRBApp extends MPApp {
       })
       .catch(err => {
         console.error(err);
-        queryEventProperties['error'] = err;
+        queryEventProperties[`error`] = err;
       })
       .then(() => {
-        this.trackEvent('Query Finish', extend(reportTrackingData, queryEventProperties));
+        this.trackEvent(`Query Finish`, extend(reportTrackingData, queryEventProperties));
       });
   }
 });

@@ -2,15 +2,15 @@
 
 import WebComponent from 'webcomponent';
 
-document.registerElement('date-picker', class extends WebComponent {
+document.registerElement(`date-picker`, class extends WebComponent {
   createdCallback() {
-    this.$el = $('<div>').appendTo(this);
+    this.$el = $(`<div>`).appendTo(this);
   }
 
   attachedCallback() {
     this.$el
       .MPDatepicker()
-      .on('change', () => this.dispatchEvent(new Event('change')));
+      .on(`change`, () => this.dispatchEvent(new Event(`change`)));
   }
 
   get value() {

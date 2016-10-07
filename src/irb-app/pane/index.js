@@ -17,7 +17,7 @@ export class Pane extends Component {
         activePaneIndex: () => this.app.hasStageClause() ? this.app.activeStageClause.paneIndex : 0,
         backButtonHandler: () => {
           window.requestAnimationFrame(() =>{
-            if (this.app.originStageClauseType() === 'filter') {
+            if (this.app.originStageClauseType() === `filter`) {
               this.app.updateStageClause({paneIndex: this.app.activeStageClause - 1});
             } else {
               this.app.update({stageClauses: this.state.stageClauses.slice(0, -1)});
@@ -57,7 +57,7 @@ export class PaneContent extends Component {
   }
 
   isPaneActive() {
-    return this.isAttributeEnabled('is-pane-active');
+    return this.isAttributeEnabled(`is-pane-active`);
   }
 
   get eventChoices() {

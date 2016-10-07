@@ -3,12 +3,12 @@ import { Component } from 'panel';
 import template from './mp-button-input.jade';
 import './mp-button-input.styl';
 
-document.registerElement('mp-button-input', class extends Component {
+document.registerElement(`mp-button-input`, class extends Component {
   get config() {
     return {
       defaultState: {
         active: false,
-        inputValue: '',
+        inputValue: ``,
       },
       helpers: {
         blur: () => this.update({active: false}),
@@ -41,18 +41,18 @@ document.registerElement('mp-button-input', class extends Component {
   }
 
   dispatchChange(options={}) {
-    this.dispatchEvent(new CustomEvent('change', {
+    this.dispatchEvent(new CustomEvent(`change`, {
       detail: Object.assign({value: this.value}, options),
     }));
   }
 
   get inputEl() {
-    return this.querySelector('input');
+    return this.querySelector(`input`);
   }
 
   get value() {
     const inputEl = this.inputEl;
-    return inputEl ? inputEl.value : '';
+    return inputEl ? inputEl.value : ``;
   }
 
   set value(val) {

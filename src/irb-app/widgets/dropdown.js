@@ -6,7 +6,7 @@ import './dropdown.styl';
 export default class Dropdown extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
-    this.app.onClickOutside(this.tagName, 'stopEditingClauseAttrs');
+    this.app.onClickOutside(this.tagName, `stopEditingClauseAttrs`);
   }
 
   get config() {
@@ -25,7 +25,7 @@ export default class Dropdown extends Component {
   }
 
   get choices() {
-    throw 'Not implemented!';
+    throw `Not implemented!`;
   }
 
   formatChoice(choice) {
@@ -33,18 +33,18 @@ export default class Dropdown extends Component {
   }
 
   get isOpen() {
-    throw 'Not implemented!';
+    throw `Not implemented!`;
   }
 
   select() {
-    throw 'Not implemented!';
+    throw `Not implemented!`;
   }
 
   get selected() {
-    throw 'Not implemented!';
+    throw `Not implemented!`;
   }
 
   toggleOpen() {
-    throw 'Not implemented!';
+    throw `Not implemented!`;
   }
 }

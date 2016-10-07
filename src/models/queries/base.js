@@ -48,7 +48,7 @@ export default class BaseQuery {
   }
 
   buildUrl() {
-    return '';
+    return ``;
   }
 
   MPApiQuery() {

@@ -3,7 +3,7 @@ import { extend } from '../../../util';
 
 import template from './event-pane-content.jade';
 
-document.registerElement('event-pane-content', class extends PaneContent {
+document.registerElement(`event-pane-content`, class extends PaneContent {
   get config() {
     return extend(super.config, {
       template,
@@ -11,6 +11,6 @@ document.registerElement('event-pane-content', class extends PaneContent {
   }
 
   get section() {
-    return 'show';
+    return `show`;
   }
 });

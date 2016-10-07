@@ -6,19 +6,19 @@ import './mp-button-input';
 import template from './index.jade';
 import './index.styl';
 
-document.registerElement('irb-header', class extends Component {
+document.registerElement(`irb-header`, class extends Component {
   get config() {
     return {
       helpers: {
         refresh: () => {
           const reportTrackingData = this.state.report.toTrackingData();
           this.app.query({useCache: false});
-          this.app.trackEvent('Refresh Report', reportTrackingData);
+          this.app.trackEvent(`Refresh Report`, reportTrackingData);
         },
         reset: () => {
           const reportTrackingData = this.state.report.toTrackingData();
-          this.app.navigate('', this.app.resetQuery());
-          this.app.trackEvent('Reset Report', reportTrackingData);
+          this.app.navigate(``, this.app.resetQuery());
+          this.app.trackEvent(`Reset Report`, reportTrackingData);
         },
 
         reportListEnabled: () => !!Object.keys(this.state.savedReports).length,
@@ -53,13 +53,13 @@ document.registerElement('irb-header', class extends Component {
 
   downloadJQLQuery(script, filename, scriptParams) {
     const parameters = {
-      script: script.replace(/\r/g, '').replace(/\n/g, '\r\n'),
+      script: script.replace(/\r/g, ``).replace(/\n/g, `\r\n`),
       download_file: `${filename}.csv`, // eslint-disable-line camelcase
       params: scriptParams,
-      format: 'csv',
+      format: `csv`,
     };
 
-    const query = window.MP.api.getQueryOptions('/api/2.0/jql/', parameters, {type: 'POST'});
+    const query = window.MP.api.getQueryOptions(`/api/2.0/jql/`, parameters, {type: `POST`});
     downloadData(query.endpoint, query.queryOptions.data);
   }
 });

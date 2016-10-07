@@ -12,7 +12,7 @@ import {
 import template from './index.jade';
 import './index.styl';
 
-document.registerElement('table-chart', class extends Component {
+document.registerElement(`table-chart`, class extends Component {
   get config() {
     return {
       template,
@@ -28,15 +28,15 @@ document.registerElement('table-chart', class extends Component {
 
       helpers: {
         clickHeader: (headerType, colIdx, colName) => {
-          this.dispatchEvent(new CustomEvent('change', {detail: {
+          this.dispatchEvent(new CustomEvent(`change`, {detail: {
             headerType, colIdx, colName,
           }}));
         },
 
         leftSortArrowClasses: idx => {
-          if (this.sortConfig.sortBy === 'column') {
+          if (this.sortConfig.sortBy === `column`) {
             return [
-              'sort-active',
+              `sort-active`,
               `sort-${this.sortConfig.colSortAttrs[idx].sortOrder}`,
             ];
           } else {
@@ -45,9 +45,9 @@ document.registerElement('table-chart', class extends Component {
         },
 
         rightSortArrowClasses: header => {
-          if (this.sortConfig.sortBy === 'value' && this.sortConfig.sortColumn === header) {
+          if (this.sortConfig.sortBy === `value` && this.sortConfig.sortColumn === header) {
             return [
-              'sort-active',
+              `sort-active`,
               `sort-${this.sortConfig.sortOrder}`,
             ];
           } else {
@@ -59,9 +59,9 @@ document.registerElement('table-chart', class extends Component {
   }
 
   attributeChangedCallback() {
-    let {headers, series, resourceDescription} = this.getJSONAttribute('data');
-    const displayOptions = this.getJSONAttribute('display-options');
-    const sortConfig = this.getJSONAttribute('sorting');
+    let {headers, series, resourceDescription} = this.getJSONAttribute(`data`);
+    const displayOptions = this.getJSONAttribute(`display-options`);
+    const sortConfig = this.getJSONAttribute(`sorting`);
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
     }
@@ -84,7 +84,7 @@ document.registerElement('table-chart', class extends Component {
         columnHeaders.map(header => row[header.value])
       );
     } else {
-      columnHeaders = [{display: resourceDescription, value: 'value'}];
+      columnHeaders = [{display: resourceDescription, value: `value`}];
       columnRows = rowData.map(row => [row.value]);
     }
 
@@ -117,7 +117,7 @@ document.registerElement('table-chart', class extends Component {
       headers = headers.slice(0, -1);
     }
 
-    if (sortConfig.sortBy === 'value') {
+    if (sortConfig.sortBy === `value`) {
       return !!sortConfig.sortColumn;
     } else {
       return sortConfig.colSortAttrs.length === headers.length;
@@ -125,23 +125,23 @@ document.registerElement('table-chart', class extends Component {
   }
 });
 
-document.registerElement('table-manager', class extends WebComponent {
+document.registerElement(`table-manager`, class extends WebComponent {
   attachedCallback() {
     this.scrollHandler = ev => {
       const $target = $(ev.target);
       const scrollX = $target.scrollLeft();
       const scrollY = $target.scrollTop();
 
-      this.$container.toggleClass('scrolled-y', !!scrollY);
+      this.$container.toggleClass(`scrolled-y`, !!scrollY);
 
-      if ($target.hasClass('right-table')) {
-        this.$container.toggleClass('scrolled-x', !!scrollX);
+      if ($target.hasClass(`right-table`)) {
+        this.$container.toggleClass(`scrolled-x`, !!scrollX);
 
         // vertically scroll left table as right table is scrolled
         this.$left.scrollTop(scrollY);
 
         // horizontally scroll fixed header as right table is scrolled
-        this.$rightFixedHeader.css('transform', `translateX(-${scrollX}px)`); //
+        this.$rightFixedHeader.css(`transform`, `translateX(-${scrollX}px)`); //
       }
     };
   }
@@ -153,26 +153,26 @@ document.registerElement('table-manager', class extends WebComponent {
   }
 
   detachedCallback() {
-    this.$left.off('scroll', this.scrollHandler);
-    this.$right.off('scroll', this.scrollHandler);
+    this.$left.off(`scroll`, this.scrollHandler);
+    this.$right.off(`scroll`, this.scrollHandler);
   }
 
   render() {
     this._initialized = true;
     this.$container = $(this).parent();
-    this.$left = this.$container.find('.left-table');
-    this.$right = this.$container.find('.right-table');
-    this.$leftFixedHeader = this.$left.siblings('.fixed-header');
-    this.$rightFixedHeader = this.$right.siblings('.fixed-header');
+    this.$left = this.$container.find(`.left-table`);
+    this.$right = this.$container.find(`.right-table`);
+    this.$leftFixedHeader = this.$left.siblings(`.fixed-header`);
+    this.$rightFixedHeader = this.$right.siblings(`.fixed-header`);
 
-    this.$right.width(this.$container.width() - this.$left.children('table').width());
-    this.$right.on('scroll', this.scrollHandler);
-    this.$left.on('scroll', this.scrollHandler);
+    this.$right.width(this.$container.width() - this.$left.children(`table`).width());
+    this.$right.on(`scroll`, this.scrollHandler);
+    this.$left.on(`scroll`, this.scrollHandler);
 
-    const $leftHeaders = this.$left.find('th');
+    const $leftHeaders = this.$left.find(`th`);
     const $leftFixedHeaders = this.$leftFixedHeader.children();
 
-    const isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+    const isFirefox = navigator.userAgent.toLowerCase().indexOf(`firefox`) > -1;
 
     $leftHeaders.each((i, el) => {
       const adjust = isFirefox ? 2 : 1;
@@ -180,7 +180,7 @@ document.registerElement('table-manager', class extends WebComponent {
       $leftFixedHeaders.eq(i).width(width);
     });
 
-    const $rightHeaders = this.$right.find('th');
+    const $rightHeaders = this.$right.find(`th`);
     const $rightFixedHeaders = this.$rightFixedHeader.children();
 
     $rightHeaders.each((i, el) => {

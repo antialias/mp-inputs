@@ -1,11 +1,11 @@
 import WebComponent from 'webcomponent';
 
-const CHANGE_EVENTS = ['blur', 'change', 'focusout', 'input', 'keypress'];
+const CHANGE_EVENTS = [`blur`, `change`, `focusout`, `input`, `keypress`];
 
-document.registerElement('focus-input', class extends WebComponent {
+document.registerElement(`focus-input`, class extends WebComponent {
   createdCallback() {
-    this.inputEl = document.createElement('input');
-    this.inputEl.type = 'text';
+    this.inputEl = document.createElement(`input`);
+    this.inputEl.type = `text`;
     this.inputEl.value = this.value;
     if (this.placeholder) {
       this.inputEl.placeholder = this.placeholder;
@@ -31,7 +31,7 @@ document.registerElement('focus-input', class extends WebComponent {
   */
 
   attributeChangedCallback() {
-    this.placeholder = this.getAttribute('placeholder');
+    this.placeholder = this.getAttribute(`placeholder`);
     if (this.placeholder) {
       this.inputEl.placeholder = this.placeholder;
     }
@@ -42,7 +42,7 @@ document.registerElement('focus-input', class extends WebComponent {
   }
 
   dispatchChange() {
-    this.dispatchEvent(new CustomEvent('change', {'detail': this.inputEl.value}));
+    this.dispatchEvent(new CustomEvent(`change`, {'detail': this.inputEl.value}));
   }
 
   get value() {

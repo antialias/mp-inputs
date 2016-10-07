@@ -2,7 +2,7 @@ import { isEqual, nestedObjectCumulative, nestedObjectRolling, pick } from '../u
 
 export default class Result {
   constructor(attrs) {
-    Object.assign(this, pick(attrs, ['headers', 'series']));
+    Object.assign(this, pick(attrs, [`headers`, `series`]));
   }
 
   isEqual(result) {
@@ -14,13 +14,13 @@ export default class Result {
     // it to 'line' and 'bar' to display correctly.
     let newSeries = this.series;
 
-    if (options.analysis !== 'logarithmic') {
+    if (options.analysis !== `logarithmic`) {
       // compute transformation
       switch (options.analysis) {
-        case 'cumulative':
+        case `cumulative`:
           newSeries = nestedObjectCumulative(this.series);
           break;
-        case 'rolling':
+        case `rolling`:
           newSeries = nestedObjectRolling(this.series, options.windowSize);
           break;
       }

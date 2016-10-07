@@ -9,7 +9,7 @@ import './index.styl';
 class ControlComponent extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
-    this.app.onClickOutside(this.tagName, 'stopEditingClause');
+    this.app.onClickOutside(this.tagName, `stopEditingClause`);
   }
 
   get config() {
@@ -35,27 +35,27 @@ class ControlComponent extends Component {
   }
 
   get section() {
-    throw 'Not implemented!';
+    throw `Not implemented!`;
   }
 
   get elementClass() {
-    throw 'Not implemented!';
+    throw `Not implemented!`;
   }
 
   get label() {
-    throw 'Not implemented!';
+    throw `Not implemented!`;
   }
 
   get isRemoveable() {
-    throw 'Not implemented!';
+    throw `Not implemented!`;
   }
 
   get isPaneOpen() {
-    throw 'Not implemented!';
+    throw `Not implemented!`;
   }
 
   openPane() {
-    throw 'Not implemented!';
+    throw `Not implemented!`;
   }
 
   updatePosition(ev) {
@@ -65,7 +65,7 @@ class ControlComponent extends Component {
 
 export class AddControl extends ControlComponent {
   get elementClass() {
-    return 'verb';
+    return `verb`;
   }
 
   get isRemoveable() {
@@ -88,7 +88,7 @@ export class EditControl extends ControlComponent {
   }
 
   get elementClass() {
-    return 'noun';
+    return `noun`;
   }
 
   get isRemoveable() {
@@ -100,7 +100,7 @@ export class EditControl extends ControlComponent {
   }
 
   get clauseIndex() {
-    return Number(this.getAttribute('clause-index'));
+    return Number(this.getAttribute(`clause-index`));
   }
 
   openPane() {

@@ -28,12 +28,12 @@ export function countRun(row, start) {
  * Get the max leaf value of a nested object
  */
 export function nestedObjectMax(obj) {
-  if (typeof obj === 'number') { return obj; }
+  if (typeof obj === `number`) { return obj; }
   return Math.max(0, Math.max(...Object.keys(obj).map(key => nestedObjectMax(obj[key]))));
 }
 
 export function stackedNestedObjectMax(obj) {
-  if (Object.values(obj).some(k => typeof k === 'number')) {
+  if (Object.values(obj).some(k => typeof k === `number`)) {
     return Object.values(obj).reduce((a, b) => a + b, 0);
   }
   return Math.max(0, Math.max(...Object.keys(obj).map(key => stackedNestedObjectMax(obj[key]))));
@@ -133,7 +133,7 @@ function sortTableColumns(arr, colSortAttrs) {
   return arr
     .sort((a, b) => {
       [a, b] = [a, b].map(entry => entry[0].value.toLowerCase());
-      return (a > b ? 1 : (a < b ? -1 : 0)) * (colSortAttrs[0].sortOrder === 'desc' ? -1 : 1);
+      return (a > b ? 1 : (a < b ? -1 : 0)) * (colSortAttrs[0].sortOrder === `desc` ? -1 : 1);
     });
 }
 
@@ -155,15 +155,15 @@ export function nestedObjectToTableData(obj, sortConfig) {
   let arr = nestedObjectToArrayWithSums(obj, objDepth);
 
   switch(sortConfig.sortBy) {
-    case 'column':
+    case `column`:
       arr = sortTableColumns(arr, sortConfig.colSortAttrs);
       arr = expandTableHeaderRows(arr, objDepth);
       break;
-    case 'value':
+    case `value`:
       arr = expandTableHeaderRows(arr, objDepth, false);
       arr = arr.sort((a, b) => {
         [a, b] = [a, b].map(entry => entry[entry.length - 1][sortConfig.sortColumn] || 0);
-        return (a > b ? 1 : (a < b ? -1 : 0)) * (sortConfig.sortOrder === 'desc' ? -1 : 1);
+        return (a > b ? 1 : (a < b ? -1 : 0)) * (sortConfig.sortOrder === `desc` ? -1 : 1);
       });
       break;
   }
@@ -235,14 +235,14 @@ function nestedArrayToBarChartData(arr) {
  * // ]
  */
 function flattenNestedObjectToArray(obj) {
-  if (typeof obj === 'number') {
+  if (typeof obj === `number`) {
     return obj;
   } else {
     return Object.keys(obj)
       .map(label => {
         let entry;
         const value = obj[label];
-        if (typeof value === 'object') {
+        if (typeof value === `object`) {
           entry = flattenNestedObjectToArray(value).map(child => ({
             label: label,
             children: [child],
@@ -286,13 +286,13 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
   let arr;
   switch(sortConfig.sortBy) {
 
-    case 'column': {
+    case `column`: {
       const colSortAttrs = sortConfig.colSortAttrs[0];
       arr = Object.keys(obj)
         .map(k => {
           const entry = {label: k};
           const value = obj[k];
-          if (typeof value === 'object') {
+          if (typeof value === `object`) {
             entry.children = nestedObjectToNestedArray(value, Object.assign({}, sortConfig, {
               colSortAttrs: sortConfig.colSortAttrs.slice(1),
             }));
@@ -306,7 +306,7 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
       break;
     }
 
-    case 'value':
+    case `value`:
       arr = flattenNestedObjectToArray(obj)
         .sort(NESTED_ARRAY_SORT_FUNCS.value[sortConfig.sortOrder]);
       break;
@@ -336,7 +336,7 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
  * // ]
  */
 export function nestedObjectToBarChartData(obj, sortConfig) {
-  if (typeof obj === 'object' && Object.keys(obj).length) {
+  if (typeof obj === `object` && Object.keys(obj).length) {
     return nestedArrayToBarChartData(nestedObjectToNestedArray(obj, sortConfig));
   } else {
     return [];

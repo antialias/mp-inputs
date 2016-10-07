@@ -69,28 +69,28 @@ const ROLLING_WINDOWS_BY_UNIT = {
 
 const CHART_OPTIONS = {
   bar: {
-    standard: 'Bar',
-    stacked: 'Stacked bar',
+    standard: `Bar`,
+    stacked: `Stacked bar`,
   },
   line: {
-    standard: 'Line',
-    stacked: 'Stacked line',
+    standard: `Line`,
+    stacked: `Stacked line`,
   },
   table: {
-    standard: 'Table',
+    standard: `Table`,
   },
 };
 
 function reverseSortOrder(order) {
-  return order === 'desc' ? 'asc' : 'desc';
+  return order === `desc` ? `asc` : `desc`;
 }
 
-document.registerElement('irb-result', class extends Component {
+document.registerElement(`irb-result`, class extends Component {
   get config() {
     return {
       helpers: {
         getChartLabel: () => {
-          let chartLabel = ['number of'];
+          let chartLabel = [`number of`];
           const mathTypes = Array.from(new Set(this.state.report.sections.show.clauses.map(clause => clause.math)));
           if (mathTypes && mathTypes.length === 1) {
             chartLabel.unshift(mathTypes[0]);
@@ -98,23 +98,23 @@ document.registerElement('irb-result', class extends Component {
 
           const showValueNames = this.config.helpers.getShowValueNames();
           const headers = this.state.result.headers;
-          if (headers.length === 1 && headers[0] !== '$event' && showValueNames.length === 1) {
+          if (headers.length === 1 && headers[0] !== `$event` && showValueNames.length === 1) {
             chartLabel.push(showValueNames[0]);
           }
 
-          return capitalize(chartLabel.join(' '));
+          return capitalize(chartLabel.join(` `));
         },
         getDisplayOptions: () => extend(
-          pick(this.state.report.displayOptions, ['analysis', 'plotStyle', 'value']),
+          pick(this.state.report.displayOptions, [`analysis`, `plotStyle`, `value`]),
           {timeUnit: this.state.report.sections.time.clauses[0].unit}
         ),
         getFunctionLabel: () => {
           switch (this.config.helpers.getDisplayOptions().analysis) {
-            case 'logarithmic':
-              return '(Logarithmic - base 10)';
-            case 'cumulative':
-              return '(Cumulative)';
-            case 'rolling': {
+            case `logarithmic`:
+              return `(Logarithmic - base 10)`;
+            case `cumulative`:
+              return `(Cumulative)`;
+            case `rolling`: {
               const unit = this.state.report.sections.time.clauses[0].unit;
               return `(Rolling - ${ROLLING_WINDOWS_BY_UNIT[unit]} ${unit})s`;
             }
@@ -131,10 +131,10 @@ document.registerElement('irb-result', class extends Component {
           const groupClauses = this.state.report.sections.group.clauses;
           let shouldShow = false;
 
-          if (chartName.includes('bar')) {
-            shouldShow = groupClauses.length > 0 || (chartName === 'stacked bar' && showClauses.length > 1);
-          } else if (chartName.includes('line')) {
-            shouldShow = groupClauses.length > 0 || showClauses.length > 1 || (chartName === 'line' && showClauses[0].value.name === '$top_events');
+          if (chartName.includes(`bar`)) {
+            shouldShow = groupClauses.length > 0 || (chartName === `stacked bar` && showClauses.length > 1);
+          } else if (chartName.includes(`line`)) {
+            shouldShow = groupClauses.length > 0 || showClauses.length > 1 || (chartName === `line` && showClauses[0].value.name === `$top_events`);
           }
 
           return shouldShow;
@@ -144,7 +144,7 @@ document.registerElement('irb-result', class extends Component {
           const reportTrackingData = this.state.report.toTrackingData();
           this.app.query();
           this.app.trackEvent(
-            'Refresh Report',
+            `Refresh Report`,
             extend(reportTrackingData, {'toast': true})
           );
         },
@@ -153,13 +153,13 @@ document.registerElement('irb-result', class extends Component {
             analysis: this.state.report.displayOptions.analysis,
             windowSize: ROLLING_WINDOWS_BY_UNIT[this.state.report.sections.time.clauses[0].unit],
           });
-          const isFlattenedData = this.state.report.displayOptions.chartType === 'line';
+          const isFlattenedData = this.state.report.displayOptions.chartType === `line`;
           if (this.config.helpers.showLegend()) {
             const legend = this.state.report.legend;
             legend.buildColorMap();
             result.series = filterObject(result.series, (value, depth, parentKeys) => {
               if (isFlattenedData) {
-                return depth === 2 ? legend.data[0].flattenedData[parentKeys.concat(value).join(' ')] : true;
+                return depth === 2 ? legend.data[0].flattenedData[parentKeys.concat(value).join(` `)] : true;
               } else {
                 return depth > 1 ? legend.data[depth - 2].seriesData[value] : true;
               }
@@ -174,15 +174,15 @@ document.registerElement('irb-result', class extends Component {
               const barSort = this.state.report.sorting.bar;
               const colIdx = ev.detail.colIdx;
               switch(ev.detail.type) {
-                case 'axisSort':
-                  barSort.sortBy = 'value';
+                case `axisSort`:
+                  barSort.sortBy = `value`;
                   barSort.sortOrder = ev.detail.sortOrder;
                   break;
-                case 'colSort':
-                  barSort.sortBy = 'column';
+                case `colSort`:
+                  barSort.sortBy = `column`;
                   barSort.colSortAttrs = this.app.sortConfigFor(this.state.result, this.state.report.sorting).bar.colSortAttrs;
                   barSort.colSortAttrs[colIdx] = pick(ev.detail, [
-                    'sortBy', 'sortOrder',
+                    `sortBy`, `sortOrder`,
                   ]);
                   break;
               }
@@ -190,11 +190,11 @@ document.registerElement('irb-result', class extends Component {
               this.trackSort(reportTrackingData, ev.detail.type, barSort, colIdx);
             } else if (ev.detail.axis && ev.detail.maxValueText) {
               const reportTrackingData = this.state.report.toTrackingData();
-              const newValue = this.state.report.displayOptions.value === 'absolute' ? 'relative' : 'absolute';
+              const newValue = this.state.report.displayOptions.value === `absolute` ? `relative` : `absolute`;
               this.state.report.displayOptions.value = newValue;
               this.app.updateReport();
               this.app.trackEvent(
-                'Chart Options - Changed Value Display',
+                `Chart Options - Changed Value Display`,
                 extend(reportTrackingData, {
                   'from bar chart toggle': true,
                   'new analysis type': newValue,
@@ -208,8 +208,8 @@ document.registerElement('irb-result', class extends Component {
           const {headerType, colIdx, colName} = ev.detail;
           const sortConfig = this.state.report.sorting.table;
           switch(headerType) {
-            case 'left':
-              if (sortConfig.sortBy === 'column') {
+            case `left`:
+              if (sortConfig.sortBy === `column`) {
                 // already sorting by group label
                 const col = sortConfig.colSortAttrs[colIdx];
                 col.sortOrder = reverseSortOrder(col.sortOrder);
@@ -218,14 +218,14 @@ document.registerElement('irb-result', class extends Component {
                 this.state.report.sorting.table = this.app.sortConfigFor(this.state.result).table;
               }
               break;
-            case 'right':
-              if (sortConfig.sortBy === 'value' && sortConfig.sortColumn === colName) {
+            case `right`:
+              if (sortConfig.sortBy === `value` && sortConfig.sortColumn === colName) {
                 // already sorting by this column value
                 sortConfig.sortOrder = reverseSortOrder(sortConfig.sortOrder);
               } else {
-                sortConfig.sortBy = 'value';
+                sortConfig.sortBy = `value`;
                 sortConfig.sortColumn = colName;
-                sortConfig.sortOrder = 'desc';
+                sortConfig.sortOrder = `desc`;
               }
               break;
           }
@@ -252,21 +252,21 @@ document.registerElement('irb-result', class extends Component {
   trackSort(reportProperties, group, sortConfig, colIdx) {
     const eventProperties = {};
     switch (group) {
-      case 'colSort':
-      case 'left':
-        eventProperties['sort by'] = sortConfig.colSortAttrs[colIdx].sortBy;
-        eventProperties['sort order'] = sortConfig.colSortAttrs[colIdx].sortOrder;
-        eventProperties['sort group'] = sortConfig.sortBy;
-        eventProperties['sort column index'] = colIdx;
+      case `colSort`:
+      case `left`:
+        eventProperties[`sort by`] = sortConfig.colSortAttrs[colIdx].sortBy;
+        eventProperties[`sort order`] = sortConfig.colSortAttrs[colIdx].sortOrder;
+        eventProperties[`sort group`] = sortConfig.sortBy;
+        eventProperties[`sort column index`] = colIdx;
         break;
-      case 'axisSort':
-      case 'right':
-        eventProperties['sort by'] = sortConfig.sortBy;
-        eventProperties['sort order'] = sortConfig.sortOrder;
-        eventProperties['sort group'] = 'axis';
+      case `axisSort`:
+      case `right`:
+        eventProperties[`sort by`] = sortConfig.sortBy;
+        eventProperties[`sort order`] = sortConfig.sortOrder;
+        eventProperties[`sort group`] = `axis`;
         break;
     }
-    this.app.trackEvent('Chart Options - Sort', extend(reportProperties, eventProperties));
+    this.app.trackEvent(`Chart Options - Sort`, extend(reportProperties, eventProperties));
   }
 
   isAnalysisEnabled(analysis, chartName=this.selectedChartName()) {
@@ -287,8 +287,8 @@ document.registerElement('irb-result', class extends Component {
     const newChartName = this.formattedChartName(options.chartType, options.plotStyle);
 
     this.app.updateDisplayOptions(extend(options, {
-      analysis: this.isAnalysisEnabled(options.analysis, newChartName) ? options.analysis : 'linear',
-      value: this.isValueToggleEnabled(newChartName) ? options.value : 'absolute',
+      analysis: this.isAnalysisEnabled(options.analysis, newChartName) ? options.analysis : `linear`,
+      value: this.isValueToggleEnabled(newChartName) ? options.value : `absolute`,
     }));
   }
 });

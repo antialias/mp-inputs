@@ -18,25 +18,25 @@ import './index.styl';
 export class BuilderPane extends Pane {
   get eventPaneContent() {
     return {
-      tag: 'event-pane-content',
+      tag: `event-pane-content`,
       constants: {
-        header: 'Show',
+        header: `Show`,
       },
     };
   }
 
   get filterPropertyValuePaneContent() {
     return {
-      tag: 'filter-property-value-pane-content',
+      tag: `filter-property-value-pane-content`,
       constants: {
         search: false,
-        commitLabel: 'Update',
+        commitLabel: `Update`,
       },
       helpers: {
         commitHandler: () => this.app.commitStageClause(),
         getHeader: () => {
           const clause = this.app.activeStageClause;
-          return clause && clause.value ? renameProperty(clause.value) : '';
+          return clause && clause.value ? renameProperty(clause.value) : ``;
         },
       },
     };
@@ -44,24 +44,24 @@ export class BuilderPane extends Pane {
 
   get groupPropertyPaneContent() {
     return {
-      tag: 'group-property-pane-content',
+      tag: `group-property-pane-content`,
       constants: {
-        header: 'Properties',
+        header: `Properties`,
       },
     };
   }
 
   get showPaneContent() {
     return {
-      tag: 'show-pane-content',
+      tag: `show-pane-content`,
       constants: {
-        header: 'Show',
+        header: `Show`,
       },
     };
   }
 }
 
-document.registerElement('operator-dropdown', class extends Dropdown {
+document.registerElement(`operator-dropdown`, class extends Dropdown {
   get choices() {
     const clause = this.app.activeStageClause;
     return clause ? FilterClause.FILTER_OPERATORS[clause.filterType] : [];
@@ -78,7 +78,7 @@ document.registerElement('operator-dropdown', class extends Dropdown {
   toggleOpen() {
     const clause = this.app.activeStageClause;
     this.app.updateStageClause({
-      editing: clause && clause.isEditingFilterOperator ? null : 'filterOperator',
+      editing: clause && clause.isEditingFilterOperator ? null : `filterOperator`,
     });
   }
 
@@ -92,7 +92,7 @@ document.registerElement('operator-dropdown', class extends Dropdown {
   }
 });
 
-document.registerElement('date-unit-dropdown', class extends Dropdown {
+document.registerElement(`date-unit-dropdown`, class extends Dropdown {
   get config() {
     return extend(super.config, {
       helpers: extend(super.config.helpers, {
@@ -116,7 +116,7 @@ document.registerElement('date-unit-dropdown', class extends Dropdown {
   toggleOpen() {
     const clause = this.app.activeStageClause;
     this.app.updateStageClause({
-      editing: clause && clause.isEditingFilterDateUnit ? null : 'filterDateUnit',
+      editing: clause && clause.isEditingFilterDateUnit ? null : `filterDateUnit`,
     });
   }
 
@@ -128,7 +128,7 @@ document.registerElement('date-unit-dropdown', class extends Dropdown {
   }
 });
 
-document.registerElement('operator-toggle', class extends Toggle {
+document.registerElement(`operator-toggle`, class extends Toggle {
   get choices() {
     const clause = this.app.activeStageClause;
     return clause ? FilterClause.FILTER_OPERATORS[clause.filterType] : [];

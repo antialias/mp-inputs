@@ -15,7 +15,7 @@ import './index.styl';
 
 const LOGARITHMIC_CHART_ZERO_REMAPPING = 0.6;
 
-document.registerElement('line-chart', class extends Component {
+document.registerElement(`line-chart`, class extends Component {
   get config() {
     return {
       template,
@@ -28,8 +28,8 @@ document.registerElement('line-chart', class extends Component {
   }
 
   attributeChangedCallback() {
-    let { headers, series } = JSON.parse(this.getAttribute('data')) || {};
-    const chartLabel = JSON.parse(this.getAttribute('chart-label'));
+    let { headers, series } = JSON.parse(this.getAttribute(`data`)) || {};
+    const chartLabel = JSON.parse(this.getAttribute(`chart-label`));
 
     if (headers && series) {
       this.update({
@@ -39,29 +39,29 @@ document.registerElement('line-chart', class extends Component {
         data: util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
           [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
         )),
-        displayOptions: JSON.parse(this.getAttribute('display-options')),
+        displayOptions: JSON.parse(this.getAttribute(`display-options`)),
       });
     }
   }
 
   formatHeader(parts, headers) {
-    if (headers[0] === '$events') {
+    if (headers[0] === `$events`) {
       parts = [util.renameEvent(parts[0]), ...parts.slice(0, -1).map(util.renameProperty)];
     } else {
       parts = parts.map(util.renameProperty);
     }
-    return parts.join(' / ');
+    return parts.join(` / `);
   }
 });
 
-document.registerElement('mp-line-chart', class extends WebComponent {
+document.registerElement(`mp-line-chart`, class extends WebComponent {
   attachedCallback() {
     this.renderMPChart();
   }
 
   attributeChangedCallback() {
-    this._data = JSON.parse(this.getAttribute('data') || '{}');
-    this._displayOptions = JSON.parse(this.getAttribute('display-options') || '{}');
+    this._data = JSON.parse(this.getAttribute(`data`) || `{}`);
+    this._displayOptions = JSON.parse(this.getAttribute(`display-options`) || `{}`);
 
     this.renderMPChart();
   }
@@ -69,12 +69,12 @@ document.registerElement('mp-line-chart', class extends WebComponent {
   tooltipFormatter() {
     const timeUnit = this._displayOptions.timeUnit;
     const timeFormatting = {
-      'hour': 'MMM D[,] ha',
-      'day': 'MMM D',
-      'week': 'MMM D',
-      'month': 'MMM YYYY',
-      'quarter': '[Q]Q YYYY',
-      'year': 'YYYY',
+      'hour': `MMM D[,] ha`,
+      'day': `MMM D`,
+      'week': `MMM D`,
+      'month': `MMM YYYY`,
+      'quarter': `[Q]Q YYYY`,
+      'year': `YYYY`,
     };
     return function() {
       return `
@@ -84,7 +84,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
             <span class="date">${moment(this.x).format(timeFormatting[timeUnit])}: </span>
             <span class="count">${this.y}</span>
           </div>
-          ${this.percentage ? `<div class="percent">${util.formatPercent(this.percentage * .01)}</div>` : ''}
+          ${this.percentage ? `<div class="percent">${util.formatPercent(this.percentage * .01)}</div>` : ``}
         </div>
       `;
     };
@@ -108,7 +108,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
         marginLeft: null,
         spacingBottom: 30,
         spacingLeft: 28,
-        type: 'line',
+        type: `line`,
       },
       colors: [
         commonCSS.segmentColor1,
@@ -143,7 +143,7 @@ document.registerElement('mp-line-chart', class extends WebComponent {
               enabled: true,
             },
             lineWidth: 2,
-            symbol: 'circle',
+            symbol: `circle`,
           },
           shadow: false,
           stacking: null,
@@ -163,20 +163,20 @@ document.registerElement('mp-line-chart', class extends WebComponent {
       }),
     };
 
-    if (displayOptions.plotStyle === 'stacked') {
-      highchartsOptions.plotOptions.series.stacking = 'normal';
+    if (displayOptions.plotStyle === `stacked`) {
+      highchartsOptions.plotOptions.series.stacking = `normal`;
       highchartsOptions.plotOptions.series.fillOpacity = 0.2;
-      highchartsOptions.chart.type = 'area';
-      if (displayOptions.value === 'relative') {
-        highchartsOptions.plotOptions.series.stacking = 'percent';
+      highchartsOptions.chart.type = `area`;
+      if (displayOptions.value === `relative`) {
+        highchartsOptions.plotOptions.series.stacking = `percent`;
       }
     }
-    if (displayOptions.analysis === 'logarithmic') {
-      highchartsOptions.yAxis.type = 'logarithmic';
+    if (displayOptions.analysis === `logarithmic`) {
+      highchartsOptions.yAxis.type = `logarithmic`;
       highchartsOptions.yAxis.min = LOGARITHMIC_CHART_ZERO_REMAPPING;
     }
     return {
-      chartType: 'line',
+      chartType: `line`,
       highchartsOptions,
       lineLimit: false,
       MPstyling: false,
@@ -188,9 +188,9 @@ document.registerElement('mp-line-chart', class extends WebComponent {
       this.$el.remove();
     }
 
-    this.$el = $('<div>').appendTo(this);
+    this.$el = $(`<div>`).appendTo(this);
     this.$el
       .MPChart(this.createChartOptions())
-      .MPChart('setData', this._data);
+      .MPChart(`setData`, this._data);
   }
 });

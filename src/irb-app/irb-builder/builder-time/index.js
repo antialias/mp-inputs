@@ -14,14 +14,14 @@ import timePaneContentTemplate from './time-pane-content.jade';
 import customDatePaneContentTemplate from './custom-date-pane-content.jade';
 import './index.styl';
 
-document.registerElement('builder-time', class extends Component {
+document.registerElement(`builder-time`, class extends Component {
   get config() {
     return {template};
   }
 });
 
 // controls
-document.registerElement('time-edit-control', class extends EditControl {
+document.registerElement(`time-edit-control`, class extends EditControl {
   get label() {
     const clause = this.state.report.sections.time.clauses[0];
     return clause.range ? clause.range : `${clause.value[0]} - ${clause.value[1]}`;
@@ -32,12 +32,12 @@ document.registerElement('time-edit-control', class extends EditControl {
   }
 
   get section() {
-    return 'time';
+    return `time`;
   }
 });
 
 // dropdown content
-document.registerElement('time-pane', class extends Pane {
+document.registerElement(`time-pane`, class extends Pane {
   get config() {
     return extend(super.config, {
       helpers: extend(super.config.helpers, {
@@ -53,39 +53,39 @@ document.registerElement('time-pane', class extends Pane {
 
   get constants() {
     return extend(super.constants, {
-      header: 'Time',
+      header: `Time`,
       search: false,
     });
   }
 
   get section() {
-    return 'time';
+    return `time`;
   }
 
   get subpanes() {
     return [
       {
-        tag: 'time-pane-content',
+        tag: `time-pane-content`,
       },
       {
-        tag: 'custom-date-pane-content',
+        tag: `custom-date-pane-content`,
         constants: {
-          commitLabel: 'Update',
-          header: 'Custom date range',
+          commitLabel: `Update`,
+          header: `Custom date range`,
         },
       },
     ];
   }
 });
 
-document.registerElement('time-pane-content', class extends PaneContent {
+document.registerElement(`time-pane-content`, class extends PaneContent {
   get config() {
     return extend(super.config, {
       template: timePaneContentTemplate,
 
       helpers: extend(super.config.helpers, {
         isRangeSelected: range => {
-          const selectedRange = this.config.helpers.getActiveClauseProperty('range');
+          const selectedRange = this.config.helpers.getActiveClauseProperty(`range`);
           return range === selectedRange || (!selectedRange && range === this.constants.customRange);
         },
         selectTimeRange: range => {
@@ -110,11 +110,11 @@ document.registerElement('time-pane-content', class extends PaneContent {
   }
 
   get section() {
-    return 'time';
+    return `time`;
   }
 });
 
-document.registerElement('custom-date-pane-content', class extends PaneContent {
+document.registerElement(`custom-date-pane-content`, class extends PaneContent {
   get config() {
     return extend(super.config, {
       template: customDatePaneContentTemplate,
@@ -123,8 +123,8 @@ document.registerElement('custom-date-pane-content', class extends PaneContent {
         selectUnit: unit => this.app.updateStageClause({unit, paneIndex: 1}),
         selectDateRange: ev => {
           if (ev.detail) {
-            let unit = this.config.helpers.getActiveClauseProperty('unit');
-            const currentVal = this.config.helpers.getActiveClauseProperty('value');
+            let unit = this.config.helpers.getActiveClauseProperty(`unit`);
+            const currentVal = this.config.helpers.getActiveClauseProperty(`value`);
             if (
               !Array.isArray(currentVal) ||
               currentVal[0] !== ev.detail[0] ||
@@ -132,15 +132,15 @@ document.registerElement('custom-date-pane-content', class extends PaneContent {
             ) {
               // auto-adjust unit when changing date range
               const [start, end] = ev.detail.map(ds => moment.utc(ds));
-              const days = end.diff(start, 'days') + 1;
+              const days = end.diff(start, `days`) + 1;
               if (days <= 4) {
-                unit = 'hour';
+                unit = `hour`;
               } else if (days <= 31) {
-                unit = 'day';
+                unit = `day`;
               } else if (days <= 183) {
-                unit = 'week';
+                unit = `week`;
               } else {
-                unit = 'month';
+                unit = `month`;
               }
             }
 
@@ -153,11 +153,11 @@ document.registerElement('custom-date-pane-content', class extends PaneContent {
 
   get constants() {
     return extend(super.constants, {
-      unitChoices: TimeClause.UNIT_CHOICES.filter(choice => choice !== 'year'),
+      unitChoices: TimeClause.UNIT_CHOICES.filter(choice => choice !== `year`),
     });
   }
 
   get section() {
-    return 'time';
+    return `time`;
   }
 });

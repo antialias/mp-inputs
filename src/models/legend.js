@@ -10,15 +10,15 @@ import {
 
 export default class Legend {
   constructor(attrs) {
-    Object.assign(this, pick(attrs, ['data']));
+    Object.assign(this, pick(attrs, [`data`]));
   }
 
   isAnyDisplayExpanded() {
-    return this.seriesShowing.some(displaySetting => displaySetting === 'expanded');
+    return this.seriesShowing.some(displaySetting => displaySetting === `expanded`);
   }
 
   _seriesDisplaySetting(series) {
-    return Object.keys(series.seriesData).length > 20 ? 'minimized' : 'all';
+    return Object.keys(series.seriesData).length > 20 ? `minimized` : `all`;
   }
 
   _buildColorMap(mapName, dataKey, numColors) {
@@ -44,8 +44,8 @@ export default class Legend {
           seriesDataSortedKeys: [],
         });
       } else {
-        this._buildColorMap('_colorMap',  this.dataKeyForSeriesData, numColors);
-        this._buildColorMap('_flattenedColorMap', this.dataKeyForFlatData, numColors);
+        this._buildColorMap(`_colorMap`,  this.dataKeyForSeriesData, numColors);
+        this._buildColorMap(`_flattenedColorMap`, this.dataKeyForFlatData, numColors);
       }
     }
     return this;
@@ -61,20 +61,20 @@ export default class Legend {
   }
 
   get dataKeyForSeriesData() {
-    return 'seriesData';
+    return `seriesData`;
   }
 
   get dataKeyForFlatData() {
-    return 'flattenedData';
+    return `flattenedData`;
   }
 
   getColorForSeries(series, flattenedData=false) {
-    return this[flattenedData ? '_flattenedColorMap' : '_colorMap'][series];
+    return this[flattenedData ? `_flattenedColorMap` : `_colorMap`][series];
   }
 
   get seriesShowing() {
     if (!this._seriesShowing) {
-      this._seriesShowing = this.data.map((series, idx) => idx === 0 ? this._seriesDisplaySetting(series) : 'hidden');
+      this._seriesShowing = this.data.map((series, idx) => idx === 0 ? this._seriesDisplaySetting(series) : `hidden`);
     }
     return this._seriesShowing;
   }
@@ -89,26 +89,26 @@ export default class Legend {
   }
 
   showAllSeries() {
-    this.seriesShowing = this.seriesShowing.map(() => 'all');
+    this.seriesShowing = this.seriesShowing.map(() => `all`);
     return this;
   }
 
   isSeriesShowing(seriesIdx) {
-    return this.seriesShowing[seriesIdx] !== 'hidden';
+    return this.seriesShowing[seriesIdx] !== `hidden`;
   }
 
   toggleShowSeries(seriesIdx) {
     if (this.seriesShowing && this.seriesShowing.length >= seriesIdx) {
-      this.seriesShowing[seriesIdx] = this.isSeriesShowing(seriesIdx) ? 'hidden' : this._seriesDisplaySetting(this.data[seriesIdx]);
+      this.seriesShowing[seriesIdx] = this.isSeriesShowing(seriesIdx) ? `hidden` : this._seriesDisplaySetting(this.data[seriesIdx]);
     }
     return this;
   }
 
   toggleSeriesDisplaySetting(seriesIdx) {
-    if (['minimized', 'expanded'].includes(this.seriesShowing[seriesIdx])) {
+    if ([`minimized`, `expanded`].includes(this.seriesShowing[seriesIdx])) {
       const oldDisplaySetting = this.seriesShowing[seriesIdx];
-      this.seriesShowing = this.seriesShowing.map(displaySetting => displaySetting === 'expanded' ? 'minimized' : displaySetting);
-      this.seriesShowing[seriesIdx] = oldDisplaySetting === 'minimized' ? 'expanded' : 'minimized';
+      this.seriesShowing = this.seriesShowing.map(displaySetting => displaySetting === `expanded` ? `minimized` : displaySetting);
+      this.seriesShowing[seriesIdx] = oldDisplaySetting === `minimized` ? `expanded` : `minimized`;
     }
     return this;
   }
@@ -125,7 +125,7 @@ export default class Legend {
 
   _sortAndLimitSeries(series, defaultValue, showLimit) {
     const sortedKeys = sorted(Object.keys(series), {
-      order: 'desc',
+      order: `desc`,
       transform: item => series[item],
     });
     const defaultStates = sortedKeys.reduce((obj, key, idx) => {

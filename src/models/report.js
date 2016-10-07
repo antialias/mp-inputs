@@ -9,20 +9,20 @@ export default class Report {
   constructor(attrs) {
     Object.assign(this, pick(attrs, [
       // metadata
-      'id',
-      'title',
-      'user',
+      `id`,
+      `title`,
+      `user`,
 
       // visualization params
-      'displayOptions',
-      'sections',
-      'legend',
-      'sorting',
+      `displayOptions`,
+      `sections`,
+      `legend`,
+      `sorting`,
     ]));
 
     if (attrs.modified) {
       this.modified = moment.utc(attrs.modified).local();
-      this.modifiedStr = this.modified.format('MMM Do, YYYY');
+      this.modifiedStr = this.modified.format(`MMM Do, YYYY`);
     }
   }
 
@@ -37,10 +37,10 @@ export default class Report {
     const serialized = extend({
       sections: this.sections.serialize(),
     }, pick(this, [
-      'displayOptions',
-      'legend',
-      'sorting',
-      'title',
+      `displayOptions`,
+      `legend`,
+      `sorting`,
+      `title`,
     ]));
     if (this.id) {
       serialized.id = this.id;
@@ -50,7 +50,7 @@ export default class Report {
 
   // MP bookmarks
   static fromBookmarkData(bookmark) {
-    return Report.deserialize(extend(pick(bookmark, ['id', 'user']), JSON.parse(bookmark.params)));
+    return Report.deserialize(extend(pick(bookmark, [`id`, `user`]), JSON.parse(bookmark.params)));
   }
 
   toBookmarkData() {
@@ -63,14 +63,14 @@ export default class Report {
 
   _listOfSectionValues(section) {
     const reportSection = this.sections[section];
-    return reportSection && reportSection.clauses.map(clause => clause.TYPE === 'show' ? clause.value.name : clause.value);
+    return reportSection && reportSection.clauses.map(clause => clause.TYPE === `show` ? clause.value.name : clause.value);
   }
 
   toTrackingData() {
-    const compareClauses = this._listOfSectionValues('show');
-    const groupClauses = this._listOfSectionValues('group');
-    const filterClauses = this._listOfSectionValues('filter');
-    const timeClause = this.sections['time'].clauses[0];
+    const compareClauses = this._listOfSectionValues(`show`);
+    const groupClauses = this._listOfSectionValues(`group`);
+    const filterClauses = this._listOfSectionValues(`filter`);
+    const timeClause = this.sections[`time`].clauses[0];
 
     const trackingData = {
       'report info: title': this.title,
@@ -88,7 +88,7 @@ export default class Report {
       'report info: time value': timeClause.value,
     };
     if (this.id) {
-      trackingData['report id'] = this.id;
+      trackingData[`report id`] = this.id;
     }
     return trackingData;
   }

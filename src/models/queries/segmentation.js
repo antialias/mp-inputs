@@ -19,7 +19,7 @@ export const MS_BY_UNIT = {
 };
 
 export function toArbSelectorPropertyToken(resourceType, property) {
-  return `${resourceType === 'events' ? 'properties' : 'user'}["${property}"]`;
+  return `${resourceType === `events` ? `properties` : `user`}["${property}"]`;
 }
 
 function isFilterValid(filter) {
@@ -27,9 +27,9 @@ function isFilterValid(filter) {
     return false;
   }
 
-  const isSetOrBoolean = ['is set', 'is not set', 'is true', 'is false'].includes(filter.filterOperator);
-  const isBetween = ['is between', 'was between'].includes(filter.filterOperator);
-  const isDaysAgo = filter.filterType === 'datetime' && ['was more than', 'was less than'].includes(filter.filterOperator);
+  const isSetOrBoolean = [`is set`, `is not set`, `is true`, `is false`].includes(filter.filterOperator);
+  const isBetween = [`is between`, `was between`].includes(filter.filterOperator);
+  const isDaysAgo = filter.filterType === `datetime` && [`was more than`, `was less than`].includes(filter.filterOperator);
 
   // filter must have a value UNLESS it is set or boolean
   if (!isSetOrBoolean && !filter.filterValue) {
@@ -63,37 +63,37 @@ function filterToArbSelectorString(filter) {
 
   property = `(${toArbSelectorPropertyToken(filter.resourceType, property)})`;
 
-  if (typeof value === 'string') {
+  if (typeof value === `string`) {
     value = `"${value}"`;
   } else if (Array.isArray(value)) {
-    value = value.map(val => typeof val === 'string' ? `"${val}"` : val);
+    value = value.map(val => typeof val === `string` ? `"${val}"` : val);
   }
 
   switch (type) {
-    case 'string':
-      if (operator === 'equals' || operator === 'does not equal') {
+    case `string`:
+      if (operator === `equals` || operator === `does not equal`) {
         if (!Array.isArray(value)) {
           value = [value];
         }
       }
       switch (operator) {
-        case 'equals'           : return '(' + value.map(val => `(${property} == ${val})`).join(' or ') + ')';
-        case 'does not equal'   : return '(' + value.map(val => `(${property} != ${val})`).join(' and ') + ')';
-        case 'contains'         : return `(${value} in ${property})`;
-        case 'does not contain' : return `(not ${value} in ${property})`;
-        case 'is set'           : return `(defined ${property})`;
-        case 'is not set'       : return `(not defined ${property})`;
+        case `equals`           : return `(` + value.map(val => `(${property} == ${val})`).join(` or `) + `)`;
+        case `does not equal`   : return `(` + value.map(val => `(${property} != ${val})`).join(` and `) + `)`;
+        case `contains`         : return `(${value} in ${property})`;
+        case `does not contain` : return `(not ${value} in ${property})`;
+        case `is set`           : return `(defined ${property})`;
+        case `is not set`       : return `(not defined ${property})`;
       }
       break;
-    case 'number':
+    case `number`:
       switch (operator) {
-        case 'is between'      : return `((${property} > ${value[0]}) and (${property} < ${value[1]}))`;
-        case 'is equal to'     : return `(${property} == ${value})`;
-        case 'is less than'    : return `(${property} < ${value})`;
-        case 'is greater than' : return `(${property} > ${value})`;
+        case `is between`      : return `((${property} > ${value[0]}) and (${property} < ${value[1]}))`;
+        case `is equal to`     : return `(${property} == ${value})`;
+        case `is less than`    : return `(${property} < ${value})`;
+        case `is greater than` : return `(${property} > ${value})`;
       }
       break;
-    case 'datetime': {
+    case `datetime`: {
       const unitMs = MS_BY_UNIT[dateUnit];
 
       const between = (from, to) => {
@@ -104,23 +104,23 @@ function filterToArbSelectorString(filter) {
       };
 
       switch (operator) {
-        case 'was less than': return `(${property} < datetime(${new Date().getTime() - (value * unitMs)}))`;
-        case 'was more than': return `(${property} > datetime(${new Date().getTime() - (value * unitMs)}))`;
-        case 'was on': return between(new Date(value), new Date(value));
-        case 'was between': return between(new Date(value[0]), new Date(value[1]));
+        case `was less than`: return `(${property} < datetime(${new Date().getTime() - (value * unitMs)}))`;
+        case `was more than`: return `(${property} > datetime(${new Date().getTime() - (value * unitMs)}))`;
+        case `was on`: return between(new Date(value), new Date(value));
+        case `was between`: return between(new Date(value[0]), new Date(value[1]));
       }
       break;
     }
-    case 'boolean':
+    case `boolean`:
       switch (operator) {
-        case 'is true'  : return `(boolean(${property}) == true)`;
-        case 'is false' : return `(boolean(${property}) == false)`;
+        case `is true`  : return `(boolean(${property}) == true)`;
+        case `is false` : return `(boolean(${property}) == false)`;
       }
       break;
-    case 'list':
+    case `list`:
       switch (operator) {
-        case 'contains'         : return `(${value} in list(${property}))`;
-        case 'does not contain' : return `(not ${value} in list(${property}))`;
+        case `contains`         : return `(${value} in list(${property}))`;
+        case `does not contain` : return `(not ${value} in list(${property}))`;
       }
       break;
   }
@@ -164,11 +164,11 @@ class JQLQuery {
     this.type = showClause.math;
 
     this.unit = state.report.sections.time.clauses[0].unit;
-    if (['min', 'max', 'unique', 'average', 'median'].includes(this.type) && this.chartType !== 'line') {
-      this.unit = 'all';
+    if ([`min`, `max`, `unique`, `average`, `median`].includes(this.type) && this.chartType !== `line`) {
+      this.unit = `all`;
     }
 
-    this.property = (showClause.property && pick(showClause.property, ['name', 'resourceType'])) || null;
+    this.property = (showClause.property && pick(showClause.property, [`name`, `resourceType`])) || null;
 
     this.displayNames = {};
   }
@@ -213,7 +213,7 @@ class JQLQuery {
           // merge nested CE's selectors with this one's
           let nestedSelectors = this.customEventToSelectors(nestedCE)
             .map(nestedSelector => extend(nestedSelector, {
-              selector: [nestedSelector.selector, selector.selector].filter(Boolean).join(' and '),
+              selector: [nestedSelector.selector, selector.selector].filter(Boolean).join(` and `),
             }));
           currentSelectors = currentSelectors.concat(nestedSelectors);
         }
@@ -243,17 +243,17 @@ export default class SegmentationQuery extends BaseQuery {
 
     // fire one query per show clause
     let jqlQueries = sections.show.clauses.map(
-      showClause => new JQLQuery(showClause, state, extend(options, pick(this, ['customEvents'])))
+      showClause => new JQLQuery(showClause, state, extend(options, pick(this, [`customEvents`])))
     );
 
     // data global to all JQL queries.
-    const segments = sections.group.clauses.map(clause => pick(clause, ['value', 'resourceType', 'filterType']));
+    const segments = sections.group.clauses.map(clause => pick(clause, [`value`, `resourceType`, `filterType`]));
 
     const filterArbSelectors = sections.filter.clauses
       .map(clause => clause.attrs)
       .filter(filter => isFilterValid(filter))
       .map(filter => filterToArbSelectorString(filter))
-      .join(' and ');
+      .join(` and `);
 
     const time = sections.time.clauses[0];
     const unit = time.unit;
@@ -270,7 +270,7 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   buildUrl() {
-    return 'api/2.0/jql';
+    return `api/2.0/jql`;
   }
 
   buildGroups(jqlQuery) {
@@ -279,7 +279,7 @@ export default class SegmentationQuery extends BaseQuery {
     // special groupby functions to create buckets to avoid doing high-cardinality groupbys. For all
     // other cases, return (resolve) right away.
     return Promise.all(this.query.segments.map(segment => new Promise(resolve => {
-      if (segment.filterType === 'number') {
+      if (segment.filterType === `number`) {
         let eventName;
         if (jqlQuery.custom) {
           eventName = jqlQuery.outputName;
@@ -294,7 +294,7 @@ export default class SegmentationQuery extends BaseQuery {
           // Or, we can take advantage of 'Group By Limits' in JQL 2.0.
           return resolve(segment);
         }
-        const action = segment.resourceType === 'people' ? 'user' : 'properties';
+        const action = segment.resourceType === `people` ? `user` : `properties`;
         let extremaQuery = new ExtremaQuery();
         let state = {
           /* eslint-disable camelcase */
@@ -334,8 +334,8 @@ export default class SegmentationQuery extends BaseQuery {
         }),
         outputName: jqlQuery.outputName,
         dates: {
-          from: (new Date(this.query.from)).toISOString().split('T')[0],
-          to:   (new Date(this.query.to)).toISOString().split('T')[0],
+          from: (new Date(this.query.from)).toISOString().split(`T`)[0],
+          to:   (new Date(this.query.to)).toISOString().split(`T`)[0],
           unit: jqlQuery.unit,
         },
         groups: groups,
@@ -345,9 +345,9 @@ export default class SegmentationQuery extends BaseQuery {
 
       // As we need more helper data this should be moved down a level in the params
       const hasPeopleFilters = scriptParams.groups.concat([scriptParams.property])
-        .some(param => param && param.resourceType === 'people');
+        .some(param => param && param.resourceType === `people`);
       const hasUserSelectors = scriptParams.selectors
-        .some(es => es.selector && es.selector.includes('user['));
+        .some(es => es.selector && es.selector.includes(`user[`));
       scriptParams.needsPeopleData = hasPeopleFilters || hasUserSelectors;
 
       return scriptParams;
@@ -362,7 +362,7 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   buildOptions() {
-    return {type: 'POST'};
+    return {type: `POST`};
   }
 
   preprocessNameConflicts() {
@@ -455,7 +455,7 @@ export default class SegmentationQuery extends BaseQuery {
     // Add the special $event header when not doing groupBy or when there is more than one event
     // name.
     if (queriedEventNames.length > 1 || this.query.segments.length === 0) {
-      headers = ['$event'].concat(headers);
+      headers = [`$event`].concat(headers);
     }
     return new Result({series, headers});
   }

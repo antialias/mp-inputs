@@ -17,17 +17,17 @@ class BaseTopPropertiesQuery extends BaseQuery {
 
 export class TopEventPropertiesQuery extends BaseTopPropertiesQuery {
   buildUrl() {
-    return 'api/2.0/events/properties/toptypes';
+    return `api/2.0/events/properties/toptypes`;
   }
 
   get resourceType() {
-    return 'events';
+    return `events`;
   }
 }
 
 export class TopPeoplePropertiesQuery extends BaseTopPropertiesQuery {
   buildUrl() {
-    return 'api/2.0/engage/properties';
+    return `api/2.0/engage/properties`;
   }
 
   processResults(properties) {
@@ -35,6 +35,6 @@ export class TopPeoplePropertiesQuery extends BaseTopPropertiesQuery {
   }
 
   get resourceType() {
-    return 'people';
+    return `people`;
   }
 }

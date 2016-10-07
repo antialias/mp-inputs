@@ -4,7 +4,7 @@ import { extend, renameEvent, renameProperty, sorted } from '../../../util';
 
 import template from './show-pane-content.jade';
 
-document.registerElement('show-pane-content', class extends PaneContent {
+document.registerElement(`show-pane-content`, class extends PaneContent {
   get config() {
     return extend(super.config, {
       template,
@@ -12,7 +12,7 @@ document.registerElement('show-pane-content', class extends PaneContent {
         onArrowClick: (ev, value) => {
           ev.stopPropagation();
           this.app.updateStageClause({value});
-          this.app.startAddingClause('group');
+          this.app.startAddingClause(`group`);
           window.requestAnimationFrame(() =>
             this.app.updateStageClause({paneIndex: 1})
           );
@@ -20,20 +20,20 @@ document.registerElement('show-pane-content', class extends PaneContent {
         onPropertyArrowClick: (ev, property) => {
           ev.stopPropagation();
           this.app.updateStageClause({value: property});
-          this.app.startAddingClause('show');
+          this.app.startAddingClause(`show`);
           // search key shouldn't be propagated to event selection pane.
-          this.app.activeStageClause.search = '';
+          this.app.activeStageClause.search = ``;
           window.requestAnimationFrame(() =>
             this.app.updateStageClause({paneIndex: 1})
           );
         },
         showResource: (resourceType, selectedResourceType) => {
-          return selectedResourceType === 'all' || selectedResourceType === resourceType;
+          return selectedResourceType === `all` || selectedResourceType === resourceType;
         },
         selectProperty: property => {
           // commit property selection with "All Events"
           this.app.updateStageClause({value: property});
-          this.app.startAddingClause('show');
+          this.app.startAddingClause(`show`);
           this.config.helpers.updateStageClause({value: ShowClause.ALL_EVENTS}, true);
         },
       }),
@@ -64,7 +64,7 @@ document.registerElement('show-pane-content', class extends PaneContent {
   }
 
   get section() {
-    return 'show';
+    return `show`;
   }
 
   get resourceTypeChoices() {
@@ -72,7 +72,7 @@ document.registerElement('show-pane-content', class extends PaneContent {
   }
 
   _propsForDisplay(props) {
-    return sorted(props.filter(prop => prop.type === 'number'), {
+    return sorted(props.filter(prop => prop.type === `number`), {
       transform: prop => renameProperty(prop.name).toLowerCase(),
     });
   }

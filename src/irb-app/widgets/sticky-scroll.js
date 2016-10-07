@@ -4,7 +4,7 @@ import debounce from 'lodash/debounce';
 
 import './sticky-scroll.styl';
 
-document.registerElement('sticky-scroll', class extends WebComponent {
+document.registerElement(`sticky-scroll`, class extends WebComponent {
   attributeChangedCallback() {
     window.requestAnimationFrame(() => this.updateIfInitialized());
   }
@@ -18,44 +18,44 @@ document.registerElement('sticky-scroll', class extends WebComponent {
     this.onBodyScrollHandler = debounce(() => this.updateStuckHeader(), 10, {leading: true, trailing: true});
     this.onFirstScrollHandler = ()=> {
       if (this.firstScroll) {
-        this.style.overflowY = 'hidden';
-        this.stickyBody = this.querySelector('.body');
-        this.stickyBody.style.overflowY = 'auto';
+        this.style.overflowY = `hidden`;
+        this.stickyBody = this.querySelector(`.body`);
+        this.stickyBody.style.overflowY = `auto`;
         this.stickyBody.scrollTop = this.scrollTop;
-        this.stickyHeader = document.createElement('div');
+        this.stickyHeader = document.createElement(`div`);
         this.setWidth();
-        this.stickyHeader.classList.add('sticky-header');
+        this.stickyHeader.classList.add(`sticky-header`);
         this.appendChild(this.stickyHeader);
         this.render();
         this.firstScroll = false;
-        this.stickyBody.addEventListener('scroll', this.onBodyScrollHandler);
+        this.stickyBody.addEventListener(`scroll`, this.onBodyScrollHandler);
       }
     };
 
-    this.addEventListener('scroll', this.onFirstScrollHandler);
+    this.addEventListener(`scroll`, this.onFirstScrollHandler);
   }
 
   detachedCallback() {
-    this.removeEventListener('scroll', this.onFirstScrollHandler);
+    this.removeEventListener(`scroll`, this.onFirstScrollHandler);
     if (this.stickyBody) {
-      this.stickyBody.removeEventListener('scroll', this.onBodyScrollHandler);
+      this.stickyBody.removeEventListener(`scroll`, this.onBodyScrollHandler);
     }
   }
 
   hideTitle(title) {
-    title.classList.remove('stuck');
+    title.classList.remove(`stuck`);
     title.style.marginTop = `-${title.offsetHeight}px`;
   }
 
   moveTitleAtIndex(idx, px) {
     const title = this.headerStickyTitles[idx];
-    title.classList.add('stuck');
+    title.classList.add(`stuck`);
     this.stuckTitle = title;
     title.style.marginTop = `${px}px`;
   }
 
   render() {
-    this.bodyStickyTitles = [...this.stickyBody.getElementsByClassName('sticky-title')];
+    this.bodyStickyTitles = [...this.stickyBody.getElementsByClassName(`sticky-title`)];
     while (this.stickyHeader.hasChildNodes()) {
       this.stickyHeader.removeChild(this.stickyHeader.lastChild);
     }
@@ -80,9 +80,9 @@ document.registerElement('sticky-scroll', class extends WebComponent {
   }
 
   showTitle(title) {
-    title.classList.add('stuck');
+    title.classList.add(`stuck`);
     this.stuckTitle = title;
-    title.style.marginTop = '';
+    title.style.marginTop = ``;
   }
 
   updateIfInitialized() {

@@ -26,7 +26,7 @@ export default class BuilderSections {
   }
 
   get attrs() {
-    return pick(this, ['show', 'group', 'filter', 'time']);
+    return pick(this, [`show`, `group`, `filter`, `time`]);
   }
 
   getClause(type, clauseIndex) {
@@ -54,12 +54,12 @@ export default class BuilderSections {
     const valid = newSections.valid;
 
     if (!valid) {
-      debug.warn('sections invalid:', newSections);
+      debug.warn(`sections invalid:`, newSections);
     }
 
     return valid ? newSections : this;
   }
 }
 BuilderSections.TYPES = BuilderSections.prototype.TYPES = [
-  'show', 'group', 'time', 'filter',
+  `show`, `group`, `time`, `filter`,
 ];
