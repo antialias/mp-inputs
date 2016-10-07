@@ -75,7 +75,7 @@ export function isEqual(x, y) {
 
   // recursive object equality check
   const p = Object.keys(x);
-  return Object.keys(y).every((idx) => p.indexOf(idx) !== -1) && p.every((idx) => isEqual(x[idx], y[idx]));
+  return Object.keys(y).every(idx => p.indexOf(idx) !== -1) && p.every(idx => isEqual(x[idx], y[idx]));
 }
 
 /**

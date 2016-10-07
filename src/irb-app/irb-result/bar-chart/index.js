@@ -33,7 +33,7 @@ document.registerElement('bar-chart', class extends Component {
         util,
       },
       helpers: {
-        getHeaderWidth: (text) => util.getTextWidth(text, 'bold 14px Helvetica') + SORT_ICON_WIDTH,
+        getHeaderWidth: text => util.getTextWidth(text, 'bold 14px Helvetica') + SORT_ICON_WIDTH,
         headerClick: ev => {
           if (ev.detail) {
             if (typeof ev.detail.header === 'number') {
@@ -69,7 +69,7 @@ document.registerElement('bar-chart', class extends Component {
         onMouseLeave: () => {
           this.update({hoverTooltip: util.extend(this.state.hoverTooltip, {rowIdx: null, cellIdx: null})});
         },
-        selectAxisSort: (sortOrder) => {
+        selectAxisSort: sortOrder => {
           this.update({headerSortPanel: null});
           this.dispatchEvent(new CustomEvent('change', {
             detail: {

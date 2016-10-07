@@ -5,7 +5,7 @@ import debounce from 'lodash/debounce';
 import './sticky-scroll.styl';
 
 document.registerElement('sticky-scroll', class extends WebComponent {
-  attributeChangedCallback(){
+  attributeChangedCallback() {
     window.requestAnimationFrame(() => this.updateIfInitialized());
   }
 

@@ -10,7 +10,7 @@ document.registerElement('group-property-pane-content', class extends PaneConten
       template,
 
       helpers: extend(super.config.helpers, {
-        isSelectedProperty: (property) => (
+        isSelectedProperty: property => (
           super.config.helpers.getActiveClauseProperty('value') === property.name &&
           super.config.helpers.getActiveClauseProperty('resourceType') === property.resourceType
         ),
