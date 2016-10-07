@@ -174,10 +174,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         chart = chart || this.querySelector('.chart');
         if (chart.getBoundingClientRect().top <= 0) {
           app.classList.add(stickyClassName);
-        } else {
-          app.classList.remove(stickyClassName);
-        }
-        if (app.classList.contains(stickyClassName)) {
           legend = legend || this.querySelector('.legend');
           const distFromBottom =  app.scrollHeight - (app.scrollTop + app.offsetHeight);
           const appBottomMargin = 20; // padding on .irb-main-panel
@@ -186,6 +182,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           } else {
             legend.style.height = '';
           }
+        } else {
+          app.classList.remove(stickyClassName);
         }
       }, 10, {leading: true, trailing: true}));
     });
