@@ -104,7 +104,6 @@ mixin sort-axis-button(sortOrder)
                       li.chart-bar(
                         style={width: percentValueString}
                         onmouseenter=(ev) => $helpers.onMouseEnter(ev, segmentName)
-                        onmouseleave=$helpers.onMouseLeave
                       )
                         if hoverTooltipName == segmentName
                           .hover-label
