@@ -107,10 +107,7 @@ mixin sort-axis-button(sortOrder)
                         onmouseleave=$helpers.onMouseLeave
                       )
                         if hoverTooltip.show
-                          .hover-label(
-                            onmouseenter=$helpers.onMouseEnter
-                            onmouseleave=$helpers.onMouseLeave
-                          )
+                          .hover-label
                             .content
                               .title(class={[segmentColorClassName]: isMultiColor})= segmentName
                               .results
