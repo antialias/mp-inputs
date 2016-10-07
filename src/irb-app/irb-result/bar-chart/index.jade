@@ -103,9 +103,9 @@ mixin sort-axis-button(sortOrder)
                       - const segmentColorClassName = `segment-color-${segmentColorMap[segmentName]}`
                       li.chart-bar(
                         style={width: percentValueString}
-                        onmouseenter=(ev) => $helpers.onMouseEnter(ev, segmentName)
+                        onmouseenter=ev => $helpers.onMouseEnter(ev, k)
                       )
-                        if hoverTooltipName == segmentName
+                        if hoverTooltipIndex == k
                           .hover-label
                             .content
                               .title(class={[segmentColorClassName]: isMultiColor})= segmentName
