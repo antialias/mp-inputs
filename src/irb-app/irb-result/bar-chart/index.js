@@ -28,7 +28,7 @@ document.registerElement('bar-chart', class extends Component {
         displayOptions: {},
         chartLabel: '',
         functionLabel: '',
-        hoverTooltip: {row:null, index:null},
+        hoverTooltip: {rowIdx: null, cellIdx: null},
         showValueNames: [],
         util,
       },
@@ -62,8 +62,8 @@ document.registerElement('bar-chart', class extends Component {
           }
           return headers || this.state.headers;
         },
-        onMouseEnter: (ev, index, row) => {
-          const hoverTooltip = util.extend(this.state.hoverTooltip, {row: row, index:index});
+        onMouseEnter: (ev, rowIdx, cellIdx) => {
+          const hoverTooltip = util.extend(this.state.hoverTooltip, {rowIdx, cellIdx});
           this.update({hoverTooltip});
         },
         selectAxisSort: (sortOrder) => {
