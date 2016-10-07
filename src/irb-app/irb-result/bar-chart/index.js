@@ -66,6 +66,9 @@ document.registerElement('bar-chart', class extends Component {
           const hoverTooltip = util.extend(this.state.hoverTooltip, {rowIdx, cellIdx});
           this.update({hoverTooltip});
         },
+        onMouseLeave: () => {
+          this.update({hoverTooltip: util.extend(this.state.hoverTooltip, {rowIdx: null, cellIdx: null})});
+        },
         selectAxisSort: (sortOrder) => {
           this.update({headerSortPanel: null});
           this.dispatchEvent(new CustomEvent('change', {
