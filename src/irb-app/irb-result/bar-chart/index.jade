@@ -103,14 +103,20 @@ mixin sort-axis-button(sortOrder)
                       - const segmentColorClassName = `segment-color-${segmentColorMap[segmentName]}`
                       li.chart-bar(
                         style={width: percentValueString}
+                        onmouseenter=$helpers.onMouseEnter
+                        onmouseleave=$helpers.onMouseLeave
                       )
-                        .hover-label
-                          .content
-                            .title(class={[segmentColorClassName]: isMultiColor})= segmentName
-                            .results
-                              .absolute
-                                .count= value
-                              .percent= percentValueString
+                        if hoverTooltip.show
+                          .hover-label(
+                            onmouseenter=$helpers.onMouseEnter
+                            onmouseleave=$helpers.onMouseLeave
+                          )
+                            .content
+                              .title(class={[segmentColorClassName]: isMultiColor})= segmentName
+                              .results
+                                .absolute
+                                  .count= value
+                                .percent= percentValueString
                         .bar-color(class={[segmentColorClassName]: isMultiColor})
                         .label-wrapper
                           .bar-text-nudger
