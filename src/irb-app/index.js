@@ -167,17 +167,18 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   createdCallback() {
     window.requestAnimationFrame(() => {
       const app = document.querySelector('#app');
+      const stickyClassName = 'sticky-chart-headers';
       let chart = null;
       let legend = null;
-      let isStickyChartHeader = false;
       app.addEventListener('scroll', debounce(() => {
         chart = chart || this.querySelector('.chart');
-        legend = legend || this.querySelector('.legend');
-        const shouldBeSticky = chart.getBoundingClientRect().top <= 0;
-        if (shouldBeSticky !== isStickyChartHeader) {
-          app.classList.toggle('sticky-chart-headers');
-          isStickyChartHeader = shouldBeSticky;
-        } else if (shouldBeSticky) {
+        if (chart.getBoundingClientRect().top <= 0) {
+          app.classList.add(stickyClassName);
+        } else {
+          app.classList.remove(stickyClassName);
+        }
+        if (app.classList.contains(stickyClassName)) {
+          legend = legend || this.querySelector('.legend');
           const distFromBottom =  app.scrollHeight - (app.scrollTop + app.offsetHeight);
           const appBottomMargin = 20; // padding on .irb-main-panel
           if (distFromBottom < appBottomMargin) {
