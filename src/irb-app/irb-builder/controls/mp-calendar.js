@@ -56,6 +56,7 @@ document.registerElement(`mp-calendar`, class extends WebComponent {
         field: el.input,
         numberOfMonths: 2,
         onSelect: date => this.selectDate(date, idx),
+        theme: `pika-mixpanel`,
       });
       el.picker.hide();
 
