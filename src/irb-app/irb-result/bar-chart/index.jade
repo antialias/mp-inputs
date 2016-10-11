@@ -3,25 +3,6 @@
 - const isValueAbsolute = displayOptions.value === 'absolute'
 - const headersToDisplay = $helpers.headersToDisplay()
 
-mixin sort-col-button(sortBy, sortOrder, colIdx)
-  - const colConfig = sortConfig.sortBy === 'column' && sortConfig.colSortAttrs[colIdx]
-  .sort-icon(
-    class={
-      [`sort-icon-${sortBy}-${sortOrder}`]: true,
-      'sort-selected': colConfig && colConfig.sortBy === sortBy && colConfig.sortOrder === sortOrder,
-    }
-    onclick=() => $helpers.selectColumnSort(sortBy, sortOrder, colIdx)
-  )
-
-mixin sort-axis-button(sortOrder)
-  .sort-icon(
-    class={
-      [`sort-icon-value-${sortOrder}`]: true,
-      'sort-selected': sortConfig && sortConfig.sortBy === 'value' && sortConfig.sortOrder === sortOrder,
-    }
-    onclick=() => $helpers.selectAxisSort(sortOrder)
-  )
-
 .bar-chart
   table
     thead
@@ -36,29 +17,9 @@ mixin sort-axis-button(sortOrder)
               'headers': JSON.stringify(headersToDisplay),
               'sort-config': JSON.stringify(sortConfig),
             }
-            onclick=$helpers.headerClick
+            onchange=$helpers.sortChange
           )
     tbody
-      tr
-        for col, ci in headersToDisplay
-          td.sort-holder(class={'active-sort-panel': ci === headerSortPanel})
-            if !sortConfig.hideFirstSort
-              .sort-controls
-                +sort-col-button('label', 'asc',  ci)
-                +sort-col-button('label', 'desc', ci)
-                +sort-col-button('value', 'asc',  ci)
-                +sort-col-button('value', 'desc', ci)
-        td.sort-holder(class={'active-sort-panel': headerSortPanel === 'axis'})
-          .sort-controls
-            if isStacked
-              - const colIdx = rows.length > 1 ? headersToDisplay.length : 0
-              +sort-col-button('label', 'asc',  colIdx)
-              +sort-col-button('label', 'desc', colIdx)
-              +sort-col-button('value', 'asc',  colIdx)
-              +sort-col-button('value', 'desc', colIdx)
-            else
-              +sort-axis-button('asc')
-              +sort-axis-button('desc')
       for row, i in rows
         - const isMultiColor = row.length > 2 || isStacked
         tr

@@ -34,24 +34,6 @@ document.registerElement(`bar-chart`, class extends Component {
       },
       helpers: {
         getHeaderWidth: text => util.getTextWidth(text, `bold 14px Helvetica`) + SORT_ICON_WIDTH,
-        headerClick: ev => {
-          if (ev.detail) {
-            if (typeof ev.detail.header === `number`) {
-              const headerIdx = ev.detail.header;
-              this.update({
-                headerSortPanel: headerIdx === this.state.headerSortPanel ? null : headerIdx,
-              });
-            } else if (ev.detail.axis) {
-              if (ev.detail.maxValueText) {
-                this.dispatchEvent(new CustomEvent(`change`, {detail: ev.detail}));
-              } else {
-                this.update({
-                  headerSortPanel: this.state.headerSortPanel === `axis` ? null : `axis`,
-                });
-              }
-            }
-          }
-        },
         headersToDisplay: () => {
           let headers = null;
           if (this.state.displayOptions.plotStyle === `stacked`) {
@@ -69,26 +51,7 @@ document.registerElement(`bar-chart`, class extends Component {
         onMouseLeave: () => {
           this.update({hoverTooltip: util.extend(this.state.hoverTooltip, {rowIdx: null, cellIdx: null})});
         },
-        selectAxisSort: sortOrder => {
-          this.update({headerSortPanel: null});
-          this.dispatchEvent(new CustomEvent(`change`, {
-            detail: {
-              type: `axisSort`,
-              sortOrder,
-            },
-          }));
-        },
-        selectColumnSort: (sortBy, sortOrder, colIdx) => {
-          this.update({headerSortPanel: null});
-          this.dispatchEvent(new CustomEvent(`change`, {
-            detail: {
-              colIdx,
-              sortBy,
-              sortOrder,
-              type: `colSort`,
-            },
-          }));
-        },
+        sortChange: ev => ev.detail && this.dispatchEvent(new CustomEvent(`change`, {detail: ev.detail})),
       },
     };
   }
@@ -153,24 +116,63 @@ document.registerElement(`irb-bar-chart-header`, class extends WebComponent {
     this.render();
   }
 
+  createSortHolder(type, sortByOptions, sortOrderOptions, headerIdx=0) {
+    const sortControls = $(`<div>`).addClass(`sort-controls`);
+
+    sortByOptions.forEach(sortBy => {
+      sortOrderOptions.forEach(sortOrder => {
+        const sortButton = $(`<div>`).addClass(`sort-icon sort-icon-${sortBy}-${sortOrder}`);
+        sortButton.on(`click`, () => this.selectHeaderSort(type, headerIdx, sortBy, sortOrder));
+        sortControls.append(sortButton);
+      });
+    });
+
+    return $(`<div>`).addClass(`sort-holder`).append(sortControls);
+  }
+
+  selectHeaderSort (type, colIdx, sortBy, sortOrder) {
+    this.dispatchEvent(new CustomEvent(`change`, {
+      detail: {
+        colIdx,
+        sortBy,
+        sortOrder,
+        type,
+      },
+    }));
+  }
+
+  hideAllSortHolders(ignoreElement) {
+    if (this.sortHolders) {
+      this.sortHolders.forEach(el => {
+        if (!el.is(ignoreElement)) {
+          el.removeClass(`active-sort-panel`);
+        }
+      });
+    }
+  }
+
   render() {
     this.$el.empty();
+    this.sortHolders = [];
     let headersEl = this;
-    let $headers = $(this.headers.map((header, idx) =>
-      $(`<div>`)
+    let $headers = $(this.headers.map((header, idx) => {
+      const sortHolder = this.createSortHolder(`colSort`, [`label`, `value`], [`asc`, `desc`], idx);
+      this.sortHolders.push(sortHolder);
+      return $(`<div>`)
         .addClass(`bar-chart-header`)
         .data(`header-idx`, idx)
-        .on(`click`, function() {
-          headersEl.dispatchEvent(new CustomEvent(`click`, {
-            detail: {header: $(this).data(`header-idx`)},
-          }));
+        .on(`click`, () => {
+          this.hideAllSortHolders(sortHolder);
+          sortHolder.toggleClass(`active-sort-panel`);
         })
         .append($(`<div>`).addClass(`text`).html(
           header === `$event` ? `Events` : util.renameProperty(header)
         ))
         .append($(`<div>`).addClass(headersEl.sortIconClass(idx)))
-        .get(0)
-    ));
+        .append(sortHolder)
+        .get(0);
+    }));
+
     this.$el
       .addClass(`loading`)
       .append($headers);
@@ -180,22 +182,26 @@ document.registerElement(`irb-bar-chart-header`, class extends WebComponent {
       chartTitle += ` ${this.functionLabel}`;
     }
 
+    const sortAxisHolder = this.createSortHolder(`axisSort`, [`value`], [`asc`, `desc`]);
+    this.sortHolders.push(sortAxisHolder);
     const $axisTitle = $(`<div>`)
       .addClass(`axis-title`)
       .append($(`<div>`).addClass(`text`).html(chartTitle))
-      .append($(`<div>`).addClass(headersEl.sortIconAxisClass()));
+      .append($(`<div>`).addClass(headersEl.sortIconAxisClass()))
+      .append(sortAxisHolder);
 
     const $axisMaxValue = $(`<div>`)
       .addClass(`text`)
       .on(`click`, function(ev) {
-        headersEl.dispatchEvent(new CustomEvent(`click`, {detail: {axis: true, maxValueText: true}}));
+        headersEl.dispatchEvent(new CustomEvent(`change`, {detail: {axis: true, maxValueText: true}}));
         ev.stopPropagation();
       })
       .html(this.displayOptions.value === `absolute` ? util.abbreviateNumber(this.chartMax) : `100%`);
 
     let $axis = $(`<div class="bar-chart-axis"></div>`)
-      .on(`click`, function() {
-        headersEl.dispatchEvent(new CustomEvent(`click`, {detail: {axis: true}}));
+      .on(`click`, () => {
+        this.hideAllSortHolders(sortAxisHolder);
+        sortAxisHolder.toggleClass(`active-sort-panel`);
       })
       .append($axisTitle)
       .append($(`<div>`).addClass(`max-value`).append($axisMaxValue));

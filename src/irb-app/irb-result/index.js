@@ -170,6 +170,7 @@ document.registerElement(`irb-result`, class extends Component {
         barChartChange: ev => {
           if (ev.detail) {
             if (ev.detail.type) {
+              console.log(ev.detail);
               const reportTrackingData = this.state.report.toTrackingData();
               const barSort = this.state.report.sorting.bar;
               const colIdx = ev.detail.colIdx;
