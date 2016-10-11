@@ -5,44 +5,109 @@
   &.pika-single
     border none
     border-radius 10px
-    box-shadow 0px 3px 10px -4px black
-    height 290px
+    box-shadow 0px 10px 15px 0 rgba(0, 0, 0, 0.09), 0px 17px 50px 0 rgba(0, 0, 0, 0.19)
+    height 283px
     width 492px
 
+    &::after
+      border 10px solid transparent
+      border-bottom-color #ffffff
+      content ""
+      display block
+      left 231px
+      position absolute
+      top -19px
+      width 0
+
     .pika-lendar
-      margin 18px
+      padding 8px
       width 210px
 
     .pika-title
       color grey-900
       font-size 14px
       margin-bottom 7px
+      text-align center
+
+      .pika-prev
+        background-color #838ca2
+        background-image none
+        border-radius 20px
+        height 24px
+        left 5px
+        position absolute
+        text-indent 50px
+        top 2px
+        width 24px
+
+        &::before
+          background-color #ffffff
+          content ''
+          display block
+          height 30px
+          left -4px
+          mask url("~mixpanel-common/assets/icons/caret_left.svg") no-repeat center
+          position relative
+          top -3px
+          width 30px
+
+      .pika-next
+        background-color #838ca2
+        background-image none
+        border-radius 20px
+        height 24px
+        left 187px
+        position absolute
+        text-indent 50px
+        top 2px
+        width 24px
+
+        &::before
+          background-color #ffffff
+          content ''
+          display block
+          height 30px
+          left -2px
+          mask url("~mixpanel-common/assets/icons/caret_right.svg") no-repeat center
+          position relative
+          top -3px
+          width 30px
+
 
     .pika-table
       th
         color grey-700
-        text-transform uppercase
         padding-bottom 8px
+
+      tbody
+        left 1px
+        position relative
+        top 1px
 
       .pika-button
         background-color transparent
         color grey-700
         font-weight bold
         height 30px
+        left -1px
+        position relative
         text-align center
+        top -1px
 
       .is-startrange, .is-endrange
-        :not(.is-outside-current-month)
-          background-color blue-300
-          border-radius 15px
-          left -4px
-          position relative
-
+        background-color blue-300
+        border-radius 15px
+        width 30px
 
         .pika-button
           color #ffffff
-          text-align center
           text-shadow 0.5px 0.9px 0 rgba(0, 0, 0, 0.26)
+
+        &.is-outside-current-month
+          background-color #ffffff
+
+          .pika-button
+            color grey-700
 
       .is-disabled .pika-button
         opacity 0.5
