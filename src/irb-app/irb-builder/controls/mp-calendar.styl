@@ -6,12 +6,23 @@
     border none
     border-radius 10px
     box-shadow 0px 3px 10px -4px black
+    height 290px
+    width 492px
+
+    .pika-lendar
+      width 210px
+      margin 18px
 
     .pika-title
       color grey-900
       font-size 14px
+      margin-bottom 7px
 
     .pika-table
+      thead
+        display table-caption
+        padding-bottom 10px
+
       th
         color grey-700
         text-transform uppercase
@@ -20,6 +31,20 @@
         background-color transparent
         color grey-700
         font-weight bold
+        height 30px
+
+      .is-startrange, .is-endrange
+        :not(.is-outside-current-month)
+          background-color blue-300
+          border-radius 15px
+          left 3px
+          position relative
+
+
+        .pika-button
+          color #ffffff
+          text-shadow 0.5px 0.9px 0 rgba(0, 0, 0, 0.26)
+          text-align center
 
       .is-disabled .pika-button
         opacity 0.5

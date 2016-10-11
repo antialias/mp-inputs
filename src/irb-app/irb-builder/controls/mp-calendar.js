@@ -51,6 +51,7 @@ document.registerElement(`mp-calendar`, class extends WebComponent {
       el.input.className = `mp-pikaday-input`;
 
       el.picker = new Pikaday({
+        showDaysInNextAndPreviousMonths: true,
         bound: false,
         container: document.getElementsByClassName(`calendar-hook`)[0],
         field: el.input,
@@ -61,7 +62,7 @@ document.registerElement(`mp-calendar`, class extends WebComponent {
       // TODO TMP FOR DEVELOPMENT, REVERT ME
       // el.picker.hide();
 
-      // el.input.addEventListener(`focus`, () => el.picker.show());
+      el.input.addEventListener(`focus`, () => el.picker.show());
       // el.input.addEventListener(`blur`, () => el.picker.hide());
 
       this.appendChild(el.input);
