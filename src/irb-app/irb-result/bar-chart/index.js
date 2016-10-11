@@ -117,17 +117,17 @@ document.registerElement(`irb-bar-chart-header`, class extends WebComponent {
   }
 
   createSortHolder(type, sortByOptions, sortOrderOptions, headerIdx=0) {
-    const sortControls = $(`<div>`).addClass(`sort-controls`);
+    const $sortControls = $(`<div>`).addClass(`sort-controls`);
 
     sortByOptions.forEach(sortBy => {
       sortOrderOptions.forEach(sortOrder => {
-        const sortButton = $(`<div>`).addClass(`sort-icon sort-icon-${sortBy}-${sortOrder}`);
-        sortButton.on(`click`, () => this.selectHeaderSort(type, headerIdx, sortBy, sortOrder));
-        sortControls.append(sortButton);
+        const $sortButton = $(`<div>`).addClass(`sort-icon sort-icon-${sortBy}-${sortOrder}`);
+        $sortButton.on(`click`, () => this.selectHeaderSort(type, headerIdx, sortBy, sortOrder));
+        $sortControls.append($sortButton);
       });
     });
 
-    return $(`<div>`).addClass(`sort-holder`).append(sortControls);
+    return $(`<div>`).addClass(`sort-holder`).append($sortControls);
   }
 
   selectHeaderSort (type, colIdx, sortBy, sortOrder) {
