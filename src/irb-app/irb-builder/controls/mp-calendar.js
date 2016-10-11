@@ -56,6 +56,13 @@ document.registerElement(`mp-calendar`, class extends WebComponent {
         container: document.getElementsByClassName(`calendar-hook`)[0],
         field: el.input,
         numberOfMonths: 2,
+        i18n: {
+          previousMonth: `Previous Month`,
+          nextMonth: `Next Month`,
+          months: [`January`,`February`,`March`,`April`,`May`,`June`,`July`,`August`,`September`,`October`,`November`,`December`],
+          weekdays: [`Sunday`,`Monday`,`Tuesday`,`Wednesday`,`Thursday`,`Friday`,`Saturday`],
+          weekdaysShort: [`SU`,`MO`,`TU`,`WE`,`TH`,`FR`,`SA`],
+        },
         onSelect: date => this.selectDate(date, idx),
         theme: `pika-mixpanel`,
       });
