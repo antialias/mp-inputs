@@ -6,7 +6,19 @@ import './mp-button-input';
 import template from './index.jade';
 import './index.styl';
 
+// TODO move me
 import '../../../assets/dock/reset.svg';
+import svg from 'virtual-dom/virtual-hyperscript/svg';
+document.registerElement(`svg-icon`, class extends Component {
+  get config() {
+    return {
+      template: () =>
+        svg(`svg`, {height: 22, width: 22}, [
+          svg(`use`, {'xlink:href': `#icon-${this.getAttribute(`icon`)}`}),
+        ]),
+    };
+  }
+});
 
 document.registerElement(`irb-header`, class extends Component {
   get config() {

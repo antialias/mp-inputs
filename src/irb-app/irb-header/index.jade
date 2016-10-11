@@ -6,9 +6,9 @@
     onchange=$helpers.updateTitle
   )
   .loading-dock
-    .svg-icon= svg('svg.icon2', {height: 22, width: 22}, [svg('use', {'xlink:href': '#icon-reset'})])
     button.refresh-query(onclick=$helpers.refresh title="Refresh results")
     button.reset-query(onclick=$helpers.reset title="Reset query")
+      svg-icon(attributes={icon: 'reset'})
     button.download(
       onclick=$helpers.clickExportCSV
       class={enabled: !resultLoading}
