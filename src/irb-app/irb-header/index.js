@@ -6,6 +6,8 @@ import './mp-button-input';
 import template from './index.jade';
 import './index.styl';
 
+import '../../../assets/dock/reset.svg';
+
 document.registerElement(`irb-header`, class extends Component {
   get config() {
     return {

@@ -1,3 +1,4 @@
+- const svg = require('virtual-dom/virtual-hyperscript/svg')
 .irb-header
   mp-button-input(
     value=report.title
@@ -5,6 +6,7 @@
     onchange=$helpers.updateTitle
   )
   .loading-dock
+    .svg-icon= svg('svg.icon2', {height: 22, width: 22}, [svg('use', {'xlink:href': '#icon-reset'})])
     button.refresh-query(onclick=$helpers.refresh title="Refresh results")
     button.reset-query(onclick=$helpers.reset title="Reset query")
     button.download(
