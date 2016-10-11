@@ -7,6 +7,7 @@
   )
   .loading-dock
     button.refresh-query(onclick=$helpers.refresh title="Refresh results")
+      svg-icon(attributes={icon: 'refresh'})
     button.reset-query(onclick=$helpers.reset title="Reset query")
       svg-icon(attributes={icon: 'reset'})
     button.download(
@@ -14,8 +15,10 @@
       class={enabled: !resultLoading}
       title="Download CSV"
     )
+      svg-icon(attributes={icon: 'export'})
     button.report-list-button(
       onclick=$helpers.clickReportList
       class={enabled: $helpers.reportListEnabled()}
       title="Saved reports"
     )
+      svg-icon(attributes={icon: 'report-list'})

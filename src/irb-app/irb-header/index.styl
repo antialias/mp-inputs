@@ -1,5 +1,12 @@
 @import "../../stylesheets/common"
 
+icon-colors(base, hover)
+  svg-icon svg
+    fill base
+  &:hover
+    svg-icon svg
+      fill hover
+
 .irb-header
   align-items center
   border-bottom 1px solid light-gray
@@ -29,10 +36,7 @@
       border-radius 0
       height 25px
       width 30px
-      &:hover
-        // background-color grey-500
-        svg-icon svg
-          fill red
+      icon-colors(grey-700, grey-500)
 
       // &.refresh-query
       //   mask url("~assets/dock/refresh.svg") no-repeat center

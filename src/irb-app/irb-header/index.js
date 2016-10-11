@@ -7,7 +7,9 @@ import template from './index.jade';
 import './index.styl';
 
 // TODO move me
-import '../../../assets/dock/reset.svg';
+/* global require */
+const sprites = require.context(`../../../assets/dock`);
+sprites.keys().forEach(sprites);
 import svg from 'virtual-dom/virtual-hyperscript/svg';
 document.registerElement(`svg-icon`, class extends Component {
   get config() {
