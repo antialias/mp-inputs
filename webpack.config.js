@@ -31,7 +31,7 @@ var webpackConfig = {
       {
         test: /\.(png|svg)$/,
         loader: 'url-loader?limit=50000',
-        exclude: path.resolve(__dirname, 'assets/dock'),
+        exclude: /node_modules/,
       },
       {
         test: /\.styl$/,
@@ -42,7 +42,7 @@ var webpackConfig = {
         loader: 'svg-sprite?' + JSON.stringify({
           name: 'icon-[name]',
         }),
-        include: path.resolve(__dirname, 'assets/dock'),
+        include: /node_modules/,
       },
     ],
   },

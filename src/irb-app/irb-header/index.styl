@@ -1,10 +1,13 @@
 @import "../../stylesheets/common"
 
+#icon-refresh_refresh
+  fill red
+
 icon-colors(base, hover)
-  svg-icon svg
+  svg-icon svg g
     fill base
   &:hover
-    svg-icon svg
+    svg-icon svg g
       fill hover
 
 .irb-header
@@ -29,9 +32,6 @@ icon-colors(base, hover)
     margin-left auto
 
     button
-      // background-color grey-700
-      // background-position center
-      // background-repeat no-repeat
       border none
       border-radius 0
       height 25px

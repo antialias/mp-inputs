@@ -8,7 +8,7 @@ import './index.styl';
 
 // TODO move me
 /* global require */
-const sprites = require.context(`../../../assets/dock`);
+const sprites = require.context(`mixpanel-common/assets/icons`);
 sprites.keys().forEach(sprites);
 import svg from 'virtual-dom/virtual-hyperscript/svg';
 document.registerElement(`svg-icon`, class extends Component {
