@@ -84,6 +84,12 @@
         position relative
         top 1px
 
+      td:not(.is-startrange):not(.is-endrange):not(.is-disabled):not(.is-outside-current-month)
+        &:hover
+          background-color grey-100
+          border-radius 15px
+          width 30px
+
       .pika-button
         background-color transparent
         color grey-700
@@ -94,7 +100,7 @@
         text-align center
         top -1px
 
-      .is-startrange, .is-endrange
+      .is-startrange:not(.is-outside-current-month), .is-endrange:not(.is-outside-current-month)
         background-color blue-300
         border-radius 15px
         width 30px
@@ -103,11 +109,8 @@
           color #ffffff
           text-shadow 0.5px 0.9px 0 rgba(0, 0, 0, 0.26)
 
-        &.is-outside-current-month
-          background-color #ffffff
-
-          .pika-button
-            color grey-700
+      .is-inrange .pika-button
+          color grey-900
 
       .is-disabled .pika-button
         opacity 0.5
