@@ -39,9 +39,7 @@ var webpackConfig = {
       },
       {
         test: /\.svg$/,
-        loader: 'svg-sprite?' + JSON.stringify({
-          name: 'icon-[name]',
-        }),
+        loader: 'raw',
         include: /node_modules/,
       },
     ],

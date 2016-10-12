@@ -8,17 +8,28 @@ import './index.styl';
 
 // TODO move me
 /* global require */
-const sprites = require.context(`mixpanel-common/assets/icons`);
-sprites.keys().forEach(sprites);
-import svg from 'virtual-dom/virtual-hyperscript/svg';
-document.registerElement(`svg-icon`, class extends Component {
-  get config() {
-    return {
-      template: () =>
-        svg(`svg`, {height: 22, width: 22}, [
-          svg(`use`, {'xlink:href': `#icon-${this.getAttribute(`icon`)}`}),
-        ]),
-    };
+const SVG_ICONS = {};
+const svgIconContext = require.context(`mixpanel-common/assets/icons`);
+svgIconContext.keys().forEach(filename => {
+  const iconName = filename.match(/([^\/]+)\.svg$/)[1];
+  SVG_ICONS[iconName] = svgIconContext(filename);
+});
+
+import WebComponent from 'webcomponent';
+document.registerElement(`svg-icon`, class extends WebComponent {
+  attachedCallback() {
+    this.render();
+    this._initialized = true;
+  }
+
+  attributeChangedCallback() {
+    if (this._initialized) {
+      this.render();
+    }
+  }
+
+  render() {
+    this.innerHTML = SVG_ICONS[this.getAttribute(`icon`)];
   }
 });
 
