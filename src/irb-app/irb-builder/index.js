@@ -10,6 +10,15 @@ import './index.styl';
 
 document.registerElement(`irb-builder`, class extends Component {
   get config() {
-    return {template};
+    return {
+      helpers: {
+        reset: () => {
+          const reportTrackingData = this.state.report.toTrackingData();
+          this.app.navigate(``, this.app.resetQuery());
+          this.app.trackEvent(`Reset Report`, reportTrackingData);
+        },
+      },
+      template,
+    };
   }
 });

@@ -4,3 +4,5 @@
     .section-container= $component.child('builder-group')
     .section-container= $component.child('builder-time')
   .filters= $component.child('builder-filter')
+  .reset-query(onclick=$helpers.reset title="Reset query")
+    svg-icon(attributes={icon: 'x'})

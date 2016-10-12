@@ -1,15 +1,5 @@
 @import "../../stylesheets/common"
 
-#icon-refresh_refresh
-  fill red
-
-icon-colors(base, hover)
-  svg-icon svg g
-    fill base
-  &:hover
-    svg-icon svg g
-      fill hover
-
 .irb-header
   align-items center
   border-bottom 1px solid light-gray
@@ -38,17 +28,7 @@ icon-colors(base, hover)
       width 30px
       icon-colors(grey-700, grey-500)
 
-      // &.refresh-query
-      //   mask url("~assets/dock/refresh.svg") no-repeat center
-
-      // &.reset-query
-      //   mask url("~assets/dock/reset.svg") no-repeat center
-
       &.download
-        // mask url("~assets/dock/export.svg") no-repeat center
         cursor default
         &.enabled
           cursor pointer
-
-      // &.report-list-button
-      //   mask url("~assets/dock/report-list.svg") no-repeat center

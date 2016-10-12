@@ -42,11 +42,6 @@ document.registerElement(`irb-header`, class extends Component {
           this.app.query({useCache: false});
           this.app.trackEvent(`Refresh Report`, reportTrackingData);
         },
-        reset: () => {
-          const reportTrackingData = this.state.report.toTrackingData();
-          this.app.navigate(``, this.app.resetQuery());
-          this.app.trackEvent(`Reset Report`, reportTrackingData);
-        },
 
         reportListEnabled: () => !!Object.keys(this.state.savedReports).length,
         updateTitle: ev => {
