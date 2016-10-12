@@ -11,8 +11,8 @@
 
     &::after
       border 10px solid transparent
-      border-bottom-color #ffffff
-      content ""
+      border-bottom-color white
+      content ''
       display block
       left 231px
       position absolute
@@ -22,6 +22,16 @@
     .pika-lendar
       padding 8px
       width 210px
+      
+      &:first-child:after
+        background-color grey-150
+        content ''
+        display block
+        height 198px
+        left calc(50% - 1px)
+        position absolute
+        top 60px
+        width 1px
 
     .pika-title
       color grey-900
@@ -30,7 +40,7 @@
       text-align center
 
       .pika-prev
-        background-color #838ca2
+        background-color grey-500
         background-image none
         border-radius 20px
         height 24px
@@ -41,7 +51,7 @@
         width 24px
 
         &::before
-          background-color #ffffff
+          background-color white
           content ''
           display block
           height 30px
@@ -52,7 +62,7 @@
           width 30px
 
       .pika-next
-        background-color #838ca2
+        background-color grey-500
         background-image none
         border-radius 20px
         height 24px
@@ -63,7 +73,7 @@
         width 24px
 
         &::before
-          background-color #ffffff
+          background-color white
           content ''
           display block
           height 30px
@@ -100,13 +110,14 @@
         text-align center
         top -1px
 
-      .is-startrange:not(.is-outside-current-month), .is-endrange:not(.is-outside-current-month)
+      .is-startrange:not(.is-outside-current-month),
+      .is-endrange:not(.is-outside-current-month)
         background-color blue-300
         border-radius 15px
         width 30px
 
         .pika-button
-          color #ffffff
+          color white
           text-shadow 0.5px 0.9px 0 rgba(0, 0, 0, 0.26)
 
       .is-inrange .pika-button
