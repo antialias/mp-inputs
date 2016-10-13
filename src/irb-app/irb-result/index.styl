@@ -124,6 +124,9 @@ min-bar-chart-height = 600px
     margin-left 10px
 
 .sticky-chart-headers
+  .bar-chart-type
+    min-height 100vh
+
   .main-chart
     flex 0 0 auto
 
@@ -146,6 +149,7 @@ min-bar-chart-height = 600px
 
   .legend
     height 100vh
+    min-height min-bar-chart-height
     position fixed
     right 20px // padding from app
     top 0
