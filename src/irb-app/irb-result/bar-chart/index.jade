@@ -70,7 +70,10 @@
                         if hoverTooltip.rowIdx === i && hoverTooltip.cellIdx === k
                           .hover-label
                             .content
-                              .title(class={[segmentColorClassName]: isMultiColor})= segmentName
+                              .title(
+                                class={[segmentColorClassName]: isMultiColor}
+                                title=segmentName
+                              )= segmentName
                               .results
                                 .absolute
                                   .count= value
