@@ -48,13 +48,6 @@ ellipsis()
   text-overflow ellipsis
   white-space nowrap
 
-icon-colors(base, hover)
-  svg-icon svg
-    fill base
-  &:hover
-    svg-icon svg
-      fill hover
-
 loader()
   animation load8 1.1s infinite linear
   border-bottom 1.1em solid rgba(200, 200, 200, 0.2)
@@ -79,6 +72,7 @@ loader()
     100%
       transform rotate(360deg)
 
+// deprecated
 svg-icon(filename, pos-left=8px, pos-top=7px, icon-color=grey-500)
   &::before
     mask unquote('url(~mixpanel-common/assets/icons/' + filename + '.svg)') no-repeat center
@@ -96,3 +90,27 @@ panel-top()
   background-color header-gray
   border-radius 5px 5px 0 0
   box-shadow inset 0px 1px #fff
+
+
+// svg-icon component, to go to mixpanel-common
+svg-icon
+  display inline-block
+  height 22px
+  position relative
+  width 22px
+  svg
+    position absolute
+
+svg-icon-colors(base, hover)
+  svg-icon svg
+    fill base
+  &:hover
+    svg-icon svg
+      fill hover
+
+svg-icon-pos(size, pos-left=0, pos-top=0)
+  & svg
+    height size
+    left pos-left
+    top pos-top
+    width size

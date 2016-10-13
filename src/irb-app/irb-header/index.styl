@@ -25,10 +25,18 @@
       border none
       border-radius 0
       height 25px
+      margin-left 5px
       width 30px
-      icon-colors(grey-700, grey-500)
+      svg-icon-colors(grey-700, grey-500)
+
+      &.refresh-query
+        svg-icon-pos(22px, -4px, -2px)
 
       &.download
         cursor default
+        svg-icon-pos(27px, 0, -1px)
         &.enabled
           cursor pointer
+
+      &.report-list-button
+        svg-icon-pos(26px, 2px, 0)
