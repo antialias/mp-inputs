@@ -162,33 +162,29 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     if (this.state.report.id) {
       this.navigate(`report/${this.state.report.id}`);
     }
-  }
 
-  createdCallback() {
     window.requestAnimationFrame(() => {
-      const app = document.querySelector(`#app`);
+      const app = this.parentNode;
       const stickyClassName = `sticky-chart-headers`;
-      let chart = null;
-      let legend = null;
       app.addEventListener(`scroll`, debounce(() => {
-        chart = chart || this.querySelector(`.chart`);
-        if (chart.getBoundingClientRect().top <= 0) {
+        const chart = this.querySelector(`.chart`);
+        if (chart && chart.getBoundingClientRect().top <= 0) {
           app.classList.add(stickyClassName);
-          legend = legend || this.querySelector(`.legend`);
-          const distFromBottom =  app.scrollHeight - (app.scrollTop + app.offsetHeight);
-          const appBottomMargin = 20; // padding on .irb-main-panel
-          if (distFromBottom < appBottomMargin) {
-            legend.style.height = `calc(100vh - ${appBottomMargin - distFromBottom}px)`;
-          } else {
-            legend.style.height = ``;
+          const legend = this.querySelector(`.legend`);
+          if (legend) {
+            const distFromBottom =  app.scrollHeight - (app.scrollTop + app.offsetHeight);
+            const appBottomMargin = 20; // padding on .irb-main-panel
+            if (distFromBottom < appBottomMargin) {
+              legend.style.height = `calc(100vh - ${appBottomMargin - distFromBottom}px)`;
+            } else {
+              legend.style.height = ``;
+            }
           }
         } else {
           app.classList.remove(stickyClassName);
         }
       }, 10, {leading: true, trailing: true}));
     });
-
-    super.createdCallback(...arguments);
   }
 
   // Serialization helpers
