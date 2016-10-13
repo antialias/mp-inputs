@@ -57,8 +57,8 @@ document.registerElement(`mp-calendar`, class extends WebComponent {
         field: el.input,
         numberOfMonths: 2,
         i18n: {
-          months: [`January`,`February`,`March`,`April`,`May`,`June`,`July`,`August`,`September`,`October`,`November`,`December`],
-          weekdays: [`Sunday`,`Monday`,`Tuesday`,`Wednesday`,`Thursday`,`Friday`,`Saturday`],
+          months: [`January`, `February`, `March`, `April`, `May`, `June`, `July`, `August`, `September`, `October`, `November`, `December`],
+          weekdays: [`Sunday`, `Monday`, `Tuesday`, `Wednesday`, `Thursday`, `Friday`, `Saturday`],
           weekdaysShort: [`SU`,`MO`,`TU`,`WE`,`TH`,`FR`,`SA`],
         },
         onSelect: date => this.selectDate(date, idx),
