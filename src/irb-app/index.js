@@ -168,7 +168,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       const stickyClassName = `sticky-chart-headers`;
       app.addEventListener(`scroll`, debounce(() => {
         const chart = this.querySelector(`.chart`);
-        if (chart && chart.getBoundingClientRect().top <= 0) {
+        const isBarChart = this.state.report.displayOptions.chartType === `bar`;
+        if (isBarChart && chart && chart.getBoundingClientRect().top <= 0) {
           app.classList.add(stickyClassName);
           const legend = this.querySelector(`.legend`);
           if (legend) {
