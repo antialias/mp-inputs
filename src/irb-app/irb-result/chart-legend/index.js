@@ -66,7 +66,7 @@ document.registerElement(`chart-legend`, class extends Component {
                 } else {
                   formattedText = this.config.helpers.renameSeriesValue(idx, originalValue);
                   matches = legend && stringFilterMatches(
-                    formattedText,legend.search
+                    formattedText, legend.search
                   );
                 }
                 return matches ? {formattedText, matches, originalValue} : null;
