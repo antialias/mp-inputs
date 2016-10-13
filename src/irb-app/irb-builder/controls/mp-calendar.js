@@ -64,11 +64,11 @@ document.registerElement(`mp-calendar`, class extends WebComponent {
         onSelect: date => this.selectDate(date, idx),
         theme: `pika-mixpanel`,
       });
-      // TODO TMP FOR DEVELOPMENT, REVERT ME
-      // el.picker.hide();
+      TODO TMP FOR DEVELOPMENT, REVERT ME
+      el.picker.hide();
 
       el.input.addEventListener(`focus`, () => el.picker.show());
-      // el.input.addEventListener(`blur`, () => el.picker.hide());
+      el.input.addEventListener(`blur`, () => el.picker.hide());
 
       this.appendChild(el.input);
 
