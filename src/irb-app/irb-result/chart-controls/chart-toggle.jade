@@ -17,6 +17,7 @@ ul.chart-toggle(class={'editing-charttype': chartToggle.editingType})
           = $helpers.formattedChartName(chartType, selectedPlotStyle)
         if styleChoicesForChartType.length > 1
           button.dropdown(onclick=() => $helpers.onDropdownClick(chartType))
+            svg-icon(attributes={icon: 'caret_down'})
       if isEditingCurrentStyle
         .chart-style.options
           each plotStyle in styleChoicesForChartType

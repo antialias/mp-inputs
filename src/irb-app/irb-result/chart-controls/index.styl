@@ -104,18 +104,8 @@ chart-toggle-icon(filename)
       &.dropdown
         padding 0
         width 20px
-
-        &:before
-          background grey-300
-          content ''
-          display block
-          height 10px
-          mask url("~assets/chart-controls/caret-dropdown.svg") no-repeat center
-          mask-size 100% auto
-          width 10px
-
-        &:hover:before
-          background medium-gray
+        svg-icon-pos(20px, 0, 1px)
+        svg-icon-colors(grey-500, grey-700)
 
       &.label
         font-size 12px
