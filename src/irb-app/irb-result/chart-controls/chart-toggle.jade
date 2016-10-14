@@ -8,17 +8,19 @@ ul.chart-toggle(class={'editing-charttype': chartToggle.editingType})
       class={editing: isEditingCurrentStyle}
     )
       .toggle-button
-        button.label.icon(
+        button.label(
           class=[chartType, selectedPlotStyle]
           class={selected: chartType == report.displayOptions.chartType}
           onclick=() => $helpers.onStyleClick(chartType, selectedPlotStyle)
-        )= $helpers.formattedChartName(chartType, selectedPlotStyle)
+        )
+          svg-icon(attributes={icon: chartType})
+          = $helpers.formattedChartName(chartType, selectedPlotStyle)
         if styleChoicesForChartType.length > 1
           button.dropdown(onclick=() => $helpers.onDropdownClick(chartType))
       if isEditingCurrentStyle
         .chart-style.options
           each plotStyle in styleChoicesForChartType
-            button.button-option.icon(
+            button.button-option(
               class=[chartType, plotStyle]
               class={selected: selectedPlotStyle == plotStyle}
               onclick=() => $helpers.onStyleClick(chartType, plotStyle)
