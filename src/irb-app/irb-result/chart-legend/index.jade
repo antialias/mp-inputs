@@ -27,7 +27,11 @@ include ../../mixins.jade
           - const seriesDisplayLabel = $helpers.seriesDisplayOption(seriesIdx)
           if !isFlattenedData
             .sticky-title.info(onclick=() => report.legend.toggleShowSeries(seriesIdx))
-              .name(class={showing: isSeriesShowing})= util.renameProperty(series.seriesName)
+              - const titleName = util.renameProperty(series.seriesName)
+              .name(
+                class={showing: isSeriesShowing}
+                title=titleName
+              )= titleName
               .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
           ul.series-values
             if isSeriesShowing
