@@ -70,6 +70,8 @@ chart-toggle-icon(filename)
       background-color grey-50
 
   button
+    svg-icon-pos(22px, -5px, 0)
+    svg-icon-colors(grey-700, blue-300)
     align-items center
     background none
     background-color initial
@@ -84,11 +86,13 @@ chart-toggle-icon(filename)
     padding 0
     white-space nowrap
 
-    &.selected
-      color grey-900
-
     &:hover
       color blue-300
+
+    &.selected
+      color grey-900
+      svg-icon svg
+        fill grey-900
 
     &::before, &::after
       content none
@@ -97,8 +101,6 @@ chart-toggle-icon(filename)
     display flex
 
     button
-      svg-icon-pos(22px, -5px, 0)
-      svg-icon-colors(grey-700, blue-300)
       &.dropdown
         padding 0
         width 20px
@@ -150,11 +152,13 @@ chart-toggle-icon(filename)
       font-size 12px
       height inherit
       line-height 25px
-      padding 6px 24px 6px 48px
+      padding 6px 24px 6px 26px
       position relative
       text-align left
       white-space nowrap
       width 100%
+      svg-icon-pos(22px, -10px, 1px)
+      svg-icon-colors(grey-700, blue-300)
 
       &::before
         background-color grey-700
@@ -165,23 +169,10 @@ chart-toggle-icon(filename)
 
       &.selected
         color grey-900
+        svg-icon svg
+          fill grey-900
 
   // .icon
-  //   &.line
-  //     chart-toggle-icon('line')
-
-  //     &.stacked
-  //       chart-toggle-icon('line_stacked')
-
-  //   &.bar
-  //     chart-toggle-icon('bar')
-
-  //     &.stacked
-  //       chart-toggle-icon('bar_stacked')
-
-  //   &.table
-  //     chart-toggle-icon('table')
-
   //   &.linear
   //     chart-toggle-icon('analysis_linear')
 
@@ -199,14 +190,6 @@ chart-toggle-icon(filename)
 
   //   &.relative
   //     chart-toggle-icon('value_relative')
-
-  //   &:hover, &.stacked:hover
-  //     &::before
-  //       background-color blue-300
-
-  //   &.selected, &.stacked.selected
-  //     &::before
-  //       background-color grey-900
 
   &.chart-type:hover, &.editing
     border-color grey-300

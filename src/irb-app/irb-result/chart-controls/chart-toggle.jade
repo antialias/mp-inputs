@@ -24,4 +24,7 @@ ul.chart-toggle(class={'editing-charttype': chartToggle.editingType})
               class=[chartType, plotStyle]
               class={selected: selectedPlotStyle == plotStyle}
               onclick=() => $helpers.onStyleClick(chartType, plotStyle)
-            )= $helpers.formattedChartName(chartType, plotStyle)
+            )
+              - const icon = `${chartType}${plotStyle === `standard` ? `` : `_${plotStyle}`}`
+              svg-icon(attributes={icon})
+              = $helpers.formattedChartName(chartType, plotStyle)
