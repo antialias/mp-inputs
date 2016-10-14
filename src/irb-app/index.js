@@ -17,6 +17,8 @@ import QueryCache from '../models/queries/query-cache';
 import Report from '../models/report';
 import Result from '../models/result';
 
+import './widgets/svg-icon';
+
 import './irb-header';
 import './irb-builder';
 import './irb-result';

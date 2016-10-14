@@ -72,6 +72,11 @@ loader()
     100%
       transform rotate(360deg)
 
+panel-top()
+  background-color header-gray
+  border-radius 5px 5px 0 0
+  box-shadow inset 0px 1px #fff
+
 // deprecated
 svg-icon(filename, pos-left=8px, pos-top=7px, icon-color=grey-500)
   &::before
@@ -85,21 +90,6 @@ svg-icon(filename, pos-left=8px, pos-top=7px, icon-color=grey-500)
     position absolute
     top pos-top
     width 22px
-
-panel-top()
-  background-color header-gray
-  border-radius 5px 5px 0 0
-  box-shadow inset 0px 1px #fff
-
-
-// svg-icon component, to go to mixpanel-common
-svg-icon
-  display inline-block
-  height 22px
-  position relative
-  width 22px
-  svg
-    position absolute
 
 svg-icon-style(base-color, hover-color, size=22px, pos-left=0, pos-top=0)
   svg-icon svg
