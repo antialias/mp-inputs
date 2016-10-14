@@ -11,24 +11,28 @@ ul.toggle-view
           ul
             each analysis in $helpers.analysisChoices()
               li
-                button.button-option.icon(
+                button.button-option(
                   class=analysis
                   class={
                     selected: analysis == report.displayOptions.analysis,
                     disabled: $helpers.isAnalysisDisabled(analysis),
                   }
                   onclick=() => $helpers.onAnalysisClick(analysis)
-                )= analysis
+                )
+                  svg-icon(attributes={icon: `analysis_${analysis}`})
+                  = analysis
         .value.section
           .title(class={disabled: $helpers.isValueToggleDisabled()}) value
           ul
             each value in $helpers.valueChoices()
               li
-                button.button-option.icon(
+                button.button-option(
                   class=value
                   class={
                     selected: value == report.displayOptions.value,
                     disabled: $helpers.isValueToggleDisabled(),
                   }
                   onclick=() => $helpers.onValueClick(value)
-                )= value
+                )
+                  svg-icon(attributes={icon: `value_${value}`})
+                  = value
