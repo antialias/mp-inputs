@@ -164,16 +164,15 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     }
 
     window.requestAnimationFrame(() => {
-      const appContainer = this.parentNode;
       const stickyClassName = `sticky-chart-headers`;
-      appContainer.addEventListener(`scroll`, debounce(() => {
+      window.addEventListener(`scroll`, debounce(() => {
         const chart = this.querySelector(`.chart`);
         const isBarChart = this.state.report.displayOptions.chartType === `bar`;
         if (isBarChart && chart && chart.getBoundingClientRect().top <= 0) {
-          appContainer.classList.add(stickyClassName);
+          this.parentNode.classList.add(stickyClassName);
           const legend = this.querySelector(`.legend`);
           if (legend) {
-            const distFromBottom = appContainer.scrollHeight - (appContainer.scrollTop + appContainer.offsetHeight);
+            const distFromBottom = document.body.scrollHeight - (document.body.scrollTop + document.body.offsetHeight);
             const appBottomMargin = 20; // padding on .irb-main-panel
             if (distFromBottom < appBottomMargin) {
               legend.style.height = `calc(100vh - ${appBottomMargin - distFromBottom}px)`;
@@ -182,7 +181,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
             }
           }
         } else {
-          appContainer.classList.remove(stickyClassName);
+          this.parentNode.classList.remove(stickyClassName);
         }
       }, 10, {leading: true, trailing: true}));
     });
