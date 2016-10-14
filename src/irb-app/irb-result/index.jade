@@ -12,6 +12,7 @@
             .header-icon
           .chart-graph
             .chart-graph-text Gathering all the data...
+              .loader
       else
         - const processedResult = $helpers.processResult(result);
         case report.displayOptions.chartType
@@ -57,7 +58,7 @@
               .search
                 input(type="text", placeholder="search")
               .body-loader
-                for i in _.range(3)
+                for i in _.range(5)
                   .series-loader
                     .select-icon-loader
                     .label-loader
