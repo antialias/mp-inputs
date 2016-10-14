@@ -101,16 +101,13 @@ svg-icon
   svg
     position absolute
 
-svg-icon-colors(base, hover)
+svg-icon-style(base-color, hover-color, size=22px, pos-left=0, pos-top=0)
   svg-icon svg
-    fill base
-  &:hover
-    svg-icon svg
-      fill hover
-
-svg-icon-pos(size, pos-left=0, pos-top=0)
-  & svg
+    fill base-color
     height size
     left pos-left
     top pos-top
     width size
+  &:hover
+    svg-icon svg
+      fill hover-color
