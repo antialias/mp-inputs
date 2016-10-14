@@ -172,10 +172,13 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           this.parentNode.classList.add(stickyClassName);
           const legend = this.querySelector(`.legend`);
           if (legend) {
-            const distFromBottom = document.body.scrollHeight - (document.body.scrollTop + document.body.offsetHeight);
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+            const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+            const distFromBottom = scrollHeight - (scrollTop + window.innerHeight);
             const appBottomMargin = 20; // padding on .irb-main-panel
-            if (distFromBottom < appBottomMargin) {
-              legend.style.height = `calc(100vh - ${appBottomMargin - distFromBottom}px)`;
+            const spacingForBottom = Math.max(appBottomMargin - distFromBottom, 0);
+            if (spacingForBottom) {
+              legend.style.height = `calc(100vh - ${spacingForBottom}px)`;
             } else {
               legend.style.height = ``;
             }
