@@ -8,21 +8,21 @@
     width 100%
 
   button
-    background lighten(background-gray, 50%)
-    border 1px solid light-gray
-    color medium-gray
+    background lighten(grey-100, 50%)
+    border 1px solid grey-300
+    color grey-500
     font-size 12px
     height 32px
     padding 3px 8px
 
     &.label
       border-radius 2px
-      color dark-gray
+      color grey-700
 
       &::after
         border-left 5px solid transparent
         border-right 5px solid transparent
-        border-top 5px solid light-gray
+        border-top 5px solid grey-300
         content ''
         height 0
         position absolute
@@ -49,10 +49,10 @@
 
       &:hover, &.selected
         button
-          color dark-gray
+          color grey-700
 
       &.selected button
-        background background-gray
+        background grey-100
 
   &:not(.menu-open) ul
     opacity 0

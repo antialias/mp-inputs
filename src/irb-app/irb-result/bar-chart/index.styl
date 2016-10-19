@@ -57,7 +57,7 @@ bar-bottom = 8px
                 height 30px
 
                 &:not(:last-child)
-                  border-right 1px solid background-gray
+                  border-right 1px solid grey-100
 
                 &::before
                   height 10px
@@ -128,9 +128,9 @@ bar-bottom = 8px
 
     td
       border 1px dotted border-gray
-      border-bottom-color lighten(background-gray, 75%)
+      border-bottom-color lighten(grey-100, 75%)
       border-top none
-      color medium-gray
+      color grey-500
       font-size 12px
       padding 12px
       padding-top 20px
@@ -185,7 +185,7 @@ bar-bottom = 8px
           width 100%
 
           .grid-line
-            border-right 2px solid background-gray
+            border-right 2px solid grey-100
             flex-grow 1
             height 100%
 
@@ -267,7 +267,7 @@ bar-bottom = 8px
     &:hover::before
       background-color blue-300
     &.sort-selected::before
-      background-color medium-gray
+      background-color grey-500
     &.sort-icon-label-asc::before
       mask url("~assets/charts/sort-label-asc.svg") no-repeat center
     &.sort-icon-label-desc::before
