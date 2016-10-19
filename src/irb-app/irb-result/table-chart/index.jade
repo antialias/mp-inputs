@@ -4,7 +4,7 @@
 .table-chart(class={'full-width': fullWidthTable})
   table-manager(data=JSON.stringify({headers, rows, columnHeaders, columnRows, displayOptions}))
   .left-table-container
-    .fixed-header
+    .fixed-header.chart-header-container
       for header, idx in headers
         .fixed-header-cell(onclick=() => $helpers.clickHeader('left', idx, header))
           span= header === '$event' ? 'Event' : util.renameProperty(header)
@@ -12,7 +12,7 @@
     .left-table
       table
         thead
-          tr
+          tr.chart-header-container
             for header in headers
               th= util.renameProperty(header)
         tbody
@@ -25,7 +25,7 @@
 
   if fullWidthTable
     .right-table-container
-      .fixed-header
+      .fixed-header.chart-header-container
         for header, idx in columnHeaders
           .fixed-header-cell(onclick=() => $helpers.clickHeader('right', idx, header.value))
             span= header.display
@@ -33,7 +33,7 @@
       .right-table
         table
           thead
-            tr
+            tr.chart-header-container
               for header in columnHeaders
                 th= header.display
           tbody
