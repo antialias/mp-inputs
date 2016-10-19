@@ -72,12 +72,17 @@ min-bar-chart-height = 600px
     position relative
     width "calc(100% - %s)" % legend-width
 
+    .chart-header-container
+      background-color header-gray
+      color grey-500
+      font-size 12px
+      height 40px
+      line-height 40px
+
   .chart-loader
-    .chart-header
-      background-color grey-100
+    .chart-header-container
       border-bottom solid 1px grey-200
       display flex
-      height 40px
 
       .header-text-container
         display flex

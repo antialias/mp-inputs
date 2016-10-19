@@ -97,7 +97,7 @@ document.registerElement(`bar-chart`, class extends Component {
 
 document.registerElement(`irb-bar-chart-header`, class extends WebComponent {
   createdCallback() {
-    this.$el = $(`<div>`).addClass(`bar-chart-container`).appendTo(this);
+    this.$el = $(`<div>`).addClass(`chart-header-container`).appendTo(this);
     this.chartLabel = ``;
     this.chartMax = null;
     this.displayOptions = {};
