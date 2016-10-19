@@ -1,5 +1,10 @@
 @import "../../../stylesheets/common"
 
+.table-chart-type
+  overflow hidden
+  border-bottom-left-radius 5px
+  border-bottom-right-radius 5px
+
 .table-chart
   font-size 12px
   overflow hidden
@@ -48,6 +53,10 @@
   .left-table-container
     z-index 2
 
+    .fixed-header
+      .fixed-header-cell:first-child
+        border-left-color transparent
+
   .left-table, .right-table
     display inline-block
     margin-bottom -3px
@@ -71,6 +80,12 @@
         max-width 300px
         padding 13px 17px
         vertical-align top
+
+        &.first-column-cell
+          border-left none
+
+      th:first-child
+        border-left-color transparent
 
       tr
         border 1px solid border-gray
