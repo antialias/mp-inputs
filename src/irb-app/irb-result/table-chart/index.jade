@@ -21,7 +21,7 @@
               for cell, i in row
                 if cell
                   - const value = headers[i] === '$event' ? util.renameEvent(cell.value) : util.renamePropertyValue(cell.value)
-                  td(class=cell.odd ? 'odd' : 'even', rowSpan=cell.rowSpan || 1)= value
+                  td(class=cell.odd ? 'odd' : 'even', rowSpan=cell.rowSpan || 1, title=value)= value
 
   if fullWidthTable
     .right-table-container
@@ -46,6 +46,6 @@
                     if isRelativeValue
                       - percent = util.formatPercent(cellValue / segmentMax)
                       - cellValue = percent === '0%' ? '< 0.01%' : percent
-                    td(rowSpan=cell.rowSpan || 1)= cellValue
+                    td(rowSpan=cell.rowSpan || 1, title=cellValue)= cellValue
                   else
                     td
