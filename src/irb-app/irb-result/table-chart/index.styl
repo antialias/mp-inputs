@@ -27,22 +27,25 @@
         cursor pointer
         display inline-block
         font-weight bold
-        padding 0 8px
-        padding-right 21px
+        padding 0 21px 0 17px
+        position relative
         &:first-child
           border-left 1px solid border-gray
 
         .sort-arrows
           background-image url("~assets/charts/sort_arrows_sprite.png")
+          background-position 0 center
           background-repeat no-repeat
           display inline-block
-          height 10px
+          height 100%
           margin-left 5px
           opacity 0
+          position absolute
+          right 7px
           transition opacity 0.2s
           width 8px
           &.sort-desc
-            background-position -8px 0
+            background-position -8px center
           &.sort-active
             opacity 1
 
@@ -54,8 +57,9 @@
     z-index 2
 
     .fixed-header
-      .fixed-header-cell:first-child
-        border-left-color transparent
+      .fixed-header-cell
+        &:first-child
+          border-left-color transparent
 
   .left-table, .right-table
     display inline-block
@@ -70,9 +74,10 @@
         border 1px solid border-gray
         border-top none
         border-bottom none
-        padding 0 8px
-        padding-right 20px
+        line-height 15px
 
+      th
+        padding 0 20px 0 17px
 
       td
         ellipsis()
@@ -120,6 +125,7 @@
       background grey-50
 
     th, td
+      font-size 13px
       &:last-child
         border-right none
 
