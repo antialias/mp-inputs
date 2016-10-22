@@ -121,13 +121,11 @@ function main() {
   groups = [mixpanel.multiple_keys(groups)];
 
   var getReducerFunc = function(type, accessor) {
-    accessor = accessor || 'value';
+    accessor = accessor || `value`;
     var reducerFunc;
     switch (type) {
       case `average`:
-        // TODO(chi) numeric_summary doesn't support non-function accessors yet, otherwise
-        // 'accessor's default value can be just 'value'.
-        // UPDATE JQL 2.0: use mixpanel.reducer.avg()
+        // TODO: use mixpanel.reducer.avg()
         reducerFunc = mixpanel.reducer.numeric_summary(accessor);
         break;
       case `max`:
@@ -235,7 +233,7 @@ function main() {
           };
           break;
         default:
-          throw new Error(`Unsupported type in getAccessorFunc`);
+          throw new Error(`Unsupported type in getPostprocessFunc`);
       }
       return postprocessFunc;
     };
