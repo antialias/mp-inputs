@@ -121,7 +121,7 @@ function main() {
   groups = [mixpanel.multiple_keys(groups)];
 
   var getReducerFunc = function(type, accessor) {
-    accessor = accessor || function(item) { return item.value; };
+    accessor = accessor || 'value';
     var reducerFunc;
     switch (type) {
       case `average`:
