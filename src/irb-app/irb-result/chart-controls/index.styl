@@ -70,7 +70,7 @@ chart-toggle-icon(filename)
       background-color grey-50
 
   button
-    svg-icon-style(grey-700, blue-300, 22px, -5px, 0)
+    svg-icon-style(grey-700, blue-300, pos-left: -5px)
     align-items center
     background none
     background-color initial
@@ -90,8 +90,7 @@ chart-toggle-icon(filename)
 
     &.selected
       color grey-900
-      svg-icon svg
-        fill grey-900
+      svg-icon-style(grey-900, pos-left: -5px)
 
     &::before, &::after
       content none
@@ -103,7 +102,7 @@ chart-toggle-icon(filename)
       &.dropdown
         padding 0
         width 20px
-        svg-icon-style(grey-500, grey-700, 20px, 0, 1px)
+        svg-icon-style(grey-300, grey-500, size: 20px)
 
       &.label
         font-size 12px
@@ -145,7 +144,7 @@ chart-toggle-icon(filename)
       text-align left
       white-space nowrap
       width 100%
-      svg-icon-style(grey-700, blue-300, 22px, -10px, 1px)
+      svg-icon-style(grey-700, blue-300, pos-left: -5px)
 
       &::before
         background-color grey-700
@@ -156,8 +155,7 @@ chart-toggle-icon(filename)
 
       &.selected
         color grey-900
-        svg-icon svg
-          fill grey-900
+        svg-icon-style(grey-900, pos-left: -5px)
 
   &.chart-type:hover, &.editing
     border-color grey-300

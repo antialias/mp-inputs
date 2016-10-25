@@ -3,6 +3,8 @@ import MPApp from 'mixpanel-common/report/mp-app';
 import { extend } from 'mixpanel-common/util';
 import * as util from '../util';
 
+import 'mixpanel-common/components/svg-icon';
+
 import { mixpanel, rollbar } from '../tracking';
 
 import BuilderSections from '../models/builder-sections';
@@ -16,8 +18,6 @@ import SegmentationQuery from '../models/queries/segmentation';
 import QueryCache from '../models/queries/query-cache';
 import Report from '../models/report';
 import Result from '../models/result';
-
-import './widgets/svg-icon';
 
 import './irb-header';
 import './irb-builder';

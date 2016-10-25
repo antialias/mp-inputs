@@ -19,7 +19,7 @@ ul.toggle-view
                   }
                   onclick=() => $helpers.onAnalysisClick(analysis)
                 )
-                  svg-icon(attributes={icon: `analysis_${analysis}`})
+                  svg-icon(attributes={icon: `analysis-${analysis}`})
                   = analysis
         .value.section
           .title(class={disabled: $helpers.isValueToggleDisabled()}) value
@@ -34,5 +34,5 @@ ul.toggle-view
                   }
                   onclick=() => $helpers.onValueClick(value)
                 )
-                  svg-icon(attributes={icon: `value_${value}`})
+                  svg-icon(attributes={icon: `value-${value}`})
                   = value
