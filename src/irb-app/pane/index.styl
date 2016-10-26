@@ -133,14 +133,18 @@ header-height = 48px
           pointer-events none
 
       &.resource-value li
+        align-items center
+        display flex
         font-size 13px
         font-weight 500
         line-height 1.5
         overflow hidden
-        padding-left 32px
-        padding-right 32px
+        padding 4px 8px
         position relative
         text-overflow ellipsis
+        svg-icon-style(grey-500, blue-300)
+        svg-icon
+          padding-right 4px
 
         &.property
           &::after
@@ -150,12 +154,6 @@ header-height = 48px
             right 24px
             top 7px
             width 14px
-
-          &.events
-            svg-icon('event', pos-top: 4px)
-
-          &.people
-            svg-icon('profile', pos-top: 4px)
 
           &.type-string::after
             background url("~assets/properties/types/string.svg")
@@ -171,7 +169,6 @@ header-height = 48px
 
           &.type-datetime::after
             background url("~assets/properties/types/datetime.svg")
-
 
         .next-arrow
           background none

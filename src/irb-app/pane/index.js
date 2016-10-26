@@ -8,6 +8,11 @@ import './focus-input';
 import template from './index.jade';
 import './index.styl';
 
+const RESOURCE_ICONS = {
+  events: `event`,
+  people: `profile`,
+};
+
 export class Pane extends Component {
   get config() {
     return {
@@ -45,6 +50,7 @@ export class PaneContent extends Component {
       helpers: {
         commitStageClause: () => this.app.commitStageClause(),
         getActiveClauseProperty: property => this.app.hasStageClause() ? this.app.activeStageClause[property] : false,
+        resourceIcon: resource => RESOURCE_ICONS[resource],
         searchMatches: value => this.app.hasStageClause() && stringFilterMatches(value, this.app.activeStageClause.search),
         updateStageClause: (clauseData, commit) => {
           this.app.updateStageClause(clauseData);
