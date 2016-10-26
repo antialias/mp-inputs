@@ -10,7 +10,6 @@ mixin property-entry(property, selected)
       onclick=() => $helpers.selectProperty(property)
     )
       - const icon = $helpers.resourceIcon(property.resourceType)
-      if icon
-        svg-icon(attributes={icon})
+      svg-icon(attributes={icon, empty: !icon})
       +highlight-matches(matches)
       button.next-arrow(onclick=ev => $helpers.onPropertyArrowClick(ev, property)) ›
