@@ -31,6 +31,8 @@ include ./mixins.jade
             onclick=() => $helpers.updateStageClause({property: null, value}, true)
             title=valueName
           )
+            - const attrs = !!value.custom ? {icon: 'custom-events'} : {empty: true}
+            svg-icon(attributes=attrs)
             +highlight-matches(matches)
             button.next-arrow(onclick=ev => $helpers.onArrowClick(ev, value)) ›
 

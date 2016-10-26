@@ -118,9 +118,6 @@ header-height = 48px
         cursor pointer
         padding 5px 20px
 
-        &.custom
-          svg-icon('custom-events', pos-top: 4px)
-
         &.selected, &:hover
           color grey-900
 
@@ -133,18 +130,20 @@ header-height = 48px
           pointer-events none
 
       &.resource-value li
-        align-items center
-        display flex
         font-size 13px
         font-weight 500
         line-height 1.5
         overflow hidden
-        padding 4px 8px
+        padding 4px 32px 0 8px
         position relative
         text-overflow ellipsis
         svg-icon-style(grey-500, blue-300)
         svg-icon
           padding-right 4px
+
+        .substr
+          line-height 21px
+          vertical-align top
 
         &.property
           &::after
