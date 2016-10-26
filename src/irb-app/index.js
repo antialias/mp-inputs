@@ -135,6 +135,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   attachedCallback() {
     this.customEvents = (this.parentData && this.parentData.custom_events) || [];
+    let isDevWhitelist = window.parent === window; // is standalone
     if (this.parentData) {
       // don't start persisting yet
       Object.assign(this.state, {
@@ -143,7 +144,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           {}
         ),
       });
+      isDevWhitelist = this.parentData.whitelists && this.parentData.whitelists.includes(`dev`);
     }
+    Object.assign(this.state, {isDevWhitelist});
     if (this.parentFrame) {
       this.parentFrame.addHandler(`deleteBookmark`, this.deleteReport.bind(this));
     }
