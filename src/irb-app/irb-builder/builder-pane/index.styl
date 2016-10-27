@@ -122,10 +122,6 @@ group-property-pane-content
       width 328px
 
 
-filter-icon(filename)
-  position relative
-  svg-icon(filename, 12px, 12px)
-
 filter-property-value-pane-content
   .pane-content
     .filter-tabs
@@ -147,29 +143,29 @@ filter-property-value-pane-content
         position relative
         transition background-color .2s, border-color .2s
 
+        .filter-button-wrapper
+          svg-icon-style(grey-500, blue-300, pos-left: 10px, pos-top: 10px)
+          svg-icon
+            position absolute
+
         &.type-string
           .filter-button-wrapper
-            filter-icon('type-text')
             width 98px
 
         &.type-number
           .filter-button-wrapper
-            filter-icon('type-number')
             width 103px
 
         &.type-datetime
           .filter-button-wrapper
-            filter-icon('type-date')
             width 82px
 
         &.type-boolean
           .filter-button-wrapper
-            filter-icon('type-boolean')
             width 124px
 
         &.type-list
           .filter-button-wrapper
-            filter-icon('type-list')
             width 85px
 
         .filter-button-wrapper
@@ -178,8 +174,6 @@ filter-property-value-pane-content
         &:hover
           button
             color blue-300
-          .filter-button-wrapper::before
-            background-color blue-300
 
         &.selected
           border-left 1px solid border-gray
@@ -196,8 +190,7 @@ filter-property-value-pane-content
             button
               border-left-color transparent
               color grey-900
-            &::before
-              background-color grey-900
+            svg-icon-style(grey-900, pos-left: 10px, pos-top: 10px)
           & + .filter-tab
             button
               border-left-color transparent
@@ -231,5 +224,5 @@ filter-property-value-pane-content
           padding 0
           text-align center
           text-indent 16px
-          transition color .1s
+          transition color .2s
           width 100%

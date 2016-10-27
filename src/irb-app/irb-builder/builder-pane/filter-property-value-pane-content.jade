@@ -12,6 +12,7 @@
         [`type-${typeChoice}`]: true,
       })
         .filter-button-wrapper(onclick=() => $helpers.selectFilterType(typeChoice))
+          svg-icon(attributes={icon: $helpers.typeIcon(typeChoice)})
           button= util.renamePropertyType(typeChoice)
 
   if selectedType

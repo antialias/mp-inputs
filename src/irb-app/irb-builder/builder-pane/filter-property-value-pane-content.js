@@ -8,6 +8,14 @@ import {
 
 import template from './filter-property-value-pane-content.jade';
 
+const TYPE_ICONS = {
+  boolean:  `type-boolean`,
+  datetime: `type-date`,
+  list:     `type-list`,
+  number:   `type-number`,
+  string:   `type-text`,
+};
+
 document.registerElement(`filter-property-value-pane-content`, class extends PaneContent {
   get config() {
     return extend(super.config, {
@@ -38,6 +46,7 @@ document.registerElement(`filter-property-value-pane-content`, class extends Pan
         }),
         showPropertyValues: () => this.app.hasStageClause() && !this.app.activeStageClause.filterOperatorIsSetOrNotSet,
         stopEditingClause: () => this.app.stopEditingClause(),
+        typeIcon: filterType => TYPE_ICONS[filterType],
         updateDate: ev => ev.detail && this.app.updateStageClause({filterValue: ev.detail}),
         updateStageClause: clauseData => this.app.updateStageClause(clauseData),
       }),
