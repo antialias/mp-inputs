@@ -31,16 +31,10 @@ var webpackConfig = {
       {
         test: /\.(png|svg)$/,
         loader: 'url-loader?limit=50000',
-        exclude: /node_modules/,
       },
       {
         test: /\.styl$/,
         loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader!stylus-loader'),
-      },
-      {
-        test: /\.svg$/,
-        loader: 'raw',
-        include: /node_modules/,
       },
     ],
   },
