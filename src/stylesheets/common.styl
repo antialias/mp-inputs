@@ -76,17 +76,3 @@ panel-top()
   background-color header-gray
   border-radius 5px 5px 0 0
   box-shadow inset 0px 1px #fff
-
-// deprecated
-svg-icon(filename, pos-left=8px, pos-top=7px, icon-color=grey-500)
-  &::before
-    mask unquote('url(~mixpanel-common/assets/icons/' + filename + '.svg)') no-repeat center
-    background-color icon-color
-    background-position center
-    background-repeat no-repeat
-    content ''
-    height 22px
-    left pos-left
-    position absolute
-    top pos-top
-    width 22px
