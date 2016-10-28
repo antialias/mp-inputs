@@ -21,6 +21,7 @@ if (API_LOCAL && !STANDALONE) {
 const initIRB = () => new Promise(resolve => {
   const IRB = document.createElement(`irb-app`);
   if (STANDALONE) {
+    IRB.setAttribute(`standalone`, `true`);
     resolve(IRB);
   } else {
     const parentFrame = new Framesg(window.parent, `mp-app`, {

@@ -135,18 +135,20 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   attachedCallback() {
     this.customEvents = (this.parentData && this.parentData.custom_events) || [];
-    let isDevWhitelist = window.parent === window; // is standalone
+    let queryBuilderVersion = this.getJSONAttribute(`standalone`) ? `new` : `old`;
     if (this.parentData) {
       // don't start persisting yet
+      if (this.parentData.whitelists && this.parentData.whitelists.includes(`dev`)) {
+        queryBuilderVersion = `new`;
+      }
       Object.assign(this.state, {
         savedReports: this.parentData.bookmarks.reduce(
           (reports, bm) => extend(reports, {[bm.id]: Report.fromBookmarkData(bm)}),
           {}
         ),
       });
-      isDevWhitelist = this.parentData.whitelists && this.parentData.whitelists.includes(`dev`);
     }
-    Object.assign(this.state, {isDevWhitelist});
+    Object.assign(this.state, {queryBuilderVersion});
     if (this.parentFrame) {
       this.parentFrame.addHandler(`deleteBookmark`, this.deleteReport.bind(this));
     }
