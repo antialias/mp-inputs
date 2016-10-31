@@ -16,14 +16,18 @@
             for header in headers
               th= util.renameProperty(header)
         tbody
+          -let firstColIdx = 0
           for row in rows
             tr
-              for cell, i in row
+              for cell, cellIdx in row
+                -const isFirstCol = cellIdx === 0;
                 if cell
-                  - const value = headers[i] === '$event' ? util.renameEvent(cell.value) : util.renamePropertyValue(cell.value)
+                  - const value = headers[cellIdx] === '$event' ? util.renameEvent(cell.value) : util.renamePropertyValue(cell.value)
                   td(
-                    class=cell.odd ? 'odd' : 'even'
-                    class={'first-column-cell': i === 0}
+                    class={
+                      'first-column-cell': isFirstCol,
+                      'even': isFirstCol && firstColIdx++ % 2,
+                    }
                     rowSpan=cell.rowSpan || 1
                     title=value
                   )= value

@@ -89,6 +89,9 @@
         &.first-column-cell
           border-left none
 
+          &.even
+            background grey-50
+
       th:first-child
         border-left-color transparent
 
@@ -99,6 +102,9 @@
 
         &:first-child
           border-top none
+
+        &:nth-child(even) td:not(.first-column-cell)
+          background grey-50
 
       tbody
         tr:last-child
@@ -112,9 +118,6 @@
     th, td
       &:last-child
         border-right none
-
-      &.even
-        background grey-50
 
   .right-table
     overflow scroll
