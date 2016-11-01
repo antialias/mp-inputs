@@ -9,6 +9,8 @@
         .fixed-header-cell(onclick=() => $helpers.clickHeader('left', idx, header))
           span= header === '$event' ? 'Event' : util.renameProperty(header)
           .sort-arrows(class=$helpers.leftSortArrowClasses(idx))
+            svg-icon.triangle-up(attributes={icon: 'triangle-up'})
+            svg-icon.triangle-down(attributes={icon: 'triangle-down'})
     .left-table
       table
         thead
@@ -39,6 +41,9 @@
           .fixed-header-cell(onclick=() => $helpers.clickHeader('right', idx, header.value))
             span= header.display
             .sort-arrows(class=$helpers.rightSortArrowClasses(header.value))
+              svg-icon.triangle-up(attributes={icon: 'triangle-up'})
+              svg-icon.triangle-down(attributes={icon: 'triangle-down'})
+
       .right-table
         table
           thead
