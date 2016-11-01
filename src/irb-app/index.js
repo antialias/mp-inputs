@@ -135,7 +135,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   attachedCallback() {
     this.customEvents = (this.parentData && this.parentData.custom_events) || [];
-    let queryBuilderVersion = this.getJSONAttribute(`standalone`) ? `new` : `old`;
+    let queryBuilderVersion = this.standalone ? `new` : `old`;
     if (this.parentData) {
       // don't start persisting yet
       if (this.parentData.whitelists && this.parentData.whitelists.includes(`dev`)) {
@@ -148,7 +148,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         ),
       });
     }
-    Object.assign(this.state, {queryBuilderVersion});
+    this.state.queryBuilderVersion = queryBuilderVersion;
     if (this.parentFrame) {
       this.parentFrame.addHandler(`deleteBookmark`, this.deleteReport.bind(this));
     }
