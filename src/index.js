@@ -2,7 +2,7 @@
 
 // polyfills, must import first
 import 'babel-polyfill';
-import 'webcomponents.js/webcomponents-lite';
+import 'webcomponents.js/webcomponents';
 
 import Framesg from 'framesg';
 

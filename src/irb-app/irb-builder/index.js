@@ -1,3 +1,4 @@
+import 'mixpanel-common/build/components/buttons/button';
 import { Component } from 'panel';
 
 import './builder-show';

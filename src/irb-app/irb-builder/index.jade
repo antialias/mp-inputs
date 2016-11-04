@@ -1,8 +1,14 @@
 .irb-builder
-  .query
-    .section-container= $component.child('builder-show')
-    .section-container= $component.child('builder-group')
-    .section-container= $component.child('builder-time')
-  .filters= $component.child('builder-filter')
-  .reset-query(onclick=$helpers.reset title="Reset query")
-    svg-icon(attributes={icon: 'x'})
+  if projectHasEvents
+    .query
+      .section-container= $component.child('builder-show')
+      .section-container= $component.child('builder-group')
+      .section-container= $component.child('builder-time')
+    .filters= $component.child('builder-filter')
+    .reset-query(onclick=$helpers.reset title="Reset query")
+      svg-icon(attributes={icon: 'x'})
+  else
+    .builder-error-caption.error-title We haven't recieved any events from you yet
+    .builder-error-caption You'll need to install Mixpanel's library on your site and start tracking your user's actions.
+    .error-builder-button
+      mp-button.mp-button-primary Install Mixpanel

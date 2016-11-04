@@ -11,9 +11,11 @@ document.registerElement(`irb-header`, class extends Component {
     return {
       helpers: {
         refresh: () => {
-          const reportTrackingData = this.state.report.toTrackingData();
-          this.app.query({useCache: false});
-          this.app.trackEvent(`Refresh Report`, reportTrackingData);
+          if (this.app.state.projectHasEvents) {
+            const reportTrackingData = this.state.report.toTrackingData();
+            this.app.query({useCache: false});
+            this.app.trackEvent(`Refresh Report`, reportTrackingData);
+          }
         },
 
         reportListEnabled: () => !!Object.keys(this.state.savedReports).length,
@@ -27,7 +29,7 @@ document.registerElement(`irb-header`, class extends Component {
         },
 
         clickExportCSV: () => {
-          if (!this.state.resultLoading) {
+          if (!this.state.resultLoading && this.app.state.projectHasEvents) {
             this.app.queries.segmentation
               .build(this.state)
               .buildJQLArgs()
@@ -37,7 +39,7 @@ document.registerElement(`irb-header`, class extends Component {
           }
         },
         clickReportList: () => {
-          if (this.config.helpers.reportListEnabled()) {
+          if (this.config.helpers.reportListEnabled() && this.app.state.projectHasEvents) {
             this.app.openReportList();
           }
         },
