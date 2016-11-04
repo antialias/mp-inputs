@@ -1,6 +1,7 @@
 @import "../../stylesheets/common"
 
 border-curve = 3px
+button-height = 36px
 
 active-input()
   background-color #fff
@@ -16,17 +17,22 @@ mp-button-input
     &:hover input
       active-input()
 
-  input[type=text]
+  .disabled-input, input[type=text]
     background-color inherit
     border 1px solid transparent
     border-radius border-curve
     color grey-500
     font-size 20px
     font-weight normal
-    height 36px
+    height button-height
     outline none
     padding 0 20px
     width 270px
+
+  .disabled-input
+    line-height button-height
+
+  input[type=text]
     &:focus, &:hover
       active-input()
     &.active

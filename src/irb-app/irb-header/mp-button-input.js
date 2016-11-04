@@ -7,6 +7,7 @@ document.registerElement(`mp-button-input`, class extends Component {
   get config() {
     return {
       defaultState: {
+        enabled: true,
         active: false,
         inputValue: ``,
       },
@@ -38,6 +39,10 @@ document.registerElement(`mp-button-input`, class extends Component {
       },
       template,
     };
+  }
+
+  attributeChangedCallback() {
+    this.update({enabled: !!this.getJSONAttribute(`disabled`) ? false : true});
   }
 
   dispatchChange(options={}) {
