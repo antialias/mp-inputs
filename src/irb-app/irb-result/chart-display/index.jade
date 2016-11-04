@@ -1,14 +1,19 @@
 .chart(class=`${report.displayOptions.chartType}-chart-type`)
   .main-chart
-    if resultLoading
+    if resultLoading || !projectHasEvents
       .chart-loader
         .chart-header-container
           .header-text-container
-            .header-text
+            if resultLoading && projectHasEvents
+              .header-text
           .header-icon
         .chart-graph
-          .chart-graph-text Gathering all the data...
-            .loader
+          if resultLoading && projectHasEvents
+            .chart-graph-text Gathering all the data...
+              .loader
+          else
+            .chart-error-data-image
+            .chart-error-no-data-text We don't have any data for your project.
     else
       - const processedResult = $helpers.processResult(result);
       case report.displayOptions.chartType
