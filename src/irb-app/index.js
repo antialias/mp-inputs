@@ -69,7 +69,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         if (this.state.report.id) {
           stateUpdate = extend(stateUpdate, this.resetQuery());
         } else {
-          if (!stateUpdate.report) {
+          if (!stateUpdate.report && this.state.projectHasEvents) {
             this.resetTopQueries();
           }
         }
@@ -137,7 +137,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   attachedCallback() {
     this.customEvents = (this.parentData && this.parentData.custom_events) || [];
 
-
     let projectHasEvents = false;
     let queryBuilderVersion = `old`;
     let queryOnAllPeople = false;
@@ -171,16 +170,19 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       this.parentFrame.addHandler(`deleteBookmark`, this.deleteReport.bind(this));
     }
 
-    this.queries = {
-      topEvents: new TopEventsQuery(),
-      topEventProperties: new TopEventPropertiesQuery(),
-      topEventPropertyValues: new TopEventPropertyValuesQuery(),
-      topPeopleProperties: new TopPeoplePropertiesQuery(),
-      topPeoplePropertyValues: new TopPeoplePropertyValuesQuery(),
-      topPropertyValuesCache: new QueryCache(),
-      segmentation: new SegmentationQuery(this.customEvents),
-      segmentationCache: new QueryCache(),
-    };
+    if (projectHasEvents) {
+      this.queries = {
+        topEvents: new TopEventsQuery(),
+        topEventProperties: new TopEventPropertiesQuery(),
+        topEventPropertyValues: new TopEventPropertyValuesQuery(),
+        topPeopleProperties: new TopPeoplePropertiesQuery(),
+        topPeoplePropertyValues: new TopPeoplePropertyValuesQuery(),
+        topPropertyValuesCache: new QueryCache(),
+        segmentation: new SegmentationQuery(this.customEvents),
+        segmentationCache: new QueryCache(),
+      };
+    }
+
 
     super.attachedCallback(...arguments);
 

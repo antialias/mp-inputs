@@ -18,7 +18,7 @@ toggle-height = 34px
     border-radius 3px
     display flex
 
-    &:hover, &.editing-charttype
+    &.enabled:hover, &.editing-charttype
       border-color border-gray
       box-shadow 0 1px 2px 0 rgba(0, 0, 0, 0.05)
 
@@ -57,7 +57,7 @@ toggle-height = 34px
       &:after
         content none
 
-    &:hover, &.editing
+    &.enabled:hover, &.editing
       background-color grey-50
 
   button
@@ -76,15 +76,16 @@ toggle-height = 34px
     padding 0
     white-space nowrap
 
-    &:hover
-      color blue-300
-
     &.selected
       color grey-900
       svg-icon-style(grey-900, pos-left: -5px)
 
     &::before, &::after
       content none
+
+  ul.chart-toggle.enabled
+    button:hover
+      color blue-300
 
   .toggle-button
     display flex
@@ -216,3 +217,11 @@ button.extras-menu
       font-weight bold
       padding 6px 18px
       text-transform uppercase
+
+
+.error-no-project-data .irb-result .chart-toggle
+  button
+    svg-icon-style(grey-500, grey-400, pos-left: -5px)
+    color grey-500
+    cursor pointer
+

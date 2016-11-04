@@ -30,21 +30,27 @@ document.registerElement(`chart-toggle`, class extends Component {
         formattedChartName,
         styleChoicesForChartType,
 
-        onDropdownClick: type => this.app.updateChartToggle({
-          editingType: this.state.chartToggle.editingType === type ? null : type,
-        }),
+        onDropdownClick: type => {
+          if (this.app.state.projectHasEvents) {
+            this.app.updateChartToggle({
+              extendditingType: this.state.chartToggle.editingType === type ? null : type,
+            });
+          }
+        },
         onStyleClick: (chartType, plotStyle) => {
-          const reportTrackingData = this.state.report.toTrackingData();
-          const displayOptions = this.state.report.displayOptions;
-          this.IRBResult.updateDisplayOptions({chartType, plotStyle});
-          if (displayOptions.chartType !== chartType || displayOptions.plotStyle !== plotStyle) {
-            this.app.trackEvent(
-              `Chart Options - Changed Chart Type`,
-              extend(reportTrackingData, {
-                'new chart type': chartType,
-                'new plot style': plotStyle,
-              })
-            );
+          if (this.app.state.projectHasEvents) {
+            const reportTrackingData = this.state.report.toTrackingData();
+            const displayOptions = this.state.report.displayOptions;
+            this.IRBResult.updateDisplayOptions({chartType, plotStyle});
+            if (displayOptions.chartType !== chartType || displayOptions.plotStyle !== plotStyle) {
+              this.app.trackEvent(
+                `Chart Options - Changed Chart Type`,
+                extend(reportTrackingData, {
+                  'new chart type': chartType,
+                  'new plot style': plotStyle,
+                })
+              );
+            }
           }
         },
       },
