@@ -42,7 +42,7 @@ document.registerElement(`mp-button-input`, class extends Component {
   }
 
   attributeChangedCallback() {
-    this.update({enabled: !!this.getJSONAttribute(`disabled`) ? false : true});
+    this.update({enabled: this.getJSONAttribute(`disabled`) ? false : true});
   }
 
   dispatchChange(options={}) {
