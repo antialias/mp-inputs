@@ -136,18 +136,23 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   attachedCallback() {
     this.customEvents = (this.parentData && this.parentData.custom_events) || [];
+
+
+    let projectHasEvents = false;
     let queryBuilderVersion = `old`;
     let queryOnAllPeople = false;
     if (this.standalone) {
       queryBuilderVersion = `new`;
       queryOnAllPeople = true;
     }
+
     if (this.parentData) {
       // don't start persisting yet
       if (this.parentData.whitelists) {
         queryBuilderVersion = this.parentData.whitelists.includes(`irb-new-query-builder`) ? `new` : queryBuilderVersion;
         queryOnAllPeople = this.parentData.whitelists.includes(`dev`) ? true : queryOnAllPeople;
       }
+      projectHasEvents = !!this.parentData.has_integrated_arb;
       Object.assign(this.state, {
         savedReports: this.parentData.bookmarks.reduce(
           (reports, bm) => extend(reports, {[bm.id]: Report.fromBookmarkData(bm)}),
@@ -155,10 +160,13 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         ),
       });
     }
+
+    this.state.projectHasEvents = projectHasEvents;
     this.state.features = {
       queryBuilderVersion,
       queryOnAllPeople,
     };
+
     if (this.parentFrame) {
       this.parentFrame.addHandler(`deleteBookmark`, this.deleteReport.bind(this));
     }
