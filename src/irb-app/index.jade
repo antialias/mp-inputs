@@ -1,6 +1,6 @@
 .irb-app(class={'error-no-project-data': !projectHasEvents})
-  .irb-main-panel
+  .irb-main-panel.top-panel
     = $component.child('irb-header')
     = $component.child('irb-builder')
-  .irb-main-panel
+  .irb-main-panel.bottom-panel
     = $component.child('irb-result')
