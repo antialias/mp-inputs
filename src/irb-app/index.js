@@ -217,6 +217,13 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     });
   }
 
+  navigateToSetup() {
+    if (this.parentFrame) {
+      this.trackEvent(`No Data - Click Install Mixpanel`, {}, () => this.parentFrame.send(`navigateToSetup`));
+      setTimeout(() => this.parentFrame.send(`navigateToSetup`), 500);
+    }
+  }
+
   // Serialization helpers
 
   get persistenceKey() {

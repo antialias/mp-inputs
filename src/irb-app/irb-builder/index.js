@@ -13,6 +13,7 @@ document.registerElement(`irb-builder`, class extends Component {
   get config() {
     return {
       helpers: {
+        clickSetupMixpanel: () => this.app.navigateToSetup(),
         reset: () => {
           const reportTrackingData = this.state.report.toTrackingData();
           this.app.navigate(``, this.app.resetQuery());
