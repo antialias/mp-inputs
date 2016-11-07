@@ -62,6 +62,7 @@ toggle-height = 34px
 
   button
     svg-icon-style(grey-700, blue-300, pos-left: -5px)
+    svg-height(toggle-height)
     align-items center
     background none
     background-color initial
@@ -95,6 +96,7 @@ toggle-height = 34px
         padding 0
         width 20px
         svg-icon-style(grey-300, grey-500, size: 20px)
+        svg-height(toggle-height)
 
       &.label
         font-size 12px
@@ -220,8 +222,10 @@ button.extras-menu
 
 
 .error-no-project-data .irb-result .chart-toggle
-  button
-    svg-icon-style(grey-500, grey-400, pos-left: -5px)
+  button, button:hover
     color grey-500
     cursor default
-
+    svg-icon
+      svg, path
+        color grey-500
+        fill grey-500
