@@ -128,15 +128,13 @@ function main() {
         reducerFunc = mixpanel.reducer.avg(accessor);
         break;
       case `max`:
-        // TODO: provide support for reducer.max
-        reducerFunc = mixpanel.reducer.max_by(accessor);
+        reducerFunc = mixpanel.reducer.max(accessor);
         break;
       case `median`:
         reducerFunc = mixpanel.reducer.numeric_percentiles(accessor, [50]);
         break;
       case `min`:
-        // TODO: provide support for reducer.min
-        reducerFunc = mixpanel.reducer.min_by(accessor);
+        reducerFunc = mixpanel.reducer.min(accessor);
         break;
       case `total`:
         reducerFunc = mixpanel.reducer.sum(accessor);
@@ -206,32 +204,11 @@ function main() {
     query = query.groupByUser(groups, mixpanel.reducer.count({account_for_sampling: true}))
       .groupBy([mixpanel.slice(`key`, 1)], getReducerFunc(params.type));
   }
-  if (![`total`, `unique`, `average`].includes(params.type)) {
-    var getPostprocessFunc = function(type, paths) {
-      var postprocessFunc;
-      switch (type) {
-        case `max`:
-        case `min`:
-          postprocessFunc = function(item) {
-            item.value = paths.reduce(function(prop, path) {
-              return prop[path];
-            }, item.value);
-            return item;
-          };
-          break;
-        case `median`:
-          postprocessFunc = function(item) {
-            item.value = item.value[0].value;
-            return item;
-          };
-          break;
-        default:
-          throw new Error(`Unsupported type in getPostprocessFunc`);
-      }
-      return postprocessFunc;
-    };
-
-    query = query.map(getPostprocessFunc(params.type, propertyPaths));
+  if (params.type === `median`) {
+    query = query.map(function(item) {
+      item.value = item.value[0].value;
+      return item;
+    });
   }
 
   return query;
