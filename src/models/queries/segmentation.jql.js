@@ -125,8 +125,7 @@ function main() {
     var reducerFunc;
     switch (type) {
       case `average`:
-        // TODO: use mixpanel.reducer.avg()
-        reducerFunc = mixpanel.reducer.numeric_summary(accessor);
+        reducerFunc = mixpanel.reducer.avg(accessor);
         break;
       case `max`:
         // TODO: provide support for reducer.max
@@ -207,16 +206,10 @@ function main() {
     query = query.groupByUser(groups, mixpanel.reducer.count({account_for_sampling: true}))
       .groupBy([mixpanel.slice(`key`, 1)], getReducerFunc(params.type));
   }
-  if (![`total`, `unique`].includes(params.type)) {
+  if (![`total`, `unique`, `average`].includes(params.type)) {
     var getPostprocessFunc = function(type, paths) {
       var postprocessFunc;
       switch (type) {
-        case `average`:
-          postprocessFunc = function(item) {
-            item.value = item.value.sum / item.value.count;
-            return item;
-          };
-          break;
         case `max`:
         case `min`:
           postprocessFunc = function(item) {
