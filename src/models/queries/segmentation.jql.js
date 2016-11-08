@@ -54,6 +54,7 @@ function main() {
       var jqlGroup;
       jqlGroup = getPropertyPaths(group.value, group.resourceType).join(`.`);
       if (group.buckets) {
+        // TODO: handle key name change output from mixpanel.numeric_bucket
         jqlGroup = mixpanel.numeric_bucket(jqlGroup, group.buckets);
       }
       return jqlGroup;
@@ -110,6 +111,7 @@ function main() {
            quarterStart.setMonth(quarterStart.getMonth() + 3)) {
         quarterStarts.push(quarterStart.getTime());
       }
+      // TODO: handle key name change output from mixpanel.numeric_bucket
       timeUnitGroupBySelector = mixpanel.numeric_bucket(params.needsPeopleData ? `event.time` : `time`, quarterStarts);
       params.dates.from = getStartOfQuarter(params.dates.from);
       break;
@@ -124,17 +126,20 @@ function main() {
     switch (type) {
       case `average`:
         // TODO(chi) numeric_summary doesn't support non-function accessors yet, otherwise
-        // 'accessor's default value can be just 'value'
+        // 'accessor's default value can be just 'value'.
+        // UPDATE JQL 2.0: use mixpanel.reducer.avg()
         reducerFunc = mixpanel.reducer.numeric_summary(accessor);
         break;
       case `max`:
-        reducerFunc = mixpanel.reducer.max(accessor);
+        // TODO: provide support for reducer.max
+        reducerFunc = mixpanel.reducer.max_by(accessor);
         break;
       case `median`:
         reducerFunc = mixpanel.reducer.numeric_percentiles(accessor, [50]);
         break;
       case `min`:
-        reducerFunc = mixpanel.reducer.min(accessor);
+        // TODO: provide support for reducer.min
+        reducerFunc = mixpanel.reducer.min_by(accessor);
         break;
       case `total`:
         reducerFunc = mixpanel.reducer.sum(accessor);
