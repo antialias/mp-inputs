@@ -33,7 +33,7 @@ document.registerElement(`chart-toggle`, class extends Component {
         onDropdownClick: type => {
           if (this.app.state.projectHasEvents) {
             this.app.updateChartToggle({
-              extendditingType: this.state.chartToggle.editingType === type ? null : type,
+              editingType: this.state.chartToggle.editingType === type ? null : type,
             });
           }
         },
