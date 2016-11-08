@@ -58,7 +58,16 @@ document.registerElement(`table-chart`, class extends Component {
     };
   }
 
+  attachedCallback() {
+    super.attachedCallback(...arguments)
+    this.updateStateFromAttributes();
+  }
+
   attributeChangedCallback() {
+    this.updateStateFromAttributes();
+  }
+
+  updateStateFromAttributes() {
     let {headers, series, resourceDescription} = this.getJSONAttribute(`data`);
     const displayOptions = this.getJSONAttribute(`display-options`);
     const sortConfig = this.getJSONAttribute(`sorting`);

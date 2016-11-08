@@ -27,7 +27,16 @@ document.registerElement(`line-chart`, class extends Component {
     };
   }
 
+  attachedCallback() {
+    super.attachedCallback(...arguments)
+    this.updateStateFromAttributes();
+  }
+
   attributeChangedCallback() {
+    this.updateStateFromAttributes();
+  }
+
+  updateStateFromAttributes() {
     let { headers, series } = JSON.parse(this.getAttribute(`data`)) || {};
     const chartLabel = JSON.parse(this.getAttribute(`chart-label`));
 

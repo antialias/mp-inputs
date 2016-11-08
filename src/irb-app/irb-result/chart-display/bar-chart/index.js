@@ -56,7 +56,16 @@ document.registerElement(`bar-chart`, class extends Component {
     };
   }
 
+  attachedCallback() {
+    super.attachedCallback(...arguments)
+    this.updateStateFromAttributes();
+  }
+
   attributeChangedCallback() {
+    this.updateStateFromAttributes();
+  }
+
+  updateStateFromAttributes() {
     let {headers, series} = this.getJSONAttribute(`data`);
     const segmentColorMap = this.getJSONAttribute(`segment-color-map`) || {};
     const chartLabel = this.getJSONAttribute(`chart-label`) || ``;
