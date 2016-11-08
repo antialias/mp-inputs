@@ -135,7 +135,7 @@ export default class Legend {
     return {sortedKeys, defaultStates};
   }
 
-  updateLegendData(result, defaultValue=true, showLimit=48) {
+  updateLegendData(result, defaultValue=true) {
     let data = [];
     const segments = result.headers.slice();
     const sumNestedResults = nestedObjectSum(result.series);
@@ -146,8 +146,8 @@ export default class Legend {
 
       if (!data.length) {
         const resultsFlattened = flattenNestedObjectToPath(sumNestedResults);
-        const flatResults = this._sortAndLimitSeries(resultsFlattened.values, defaultValue, showLimit);
-        const seriesResults = this._sortAndLimitSeries(combineNestedObjKeys(sumNestedResults), defaultValue, showLimit);
+        const flatResults = this._sortAndLimitSeries(resultsFlattened.values, defaultValue, 20); // Line Chart
+        const seriesResults = this._sortAndLimitSeries(combineNestedObjKeys(sumNestedResults), defaultValue, 24); // Bar Chart
         Object.assign(dataSegment, {
           flattenedData: flatResults.defaultStates,
           flattenedDataPaths: resultsFlattened.paths,
