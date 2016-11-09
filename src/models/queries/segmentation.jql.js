@@ -75,7 +75,6 @@ function main() {
       timeUnitGroupBySelector = mixpanel.event_strftime(`%F`);
       break;
     case `week`:
-      // TODO(chi): consider just '%G'
       var getMonday = function(date) {
         date = new Date(date);
         var day = date.getDay();
@@ -83,7 +82,7 @@ function main() {
         date.setDate(date.getDate() - offset);
         return date.toISOString().split(`T`)[0];
       };
-      timeUnitGroupBySelector = mixpanel.event_strftime(`%Y %W`);
+      timeUnitGroupBySelector = mixpanel.event_strftime(`%G %V`);
       params.dates.from = getMonday(params.dates.from);
       break;
     case `month`:
