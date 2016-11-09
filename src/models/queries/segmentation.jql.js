@@ -131,7 +131,7 @@ function main() {
         reducerFunc = mixpanel.reducer.max(accessor);
         break;
       case `median`:
-        reducerFunc = mixpanel.reducer.numeric_percentiles(accessor, [50]);
+        reducerFunc = mixpanel.reducer.numeric_percentiles(accessor, 50);
         break;
       case `min`:
         reducerFunc = mixpanel.reducer.min(accessor);
@@ -204,13 +204,6 @@ function main() {
     query = query.groupByUser(groups, mixpanel.reducer.count({account_for_sampling: true}))
       .groupBy([mixpanel.slice(`key`, 1)], getReducerFunc(params.type));
   }
-  if (params.type === `median`) {
-    query = query.map(function(item) {
-      item.value = item.value[0].value;
-      return item;
-    });
-  }
-
   return query;
 }
 
