@@ -11,11 +11,16 @@ export function extremaResultToBuckets(result) {
   }
   const numBuckets = Math.floor((result.max - result.min) / bucketSize);
   const buckets = [];
+  const bucketRanges = {};
   for (let i = 0; i < numBuckets + 2; i++) {
-    buckets.push(Math.floor(result.min + bucketSize * i));
+    const bucket = Math.floor(result.min + bucketSize * i);
+    buckets.push(bucket);
+    if (i) {
+      bucketRanges[buckets[i-1]] = [buckets[i-1], bucket];
+    }
   }
-
-  return {buckets};
+  bucketRanges[buckets[buckets.length - 1]] = [buckets[buckets.length - 1], result.max];
+  return {buckets, bucketRanges};
 }
 
 export default class ExtremaQuery extends BaseQuery {

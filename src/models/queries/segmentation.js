@@ -5,7 +5,14 @@ import ExtremaQuery from './extrema';
 import { ShowClause } from '../clause';
 import Result from '../result';
 import main from './segmentation.jql.js';
-import { capitalize, extend, pick, renameEvent, renameProperty } from '../../util';
+import {
+  abbreviateNumber,
+  capitalize,
+  extend,
+  pick,
+  renameEvent,
+  renameProperty,
+} from '../../util';
 
 const MS_IN_HOUR = 60 * 60 * 1000;
 const MS_IN_DAY = MS_IN_HOUR * 24;
@@ -278,7 +285,8 @@ export default class SegmentationQuery extends BaseQuery {
     // query asynchronously to get its cardinality information. JQL code will use it to create
     // special groupby functions to create buckets to avoid doing high-cardinality groupbys. For all
     // other cases, return (resolve) right away.
-    return Promise.all(this.query.segments.map(segment => new Promise(resolve => {
+    this.resetBucketRanges();
+    return Promise.all(this.query.segments.map((segment, idx) => new Promise(resolve => {
       if (segment.filterType === `number`) {
         let eventName;
         if (jqlQuery.custom) {
@@ -309,7 +317,14 @@ export default class SegmentationQuery extends BaseQuery {
           /* eslint-enable camelcase */
         };
         state.interval = (state.to.getTime() - state.from.getTime()) / MS_BY_UNIT.day + 1;
-        extremaQuery.build(state).run().then(result => resolve(extend(segment, result)));
+        extremaQuery.build(state).run().then(result => {
+          let buckets;
+          if (result.buckets) {
+            this.storeBucketRange(idx, result.bucketRanges);
+            buckets = result.buckets;
+          }
+          return resolve(extend(segment, {buckets}));
+        });
       } else {
         resolve(segment);
       }
@@ -430,6 +445,9 @@ export default class SegmentationQuery extends BaseQuery {
         let obj = seriesObj;
         for (let si = 0; si < item.key.length - 1; si++) {
           let key = item.key[si];
+          if (si && this.isBucketedAtSegmentIdx(si - 1)) {
+            key = this.formattedKeyForBucketedSegment(si - 1, key);
+          }
           // If it is the second to last key it must be the object holding the date values.
           // If it does not yet exist fill this with the zeroed-out base dates.
           if (si === item.key.length - 2 && !obj[key]) {
@@ -458,5 +476,26 @@ export default class SegmentationQuery extends BaseQuery {
       headers = [`$event`].concat(headers);
     }
     return new Result({series, headers});
+  }
+
+  // bucketed segment helpers
+
+  formattedKeyForBucketedSegment(segmentIdx, key) {
+    const ranges = this._bucketRanges[segmentIdx][key];
+    return `${abbreviateNumber(ranges[0])} - ${abbreviateNumber(ranges[1])}`;
+  }
+
+  isBucketedAtSegmentIdx(idx) {
+    return this.hasBucketedSegments && !!this._bucketRanges[idx];
+  }
+
+  resetBucketRanges() {
+    this.hasBucketedSegments = false;
+    this._bucketRanges = {};
+  }
+
+  storeBucketRange(segmentIdx, bucketRanges) {
+    this.hasBucketedSegments = true;
+    this._bucketRanges[segmentIdx] = bucketRanges;
   }
 }

@@ -51,10 +51,8 @@ function main() {
 
   if (params.groups) {
     groups = groups.concat(params.groups.map(function(group) {
-      var jqlGroup;
-      jqlGroup = getPropertyPaths(group.value, group.resourceType).join(`.`);
+      var jqlGroup = getPropertyPaths(group.value, group.resourceType).join(`.`);
       if (group.buckets) {
-        // TODO: handle key name change output from mixpanel.numeric_bucket
         jqlGroup = mixpanel.numeric_bucket(jqlGroup, group.buckets);
       }
       return jqlGroup;
@@ -110,7 +108,6 @@ function main() {
            quarterStart.setMonth(quarterStart.getMonth() + 3)) {
         quarterStarts.push(quarterStart.getTime());
       }
-      // TODO: handle key name change output from mixpanel.numeric_bucket
       timeUnitGroupBySelector = mixpanel.numeric_bucket(params.needsPeopleData ? `event.time` : `time`, quarterStarts);
       params.dates.from = getStartOfQuarter(params.dates.from);
       break;
