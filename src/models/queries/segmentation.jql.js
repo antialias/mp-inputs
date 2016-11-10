@@ -116,8 +116,8 @@ function main() {
 
   groups = [mixpanel.multiple_keys(groups)];
 
-  var getReducerFunc = function(type, propertyKey) {
-    var accessor = mixpanel.to_number(propertyKey);
+  var getReducerFunc = function(type, propertyPaths) {
+    var accessor = mixpanel.to_number(propertyPaths.join(`.`));
     var reducerFunc;
     switch (type) {
       case `average`:
@@ -160,7 +160,7 @@ function main() {
       groupByKeys = [mixpanel.slice(`key`, 1)];
       query = query.groupByUser(groups, mixpanel.reducer.any());
     }
-    query = query.groupBy(groupByKeys, getReducerFunc(params.type, propertyPaths.join(`.`)));
+    query = query.groupBy(groupByKeys, getReducerFunc(params.type, propertyPaths));
   } else if (params.type === `total`) {
     query = query.groupBy(groups, mixpanel.reducer.count({account_for_sampling: true}));
   } else if (params.type === `unique`) {
