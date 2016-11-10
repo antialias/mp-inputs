@@ -1,4 +1,4 @@
-/* global Events, People, join, mixpanel, module, params, _*/
+/* global Events, People, join, mixpanel, module, params*/
 /* eslint camelcase:0 */
 
 // parameterized JQL segmentation query
@@ -116,8 +116,8 @@ function main() {
 
   groups = [mixpanel.multiple_keys(groups)];
 
-  var getReducerFunc = function(type, accessor) {
-    accessor = accessor || `value`;
+  var getReducerFunc = function(type, propertyKey) {
+    var accessor = mixpanel.to_number(propertyKey);
     var reducerFunc;
     switch (type) {
       case `average`:
@@ -153,44 +153,14 @@ function main() {
 
   var propertyPaths = [`value`];
   if (params.property) {
+    var groupByKeys = groups;
     propertyPaths = getPropertyPaths(params.property.name, params.property.resourceType);
-    // TODO(chi): use mixpanel.to_number
-    var accessNumericPropertyOrReturnDefaultValue = function(paths, defaultValue) {
-      return function(eventData) {
-        if (!eventData) {
-          return defaultValue;
-        }
-
-        var prop = paths.reduce(function(prop, path) {
-          return prop && prop[path];
-        }, eventData);
-
-        return _.isNumber(prop) ? prop : defaultValue;
-      };
-    };
-    // TODO(chi): Have the accessor return any number for 'average' or 'median' when the property
-    // isn't a number yields inaccurate result. The fundamental issue is what do do when a numeric
-    // property of a user is non-existent or not numeric?
-    var getAccessorFunc = function(type, paths) {
-      switch (type) {
-        case `average`:
-        case `max`:
-        case `median`:
-        case `total`:
-          return accessNumericPropertyOrReturnDefaultValue(paths, 0);
-        case `min`:
-          return accessNumericPropertyOrReturnDefaultValue(paths, Number.MAX_VALUE);
-        default:
-          throw new Error(`Unsupported type in getAccessorFunc`);
-      }
-    };
     if (params.property.resourceType === `people`) {
       propertyPaths = [`value`].concat(propertyPaths);
-      query = query.groupByUser(groups, mixpanel.reducer.any())
-        .groupBy([mixpanel.slice(`key`, 1)], getReducerFunc(params.type, getAccessorFunc(params.type, propertyPaths)));
-    } else {
-      query = query.groupBy(groups, getReducerFunc(params.type, getAccessorFunc(params.type, propertyPaths)));
+      groupByKeys = [mixpanel.slice(`key`, 1)];
+      query = query.groupByUser(groups, mixpanel.reducer.any());
     }
+    query = query.groupBy(groupByKeys, getReducerFunc(params.type, propertyPaths.join(`.`)));
   } else if (params.type === `total`) {
     query = query.groupBy(groups, mixpanel.reducer.count({account_for_sampling: true}));
   } else if (params.type === `unique`) {
