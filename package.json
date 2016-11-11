@@ -30,7 +30,7 @@
     "babel-polyfill": "^6.7.4",
     "framesg": "^0.1.2",
     "lodash": "4.15.0",
-    "mixpanel-common": "^0.19.0",
+    "mixpanel-common": "0.22.2",
     "moment": "^2.13.0",
     "panel": "^0.8.5",
     "pikaday": "1.5.1",

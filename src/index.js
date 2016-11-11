@@ -10,6 +10,7 @@ import { mixpanel, rollbar } from './tracking';
 
 import './irb-app';
 
+import 'mixpanel-common/stylesheets/defaults/index.styl';
 import './stylesheets/index.styl';
 
 const STANDALONE = window.parent === window;
