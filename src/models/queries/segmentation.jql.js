@@ -1,4 +1,4 @@
-/* global Events, People, join, mixpanel, module, params*/
+/* global Events, People, join, mixpanel, module, params */
 /* eslint camelcase:0 */
 
 // parameterized JQL segmentation query
@@ -118,25 +118,13 @@ function main() {
 
   var getReducerFunc = function(type, propertyPaths) {
     var accessor = mixpanel.to_number(propertyPaths.join(`.`));
-    var reducerFunc;
     switch (type) {
-      case `average`:
-        reducerFunc = mixpanel.reducer.avg(accessor);
-        break;
-      case `max`:
-        reducerFunc = mixpanel.reducer.max(accessor);
-        break;
-      case `median`:
-        reducerFunc = mixpanel.reducer.numeric_percentiles(accessor, 50);
-        break;
-      case `min`:
-        reducerFunc = mixpanel.reducer.min(accessor);
-        break;
-      case `total`:
-        reducerFunc = mixpanel.reducer.sum(accessor);
-        break;
+      case `average`: return mixpanel.reducer.avg(accessor);
+      case `max`    : return mixpanel.reducer.max(accessor);
+      case `median` : return mixpanel.reducer.numeric_percentiles(accessor, 50);
+      case `min`    : return mixpanel.reducer.min(accessor);
+      case `total`  : return mixpanel.reducer.sum(accessor);
     }
-    return reducerFunc;
   };
 
   var query;
