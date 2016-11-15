@@ -291,7 +291,7 @@ export default class SegmentationQuery extends BaseQuery {
         let eventName;
         if (jqlQuery.custom) {
           eventName = jqlQuery.outputName;
-        } else if (jqlQuery.events.length === 1) {
+        } else if (this.totalEventsInAllQueries() === 1) {
           eventName = jqlQuery.eventNames()[0];
         } else {
           // Don't support getting extrema on the same property of multiple events *in the same
@@ -476,6 +476,10 @@ export default class SegmentationQuery extends BaseQuery {
       headers = [`$event`].concat(headers);
     }
     return new Result({series, headers});
+  }
+
+  totalEventsInAllQueries() {
+    return this.query.jqlQueries.reduce((total, query) => query.events.length + total, 0);
   }
 
   // bucketed segment helpers
