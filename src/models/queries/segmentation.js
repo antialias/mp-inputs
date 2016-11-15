@@ -318,12 +318,12 @@ export default class SegmentationQuery extends BaseQuery {
         };
         state.interval = (state.to.getTime() - state.from.getTime()) / MS_BY_UNIT.day + 1;
         extremaQuery.build(state).run().then(result => {
-          let buckets = {};
           if (result.buckets) {
             this.storeBucketRange(idx, result.bucketRanges);
-            buckets = result.buckets;
+            return resolve(extend(segment, {buckets: result.buckets}));
+          } else {
+            return resolve(segment);
           }
-          return resolve(extend(segment, {buckets}));
         });
       } else {
         resolve(segment);
