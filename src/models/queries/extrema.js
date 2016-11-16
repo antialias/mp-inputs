@@ -1,15 +1,16 @@
 import BaseQuery from './base';
-import { extend, pick } from '../../util';
+import { pick } from '../../util';
+
+import main from './extrema.jql.js';
 
 export function extremaResultToBuckets(result) {
-  if (!result.cardinality || result.cardinality !== `high`) {
+  const extremaDelta = result.max - result.min;
+  if (extremaDelta < 50) {
     return {};
   }
-  let bucketSize = result.bucket_size; // eslint-disable-line camelcase
-  if (bucketSize < 1) {
-    bucketSize = Math.floor(result.multiplier * bucketSize);
-  }
-  const numBuckets = Math.floor((result.max - result.min) / bucketSize);
+
+  const numBuckets = 10;
+  let bucketSize = extremaDelta / numBuckets;
   const buckets = [];
   const bucketRanges = {};
   for (let i = 0; i < numBuckets + 2; i++) {
@@ -23,32 +24,67 @@ export function extremaResultToBuckets(result) {
   return {buckets, bucketRanges};
 }
 
-export default class ExtremaQuery extends BaseQuery {
+export default class ExtremaJQLQuery extends BaseQuery {
   buildQuery(state) {
     return state;
   }
 
-  buildParams() {
-    const params = extend(pick(this.query, [`event`, `on`, `allow_fewer_buckets`, `allow_more_buckets`, `buckets`]), {
-      /* eslint-disable camelcase */
-      from_date: this.query.from.toISOString().split(`T`)[0],
-      to_date: this.query.to.toISOString().split(`T`)[0],
-      interval: Math.min(36, this.query.interval),
-      cardinality_threshold: 50,
-      /* eslint-enable camelcase */
-    });
-    if (this.query.where) {
-      params[`selector`] = this.query.where;
-    }
+  buildOptions() {
+    return {type: `POST`};
+  }
 
-    return params;
+  buildParams() {
+    const params = pick(this.query, [`events`, `property`, `isPeopleProperty`]);
+    params.from = this.query.from.toISOString().split(`T`)[0];
+    params.to = this.query.to.toISOString().split(`T`)[0];
+    params.task = this.task;
+    params.propertyPath = `${params.isPeopleProperty ? `user.` : ``}properties.${params.property}`;
+    return {
+      script: String(main),
+      params: JSON.stringify(params),
+    };
+  }
+
+  setTask(task) {
+    this.task = task;
+    return this;
+  }
+
+  buildJQLArgs() {
+    // prepare args for each JQL Query.
+    return this.query.jqlQueries.map(jqlQuery =>
+      this.buildJQLParams(jqlQuery).then(jqlParams =>
+        [this.buildUrl(), this.buildParams(jqlParams), this.buildOptions()]));
   }
 
   buildUrl() {
-    return `api/2.0/segmentation/extrema`;
+    return `api/2.0/jql`;
   }
 
-  processResults(result) {
-    return extremaResultToBuckets(result);
+  runJQLQueries() {
+    return [`min`, `max`].map(task => (
+      new Promise(resolve => {
+        this.setTask(task)
+          .fetch(this.buildUrl(), this.buildParams(), this.buildOptions())
+          .then(results => {
+            resolve({[task]: results});
+          });
+      })
+    ));
+  }
+
+  executeQuery() {
+    return Promise.all(this.runJQLQueries());
+  }
+
+  processResults(results) {
+    let flatResult = results.reduce((obj, result) => {
+      Object.keys(result).forEach(task => {
+        obj[task] = result[task][0];
+      });
+      return obj;
+    }, {});
+
+    return extremaResultToBuckets(flatResult);
   }
 }

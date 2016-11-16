@@ -1,10 +1,12 @@
 import moment from 'moment';
 
 import BaseQuery from './base';
-import ExtremaQuery from './extrema';
 import { ShowClause } from '../clause';
+import ExtremaJQLQuery from './extrema';
 import Result from '../result';
 import main from './segmentation.jql.js';
+import QueryCache from './query-cache';
+
 import {
   abbreviateNumber,
   capitalize,
@@ -239,6 +241,11 @@ class JQLQuery {
 }
 
 export default class SegmentationQuery extends BaseQuery {
+  constructor() {
+    super(...arguments);
+    this.extremaCache = new QueryCache();
+  }
+
   get valid() {
     // only valid if one or more queries is prepared
     return !!this.query.jqlQueries.length;
@@ -279,57 +286,39 @@ export default class SegmentationQuery extends BaseQuery {
     return `api/2.0/jql`;
   }
 
-  buildGroups(jqlQuery) {
-    // Check all numeric property groupBys. When a group clause is a numeric property, do an extrema
-    // query asynchronously to get its cardinality information. JQL code will use it to create
-    // special groupby functions to create buckets to avoid doing high-cardinality groupbys. For all
-    // other cases, return (resolve) right away.
+  buildGroups() {
     this.resetBucketRanges();
+    let eventsToQuery = this.allEventsInAllQueries();
     return Promise.all(this.query.segments.map((segment, idx) => new Promise(resolve => {
       const segmentType = segment.typeCast || segment.propertyType;
-      if (segmentType === `number` && segment.resourceType !== `people`) {
-        let eventName;
-        if (jqlQuery.custom) {
-          eventName = jqlQuery.outputName;
-        } else if (this.totalEventsInAllQueries() === 1) {
-          eventName = jqlQuery.eventNames()[0];
-        } else {
-          // Don't support getting extrema on the same property of multiple events *in the same
-          // show clause* for now. This means using 'Top Events' with a high-cardinality groupBy can
-          // still freeze the browser. Alternatively, we can call extrema for all 12 top events and
-          // get an universal bucketing scheme, but this gets crazy for 'All Events'.
-
-          // Or, we can take advantage of 'Group By Limits' in JQL 2.0.
-          return resolve(segment);
+      if (segmentType === `number`) {
+        if (this.query.filterArbSelectors) {
+          eventsToQuery = eventsToQuery.map(event => {
+            const selector = event.selector ? `(${event.selector} and ${this.query.filterArbSelectors})` : this.query.filterArbSelectors;
+            return extend(event, {selector});
+          });
         }
-        const action = segment.resourceType === `people` ? `user` : `properties`;
-        let extremaQuery = new ExtremaQuery({
+
+        const state = {
+          from: new Date(this.query.from),
+          to: new Date(this.query.to),
+          events: eventsToQuery,
+          isPeopleProperty: segment.resourceType === `people`,
+          property: segment.value,
+        };
+        const extremaQuery = new ExtremaJQLQuery({
           apiHost: this.apiHost,
           apiSecret: this.apiSecret,
         });
-        let state = {
-          /* eslint-disable camelcase */
-          from: new Date(this.query.from),
-          to: new Date(this.query.to),
-          event: eventName,
-          on: `${action}["${segment.value}"]`,
-          where: this.query.filterArbSelectors,
-          allow_more_buckets: false,
-          allow_fewer_buckets: true,
-          buckets: 12,
-          /* eslint-enable camelcase */
-        };
-        state.interval = (state.to.getTime() - state.from.getTime()) / MS_BY_UNIT.day + 1;
-        extremaQuery.build(state).run().then(result => {
-          if (result.buckets) {
-            this.storeBucketRange(idx, result.bucketRanges);
-            return resolve(extend(segment, {buckets: result.buckets}));
-          } else {
-            return resolve(segment);
-          }
+        const builtExtremaQuery = extremaQuery.build(state);
+        const cachedExtremaQuery = this.extremaCache.get(builtExtremaQuery.query);
+        builtExtremaQuery.run(cachedExtremaQuery).then(result => {
+          this.extremaCache.set(builtExtremaQuery.query, result, 120);
+          this.storeBucketRange(idx, result.bucketRanges);
+          return resolve(extend(segment, {buckets: result.buckets}));
         });
       } else {
-        resolve(segment);
+        return resolve(segment);
       }
     })));
   }
@@ -501,15 +490,20 @@ export default class SegmentationQuery extends BaseQuery {
     return new Result({series, headers});
   }
 
-  totalEventsInAllQueries() {
-    return this.query.jqlQueries.reduce((total, query) => query.events.length + total, 0);
+  allEventsInAllQueries() {
+    return this.query.jqlQueries.reduce((total, query) => total.concat(query.events), []);
   }
 
   // bucketed segment helpers
 
   formattedKeyForBucketedSegment(segmentIdx, key) {
-    const ranges = this._bucketRanges[segmentIdx][key];
-    return `${abbreviateNumber(ranges[0])} - ${abbreviateNumber(ranges[1])}`;
+    if (typeof key === `number`) {
+      const ranges = this._bucketRanges[segmentIdx][key];
+      return `${abbreviateNumber(ranges[0])} - ${abbreviateNumber(ranges[1])}`;
+    } else {
+      return key;
+    }
+
   }
 
   isBucketedAtSegmentIdx(idx) {
