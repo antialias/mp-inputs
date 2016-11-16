@@ -158,7 +158,7 @@ function main() {
     query = query.groupByUser(groups, mixpanel.reducer.count({account_for_sampling: true}))
       .groupBy([mixpanel.slice(`key`, 1)], getReducerFunc(params.type));
   }
-  return query;
+  return params.groupLimits ? query.internalLimitHierarchically(params.groupLimits) : query;
 }
 
 // ===== JQL CODE ENDS

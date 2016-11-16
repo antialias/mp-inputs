@@ -358,6 +358,10 @@ export default class SegmentationQuery extends BaseQuery {
         property: jqlQuery.property,
       };
 
+      if (groups.length) {
+        scriptParams.groupLimits = [-1].concat(Array(groups.length).fill(250));
+      }
+
       // As we need more helper data this should be moved down a level in the params
       const hasPeopleFilters = scriptParams.groups.concat([scriptParams.property])
         .some(param => param && param.resourceType === `people`);
