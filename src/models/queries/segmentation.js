@@ -359,7 +359,7 @@ export default class SegmentationQuery extends BaseQuery {
       };
 
       if (groups.length) {
-        scriptParams.groupLimits = [-1].concat(Array(groups.length).fill(250));
+        scriptParams.groupLimits = [-1].concat(groups.map(() => 250));
       }
 
       // As we need more helper data this should be moved down a level in the params
