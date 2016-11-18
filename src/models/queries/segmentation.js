@@ -138,46 +138,50 @@ class JQLQuery {
     this.chartType = options.chartType || state.report.displayOptions.chartType;
     this.customEvents = options.customEvents || [];
 
-    const ev = showClause.value;
-
-    // insert events
-    let events;
-    if (ev.custom) {
-      events = this.customEventToSelectors(ev);
-    } else {
-      switch(ev.name) {
-        case ShowClause.ALL_EVENTS.name:
-          events = [];
-          break;
-        case ShowClause.TOP_EVENTS.name:
-          events = state.topEvents.slice(0, 12);
-          break;
-        default:
-          events = [ev];
-          break;
-      }
-      events = events.map(ev => ({event: ev.name}));
-    }
-
-    this.custom = ev.custom;
-    this.events = events;
-
-    // Custom events and 'All Events' are a special case since they can't be used in the JQL
-    // 'event_selectors' directly but we still want to track their display names.
-    if (ev.custom || ev.name === ShowClause.ALL_EVENTS.name) {
-      this.outputName = ev.name;
-    }
-
     this.type = showClause.math;
-
-    this.unit = state.report.sections.time.clauses[0].unit;
-    if ([`min`, `max`, `unique`, `average`, `median`].includes(this.type) && this.chartType !== `line`) {
-      this.unit = `all`;
-    }
-
     this.property = (showClause.property && pick(showClause.property, [`name`, `resourceType`])) || null;
+    this.resourceType = showClause.value.resourceType || `events`;
 
-    this.displayNames = {};
+    if (this.resourceType === `events`) {
+      // event query
+      const ev = showClause.value;
+      let events;
+      if (ev.custom) {
+        events = this.customEventToSelectors(ev);
+      } else {
+        switch(ev.name) {
+          case ShowClause.ALL_EVENTS.name:
+            events = [];
+            break;
+          case ShowClause.TOP_EVENTS.name:
+            events = state.topEvents.slice(0, 12);
+            break;
+          default:
+            events = [ev];
+            break;
+        }
+        events = events.map(ev => ({event: ev.name}));
+      }
+
+      this.custom = ev.custom;
+      this.events = events;
+
+      // Custom events and 'All Events' are a special case since they can't be used in the JQL
+      // 'event_selectors' directly but we still want to track their display names.
+      if (ev.custom || ev.name === ShowClause.ALL_EVENTS.name) {
+        this.outputName = ev.name;
+      }
+
+      this.unit = state.report.sections.time.clauses[0].unit;
+      if ([`min`, `max`, `unique`, `average`, `median`].includes(this.type) && this.chartType !== `line`) {
+        this.unit = `all`;
+      }
+
+      this.displayNames = {};
+    } else {
+      // people query
+      this.people = [pick(showClause.value, [`name`, `type`])];
+    }
   }
 
   eventNames() {
@@ -337,7 +341,7 @@ export default class SegmentationQuery extends BaseQuery {
       // base params
       const scriptParams = {
         // filter clauses are global to all show clauses.
-        selectors: jqlQuery.events.map(selector => {
+        selectors: jqlQuery.events && jqlQuery.events.map(selector => {
           if (selector.selector) {
             if (this.query.filterArbSelectors) {
               selector.selector += ` and ${this.query.filterArbSelectors}`;
@@ -347,8 +351,9 @@ export default class SegmentationQuery extends BaseQuery {
           }
           return selector;
         }),
+        people: jqlQuery.people,
         outputName: jqlQuery.outputName,
-        dates: {
+        dates: jqlQuery.events && {
           from: (new Date(this.query.from)).toISOString().split(`T`)[0],
           to:   (new Date(this.query.to)).toISOString().split(`T`)[0],
           unit: jqlQuery.unit,
@@ -363,11 +368,18 @@ export default class SegmentationQuery extends BaseQuery {
       }
 
       // As we need more helper data this should be moved down a level in the params
-      const hasPeopleFilters = scriptParams.groups.concat([scriptParams.property])
+      const hasPeopleFilters = groups.concat([scriptParams.property])
         .some(param => param && param.resourceType === `people`);
-      const hasUserSelectors = scriptParams.selectors
+      const hasUserSelectors = scriptParams.selectors && scriptParams.selectors
         .some(es => es.selector && es.selector.includes(`user[`));
-      scriptParams.needsPeopleData = hasPeopleFilters || hasUserSelectors;
+
+      const needsPeopleData = hasPeopleFilters || hasUserSelectors || jqlQuery.people;
+
+      let resourceTypeNeeded = needsPeopleData ? `people` : `events`;
+      if (jqlQuery.events && needsPeopleData) {
+        resourceTypeNeeded = `all`;
+      }
+      scriptParams.resourceTypeNeeded = resourceTypeNeeded;
 
       return scriptParams;
     });

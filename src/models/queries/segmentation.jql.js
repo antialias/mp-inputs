@@ -33,17 +33,18 @@
 
 function main() {
   var groups = [];
+  var usesPeopleData = params.resourceTypeNeeded === `all` || params.resourceTypeNeeded === `people`;
   if (params.outputName) {
     groups.push(function() {
       return params.outputName;
     });
   } else if (params.selectors && params.selectors.length) {
-    groups.push(params.needsPeopleData ? `event.name` : `name`);
+    groups.push(usesPeopleData ? `event.name` : `name`);
   }
 
   var getPropertyPaths = function(propertyName, propertyResourceType) {
     var paths = [];
-    if (params.needsPeopleData) {
+    if (usesPeopleData) {
       paths.push(propertyResourceType === `people` ? `user` : `event`);
     }
     return paths.concat(`properties`, propertyName);
@@ -108,7 +109,7 @@ function main() {
            quarterStart.setMonth(quarterStart.getMonth() + 3)) {
         quarterStarts.push(quarterStart.getTime());
       }
-      timeUnitGroupBySelector = mixpanel.numeric_bucket(params.needsPeopleData ? `event.time` : `time`, quarterStarts);
+      timeUnitGroupBySelector = mixpanel.numeric_bucket(usesPeopleData ? `event.time` : `time`, quarterStarts);
       params.dates.from = getStartOfQuarter(params.dates.from);
       break;
   }
@@ -132,7 +133,7 @@ function main() {
     from_date: params.dates.from,
     to_date: params.dates.to,
   };
-  if (params.needsPeopleData) {
+  if (usesPeopleData) {
     query = join(Events(queryParams), People(), {selectors: params.selectors, type: `left`});
   } else {
     queryParams.event_selectors = params.selectors;

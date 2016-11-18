@@ -31,10 +31,15 @@ document.registerElement(`show-pane-content`, class extends PaneContent {
           return selectedResourceType === `all` || selectedResourceType === resourceType;
         },
         selectProperty: property => {
-          // commit property selection with "All Events"
+          // commit property selection with "All Events" for event properties.
+          debugger;
           this.app.updateStageClause({value: property});
           this.app.startAddingClause(`show`);
-          this.config.helpers.updateStageClause({value: ShowClause.ALL_EVENTS}, true);
+          if (property.resourceType === `events`) {
+            this.config.helpers.updateStageClause({value: ShowClause.ALL_EVENTS}, true);
+          } else {
+            this.config.helpers.updateStageClause({resourceType: property.resourceType}, true);
+          }
         },
       }),
     });
