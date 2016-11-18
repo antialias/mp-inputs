@@ -34,6 +34,8 @@
 function main() {
   var groups = [];
   var usesPeopleData = params.resourceTypeNeeded === `all` || params.resourceTypeNeeded === `people`;
+  var usesEventData = params.resourceTypeNeeded === `all` || params.resourceTypeNeeded === `events`;
+
   if (params.outputName) {
     groups.push(function() {
       return params.outputName;
@@ -44,7 +46,7 @@ function main() {
 
   var getPropertyPaths = function(propertyName, propertyResourceType) {
     var paths = [];
-    if (usesPeopleData) {
+    if (params.resourceTypeNeeded === `all`) {
       paths.push(propertyResourceType === `people` ? `user` : `event`);
     }
     return paths.concat(`properties`, propertyName);
@@ -62,58 +64,61 @@ function main() {
 
   // TODO(chi): do we want to keep the 'reset from_date back to the first day of unit' behavior for
   // month and quarter?
-  var timeUnitGroupBySelector;
-  switch(params.dates.unit) {
-    case `all`:
-      timeUnitGroupBySelector = function() { return `all`; };
-      break;
-    case `hour`:
-      timeUnitGroupBySelector = mixpanel.event_strftime(`%F %H`);
-      break;
-    case `day`:
-      timeUnitGroupBySelector = mixpanel.event_strftime(`%F`);
-      break;
-    case `week`:
-      var getMonday = function(date) {
-        date = new Date(date);
-        var day = date.getDay();
-        var offset = day > 0 ? day - 1 : 6;
-        date.setDate(date.getDate() - offset);
-        return date.toISOString().split(`T`)[0];
-      };
-      timeUnitGroupBySelector = mixpanel.event_strftime(`%G %V`);
-      params.dates.from = getMonday(params.dates.from);
-      break;
-    case `month`:
-      var getFirstOfMonth = function(date) {
-        date = new Date(date);
-        date.setDate(1);
-        return date.toISOString().split(`T`)[0];
-      };
-      timeUnitGroupBySelector = mixpanel.event_strftime(`%Y-%m`);
-      params.dates.from = getFirstOfMonth(params.dates.from);
-      break;
-    case `quarter`:
-      var getStartOfQuarter = function(date) {
-        date = new Date(date);
-        var qMonth = Math.floor(date.getMonth() / 3) * 3 + 1;
-        if (qMonth < 10) {
-          qMonth = `0` + qMonth;
+
+  if (usesEventData) {
+    var timeUnitGroupBySelector;
+    switch (params.dates.unit) {
+      case `all`:
+        timeUnitGroupBySelector = function() { return `all`; };
+        break;
+      case `hour`:
+        timeUnitGroupBySelector = mixpanel.event_strftime(`%F %H`);
+        break;
+      case `day`:
+        timeUnitGroupBySelector = mixpanel.event_strftime(`%F`);
+        break;
+      case `week`:
+        var getMonday = function(date) {
+          date = new Date(date);
+          var day = date.getDay();
+          var offset = day > 0 ? day - 1 : 6;
+          date.setDate(date.getDate() - offset);
+          return date.toISOString().split(`T`)[0];
+        };
+        timeUnitGroupBySelector = mixpanel.event_strftime(`%G %V`);
+        params.dates.from = getMonday(params.dates.from);
+        break;
+      case `month`:
+        var getFirstOfMonth = function(date) {
+          date = new Date(date);
+          date.setDate(1);
+          return date.toISOString().split(`T`)[0];
+        };
+        timeUnitGroupBySelector = mixpanel.event_strftime(`%Y-%m`);
+        params.dates.from = getFirstOfMonth(params.dates.from);
+        break;
+      case `quarter`:
+        var getStartOfQuarter = function(date) {
+          date = new Date(date);
+          var qMonth = Math.floor(date.getMonth() / 3) * 3 + 1;
+          if (qMonth < 10) {
+            qMonth = `0` + qMonth;
+          }
+          return date.toISOString().split(`T`)[0].replace(/(\d+)-\d\d-\d\d/, `$1-` + qMonth + `-01`);
+        };
+        var quarterStarts = [];
+        var lastQuarterStart = new Date(getStartOfQuarter(params.dates.to));
+        for (var quarterStart = new Date(getStartOfQuarter(params.dates.from));
+             quarterStart <= lastQuarterStart;
+             quarterStart.setMonth(quarterStart.getMonth() + 3)) {
+          quarterStarts.push(quarterStart.getTime());
         }
-        return date.toISOString().split(`T`)[0].replace(/(\d+)-\d\d-\d\d/, `$1-` + qMonth + `-01`);
-      };
-      var quarterStarts = [];
-      var lastQuarterStart = new Date(getStartOfQuarter(params.dates.to));
-      for (var quarterStart = new Date(getStartOfQuarter(params.dates.from));
-           quarterStart <= lastQuarterStart;
-           quarterStart.setMonth(quarterStart.getMonth() + 3)) {
-        quarterStarts.push(quarterStart.getTime());
-      }
-      timeUnitGroupBySelector = mixpanel.numeric_bucket(usesPeopleData ? `event.time` : `time`, quarterStarts);
-      params.dates.from = getStartOfQuarter(params.dates.from);
-      break;
+        timeUnitGroupBySelector = mixpanel.numeric_bucket(usesPeopleData ? `event.time` : `time`, quarterStarts);
+        params.dates.from = getStartOfQuarter(params.dates.from);
+        break;
+    }
+    groups.push(timeUnitGroupBySelector);
   }
-  groups.push(timeUnitGroupBySelector);
 
   groups = [mixpanel.multiple_keys(groups)];
 
@@ -130,14 +135,21 @@ function main() {
 
   var query;
   var queryParams = {
-    from_date: params.dates.from,
-    to_date: params.dates.to,
+    from_date: params.dates && params.dates.from,
+    to_date: params.dates && params.dates.to,
   };
-  if (usesPeopleData) {
-    query = join(Events(queryParams), People(), {selectors: params.selectors, type: `left`});
-  } else {
-    queryParams.event_selectors = params.selectors;
-    query = Events(queryParams);
+
+  switch (params.resourceTypeNeeded) {
+    case `all`:
+      query = join(Events(queryParams), People(), {selectors: params.selectors, type: `left`});
+      break;
+    case `events`:
+      queryParams.event_selectors = params.selectors;
+      query = Events(queryParams);
+      break;
+    case `people`:
+      query = People();
+      break;
   }
 
   var propertyPaths = [`value`];
@@ -151,12 +163,13 @@ function main() {
     }
     query = query.groupBy(groupByKeys, getReducerFunc(params.type, propertyPaths));
   } else if (params.type === `total`) {
-    query = query.groupBy(groups, mixpanel.reducer.count({account_for_sampling: true}));
+    var reducerCount = usesEventData ? mixpanel.reducer.count({account_for_sampling: true}) :  mixpanel.reducer.count();
+    query = query.groupBy(groups, reducerCount);
   } else if (params.type === `unique`) {
     query = query.groupByUser(groups, mixpanel.reducer.noop())
       .groupBy([mixpanel.slice(`key`, 1)], mixpanel.reducer.count());
   } else {
-    query = query.groupByUser(groups, mixpanel.reducer.count({account_for_sampling: true}))
+    query = query.groupByUser(groups, mixpanel.reducer.count({}))
       .groupBy([mixpanel.slice(`key`, 1)], getReducerFunc(params.type));
   }
   return params.groupLimits ? query.internalLimitHierarchically(params.groupLimits) : query;

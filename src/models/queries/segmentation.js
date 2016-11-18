@@ -141,6 +141,7 @@ class JQLQuery {
     this.type = showClause.math;
     this.property = (showClause.property && pick(showClause.property, [`name`, `resourceType`])) || null;
     this.resourceType = showClause.value.resourceType || `events`;
+    this.displayNames = {};
 
     if (this.resourceType === `events`) {
       // event query
@@ -176,11 +177,13 @@ class JQLQuery {
       if ([`min`, `max`, `unique`, `average`, `median`].includes(this.type) && this.chartType !== `line`) {
         this.unit = `all`;
       }
-
-      this.displayNames = {};
     } else {
       // people query
-      this.people = [pick(showClause.value, [`name`, `type`])];
+      this.outputName = showClause.value.name;
+      this.people = [{
+        value: this.outputName,
+        resourceType: `people`,
+      }];
     }
   }
 
@@ -351,14 +354,13 @@ export default class SegmentationQuery extends BaseQuery {
           }
           return selector;
         }),
-        people: jqlQuery.people,
         outputName: jqlQuery.outputName,
         dates: jqlQuery.events && {
           from: (new Date(this.query.from)).toISOString().split(`T`)[0],
           to:   (new Date(this.query.to)).toISOString().split(`T`)[0],
           unit: jqlQuery.unit,
         },
-        groups: groups,
+        groups: groups.concat(jqlQuery.people || []),
         type: jqlQuery.type,
         property: jqlQuery.property,
       };
