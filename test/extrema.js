@@ -22,6 +22,15 @@ describe('extremaResultToBuckets', function() {
         };
         expect(extremaResultToBuckets(result)).to.eql({
             buckets: [0, 20, 40, 60, 80, 100, 120],
+            bucketRanges: {
+                0: [0, 20],
+                20: [20, 40],
+                40: [40, 60],
+                60: [60, 80],
+                80: [80, 100],
+                100: [100, 120],
+                120: [120, 140],
+            },
         });
     });
 
@@ -35,6 +44,15 @@ describe('extremaResultToBuckets', function() {
         };
         expect(extremaResultToBuckets(result)).to.eql({
             buckets: [0, 2, 4, 6, 8, 10, 12],
+            bucketRanges: {
+                0: [0, 2],
+                2: [2, 4],
+                4: [4, 6],
+                6: [6, 8],
+                8: [8, 10],
+                10: [10, 12],
+                12: [12, 14],
+            },
         });
     });
 });

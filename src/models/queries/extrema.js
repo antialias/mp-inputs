@@ -19,7 +19,7 @@ export function extremaResultToBuckets(result) {
       bucketRanges[buckets[i-1]] = [buckets[i-1], bucket];
     }
   }
-  bucketRanges[buckets[buckets.length - 1]] = [buckets[buckets.length - 1], result.max];
+  bucketRanges[buckets[buckets.length - 1]] = [buckets[buckets.length - 1], Math.floor(result.min + bucketSize * buckets.length)];
   return {buckets, bucketRanges};
 }
 
