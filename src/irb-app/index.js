@@ -283,6 +283,12 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     return this.hasStageClause() && this.state.stageClauses[0].TYPE;
   }
 
+  originStageClauseIsPeopleProperty() {
+    return this.hasStageClause()
+      && this.state.stageClauses[0].value
+      && this.state.stageClauses[0].value.resourceType === `people`;
+  }
+
   isAddingClause(sectionType) {
     return (
       this.originStageClauseType() === sectionType &&

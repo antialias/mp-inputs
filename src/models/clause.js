@@ -110,7 +110,7 @@ ShowClause.ALL_EVENTS = ShowClause.prototype.ALL_EVENTS = {
   resourceType: `events`,
 };
 ShowClause.ALL_PEOPLE = ShowClause.prototype.ALL_PEOPLE = {
-  name: `$all_people`,
+  name: `All People`,
   resourceType: `people`,
 };
 ShowClause.MATH_TYPES = ShowClause.prototype.MATH_TYPES = [

@@ -70,6 +70,10 @@ export class PaneContent extends Component {
     const topEvents = sorted(this.state.topEvents, {
       transform: ev => renameEvent(ev.name).toLowerCase(),
     });
-    return [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS, ...topEvents];
+    const specialEvents = [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS];
+    if (this.app.originStageClauseIsPeopleProperty()) {
+      specialEvents.push(ShowClause.ALL_PEOPLE);
+    }
+    return specialEvents.concat(topEvents);
   }
 }
