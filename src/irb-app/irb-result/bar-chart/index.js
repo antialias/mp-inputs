@@ -130,7 +130,7 @@ document.registerElement(`irb-bar-chart-header`, class extends WebComponent {
     return $(`<div>`).addClass(`sort-holder`).append($sortControls);
   }
 
-  selectHeaderSort (type, colIdx, sortBy, sortOrder) {
+  selectHeaderSort(type, colIdx, sortBy, sortOrder) {
     this.dispatchEvent(new CustomEvent(`change`, {
       detail: {
         colIdx,
