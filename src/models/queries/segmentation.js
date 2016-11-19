@@ -377,15 +377,12 @@ export default class SegmentationQuery extends BaseQuery {
         .some(param => param && param.resourceType === `people`);
       const hasUserSelectors = scriptParams.selectors && scriptParams.selectors
         .some(es => es.selector && es.selector.includes(`user[`));
-
       const needsPeopleData = hasPeopleFilters || hasUserSelectors|| jqlQuery.resourceType === `people`;
-
       let resourceTypeNeeded = needsPeopleData ? `people` : `events`;
       if (jqlQuery.events && needsPeopleData) {
         resourceTypeNeeded = `all`;
       }
       scriptParams.resourceTypeNeeded = resourceTypeNeeded;
-
       return scriptParams;
     });
   }
