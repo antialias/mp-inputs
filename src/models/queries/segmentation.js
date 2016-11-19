@@ -340,7 +340,19 @@ export default class SegmentationQuery extends BaseQuery {
       // base params
       const scriptParams = {
         // filter clauses are global to all show clauses.
-        selectors: jqlQuery.events && jqlQuery.events.map(selector => {
+        outputName: jqlQuery.outputName,
+        groups: groups,
+        type: jqlQuery.type,
+        property: jqlQuery.property,
+      };
+
+      if (jqlQuery.events) {
+        scriptParams.dates = {
+          from: (new Date(this.query.from)).toISOString().split(`T`)[0],
+          to:   (new Date(this.query.to)).toISOString().split(`T`)[0],
+          unit: jqlQuery.unit,
+        };
+        scriptParams.selectors = jqlQuery.events.map(selector => {
           if (selector.selector) {
             if (this.query.filterArbSelectors) {
               selector.selector += ` and ${this.query.filterArbSelectors}`;
@@ -349,20 +361,15 @@ export default class SegmentationQuery extends BaseQuery {
             selector.selector = this.query.filterArbSelectors;
           }
           return selector;
-        }),
-        outputName: jqlQuery.outputName,
-        dates: jqlQuery.events && {
-          from: (new Date(this.query.from)).toISOString().split(`T`)[0],
-          to:   (new Date(this.query.to)).toISOString().split(`T`)[0],
-          unit: jqlQuery.unit,
-        },
-        groups: groups,
-        type: jqlQuery.type,
-        property: jqlQuery.property,
-      };
+        });
+      } else {
+        if (this.query.filterArbSelectors) {
+          scriptParams.selectors = [{selector: this.query.filterArbSelectors}];
+        }
+      }
 
       if (groups.length) {
-        scriptParams.groupLimits = [-1].concat(groups.map(() => 250));
+        scriptParams.groupLimits = [-1].concat(groups.map(() => 100));
       }
 
       // As we need more helper data this should be moved down a level in the params

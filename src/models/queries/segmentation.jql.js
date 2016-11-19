@@ -148,7 +148,8 @@ function main() {
       query = Events(queryParams);
       break;
     case `people`:
-      query = People();
+      queryParams.user_selectors = params.selectors;
+      query = People(queryParams);
       break;
   }
 
