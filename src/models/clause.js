@@ -102,10 +102,16 @@ ShowClause.TYPE = ShowClause.prototype.TYPE = `show`;
 ShowClause.TOP_EVENTS = ShowClause.prototype.TOP_EVENTS = {
   name: `$top_events`,
   custom: false,
+  resourceType: `events`,
 };
 ShowClause.ALL_EVENTS = ShowClause.prototype.ALL_EVENTS = {
   name: `$all_events`,
   custom: false,
+  resourceType: `events`,
+};
+ShowClause.ALL_PEOPLE = ShowClause.prototype.ALL_PEOPLE = {
+  name: `$all_people`,
+  resourceType: `people`,
 };
 ShowClause.MATH_TYPES = ShowClause.prototype.MATH_TYPES = [
   `total`, `unique`, `average`, `median`, `min`, `max`,

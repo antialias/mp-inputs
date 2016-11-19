@@ -180,10 +180,6 @@ class JQLQuery {
     } else {
       // people query
       this.outputName = showClause.value.name;
-      this.people = [{
-        value: this.outputName,
-        resourceType: `people`,
-      }];
     }
   }
 
@@ -294,7 +290,7 @@ export default class SegmentationQuery extends BaseQuery {
     // other cases, return (resolve) right away.
     this.resetBucketRanges();
     return Promise.all(this.query.segments.map((segment, idx) => new Promise(resolve => {
-      if (segment.filterType === `number`) {
+      if (segment.filterType === `number` && segment.resourceType !== `people`) {
         let eventName;
         if (jqlQuery.custom) {
           eventName = jqlQuery.outputName;
@@ -360,7 +356,7 @@ export default class SegmentationQuery extends BaseQuery {
           to:   (new Date(this.query.to)).toISOString().split(`T`)[0],
           unit: jqlQuery.unit,
         },
-        groups: groups.concat(jqlQuery.people || []),
+        groups: groups,
         type: jqlQuery.type,
         property: jqlQuery.property,
       };
@@ -375,7 +371,7 @@ export default class SegmentationQuery extends BaseQuery {
       const hasUserSelectors = scriptParams.selectors && scriptParams.selectors
         .some(es => es.selector && es.selector.includes(`user[`));
 
-      const needsPeopleData = hasPeopleFilters || hasUserSelectors || jqlQuery.people;
+      const needsPeopleData = hasPeopleFilters || hasUserSelectors|| jqlQuery.resourceType === `people`;
 
       let resourceTypeNeeded = needsPeopleData ? `people` : `events`;
       if (jqlQuery.events && needsPeopleData) {
@@ -456,6 +452,7 @@ export default class SegmentationQuery extends BaseQuery {
     let baseDateResults = {};
     results.forEach(r => baseDateResults[r.key[r.key.length-1]] = 0);
 
+    const isPeopleQuery = this.query.jqlQueries.every(query => query.resourceType === `people`);
     if (results) {
       series = results.reduce((seriesObj, item) => {
         // transform item.key array into nested obj,
@@ -475,7 +472,7 @@ export default class SegmentationQuery extends BaseQuery {
           }
           obj = obj[key];
         }
-        obj[item.key[item.key.length - 1]] = item.value;
+        obj[item.key[item.key.length - 1]] = isPeopleQuery ? {'total': item.value} : item.value;
         return seriesObj;
       }, {});
     }

@@ -34,10 +34,10 @@ document.registerElement(`show-pane-content`, class extends PaneContent {
           // commit property selection with "All Events" for event properties.
           this.app.updateStageClause({value: property});
           this.app.startAddingClause(`show`);
-          if (property.resourceType === `events`) {
-            this.config.helpers.updateStageClause({value: ShowClause.ALL_EVENTS}, true);
-          } else {
+          if (property.name === ShowClause.ALL_PEOPLE.name) {
             this.app.commitStageClause();
+          } else {
+            this.config.helpers.updateStageClause({value: ShowClause.ALL_EVENTS}, true);
           }
         },
       }),
@@ -64,7 +64,7 @@ document.registerElement(`show-pane-content`, class extends PaneContent {
   }
 
   get peoplePropertyChoices() {
-    return this._propsForDisplay(this.state.topPeopleProperties);
+    return [ShowClause.ALL_PEOPLE, ...this._propsForDisplay(this.state.topPeopleProperties)];
   }
 
   get section() {
