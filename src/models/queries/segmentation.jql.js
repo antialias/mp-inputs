@@ -154,6 +154,7 @@ function main() {
   }
 
   var propertyPaths = [`value`];
+  var countReducer = usesEventData ? mixpanel.reducer.count({account_for_sampling: true}) :  mixpanel.reducer.count();
   if (params.property) {
     var groupByKeys = groups;
     propertyPaths = getPropertyPaths(params.property.name, params.property.resourceType);
@@ -164,13 +165,12 @@ function main() {
     }
     query = query.groupBy(groupByKeys, getReducerFunc(params.type, propertyPaths));
   } else if (params.type === `total`) {
-    var countReducer = usesEventData ? mixpanel.reducer.count({account_for_sampling: true}) :  mixpanel.reducer.count();
     query = query.groupBy(groups, countReducer);
   } else if (params.type === `unique`) {
     query = query.groupByUser(groups, mixpanel.reducer.noop())
       .groupBy([mixpanel.slice(`key`, 1)], mixpanel.reducer.count());
   } else {
-    query = query.groupByUser(groups, mixpanel.reducer.count(countReducer))
+    query = query.groupByUser(groups, countReducer)
       .groupBy([mixpanel.slice(`key`, 1)], getReducerFunc(params.type));
   }
   return params.groupLimits ? query.internalLimitHierarchically(params.groupLimits) : query;
