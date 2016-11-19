@@ -454,10 +454,11 @@ export default class SegmentationQuery extends BaseQuery {
 
     // create an object of zero values for all possible dates
     let baseDateResults = {};
-    const isPeopleQuery = this.query.jqlQueries.every(query => query.resourceType === `people`);
-    const getValueType = value => (isPeopleQuery ? {value} : value);
+    const isPeopleOnlyQuery = this.query.jqlQueries.every(query => query.resourceType === `people`);
 
-    results.forEach(r => baseDateResults[r.key[r.key.length-1]] = getValueType(0));
+    if (!isPeopleOnlyQuery) {
+      results.forEach(r => baseDateResults[r.key[r.key.length-1]] = 0);
+    }
     if (results) {
       series = results.reduce((seriesObj, item) => {
         // transform item.key array into nested obj,
@@ -477,7 +478,7 @@ export default class SegmentationQuery extends BaseQuery {
           }
           obj = obj[key];
         }
-        obj[item.key[item.key.length - 1]] = getValueType(item.value);
+        obj[item.key[item.key.length - 1]] = isPeopleOnlyQuery ? {value: item.value} : item.value;
         return seriesObj;
       }, {});
     }
