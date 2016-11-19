@@ -64,7 +64,8 @@ document.registerElement(`show-pane-content`, class extends PaneContent {
   }
 
   get peoplePropertyChoices() {
-    return [ShowClause.ALL_PEOPLE, ...this._propsForDisplay(this.state.topPeopleProperties)];
+    const specialProperties = this.state.whitelists.queryOnAllPeople ? [ShowClause.ALL_PEOPLE] : [];
+    return specialProperties.concat(this._propsForDisplay(this.state.topPeopleProperties));
   }
 
   get section() {
