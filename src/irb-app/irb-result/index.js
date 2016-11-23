@@ -1,3 +1,5 @@
+import cloneDeep from 'lodash/cloneDeep';
+import isEqual from 'lodash/isEqual';
 import { Component } from 'panel';
 import { capitalize } from 'mixpanel-common/util';
 
@@ -145,7 +147,7 @@ document.registerElement(`irb-result`, class extends Component {
           this.app.query();
           this.app.trackEvent(
             `Refresh Report`,
-            extend(reportTrackingData, {'toast': true})
+            extend(reportTrackingData, {toast: true})
           );
         },
         processResult: result => {
@@ -157,7 +159,7 @@ document.registerElement(`irb-result`, class extends Component {
           if (this.config.helpers.showLegend()) {
             const legend = this.state.report.legend;
             legend.buildColorMap();
-            result.series = filterObject(result.series, (value, depth, parentKeys) => {
+            filterObject(result.series, (value, depth, parentKeys) => {
               if (isFlattenedData) {
                 return depth === 2 ? legend.data[0].flattenedData[parentKeys.concat(value).join(` `)] : true;
               } else {
@@ -236,6 +238,36 @@ document.registerElement(`irb-result`, class extends Component {
       template,
     };
   }
+
+  /* PERFORMANCE OPTIMIZATION --------------------------------------------------------- */
+  stateToWatch(state) {
+    try {
+      return {
+        resultID: state.result.id,
+        analysis: state.report.displayOptions.analysis,
+        isFlattenedData: state.report.displayOptions.chartType === `line`,
+        legend: state.report.legend,
+        newCachedData: state.newCachedData,
+        showLegend: this.config.helpers.showLegend(state),
+        sortConfig: cloneDeep(state.report.sorting),
+        windowSize: ROLLING_WINDOWS_BY_UNIT[state.report.sections.time.clauses[0].unit],
+      };
+    } catch(e) {
+      return {};
+    }
+  }
+
+  _render() {
+    const result = super._render(...arguments);
+    this.currentState = this.stateToWatch(this.state);
+    return result;
+  }
+
+  shouldUpdate(state) {
+    this.currentState = this.currentState || {};
+    return !isEqual(this.stateToWatch(state), this.currentState);
+  }
+  /* ---------------------------------------------------------------------------------- */
 
   formattedChartName(type, style) {
     return CHART_OPTIONS[type][style];

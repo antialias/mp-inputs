@@ -1,8 +1,11 @@
 import { isEqual, nestedObjectCumulative, nestedObjectRolling, pick } from '../util';
 
+let resultID = 0;
+
 export default class Result {
   constructor(attrs) {
     Object.assign(this, pick(attrs, [`headers`, `series`]));
+    this.id = resultID++;
   }
 
   isEqual(result) {
