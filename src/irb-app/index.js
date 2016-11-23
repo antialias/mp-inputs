@@ -316,14 +316,19 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       this.update({topPeopleProperties});
     });
 
-    this.queries.topEvents.build(this.state).run().then(topEvents => {
+    const topEventsQuery = this.queries.topEvents.build(this.state).run().then(topEvents => {
       this.update({
         topEvents: topEvents
           .map(ev => ({name: ev, custom: false}))
           .concat(this.customEvents.map(ce => Object.assign(ce, {custom: true}))),
       });
-      this.query();
     });
+
+    // check whether we need to wait for Top Events query before launching the main query
+    const needsTopEvents = this.state.report.sections.show.clauses.some(showClause =>
+      showClause.value.name === ShowClause.TOP_EVENTS.name
+    );
+    (needsTopEvents ? topEventsQuery : Promise.resolve()).then(() => this.query());
   }
 
   updateReport(attrs) {
