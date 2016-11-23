@@ -18,6 +18,7 @@ const STANDALONE = window.parent === window;
 if (API_LOCAL && !STANDALONE) {
   window.MP.api.options.apiHost = window.location.origin;
 }
+window.MP.api.MAX_SIMULTANEOUS_QUERIES = 50;
 
 const initIRB = () => new Promise(resolve => {
   const IRB = document.createElement(`irb-app`);
