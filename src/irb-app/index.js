@@ -67,7 +67,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         if (this.state.report.id) {
           stateUpdate = extend(stateUpdate, this.resetQuery());
         } else {
-          if (!stateUpdate.report && this.state.projectHasEvents) {
+          if (!stateUpdate.report) {
             this.resetTopQueries();
           }
         }
@@ -168,7 +168,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       this.parentFrame.addHandler(`deleteBookmark`, this.deleteReport.bind(this));
     }
 
-    if (projectHasEvents) {
+    this.queries = {};
+    if (this.canMakeQueries()) {
       this.queries = {
         topEvents: new TopEventsQuery(),
         topEventProperties: new TopEventPropertiesQuery(),
@@ -337,30 +338,36 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     }
   }
 
+  canMakeQueries() {
+    return this.state.projectHasEvents;
+  }
+
   // State modifiers
 
   resetTopQueries() {
-    this.queries.topEventProperties.build(this.state).run().then(topEventProperties => {
-      this.update({topEventProperties});
-    });
-
-    this.queries.topPeopleProperties.build(this.state).run().then(topPeopleProperties => {
-      this.update({topPeopleProperties});
-    });
-
-    const topEventsQuery = this.queries.topEvents.build(this.state).run().then(topEvents => {
-      this.update({
-        topEvents: topEvents
-          .map(ev => ({name: ev, custom: false}))
-          .concat(this.customEvents.map(ce => Object.assign(ce, {custom: true}))),
+    if (this.canMakeQueries()) {
+      this.queries.topEventProperties.build(this.state).run().then(topEventProperties => {
+        this.update({topEventProperties});
       });
-    });
 
-    // check whether we need to wait for Top Events query before launching the main query
-    const needsTopEvents = this.state.report.sections.show.clauses.some(showClause =>
-      showClause.value.name === ShowClause.TOP_EVENTS.name
-    );
-    (needsTopEvents ? topEventsQuery : Promise.resolve()).then(() => this.query());
+      this.queries.topPeopleProperties.build(this.state).run().then(topPeopleProperties => {
+        this.update({topPeopleProperties});
+      });
+
+      const topEventsQuery = this.queries.topEvents.build(this.state).run().then(topEvents => {
+        this.update({
+          topEvents: topEvents
+            .map(ev => ({name: ev, custom: false}))
+            .concat(this.customEvents.map(ce => Object.assign(ce, {custom: true}))),
+        });
+      });
+
+      // check whether we need to wait for Top Events query before launching the main query
+      const needsTopEvents = this.state.report.sections.show.clauses.some(showClause =>
+        showClause.value.name === ShowClause.TOP_EVENTS.name
+      );
+      (needsTopEvents ? topEventsQuery : Promise.resolve()).then(() => this.query());
+    }
   }
 
   updateReport(attrs) {
@@ -658,43 +665,45 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   query(options={}) {
-    const reportTrackingData = this.state.report.toTrackingData();
-    options = Object.assign({useCache: true}, options);
-    const query = this.queries.segmentation.build(this.state, options).query;
-    const cachedResult = options.useCache && this.queries.segmentationCache.get(query);
-    const cacheExpiry = 10; // seconds
+    if (this.canMakeQueries()) {
+      const reportTrackingData = this.state.report.toTrackingData();
+      options = Object.assign({useCache: true}, options);
+      const query = this.queries.segmentation.build(this.state, options).query;
+      const cachedResult = options.useCache && this.queries.segmentationCache.get(query);
+      const cacheExpiry = 10; // seconds
 
-    if (!cachedResult) {
-      this.update({resultLoading: true});
-    }
+      if (!cachedResult) {
+        this.update({resultLoading: true});
+      }
 
-    this.update({newCachedData: false});
-    this.resetToastTimer();
-    const queryStartTime = window.performance.now();
-    const queryEventProperties = {'cached': !!cachedResult};
+      this.update({newCachedData: false});
+      this.resetToastTimer();
+      const queryStartTime = window.performance.now();
+      const queryEventProperties = {'cached': !!cachedResult};
 
-    this.trackEvent(`Query Start`, extend(reportTrackingData, queryEventProperties));
+      this.trackEvent(`Query Start`, extend(reportTrackingData, queryEventProperties));
 
-    return this.queries.segmentation.run(cachedResult)
-      .then(result => {
-        if (!cachedResult) {
-          this.queries.segmentationCache.set(query, result, cacheExpiry);
-          queryEventProperties[`latency ms`] = Math.round(window.performance.now() - queryStartTime);
-        }
+      return this.queries.segmentation.run(cachedResult)
+        .then(result => {
+          if (!cachedResult) {
+            this.queries.segmentationCache.set(query, result, cacheExpiry);
+            queryEventProperties[`latency ms`] = Math.round(window.performance.now() - queryStartTime);
+          }
 
-        this.update({result: result, newCachedData: false, resultLoading: false});
-        // TODO: Handle searching better by only updating legend data on different queries
-        this.updateReport({
-          sorting: this.sortConfigFor(result, this.state.report.sorting),
-          legend: this.state.report.legend.updateLegendData(result),
+          this.update({result: result, newCachedData: false, resultLoading: false});
+          // TODO: Handle searching better by only updating legend data on different queries
+          this.updateReport({
+            sorting: this.sortConfigFor(result, this.state.report.sorting),
+            legend: this.state.report.legend.updateLegendData(result),
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          queryEventProperties[`error`] = err;
+        })
+        .then(() => {
+          this.trackEvent(`Query Finish`, extend(reportTrackingData, queryEventProperties));
         });
-      })
-      .catch(err => {
-        console.error(err);
-        queryEventProperties[`error`] = err;
-      })
-      .then(() => {
-        this.trackEvent(`Query Finish`, extend(reportTrackingData, queryEventProperties));
-      });
+    }
   }
 });
