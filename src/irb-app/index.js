@@ -138,7 +138,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     let queryBuilderVersion = this.standalone ? `new` : `old`;
     if (this.parentData) {
       // don't start persisting yet
-      if (this.parentData.whitelists && this.parentData.whitelists.includes(`dev`)) {
+      if (this.parentData.whitelists && this.parentData.whitelists.includes(`irb-new-query-builder`)) {
         queryBuilderVersion = `new`;
       }
       Object.assign(this.state, {
