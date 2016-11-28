@@ -218,10 +218,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   navigateToSetup() {
-    if (this.parentFrame) {
-      this.trackEvent(`No Data - Click Install Mixpanel`, {}, () => this.parentFrame.send(`navigateToSetup`));
-      setTimeout(() => this.parentFrame.send(`navigateToSetup`), 500);
-    }
+    this.trackEvent(`No Data - Click Install Mixpanel`)
+      .then(() => this.parentFrame && this.parentFrame.send(`navigateToSetup`));
   }
 
   // Serialization helpers
@@ -332,7 +330,10 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   trackEvent(eventName, properties) {
     try {
-      mixpanel.track(eventName, properties);
+      return new Promise(resolve => {
+        mixpanel.track(eventName, properties, resolve);
+        setTimeout(resolve, 500);
+      });
     } catch (e) {
       rollbar.error(`tracking error`, e);
     }
