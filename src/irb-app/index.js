@@ -3,8 +3,6 @@ import MPApp from 'mixpanel-common/report/mp-app';
 import { extend } from 'mixpanel-common/util';
 import * as util from '../util';
 
-import 'mixpanel-common/components/svg-icon';
-
 import { mixpanel, rollbar } from '../tracking';
 
 import BuilderSections from '../models/builder-sections';

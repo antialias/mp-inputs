@@ -34,6 +34,7 @@ var webpackConfig = {
       },
       {
         test: /\.styl$/,
+        exclude: /node_modules/,
         loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader!stylus-loader'),
       },
     ],
