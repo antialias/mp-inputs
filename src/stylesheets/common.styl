@@ -29,19 +29,23 @@ span.substr.matches-search
   color grey-900
   font-weight 600
 
-bg-img-with-2x(original_image, two_times_image, width, height)
-  background-image url('~assets/images/' + original_image)
-  background-size width height
+bg-img(image, width=null, height=null)
+  background-image url('~assets/images/' + image)
   background-repeat no-repeat
-  width width
-  height height
+  if width != null && height != null
+      background-size width height
+      width width
+      height height
+
+bg-img-with-2x(original_image, two_times_image, width, height)
+  bg-img(original_image, width, height)
   @media only screen and (min-device-pixel-ratio: 2),
     (device-pixel-ratio: 2),
     (device-pixel-ratio 2/1),
     (min-device-pixel-ratio 2),
     (min-resolution 192dpi),
     (min-resolution 2dppx)
-      background-image url('~assets/images/' + two_times_image)
+     bg-img(two_times_image)
 
 bottom-shadow()
   box-shadow 0px 1px 1.8px 0.2px rgba(69, 81, 113, 0.2)
