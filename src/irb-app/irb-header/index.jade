@@ -2,10 +2,7 @@
 .irb-header
   mp-button-input(
     value=report.title
-    attributes={
-      buttonText: 'Save',
-      disabled: !projectHasEvents,
-    }
+    attributes={buttonText: 'Save', disabled: !projectHasEvents}
     onchange=$helpers.updateTitle
   )
   .loading-dock
