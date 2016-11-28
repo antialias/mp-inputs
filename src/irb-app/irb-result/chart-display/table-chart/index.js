@@ -59,7 +59,7 @@ document.registerElement(`table-chart`, class extends Component {
   }
 
   attachedCallback() {
-    super.attachedCallback(...arguments)
+    super.attachedCallback(...arguments);
     this.updateStateFromAttributes();
   }
 

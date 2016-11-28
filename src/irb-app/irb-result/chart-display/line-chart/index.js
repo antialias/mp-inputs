@@ -28,7 +28,7 @@ document.registerElement(`line-chart`, class extends Component {
   }
 
   attachedCallback() {
-    super.attachedCallback(...arguments)
+    super.attachedCallback(...arguments);
     this.updateStateFromAttributes();
   }
 

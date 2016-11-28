@@ -57,7 +57,7 @@ document.registerElement(`bar-chart`, class extends Component {
   }
 
   attachedCallback() {
-    super.attachedCallback(...arguments)
+    super.attachedCallback(...arguments);
     this.updateStateFromAttributes();
   }
 
