@@ -1,5 +1,28 @@
 import { nestedObjectDepth, sum } from 'mixpanel-common/util';
 
+const CHART_OPTIONS = {
+  bar: {
+    standard: `Bar`,
+    stacked: `Stacked bar`,
+  },
+  line: {
+    standard: `Line`,
+    stacked: `Stacked line`,
+  },
+  table: {
+    standard: `Table`,
+  },
+};
+
+export function formattedChartName(type, style) {
+  return CHART_OPTIONS[type][style];
+}
+
+export function styleChoicesForChartType(type) {
+  return Object.keys(CHART_OPTIONS[type]);
+}
+
+
 /**
  * Transpose a 2-dimensional array:
  * [[1, 2, 3],    [[1, 4],

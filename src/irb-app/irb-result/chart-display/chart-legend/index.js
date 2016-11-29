@@ -7,8 +7,8 @@ import {
   stringFilterMatches,
   pick,
   sorted,
-} from '../../../util';
-import '../../widgets/sticky-scroll';
+} from '../../../../util';
+import '../../../widgets/sticky-scroll';
 
 import template from './index.jade';
 import './index.styl';

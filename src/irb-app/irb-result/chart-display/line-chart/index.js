@@ -4,12 +4,12 @@ import moment from 'moment';
 import { Component } from 'panel';
 import WebComponent from 'webcomponent';
 
-import * as util from '../../../util';
+import * as util from '../../../../util';
 import {
   nestedObjectPaths,
-} from '../chart-util';
+} from '../../chart-util';
 
-import commonCSS from '!!style!css?camelCase!stylus!../../../stylesheets/common.styl';
+import commonCSS from '!!style!css?camelCase!stylus!../../../../stylesheets/common.styl';
 import template from './index.jade';
 import './index.styl';
 

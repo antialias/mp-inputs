@@ -3,11 +3,11 @@
 import { Component } from 'panel';
 import WebComponent from 'webcomponent';
 
-import * as util from '../../../util';
+import * as util from '../../../../util';
 import {
   nestedObjectToTableData,
   transpose,
-} from '../chart-util';
+} from '../../chart-util';
 
 import template from './index.jade';
 import './index.styl';

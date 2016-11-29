@@ -1,5 +1,6 @@
 import { Component } from 'panel';
 
+import { formattedChartName, styleChoicesForChartType } from '../chart-util';
 import { extend, pick } from '../../../util';
 
 import template from './index.jade';
@@ -24,9 +25,11 @@ document.registerElement(`chart-toggle`, class extends Component {
       template: chartToggleTemplate,
       helpers: {
         chartTypes: () => [`bar`, `line`, `table`],
-        formattedChartName: (type, style) => this.IRBResult.formattedChartName(type, style),
         selectedPlotStyle: type => this.state.chartToggle[type].plotStyle,
-        styleChoicesForChartType: type => this.IRBResult.styleChoicesForChartType(type),
+
+        formattedChartName,
+        styleChoicesForChartType,
+
         onDropdownClick: type => this.app.updateChartToggle({
           editingType: this.state.chartToggle.editingType === type ? null : type,
         }),
