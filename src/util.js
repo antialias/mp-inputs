@@ -22,22 +22,27 @@ export function mapObjectKeys(obj, callback) {
   return newObj;
 }
 
-export function filterObject(obj, filterFunc, parentKeys=[]) {
+function _filterIntoObject(obj, filter, parentKeys=[]) {
   const depth = nestedObjectDepth(obj);
   Object.keys(obj).forEach(key => {
-    if (!filterFunc(key, depth, parentKeys)) {
+    if (!filter(key, depth, parentKeys)) {
       delete obj[key];
     }
   });
   Object.keys(obj).forEach(key => {
     if (typeof obj[key] === `object`) {
-      filterObject(obj[key], filterFunc, parentKeys.concat(key));
+      _filterIntoObject(obj[key], filter, parentKeys.concat(key));
       if (!Object.keys(obj[key]).length) {
         delete obj[key];
       }
     }
   });
-  return obj;
+}
+
+export function filterObject(obj, filter) {
+  const newObject = JSON.parse(JSON.stringify(obj));
+  _filterIntoObject(newObject, filter);
+  return newObject;
 }
 
 /**
