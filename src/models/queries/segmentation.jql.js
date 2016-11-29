@@ -62,20 +62,19 @@ function main() {
     }));
   }
 
-  // TODO(chi): do we want to keep the 'reset from_date back to the first day of unit' behavior for
-  // month and quarter?
-
   if (usesEventData) {
-    var timeUnitGroupBySelector;
+    var bucketParams = {offset: 0};
     switch (params.dates.unit) {
       case `all`:
-        timeUnitGroupBySelector = function() { return `all`; };
+        groups.push(function() {
+          return `all`;
+        });
         break;
       case `hour`:
-        timeUnitGroupBySelector = mixpanel.event_strftime(`%F %H`);
+        bucketParams.bucket_size = 3600000;
         break;
       case `day`:
-        timeUnitGroupBySelector = mixpanel.event_strftime(`%F`);
+        bucketParams.bucket_size = 86400000;
         break;
       case `week`:
         var getMonday = function(date) {
@@ -85,39 +84,32 @@ function main() {
           date.setDate(date.getDate() - offset);
           return date.toISOString().split(`T`)[0];
         };
-        timeUnitGroupBySelector = mixpanel.event_strftime(`%G %V`);
         params.dates.from = getMonday(params.dates.from);
+        bucketParams.offset = 345600000;
+        bucketParams.bucket_size = 604800000;
         break;
       case `month`:
-        var getFirstOfMonth = function(date) {
-          date = new Date(date);
-          date.setDate(1);
-          return date.toISOString().split(`T`)[0];
-        };
-        timeUnitGroupBySelector = mixpanel.event_strftime(`%Y-%m`);
-        params.dates.from = getFirstOfMonth(params.dates.from);
-        break;
       case `quarter`:
-        var getStartOfQuarter = function(date) {
+        var monthBucketing = params.dates.unit === `quarter` ? 3 : 1;
+        var getStartOfMonths = function(date) {
           date = new Date(date);
-          var qMonth = Math.floor(date.getMonth() / 3) * 3 + 1;
-          if (qMonth < 10) {
-            qMonth = `0` + qMonth;
-          }
-          return date.toISOString().split(`T`)[0].replace(/(\d+)-\d\d-\d\d/, `$1-` + qMonth + `-01`);
+          var monthStart = Math.floor(date.getMonth() / monthBucketing) * monthBucketing;
+          return new Date(date.getFullYear(), monthStart, monthBucketing);
         };
-        var quarterStarts = [];
-        var lastQuarterStart = new Date(getStartOfQuarter(params.dates.to));
-        for (var quarterStart = new Date(getStartOfQuarter(params.dates.from));
+
+        bucketParams = [];
+        var lastQuarterStart = getStartOfMonths(params.dates.to);
+        for (var quarterStart = getStartOfMonths(params.dates.from);
              quarterStart <= lastQuarterStart;
-             quarterStart.setMonth(quarterStart.getMonth() + 3)) {
-          quarterStarts.push(quarterStart.getTime());
+             quarterStart.setMonth(quarterStart.getMonth() + monthBucketing)) {
+          bucketParams.push(quarterStart.getTime());
         }
-        timeUnitGroupBySelector = mixpanel.numeric_bucket(usesPeopleData ? `event.time` : `time`, quarterStarts);
-        params.dates.from = getStartOfQuarter(params.dates.from);
+        params.dates.from = getStartOfMonths(params.dates.from).toISOString().split(`T`)[0];
         break;
     }
-    groups.push(timeUnitGroupBySelector);
+    if (params.dates.unit !== `all`) {
+      groups.push(mixpanel.numeric_bucket(usesPeopleData ? `event.time` : `time`, bucketParams));
+    }
   }
 
   groups = [mixpanel.multiple_keys(groups)];
