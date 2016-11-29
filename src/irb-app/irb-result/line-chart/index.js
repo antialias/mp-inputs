@@ -81,7 +81,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
         <div class="title" style="background-color: ${this.series.color};">${this.series.name}</div>
         <div class="results">
           <div class="absolute">
-            <span class="date">${moment(this.x).format(timeFormatting[timeUnit])}: </span>
+            <span class="date">${moment(Number(this.key)).format(timeFormatting[timeUnit])}: </span>
             <span class="count">${this.y}</span>
           </div>
           ${this.percentage ? `<div class="percent">${util.formatPercent(this.percentage * .01)}</div>` : ``}
