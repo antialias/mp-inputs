@@ -1,4 +1,5 @@
 // IRB-specific utils
+import cloneDeep from 'lodash/cloneDeep';
 import { nestedObjectDepth, objectFromPairs } from 'mixpanel-common/util';
 
 export * from 'mixpanel-common/util';
@@ -40,7 +41,7 @@ function _filterIntoObject(obj, filter, parentKeys=[]) {
 }
 
 export function filterObject(obj, filter) {
-  const newObject = JSON.parse(JSON.stringify(obj));
+  const newObject = cloneDeep(obj);
   _filterIntoObject(newObject, filter);
   return newObject;
 }

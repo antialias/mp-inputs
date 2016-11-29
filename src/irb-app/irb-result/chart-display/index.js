@@ -94,7 +94,7 @@ document.registerElement(`chart-display`, class extends Component {
           if (this.config.helpers.showLegend()) {
             const legend = this.state.report.legend;
             legend.buildColorMap();
-            result.series = filterObject(cloneDeep(result.series), (value, depth, parentKeys) => {
+            result.series = filterObject(result.series, (value, depth, parentKeys) => {
               if (isFlattenedData) {
                 return depth === 2 ? legend.data[0].flattenedData[parentKeys.concat(value).join(` `)] : true;
               } else {
