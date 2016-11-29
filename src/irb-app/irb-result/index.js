@@ -246,7 +246,7 @@ document.registerElement(`irb-result`, class extends Component {
         resultID: state.result.id,
         analysis: state.report.displayOptions.analysis,
         isFlattenedData: state.report.displayOptions.chartType === `line`,
-        legend: cloneDeep(state.report.legend),
+        legendRevision: state.report.legend.revisionStr,
         newCachedData: state.newCachedData,
         showLegend: this.config.helpers.showLegend(state),
         sortConfig: cloneDeep(state.report.sorting),

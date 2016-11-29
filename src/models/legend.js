@@ -8,9 +8,17 @@ import {
   uniqueObjKeysAtDepth,
 } from '../util';
 
+let legendID = 1;
+
 export default class Legend {
   constructor(attrs) {
     Object.assign(this, pick(attrs, [`data`]));
+    this.id = legendID++;
+    this.changeID = 1;
+  }
+
+  get revisionStr() {
+    return `${this.id}-${this.changeID}`;
   }
 
   isAnyDisplayExpanded() {
@@ -48,6 +56,7 @@ export default class Legend {
         this._buildColorMap(`_flattenedColorMap`, this.dataKeyForFlatData, numColors);
       }
     }
+    this.changeID++;
     return this;
   }
 
@@ -80,6 +89,7 @@ export default class Legend {
   }
 
   set seriesShowing(value) {
+    this.changeID++;
     this._seriesShowing = value;
   }
 
@@ -89,6 +99,7 @@ export default class Legend {
   }
 
   showAllSeries() {
+    this.changeID++;
     this.seriesShowing = this.seriesShowing.map(() => `all`);
     return this;
   }
@@ -100,6 +111,7 @@ export default class Legend {
   toggleShowSeries(seriesIdx) {
     if (this.seriesShowing && this.seriesShowing.length >= seriesIdx) {
       this.seriesShowing[seriesIdx] = this.isSeriesShowing(seriesIdx) ? `hidden` : this._seriesDisplaySetting(this.data[seriesIdx]);
+      this.changeID++;
     }
     return this;
   }
@@ -109,11 +121,13 @@ export default class Legend {
       const oldDisplaySetting = this.seriesShowing[seriesIdx];
       this.seriesShowing = this.seriesShowing.map(displaySetting => displaySetting === `expanded` ? `minimized` : displaySetting);
       this.seriesShowing[seriesIdx] = oldDisplaySetting === `minimized` ? `expanded` : `minimized`;
+      this.changeID++;
     }
     return this;
   }
 
   update(attrs) {
+    this.changeID++;
     return Object.assign(this, attrs);
   }
 
