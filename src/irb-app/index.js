@@ -130,7 +130,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       topEventProperties: [],
       topPeopleProperties: [],
       topPropertyValues: [],
-      whitelists: {},
+      features: {},
     };
   }
 
@@ -144,9 +144,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     }
     if (this.parentData) {
       // don't start persisting yet
-      if (this.parentData.whitelists && this.parentData.whitelists.includes(`irb-new-query-builder`)) {
-        queryBuilderVersion = `new`;
-        queryOnAllPeople = true;
+      if (this.parentData.whitelists) {
+        queryBuilderVersion = this.parentData.whitelists.includes(`irb-new-query-builder`) ? `new` : queryBuilderVersion;
+        queryOnAllPeople = this.parentData.whitelists.includes(`dev`) ? true : queryOnAllPeople;
       }
       Object.assign(this.state, {
         savedReports: this.parentData.bookmarks.reduce(
@@ -155,7 +155,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         ),
       });
     }
-    this.state.whitelists = {
+    this.state.features = {
       queryBuilderVersion,
       queryOnAllPeople,
     };
