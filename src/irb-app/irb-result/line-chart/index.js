@@ -66,8 +66,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     this.renderMPChart();
   }
 
-  tooltipFormatter() {
-    const timeUnit = this._displayOptions.timeUnit;
+  epochToTimeUnitFunction(options={}) {
     const timeFormatting = {
       'hour': `MMM D[,] ha`,
       'day': `MMM D`,
@@ -76,17 +75,38 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       'quarter': `[Q]Q YYYY`,
       'year': `YYYY`,
     };
+    const timeUnit = this._displayOptions.timeUnit;
+    const timeFormatter = timeFormatting[timeUnit];
+    return epoch => {
+      const epochMoment = moment.utc(Number(epoch));
+      if (timeUnit === `week` && options.displayRangeIfWeek) {
+        return `${epochMoment.format(timeFormatter)} - ${epochMoment.add(6, `days`).format(timeFormatter)}`;
+      } else {
+        return epochMoment.format(timeFormatter);
+      }
+    };
+  }
+
+  tooltipFormatter() {
+    var timeFormatter = this.epochToTimeUnitFunction({displayRangeIfWeek: true});
     return function() {
       return `
         <div class="title" style="background-color: ${this.series.color};">${this.series.name}</div>
         <div class="results">
           <div class="absolute">
-            <span class="date">${moment(Number(this.key)).format(timeFormatting[timeUnit])}: </span>
+            <span class="date">${timeFormatter(this.key)}: </span>
             <span class="count">${this.y}</span>
           </div>
           ${this.percentage ? `<div class="percent">${util.formatPercent(this.percentage * .01)}</div>` : ``}
         </div>
       `;
+    };
+  }
+
+  xAxisFormatter() {
+    var timeFormatter = this.epochToTimeUnitFunction();
+    return function() {
+      return timeFormatter(this.value);
     };
   }
 
@@ -155,6 +175,9 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       },
       xAxis: util.extend(axisOptions, {
         endOnTick: false,
+        labels: {
+          formatter: this.xAxisFormatter(),
+        },
         startOnTick: false,
       }),
       yAxis: util.extend(axisOptions, {
