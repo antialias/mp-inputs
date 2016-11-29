@@ -203,9 +203,10 @@ document.registerElement(`chart-display`, class extends Component {
   stateToWatch(state) {
     try {
       return {
-        resultID: state.result.id,
         displayOptions: cloneDeep(state.report.displayOptions),
+        isEditingExtrasMenu: state.isEditingExtrasMenu,
         legendRevision: state.report.legend.revisionStr,
+        resultID: state.result.id,
         showLegend: this.config.helpers.showLegend(state),
         sortConfig: cloneDeep(state.report.sorting),
         windowSize: ROLLING_WINDOWS_BY_UNIT[state.report.sections.time.clauses[0].unit],
