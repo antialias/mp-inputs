@@ -457,7 +457,7 @@ export default class SegmentationQuery extends BaseQuery {
     const isPeopleOnlyQuery = this.query.jqlQueries.every(query => query.resourceType === `people`);
 
     if (!isPeopleOnlyQuery) {
-      results.forEach(r => baseDateResults[r.key[r.key.length-1]] = 0);
+      results.forEach(r => baseDateResults[r.key[r.key.length - 1]] = 0);
     }
     if (results) {
       series = results.reduce((seriesObj, item) => {
