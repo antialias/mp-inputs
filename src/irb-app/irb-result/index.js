@@ -159,7 +159,7 @@ document.registerElement(`irb-result`, class extends Component {
           if (this.config.helpers.showLegend()) {
             const legend = this.state.report.legend;
             legend.buildColorMap();
-            filterObject(result.series, (value, depth, parentKeys) => {
+            result.series = filterObject(cloneDeep(result.series), (value, depth, parentKeys) => {
               if (isFlattenedData) {
                 return depth === 2 ? legend.data[0].flattenedData[parentKeys.concat(value).join(` `)] : true;
               } else {
@@ -246,7 +246,7 @@ document.registerElement(`irb-result`, class extends Component {
         resultID: state.result.id,
         analysis: state.report.displayOptions.analysis,
         isFlattenedData: state.report.displayOptions.chartType === `line`,
-        legend: state.report.legend,
+        legend: cloneDeep(state.report.legend),
         newCachedData: state.newCachedData,
         showLegend: this.config.helpers.showLegend(state),
         sortConfig: cloneDeep(state.report.sorting),

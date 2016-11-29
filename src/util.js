@@ -37,6 +37,7 @@ export function filterObject(obj, filterFunc, parentKeys=[]) {
       }
     }
   });
+  return obj;
 }
 
 /**
