@@ -85,8 +85,8 @@ function main() {
           return date.toISOString().split(`T`)[0];
         };
         params.dates.from = getMonday(params.dates.from);
-        bucketParams.offset = 345600000;
         bucketParams.bucket_size = 604800000;
+        bucketParams.offset = 345600000; // epoch starts on a Thursday. offset 4 days to start bucketing on Monday.
         break;
       case `month`:
       case `quarter`:
