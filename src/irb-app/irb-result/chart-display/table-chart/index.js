@@ -60,6 +60,8 @@ document.registerElement(`table-chart`, class extends Component {
 
   attachedCallback() {
     super.attachedCallback(...arguments);
+    // TODO: research why attributeChangedCallback is not called before component
+    // is attached only in full webcomponents polyfill (and not lite version)
     this.updateStateFromAttributes();
   }
 

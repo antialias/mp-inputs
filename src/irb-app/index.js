@@ -135,7 +135,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   attachedCallback() {
     this.customEvents = (this.parentData && this.parentData.custom_events) || [];
 
-    let projectHasEvents = false;
+    let projectHasEvents = true;
     let queryBuilderVersion = `old`;
     let queryOnAllPeople = false;
     if (this.standalone) {
