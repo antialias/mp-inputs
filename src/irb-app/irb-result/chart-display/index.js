@@ -204,8 +204,7 @@ document.registerElement(`chart-display`, class extends Component {
     try {
       return {
         resultID: state.result.id,
-        analysis: state.report.displayOptions.analysis,
-        isFlattenedData: state.report.displayOptions.chartType === `line`,
+        displayOptions: cloneDeep(state.report.displayOptions),
         legendRevision: state.report.legend.revisionStr,
         newCachedData: state.newCachedData,
         showLegend: this.config.helpers.showLegend(state),
