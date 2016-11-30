@@ -457,7 +457,10 @@ export default class SegmentationQuery extends BaseQuery {
     const isPeopleOnlyQuery = this.query.jqlQueries.every(query => query.resourceType === `people`);
 
     if (!isPeopleOnlyQuery) {
-      results.forEach(r => baseDateResults[r.key[r.key.length - 1]] = 0);
+      results.forEach(r => {
+        const dateKey = moment.utc(r.key[r.key.length - 1]).format();
+        baseDateResults[dateKey] = 0;
+      });
     }
     if (results) {
       series = results.reduce((seriesObj, item) => {
@@ -478,7 +481,8 @@ export default class SegmentationQuery extends BaseQuery {
           }
           obj = obj[key];
         }
-        obj[item.key[item.key.length - 1]] = isPeopleOnlyQuery ? {value: item.value} : item.value;
+        const dateKey = moment.utc(item.key[item.key.length - 1]).format();
+        obj[dateKey] = isPeopleOnlyQuery ? {value: item.value} : item.value;
         return seriesObj;
       }, {});
     }
