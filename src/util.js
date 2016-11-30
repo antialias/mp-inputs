@@ -5,6 +5,18 @@ import { nestedObjectDepth, objectFromPairs } from 'mixpanel-common/util';
 export * from 'mixpanel-common/util';
 export * from 'mixpanel-common/report/util';
 
+
+const MS_IN_HOUR = 60 * 60 * 1000;
+const MS_IN_DAY = MS_IN_HOUR * 24;
+export const MS_BY_UNIT = {
+  hour: MS_IN_HOUR,
+  day: MS_IN_DAY,
+  week: MS_IN_DAY * 7,
+  month: MS_IN_DAY * 30,
+  quarter: MS_IN_DAY * 90,
+  year: MS_IN_DAY * 365,
+};
+
 export function getTextWidth(text, font) {
   const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement(`canvas`));
   let context = canvas.getContext(`2d`);

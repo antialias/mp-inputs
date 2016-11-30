@@ -87,6 +87,20 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     };
   }
 
+  getTickPositions() {
+    const unitRequiresCustomTick = [`week`, `quarter`].includes(this._displayOptions.timeUnit);
+    if (unitRequiresCustomTick) {
+      const uniqueDates = new Set()
+      Object.keys(this._data).forEach(segment => {
+        Object.keys(this._data[segment]).forEach(date => uniqueDates.add(moment.utc(date).unix() * 1000));
+      });
+      let ticks = [...uniqueDates].sort((a, b) => a - b);
+      const maxNumberOfTicks = 20;
+      return ticks.length < maxNumberOfTicks ? ticks : ticks.filter((_, idx) => !(idx % (1 + Math.floor(ticks.length / maxNumberOfTicks))));
+    }
+    return null; // giving null in highcharts means "use default"
+  }
+
   tooltipFormatter() {
     var timeFormatter = this.epochToTimeUnitFunction({displayRangeIfWeek: true});
     return function() {
@@ -179,6 +193,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
           formatter: this.xAxisFormatter(),
         },
         startOnTick: false,
+        tickPositions: this.getTickPositions(),
       }),
       yAxis: util.extend(axisOptions, {
         showFirstLabel: true,

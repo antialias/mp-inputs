@@ -9,21 +9,11 @@ import {
   abbreviateNumber,
   capitalize,
   extend,
+  MS_BY_UNIT,
   pick,
   renameEvent,
   renameProperty,
 } from '../../util';
-
-const MS_IN_HOUR = 60 * 60 * 1000;
-const MS_IN_DAY = MS_IN_HOUR * 24;
-export const MS_BY_UNIT = {
-  hour: MS_IN_HOUR,
-  day: MS_IN_DAY,
-  week: MS_IN_DAY * 7,
-  month: MS_IN_DAY * 30,
-  quarter: MS_IN_DAY * 120,
-  year: MS_IN_DAY * 365,
-};
 
 export function toArbSelectorPropertyToken(resourceType, property) {
   return `${resourceType === `events` ? `properties` : `user`}["${property}"]`;
