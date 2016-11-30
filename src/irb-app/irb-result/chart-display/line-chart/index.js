@@ -94,9 +94,13 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       Object.keys(this._data).forEach(segment => {
         Object.keys(this._data[segment]).forEach(date => uniqueDates.add(moment.utc(date).unix() * 1000));
       });
-      let ticks = [...uniqueDates].sort((a, b) => a - b);
-      const maxNumberOfTicks = 20;
-      return ticks.length < maxNumberOfTicks ? ticks : ticks.filter((_, idx) => !(idx % (1 + Math.floor(ticks.length / maxNumberOfTicks))));
+      let ticks = [...uniqueDates].sort();
+      const MAX_TICKS = 20;
+      if (ticks.length > MAX_TICKS) {
+        const tickDivisor = 1 + Math.floor(ticks.length / MAX_TICKS); // preserve 1 of every n ticks
+        ticks = ticks.filter((_, idx) => !(idx % tickDivisor));
+      }
+      return ticks;
     }
     return null; // giving null in highcharts means "use default"
   }
