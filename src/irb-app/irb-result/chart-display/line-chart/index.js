@@ -88,6 +88,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   }
 
   getTickPositions() {
+     // TODO (Jordan): Pass in buckets from query. Handle short date ranges.
     if ([`week`, `quarter`].includes(this._displayOptions.timeUnit)) {
       const uniqueDates = new Set();
       Object.keys(this._data).forEach(segment => {
