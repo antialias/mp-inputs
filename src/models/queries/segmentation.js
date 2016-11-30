@@ -456,11 +456,16 @@ export default class SegmentationQuery extends BaseQuery {
     let baseDateResults = {};
     const isPeopleOnlyQuery = this.query.jqlQueries.every(query => query.resourceType === `people`);
 
+    const dateKeyCache = {};
+    const getDateKey = epoch => {
+      if (!dateKeyCache[epoch]) {
+        dateKeyCache[epoch] = moment.utc(epoch).format();
+      }
+      return dateKeyCache[epoch];
+    };
+
     if (!isPeopleOnlyQuery) {
-      results.forEach(r => {
-        const dateKey = moment.utc(r.key[r.key.length - 1]).format();
-        baseDateResults[dateKey] = 0;
-      });
+      results.forEach(r => baseDateResults[getDateKey(r.key[r.key.length - 1])] = 0);
     }
     if (results) {
       series = results.reduce((seriesObj, item) => {
@@ -481,8 +486,7 @@ export default class SegmentationQuery extends BaseQuery {
           }
           obj = obj[key];
         }
-        const dateKey = moment.utc(item.key[item.key.length - 1]).format();
-        obj[dateKey] = isPeopleOnlyQuery ? {value: item.value} : item.value;
+        obj[getDateKey(item.key[item.key.length - 1])] = isPeopleOnlyQuery ? {value: item.value} : item.value;
         return seriesObj;
       }, {});
     }
