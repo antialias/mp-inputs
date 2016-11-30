@@ -192,6 +192,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
         labels: {
           formatter: this.xAxisFormatter(),
         },
+        minTickInterval: util.MS_BY_UNIT[this._displayOptions.timeUnit],
         startOnTick: false,
         tickPositions: this.getTickPositions(),
       }),
