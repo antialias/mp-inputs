@@ -2772,58 +2772,6 @@ span.substr.matches-search {
   color: #4c6072;
   font-weight: 600;
 }
-.toast {
-  background-color: #fff;
-  border: 1px solid #c4c8d6;
-  border-radius: 8px;
-  bottom: 30px;
-  box-shadow: 0 7px 18px 0 rgba(121,124,135,0.26);
-  height: 30px;
-  left: 15px;
-  padding: 10px;
-  padding-left: 15px;
-  position: fixed;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  width: 250px;
-  z-index: 2;
-}
-.toast button {
-  background-color: transparent;
-  border: none;
-  padding: 0;
-}
-.toast .toast-section {
-  height: 30px;
-  line-height: 30px;
-  float: left;
-}
-.toast .toast-section.toast-action {
-  color: #646670;
-  font: 600 12px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  margin: 0 4%;
-  text-transform: uppercase;
-  width: 25%;
-}
-.toast .toast-section.toast-message {
-  color: #c4c8d6;
-  font-weight: 500;
-  width: 55%;
-}
-.toast .toast-section.toast-exit {
-  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjIuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAxMSAxMSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTEgMTE7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS54LWV4aXR7ZmlsbDojREZFMkYxO30KPC9zdHlsZT4KPHBvbHlnb24gY2xhc3M9IngtZXhpdCIgcG9pbnRzPSIxMSwxLjggOS4yLDAgNS41LDMuNyAxLjgsMCAwLDEuOCAzLjcsNS41IDAsOS4yIDEuOCwxMSA1LjUsNy4yIDkuMiwxMSAxMSw5LjIgNy4yLDUuNSAiLz4KPC9zdmc+Cg==);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 12px;
-  margin-left: 2%;
-  width: 10%;
-}
-span.substr.matches-search {
-  color: #4c6072;
-  font-weight: 600;
-}
 .irb-result {
   position: relative;
 }
@@ -3087,6 +3035,58 @@ span.substr.matches-search {
 }
 .sticky-chart-headers .legend sticky-scroll {
   height: 100%;
+}
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
+}
+.toast {
+  background-color: #fff;
+  border: 1px solid #c4c8d6;
+  border-radius: 8px;
+  bottom: 30px;
+  box-shadow: 0 7px 18px 0 rgba(121,124,135,0.26);
+  height: 30px;
+  left: 15px;
+  padding: 10px;
+  padding-left: 15px;
+  position: fixed;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  width: 250px;
+  z-index: 2;
+}
+.toast button {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+.toast .toast-section {
+  height: 30px;
+  line-height: 30px;
+  float: left;
+}
+.toast .toast-section.toast-action {
+  color: #646670;
+  font: 600 12px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  margin: 0 4%;
+  text-transform: uppercase;
+  width: 25%;
+}
+.toast .toast-section.toast-message {
+  color: #c4c8d6;
+  font-weight: 500;
+  width: 55%;
+}
+.toast .toast-section.toast-exit {
+  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjIuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCAxMSAxMSIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMTEgMTE7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS54LWV4aXR7ZmlsbDojREZFMkYxO30KPC9zdHlsZT4KPHBvbHlnb24gY2xhc3M9IngtZXhpdCIgcG9pbnRzPSIxMSwxLjggOS4yLDAgNS41LDMuNyAxLjgsMCAwLDEuOCAzLjcsNS41IDAsOS4yIDEuOCwxMSA1LjUsNy4yIDkuMiwxMSAxMSw5LjIgNy4yLDUuNSAiLz4KPC9zdmc+Cg==);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px;
+  margin-left: 2%;
+  width: 10%;
 }
 span.substr.matches-search {
   color: #4c6072;
