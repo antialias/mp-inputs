@@ -88,9 +88,8 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   }
 
   getTickPositions() {
-    const unitRequiresCustomTick = [`week`, `quarter`].includes(this._displayOptions.timeUnit);
-    if (unitRequiresCustomTick) {
-      const uniqueDates = new Set()
+    if ([`week`, `quarter`].includes(this._displayOptions.timeUnit)) {
+      const uniqueDates = new Set();
       Object.keys(this._data).forEach(segment => {
         Object.keys(this._data[segment]).forEach(date => uniqueDates.add(moment.utc(date).unix() * 1000));
       });
