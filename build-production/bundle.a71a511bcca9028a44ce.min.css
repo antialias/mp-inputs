@@ -14,6 +14,7 @@ mp-button-input .mp-button-input:hover input {
   border: 1px solid #d8e0e6;
   outline: none;
 }
+mp-button-input .disabled-input,
 mp-button-input input[type=text] {
   background-color: inherit;
   border: 1px solid transparent;
@@ -25,6 +26,9 @@ mp-button-input input[type=text] {
   outline: none;
   padding: 0 20px;
   width: 270px;
+}
+mp-button-input .disabled-input {
+  line-height: 36px;
 }
 mp-button-input input[type=text]:focus,
 mp-button-input input[type=text]:hover {
@@ -152,6 +156,20 @@ span.substr.matches-search {
 .irb-header .loading-dock button.report-list-button:hover svg-icon path {
   color: #9cacbb;
   fill: #9cacbb;
+}
+.error-no-project-data .irb-header .loading-dock button {
+  cursor: default;
+}
+.error-no-project-data .irb-header .loading-dock button svg-icon svg {
+  left: 0;
+  top: 0;
+}
+.error-no-project-data .irb-header .loading-dock button svg-icon svg,
+.error-no-project-data .irb-header .loading-dock button svg-icon path {
+  color: #9cacbb;
+  fill: #9cacbb;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
 }
 @charset "UTF-8";
 
@@ -1409,6 +1427,28 @@ span.substr.matches-search {
   color: #9cacbb;
   fill: #9cacbb;
 }
+.error-no-project-data .irb-builder .builder-error-caption {
+  color: #6e859d;
+  font-size: 14px;
+  text-align: center;
+  padding: 5px 0;
+}
+.error-no-project-data .irb-builder .error-title {
+  color: #4c6072;
+  font-size: 16px;
+  font-weight: 900;
+}
+.error-no-project-data .irb-builder .error-builder-button {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin: 20px 0;
+}
 span.substr.matches-search {
   color: #4c6072;
   font-weight: 600;
@@ -1443,16 +1483,16 @@ span.substr.matches-search {
   display: -ms-flexbox;
   display: flex;
 }
-.chart-control ul.chart-toggle:hover,
+.chart-control ul.chart-toggle.enabled:hover,
 .chart-control ul.chart-toggle.editing-charttype {
   border-color: #d8e0e6;
   box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05);
 }
-.chart-control ul.chart-toggle:hover .chart-type,
+.chart-control ul.chart-toggle.enabled:hover .chart-type,
 .chart-control ul.chart-toggle.editing-charttype .chart-type {
   border-color: #d8e0e6;
 }
-.chart-control ul.chart-toggle:hover .chart-type:after,
+.chart-control ul.chart-toggle.enabled:hover .chart-type:after,
 .chart-control ul.chart-toggle.editing-charttype .chart-type:after {
   content: none;
 }
@@ -1491,7 +1531,7 @@ span.substr.matches-search {
 .chart-control .chart-type:last-child:after {
   content: none;
 }
-.chart-control .chart-type:hover,
+.chart-control .chart-type.enabled:hover,
 .chart-control .chart-type.editing {
   background-color: #f9fafc;
 }
@@ -1535,8 +1575,12 @@ span.substr.matches-search {
   color: #4ba8ff;
   fill: #4ba8ff;
 }
-.chart-control button:hover {
-  color: #4ba8ff;
+.chart-control button svg-icon {
+  height: 34px;
+}
+.chart-control button svg-icon svg,
+.chart-control button svg-icon path {
+  height: 34px;
 }
 .chart-control button.selected {
   color: #4c6072;
@@ -1555,6 +1599,9 @@ span.substr.matches-search {
 .chart-control button::before,
 .chart-control button::after {
   content: none;
+}
+.chart-control ul.chart-toggle.enabled button:hover {
+  color: #4ba8ff;
 }
 .chart-control .toggle-button {
   display: -webkit-box;
@@ -1591,6 +1638,13 @@ span.substr.matches-search {
 .chart-control .toggle-button button.dropdown:hover svg-icon path {
   color: #9cacbb;
   fill: #9cacbb;
+}
+.chart-control .toggle-button button.dropdown svg-icon {
+  height: 34px;
+}
+.chart-control .toggle-button button.dropdown svg-icon svg,
+.chart-control .toggle-button button.dropdown svg-icon path {
+  height: 34px;
 }
 .chart-control .toggle-button button.label {
   font-size: 12px;
@@ -1754,6 +1808,18 @@ button.extras-menu.selected {
   font-weight: bold;
   padding: 6px 18px;
   text-transform: uppercase;
+}
+.error-no-project-data .irb-result .chart-toggle button,
+.error-no-project-data .irb-result .chart-toggle button:hover {
+  color: #9cacbb;
+  cursor: default;
+}
+.error-no-project-data .irb-result .chart-toggle button svg-icon svg,
+.error-no-project-data .irb-result .chart-toggle button:hover svg-icon svg,
+.error-no-project-data .irb-result .chart-toggle button svg-icon path,
+.error-no-project-data .irb-result .chart-toggle button:hover svg-icon path {
+  color: #9cacbb;
+  fill: #9cacbb;
 }
 span.substr.matches-search {
   color: #4c6072;
@@ -3036,6 +3102,35 @@ span.substr.matches-search {
 .sticky-chart-headers .legend sticky-scroll {
   height: 100%;
 }
+.error-no-project-data .irb-result .chart-graph {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+              -ms-grid-row-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  height: 380px;
+}
+.error-no-project-data .irb-result .chart-graph .chart-error-no-data-text {
+  color: #4c6072;
+  font-size: 16px;
+  font-weight: 900;
+}
+.error-no-project-data .irb-result .chart-graph .chart-error-data-image {
+  background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjE2NXB4IiBoZWlnaHQ9IjExN3B4IiB2aWV3Qm94PSIwIDAgMTY1IDExNyIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KICAgIDwhLS0gR2VuZXJhdG9yOiBTa2V0Y2ggNDEuMSAoMzUzNzYpIC0gaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoIC0tPgogICAgPHRpdGxlPm5vLWRhdGEtbGFwdG9wPC90aXRsZT4KICAgIDxkZWZzPjwvZGVmcz4KICAgIDxnIGlkPSJpbGx1c3RyYXRpb24iIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgICAgIDxnIGlkPSJuby1kYXRhIj4KICAgICAgICAgICAgPHBhdGggZD0iTTE0MywxMDkgTDEyNS44LDEwOSBDMTI0LjcsMTA5IDEyMy44LDEwOC4xIDEyMy44LDEwNyBDMTIzLjgsMTA1LjkgMTI0LjcsMTA1IDEyNS44LDEwNSBMMTQzLDEwNSBDMTQ4LjUsMTA1IDE1MywxMDAuNSAxNTMsOTUgTDE1MywxNCBDMTUzLDguNSAxNDguNSw0IDE0Myw0IEwzNi42LDQgQzM1LjUsNCAzNC42LDMuMSAzNC42LDIgQzM0LjYsMC45IDM1LjUsMCAzNi42LDAgTDE0MywwIEMxNTAuNywwIDE1Nyw2LjMgMTU3LDE0IEwxNTcsOTUgQzE1NywxMDIuNyAxNTAuNywxMDkgMTQzLDEwOSBaIiBpZD0icmlnaHQtZnJhbWUiIGZpbGw9IiM1MEFBRkYiPjwvcGF0aD4KICAgICAgICAgICAgPHBhdGggZD0iTTEyNC4xLDEwOSBMMjIsMTA5IEMxNC4zLDEwOSA4LDEwMi43IDgsOTUgTDgsMTQgQzgsNi4zIDE0LjMsMCAyMiwwIEw2Ny4zLDAgQzY4LjQsMCA2OS4zLDAuOSA2OS4zLDIgQzY5LjMsMy4xIDY4LjQsNCA2Ny4zLDQgTDIyLDQgQzE2LjUsNCAxMiw4LjUgMTIsMTQgTDEyLDk1IEMxMiwxMDAuNSAxNi41LDEwNSAyMiwxMDUgTDEyNC4xLDEwNSBDMTI1LjIsMTA1IDEyNi4xLDEwNS45IDEyNi4xLDEwNyBDMTI2LjEsMTA4LjEgMTI1LjIsMTA5IDEyNC4xLDEwOSBaIiBpZD0ibGVmdC1mcmFtZSIgZmlsbD0iIzI3ODhFMyI+PC9wYXRoPgogICAgICAgICAgICA8cGF0aCBkPSJNMiwxMTMgTDE2MywxMTMgQzE2NC4xLDExMyAxNjUsMTEzLjkgMTY1LDExNSBMMTY1LDExNSBDMTY1LDExNi4xIDE2NC4xLDExNyAxNjMsMTE3IEwyLDExNyBDMC45LDExNyAwLDExNi4xIDAsMTE1IEwwLDExNSBDMCwxMTMuOSAwLjksMTEzIDIsMTEzIFoiIGlkPSJiYXNlIiBmaWxsPSIjMjc4OEUzIj48L3BhdGg+CiAgICAgICAgICAgIDxwYXRoIGQ9Ik0yMywxMSBMMTQyLDExIEMxNDQuMiwxMSAxNDYsMTIuOCAxNDYsMTUgTDE0Niw5NCBDMTQ2LDk2LjIgMTQ0LjIsOTggMTQyLDk4IEwyMyw5OCBDMjAuOCw5OCAxOSw5Ni4yIDE5LDk0IEwxOSwxNSBDMTksMTIuOCAyMC44LDExIDIzLDExIFoiIGlkPSJzY3JlZW4iIGZpbGw9IiNFRkY1RkEiPjwvcGF0aD4KICAgICAgICAgICAgPHBhdGggZD0iTTk4LjIsNjQgTDg2LDQyLjUgQzg0LjEsMzkuMiA4MSwzOS4yIDc5LjEsNDIuNSBMNjYuOCw2My42IEM2NC45LDY2LjkgNjYuNCw3MCA3MC4yLDcwIEw5NC43LDcwIEM5OC41LDcwIDEwMC4xLDY3LjMgOTguMiw2NCBaIE04Mi42LDY2IEM4MS40LDY2IDgwLjUsNjUuMSA4MC41LDYzLjkgQzgwLjUsNjIuNyA4MS40LDYxLjggODIuNiw2MS44IEM4My44LDYxLjggODQuNyw2Mi43IDg0LjcsNjMuOSBMODQuNyw2My45IEM4NC44LDY1IDgzLjgsNjYgODIuNiw2NiBMODIuNiw2NiBMODIuNiw2NiBaIE04NC4xLDYwLjQgTDgxLjEsNjAuNCBMODAuMSw0OC4xIEw4NS4xLDQ4LjEgTDg0LjEsNjAuNCBaIiBpZD0id2FybmluZy1pY29uIiBmaWxsPSIjMjc4OEUzIj48L3BhdGg+CiAgICAgICAgPC9nPgogICAgPC9nPgo8L3N2Zz4K);
+  background-repeat: no-repeat;
+  background-size: 165px 117px;
+  width: 165px;
+  height: 117px;
+  margin-bottom: 30px;
+}
+.error-no-project-data .irb-result .bar-chart-type {
+  min-height: auto;
+}
 span.substr.matches-search {
   color: #4c6072;
   font-weight: 600;
@@ -3101,6 +3196,80 @@ span.substr.matches-search {
   border-radius: 5px;
   box-shadow: 0px 1px 1.8px 0.2px rgba(69,81,113,0.15);
   margin: 20px;
+}
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+caption, table, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+table {
+    vertical-align: middle;
+}
+tbody, tfoot, thead, tr, th, td {
+    vertical-align: inherit;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+}
+th {
+    font-weight: bold;
+}
+strong {
+    font-weight: bold;
+}
+p {
+    margin: 1em 0;
+}
+h3 {
+    font-size: 1.17em;
+}
+a {
+    outline: none;
 }
 svg-icon {
   display: inline-block;
@@ -3180,7 +3349,6 @@ a:hover,
   font-weight: 500;
   line-height: 18px;
 }
-/* FORMS */
 input[type=text],
 textarea {
   border: 1px solid #d8e0e6;
@@ -3192,105 +3360,31 @@ textarea {
   -webkit-transition: border-color 150ms ease-out;
   transition: border-color 150ms ease-out;
 }
-input[type=text] ::-webkit-input-placeholder,
-textarea ::-webkit-input-placeholder {
+input[type=text]::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
   color: #9cacbb !important;
-  font-weight: 400 !important;
+  font-weight: weight-normal !important;
 }
-input[type=text] ::-moz-placeholder,
-textarea ::-moz-placeholder {
+input[type=text]::-moz-placeholder,
+textarea::-moz-placeholder {
   color: #9cacbb !important;
-  font-weight: 400 !important;
+  font-weight: weight-normal !important;
 }
-input[type=text] :-ms-input-placeholder,
-textarea :-ms-input-placeholder {
+input[type=text]:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
   color: #9cacbb !important;
-  font-weight: 400 !important;
+  font-weight: weight-normal !important;
 }
-input[type=text] ::placeholder,
-textarea ::placeholder {
+input[type=text]::placeholder,
+textarea::placeholder {
   color: #9cacbb !important;
-  font-weight: 400 !important;
+  font-weight: weight-normal !important;
 }
 input[type=text]:focus,
 textarea:focus {
   border-color: #3391e9;
   -webkit-transition: border-color 250ms ease-in;
   transition: border-color 250ms ease-in;
-}
-/* http://meyerweb.com/eric/tools/css/reset/
-   v2.0 | 20110126
-   License: none (public domain)
-*/
-
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-caption, table, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-}
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
-    display: block;
-}
-body {
-    line-height: 1;
-}
-ol, ul {
-    list-style: none;
-}
-blockquote, q {
-    quotes: none;
-}
-blockquote:before, blockquote:after,
-q:before, q:after {
-    content: '';
-    content: none;
-}
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-table {
-    vertical-align: middle;
-}
-tbody, tfoot, thead, tr, th, td {
-    vertical-align: inherit;
-}
-h1, h2, h3, h4, h5, h6 {
-    font-weight: bold;
-}
-th {
-    font-weight: bold;
-}
-strong {
-    font-weight: bold;
-}
-p {
-    margin: 1em 0;
-}
-h3 {
-    font-size: 1.17em;
-}
-a {
-    outline: none;
 }
 span.substr.matches-search {
   color: #4c6072;
