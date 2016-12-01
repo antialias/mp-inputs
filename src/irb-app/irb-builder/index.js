@@ -4,6 +4,7 @@ import './builder-show';
 import './builder-group';
 import './builder-time';
 import './builder-filter';
+import './new-builder';
 
 import template from './index.jade';
 import './index.styl';

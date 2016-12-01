@@ -1,10 +1,14 @@
 .irb-builder
   if projectHasEvents
-    .query
-      .section-container= $component.child('builder-show')
-      .section-container= $component.child('builder-group')
-      .section-container= $component.child('builder-time')
-    .filters= $component.child('builder-filter')
+    if features.queryBuilderVersion === `new`
+      .query
+        .section-container= $component.child('new-builder')
+    else
+      .query
+        .section-container= $component.child('builder-show')
+        .section-container= $component.child('builder-group')
+        .section-container= $component.child('builder-time')
+      .filters= $component.child('builder-filter')
     .reset-query(onclick=$helpers.reset title="Reset query")
       svg-icon(attributes={icon: 'x'})
   else
