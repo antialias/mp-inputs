@@ -39,6 +39,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       ),
 
       routes: {
+        'nofeatures': this.routeHandlers.noFeatures,
         'report/:reportId': this.routeHandlers.load,
         'reset':            this.routeHandlers.reset,
         '':                 this.routeHandlers.index,
@@ -61,6 +62,14 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           }
           return stateUpdate;
         }
+      },
+
+      noFeatures: (stateUpdate={}) => {
+        const features = extend(this.state.features, {
+          queryBuilderVersion: `old`,
+          queryOnAllPeople: false,
+        });
+        return extend(stateUpdate, {features});
       },
 
       index: (stateUpdate={}) => {
