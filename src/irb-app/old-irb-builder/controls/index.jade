@@ -10,12 +10,7 @@
           span= part
   if $component.isRemoveable
     button.remove(onclick=$helpers.removeClause)
-  if features.queryBuilderVersion === `new`
-    mp-drop-menu(attributes={open: $component.isPaneOpen})
-      .new-pane-content(attributes={'slot-body': true})
-        .pane PANE WILL GO HERE
-
-  else if $component.isPaneOpen
+  if $component.isPaneOpen
     .pane-container(style={
       height: `${$component.constants.paneHeight}px`,
       width: `${$component.constants.paneWidth}px`,

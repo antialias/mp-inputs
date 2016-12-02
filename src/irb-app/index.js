@@ -18,8 +18,9 @@ import Report from '../models/report';
 import Result from '../models/result';
 
 import './irb-header';
-import './irb-builder';
 import './irb-result';
+import './new-irb-builder';
+import './old-irb-builder';
 
 import template from './index.jade';
 import './index.styl';
@@ -349,6 +350,12 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   canMakeQueries() {
     return this.state.projectHasEvents;
+  }
+
+  // New query builder helpers
+
+  isNewQueryBuilder() {
+    return this.state.features.queryBuilderVersion === `new`;
   }
 
   // State modifiers

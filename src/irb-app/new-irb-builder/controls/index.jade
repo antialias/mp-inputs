@@ -1,0 +1,15 @@
+.irb-control.new-query-builder(class=$component.elementClass)
+  button.modify(onclick=$helpers.clickModify)
+    if typeof $component.label === 'string'
+      span= $component.label
+    else if $component.label
+      for part, i in $component.label
+        if i % 2
+            span.preposition= ` ${part} `
+        else
+          span= part
+  if $component.isRemoveable
+    button.remove(onclick=$helpers.removeClause)
+  mp-drop-menu(attributes={open: $component.isPaneOpen})
+    .new-pane-content(attributes={'slot-body': true})
+      .pane PANE WILL GO HERE

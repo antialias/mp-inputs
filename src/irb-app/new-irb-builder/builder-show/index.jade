@@ -1,0 +1,6 @@
+.section.builder-show
+  for _, clauseIdx in report.sections.show.clauses
+    .clause.comparison
+      .clause-header
+        h3= 'Show Total'
+      .control-container= $component.child('query-builder-edit-control', {attributes: {'clause-index': clauseIdx}})

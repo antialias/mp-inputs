@@ -1,0 +1,81 @@
+@import "../../../stylesheets/common"
+
+.irb-control.new-query-builder
+  button.modify
+    background transparent
+    border 1px solid grey-500
+    color grey-900
+    font-size 16px
+    font-weight 500
+    margin-top -1px
+    padding 8px 10px
+
+    &:hover
+      color blue-300
+
+  &.noun button.modify
+    border-width 0
+    border-bottom 1px dotted grey-500
+    color blue-700
+    padding 8px 0
+    &:hover
+      border-bottom 1px solid blue-700
+
+    .preposition
+      color blue-700
+
+  &.verb button.modify
+    border-radius 2px
+    font-size 14px
+    margin-top -2px
+
+    &::before
+      color grey-300
+      content '+'
+      display inline-block
+      font-size 18px
+      font-weight 600
+      margin-right 4px
+      margin-top -4px
+
+  &.noun, &.verb
+    float left
+    position relative
+
+  button.remove
+    background none
+    border none
+    color grey-300
+    font-weight 600
+    opacity 0
+    position absolute
+    right -6px
+    top -10px
+    transition opacity .1s
+
+    &::after
+      content '✕'
+
+    &:hover
+      color grey-700
+
+  &:hover button.remove
+    opacity 1
+
+  .pane-container
+    box-shadow 0px 3px 10px -4px black
+    position absolute
+    top 40px
+    z-index 4
+
+  .calendar-hook
+    left 10px
+    position absolute
+    top 180px
+    width 490px
+
+show-edit-control .irb-control
+  min-width 60px
+
+group-edit-control .irb-control
+  min-width 65px
