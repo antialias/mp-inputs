@@ -352,12 +352,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     return this.state.projectHasEvents;
   }
 
-  // New query builder helpers
-
-  isNewQueryBuilder() {
-    return this.state.features.queryBuilderVersion === `new`;
-  }
-
   // State modifiers
 
   resetTopQueries() {
