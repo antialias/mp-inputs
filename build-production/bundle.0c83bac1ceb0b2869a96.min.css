@@ -3197,80 +3197,6 @@ span.substr.matches-search {
   box-shadow: 0px 1px 1.8px 0.2px rgba(69,81,113,0.15);
   margin: 20px;
 }
-/* http://meyerweb.com/eric/tools/css/reset/
-   v2.0 | 20110126
-   License: none (public domain)
-*/
-
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-caption, table, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video {
-    margin: 0;
-    padding: 0;
-    border: 0;
-    font-size: 100%;
-    font: inherit;
-    vertical-align: baseline;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-}
-/* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
-    display: block;
-}
-body {
-    line-height: 1;
-}
-ol, ul {
-    list-style: none;
-}
-blockquote, q {
-    quotes: none;
-}
-blockquote:before, blockquote:after,
-q:before, q:after {
-    content: '';
-    content: none;
-}
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-table {
-    vertical-align: middle;
-}
-tbody, tfoot, thead, tr, th, td {
-    vertical-align: inherit;
-}
-h1, h2, h3, h4, h5, h6 {
-    font-weight: bold;
-}
-th {
-    font-weight: bold;
-}
-strong {
-    font-weight: bold;
-}
-p {
-    margin: 1em 0;
-}
-h3 {
-    font-size: 1.17em;
-}
-a {
-    outline: none;
-}
 svg-icon {
   display: inline-block;
   height: 22px;
@@ -3349,6 +3275,7 @@ a:hover,
   font-weight: 500;
   line-height: 18px;
 }
+/* FORMS */
 input[type=text],
 textarea {
   border: 1px solid #d8e0e6;
@@ -3385,6 +3312,80 @@ textarea:focus {
   border-color: #3391e9;
   -webkit-transition: border-color 250ms ease-in;
   transition: border-color 250ms ease-in;
+}
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+caption, table, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+table {
+    vertical-align: middle;
+}
+tbody, tfoot, thead, tr, th, td {
+    vertical-align: inherit;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+}
+th {
+    font-weight: bold;
+}
+strong {
+    font-weight: bold;
+}
+p {
+    margin: 1em 0;
+}
+h3 {
+    font-size: 1.17em;
+}
+a {
+    outline: none;
 }
 span.substr.matches-search {
   color: #4c6072;
