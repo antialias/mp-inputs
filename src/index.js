@@ -8,9 +8,9 @@ import Framesg from 'framesg';
 
 import { mixpanel, rollbar } from './tracking';
 
+import 'mixpanel-common/components';
 import './irb-app';
 
-import 'mixpanel-common/components';
 import './stylesheets/index.styl';
 
 const STANDALONE = window.parent === window;
