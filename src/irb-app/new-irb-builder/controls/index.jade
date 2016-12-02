@@ -1,12 +1,8 @@
 .irb-control.new-query-builder(class=$component.elementClass)
   button.modify(onclick=$helpers.clickModify)
-    if typeof $component.label === 'string'
-      span= $component.label
-    else if $component.label
-      for part, i in $component.label
-        if i % 2
-            span.preposition= ` ${part} `
-        else
-          span= part
+    span= $component.label
   if $component.isRemoveable
     button.remove(onclick=$helpers.removeClause)
+  .drop-menu
+    mp-drop-menu(attributes={open: $component.isPaneOpen})
+      .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-view`)

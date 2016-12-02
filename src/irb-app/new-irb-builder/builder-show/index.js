@@ -13,7 +13,7 @@ document.registerElement(`query-builder-show`, class extends Component {
   }
 });
 
-document.registerElement(`query-builder-edit-control`, class extends EditControl {
+document.registerElement(`builder-show-edit-control`, class extends EditControl {
   get section() {
     return `show`;
   }

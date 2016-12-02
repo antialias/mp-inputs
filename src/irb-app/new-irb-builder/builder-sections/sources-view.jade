@@ -1,0 +1,8 @@
+.builder-section
+  ul.section-options
+    for source in $helpers.getSources()
+      li.section-option(
+        onclick= () => $helpers.clickedSource(source)
+      )
+        .label= source.name
+        .secondary-action= '>'

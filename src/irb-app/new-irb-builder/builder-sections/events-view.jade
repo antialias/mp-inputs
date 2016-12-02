@@ -1,0 +1,9 @@
+.builder-section
+  ul.section-options
+    for event in $helpers.getEvents()
+      li.section-option(
+        onclick= () => $helpers.clickedEvent(event)
+      )
+        .label= util.renameEvent(event.name)
+        .secondary-action.pill= 'Properties >'
+

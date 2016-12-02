@@ -1,0 +1,3 @@
+.builder-view
+  -const lastView = builderPane.viewHistory[builderPane.viewHistory.length - 1]
+  .section-view(class=[lastView])= $component.child(`builder-view-${lastView}`)

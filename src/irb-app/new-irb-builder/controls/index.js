@@ -67,7 +67,7 @@ export class EditControl extends ControlComponent {
   }
 
   get isPaneOpen() {
-    return this.app.isEditingClause(this.section, this.clauseIndex);
+    return !!this.state.builderPane.viewHistory.length && this.clauseIndex === this.state.stageClauseIndex;
   }
 
   get clauseIndex() {

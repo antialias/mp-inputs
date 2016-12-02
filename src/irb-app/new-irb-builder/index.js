@@ -4,6 +4,7 @@ import template from './index.jade';
 import './index.styl';
 
 import './builder-show';
+import './builder-sections';
 
 document.registerElement(`new-irb-builder`, class extends Component {
   get config() {

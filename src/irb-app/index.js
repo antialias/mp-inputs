@@ -114,6 +114,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         title: `Untitled report`,
       }),
 
+      builderPane: {
+        viewHistory: [],
+      },
       chartToggle: {
         editingType: null,
         bar: {
@@ -303,6 +306,24 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     }
   }
 
+  // New query builder helpers
+
+  nextBuilderView(view) {
+    const viewHistory = this.state.builderPane.viewHistory.slice();
+    viewHistory.push(view);
+    this.updateBuilderPane({viewHistory});
+  }
+
+  resetBuilderView() {
+    this.update({builderPane: {
+      viewHistory: [],
+    }});
+  }
+
+  updateBuilderPane(attrs) {
+    this.update({builderPane: extend(this.state.builderPane, attrs)});
+  }
+
   // State helpers
 
   hasStageClause() {
@@ -465,6 +486,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   startEditingClause(sectionType, clauseIndex) {
+    this.nextBuilderView(`sources`);
     const stageClauses = this.state.stageClauses.concat(
       this.state.report.sections[sectionType].clauses[clauseIndex]
     );
@@ -483,6 +505,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   stopEditingClause() {
+    this.resetBuilderView();
+
     this.stopEditingClauseAttrs();
 
     const newState = {
