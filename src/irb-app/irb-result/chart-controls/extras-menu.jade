@@ -4,6 +4,7 @@ ul.toggle-view
       class={selected: isEditingExtrasMenu}
       onclick=$helpers.onClickExtrasMenu
     )
+      svg-icon(attributes={icon: 'ellipsis'})
     if isEditingExtrasMenu
       .extras-menu-options.options
         .analysis.section

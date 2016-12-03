@@ -173,17 +173,13 @@ toggle-height = 34px
     right 0
 
 button.extras-menu
-  background-color grey-700
   height 30px
-  margin 5px 0
-  mask url("~assets/extras-menu/ellipsis.svg") no-repeat center
+  margin 3px 0
   width 30px
-
-  &:hover
-    background blue-300
+  svg-icon-style(grey-700, blue-300)
 
   &.selected
-    background grey-900
+    svg-icon-style(grey-900)
 
 .options.extras-menu-options
   display flex
