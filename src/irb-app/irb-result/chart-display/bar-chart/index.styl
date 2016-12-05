@@ -38,7 +38,7 @@ bar-bottom = 8px
             opacity 1
 
           .sort-holder
-            bottom -25px
+            bottom -20px
             display flex
             justify-content center
             left 0
@@ -49,6 +49,7 @@ bar-bottom = 8px
               background-color #fff
               border-radius 5px
               box-shadow 2px 3px 10px -4px black
+              height 30px
               opacity 0
               transition opacity 0.1s
               z-index 1
@@ -256,26 +257,27 @@ bar-bottom = 8px
     display inline-block
     height 100%
     width 36px
-    &::before
-      background-color grey-500
-      content ''
-      display inline-block
-      height 100%
-      margin 0 6px
-      transition background-color 0.1s, opacity 0.1s
-      width 22px
-    &:hover::before
-      background-color blue-300
+    svg-icon-style(grey-500, blue-300, pos-left: 7px, pos-top: 2px)
+    // &::before
+    //   background-color grey-500
+    //   content ''
+    //   display inline-block
+    //   height 100%
+    //   margin 0 6px
+    //   transition background-color 0.1s, opacity 0.1s
+    //   width 22px
+    // &:hover::before
+    //   background-color blue-300
     &.sort-selected::before
       background-color grey-500
-    &.sort-icon-label-asc::before
-      mask url("~assets/charts/sort-label-asc.svg") no-repeat center
-    &.sort-icon-label-desc::before
-      mask url("~assets/charts/sort-label-desc.svg") no-repeat center
-    &.sort-icon-value-asc::before
-      mask url("~assets/charts/sort-value-asc.svg") no-repeat center
-    &.sort-icon-value-desc::before
-      mask url("~assets/charts/sort-value-desc.svg") no-repeat center
+    // &.sort-icon-label-asc::before
+    //   mask url("~assets/charts/sort-label-asc.svg") no-repeat center
+    // &.sort-icon-label-desc::before
+    //   mask url("~assets/charts/sort-label-desc.svg") no-repeat center
+    // &.sort-icon-value-asc::before
+    //   mask url("~assets/charts/sort-value-asc.svg") no-repeat center
+    // &.sort-icon-value-desc::before
+    //   mask url("~assets/charts/sort-value-desc.svg") no-repeat center
     &.sort-icon-unselected::before
       mask url("~assets/charts/sort-value-desc.svg") no-repeat center
       opacity 0

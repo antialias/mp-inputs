@@ -106,6 +106,10 @@ document.registerElement(`bar-chart`, class extends Component {
   }
 });
 
+const SORT_ICONS = {
+  label: `alpha`,
+  value: `value`,
+};
 document.registerElement(`irb-bar-chart-header`, class extends WebComponent {
   createdCallback() {
     this.$el = $(`<div>`).addClass(`chart-header-container`).appendTo(this);
@@ -132,7 +136,8 @@ document.registerElement(`irb-bar-chart-header`, class extends WebComponent {
 
     sortByOptions.forEach(sortBy => {
       sortOrderOptions.forEach(sortOrder => {
-        const $sortButton = $(`<div>`).addClass(`sort-icon sort-icon-${sortBy}-${sortOrder}`);
+        const $sortButton = $(`<div class="sort-icon">`)
+          .append($(`<svg-icon icon="sort-${SORT_ICONS[sortBy]}-${sortOrder}">`));
         $sortButton.on(`click`, () => this.selectHeaderSort(type, headerIdx, sortBy, sortOrder));
         $sortControls.append($sortButton);
       });
