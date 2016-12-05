@@ -184,7 +184,7 @@ document.registerElement(`irb-bar-chart-header`, class extends WebComponent {
         .append($(`<div>`).addClass(`text`).html(
           header === `$event` ? `Events` : util.renameProperty(header)
         ))
-        .append($(`<div>`).addClass(headersEl.sortIconClass(idx)))
+        .append($(`<div class="sort-icon sort-bar-header">`).append(headersEl.createSortIcon(idx)))
         .append(sortHolder)
         .get(0);
     }));
@@ -203,7 +203,7 @@ document.registerElement(`irb-bar-chart-header`, class extends WebComponent {
     const $axisTitle = $(`<div>`)
       .addClass(`axis-title`)
       .append($(`<div>`).addClass(`text`).html(chartTitle))
-      .append($(`<div>`).addClass(headersEl.sortIconAxisClass()))
+      .append($(`<div class="sort-icon sort-axis">`).append(headersEl.createAxisSortIcon()))
       .append(sortAxisHolder);
 
     const $axisMaxValue = $(`<div>`)
@@ -240,34 +240,34 @@ document.registerElement(`irb-bar-chart-header`, class extends WebComponent {
     });
   }
 
-  sortIconClass(headerIdx) {
-    let elClass = null;
-    if (this.sortConfig) {
-      if (this.sortConfig.hideFirstSort && headerIdx === 0) {
-        return `no-sort-icon`;
-      } else if (this.sortConfig.sortBy === `column`) {
-        const colAttrs = this.sortConfig.colSortAttrs[headerIdx];
-        if (colAttrs) {
-          elClass = `sort-icon-${colAttrs.sortBy}-${colAttrs.sortOrder}`;
-        }
+  createSortIcon(headerIdx) {
+    let sortEl = null;
+    if (
+      this.sortConfig &&
+      this.sortConfig.sortBy === `column` &&
+      !(this.sortConfig.hideFirstSort && headerIdx === 0)
+    ) {
+      const colAttrs = this.sortConfig.colSortAttrs[headerIdx];
+      if (colAttrs) {
+        sortEl = $(`<svg-icon icon="sort-${SORT_ICONS[colAttrs.sortBy]}-${colAttrs.sortOrder}">`);
       }
     }
-    return `sort-icon ${elClass || `sort-icon-unselected`}`;
+    return sortEl || $(`<svg-icon empty>`);
   }
 
-  sortIconAxisClass() {
-    let elClass = null;
+  createAxisSortIcon() {
+    let sortEl = null;
     if (this.sortConfig) {
       if (this.sortConfig.colSortAttrs && this.displayOptions && this.displayOptions.plotStyle === `stacked`) {
         const headerIdx = this.sortConfig.hideFirstSort ? 0 : this.headers.length;
         const colAttrs = this.sortConfig.colSortAttrs[headerIdx];
         if (colAttrs) {
-          elClass = `sort-icon-${colAttrs.sortBy}-${colAttrs.sortOrder}`;
+          sortEl = $(`<svg-icon icon="sort-${SORT_ICONS[colAttrs.sortBy]}-${colAttrs.sortOrder}">`);
         }
       } else if (this.sortConfig.sortBy === `value`) {
-        elClass = `sort-icon-value-${this.sortConfig.sortOrder}`;
+        sortEl = $(`<svg-icon icon="sort-value-${this.sortConfig.sortOrder}">`);
       }
     }
-    return `sort-icon ${elClass || `sort-icon-unselected`}`;
+    return sortEl || $(`<svg-icon empty>`);
   }
 });

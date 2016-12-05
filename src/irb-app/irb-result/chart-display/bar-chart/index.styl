@@ -258,26 +258,9 @@ bar-bottom = 8px
     height 100%
     width 36px
     svg-icon-style(grey-500, blue-300, pos-left: 7px, pos-top: 2px)
-    // &::before
-    //   background-color grey-500
-    //   content ''
-    //   display inline-block
-    //   height 100%
-    //   margin 0 6px
-    //   transition background-color 0.1s, opacity 0.1s
-    //   width 22px
-    // &:hover::before
-    //   background-color blue-300
-    &.sort-selected::before
-      background-color grey-500
-    // &.sort-icon-label-asc::before
-    //   mask url("~assets/charts/sort-label-asc.svg") no-repeat center
-    // &.sort-icon-label-desc::before
-    //   mask url("~assets/charts/sort-label-desc.svg") no-repeat center
-    // &.sort-icon-value-asc::before
-    //   mask url("~assets/charts/sort-value-asc.svg") no-repeat center
-    // &.sort-icon-value-desc::before
-    //   mask url("~assets/charts/sort-value-desc.svg") no-repeat center
-    &.sort-icon-unselected::before
-      mask url("~assets/charts/sort-value-desc.svg") no-repeat center
-      opacity 0
+
+    &.sort-axis
+      svg-icon-style(grey-500, blue-300, pos-left: 7px, pos-top: 7px)
+
+    &.sort-bar-header
+      margin-top 10px
