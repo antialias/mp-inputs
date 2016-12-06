@@ -80,7 +80,7 @@ document.registerElement(`builder-view-sources`, class extends BuilderView {
         clickedSource: source => {
           if (source.resourceType === `events`) {
             this.app.updateStageClause(pick(source, [`resourceType`]));
-            this.app.nextBuilderView(source.resourceType);
+            this.app.nextBuilderView(`builder-view-${source.resourceType}`);
           }
         },
       },

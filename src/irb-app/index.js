@@ -311,9 +311,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   // New query builder helpers
 
-  nextBuilderView(type) {
+  nextBuilderView(component) {
     const viewHistory = this.state.builderPane.viewHistory.slice();
-    viewHistory.push({type});
+    viewHistory.push({component});
     this.updateBuilderView({viewHistory});
   }
 
