@@ -5,4 +5,5 @@
         onclick= () => $helpers.clickedSource(source)
       )
         .label= source.name
-        .secondary-action= '>'
+        .caret-icon.small-caret
+          svg-icon(attributes={icon: 'caret-right'})

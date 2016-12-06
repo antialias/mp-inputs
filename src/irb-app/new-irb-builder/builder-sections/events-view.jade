@@ -8,5 +8,8 @@ include ./mixins.jade
         onclick=() => $helpers.clickedEvent(event)
       )
         .label= util.renameEvent(event.name)
-        .secondary-action.pill= 'Properties >'
+        .secondary-action.pill
+          span.secondary-label Properties
+          .caret-icon.small-caret
+            svg-icon(attributes={icon: 'caret-right'})
 
