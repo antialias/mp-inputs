@@ -115,6 +115,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       }),
 
       builderPane: {
+        offsetStyle: {},
+        sizeStyle: {},
         viewHistory: [],
       },
       chartToggle: {
@@ -318,16 +320,33 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     if (boundaries.width && boundaries.height) {
       const viewHistory = this.state.builderPane.viewHistory.slice();
       Object.assign(viewHistory[index], util.pick(boundaries, [`width`, `height`]));
-      console.log(viewHistory);
-      this.updateBuilderView({viewHistory});
+
+      const lastView = viewHistory[viewHistory.length - 1];
+      const sizeStyle = {
+        width: `${lastView.width}px`,
+        height: `${lastView.height}px`,
+      };
+
+      const offset = viewHistory.slice(0, -1).reduce((sum, view) => sum + view.width || 0, 0);
+      const offsetStyle = {
+        '-webkit-transform': `translateX(-${offset}px)`,
+        transform: `translateX(-${offset}px)`,
+      };
+
+      this.updateBuilderView({
+        offsetStyle,
+        sizeStyle,
+        viewHistory,
+      });
     }
   }
 
   resetBuilderView() {
-    this.update({builderPane: {
-      paneOffset: null,
+    this.updateBuilderView({
+      offsetStyle: {},
+      sizeStyle: {},
       viewHistory: [],
-    }});
+    });
   }
 
   updateBuilderView(attrs) {
