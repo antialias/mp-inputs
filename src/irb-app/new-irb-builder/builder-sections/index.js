@@ -14,6 +14,24 @@ document.registerElement(`builder-view`, class extends Component {
   get config() {
     return {
       template,
+      helpers: {
+        builderStyle: () => {
+          const views = this.state.builderPane.viewHistory.slice();
+          if (views.length) {
+            let lastView = views.pop();
+            let offset = views.reduce((sum, view) => sum + view.width || 0, 0);
+            if (!lastView.width && !lastView.width && views.length) {
+              lastView = views.pop();
+            }
+            return {
+              width: `${lastView.width || 0}px`,
+              height: `${lastView.height || 0}px`,
+              '-webkit-transform': `translateX(-${offset}px)`,
+              transform: `translateX(-${offset}px)`,
+            };
+          }
+        },
+      },
     };
   }
 });
@@ -27,7 +45,6 @@ class BuilderView extends Component {
   }
 
   get viewIdx() {
-    console.log(this.getAttribute(`view-index`))
     return Number(this.getAttribute(`view-index`));
   }
 }

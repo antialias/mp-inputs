@@ -1,5 +1,5 @@
-.builder-view
+.builder-view(style=$helpers.builderStyle())
   for view, viewIdx in builderPane.viewHistory
     .section-view(
-      class=[view]
+      class=[view.type]
     )= $component.child(`builder-view-${view.type}`, {attributes: {'view-index': viewIdx}})
