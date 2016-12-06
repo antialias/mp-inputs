@@ -19,7 +19,12 @@ document.registerElement(`builder-view`, class extends Component {
 });
 
 class BuilderView extends Component {
-
+  attachedCallback() {
+    super.attachedCallback(...arguments);
+    window.requestAnimationFrame(() => {
+      console.log(this.getBoundingClientRect());
+    });
+  }
 }
 
 document.registerElement(`builder-view-events`, class extends BuilderView {

@@ -486,7 +486,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   startEditingClause(sectionType, clauseIndex) {
-    this.nextBuilderView(`sources`);
     const stageClauses = this.state.stageClauses.concat(
       this.state.report.sections[sectionType].clauses[clauseIndex]
     );

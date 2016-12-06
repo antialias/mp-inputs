@@ -77,5 +77,6 @@ export class EditControl extends ControlComponent {
   openPane() {
     this.app.stopEditingClause();
     this.app.startEditingClause(this.section, this.clauseIndex);
+    this.app.nextBuilderView(`sources`);
   }
 }
