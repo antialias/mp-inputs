@@ -29,6 +29,14 @@ class BuilderView extends Component {
   get viewIdx() {
     return Number(this.getAttribute(`view-index`));
   }
+
+  closeBuilder() {
+    this.app.stopEditingClause();
+  }
+
+  previousBuilderView() {
+    this.app.previousBuilderView();
+  }
 }
 
 document.registerElement(`builder-view-events`, class extends BuilderView {

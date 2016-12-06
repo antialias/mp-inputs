@@ -115,6 +115,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       }),
 
       builderPane: {
+        inTransition: false,
         offsetStyle: {},
         sizeStyle: {},
         viewHistory: [],
@@ -316,22 +317,29 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     this.updateBuilderView({viewHistory});
   }
 
+  _createBuilderSizeStyle(viewHistory) {
+    const lastView = viewHistory[viewHistory.length - 1];
+    return {
+      width: `${lastView.width}px`,
+      height: `${lastView.height}px`,
+    };
+  }
+
+  _createBuilderOffsetStyle(viewHistory) {
+    const offset = viewHistory.slice(0, -1).reduce((sum, view) => sum + view.width || 0, 0);
+    return {
+      '-webkit-transform': `translateX(-${offset}px)`,
+      transform: `translateX(-${offset}px)`,
+    };
+  }
+
   setBoundariesAtViewIndex(index, boundaries) {
     if (boundaries.width && boundaries.height) {
       const viewHistory = this.state.builderPane.viewHistory.slice();
       Object.assign(viewHistory[index], util.pick(boundaries, [`width`, `height`]));
 
-      const lastView = viewHistory[viewHistory.length - 1];
-      const sizeStyle = {
-        width: `${lastView.width}px`,
-        height: `${lastView.height}px`,
-      };
-
-      const offset = viewHistory.slice(0, -1).reduce((sum, view) => sum + view.width || 0, 0);
-      const offsetStyle = {
-        '-webkit-transform': `translateX(-${offset}px)`,
-        transform: `translateX(-${offset}px)`,
-      };
+      const sizeStyle = this._createBuilderSizeStyle(viewHistory);
+      const offsetStyle = this._createBuilderOffsetStyle(viewHistory);
 
       this.updateBuilderView({
         offsetStyle,
@@ -339,6 +347,23 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         viewHistory,
       });
     }
+  }
+
+  previousBuilderView() {
+    const viewHistory = this.state.builderPane.viewHistory.slice(0, -1);
+    // TODO: lock stage clause + builder when inTransition
+    this.updateBuilderView({
+      inTransition: true,
+      offsetStyle: this._createBuilderOffsetStyle(viewHistory),
+      sizeStyle: this._createBuilderSizeStyle(viewHistory),
+    });
+    const TRANSITION_TIME = 0.25 * util.MS_IN_SECOND;
+    setTimeout(() => {
+      this.updateBuilderView({
+        inTransition: false,
+        viewHistory,
+      });
+    }, TRANSITION_TIME);
   }
 
   resetBuilderView() {

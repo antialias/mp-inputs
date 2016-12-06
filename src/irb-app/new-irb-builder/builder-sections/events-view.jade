@@ -1,8 +1,11 @@
+include ./mixins.jade
+
 .builder-section
+  +builder-title('All Events', true, true)
   ul.section-options
     for event in $helpers.getEvents()
       li.section-option(
-        onclick= () => $helpers.clickedEvent(event)
+        onclick=() => $helpers.clickedEvent(event)
       )
         .label= util.renameEvent(event.name)
         .secondary-action.pill= 'Properties >'

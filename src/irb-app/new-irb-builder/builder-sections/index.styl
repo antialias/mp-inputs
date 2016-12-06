@@ -3,6 +3,7 @@
 option-height = 30px
 
 .builder-view
+  border-radius 5px
   overflow hidden
   transition width .25s, height .25s
 
@@ -11,61 +12,87 @@ option-height = 30px
     transition transform .25s
 
   .builder-section
-    width 320px
+    display flex
+    flex-direction column
     max-height 486px
     overflow auto
+    width 320px
 
-  ul.section-options
-    margin 10px
-
-  li.section-option
-    align-items center
-    border-radius 3px
-    cursor pointer
-    font-size 12px
-    font-weight 500
-    display flex
-    height option-height
-    justify-content flex-end
-    padding 0 10px
-
-    .label
-      flex 1 1
-      ellipsis()
-
-    .secondary-action
+    .section-title
       align-items center
-      display none
+      background-color grey-150
+      color grey-700
+      display flex
       flex none
+      font-size 11px
+      font-weight 900
+      height 48px
+      position relative
+
+      .title-button
+        cursor pointer
+        padding 10px
+        position absolute
+
+        &.close-button
+          right 0
+
+      .title-label
+        text-align center
+        width 100%
+
+    ul.section-options
+      flex 1 1
+      margin 10px
+
+    li.section-option
+      align-items center
+      border-radius 3px
+      cursor pointer
+      font-size 12px
+      font-weight 500
+      display flex
+      height option-height
+      justify-content flex-end
       padding 0 10px
 
-      &.caret
-        height option-height
-
-
-      &.pill
-        background-color grey-50
-        border-radius 40px
-        color grey-500
-        font-size 10px
-        font-weight 900
-        height 18px
-
-        &:hover
-          background-color mp-blue
-          color #fff
-
-    &:hover
-      background-color grey-100
-      color mp-blue
+      .label
+        flex 1 1
+        ellipsis()
 
       .secondary-action
-        display flex
+        align-items center
+        display none
+        flex none
+        padding 0 10px
 
-  .sources
-    .builder-section
-      width 260px
+        &.caret
+          height option-height
 
-      li.section-option
-        font-size 11px
-        font-weight 900
+
+        &.pill
+          background-color grey-50
+          border-radius 40px
+          color grey-500
+          font-size 10px
+          font-weight 900
+          height 18px
+
+          &:hover
+            background-color mp-blue
+            color #fff
+
+      &:hover
+        background-color grey-100
+        color mp-blue
+
+        .secondary-action
+          display flex
+
+    .sources
+      .builder-section
+        width 260px
+
+        li.section-option
+          font-size 11px
+          font-weight 900

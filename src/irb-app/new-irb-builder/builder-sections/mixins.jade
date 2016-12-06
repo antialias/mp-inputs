@@ -1,0 +1,7 @@
+mixin builder-title(title, backButton, closeButton)
+  .section-title
+    .title-label= title
+    if backButton
+      .title-button.back-button(onclick=() => $component.previousBuilderView()) <
+    if closeButton
+      .title-button.close-button(onclick=() => $component.closeBuilder()) x
