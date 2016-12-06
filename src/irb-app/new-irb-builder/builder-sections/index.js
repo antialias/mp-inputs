@@ -22,8 +22,13 @@ class BuilderView extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
     window.requestAnimationFrame(() => {
-      console.log(this.getBoundingClientRect());
+      this.app.setBoundariesAtViewIndex(this.viewIdx, this.getBoundingClientRect());
     });
+  }
+
+  get viewIdx() {
+    console.log(this.getAttribute(`view-index`))
+    return Number(this.getAttribute(`view-index`));
   }
 }
 

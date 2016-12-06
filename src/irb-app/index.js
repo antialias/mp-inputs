@@ -308,19 +308,29 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   // New query builder helpers
 
-  nextBuilderView(view) {
+  nextBuilderView(type) {
     const viewHistory = this.state.builderPane.viewHistory.slice();
-    viewHistory.push(view);
-    this.updateBuilderPane({viewHistory});
+    viewHistory.push({type});
+    this.updateBuilderView({viewHistory});
+  }
+
+  setBoundariesAtViewIndex(index, boundaries) {
+    if (boundaries.width && boundaries.height) {
+      const viewHistory = this.state.builderPane.viewHistory.slice();
+      Object.assign(viewHistory[index], util.pick(boundaries, [`width`, `height`]));
+      console.log(viewHistory);
+      this.updateBuilderView({viewHistory});
+    }
   }
 
   resetBuilderView() {
     this.update({builderPane: {
+      paneOffset: null,
       viewHistory: [],
     }});
   }
 
-  updateBuilderPane(attrs) {
+  updateBuilderView(attrs) {
     this.update({builderPane: extend(this.state.builderPane, attrs)});
   }
 
