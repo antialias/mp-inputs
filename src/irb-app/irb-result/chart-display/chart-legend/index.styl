@@ -140,21 +140,14 @@ label-line-height = 18px
       font-size 13px
       font-weight bold
       padding-right 5px
-
-      &:before
-        background grey-500
-        content ''
-        display inline-block
-        height 10px
-        margin-right 5px
-        mask url("~assets/chart-controls/twirl-caret.svg") center center/16px 16px no-repeat
-        transition transform .25s
-        transform rotate(-90deg)
-        width 8px
-
-      &.showing
-        &:before
-          transform rotate(0)
+      svg-icon-style(grey-500, pos-left: -7px, pos-top: 6px)
+      svg-icon
+        min-width 14px
+        width 14px
+        svg
+          transition transform .25s
+      &.showing svg-icon svg
+        transform rotate(90deg)
 
     .count
       color grey-700

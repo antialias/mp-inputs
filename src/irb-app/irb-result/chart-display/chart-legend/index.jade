@@ -32,7 +32,9 @@ include ../../../mixins.jade
               .name(
                 class={showing: isSeriesShowing}
                 title=titleName
-              )= titleName
+              )
+                svg-icon(attributes={icon: 'triangle-right'})
+                = titleName
               .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
           ul.series-values
             if isSeriesShowing
