@@ -199,15 +199,8 @@ label-line-height = 18px
         flex 1 0 10px
         justify-content flex-end
         visibility hidden
-
         .delete-icon
-          background-color grey-500
-          height 12px
-          margin-right 5px
-          mask url("~assets/chart-controls/x.svg") center center/12px 12px  no-repeat
-          width 12px
-          &:hover
-            background-color grey-900
+          svg-icon-style(grey-500, mp-red, size: 18px, speed: 0)
 
       &.is-event
         padding-right 5px

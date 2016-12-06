@@ -83,6 +83,10 @@ include ../../../mixins.jade
                       else
                         .label(title=value.formattedText)= value.formattedText
                       .delete-wrapper
-                        .delete-icon(onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value.originalValue))
+                        .delete-icon
+                          svg-icon(
+                            attributes={icon: 'x'}
+                            onclick=ev => $helpers.deleteToFilter(ev, seriesIdx, value.originalValue)
+                          )
           if isSeriesShowing && seriesDisplayLabel
             .display-option(onclick=() => report.legend.toggleSeriesDisplaySetting(seriesIdx))= seriesDisplayLabel
