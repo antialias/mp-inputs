@@ -4,3 +4,4 @@ npm-debug.log
 build-development
 index-dev.html
 benchmark/project-secrets.js
+.DS_Store
