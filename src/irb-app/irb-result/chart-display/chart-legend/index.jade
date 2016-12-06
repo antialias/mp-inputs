@@ -40,11 +40,13 @@ include ../../../mixins.jade
             if isSeriesShowing
               if !isSearchActive
                 li
+                  - const allSelected = $helpers.allSeriesSelected(seriesIdx)
                   button.select-all(
-                    class={showing: $helpers.allSeriesSelected(seriesIdx)}
+                    class={showing: allSelected}
                     onclick=() => $helpers.toggleAllSeriesValue(seriesIdx)
                   )
                     .select-icon.select-all-icon
+                      svg-icon(attributes={icon: allSelected ? 'check-checkbox' : 'dash'})
                     .label Select all
               if !series.seriesValues.length
                 .no-result= 'No results'
@@ -62,6 +64,7 @@ include ../../../mixins.jade
                       color: seriesIdx === 0 && isMultiColor,
                       [`segment-color-${report.legend.getColorForSeries(value.originalValue, isFlattenedData)}`]: showing && seriesIdx === 0,
                     })
+                      svg-icon(attributes={icon: 'check-checkbox', empty: !showing})
                     if isFlattenedData
                       - const dataTitle = value.formattedText.join(' / ');
                       if isSearchActive
