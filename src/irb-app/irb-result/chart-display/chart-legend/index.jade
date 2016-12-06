@@ -9,6 +9,7 @@ include ../../../mixins.jade
   .header Legend
   .content-wrapper
     .search(class={active: isSearchActive})
+      svg-icon(attributes={icon: 'search'})
       focus-input(
         attributes={placeholder: 'search'}
         focusDelay=200

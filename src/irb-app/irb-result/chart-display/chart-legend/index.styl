@@ -44,15 +44,9 @@ label-line-height = 18px
   .search
     border-bottom 1px solid #dde8ef
     position relative
-    &:before
-      background-color grey-500
-      content ''
-      display block
-      height 100%
-      left legend-left-padding
-      mask url("~assets/charts/search.svg") no-repeat center
+    svg-icon-style(grey-500, pos-left: 12px, pos-top: 7px)
+    svg-icon
       position absolute
-      width 16px
 
     &.active:before
       background-color grey-900
