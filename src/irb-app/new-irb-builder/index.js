@@ -3,8 +3,8 @@ import { Component } from 'panel';
 import template from './index.jade';
 import './index.styl';
 
-import './builder-show';
 import './builder-sections';
+import './builder-show';
 
 document.registerElement(`new-irb-builder`, class extends Component {
   get config() {

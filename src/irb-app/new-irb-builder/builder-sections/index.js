@@ -15,7 +15,7 @@ import sourcesTemplate from './sources-view.jade';
 import './index.styl';
 
 
-document.registerElement(`builder-view`, class extends Component {
+document.registerElement(`builder-pane`, class extends Component {
   get config() {
     return {
       template,
@@ -23,7 +23,7 @@ document.registerElement(`builder-view`, class extends Component {
   }
 });
 
-class BuilderView extends Component {
+class BuilderViewBase extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
     window.requestAnimationFrame(() => {
@@ -59,7 +59,7 @@ class BuilderView extends Component {
   }
 }
 
-document.registerElement(`builder-view-events`, class extends BuilderView {
+document.registerElement(`builder-view-events`, class extends BuilderViewBase {
   get config() {
     return {
       template: eventsTemplate,
@@ -90,7 +90,7 @@ const SOURCES = [
   },
 ];
 
-document.registerElement(`builder-view-sources`, class extends BuilderView {
+document.registerElement(`builder-view-sources`, class extends BuilderViewBase {
   get config() {
     return {
       template: sourcesTemplate,

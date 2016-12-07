@@ -5,4 +5,4 @@
     button.remove(onclick=$helpers.removeClause)
   .drop-menu
     mp-drop-menu(attributes={open: $component.isPaneOpen})
-      .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-view`)
+      .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)
