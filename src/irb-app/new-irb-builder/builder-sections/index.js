@@ -37,6 +37,21 @@ class BuilderView extends Component {
   previousBuilderView() {
     this.app.previousBuilderView();
   }
+
+  updateStageClause(clauseAttrs, shouldCommit=false) {
+    if (!this.state.builderPane.inTransition) {
+      this.app.updateStageClause(clauseAttrs);
+      if (shouldCommit) {
+        this.app.commitStageClause();
+      }
+    }
+  }
+
+  nextBuilderView(view) {
+    if (!this.state.builderPane.inTransition) {
+      this.app.nextBuilderView(view);
+    }
+  }
 }
 
 document.registerElement(`builder-view-events`, class extends BuilderView {
@@ -45,8 +60,7 @@ document.registerElement(`builder-view-events`, class extends BuilderView {
       template: eventsTemplate,
       helpers: {
         clickedEvent: value => {
-          this.app.updateStageClause({value});
-          this.app.commitStageClause();
+          this.updateStageClause({value}, true);
         },
         getEvents: () => {
           const topEvents = sorted(this.state.topEvents, {
@@ -65,7 +79,6 @@ document.registerElement(`builder-view-sources`, class extends BuilderView {
       template: sourcesTemplate,
       helpers: {
         getSources: () => {
-          // use something like ShowClause.RESOURCE_TYPES
           return [
             {
               name: `Event`,
@@ -79,8 +92,8 @@ document.registerElement(`builder-view-sources`, class extends BuilderView {
         },
         clickedSource: source => {
           if (source.resourceType === `events`) {
-            this.app.updateStageClause(pick(source, [`resourceType`]));
-            this.app.nextBuilderView(`builder-view-${source.resourceType}`);
+            this.updateStageClause(pick(source, [`resourceType`]));
+            this.nextBuilderView(`builder-view-${source.resourceType}`);
           }
         },
       },

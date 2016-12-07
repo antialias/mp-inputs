@@ -351,7 +351,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   previousBuilderView() {
     const viewHistory = this.state.builderPane.viewHistory.slice(0, -1);
-    // TODO: lock stage clause + builder when inTransition
     this.updateBuilderView({
       inTransition: true,
       offsetStyle: this._createBuilderOffsetStyle(viewHistory),
