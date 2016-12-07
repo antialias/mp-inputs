@@ -1,15 +1,12 @@
 import { Component } from 'panel';
 
 import { ShowClause } from '../../../models/clause';
-import {
-  extend,
-  renameEvent,
-  sorted,
-} from '../../../util';
+import { extend, renameEvent, renameProperty, sorted } from '../../../util';
 
 import template from './index.jade';
 import eventsTemplate from './events-screen.jade';
 import sourcesTemplate from './sources-screen.jade';
+import propertiesTemplate from './properties-screen.jade';
 
 import './index.styl';
 
@@ -82,11 +79,11 @@ class BuilderScreenBase extends Component {
     }
   }
 
-  updateStageClause(clauseAttrs, options={shouldCommit: false}) {
+  updateStageClause(clauseAttrs, {shouldCommit=false, shouldStopEditing=false}={}) {
     if (!this.state.builderPane.inTransition) {
       this.app.updateStageClause(clauseAttrs);
-      if (options.shouldCommit) {
-        this.app.commitStageClause();
+      if (shouldCommit) {
+        this.app.commitStageClause({shouldStopEditing});
       }
     }
   }
@@ -109,7 +106,12 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
       template: eventsTemplate,
       helpers: extend(super.config.helpers, {
         clickedEvent: value => {
+          this.updateStageClause({value}, {shouldCommit: true, shouldStopEditing: true});
+        },
+        clickedEventProperties: (ev, value) => {
+          ev.stopPropagation();
           this.updateStageClause({value}, {shouldCommit: true});
+          this.nextScreen(`builder-screen-properties`);
         },
         getEvents: () => {
           const topEvents = sorted(this.state.topEvents, {
@@ -148,6 +150,49 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
         },
         SOURCES,
       }),
+    };
+  }
+});
+
+document.registerElement(`builder-screen-properties`, class extends BuilderScreenBase {
+  get config() {
+    return {
+      template: propertiesTemplate,
+      helpers: {
+        getProperties: () => {
+          const stageClause = this.app.activeStageClause;
+          const mpEvent = stageClause && stageClause.value && stageClause.value.name;
+          let topProperties = this.state.topEventPropertiesByEvent[mpEvent];
+
+          if (!topProperties) {
+            topProperties = [];
+
+            if (mpEvent === ShowClause.TOP_EVENTS || mpEvent === ShowClause.ALL_EVENTS) {
+              topProperties = this.app.state.topEventProperties;
+            } else if (mpEvent) {
+              this.app.getTopPropertiesForEvent(mpEvent);
+            }
+          }
+
+          topProperties = sorted(topProperties, {
+            transform: prop => renameProperty(prop.name).toLowerCase(),
+          });
+
+          if (this.showNonNumericProperties) {
+            return topProperties;
+          } else {
+            return topProperties.filter(prop => prop.type === `number`);
+          }
+        },
+        clickedProperty: property => {
+          this.updateStageClause({property}, {shouldCommit: true, shouldStopEditing: true});
+        },
+        hasNumericProperties: () => this.hasNumericProperties,
+        showNonNumericProperties: () => this.showNonNumericProperties,
+        toggleNonNumericProperties: () => {
+          this.showNonNumericProperties = !this.showNonNumericProperties;
+        },
+      },
     };
   }
 });

@@ -146,6 +146,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       stageClauses: [],
       topEvents: [],
       topEventProperties: [],
+      topEventPropertiesByEvent: {},
       topPeopleProperties: [],
       topPropertyValues: [],
     };
@@ -429,6 +430,17 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     }
   }
 
+  getTopPropertiesForEvent(event) {
+    this.queries.topEventProperties.build({event}).run().then(properties => {
+      this.update({
+        topEventPropertiesByEvent: extend(
+          this.state.topEventPropertiesByEvent,
+          {[event]: properties}
+        ),
+      });
+    });
+  }
+
   updateReport(attrs) {
     this.update({report: Object.assign(this.state.report, attrs)});
   }
@@ -584,7 +596,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     this.update(newState);
   }
 
-  commitStageClause() {
+  commitStageClause({shouldStopEditing=true}={}) {
     const reportTrackingData = this.state.report.toTrackingData();
     const newClauses = this.state.stageClauses;
     const reportAttrs = extend(this.state.report);
@@ -628,7 +640,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       this.query();
     }
 
-    this.stopEditingClause();
+    if (shouldStopEditing) {
+      this.stopEditingClause();
+    }
   }
 
   updateSection(section) {
