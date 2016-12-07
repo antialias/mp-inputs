@@ -29,8 +29,20 @@ class BuilderViewBase extends Component {
     window.requestAnimationFrame(this.updateViewSize.bind(this));
   }
 
-  closeBuilder() {
-    this.app.stopEditingClause();
+  get config() {
+    return {
+      helpers: {
+        closeBuilder: () => this.app.stopEditingClause(),
+        previousBuilderView: () => {
+          const viewHistory = this.state.builderPane.viewHistory.slice(0, -1);
+          this.app.updateBuilderView({
+            inTransition: true,
+            offsetStyle: this.createBuilderOffsetStyle(viewHistory),
+            sizeStyle: this.createBuilderSizeStyle(viewHistory),
+          }, {viewHistory});
+        },
+      },
+    };
   }
 
   createBuilderOffsetStyle(viewHistory) {
@@ -98,7 +110,7 @@ document.registerElement(`builder-view-events`, class extends BuilderViewBase {
   get config() {
     return {
       template: eventsTemplate,
-      helpers: {
+      helpers: extend({
         clickedEvent: value => {
           this.updateStageClause({value}, true);
         },
@@ -109,7 +121,7 @@ document.registerElement(`builder-view-events`, class extends BuilderViewBase {
           const specialEvents = [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS].map(ev => extend(ev, {icon: `star-top-events`}));
           return specialEvents.concat(topEvents);
         },
-      },
+      }, super.config.helpers),
     };
   }
 });
@@ -129,7 +141,7 @@ document.registerElement(`builder-view-sources`, class extends BuilderViewBase {
   get config() {
     return {
       template: sourcesTemplate,
-      helpers: {
+      helpers: extend({
         getSources: () => SOURCES,
         clickedSource: source => {
           if (source.resourceType === `events`) {
@@ -137,7 +149,7 @@ document.registerElement(`builder-view-sources`, class extends BuilderViewBase {
             this.nextBuilderView(`builder-view-${source.resourceType}`);
           }
         },
-      },
+      }, super.config.helpers),
     };
   }
 });

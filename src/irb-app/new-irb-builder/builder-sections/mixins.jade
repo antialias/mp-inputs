@@ -2,8 +2,8 @@ mixin builder-title(title, backButton, closeButton)
   .section-title
     .title-label= title
     if backButton
-      .title-button.back-button(onclick=() => $component.previousBuilderView())
+      .title-button.back-button(onclick=$helpers.previousBuilderView)
         svg-icon(attributes={icon: 'caret-left'})
     if closeButton
-      .title-button.close-button(onclick=() => $component.closeBuilder())
+      .title-button.close-button(onclick=$helpers.closeBuilder)
         svg-icon(attributes={icon: 'x'})
