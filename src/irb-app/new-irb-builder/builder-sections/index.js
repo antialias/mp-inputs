@@ -3,6 +3,7 @@ import { Component } from 'panel';
 import { ShowClause } from '../../../models/clause';
 import {
   extend,
+  MS_IN_SECOND,
   pick,
   renameEvent,
   sorted,
@@ -27,20 +28,61 @@ class BuilderViewBase extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
     window.requestAnimationFrame(() => {
-      this.app.setBoundariesAtViewIndex(this.viewIdx, this.getBoundingClientRect());
+      this.updateViewSize();
     });
-  }
-
-  get viewIdx() {
-    return Number(this.getAttribute(`view-index`));
   }
 
   closeBuilder() {
     this.app.stopEditingClause();
   }
 
+  createBuilderOffsetStyle(viewHistory) {
+    const offset = viewHistory.slice(0, -1).reduce((sum, view) => sum + view.width || 0, 0);
+    return {
+      '-webkit-transform': `translateX(-${offset}px)`,
+      transform: `translateX(-${offset}px)`,
+    };
+  }
+
+  createBuilderSizeStyle(viewHistory) {
+    const lastView = viewHistory[viewHistory.length - 1];
+    return {
+      width: `${lastView.width}px`,
+      height: `${lastView.height}px`,
+    };
+  }
+
+  nextBuilderView(view) {
+    this.app.nextBuilderView(view);
+  }
+
   previousBuilderView() {
-    this.app.previousBuilderView();
+    const viewHistory = this.state.builderPane.viewHistory.slice(0, -1);
+    this.app.updateBuilderView({
+      inTransition: true,
+      offsetStyle: this.createBuilderOffsetStyle(viewHistory),
+      sizeStyle: this.createBuilderSizeStyle(viewHistory),
+    });
+    const TRANSITION_TIME = 0.25 * MS_IN_SECOND;
+    setTimeout(() => {
+      this.app.updateBuilderView({
+        inTransition: false,
+        viewHistory,
+      });
+    }, TRANSITION_TIME);
+  }
+
+  setBuilderSizeAndPosition(width, height) {
+    if (width && height) {
+      const viewHistory = this.state.builderPane.viewHistory.slice();
+      Object.assign(viewHistory[this.viewIdx], {width, height});
+
+      this.app.updateBuilderView({
+        offsetStyle: this.createBuilderOffsetStyle(viewHistory),
+        sizeStyle: this.createBuilderSizeStyle(viewHistory),
+        viewHistory,
+      });
+    }
   }
 
   updateStageClause(clauseAttrs, shouldCommit=false) {
@@ -52,10 +94,13 @@ class BuilderViewBase extends Component {
     }
   }
 
-  nextBuilderView(view) {
-    if (!this.state.builderPane.inTransition) {
-      this.app.nextBuilderView(view);
-    }
+  updateViewSize() {
+    const {width, height} = this.getBoundingClientRect();
+    this.setBuilderSizeAndPosition(width, height);
+  }
+
+  get viewIdx() {
+    return Number(this.getAttribute(`view-index`));
   }
 }
 

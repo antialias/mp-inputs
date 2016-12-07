@@ -312,56 +312,10 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   // New query builder helpers
 
   nextBuilderView(componentName) {
-    const viewHistory = this.state.builderPane.viewHistory.concat({componentName});
-    this.updateBuilderView({viewHistory});
-  }
-
-  createBuilderSizeStyle(viewHistory) {
-    const lastView = viewHistory[viewHistory.length - 1];
-    return {
-      width: `${lastView.width}px`,
-      height: `${lastView.height}px`,
-    };
-  }
-
-  createBuilderOffsetStyle(viewHistory) {
-    const offset = viewHistory.slice(0, -1).reduce((sum, view) => sum + view.width || 0, 0);
-    return {
-      '-webkit-transform': `translateX(-${offset}px)`,
-      transform: `translateX(-${offset}px)`,
-    };
-  }
-
-  setBoundariesAtViewIndex(index, boundaries) {
-    if (boundaries.width && boundaries.height) {
-      const viewHistory = this.state.builderPane.viewHistory.slice();
-      Object.assign(viewHistory[index], util.pick(boundaries, [`width`, `height`]));
-
-      const sizeStyle = this.createBuilderSizeStyle(viewHistory);
-      const offsetStyle = this.createBuilderOffsetStyle(viewHistory);
-
-      this.updateBuilderView({
-        offsetStyle,
-        sizeStyle,
-        viewHistory,
-      });
+    if (!this.state.builderPane.inTransition) {
+      const viewHistory = this.state.builderPane.viewHistory.concat({componentName});
+      this.app.updateBuilderView({viewHistory});
     }
-  }
-
-  previousBuilderView() {
-    const viewHistory = this.state.builderPane.viewHistory.slice(0, -1);
-    this.updateBuilderView({
-      inTransition: true,
-      offsetStyle: this.createBuilderOffsetStyle(viewHistory),
-      sizeStyle: this.createBuilderSizeStyle(viewHistory),
-    });
-    const TRANSITION_TIME = 0.25 * util.MS_IN_SECOND;
-    setTimeout(() => {
-      this.updateBuilderView({
-        inTransition: false,
-        viewHistory,
-      });
-    }, TRANSITION_TIME);
   }
 
   resetBuilderView() {
