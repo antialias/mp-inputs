@@ -5,7 +5,7 @@ import {
   extend,
   pick,
   renameEvent,
-  sorted
+  sorted,
 } from '../../../util';
 
 import template from './index.jade';
@@ -79,23 +79,23 @@ document.registerElement(`builder-view-events`, class extends BuilderView {
   }
 });
 
+const SOURCES = [
+  {
+    name: `Event`,
+    resourceType: `events`,
+  },
+  {
+    name: `People`,
+    resourceType: `people`,
+  },
+];
+
 document.registerElement(`builder-view-sources`, class extends BuilderView {
   get config() {
     return {
       template: sourcesTemplate,
       helpers: {
-        getSources: () => {
-          return [
-            {
-              name: `Event`,
-              resourceType: `events`,
-            },
-            {
-              name: `People`,
-              resourceType: `people`,
-            },
-          ];
-        },
+        getSources: () => SOURCES,
         clickedSource: source => {
           if (source.resourceType === `events`) {
             this.updateStageClause(pick(source, [`resourceType`]));

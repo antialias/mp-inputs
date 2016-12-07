@@ -3,13 +3,13 @@ include ./mixins.jade
 .builder-section
   +builder-title('All Events', true, true)
   ul.section-options
-    for event in $helpers.getEvents()
+    for mpEvent in $helpers.getEvents()
       li.section-option(
-        onclick=() => $helpers.clickedEvent(event)
+        onclick=() => $helpers.clickedEvent(mpEvent)
       )
         .option-icon
-          svg-icon(attributes={icon: event.icon})
-        .label= util.renameEvent(event.name)
+          svg-icon(attributes={icon: mpEvent.icon})
+        .label= util.renameEvent(mpEvent.name)
         .secondary-action.pill
           span.secondary-label Properties
           .caret-icon.small-caret

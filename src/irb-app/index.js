@@ -311,13 +311,13 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   // New query builder helpers
 
-  nextBuilderView(component) {
+  nextBuilderView(componentName) {
     const viewHistory = this.state.builderPane.viewHistory.slice();
-    viewHistory.push({component});
+    viewHistory.push({componentName});
     this.updateBuilderView({viewHistory});
   }
 
-  _createBuilderSizeStyle(viewHistory) {
+  createBuilderSizeStyle(viewHistory) {
     const lastView = viewHistory[viewHistory.length - 1];
     return {
       width: `${lastView.width}px`,
@@ -325,7 +325,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     };
   }
 
-  _createBuilderOffsetStyle(viewHistory) {
+  createBuilderOffsetStyle(viewHistory) {
     const offset = viewHistory.slice(0, -1).reduce((sum, view) => sum + view.width || 0, 0);
     return {
       '-webkit-transform': `translateX(-${offset}px)`,
@@ -338,8 +338,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       const viewHistory = this.state.builderPane.viewHistory.slice();
       Object.assign(viewHistory[index], util.pick(boundaries, [`width`, `height`]));
 
-      const sizeStyle = this._createBuilderSizeStyle(viewHistory);
-      const offsetStyle = this._createBuilderOffsetStyle(viewHistory);
+      const sizeStyle = this.createBuilderSizeStyle(viewHistory);
+      const offsetStyle = this.createBuilderOffsetStyle(viewHistory);
 
       this.updateBuilderView({
         offsetStyle,
@@ -353,8 +353,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     const viewHistory = this.state.builderPane.viewHistory.slice(0, -1);
     this.updateBuilderView({
       inTransition: true,
-      offsetStyle: this._createBuilderOffsetStyle(viewHistory),
-      sizeStyle: this._createBuilderSizeStyle(viewHistory),
+      offsetStyle: this.createBuilderOffsetStyle(viewHistory),
+      sizeStyle: this.createBuilderSizeStyle(viewHistory),
     });
     const TRANSITION_TIME = 0.25 * util.MS_IN_SECOND;
     setTimeout(() => {

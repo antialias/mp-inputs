@@ -1,9 +1,7 @@
 .builder-section.sources
   ul.section-options
     for source in $helpers.getSources()
-      li.section-option(
-        onclick= () => $helpers.clickedSource(source)
-      )
+      li.section-option(onclick=() => $helpers.clickedSource(source))
         .label= source.name
         .caret-icon.small-caret
           svg-icon(attributes={icon: 'caret-right'})
