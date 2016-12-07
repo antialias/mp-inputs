@@ -34,27 +34,27 @@ class BuilderViewBase extends Component {
       helpers: {
         closeBuilder: () => this.app.stopEditingClause(),
         previousBuilderView: () => {
-          const viewHistory = this.state.builderPane.viewHistory.slice(0, -1);
+          const views = this.state.builderPane.views.slice(0, -1);
           this.app.updateBuilderView({
             inTransition: true,
-            offsetStyle: this.createBuilderOffsetStyle(viewHistory),
-            sizeStyle: this.createBuilderSizeStyle(viewHistory),
-          }, {viewHistory});
+            offsetStyle: this.createBuilderOffsetStyle(views),
+            sizeStyle: this.createBuilderSizeStyle(views),
+          }, {views});
         },
       },
     };
   }
 
-  createBuilderOffsetStyle(viewHistory) {
-    const offset = viewHistory.slice(0, -1).reduce((sum, view) => sum + view.width || 0, 0);
+  createBuilderOffsetStyle(views) {
+    const offset = views.slice(0, -1).reduce((sum, view) => sum + view.width || 0, 0);
     return {
       '-webkit-transform': `translateX(-${offset}px)`,
       transform: `translateX(-${offset}px)`,
     };
   }
 
-  createBuilderSizeStyle(viewHistory) {
-    const lastView = viewHistory[viewHistory.length - 1];
+  createBuilderSizeStyle(views) {
+    const lastView = views[views.length - 1];
     return {
       width: `${lastView.width}px`,
       height: `${lastView.height}px`,
@@ -66,23 +66,23 @@ class BuilderViewBase extends Component {
   }
 
   previousBuilderView() {
-    const viewHistory = this.state.builderPane.viewHistory.slice(0, -1);
+    const views = this.state.builderPane.views.slice(0, -1);
     this.app.updateBuilderView({
       inTransition: true,
-      offsetStyle: this.createBuilderOffsetStyle(viewHistory),
-      sizeStyle: this.createBuilderSizeStyle(viewHistory),
-    }, {viewHistory});
+      offsetStyle: this.createBuilderOffsetStyle(views),
+      sizeStyle: this.createBuilderSizeStyle(views),
+    }, {views});
   }
 
   setBuilderSizeAndPosition(width, height) {
     if (width && height) {
-      const viewHistory = this.state.builderPane.viewHistory.slice();
-      Object.assign(viewHistory[this.viewIdx], {width, height});
+      const views = this.state.builderPane.views.slice();
+      Object.assign(views[this.viewIdx], {width, height});
 
       this.app.updateBuilderView({
-        offsetStyle: this.createBuilderOffsetStyle(viewHistory),
-        sizeStyle: this.createBuilderSizeStyle(viewHistory),
-        viewHistory,
+        offsetStyle: this.createBuilderOffsetStyle(views),
+        sizeStyle: this.createBuilderSizeStyle(views),
+        views,
       });
     }
   }

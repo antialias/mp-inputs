@@ -118,7 +118,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         inTransition: false,
         offsetStyle: {},
         sizeStyle: {},
-        viewHistory: [],
+        views: [],
       },
       chartToggle: {
         editingType: null,
@@ -315,7 +315,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     if (!this.state.builderPane.inTransition) {
       this.app.updateBuilderView({
         inTransition: true,
-        viewHistory: this.state.builderPane.viewHistory.concat({componentName}),
+        views: this.state.builderPane.views.concat({componentName}),
       });
     }
   }
@@ -324,7 +324,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     this.updateBuilderView({
       offsetStyle: {},
       sizeStyle: {},
-      viewHistory: [],
+      views: [],
     });
   }
 
