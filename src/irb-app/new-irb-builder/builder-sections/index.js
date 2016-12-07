@@ -3,7 +3,6 @@ import { Component } from 'panel';
 import { ShowClause } from '../../../models/clause';
 import {
   extend,
-  MS_IN_SECOND,
   pick,
   renameEvent,
   sorted,
@@ -27,9 +26,7 @@ document.registerElement(`builder-pane`, class extends Component {
 class BuilderViewBase extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
-    window.requestAnimationFrame(() => {
-      this.updateViewSize();
-    });
+    window.requestAnimationFrame(this.updateViewSize.bind(this));
   }
 
   closeBuilder() {
@@ -62,14 +59,7 @@ class BuilderViewBase extends Component {
       inTransition: true,
       offsetStyle: this.createBuilderOffsetStyle(viewHistory),
       sizeStyle: this.createBuilderSizeStyle(viewHistory),
-    });
-    const TRANSITION_TIME = 0.25 * MS_IN_SECOND;
-    setTimeout(() => {
-      this.app.updateBuilderView({
-        inTransition: false,
-        viewHistory,
-      });
-    }, TRANSITION_TIME);
+    }, {viewHistory});
   }
 
   setBuilderSizeAndPosition(width, height) {

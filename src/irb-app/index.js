@@ -313,8 +313,10 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   nextBuilderView(componentName) {
     if (!this.state.builderPane.inTransition) {
-      const viewHistory = this.state.builderPane.viewHistory.concat({componentName});
-      this.app.updateBuilderView({viewHistory});
+      this.app.updateBuilderView({
+        inTransition: true,
+        viewHistory: this.state.builderPane.viewHistory.concat({componentName}),
+      });
     }
   }
 
@@ -326,8 +328,14 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     });
   }
 
-  updateBuilderView(attrs) {
+  updateBuilderView(attrs, postTransitionAttrs={}) {
     this.update({builderPane: extend(this.state.builderPane, attrs)});
+    if (attrs.inTransition) {
+      const TRANSITION_TIME = 0.25 * util.MS_IN_SECOND;
+      setTimeout(() => {
+        this.updateBuilderView(util.extend(postTransitionAttrs, {inTransition: false}));
+      }, TRANSITION_TIME);
+    }
   }
 
   // State helpers
