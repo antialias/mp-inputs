@@ -71,7 +71,7 @@ document.registerElement(`builder-view-events`, class extends BuilderView {
           const topEvents = sorted(this.state.topEvents, {
             transform: ev => renameEvent(ev.name).toLowerCase(),
           }).map(ev => extend(ev, {icon: ev.custom ? `custom-events` : `event`}));
-          const specialEvents = [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS].map(ev => extend(ev, {icon: `star`}));
+          const specialEvents = [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS].map(ev => extend(ev, {icon: `star-top-events`}));
           return specialEvents.concat(topEvents);
         },
       },
