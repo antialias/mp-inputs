@@ -15,7 +15,6 @@ option-height = 30px
     display flex
     flex-direction column
     max-height 486px
-    overflow auto
     width 320px
 
 
@@ -48,6 +47,7 @@ option-height = 30px
     ul.section-options
       flex 1 1
       margin 10px
+      overflow auto
 
     li.section-option
       align-items center
@@ -60,9 +60,13 @@ option-height = 30px
       justify-content flex-end
 
       .label
-        padding-left 10px
+        padding-left 8px
         ellipsis()
         flex 1 1
+
+      .option-icon
+        padding-left 5px
+        svg-icon-style(grey-700)
 
       .secondary-action
         align-items center
@@ -93,6 +97,9 @@ option-height = 30px
       &:hover
         background-color grey-100
         color mp-blue
+
+        .option-icon
+          svg-icon-style(mp-blue)
 
         .secondary-action
           display flex

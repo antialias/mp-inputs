@@ -7,6 +7,8 @@ include ./mixins.jade
       li.section-option(
         onclick=() => $helpers.clickedEvent(event)
       )
+        .option-icon
+          svg-icon(attributes={icon: event.icon})
         .label= util.renameEvent(event.name)
         .secondary-action.pill
           span.secondary-label Properties

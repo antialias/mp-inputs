@@ -1,7 +1,12 @@
 import { Component } from 'panel';
 
 import { ShowClause } from '../../../models/clause';
-import { pick, renameEvent, sorted } from '../../../util';
+import {
+  extend,
+  pick,
+  renameEvent,
+  sorted
+} from '../../../util';
 
 import template from './index.jade';
 import eventsTemplate from './events-view.jade';
@@ -65,8 +70,9 @@ document.registerElement(`builder-view-events`, class extends BuilderView {
         getEvents: () => {
           const topEvents = sorted(this.state.topEvents, {
             transform: ev => renameEvent(ev.name).toLowerCase(),
-          });
-          return [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS].concat(topEvents);
+          }).map(ev => extend(ev, {icon: ev.custom ? `custom-events` : `event`}));
+          const specialEvents = [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS].map(ev => extend(ev, {icon: `star`}));
+          return specialEvents.concat(topEvents);
         },
       },
     };
