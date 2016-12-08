@@ -12,6 +12,5 @@ include ./mixins.jade
         .option-label= util.renameEvent(mpEvent.name)
         .option-secondary-action.pill
           span.secondary-label Properties
-          .caret-icon.small-caret
-            svg-icon(attributes={icon: 'caret-right'})
+          +small-caret-icon()
 
