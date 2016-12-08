@@ -1,5 +1,11 @@
+mixin secondary-action-pill(label)
+  -label = label || 'Properties'
+  .option-secondary-action.pill
+    span.secondary-label= label
+    +small-caret-icon()
+
 mixin small-caret-icon(direction)
-  -direction = direction || `right`
+  -direction = direction || 'right'
   .caret-icon.small-caret
     svg-icon(attributes={icon: `caret-${direction}`})
 
