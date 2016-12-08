@@ -40,7 +40,7 @@ class ControlComponent extends Component {
     throw `Not implemented!`;
   }
 
-  get isPaneOpen() {
+  isPaneOpen() {
     throw `Not implemented!`;
   }
 
@@ -66,7 +66,7 @@ export class EditControl extends ControlComponent {
     return true;
   }
 
-  get isPaneOpen() {
+  isPaneOpen() {
     return !!this.state.builderPane.views.length && this.clauseIndex === this.state.stageClauseIndex;
   }
 

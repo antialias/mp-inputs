@@ -3,7 +3,6 @@ import { Component } from 'panel';
 import { ShowClause } from '../../../models/clause';
 import {
   extend,
-  pick,
   renameEvent,
   sorted,
 } from '../../../util';
@@ -47,7 +46,7 @@ class BuilderViewBase extends Component {
   }
 
   createBuilderOffsetStyle(views) {
-    const offset = views.slice(0, -1).reduce((sum, view) => sum + view.width || 0, 0);
+    const offset = views.slice(0, -1).reduce((sum, view) => sum + (view.width || 0), 0);
     return {
       '-webkit-transform': `translateX(-${offset}px)`,
       transform: `translateX(-${offset}px)`,
@@ -68,7 +67,7 @@ class BuilderViewBase extends Component {
 
   setBuilderSizeAndPosition(width, height) {
     if (width && height) {
-      const views = this.state.builderPane.views.slice();
+      const views = this.state.builderPane.views;
       Object.assign(views[this.viewIdx], {width, height});
 
       this.app.updateBuilderView({
@@ -79,10 +78,10 @@ class BuilderViewBase extends Component {
     }
   }
 
-  updateStageClause(clauseAttrs, shouldCommit=false) {
+  updateStageClause(clauseAttrs, options={shouldCommit: false}) {
     if (!this.state.builderPane.inTransition) {
       this.app.updateStageClause(clauseAttrs);
-      if (shouldCommit) {
+      if (options.shouldCommit) {
         this.app.commitStageClause();
       }
     }
@@ -102,9 +101,9 @@ document.registerElement(`builder-view-events`, class extends BuilderViewBase {
   get config() {
     return {
       template: eventsTemplate,
-      helpers: extend({
+      helpers: extend(super.config.helpers, {
         clickedEvent: value => {
-          this.updateStageClause({value}, true);
+          this.updateStageClause({value}, {shouldCommit: true});
         },
         getEvents: () => {
           const topEvents = sorted(this.state.topEvents, {
@@ -113,7 +112,7 @@ document.registerElement(`builder-view-events`, class extends BuilderViewBase {
           const specialEvents = [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS].map(ev => extend(ev, {icon: `star-top-events`}));
           return specialEvents.concat(topEvents);
         },
-      }, super.config.helpers),
+      }),
     };
   }
 });
@@ -133,15 +132,16 @@ document.registerElement(`builder-view-sources`, class extends BuilderViewBase {
   get config() {
     return {
       template: sourcesTemplate,
-      helpers: extend({
-        getSources: () => SOURCES,
+      helpers: extend(super.config.helpers, {
         clickedSource: source => {
-          if (source.resourceType === `events`) {
-            this.updateStageClause(pick(source, [`resourceType`]));
-            this.nextBuilderView(`builder-view-${source.resourceType}`);
+          const {resourceType} = source;
+          if (resourceType === `events`) {
+            this.updateStageClause({resourceType});
+            this.nextBuilderView(`builder-view-${resourceType}`);
           }
         },
-      }, super.config.helpers),
+        SOURCES,
+      }),
     };
   }
 });

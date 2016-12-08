@@ -2,7 +2,7 @@ include ./mixins.jade
 
 .builder-view.sources
   ul.view-options-list
-    for source in $helpers.getSources()
+    for source in $helpers.SOURCES
       li.list-option(onclick=() => $helpers.clickedSource(source))
         +view-option(source.name)
         +small-caret-icon()

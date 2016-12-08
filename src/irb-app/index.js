@@ -313,7 +313,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   nextBuilderView(componentName) {
     if (!this.state.builderPane.inTransition) {
-      this.app.updateBuilderView({
+      this.updateBuilderView({
         inTransition: true,
         views: this.state.builderPane.views.concat({componentName}),
       });
@@ -331,10 +331,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   updateBuilderView(attrs, postTransitionAttrs={}) {
     this.update({builderPane: extend(this.state.builderPane, attrs)});
     if (attrs.inTransition) {
-      const TRANSITION_TIME = 0.25 * util.MS_IN_SECOND;
       setTimeout(() => {
         this.updateBuilderView(util.extend(postTransitionAttrs, {inTransition: false}));
-      }, TRANSITION_TIME);
+      }, 250);
     }
   }
 
@@ -519,7 +518,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   stopEditingClause() {
     this.resetBuilderView();
-
     this.stopEditingClauseAttrs();
 
     const newState = {
