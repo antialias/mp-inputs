@@ -1,6 +1,6 @@
-mixin secondary-action-pill(options)
+mixin secondary-action-pill(label, options)
   .option-secondary-action.pill(onclick=options.onclick)
-    span.secondary-label= options.label
+    span.secondary-label= label
     +small-caret-icon()
 
 mixin small-caret-icon(options)

@@ -50,6 +50,7 @@ class BuilderScreenBase extends Component {
   }
 
   createPaneSizeStyle(screens) {
+    console.log('screens', screens)
     const lastScreen = screens[screens.length - 1];
     return {
       width: `${lastScreen.width}px`,
@@ -178,20 +179,23 @@ document.registerElement(`builder-screen-properties`, class extends BuilderScree
             transform: prop => renameProperty(prop.name).toLowerCase(),
           });
 
-          if (this.showNonNumericProperties) {
+          console.log(topProperties)
+
+          if (this.config.helpers.showingNonNumericProperties()) {
             return topProperties;
           } else {
-            return topProperties.filter(prop => prop.type === `number`);
+            return topProperties.filter(prop => prop.type === `number`)
           }
         },
         clickedProperty: property => {
           this.updateStageClause({property}, {shouldCommit: true, shouldStopEditing: true});
         },
-        hasNumericProperties: () => this.hasNumericProperties,
-        showNonNumericProperties: () => this.showNonNumericProperties,
-        toggleNonNumericProperties: () => {
-          this.showNonNumericProperties = !this.showNonNumericProperties;
-        },
+        showingNonNumericProperties: () =>
+          !!this.app.getBuilderViewCurrentView().showingNonNumericProperties,
+        toggleNonNumericProperties: () =>
+          this.app.updateBuilderViewCurrentView({
+            showingNonNumericProperties: !this.config.helpers.showingNonNumericProperties(),
+          }),
       },
     };
   }

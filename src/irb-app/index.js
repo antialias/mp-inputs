@@ -353,6 +353,22 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     }
   }
 
+  updateBuilderCurrentScreen(attrs) {
+    const screens = this.state.builderPane.screens;
+    const screen = this.getBuilderCurrentScreen();
+
+    this.update({
+      builderPane: extend(this.state.builderPane, {
+        screens: [...screens.slice(0, -1), extend(screen, attrs)],
+      }),
+    });
+  }
+
+  getBuilderCurrentScreen() {
+    const screens = this.state.builderPane.screens;
+    return screens[screens.length - 1];
+  }
+
   // State helpers
 
   hasStageClause() {
