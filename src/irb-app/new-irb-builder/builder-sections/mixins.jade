@@ -9,6 +9,12 @@ mixin small-caret-icon(direction)
   .caret-icon.small-caret
     svg-icon(attributes={icon: `caret-${direction}`})
 
+mixin view-option(label, icon)
+  if icon
+    .option-icon
+      svg-icon(attributes={icon})
+  .option-label= label
+
 mixin view-title(title, backButton, closeButton)
   .section-title
     .title-label= title

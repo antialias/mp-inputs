@@ -4,5 +4,5 @@ include ./mixins.jade
   ul.view-options-list
     for source in $helpers.getSources()
       li.list-option(onclick=() => $helpers.clickedSource(source))
-        .option-label= source.name
+        +view-option(source.name)
         +small-caret-icon()
