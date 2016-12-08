@@ -66,15 +66,6 @@ class BuilderViewBase extends Component {
     this.app.nextBuilderView(view);
   }
 
-  previousBuilderView() {
-    const views = this.state.builderPane.views.slice(0, -1);
-    this.app.updateBuilderView({
-      inTransition: true,
-      offsetStyle: this.createBuilderOffsetStyle(views),
-      sizeStyle: this.createBuilderSizeStyle(views),
-    }, {views});
-  }
-
   setBuilderSizeAndPosition(width, height) {
     if (width && height) {
       const views = this.state.builderPane.views.slice();
