@@ -332,7 +332,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     this.update({builderPane: extend(this.state.builderPane, attrs)});
     if (attrs.inTransition) {
       setTimeout(() => {
-        this.updateBuilderView(util.extend(postTransitionAttrs, {inTransition: false}));
+        this.updateBuilderView(extend(postTransitionAttrs, {inTransition: false}));
       }, 250);
     }
   }
