@@ -7,9 +7,6 @@ option-height = 30px
   overflow hidden
   transition width .25s, height .25s
 
-  .small-caret
-    svg-icon-style(size: 16px)
-
   .builder-pane-offset
     display flex
     transition transform .25s
@@ -20,31 +17,6 @@ option-height = 30px
     max-height 486px
     width 320px
 
-    .section-title
-      align-items center
-      background-color grey-150
-      color grey-700
-      display flex
-      flex none
-      font-size 11px
-      font-weight 900
-      height 48px
-      position relative
-
-      .title-button
-        cursor pointer
-        padding 10px
-        position absolute
-        svg-icon-style(grey-500, grey-700)
-
-        &.close-button
-          right 0
-
-      .title-label
-        text-align center
-        text-transform uppercase
-        width 100%
-
     ul.view-options-list
       flex 1 1
       margin 10px
@@ -54,46 +26,11 @@ option-height = 30px
       align-items center
       border-radius 3px
       cursor pointer
+      display flex
       font-size 12px
       font-weight 500
-      display flex
       height option-height
       justify-content flex-end
-
-      .option-label
-        padding-left 8px
-        ellipsis()
-        flex 1 1
-
-      .option-icon
-        padding-left 5px
-        svg-icon-style(grey-700)
-
-      .option-secondary-action
-        align-items center
-        display none
-        flex none
-        padding 0 10px
-        margin-right 10px
-
-        &.pill
-          background-color grey-50
-          border-radius 40px
-          color grey-500
-          font-size 10px
-          font-weight 900
-          height 18px
-
-          .secondary-label
-            vertical-align middle
-
-          .caret-icon
-            svg-icon-style(grey-500, speed: 0s, pos-top: 1px)
-
-          &:hover
-            background-color mp-blue
-            color #fff
-            svg-icon-style(#fff, speed: 0s, pos-top: 1px)
 
       &:hover
         background-color grey-100

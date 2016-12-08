@@ -16,7 +16,7 @@ mixin view-option(label, icon)
   .option-label= label
 
 mixin view-title(title, backButton, closeButton)
-  .section-title
+  .view-title
     .title-label= title
     if backButton
       .title-button.back-button(onclick=$helpers.previousBuilderView)
