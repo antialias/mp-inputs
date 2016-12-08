@@ -1,26 +1,27 @@
 mixin secondary-action-pill(label)
-  -label = label || 'Properties'
   .option-secondary-action.pill
     span.secondary-label= label
     +small-caret-icon()
 
-mixin small-caret-icon(direction)
-  -direction = direction || 'right'
+mixin small-caret-icon(options)
+  - options = options || {}
   .caret-icon.small-caret
-    svg-icon(attributes={icon: `caret-${direction}`})
+    svg-icon(attributes={icon: `caret-${options.direction || 'right'}`})
 
-mixin view-option(label, icon)
-  if icon
+mixin view-option(label, options)
+  - options = options || {}
+  if options.icon
     .option-icon
-      svg-icon(attributes={icon})
+      svg-icon(attributes={icon: options.icon})
   .option-label= label
 
-mixin view-title(title, backButton, closeButton)
+mixin view-title(title, options)
+  - options = options || {}
   .view-title
     .title-label= title
-    if backButton
+    if options.backButton
       .title-button.back-button(onclick=$helpers.previousBuilderView)
         svg-icon(attributes={icon: 'caret-left'})
-    if closeButton
+    if options.closeButton
       .title-button.close-button(onclick=$helpers.closeBuilder)
         svg-icon(attributes={icon: 'x'})
