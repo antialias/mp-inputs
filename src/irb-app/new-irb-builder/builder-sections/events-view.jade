@@ -1,16 +1,16 @@
 include ./mixins.jade
 
-.builder-section
-  +builder-title('All Events', true, true)
-  ul.section-options
+.builder-view.events
+  +view-title('All Events', true, true)
+  ul.view-options-list
     for mpEvent in $helpers.getEvents()
-      li.section-option(
+      li.list-option(
         onclick=() => $helpers.clickedEvent(mpEvent)
       )
         .option-icon
           svg-icon(attributes={icon: mpEvent.icon})
-        .label= util.renameEvent(mpEvent.name)
-        .secondary-action.pill
+        .option-label= util.renameEvent(mpEvent.name)
+        .option-secondary-action.pill
           span.secondary-label Properties
           .caret-icon.small-caret
             svg-icon(attributes={icon: 'caret-right'})

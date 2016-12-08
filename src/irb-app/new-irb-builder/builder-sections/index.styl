@@ -2,16 +2,16 @@
 
 option-height = 30px
 
-.builder-view
+.builder-pane
   border-radius 5px
   overflow hidden
   transition width .25s, height .25s
 
-  .builder-offset-container
+  .builder-pane-offset
     display flex
     transition transform .25s
 
-  .builder-section
+  .builder-view
     display flex
     flex-direction column
     max-height 486px
@@ -42,12 +42,12 @@ option-height = 30px
         text-transform uppercase
         width 100%
 
-    ul.section-options
+    ul.view-options-list
       flex 1 1
       margin 10px
       overflow auto
 
-    li.section-option
+    li.list-option
       align-items center
       border-radius 3px
       cursor pointer
@@ -57,7 +57,7 @@ option-height = 30px
       height option-height
       justify-content flex-end
 
-      .label
+      .option-label
         padding-left 8px
         ellipsis()
         flex 1 1
@@ -66,7 +66,7 @@ option-height = 30px
         padding-left 5px
         svg-icon-style(grey-700)
 
-      .secondary-action
+      .option-secondary-action
         align-items center
         display none
         flex none
@@ -99,20 +99,20 @@ option-height = 30px
         .option-icon
           svg-icon-style(mp-blue)
 
-        .secondary-action
+        .option-secondary-action
           display flex
 
     &.sources
         width 260px
 
-        li.section-option
+        li.list-option
           font-size 11px
           font-weight 900
           svg-icon-style(mp-blue, size: 16px, speed: 0s)
           text-transform uppercase
 
-          svg-icon
+          .caret-icon
             visibility hidden
 
-          &:hover svg-icon
+          &:hover .caret-icon
             visibility visible

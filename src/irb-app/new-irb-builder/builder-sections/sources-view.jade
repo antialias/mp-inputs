@@ -1,7 +1,9 @@
-.builder-section.sources
-  ul.section-options
+include ./mixins.jade
+
+.builder-view.sources
+  ul.view-options-list
     for source in $helpers.getSources()
-      li.section-option(onclick=() => $helpers.clickedSource(source))
-        .label= source.name
+      li.list-option(onclick=() => $helpers.clickedSource(source))
+        .option-label= source.name
         .caret-icon.small-caret
           svg-icon(attributes={icon: 'caret-right'})

@@ -1,5 +1,4 @@
-.builder-view(style=builderPane.sizeStyle)
-  .builder-offset-container(style=builderPane.offsetStyle)
+.builder-pane(style=builderPane.sizeStyle)
+  .builder-pane-offset(style=builderPane.offsetStyle)
     for view, viewIdx in builderPane.views
-      .section-view
-        = $component.child(view.componentName, {attributes: {'view-index': viewIdx}})
+      = $component.child(view.componentName, {attributes: {'view-index': viewIdx}})
