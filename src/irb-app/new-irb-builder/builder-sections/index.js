@@ -12,7 +12,6 @@ import eventsTemplate from './events-view.jade';
 import sourcesTemplate from './sources-view.jade';
 
 import './index.styl';
-import './mixin.styl';
 
 
 document.registerElement(`builder-pane`, class extends Component {

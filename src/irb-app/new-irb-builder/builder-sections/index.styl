@@ -57,3 +57,71 @@ transition-time = .25s
 
           &:hover .caret-icon
             visibility visible
+
+/* Builder Jade Mixins */
+// secondary-action-pill
+.option-secondary-action
+  align-items center
+  display none
+  flex none
+  padding 0 10px
+  margin-right 10px
+
+  &.pill
+    background-color grey-50
+    border-radius 40px
+    color grey-500
+    font-size 10px
+    font-weight 900
+    height 18px
+
+    .secondary-label
+      vertical-align middle
+
+    .caret-icon
+      svg-icon-style(grey-500, speed: 0s, pos-top: 1px)
+
+    &:hover
+      background-color mp-blue
+      color #fff
+      svg-icon-style(#fff, speed: 0s, pos-top: 1px)
+
+//small-caret-icon
+.small-caret
+  svg-icon-style(size: 16px)
+
+// view-option
+.option-label
+  padding-left 8px
+  ellipsis()
+  flex 1 1
+
+.option-icon
+  padding-left 5px
+  svg-icon-style(grey-700)
+
+// view-title
+.view-title
+  align-items center
+  background-color grey-150
+  color grey-700
+  display flex
+  flex none
+  font-size 11px
+  font-weight 900
+  height 48px
+  position relative
+
+  .title-button
+    cursor pointer
+    padding 10px
+    position absolute
+    svg-icon-style(grey-500, grey-700)
+
+    &.close-button
+      right 0
+
+  .title-label
+    text-align center
+    text-transform uppercase
+    width 100%
