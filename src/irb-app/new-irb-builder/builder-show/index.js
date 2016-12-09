@@ -73,7 +73,14 @@ document.registerElement(`builder-contextual-menu`, class extends AddControl {
     return super.elementClasses.concat(`contextual-menu`);
   }
 
-  openPane() {
-    this.app.startBuilderOnScreen(`builder-screen-sources`);
+  clickModify() {
+    if (!this.isPaneOpen()) {
+      this.app.startBuilderOnScreen(`builder-screen-sources`);
+    }
+    this.app.updateBuilder({isContextualMenuOpen: !this.isPaneOpen()});
+  }
+
+  isPaneOpen() {
+    return this.state.builderPane.screens.length && this.state.builderPane.isContextualMenuOpen;
   }
 });

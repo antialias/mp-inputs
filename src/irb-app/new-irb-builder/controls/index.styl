@@ -40,15 +40,16 @@
       height 28px
       justify-content center
       margin-left 2px
-      svg-icon-style(mp-blue, size: 16px)
+      svg-icon-style(grey-700, size: 16px)
       width 28px
+      &:hover
+        svg-icon-style(mp-blue, size: 16px)
 
   &.pane-open .add-control
     button.control-label
-      width 100px
+      width 200px
 
     button.modify
-      svg-icon-style(grey-700, size: 16px)
       svg-icon svg
         transform rotate(45deg)
 

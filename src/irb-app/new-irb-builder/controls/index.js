@@ -13,7 +13,8 @@ class ControlComponent extends Component {
     return {
       template,
       helpers: {
-        clickModify: () => this.openPane(),
+        clickLabel: () => this.clickLabel && this.clickLabel(),
+        clickModify: () => this.clickModify(),
         removeClause: () => this.app.removeClause(this.section, this.clauseIndex),
       },
     };
@@ -39,7 +40,7 @@ class ControlComponent extends Component {
     throw `Not implemented!`;
   }
 
-  openPane() {
+  clickModify() {
     throw `Not implemented!`;
   }
 }
@@ -74,15 +75,15 @@ export class EditControl extends ControlComponent {
   }
 
   isPaneOpen() {
-    return !!this.state.builderPane.screens.length &&
-      this.app.isEditingClause(this.section, this.clauseIndex);
+    return !!this.state.builderPane.screens.length && this.app.isEditingClause(this.section, this.clauseIndex);
   }
 
   get clauseIndex() {
     return Number(this.getAttribute(`clause-index`));
   }
 
-  openPane() {
+  clickLabel() {
+    this.app.startBuilderOnScreen(`builder-screen-sources`);
     this.app.stopEditingClause();
     this.app.startEditingClause(this.section, this.clauseIndex);
   }
@@ -95,9 +96,5 @@ export class AddControl extends ControlComponent {
 
   get isRemoveable() {
     return false;
-  }
-
-  isPaneOpen() {
-    return this.state.builderPane.screens.length && this.state.stageClauseIndex === null;
   }
 }

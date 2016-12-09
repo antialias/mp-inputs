@@ -114,15 +114,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         title: `Untitled report`,
       }),
 
-      builderPane: {
-        inTransition: false,
-        offsetStyle: {},
-        sizeStyle: {
-          width: `0px`,
-          height: `0px`,
-        },
-        screens: [],
-      },
+      builderPane: this.defaultBuilderPane,
       chartToggle: {
         editingType: null,
         bar: {
@@ -316,10 +308,23 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   // New query builder helpers
 
+  get defaultBuilderPane() {
+    return {
+      inTransition: false,
+      isContextualMenuOpen: false,
+      offsetStyle: {},
+      sizeStyle: {
+        width: `0px`,
+        height: `0px`,
+      },
+      screens: [],
+    };
+  }
+
   startBuilderOnScreen(componentName) {
     const hasExistingScreens = !!this.state.builderPane.screens.length;
     const screens = [{componentName}];
-    this.resetBuilder();
+    this.stopBuildingQuery();
     if (hasExistingScreens) {
       this.updateBuilder({inTransition: true}, {screens});
     } else {
@@ -335,14 +340,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   resetBuilder() {
-    this.updateBuilder({
-      offsetStyle: {},
-      sizeStyle: {
-        width: `0px`,
-        height: `0px`,
-      },
-      screens: [],
-    });
+    this.updateBuilder(this.defaultBuilderPane);
   }
 
   updateBuilder(attrs, postTransitionAttrs={}) {
