@@ -8,8 +8,8 @@ import {
 } from '../../../util';
 
 import template from './index.jade';
-import eventsTemplate from './events-view.jade';
-import sourcesTemplate from './sources-view.jade';
+import eventsTemplate from './events-screen.jade';
+import sourcesTemplate from './sources-screen.jade';
 
 import './index.styl';
 
@@ -22,57 +22,62 @@ document.registerElement(`builder-pane`, class extends Component {
   }
 });
 
-class BuilderViewBase extends Component {
+class BuilderScreenBase extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
-    window.requestAnimationFrame(this.updateViewSize.bind(this));
+    this.updateScreensRenderedSize();
   }
 
   get config() {
     return {
       helpers: {
-        closeBuilder: () => this.app.stopEditingClause(),
-        previousBuilderView: () => {
-          const views = this.state.builderPane.views.slice(0, -1);
-          this.app.updateBuilderView({
+        closePane: () => this.app.stopEditingClause(),
+        previousScreen: () => {
+          const screens = this.state.builderPane.screens.slice(0, -1);
+          this.app.updateBuilder({
             inTransition: true,
-            offsetStyle: this.createBuilderOffsetStyle(views),
-            sizeStyle: this.createBuilderSizeStyle(views),
-          }, {views});
+            offsetStyle: this.createPaneOffsetStyle(screens),
+            sizeStyle: this.createPaneSizeStyle(screens),
+          }, {screens});
         },
       },
     };
   }
 
-  createBuilderOffsetStyle(views) {
-    const offset = views.slice(0, -1).reduce((sum, view) => sum + (view.width || 0), 0);
+  createPaneOffsetStyle(screens) {
+    const offset = screens.slice(0, -1).reduce((sum, screen) => sum + (screen.width || 0), 0);
     return {
       '-webkit-transform': `translateX(-${offset}px)`,
       transform: `translateX(-${offset}px)`,
     };
   }
 
-  createBuilderSizeStyle(views) {
-    const lastView = views[views.length - 1];
+  createPaneSizeStyle(screens) {
+    const lastScreen = screens[screens.length - 1];
     return {
-      width: `${lastView.width}px`,
-      height: `${lastView.height}px`,
+      width: `${lastScreen.width}px`,
+      height: `${lastScreen.height}px`,
     };
   }
 
-  nextBuilderView(view) {
-    this.app.nextBuilderView(view);
+  nextScreen(componentName) {
+    if (!this.state.builderPane.inTransition) {
+      this.app.updateBuilder({
+        inTransition: true,
+        screens: this.state.builderPane.screens.concat({componentName}),
+      });
+    }
   }
 
-  setBuilderSizeAndPosition(width, height) {
+  setPaneSizeAndPosition(width, height) {
     if (width && height) {
-      const views = this.state.builderPane.views;
-      Object.assign(views[this.viewIdx], {width, height});
+      const screens = this.state.builderPane.screens;
+      Object.assign(screens[this.screenIdx], {width, height});
 
-      this.app.updateBuilderView({
-        offsetStyle: this.createBuilderOffsetStyle(views),
-        sizeStyle: this.createBuilderSizeStyle(views),
-        views,
+      this.app.updateBuilder({
+        offsetStyle: this.createPaneOffsetStyle(screens),
+        sizeStyle: this.createPaneSizeStyle(screens),
+        screens,
       });
     }
   }
@@ -86,17 +91,19 @@ class BuilderViewBase extends Component {
     }
   }
 
-  updateViewSize() {
-    const {width, height} = this.getBoundingClientRect();
-    this.setBuilderSizeAndPosition(width, height);
+  updateScreensRenderedSize() {
+    window.requestAnimationFrame(() => {
+      const {width, height} = this.getBoundingClientRect();
+      this.setPaneSizeAndPosition(width, height);
+    });
   }
 
-  get viewIdx() {
-    return Number(this.getAttribute(`view-index`));
+  get screenIdx() {
+    return Number(this.getAttribute(`screen-index`));
   }
 }
 
-document.registerElement(`builder-view-events`, class extends BuilderViewBase {
+document.registerElement(`builder-screen-events`, class extends BuilderScreenBase {
   get config() {
     return {
       template: eventsTemplate,
@@ -127,7 +134,7 @@ const SOURCES = [
   },
 ];
 
-document.registerElement(`builder-view-sources`, class extends BuilderViewBase {
+document.registerElement(`builder-screen-sources`, class extends BuilderScreenBase {
   get config() {
     return {
       template: sourcesTemplate,
@@ -136,7 +143,7 @@ document.registerElement(`builder-view-sources`, class extends BuilderViewBase {
           const {resourceType} = source;
           if (resourceType === `events`) {
             this.updateStageClause({resourceType});
-            this.nextBuilderView(`builder-view-${resourceType}`);
+            this.nextScreen(`builder-screen-${resourceType}`);
           }
         },
         SOURCES,

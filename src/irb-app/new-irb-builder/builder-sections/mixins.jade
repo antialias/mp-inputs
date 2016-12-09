@@ -8,20 +8,20 @@ mixin small-caret-icon(options)
   .caret-icon.small-caret
     svg-icon(attributes={icon: `caret-${options.direction || 'right'}`})
 
-mixin view-option(label, options)
+mixin screen-option(label, options)
   - options = options || {}
   if options.icon
     .option-icon
       svg-icon(attributes={icon: options.icon})
   .option-label= label
 
-mixin view-title(title, options)
+mixin screen-title(title, options)
   - options = options || {}
-  .view-title
+  .screen-title
     .title-label= title
     if options.backButton
-      .title-button.back-button(onclick=$helpers.previousBuilderView)
+      .title-button.back-button(onclick=$helpers.previousScreen)
         svg-icon(attributes={icon: 'caret-left'})
     if options.closeButton
-      .title-button.close-button(onclick=$helpers.closeBuilder)
+      .title-button.close-button(onclick=$helpers.closePane)
         svg-icon(attributes={icon: 'x'})

@@ -117,8 +117,11 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       builderPane: {
         inTransition: false,
         offsetStyle: {},
-        sizeStyle: {},
-        views: [],
+        sizeStyle: {
+          width: `0px`,
+          height: `0px`,
+        },
+        screens: [],
       },
       chartToggle: {
         editingType: null,
@@ -311,28 +314,38 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   // New query builder helpers
 
-  nextBuilderView(componentName) {
-    if (!this.state.builderPane.inTransition) {
-      this.updateBuilderView({
-        inTransition: true,
-        views: this.state.builderPane.views.concat({componentName}),
-      });
+  startBuilderOnScreen(componentName) {
+    const hasExistingViews = !!this.state.builderPane.screens.length;
+    const screens = [{componentName}];
+    this.resetBuilder();
+    if (hasExistingViews) {
+      this.updateBuilder({inTransition: true}, {screens});
+    } else {
+      this.updateBuilder({screens});
     }
   }
 
-  resetBuilderView() {
-    this.updateBuilderView({
+  stopBuildingQuery() {
+    this.resetBuilder();
+    this.stopEditingClause();
+  }
+
+  resetBuilder() {
+    this.updateBuilder({
       offsetStyle: {},
-      sizeStyle: {},
-      views: [],
+      sizeStyle: {
+        width: `0px`,
+        height: `0px`,
+      },
+      screens: [],
     });
   }
 
-  updateBuilderView(attrs, postTransitionAttrs={}) {
+  updateBuilder(attrs, postTransitionAttrs={}) {
     this.update({builderPane: extend(this.state.builderPane, attrs)});
     if (attrs.inTransition) {
       setTimeout(() => {
-        this.updateBuilderView(extend(postTransitionAttrs, {inTransition: false}));
+        this.updateBuilder(extend(postTransitionAttrs, {inTransition: false}));
       }, 250);
     }
   }
@@ -517,7 +530,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   stopEditingClause() {
-    this.resetBuilderView();
     this.stopEditingClauseAttrs();
 
     const newState = {

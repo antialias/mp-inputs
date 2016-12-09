@@ -6,7 +6,7 @@ import './index.styl';
 class ControlComponent extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
-    this.app.onClickOutside(this.tagName, `stopEditingClause`);
+    this.app.onClickOutside(this.tagName, `stopBuildingQuery`);
   }
 
   get config() {
@@ -67,7 +67,7 @@ export class EditControl extends ControlComponent {
   }
 
   isPaneOpen() {
-    return !!this.state.builderPane.views.length && this.clauseIndex === this.state.stageClauseIndex;
+    return !!this.state.builderPane.screens.length && this.clauseIndex === this.state.stageClauseIndex;
   }
 
   get clauseIndex() {
@@ -75,8 +75,8 @@ export class EditControl extends ControlComponent {
   }
 
   openPane() {
+    this.app.startBuilderOnScreen(`builder-screen-sources`);
     this.app.stopEditingClause();
     this.app.startEditingClause(this.section, this.clauseIndex);
-    this.app.nextBuilderView(`builder-view-sources`);
   }
 }

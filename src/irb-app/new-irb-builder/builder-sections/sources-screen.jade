@@ -1,8 +1,8 @@
 include ./mixins.jade
 
-.builder-view.sources
-  ul.view-options-list
+.builder-screen.sources
+  ul.screen-options-list
     for source in $helpers.SOURCES
       li.list-option(onclick=() => $helpers.clickedSource(source))
-        +view-option(source.name)
+        +screen-option(source.name)
         +small-caret-icon()
