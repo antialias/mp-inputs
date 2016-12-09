@@ -315,10 +315,10 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   // New query builder helpers
 
   startBuilderOnScreen(componentName) {
-    const hasExistingViews = !!this.state.builderPane.screens.length;
+    const hasExistingScreens = !!this.state.builderPane.screens.length;
     const screens = [{componentName}];
     this.resetBuilder();
-    if (hasExistingViews) {
+    if (hasExistingScreens) {
       this.updateBuilder({inTransition: true}, {screens});
     } else {
       this.updateBuilder({screens});
