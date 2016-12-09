@@ -2,6 +2,8 @@
 
 .section.builder-show
   for clause, clauseIdx in report.sections.show.clauses
+    if clauseIdx
+      .control-langauge.preposition and
     .clause.comparison
       .clause-header
         h3= 'Show Total'

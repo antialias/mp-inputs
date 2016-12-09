@@ -17,6 +17,7 @@
     button.control-label
       border-bottom 1px dotted grey-500
       color blue-700
+      font-family font-helvetica-neue
       font-size 16px
 
       &:hover
@@ -29,6 +30,10 @@
     button.control-label
       width 0px
       transition .25s
+
+      .label-preposition
+        color grey-300
+        visibility hidden
 
     button.modify
       align-items center
@@ -47,7 +52,12 @@
 
   &.pane-open .add-control
     button.control-label
+      text-align left
       width 200px
+
+      .label-preposition
+        visibility visible
+
 
     button.modify
       svg-icon svg

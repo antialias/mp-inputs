@@ -2,6 +2,7 @@
   .control-buttons(class=$component.elementClasses)
     if $component.controlType === `add`
       button.control-label(onclick=$helpers.clickLabel)
+        span.label-preposition= $helpers.getPreposition()
       button.modify(onclick=$helpers.clickModify)
         svg-icon(attributes={icon: 'plus-large'})
     else

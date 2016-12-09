@@ -173,7 +173,12 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
   }
 });
 
-
+const CONTEXTUAL_OPTIONS = {
+  events: [
+    {name: `Group by a property`, clauseType: `group`},
+    {name: `Compare to an event`, clauseType: `show`},
+  ],
+};
 
 document.registerElement(`builder-screen-contextual`, class extends BuilderScreenBase {
   get config() {
@@ -187,10 +192,14 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
             this.nextScreen(`builder-screen-events`);
           }
         },
-        getOptions: () => ([
-          {name: `Group by a property`, clauseType: `group`},
-          {name: `Compare to another measure`, clauseType: `show`},
-        ]),
+        getOptions: () => {
+          const firstShowClause = this.state.report.sections.show.clauses[0];
+          switch (firstShowClause.resourceType) {
+            case `all`:
+            case `events`:
+              return CONTEXTUAL_OPTIONS[`events`];
+          }
+        },
       }),
     };
   }

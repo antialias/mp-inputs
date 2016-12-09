@@ -15,6 +15,14 @@ class ControlComponent extends Component {
       helpers: {
         clickLabel: () => this.clickLabel && this.clickLabel(),
         clickModify: () => this.clickModify(),
+        getPreposition: () => {
+          switch(this.app.originStageClauseType()) {
+            case `show`:
+              return `and`;
+            case `group`:
+              return `on`;
+          }
+        },
         removeClause: () => this.app.removeClause(this.section, this.clauseIndex),
       },
     };
