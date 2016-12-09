@@ -1,11 +1,12 @@
-.irb-control.new-query-builder(
-  class=$component.elementClasses
-  class={'pane-open': $component.isPaneOpen()}
-)
-  button.modify(onclick=$helpers.clickModify)
+.irb-new-control.new-query-builder(class={'pane-open': $component.isPaneOpen()})
+  .control-buttons(class=$component.elementClasses)
     if $component.controlType === `add`
-      span= test
-    span= $component.label
+      button.control-label
+      button.modify(onclick=$helpers.clickModify)
+        svg-icon(attributes={icon: 'plus-large'})
+    else
+      button.control-label(onclick=$helpers.clickModify)
+        span= $component.label
 
   if $component.isRemoveable
     button.remove(onclick=$helpers.removeClause)

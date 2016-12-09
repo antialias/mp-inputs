@@ -1,45 +1,56 @@
 @import "../../../stylesheets/common"
 
-.irb-control.new-query-builder
-  button.modify
-    background transparent
-    border 1px solid grey-500
-    color grey-900
-    font-size 16px
-    font-weight 500
-    margin-top -1px
-    padding 8px 10px
+.irb-new-control.new-query-builder
+  position relative
+
+  .control-buttons
+    display flex
+    align-items center
+
+    button
+      border-width 0
+      background transparent
+      font-weight 500
+      height 36px
+      padding 0
+
+    button.control-label
+      border-bottom 1px dotted grey-500
+      color blue-700
+      font-size 16px
+
+      &:hover
+        border-bottom 1px solid blue-700
 
     &:hover
       color blue-300
 
-  &.edit-control button.modify
-    border-width 0
-    border-bottom 1px dotted grey-500
-    color blue-700
-    padding 8px 0
-    &:hover
-      border-bottom 1px solid blue-700
+  .add-control
+    button.control-label
+      width 0px
+      transition .25s
 
-    .preposition
-      color blue-700
+    button.modify
+      align-items center
+      background-color grey-50
+      border 1px solid grey-150
+      border-radius 50%
+      box-shadow 0 1px 1px 0 rgba(76, 96, 113, 0.08)
+      display flex
+      height 28px
+      justify-content center
+      margin-left 2px
+      svg-icon-style(mp-blue, size: 16px)
+      width 28px
 
-  &.add-control button.modify
-    border-radius 2px
-    font-size 14px
-    margin-top -2px
+  &.pane-open .add-control
+    button.control-label
+      width 100px
 
-    &::before
-      color grey-300
-      content '+'
-      display inline-block
-      font-size 18px
-      font-weight 600
-      margin-right 4px
-      margin-top -4px
-
-  &.edit-control, &.add-control
-    position relative
+    button.modify
+      svg-icon-style(grey-700, size: 16px)
+      svg-icon svg
+        transform rotate(45deg)
 
   button.remove
     background none
@@ -60,12 +71,6 @@
 
   &:hover button.remove
     opacity 1
-
-  .pane-container
-    box-shadow 0px 3px 10px -4px black
-    position absolute
-    top 40px
-    z-index 4
 
   .drop-menu
     position relative
