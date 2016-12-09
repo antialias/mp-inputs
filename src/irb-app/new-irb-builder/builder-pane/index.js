@@ -186,6 +186,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
       template: generalOptionsTemplate,
       helpers: extend(super.config.helpers, {
         clickedSource: option => {
+          // We are currently only allowing event show clauses to be added
           if (option.clauseType === ShowClause.TYPE) {
             this.app.stopEditingClause();
             this.app.startAddingClause(option.clauseType);

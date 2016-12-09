@@ -19,8 +19,6 @@ class ControlComponent extends Component {
           switch(this.app.originStageClauseType()) {
             case `show`:
               return `and`;
-            case `group`:
-              return `on`;
           }
         },
         removeClause: () => this.app.removeClause(this.section, this.clauseIndex),

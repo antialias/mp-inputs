@@ -114,7 +114,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         title: `Untitled report`,
       }),
 
-      builderPane: this.defaultBuilderPane,
+      builderPane: this.defaultBuilderState,
       chartToggle: {
         editingType: null,
         bar: {
@@ -308,16 +308,16 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   // New query builder helpers
 
-  get defaultBuilderPane() {
+  get defaultBuilderState() {
     return {
       inTransition: false,
       isContextualMenuOpen: false,
       offsetStyle: {},
+      screens: [],
       sizeStyle: {
         width: `0px`,
         height: `0px`,
       },
-      screens: [],
     };
   }
 
@@ -340,7 +340,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   resetBuilder() {
-    this.updateBuilder(this.defaultBuilderPane);
+    this.updateBuilder(this.defaultBuilderState);
   }
 
   updateBuilder(attrs, postTransitionAttrs={}) {

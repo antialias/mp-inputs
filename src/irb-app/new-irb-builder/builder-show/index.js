@@ -68,7 +68,7 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
 });
 
 
-document.registerElement(`builder-contextual-menu`, class extends AddControl {
+document.registerElement(`builder-add-contextual`, class extends AddControl {
   get elementClasses() {
     return super.elementClasses.concat(`contextual-menu`);
   }
