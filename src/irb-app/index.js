@@ -326,8 +326,10 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   stopBuildingQuery() {
-    this.resetBuilder();
-    this.stopEditingClause();
+    if (this.state.features.queryBuilderVersion === `new`) {
+      this.resetBuilder();
+      this.stopEditingClause();
+    }
   }
 
   resetBuilder() {
