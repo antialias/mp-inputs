@@ -29,15 +29,14 @@ export default class ExtremaQuery extends BaseQuery {
   }
 
   buildParams() {
-    const params = extend(pick(this.query, [`event`, `on`, `allow_fewer_buckets`, `allow_more_buckets`, `buckets`]),
-      {
-        /* eslint-disable camelcase */
-        from_date: this.query.from.toISOString().split(`T`)[0],
-        to_date: this.query.to.toISOString().split(`T`)[0],
-        interval: Math.min(36, this.query.interval),
-        cardinality_threshold: 50,
-        /* eslint-enable camelcase */
-      });
+    const params = extend(pick(this.query, [`event`, `on`, `allow_fewer_buckets`, `allow_more_buckets`, `buckets`]), {
+      /* eslint-disable camelcase */
+      from_date: this.query.from.toISOString().split(`T`)[0],
+      to_date: this.query.to.toISOString().split(`T`)[0],
+      interval: Math.min(36, this.query.interval),
+      cardinality_threshold: 50,
+      /* eslint-enable camelcase */
+    });
     if (this.query.where) {
       params[`selector`] = this.query.where;
     }
