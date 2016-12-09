@@ -2081,6 +2081,251 @@ span.substr.matches-search {
   color: #4c6072;
   font-weight: 600;
 }
+.builder-pane {
+  border-radius: 5px;
+  overflow: hidden;
+  -webkit-transition: width 0.25s, height 0.25s;
+  transition: width 0.25s, height 0.25s;
+}
+.builder-pane .builder-pane-offset {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-transition: -webkit-transform 0.25s;
+  transition: -webkit-transform 0.25s;
+  transition: transform 0.25s;
+  transition: transform 0.25s, -webkit-transform 0.25s;
+}
+.builder-pane .builder-screen {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  max-height: 486px;
+  width: 320px;
+}
+.builder-pane .builder-screen ul.screen-options-list {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+  margin: 10px;
+  overflow: auto;
+}
+.builder-pane .builder-screen li.list-option {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-radius: 3px;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  font-size: 12px;
+  font-weight: 500;
+  height: 30px;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+.builder-pane .builder-screen li.list-option:hover {
+  background-color: #eff3f5;
+  color: #4ba8ff;
+}
+.builder-pane .builder-screen li.list-option:hover .option-icon svg-icon svg {
+  left: 0;
+  top: 0;
+}
+.builder-pane .builder-screen li.list-option:hover .option-icon svg-icon svg,
+.builder-pane .builder-screen li.list-option:hover .option-icon svg-icon path {
+  color: #4ba8ff;
+  fill: #4ba8ff;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+}
+.builder-pane .builder-screen li.list-option:hover .option-secondary-action {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.builder-pane .builder-screen.sources {
+  width: 260px;
+}
+.builder-pane .builder-screen.sources li.list-option {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+.builder-pane .builder-screen.sources li.list-option .caret-icon {
+  visibility: hidden;
+}
+.builder-pane .builder-screen.sources li.list-option .caret-icon svg-icon svg {
+  left: 0;
+  top: 0;
+}
+.builder-pane .builder-screen.sources li.list-option .caret-icon svg-icon svg,
+.builder-pane .builder-screen.sources li.list-option .caret-icon svg-icon path {
+  color: #4ba8ff;
+  fill: #4ba8ff;
+  -webkit-transition: 0s;
+  transition: 0s;
+}
+.builder-pane .builder-screen.sources li.list-option:hover .caret-icon {
+  visibility: visible;
+}
+/* Builder Jade Mixins */
+.option-secondary-action {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+              -ms-grid-row-align: center;
+          align-items: center;
+  display: none;
+  -webkit-box-flex: 0;
+  -webkit-flex: none;
+      -ms-flex: none;
+          flex: none;
+  padding: 0 10px;
+  margin-right: 10px;
+}
+.option-secondary-action.pill {
+  background-color: #f9fafc;
+  border-radius: 40px;
+  color: #9cacbb;
+  font-size: 10px;
+  font-weight: 900;
+  height: 18px;
+}
+.option-secondary-action.pill .secondary-label {
+  vertical-align: middle;
+}
+.option-secondary-action.pill .caret-icon svg-icon svg {
+  left: 0;
+  top: 1px;
+}
+.option-secondary-action.pill .caret-icon svg-icon svg,
+.option-secondary-action.pill .caret-icon svg-icon path {
+  color: #9cacbb;
+  fill: #9cacbb;
+  -webkit-transition: 0s;
+  transition: 0s;
+}
+.option-secondary-action.pill:hover {
+  background-color: #4ba8ff;
+  color: #fff;
+}
+.option-secondary-action.pill:hover svg-icon svg {
+  left: 0;
+  top: 1px;
+}
+.option-secondary-action.pill:hover svg-icon svg,
+.option-secondary-action.pill:hover svg-icon path {
+  color: #fff;
+  fill: #fff;
+  -webkit-transition: 0s;
+  transition: 0s;
+}
+.small-caret svg-icon {
+  height: 16px;
+  min-height: 16px;
+  min-width: 16px;
+  width: 16px;
+}
+.small-caret svg-icon svg {
+  height: 16px;
+  min-height: 16px;
+  min-width: 16px;
+  width: 16px;
+  left: 0;
+  top: 0;
+}
+.option-label {
+  padding-left: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1;
+      -ms-flex: 1 1;
+          flex: 1 1;
+}
+.option-icon {
+  padding-left: 5px;
+}
+.option-icon svg-icon svg {
+  left: 0;
+  top: 0;
+}
+.option-icon svg-icon svg,
+.option-icon svg-icon path {
+  color: #6e859d;
+  fill: #6e859d;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+}
+.screen-title {
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #e5eaef;
+  color: #6e859d;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 0;
+  -webkit-flex: none;
+      -ms-flex: none;
+          flex: none;
+  font-size: 11px;
+  font-weight: 900;
+  height: 48px;
+  position: relative;
+}
+.screen-title .title-button {
+  cursor: pointer;
+  padding: 10px;
+  position: absolute;
+}
+.screen-title .title-button svg-icon svg {
+  left: 0;
+  top: 0;
+}
+.screen-title .title-button svg-icon svg,
+.screen-title .title-button svg-icon path {
+  color: #9cacbb;
+  fill: #9cacbb;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+}
+.screen-title .title-button:hover svg-icon svg,
+.screen-title .title-button:hover svg-icon path {
+  color: #6e859d;
+  fill: #6e859d;
+}
+.screen-title .title-button.close-button {
+  right: 0;
+}
+.screen-title .title-label {
+  text-align: center;
+  text-transform: uppercase;
+  width: 100%;
+}
+span.substr.matches-search {
+  color: #4c6072;
+  font-weight: 600;
+}
 .irb-control.new-query-builder button.modify {
   background: transparent;
   border: 1px solid #9cacbb;
@@ -2121,7 +2366,6 @@ span.substr.matches-search {
 }
 .irb-control.new-query-builder.noun,
 .irb-control.new-query-builder.verb {
-  float: left;
   position: relative;
 }
 .irb-control.new-query-builder button.remove {
@@ -2151,11 +2395,9 @@ span.substr.matches-search {
   top: 40px;
   z-index: 4;
 }
-.irb-control.new-query-builder .calendar-hook {
-  left: 10px;
-  position: absolute;
-  top: 180px;
-  width: 490px;
+.irb-control.new-query-builder .drop-menu {
+  position: relative;
+  top: 6px;
 }
 show-edit-control .irb-control {
   min-width: 60px;
