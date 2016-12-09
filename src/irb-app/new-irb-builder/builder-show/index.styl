@@ -1,9 +1,28 @@
 @import "../../../stylesheets/common"
 
-.builder-show
-  .control-langauge
-    color grey-300
-    height 36px
-    line-height 36px
-    margin-top 23px
+.builder-show.new-query-builder
+  display flex
+  align-item flex-end
+
+  .builder-container
+    display flex
+    flex-direction column
+    justify-content flex-end
+    margin-bottom 18px
     margin-right 12px
+
+  .clause-header
+    color grey-300
+    font-size 12px
+    font-weight 500
+    line-height 15px
+    margin-bottom 8px
+    text-transform uppercase
+
+  .clause-langauge
+    color grey-300
+    line-height 36px
+
+  .section.disabled
+    opacity 0.3
+    pointer-events none

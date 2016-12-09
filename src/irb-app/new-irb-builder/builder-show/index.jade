@@ -1,15 +1,15 @@
--const clauses = report.sections.show.clauses
+- const clauses = report.sections.show.clauses
 
 .section.builder-show
   for clause, clauseIdx in report.sections.show.clauses
     if clauseIdx
-      .control-langauge.preposition and
-    .clause.comparison
-      .clause-header
-        h3= 'Show Total'
+      .builder-container
+        .clause-langauge.preposition and
+    .builder-container
+      .clause-header Show Total
       if clause.property
         .control-container= $component.child('builder-numeric-property-edit-control')
         .preposition on
-      .control-container= $component.child('builder-show-edit-control', {attributes: {'clause-index': clauseIdx}})
-      if clauseIdx === clauses.length - 1
-        .control-container= $component.child('builder-contextual-menu')
+      .clause-container= $component.child('builder-show-edit-control', {attributes: {'clause-index': clauseIdx}})
+    if clauseIdx === clauses.length - 1
+      .builder-container= $component.child('builder-contextual-menu')
