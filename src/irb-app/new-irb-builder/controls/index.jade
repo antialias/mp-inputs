@@ -1,6 +1,12 @@
-.irb-control.new-query-builder(class=$component.elementClass)
+.irb-control.new-query-builder(
+  class=$component.elementClasses
+  class={'pane-open': $component.isPaneOpen()}
+)
   button.modify(onclick=$helpers.clickModify)
+    if $component.controlType === `add`
+      span= test
     span= $component.label
+
   if $component.isRemoveable
     button.remove(onclick=$helpers.removeClause)
   .drop-menu

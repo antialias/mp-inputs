@@ -5,7 +5,8 @@ import {
   renameProperty,
 } from '../../../util';
 
-import { EditControl } from '../controls';
+import { AddControl, EditControl } from '../controls';
+
 
 import template from './index.jade';
 import './index.styl';
@@ -63,5 +64,16 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
 
   remove() {
     this.app.updateClause(this.section, this.clauseIndex, {property: null});
+  }
+});
+
+
+document.registerElement(`builder-contextual-menu`, class extends AddControl {
+  get elementClasses() {
+    return super.elementClasses.concat(`contextual-menu`);
+  }
+
+  openPane() {
+    this.app.startBuilderOnScreen(`builder-screen-sources`);
   }
 });

@@ -1,3 +1,5 @@
+-const clauses = report.sections.show.clauses
+
 .section.builder-show
   for clause, clauseIdx in report.sections.show.clauses
     .clause.comparison
@@ -7,3 +9,5 @@
         .control-container= $component.child('builder-numeric-property-edit-control')
         .preposition on
       .control-container= $component.child('builder-show-edit-control', {attributes: {'clause-index': clauseIdx}})
+      if clauseIdx === clauses.length - 1
+        .control-container= $component.child('builder-contextual-menu')

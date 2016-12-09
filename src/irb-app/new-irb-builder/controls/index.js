@@ -13,31 +13,22 @@ class ControlComponent extends Component {
     return {
       template,
       helpers: {
-        clickModify: ev => {
-          this.updatePosition(ev);
-          this.openPane();
-        },
-        getPaneLeft: () => !this.position ? 0 : Math.min(0, (window.innerWidth - this.position.left) - this.constants.paneWidth),
-        removeClause: () => this.remove(),
-        updatePosition: ev => this.updatePosition(ev),
+        clickModify: () => this.openPane(),
+        removeClause: () => this.app.removeClause(this.section, this.clauseIndex),
       },
     };
   }
 
-  get section() {
-    throw `Not implemented!`;
-  }
-
-  get elementClass() {
-    throw `Not implemented!`;
-  }
-
-  get label() {
-    throw `Not implemented!`;
+  get elementClasses() {
+    return [`${this.controlType}-control`];
   }
 
   get isRemoveable() {
-    throw `Not implemented!`;
+    return true;
+  }
+
+  get label() {
+    return null;
   }
 
   remove() {
@@ -50,10 +41,6 @@ class ControlComponent extends Component {
 
   openPane() {
     throw `Not implemented!`;
-  }
-
-  updatePosition(ev) {
-    this.position = ev.target.parentNode.getBoundingClientRect();
   }
 }
 
@@ -82,12 +69,8 @@ export class EditControl extends ControlComponent {
     return !!state.report.sections.getClause(this.section, this.clauseIndex);
   }
 
-  get elementClass() {
-    return `noun`;
-  }
-
-  get isRemoveable() {
-    return true;
+  get controlType() {
+    return `edit`;
   }
 
   isPaneOpen() {
@@ -102,5 +85,19 @@ export class EditControl extends ControlComponent {
   openPane() {
     this.app.stopEditingClause();
     this.app.startEditingClause(this.section, this.clauseIndex);
+  }
+}
+
+export class AddControl extends ControlComponent {
+  get controlType() {
+    return `add`;
+  }
+
+  get isRemoveable() {
+    return false;
+  }
+
+  isPaneOpen() {
+    return this.state.builderPane.screens.length && this.state.stageClauseIndex === null;
   }
 }
