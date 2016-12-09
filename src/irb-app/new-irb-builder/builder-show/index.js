@@ -75,7 +75,7 @@ document.registerElement(`builder-contextual-menu`, class extends AddControl {
 
   clickModify() {
     if (!this.isPaneOpen()) {
-      this.app.startBuilderOnScreen(`builder-screen-sources`);
+      this.app.startBuilderOnScreen(`builder-screen-contextual`);
     }
     this.app.updateBuilder({isContextualMenuOpen: !this.isPaneOpen()});
   }

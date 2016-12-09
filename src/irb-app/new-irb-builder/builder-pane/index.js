@@ -12,9 +12,9 @@ import {
 
 import template from './index.jade';
 import eventsTemplate from './events-screen.jade';
-import sourcesTemplate from './sources-screen.jade';
 import groupPropertiesTemplate from './group-properties-screen.jade';
 import numericPropertiesTemplate from './numeric-properties-screen.jade';
+import generalOptionsTemplate from './general-options-screen.jade';
 
 import './index.styl';
 
@@ -156,7 +156,7 @@ const SOURCES = [
 document.registerElement(`builder-screen-sources`, class extends BuilderScreenBase {
   get config() {
     return {
-      template: sourcesTemplate,
+      template: generalOptionsTemplate,
       helpers: extend(super.config.helpers, {
         SOURCES,
         clickedSource: source => {
@@ -166,6 +166,31 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
             this.nextScreen(`builder-screen-${resourceType}`);
           }
         },
+        getOptions: () => SOURCES,
+
+      }),
+    };
+  }
+});
+
+
+
+document.registerElement(`builder-screen-contextual`, class extends BuilderScreenBase {
+  get config() {
+    return {
+      template: generalOptionsTemplate,
+      helpers: extend(super.config.helpers, {
+        clickedSource: option => {
+          if (option.clauseType === ShowClause.TYPE) {
+            this.app.stopEditingClause();
+            this.app.startAddingClause(option.clauseType);
+            this.nextScreen(`builder-screen-events`);
+          }
+        },
+        getOptions: () => ([
+          {name: `Group by a property`, clauseType: `group`},
+          {name: `Compare to another measure`, clauseType: `show`},
+        ]),
       }),
     };
   }
