@@ -1,7 +1,13 @@
 import { Component } from 'panel';
 
 import { ShowClause } from '../../../models/clause';
-import { extend, renameEvent, renameProperty, sorted } from '../../../util';
+import {
+  extend,
+  replaceByIndex,
+  renameEvent,
+  renameProperty,
+  sorted,
+} from '../../../util';
 
 import template from './index.jade';
 import eventsTemplate from './events-screen.jade';
@@ -50,7 +56,6 @@ class BuilderScreenBase extends Component {
   }
 
   createPaneSizeStyle(screens) {
-    console.log('screens', screens)
     const lastScreen = screens[screens.length - 1];
     return {
       width: `${lastScreen.width}px`,
@@ -69,14 +74,19 @@ class BuilderScreenBase extends Component {
 
   setPaneSizeAndPosition(width, height) {
     if (width && height) {
-      const screens = this.state.builderPane.screens;
-      Object.assign(screens[this.screenIdx], {width, height});
+      let screens = this.app.state.builderPane.screens;
+      let screen = screens[this.screenIdx];
 
-      this.app.updateBuilder({
-        offsetStyle: this.createPaneOffsetStyle(screens),
-        sizeStyle: this.createPaneSizeStyle(screens),
-        screens,
-      });
+      if (screen) {
+        screen = extend(screen, {width, height});
+        screens = replaceByIndex(screens, this.screenIdx, screen);
+
+        this.app.updateBuilder({
+          offsetStyle: this.createPaneOffsetStyle(screens),
+          sizeStyle: this.createPaneSizeStyle(screens),
+          screens,
+        });
+      }
     }
   }
 
@@ -89,10 +99,12 @@ class BuilderScreenBase extends Component {
     }
   }
 
-  updateScreensRenderedSize() {
+  updateScreensRenderedSize({cancelDuringTransition=false}={}) {
     window.requestAnimationFrame(() => {
-      const {width, height} = this.getBoundingClientRect();
-      this.setPaneSizeAndPosition(width, height);
+      if (!(cancelDuringTransition && this.state.builderPane.inTransition)) {
+        const {width, height} = this.firstChild.getBoundingClientRect();
+        this.setPaneSizeAndPosition(width, height);
+      }
     });
   }
 
@@ -159,7 +171,7 @@ document.registerElement(`builder-screen-properties`, class extends BuilderScree
   get config() {
     return {
       template: propertiesTemplate,
-      helpers: {
+      helpers: extend(super.config.helpers, {
         getProperties: () => {
           const stageClause = this.app.activeStageClause;
           const mpEvent = stageClause && stageClause.value && stageClause.value.name;
@@ -168,8 +180,8 @@ document.registerElement(`builder-screen-properties`, class extends BuilderScree
           if (!topProperties) {
             topProperties = [];
 
-            if (mpEvent === ShowClause.TOP_EVENTS || mpEvent === ShowClause.ALL_EVENTS) {
-              topProperties = this.app.state.topEventProperties;
+            if (mpEvent === ShowClause.TOP_EVENTS.name || mpEvent === ShowClause.ALL_EVENTS.name) {
+              topProperties = this.state.topEventProperties;
             } else if (mpEvent) {
               this.app.getTopPropertiesForEvent(mpEvent);
             }
@@ -179,24 +191,32 @@ document.registerElement(`builder-screen-properties`, class extends BuilderScree
             transform: prop => renameProperty(prop.name).toLowerCase(),
           });
 
-          console.log(topProperties)
-
-          if (this.config.helpers.showingNonNumericProperties()) {
-            return topProperties;
-          } else {
-            return topProperties.filter(prop => prop.type === `number`)
+          if (!this.config.helpers.showingNonNumericProperties()) {
+            topProperties = topProperties.filter(prop => prop.type === `number`);
           }
+
+          // if the number of properties changes, update builder pane size
+          if (this.numProperties !== topProperties.length) {
+            this.numProperties = topProperties.length;
+            this.updateScreensRenderedSize({
+              cancelDuringTransition: true,
+            });
+          }
+
+          return topProperties;
         },
         clickedProperty: property => {
           this.updateStageClause({property}, {shouldCommit: true, shouldStopEditing: true});
         },
-        showingNonNumericProperties: () =>
-          !!this.app.getBuilderViewCurrentView().showingNonNumericProperties,
+        showingNonNumericProperties: () => {
+          const screen = this.app.getBuilderCurrentScreen();
+          return screen && !!screen.showingNonNumericProperties;
+        },
         toggleNonNumericProperties: () =>
-          this.app.updateBuilderViewCurrentView({
+          this.app.updateBuilderCurrentScreen({
             showingNonNumericProperties: !this.config.helpers.showingNonNumericProperties(),
           }),
-      },
+      }),
     };
   }
 });

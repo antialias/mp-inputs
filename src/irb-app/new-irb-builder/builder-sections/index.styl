@@ -20,7 +20,6 @@ transition-time = .25s
 
     ul.screen-options-list
       flex 1 1 auto
-      margin 10px
       overflow auto
 
     li.list-option
@@ -32,6 +31,13 @@ transition-time = .25s
       font-weight 500
       height option-height
       justify-content flex-end
+      margin 0 10px
+
+      &:first-child
+        margin-top 10px
+
+      &:last-child
+        margin-bottom 10px
 
       &:hover
         background-color grey-100
@@ -86,7 +92,7 @@ transition-time = .25s
       color #fff
       svg-icon-style(#fff, speed: 0s, pos-top: 1px)
 
-//small-caret-icon
+// small-caret-icon
 .small-caret
   svg-icon-style(size: 16px)
 
@@ -125,3 +131,15 @@ transition-time = .25s
     text-align center
     text-transform uppercase
     width 100%
+
+// screen-footer-button
+button.screen-footer
+  background none
+  border none
+  border-top 1px solid grey-150
+  color grey-500
+  font-weight 500
+  font-size 12px
+  min-height 48px
+  line-height 100%
+  padding 0

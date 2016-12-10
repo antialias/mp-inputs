@@ -25,3 +25,7 @@ mixin screen-title(title, options)
     if options.closeButton
       .title-button.close-button(onclick=$helpers.closePane)
         svg-icon(attributes={icon: 'x'})
+
+mixin screen-footer-button(label, options)
+  - options = options || {}
+  button.screen-footer(onclick=options.onclick)= label
