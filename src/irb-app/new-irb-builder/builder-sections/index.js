@@ -34,6 +34,7 @@ class BuilderScreenBase extends Component {
   get config() {
     return {
       helpers: {
+        screenIdx: () => this.screenIdx,
         closePane: () => this.app.stopEditingClause(),
         previousScreen: () => {
           const screens = this.state.builderPane.screens.slice(0, -1);

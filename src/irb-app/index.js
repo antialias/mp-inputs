@@ -136,6 +136,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         },
       },
       isEditingExtrasMenu: false,
+      isEditingNumericProperty: false,
       newCachedData: false,
       resourceTypeFilter: `all`,
       result: new Result({
@@ -665,6 +666,15 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     const sections = this.state.report.sections.replaceSection(section);
     this.updateReport({sections});
     this.query();
+  }
+
+  updateClause(sectionType, clauseIndex, clauseData) {
+    const section = this.state.report.sections[sectionType];
+    const clause = section.clauses[clauseIndex];
+
+    this.updateSection(
+      section.replaceClause(clauseIndex, clause.extend(clauseData))
+    );
   }
 
   moveClause(sectionType, clauseIndex, offset) {

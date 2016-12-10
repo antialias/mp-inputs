@@ -5,7 +5,7 @@ include ./mixins.jade
 - const footerButtonText = (showingNonNumeric ? `Hide` : `View all`) + ` non-numeric properties`;
 
 .builder-screen.properties
-  +screen-title(`All Properties`, {backButton: true})
+  +screen-title(`All Properties`, {backButton: $helpers.screenIdx() > 1})
   if !properties.length
     div.empty-state No properties available
   else

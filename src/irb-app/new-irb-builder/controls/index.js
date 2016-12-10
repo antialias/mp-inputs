@@ -18,7 +18,7 @@ class ControlComponent extends Component {
           this.openPane();
         },
         getPaneLeft: () => !this.position ? 0 : Math.min(0, (window.innerWidth - this.position.left) - this.constants.paneWidth),
-        removeClause: () => this.app.removeClause(this.section, this.clauseIndex),
+        removeClause: () => this.remove(),
         updatePosition: ev => this.updatePosition(ev),
       },
     };
@@ -38,6 +38,10 @@ class ControlComponent extends Component {
 
   get isRemoveable() {
     throw `Not implemented!`;
+  }
+
+  remove() {
+    this.app.removeClause(this.section, this.clauseIndex);
   }
 
   isPaneOpen() {
