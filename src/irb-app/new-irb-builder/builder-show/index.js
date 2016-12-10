@@ -7,7 +7,6 @@ import {
 
 import { AddControl, EditControl } from '../controls';
 
-
 import template from './index.jade';
 import './index.styl';
 

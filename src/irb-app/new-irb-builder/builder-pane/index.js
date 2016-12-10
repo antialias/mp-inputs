@@ -167,7 +167,6 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
           }
         },
         getOptions: () => SOURCES,
-
       }),
     };
   }
