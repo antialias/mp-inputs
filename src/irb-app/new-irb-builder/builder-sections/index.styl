@@ -22,6 +22,14 @@ transition-time = .25s
       flex 1 1 auto
       overflow auto
 
+      &:empty
+        loader(4px)
+        margin 12px auto
+
+      .list-option.list-empty
+        pointer-events none
+        justify-content center
+
     li.list-option
       align-items center
       border-radius 3px

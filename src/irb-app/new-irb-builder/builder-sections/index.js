@@ -177,6 +177,7 @@ document.registerElement(`builder-screen-properties`, class extends BuilderScree
           const stageClause = this.app.activeStageClause;
           const mpEvent = stageClause && stageClause.value && stageClause.value.name;
           let topProperties = this.state.topEventPropertiesByEvent[mpEvent];
+          let updateBuilderSize = false;
 
           if (!topProperties) {
             topProperties = [];
@@ -185,20 +186,27 @@ document.registerElement(`builder-screen-properties`, class extends BuilderScree
               topProperties = this.state.topEventProperties;
             } else if (mpEvent) {
               this.app.getTopPropertiesForEvent(mpEvent);
+              this.loading = true;
             }
+          } else if (this.loading) {
+            this.loading = false;
+            updateBuilderSize = true;
           }
 
           topProperties = sorted(topProperties, {
             transform: prop => renameProperty(prop.name).toLowerCase(),
           });
 
-          if (!this.config.helpers.showingNonNumericProperties()) {
+          if (!this.showingNonNumericProperties) {
             topProperties = topProperties.filter(prop => prop.type === `number`);
           }
 
-          // if the number of properties changes, update builder pane size
           if (this.numProperties !== topProperties.length) {
             this.numProperties = topProperties.length;
+            updateBuilderSize = true;
+          }
+
+          if (updateBuilderSize) {
             this.updateScreensRenderedSize({
               cancelDuringTransition: true,
             });
@@ -209,15 +217,17 @@ document.registerElement(`builder-screen-properties`, class extends BuilderScree
         clickedProperty: property => {
           this.updateStageClause({property}, {shouldCommit: true, shouldStopEditing: true});
         },
-        showingNonNumericProperties: () => {
-          const screen = this.app.getBuilderCurrentScreen();
-          return screen && !!screen.showingNonNumericProperties;
-        },
         toggleNonNumericProperties: () =>
           this.app.updateBuilderCurrentScreen({
-            showingNonNumericProperties: !this.config.helpers.showingNonNumericProperties(),
+            showingNonNumericProperties: !this.showingNonNumericProperties,
           }),
       }),
     };
   }
+
+  get showingNonNumericProperties() {
+    const screen = this.app.getBuilderCurrentScreen();
+    return screen && !!screen.showingNonNumericProperties;
+  }
 });
+

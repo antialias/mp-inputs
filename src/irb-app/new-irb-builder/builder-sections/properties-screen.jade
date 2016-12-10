@@ -1,19 +1,18 @@
 include ./mixins.jade
 
 - const properties = $helpers.getProperties();
-- const showingNonNumeric = $helpers.showingNonNumericProperties();
-- const footerButtonText = (showingNonNumeric ? `Hide` : `View all`) + ` non-numeric properties`;
 
 .builder-screen.properties
   +screen-title(`All Properties`, {backButton: $helpers.screenIdx() > 1})
-  if !properties.length
-    div.empty-state No properties available
-  else
-    ul.screen-options-list
+  ul.screen-options-list
+    if properties.length
       for property in properties
         li.list-option(onclick=() => $helpers.clickedProperty(property))
           - const iconType = property.type === `string` ? `text` : property.type;
           +screen-option(util.renameProperty(property.name), {icon: `type-${iconType}`})
-  +screen-footer-button(footerButtonText, {
-    onclick: $helpers.toggleNonNumericProperties
-  })
+    else if !$component.loading
+      li.list-option.list-empty no properties available
+  if !$component.loading
+    +screen-footer-button(($component.showingNonNumericProperties ? `Hide` : `View all`) + ` non-numeric properties`, {
+      onclick: $helpers.toggleNonNumericProperties
+    })
