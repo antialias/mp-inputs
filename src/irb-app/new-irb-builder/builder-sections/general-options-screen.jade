@@ -1,0 +1,8 @@
+include ./mixins.jade
+
+.builder-screen.sources
+  ul.screen-options-list
+    for option in $helpers.getOptions()
+      li.list-option(onclick=() => $helpers.clickedSource(option))
+        +screen-option(option.name)
+        +small-caret-icon()
