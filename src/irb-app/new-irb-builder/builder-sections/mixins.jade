@@ -20,7 +20,7 @@ mixin screen-title(title, options)
   .screen-title
     .title-label= title
     if options.backButton
-      .title-button.back-button(onclick=$helpers.previousScreen)
+      .title-button.back-button(onclick=$helpers.clickedBackButton)
         svg-icon(attributes={icon: 'caret-left'})
     if options.closeButton
       .title-button.close-button(onclick=$helpers.closePane)

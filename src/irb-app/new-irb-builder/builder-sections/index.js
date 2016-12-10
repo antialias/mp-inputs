@@ -16,7 +16,6 @@ import propertiesTemplate from './properties-screen.jade';
 
 import './index.styl';
 
-
 document.registerElement(`builder-pane`, class extends Component {
   get config() {
     return {
@@ -36,14 +35,7 @@ class BuilderScreenBase extends Component {
       helpers: {
         screenIdx: () => this.screenIdx,
         closePane: () => this.app.stopEditingClause(),
-        previousScreen: () => {
-          const screens = this.state.builderPane.screens.slice(0, -1);
-          this.app.updateBuilder({
-            inTransition: true,
-            offsetStyle: this.createPaneOffsetStyle(screens),
-            sizeStyle: this.createPaneSizeStyle(screens),
-          }, {screens});
-        },
+        clickedBackButton: () => this.previousScreen(),
       },
     };
   }
@@ -62,6 +54,15 @@ class BuilderScreenBase extends Component {
       width: `${lastScreen.width}px`,
       height: `${lastScreen.height}px`,
     };
+  }
+
+  previousScreen() {
+    const screens = this.state.builderPane.screens.slice(0, -1);
+    this.app.updateBuilder({
+      inTransition: true,
+      offsetStyle: this.createPaneOffsetStyle(screens),
+      sizeStyle: this.createPaneSizeStyle(screens),
+    }, {screens});
   }
 
   nextScreen(componentName) {
@@ -114,31 +115,6 @@ class BuilderScreenBase extends Component {
   }
 }
 
-document.registerElement(`builder-screen-events`, class extends BuilderScreenBase {
-  get config() {
-    return {
-      template: eventsTemplate,
-      helpers: extend(super.config.helpers, {
-        clickedEvent: value => {
-          this.updateStageClause({value}, {shouldCommit: true, shouldStopEditing: true});
-        },
-        clickedEventProperties: (ev, value) => {
-          ev.stopPropagation();
-          this.updateStageClause({value}, {shouldCommit: true});
-          this.nextScreen(`builder-screen-properties`);
-        },
-        getEvents: () => {
-          const topEvents = sorted(this.state.topEvents, {
-            transform: ev => renameEvent(ev.name).toLowerCase(),
-          }).map(ev => extend(ev, {icon: ev.custom ? `custom-events` : `event`}));
-          const specialEvents = [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS].map(ev => extend(ev, {icon: `star-top-events`}));
-          return specialEvents.concat(topEvents);
-        },
-      }),
-    };
-  }
-});
-
 const SOURCES = [
   {
     name: `Event`,
@@ -155,6 +131,7 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
     return {
       template: sourcesTemplate,
       helpers: extend(super.config.helpers, {
+        SOURCES,
         clickedSource: source => {
           const {resourceType} = source;
           if (resourceType === `events`) {
@@ -162,7 +139,31 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
             this.nextScreen(`builder-screen-${resourceType}`);
           }
         },
-        SOURCES,
+      }),
+    };
+  }
+});
+
+document.registerElement(`builder-screen-events`, class extends BuilderScreenBase {
+  get config() {
+    return {
+      template: eventsTemplate,
+      helpers: extend(super.config.helpers, {
+        getEvents: () => {
+          const topEvents = sorted(this.state.topEvents, {
+            transform: ev => renameEvent(ev.name).toLowerCase(),
+          }).map(ev => extend(ev, {icon: ev.custom ? `custom-events` : `event`}));
+          const specialEvents = [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS].map(ev => extend(ev, {icon: `star-top-events`}));
+          return specialEvents.concat(topEvents);
+        },
+        clickedEvent: value => {
+          this.updateStageClause({value}, {shouldCommit: true, shouldStopEditing: true});
+        },
+        clickedEventProperties: (ev, value) => {
+          ev.stopPropagation();
+          this.updateStageClause({value}, {shouldCommit: true});
+          this.nextScreen(`builder-screen-properties`);
+        },
       }),
     };
   }
