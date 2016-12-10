@@ -69,12 +69,10 @@ span.substr.matches-search {
 }
 .irb-header {
   -webkit-box-align: center;
-  -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
   border-bottom: 1px solid #c1ccd5;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   height: 60px;
@@ -177,16 +175,13 @@ span.substr.matches-search {
 }
 .chart-controls-container {
   -webkit-box-align: center;
-  -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
   border-bottom: 1px solid #d8e0e6;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
       -ms-flex-pack: start;
           justify-content: flex-start;
   padding: 9px 11px;
@@ -201,7 +196,6 @@ span.substr.matches-search {
   border: solid 1px transparent;
   border-radius: 3px;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
 }
@@ -221,11 +215,9 @@ span.substr.matches-search {
 .chart-control .chart-type {
   border-right: 1px solid transparent;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
       -ms-flex-pack: end;
           justify-content: flex-end;
   position: relative;
@@ -259,7 +251,6 @@ span.substr.matches-search {
 }
 .chart-control button {
   -webkit-box-align: center;
-  -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
   background: none;
@@ -269,13 +260,11 @@ span.substr.matches-search {
   border: none;
   color: #6e859d;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   font-weight: 600;
   height: 100%;
   -webkit-box-pack: center;
-  -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
   padding: 0;
@@ -327,7 +316,6 @@ span.substr.matches-search {
 }
 .chart-control .toggle-button {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
 }
@@ -395,7 +383,6 @@ span.substr.matches-search {
 }
 .chart-control .options button {
   -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
       -ms-flex-pack: start;
           justify-content: flex-start;
 }
@@ -507,7 +494,6 @@ button.extras-menu.selected svg-icon path {
 }
 .options.extras-menu-options {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   left: auto;
@@ -524,7 +510,6 @@ button.extras-menu.selected svg-icon path {
 }
 .options.extras-menu-options .section {
   -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
 }
@@ -532,7 +517,6 @@ button.extras-menu.selected svg-icon path {
   border: none;
   height: inherit;
   -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
       -ms-flex-pack: start;
           justify-content: flex-start;
 }
@@ -595,16 +579,13 @@ span.substr.matches-search {
 chart-legend,
 .chart-legend {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
   -webkit-box-flex: 1;
-  -webkit-flex: 1 0;
       -ms-flex: 1 0;
           flex: 1 0;
 }
@@ -612,18 +593,15 @@ chart-legend,
   background-color: #f9fafc;
   border-radius: 0 0 5px 0;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
 }
 .chart-legend .has-results {
   -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
 }
@@ -637,7 +615,6 @@ chart-legend,
   border-top: none;
   color: #9cacbb;
   -webkit-box-flex: 0;
-  -webkit-flex: 0 0;
       -ms-flex: 0 0;
           flex: 0 0;
   font-size: 12px;
@@ -648,16 +625,13 @@ chart-legend,
 .chart-legend .content-wrapper {
   border-left: 1px dotted #d8e0e6;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-flex: 1;
-  -webkit-flex: 1 0;
       -ms-flex: 1 0;
           flex: 1 0;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
   height: 100%;
@@ -718,7 +692,6 @@ chart-legend,
 }
 .chart-legend .body-loader .series-loader {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   height: 20px;
@@ -775,12 +748,10 @@ chart-legend,
   background-color: #f9fafc;
   cursor: pointer;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   height: 40px;
   -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
       -ms-flex-pack: justify;
           justify-content: space-between;
   padding: 0 10px 0 15px;
@@ -833,13 +804,11 @@ chart-legend,
 }
 .chart-legend .series-values button {
   -webkit-box-align: start;
-  -webkit-align-items: flex-start;
       -ms-flex-align: start;
           align-items: flex-start;
   background: none;
   border: none;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   padding: 6px 0 6px 15px;
@@ -851,7 +820,6 @@ chart-legend,
   border-radius: 3px;
   box-sizing: border-box;
   -webkit-box-flex: 0;
-  -webkit-flex: 0 0 18px;
       -ms-flex: 0 0 18px;
           flex: 0 0 18px;
   height: 18px;
@@ -897,15 +865,12 @@ chart-legend,
 }
 .chart-legend .series-values button .delete-wrapper {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-flex: 1;
-  -webkit-flex: 1 0 10px;
       -ms-flex: 1 0 10px;
           flex: 1 0 10px;
   -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
       -ms-flex-pack: end;
           justify-content: flex-end;
   visibility: hidden;
@@ -993,11 +958,9 @@ span.substr.matches-search {
 }
 .bar-chart table thead irb-bar-chart-header .chart-header-container {
   -webkit-box-align: center;
-  -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
 }
@@ -1007,12 +970,10 @@ span.substr.matches-search {
 .bar-chart table thead irb-bar-chart-header .bar-chart-header,
 .bar-chart table thead irb-bar-chart-header .bar-chart-axis {
   -webkit-box-align: center;
-  -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
   cursor: pointer;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   height: 100%;
@@ -1021,9 +982,7 @@ span.substr.matches-search {
 .bar-chart table thead irb-bar-chart-header .bar-chart-header .text,
 .bar-chart table thead irb-bar-chart-header .bar-chart-axis .text {
   -webkit-box-align: center;
-  -webkit-align-items: center;
       -ms-flex-align: center;
-              -ms-grid-row-align: center;
           align-items: center;
 }
 .bar-chart table thead irb-bar-chart-header .bar-chart-header:hover .sort-icon::before,
@@ -1034,11 +993,9 @@ span.substr.matches-search {
 .bar-chart table thead irb-bar-chart-header .bar-chart-axis .sort-holder {
   bottom: -20px;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
-  -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
   left: 0;
@@ -1089,17 +1046,14 @@ span.substr.matches-search {
 }
 .bar-chart table thead irb-bar-chart-header .bar-chart-axis {
   -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
       -ms-flex-pack: end;
           justify-content: flex-end;
 }
 .bar-chart table thead irb-bar-chart-header .bar-chart-axis .axis-title {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
-  -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
   width: 50%;
@@ -1110,11 +1064,9 @@ span.substr.matches-search {
 .bar-chart table thead irb-bar-chart-header .bar-chart-axis .max-value {
   color: #3391e9;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
       -ms-flex-pack: end;
           justify-content: flex-end;
   width: 25%;
@@ -1175,7 +1127,6 @@ span.substr.matches-search {
 }
 .bar-chart table td ul.stacked {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
 }
@@ -1207,7 +1158,6 @@ span.substr.matches-search {
 }
 .bar-chart table td.chart-data .chart-grid {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   height: 100%;
@@ -1220,7 +1170,6 @@ span.substr.matches-search {
 .bar-chart table td.chart-data .chart-grid .grid-line {
   border-right: 2px solid #eff3f5;
   -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
   height: 100%;
@@ -1270,11 +1219,9 @@ span.substr.matches-search {
 }
 .bar-chart .hover-label {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
-  -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
   position: relative;
@@ -1342,12 +1289,10 @@ span.substr.matches-search {
 }
 .line-chart-container {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
   height: 600px;
@@ -1356,14 +1301,12 @@ span.substr.matches-search {
 .line-chart-container .chart-header-container {
   border-bottom: 1px solid #d8e0e6;
   -webkit-box-flex: 0;
-  -webkit-flex: 0 0 40px;
       -ms-flex: 0 0 40px;
           flex: 0 0 40px;
   text-align: center;
 }
 .line-chart-container .line-chart {
   -webkit-box-flex: 1;
-  -webkit-flex: 1 0;
       -ms-flex: 1 0;
           flex: 1 0;
 }
@@ -1610,7 +1553,6 @@ span.substr.matches-search {
 }
 .irb-result .chart {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   width: 100%;
@@ -1636,7 +1578,6 @@ span.substr.matches-search {
 .irb-result .chart .content .results {
   color: #4c6072;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   padding: 10px 15px;
@@ -1644,7 +1585,6 @@ span.substr.matches-search {
 .irb-result .chart .highcharts-tooltip .results .absolute,
 .irb-result .chart .content .results .absolute {
   -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
   text-align: left;
@@ -1657,7 +1597,6 @@ span.substr.matches-search {
 .irb-result .chart .content .results .percent {
   color: #9cacbb;
   -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
       -ms-flex-positive: 1;
           flex-grow: 1;
   font-weight: 400;
@@ -1705,7 +1644,6 @@ span.substr.matches-search {
 }
 .irb-result .main-chart {
   -webkit-box-flex: 1;
-  -webkit-flex: 1 1;
       -ms-flex: 1 1;
           flex: 1 1;
   position: relative;
@@ -1721,22 +1659,18 @@ span.substr.matches-search {
 .irb-result .chart-loader .chart-header-container {
   border-bottom: solid 1px #d8e0e6;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
 }
 .irb-result .chart-loader .chart-header-container .header-text-container {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
       -ms-flex-direction: row;
           flex-direction: row;
   -webkit-box-pack: center;
-  -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
   width: 100%;
@@ -1769,17 +1703,14 @@ span.substr.matches-search {
   background-color: #fff;
   border-radius: 0 0 15px 15px;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
       -ms-flex-direction: row;
           flex-direction: row;
   height: 559px;
   -webkit-box-pack: center;
-  -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
   width: 100%;
@@ -1833,7 +1764,6 @@ span.substr.matches-search {
 }
 .irb-result .legend {
   -webkit-box-flex: 0;
-  -webkit-flex: 0 0 174px;
       -ms-flex: 0 0 174px;
           flex: 0 0 174px;
   z-index: 1;
@@ -1847,7 +1777,6 @@ span.substr.matches-search {
 }
 .sticky-chart-headers .main-chart {
   -webkit-box-flex: 0;
-  -webkit-flex: 0 0 auto;
       -ms-flex: 0 0 auto;
           flex: 0 0 auto;
 }
@@ -1881,13 +1810,10 @@ span.substr.matches-search {
 }
 .error-no-project-data .irb-result .chart-graph {
   -webkit-box-align: center;
-  -webkit-align-items: center;
       -ms-flex-align: center;
-              -ms-grid-row-align: center;
           align-items: center;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
   height: 380px;
@@ -2068,11 +1994,9 @@ span.substr.matches-search {
 }
 .error-no-project-data .irb-builder .error-builder-button {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
-  -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
   margin: 20px 0;
@@ -2089,7 +2013,6 @@ span.substr.matches-search {
 }
 .builder-pane .builder-pane-offset {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-transition: -webkit-transform 0.25s;
@@ -2099,12 +2022,10 @@ span.substr.matches-search {
 }
 .builder-pane .builder-screen {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
       -ms-flex-direction: column;
           flex-direction: column;
   max-height: 486px;
@@ -2112,7 +2033,6 @@ span.substr.matches-search {
 }
 .builder-pane .builder-screen ul.screen-options-list {
   -webkit-box-flex: 1;
-  -webkit-flex: 1 1 auto;
       -ms-flex: 1 1 auto;
           flex: 1 1 auto;
   margin: 10px;
@@ -2120,20 +2040,17 @@ span.substr.matches-search {
 }
 .builder-pane .builder-screen li.list-option {
   -webkit-box-align: center;
-  -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
   border-radius: 3px;
   cursor: pointer;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   font-size: 12px;
   font-weight: 500;
   height: 30px;
   -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
       -ms-flex-pack: end;
           justify-content: flex-end;
 }
@@ -2154,7 +2071,6 @@ span.substr.matches-search {
 }
 .builder-pane .builder-screen li.list-option:hover .option-secondary-action {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
 }
@@ -2186,13 +2102,10 @@ span.substr.matches-search {
 /* Builder Jade Mixins */
 .option-secondary-action {
   -webkit-box-align: center;
-  -webkit-align-items: center;
       -ms-flex-align: center;
-              -ms-grid-row-align: center;
           align-items: center;
   display: none;
   -webkit-box-flex: 0;
-  -webkit-flex: none;
       -ms-flex: none;
           flex: none;
   padding: 0 10px;
@@ -2255,7 +2168,6 @@ span.substr.matches-search {
   text-overflow: ellipsis;
   white-space: nowrap;
   -webkit-box-flex: 1;
-  -webkit-flex: 1 1;
       -ms-flex: 1 1;
           flex: 1 1;
 }
@@ -2275,17 +2187,14 @@ span.substr.matches-search {
 }
 .screen-title {
   -webkit-box-align: center;
-  -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
   background-color: #e5eaef;
   color: #6e859d;
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-flex: 0;
-  -webkit-flex: none;
       -ms-flex: none;
           flex: none;
   font-size: 11px;
@@ -3527,7 +3436,6 @@ time-pane .content {
 }
 .custom-date-pane-content .date-unit-select .toggle {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
 }
@@ -3537,7 +3445,6 @@ time-pane .content {
   cursor: pointer;
   display: inline-block;
   -webkit-box-flex: 1;
-  -webkit-flex: 1;
       -ms-flex: 1;
           flex: 1;
   padding: 10px;
@@ -3686,11 +3593,9 @@ span.substr.matches-search {
 }
 .error-no-project-data .irb-builder .error-builder-button {
   display: -webkit-box;
-  display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
-  -webkit-justify-content: center;
       -ms-flex-pack: center;
           justify-content: center;
   margin: 20px 0;
