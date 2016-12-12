@@ -447,12 +447,12 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     }
   }
 
-  getTopPropertiesForEvent(event) {
-    this.queries.topEventProperties.build({event}).run().then(properties => {
+  fetchTopPropertiesForEvent(mpEvent) {
+    this.queries.topEventProperties.build({mpEvent}).run().then(properties => {
       this.update({
         topEventPropertiesByEvent: extend(
           this.state.topEventPropertiesByEvent,
-          {[event]: properties}
+          {[mpEvent]: properties}
         ),
       });
     });

@@ -1,5 +1,6 @@
 include ./mixins.jade
 
+- const properties = $helpers.getProperties();
 - const selectedResourceType = $component.resourceType;
 - const formatResourceType = type => type === `events` ? `event` : type;
 
@@ -13,4 +14,7 @@ include ./mixins.jade
           onclick=() => $helpers.selectResourceType(resourceType)
         )= formatResourceType(resourceType)
     .resource-type-label= `${formatResourceType(selectedResourceType)} properties`
-  +property-list()
+  +property-list(properties, {
+    clickedProperty: $helpers.clickedProperty,
+    loading: $component.loading
+  })

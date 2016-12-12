@@ -1,3 +1,5 @@
+/* global requestAnimationFrame */
+
 import { Component } from 'panel';
 
 import { Clause, ShowClause } from '../../../models/clause';
@@ -34,9 +36,9 @@ class BuilderScreenBase extends Component {
   get config() {
     return {
       helpers: {
-        screenIdx: () => this.screenIdx,
-        closePane: () => this.app.stopEditingClause(),
         clickedBackButton: () => this.previousScreen(),
+        closePane: () => this.app.stopEditingClause(),
+        screenIdx: () => this.screenIdx,
       },
     };
   }
@@ -103,7 +105,7 @@ class BuilderScreenBase extends Component {
   }
 
   updateScreensRenderedSize({cancelDuringTransition=false}={}) {
-    window.requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
       if (!(cancelDuringTransition && this.state.builderPane.inTransition)) {
         const {width, height} = this.firstChild.getBoundingClientRect();
         this.setPaneSizeAndPosition(width, height);
@@ -212,7 +214,7 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
       template: numericPropertiesTemplate,
       helpers: extend(super.config.helpers, {
         toggleNonNumericProperties: () => this.app.updateBuilderCurrentScreen({
-          showingNonNumericProperties: !this.showingNonNumericProperties,
+          showingNonNumericProperties: !this.isShowingNonNumericProperties(),
         }),
         clickedProperty: property => this.updateStageClause({property}),
       }),
@@ -240,7 +242,7 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
         transform: prop => renameProperty(prop.name).toLowerCase(),
       });
 
-      if (!this.showingNonNumericProperties) {
+      if (!this.isShowingNonNumericProperties()) {
         properties = properties.filter(prop => prop.type === `number`);
       }
     }
@@ -252,7 +254,7 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
     return !this.state.topEventPropertiesByEvent.hasOwnProperty(this.event);
   }
 
-  get showingNonNumericProperties() {
+  isShowingNonNumericProperties() {
     const screen = this.app.getBuilderCurrentScreen();
     return screen && !!screen.showingNonNumericProperties;
   }
@@ -265,7 +267,7 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
       helpers: extend(super.config.helpers, {
         RESOURCE_TYPES: Clause.RESOURCE_TYPES,
         selectResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
-        clickedProperty: value => this.updateStageClause({value}),
+        clickedProperty: property => this.updateStageClause({resourceType: property.resourceType, value: property.name}),
       }),
     };
   }

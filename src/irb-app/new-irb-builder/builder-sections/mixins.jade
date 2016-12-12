@@ -1,12 +1,9 @@
+include ../mixins.jade
+
 mixin secondary-action-pill(label, options)
   .option-secondary-action.pill(onclick=options.onclick)
     span.secondary-label= label
     +small-caret-icon()
-
-mixin small-caret-icon(options)
-  - options = options || {}
-  .caret-icon.small-caret
-    svg-icon(attributes={icon: `caret-${options.direction || 'right'}`})
 
 mixin screen-option(label, options)
   - options = options || {}
@@ -30,14 +27,13 @@ mixin screen-footer-button(label, options)
   - options = options || {}
   button.screen-footer(onclick=options.onclick)= label
 
-mixin property-list()
-  - const properties = $helpers.getProperties();
+mixin property-list(properties, options)
   ul.screen-options-list
     if properties.length
       for property in properties
-        li.list-option(onclick=() => $helpers.clickedProperty(property))
+        li.list-option(onclick=() => options.clickedProperty(property))
           +screen-option(util.renameProperty(property.name), {
             icon: util.getIconForPropertyType(property.type)
           })
-    else if !$component.loading
+    else if !options.loading
       li.list-option.list-empty no properties available

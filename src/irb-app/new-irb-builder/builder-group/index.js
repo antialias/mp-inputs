@@ -43,7 +43,7 @@ document.registerElement(`builder-group-edit-control`, class extends EditControl
 
   get label() {
     const clause = this.state.report.sections.getClause(`group`, this.clauseIndex);
-    return clause && clause.value && renameProperty(clause.value.name);
+    return clause && clause.value && renameProperty(clause.value);
   }
 
   openPane() {

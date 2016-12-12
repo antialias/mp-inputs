@@ -1,0 +1,4 @@
+mixin small-caret-icon(options)
+  - options = options || {}
+  .caret-icon.small-caret
+    svg-icon(attributes={icon: `caret-${options.direction || 'right'}`})
