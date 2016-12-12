@@ -11,5 +11,4 @@
         .control-container= $component.child('builder-numeric-property-edit-control')
         .preposition on
       .clause-container= $component.child('builder-show-edit-control', {attributes: {'clause-index': clauseIdx}})
-    if clauseIdx === clauses.length - 1
-      .builder-container= $component.child('builder-add-contextual')
+  .builder-container= $component.child('builder-add-contextual')

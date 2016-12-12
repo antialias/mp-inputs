@@ -16,10 +16,12 @@ class ControlComponent extends Component {
         clickLabel: () => this.clickLabel && this.clickLabel(),
         clickModify: () => this.clickModify(),
         getPreposition: () => {
+          let preposition;
           switch(this.app.originStageClauseType()) {
             case `show`:
-              return `and`;
+              preposition = `and`;
           }
+          return preposition;
         },
         removeClause: () => this.app.removeClause(this.section, this.clauseIndex),
       },
