@@ -1,9 +1,12 @@
 import { Component } from 'panel';
 
-import template from './index.jade';
+import { extend } from '../../../util';
+
+import addTemplate from './add-control.jade';
+import editTemplate from './edit-control.jade';
 import './index.styl';
 
-class ControlComponent extends Component {
+export class EditControl extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
     this.app.onClickOutside(this.tagName, `stopBuildingQuery`);
@@ -11,10 +14,50 @@ class ControlComponent extends Component {
 
   get config() {
     return {
-      template,
-      helpers: {
-        clickLabel: () => this.clickLabel && this.clickLabel(),
-        clickModify: () => this.clickModify(),
+      helpers: extend(super.config.helpers, {
+        clickLabel: () => {
+          this.app.startBuilderOnScreen(`builder-screen-sources`);
+          this.app.stopEditingClause();
+          this.app.startEditingClause(this.section, this.clauseIndex);
+        },
+        getLabel: () => this.label,
+        isPaneOpen: () => !!this.state.builderPane.screens.length && this.app.isEditingClause(this.section, this.clauseIndex),
+        isRemovable: () => this.isRemovable(),
+        removeClause: () => this.app.removeClause(this.section, this.clauseIndex),
+      }),
+      template: editTemplate,
+    };
+  }
+
+  shouldUpdate(state) {
+    return !!state.report.sections.getClause(this.section, this.clauseIndex);
+  }
+
+  isRemovable() {
+    throw `Not implemented!`;
+  }
+
+  get clauseIndex() {
+    return Number(this.getAttribute(`clause-index`));
+  }
+
+  get label() {
+    throw `Not implemented!`;
+  }
+}
+
+export class AddControl extends Component {
+  attachedCallback() {
+    super.attachedCallback(...arguments);
+    this.app.onClickOutside(this.tagName, `stopBuildingQuery`);
+  }
+
+  get config() {
+    return {
+      helpers: extend(super.config.helpers, {
+        clickAdd: () => this.clickAdd(),
+        isPaneOpen: () => this.isPaneOpen(),
+        getElementClasses: () => this.elementClasses,
         getPreposition: () => {
           let preposition;
           switch(this.app.originStageClauseType()) {
@@ -23,66 +66,24 @@ class ControlComponent extends Component {
           }
           return preposition;
         },
-        removeClause: () => this.app.removeClause(this.section, this.clauseIndex),
-      },
+      }),
+      template: addTemplate,
     };
   }
 
-  get elementClasses() {
-    return [`${this.controlType}-control`];
-  }
-
-  get isRemoveable() {
-    return true;
-  }
-
-  get label() {
-    return null;
-  }
-
-  remove() {
-    this.app.removeClause(this.section, this.clauseIndex);
+  clickAdd() {
+    throw `Not implemented!`;
   }
 
   isPaneOpen() {
     throw `Not implemented!`;
   }
 
-  clickModify() {
-    throw `Not implemented!`;
-  }
-}
-
-export class EditControl extends ControlComponent {
-  shouldUpdate(state) {
-    return !!state.report.sections.getClause(this.section, this.clauseIndex);
-  }
-
-  get controlType() {
-    return `edit`;
-  }
-
-  isPaneOpen() {
-    return !!this.state.builderPane.screens.length && this.app.isEditingClause(this.section, this.clauseIndex);
-  }
-
-  get clauseIndex() {
-    return Number(this.getAttribute(`clause-index`));
-  }
-
-  clickLabel() {
-    this.app.startBuilderOnScreen(`builder-screen-sources`);
-    this.app.stopEditingClause();
-    this.app.startEditingClause(this.section, this.clauseIndex);
-  }
-}
-
-export class AddControl extends ControlComponent {
   get controlType() {
     return `add`;
   }
 
-  get isRemoveable() {
-    return false;
+  get elementClasses() {
+    return [];
   }
 }

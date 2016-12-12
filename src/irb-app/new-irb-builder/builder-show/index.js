@@ -17,17 +17,17 @@ document.registerElement(`query-builder-show`, class extends Component {
 });
 
 document.registerElement(`builder-show-edit-control`, class extends EditControl {
-  get section() {
-    return `show`;
+  isRemovable() {
+    return this.state.report.sections.show.clauses.length > 1;
   }
 
   get label() {
-    const clause = this.state.report.sections.getClause(`show`, this.clauseIndex);
+    const clause = this.state.report.sections.getClause(this.section, this.clauseIndex);
     return renameEvent(clause.value.name);
   }
 
-  get isRemoveable() {
-    return this.state.report.sections.show.clauses.length > 1;
+  get section() {
+    return `show`;
   }
 
   isPaneOpen() {
@@ -67,11 +67,7 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
 });
 
 document.registerElement(`builder-add-contextual`, class extends AddControl {
-  get elementClasses() {
-    return super.elementClasses.concat(`contextual-menu`);
-  }
-
-  clickModify() {
+  clickAdd() {
     if (!this.isPaneOpen()) {
       this.app.startBuilderOnScreen(`builder-screen-contextual`);
     }
@@ -80,5 +76,9 @@ document.registerElement(`builder-add-contextual`, class extends AddControl {
 
   isPaneOpen() {
     return this.state.builderPane.screens.length && this.state.builderPane.isContextualMenuOpen;
+  }
+
+  get elementClasses() {
+    return [`contextual-menu`];
   }
 });

@@ -1,0 +1,11 @@
+- const open = $helpers.isPaneOpen()
+
+.irb-new-control.new-query-builder(class={'pane-open': open})
+  .control-buttons.edit-control
+    button.control-label(onclick=$helpers.clickLabel)
+      span= $helpers.getLabel()
+  if $helpers.isRemovable()
+    button.remove(onclick=$helpers.removeClause)
+  .drop-menu
+    mp-drop-menu(attributes={open})
+      .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)
