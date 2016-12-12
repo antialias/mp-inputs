@@ -30,33 +30,6 @@ transition-time = .25s
         pointer-events none
         justify-content center
 
-    li.list-option
-      align-items center
-      border-radius 3px
-      cursor pointer
-      display flex
-      font-size 12px
-      font-weight 500
-      height option-height
-      justify-content flex-end
-      margin 0 10px
-
-      &:first-child
-        margin-top 10px
-
-      &:last-child
-        margin-bottom 10px
-
-      &:hover
-        background-color grey-100
-        color mp-blue
-
-        .option-icon
-          svg-icon-style(mp-blue)
-
-        .option-secondary-action
-          display flex
-
     &.sources
         width 260px
 
@@ -118,6 +91,34 @@ transition-time = .25s
     text-transform uppercase
 
 /* Builder Jade Mixins */
+// generic-options-list-item
+li.list-option
+  align-items center
+  border-radius 3px
+  cursor pointer
+  display flex
+  font-size 12px
+  font-weight 500
+  height option-height
+  justify-content flex-end
+
+  &:first-child
+    margin-top 10px
+
+  &:last-child
+    margin-bottom 10px
+
+  &:hover
+    background-color grey-100
+    color mp-blue
+
+    .option-icon
+      svg-icon-style(mp-blue)
+
+    .option-secondary-action
+      display flex
+
+
 // secondary-action-pill
 .option-secondary-action
   align-items center

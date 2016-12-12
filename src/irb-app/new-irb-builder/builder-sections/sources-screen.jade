@@ -1,0 +1,6 @@
+include ./mixins.jade
+
+.builder-screen.sources
+  ul.screen-options-list
+    for source in $helpers.SOURCES
+      +generic-options-list-item(source.name, {onclick: () => $helpers.clickedSource(source)})

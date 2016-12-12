@@ -1,5 +1,10 @@
 include ../mixins.jade
 
+mixin generic-options-list-item(label, options)
+  li.list-option(onclick= options.onclick)
+    +screen-option(label)
+    +small-caret-icon()
+
 mixin secondary-action-pill(label, options)
   .option-secondary-action.pill(onclick=options.onclick)
     span.secondary-label= label

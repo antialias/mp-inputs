@@ -51,26 +51,6 @@ class ControlComponent extends Component {
   }
 }
 
-export class AddControl extends ControlComponent {
-  get elementClass() {
-    return `verb`;
-  }
-
-  get isRemoveable() {
-    return false;
-  }
-
-  isPaneOpen() {
-    return !!this.state.builderPane.screens.length &&
-      this.app.isAddingClause(this.section);
-  }
-
-  openPane() {
-    this.app.stopEditingClause();
-    this.app.startAddingClause(this.section);
-  }
-}
-
 export class EditControl extends ControlComponent {
   shouldUpdate(state) {
     return !!state.report.sections.getClause(this.section, this.clauseIndex);

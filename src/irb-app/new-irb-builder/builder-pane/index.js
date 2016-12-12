@@ -11,10 +11,11 @@ import {
 } from '../../../util';
 
 import template from './index.jade';
+import contextualTemplate from './contextual-screen.jade';
 import eventsTemplate from './events-screen.jade';
 import groupPropertiesTemplate from './group-properties-screen.jade';
 import numericPropertiesTemplate from './numeric-properties-screen.jade';
-import generalOptionsTemplate from './general-options-screen.jade';
+import sourcesTemplate from './sources-screen.jade';
 
 import './index.styl';
 
@@ -143,20 +144,14 @@ class BuilderScreenBase extends Component {
 }
 
 const SOURCES = [
-  {
-    name: `Event`,
-    resourceType: `events`,
-  },
-  {
-    name: `People`,
-    resourceType: `people`,
-  },
+  {name: `Event`, resourceType: `events`},
+  {name: `People`, resourceType: `people`},
 ];
 
 document.registerElement(`builder-screen-sources`, class extends BuilderScreenBase {
   get config() {
     return {
-      template: generalOptionsTemplate,
+      template: sourcesTemplate,
       helpers: extend(super.config.helpers, {
         SOURCES,
         clickedSource: source => {
@@ -166,7 +161,6 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
             this.nextScreen(`builder-screen-${resourceType}`);
           }
         },
-        getOptions: () => SOURCES,
       }),
     };
   }
@@ -182,9 +176,9 @@ const CONTEXTUAL_OPTIONS = {
 document.registerElement(`builder-screen-contextual`, class extends BuilderScreenBase {
   get config() {
     return {
-      template: generalOptionsTemplate,
+      template: contextualTemplate,
       helpers: extend(super.config.helpers, {
-        clickedSource: option => {
+        clickedOption: option => {
           // We are currently only allowing event show clauses to be added
           if (option.clauseType === ShowClause.TYPE) {
             this.app.stopEditingClause();
@@ -192,7 +186,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
             this.nextScreen(`builder-screen-events`);
           }
         },
-        getOptions: () => {
+        getContextOptions: () => {
           const firstShowClause = this.state.report.sections.show.clauses[0];
           switch (firstShowClause.resourceType) {
             case `all`:
