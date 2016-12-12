@@ -5,6 +5,7 @@ import './index.styl';
 
 import './builder-sections';
 import './builder-show';
+import './builder-group';
 
 document.registerElement(`new-irb-builder`, class extends Component {
   get config() {

@@ -1,6 +1,6 @@
 import { Component } from 'panel';
 
-import { ShowClause } from '../../../models/clause';
+import { Clause, ShowClause } from '../../../models/clause';
 import {
   extend,
   replaceByIndex,
@@ -12,7 +12,8 @@ import {
 import template from './index.jade';
 import eventsTemplate from './events-screen.jade';
 import sourcesTemplate from './sources-screen.jade';
-import propertiesTemplate from './properties-screen.jade';
+import groupPropertiesTemplate from './group-properties-screen.jade';
+import numericPropertiesTemplate from './numeric-properties-screen.jade';
 
 import './index.styl';
 
@@ -162,68 +163,93 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
         clickedEventProperties: (ev, value) => {
           ev.stopPropagation();
           this.updateStageClause({value}, {shouldCommit: true});
-          this.nextScreen(`builder-screen-properties`);
+          this.nextScreen(`builder-screen-numeric-properties`);
         },
       }),
     };
   }
 });
 
-document.registerElement(`builder-screen-properties`, class extends BuilderScreenBase {
+class BuilderScreenProperties extends BuilderScreenBase {
   get config() {
     return {
-      template: propertiesTemplate,
       helpers: extend(super.config.helpers, {
         getProperties: () => {
-          const stageClause = this.app.activeStageClause;
-          const mpEvent = stageClause && stageClause.value && stageClause.value.name;
-          let topProperties = this.state.topEventPropertiesByEvent[mpEvent];
-          let updateBuilderSize = false;
+          const properties = this.properties;
 
-          if (!topProperties) {
-            topProperties = [];
-
-            if (mpEvent === ShowClause.TOP_EVENTS.name || mpEvent === ShowClause.ALL_EVENTS.name) {
-              topProperties = this.state.topEventProperties;
-            } else if (mpEvent) {
-              this.app.getTopPropertiesForEvent(mpEvent);
-              this.loading = true;
-            }
-          } else if (this.loading) {
-            this.loading = false;
-            updateBuilderSize = true;
-          }
-
-          topProperties = sorted(topProperties, {
-            transform: prop => renameProperty(prop.name).toLowerCase(),
-          });
-
-          if (!this.showingNonNumericProperties) {
-            topProperties = topProperties.filter(prop => prop.type === `number`);
-          }
-
-          if (this.numProperties !== topProperties.length) {
-            this.numProperties = topProperties.length;
-            updateBuilderSize = true;
-          }
-
-          if (updateBuilderSize) {
+          if (this.numProperties !== (properties && properties.length)) {
+            this.numProperties = properties.length;
             this.updateScreensRenderedSize({
               cancelDuringTransition: true,
             });
           }
 
-          return topProperties;
+          return properties || [];
         },
-        clickedProperty: property => {
-          this.updateStageClause({property}, {shouldCommit: true, shouldStopEditing: true});
-        },
-        toggleNonNumericProperties: () =>
-          this.app.updateBuilderCurrentScreen({
-            showingNonNumericProperties: !this.showingNonNumericProperties,
-          }),
       }),
     };
+  }
+
+  get properties() {
+    throw `Not implemented!`;
+  }
+
+  get loading() {
+    throw `Not implemented!`;
+  }
+
+  updateStageClause(update) {
+    super.updateStageClause(update, {
+      shouldCommit: true,
+      shouldStopEditing: true,
+    });
+  }
+}
+
+document.registerElement(`builder-screen-numeric-properties`, class extends BuilderScreenProperties {
+  get config() {
+    return {
+      template: numericPropertiesTemplate,
+      helpers: extend(super.config.helpers, {
+        toggleNonNumericProperties: () => this.app.updateBuilderCurrentScreen({
+          showingNonNumericProperties: !this.showingNonNumericProperties,
+        }),
+        clickedProperty: property => this.updateStageClause({property}),
+      }),
+    };
+  }
+
+  get event() {
+    const stageClause = this.app.activeStageClause;
+    return stageClause && stageClause.value && stageClause.value.name;
+  }
+
+  get properties() {
+    let properties = this.state.topEventPropertiesByEvent[this.event];
+
+    if (!properties) {
+      if (this.event === ShowClause.TOP_EVENTS.name || this.event === ShowClause.ALL_EVENTS.name) {
+        properties = this.state.topEventProperties;
+      } else if (this.event) {
+        this.app.getTopPropertiesForEvent(this.event);
+      }
+    }
+
+    if (properties) {
+      properties = sorted(properties, {
+        transform: prop => renameProperty(prop.name).toLowerCase(),
+      });
+
+      if (!this.showingNonNumericProperties) {
+        properties = properties.filter(prop => prop.type === `number`);
+      }
+    }
+
+    return properties;
+  }
+
+  get loading() {
+    return !this.state.topEventPropertiesByEvent.hasOwnProperty(this.event);
   }
 
   get showingNonNumericProperties() {
@@ -232,3 +258,42 @@ document.registerElement(`builder-screen-properties`, class extends BuilderScree
   }
 });
 
+document.registerElement(`builder-screen-group-properties`, class extends BuilderScreenProperties {
+  get config() {
+    return {
+      template: groupPropertiesTemplate,
+      helpers: extend(super.config.helpers, {
+        RESOURCE_TYPES: Clause.RESOURCE_TYPES,
+        selectResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
+        clickedProperty: value => this.updateStageClause({value}),
+      }),
+    };
+  }
+
+  get resourceType() {
+    const screen = this.app.getBuilderCurrentScreen();
+    return (screen && screen.resourceType) || Clause.RESOURCE_TYPE_ALL;
+  }
+
+  get properties() {
+    switch (this.resourceType) {
+      case Clause.RESOURCE_TYPE_ALL:
+        return this.state.topEventProperties.concat(this.state.topPeopleProperties);
+      case Clause.RESOURCE_TYPE_EVENTS:
+        return this.state.topEventProperties;
+      case Clause.RESOURCE_TYPE_PEOPLE:
+        return this.state.topPeopleProperties;
+    }
+  }
+
+  get loading() {
+    switch (this.resourceType) {
+      case Clause.RESOURCE_TYPE_ALL:
+        return !(this.state.topEventProperties.length || this.state.topPeopleProperties.length);
+      case Clause.RESOURCE_TYPE_EVENTS:
+        return !this.state.topEventProperties.length;
+      case Clause.RESOURCE_TYPE_PEOPLE:
+        return !this.state.topPeopleProperties.length;
+    }
+  }
+});

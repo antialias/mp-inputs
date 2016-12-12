@@ -1,0 +1,19 @@
+.section.builder-group
+  if !report.sections.group.clauses.length
+    .clause.group
+      h3
+      .control-container= $component.child('builder-group-add-control')
+  else
+    for clause, clauseIndex in report.sections.group.clauses
+      .preposition= clauseIndex ? 'and' : 'by'
+      .clause.group
+        .clause-header
+          .header-controls
+            if clauseIndex > 0
+              button.reorder.reorder-left(onclick=() => $helpers.moveClause(clauseIndex, -1)) ‹
+            h3= 'Group' + (report.sections.group.clauses.length === 1 ? '' : ' ' + (clauseIndex + 1))
+            if clauseIndex < report.sections.group.clauses.length - 1
+              button.reorder.reorder-right(onclick=() => $helpers.moveClause(clauseIndex, 1)) ›
+        .control-container= $component.child('builder-group-edit-control', {attributes: {'clause-index': clauseIndex}})
+        if clauseIndex + 1 === report.sections.group.clauses.length && report.sections.group.clauses.length < 10
+          .control-container= $component.child('builder-group-add-control')

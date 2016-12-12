@@ -1,0 +1,16 @@
+include ./mixins.jade
+
+- const selectedResourceType = $component.resourceType;
+- const formatResourceType = type => type === `events` ? `event` : type;
+
+.builder-screen.properties
+  +screen-title(`Group by a property`, {backButton: $helpers.screenIdx() > 1})
+  .resource-type-control
+    .resource-type-tabs
+      for resourceType in $helpers.RESOURCE_TYPES
+        button.tab(
+          class=selectedResourceType === resourceType ? 'selected' : '',
+          onclick=() => $helpers.selectResourceType(resourceType)
+        )= formatResourceType(resourceType)
+    .resource-type-label= `${formatResourceType(selectedResourceType)} properties`
+  +property-list()

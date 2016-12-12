@@ -24,6 +24,15 @@ export function getTextWidth(text, font) {
   return context.measureText(text).width;
 }
 
+const PROPERTY_TYPE_ICON_MAP = {
+  string: `text`,
+  datetime: `date`,
+  object: `list`,
+};
+export function getIconForPropertyType(type) {
+  return type === `unknown` ? null : `type-${PROPERTY_TYPE_ICON_MAP[type] || type}`;
+}
+
 // TODO(chi): move to mixpanel-common
 export function mapObjectKeys(obj, callback) {
   const newObj = {};

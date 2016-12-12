@@ -1,0 +1,9 @@
+include ./mixins.jade
+
+.builder-screen.properties
+  +screen-title(`Properties of ${$component.event}`, {backButton: $helpers.screenIdx() > 1})
+  +property-list()
+  if !$component.loading
+    +screen-footer-button(($component.showingNonNumericProperties ? `Hide` : `View all`) + ` non-numeric properties`, {
+      onclick: $helpers.toggleNonNumericProperties
+    })

@@ -29,3 +29,15 @@ mixin screen-title(title, options)
 mixin screen-footer-button(label, options)
   - options = options || {}
   button.screen-footer(onclick=options.onclick)= label
+
+mixin property-list()
+  - const properties = $helpers.getProperties();
+  ul.screen-options-list
+    if properties.length
+      for property in properties
+        li.list-option(onclick=() => $helpers.clickedProperty(property))
+          +screen-option(util.renameProperty(property.name), {
+            icon: util.getIconForPropertyType(property.type)
+          })
+    else if !$component.loading
+      li.list-option.list-empty no properties available

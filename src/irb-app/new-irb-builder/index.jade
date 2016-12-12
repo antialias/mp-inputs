@@ -2,6 +2,7 @@
   if projectHasEvents
     .query
       .section-container= $component.child('query-builder-show')
+      .section-container= $component.child('query-builder-group')
     .reset-query(onclick=$helpers.reset title='Reset query')
       svg-icon(attributes={icon: 'x'})
   else

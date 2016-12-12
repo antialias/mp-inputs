@@ -72,6 +72,49 @@ transition-time = .25s
           &:hover .caret-icon
             visibility visible
 
+.resource-type-control
+  border-bottom 1px solid grey-150
+  padding 12px
+  padding-bottom 8px
+
+  .resource-type-tabs
+    .tab
+      border 1px solid grey-200
+      background grey-100
+      color grey-700
+      font-size 11px
+      font-weight 600
+      padding 8px
+      text-transform capitalize
+      width 33.33%
+
+      &:first-child
+        border-radius 5px 0 0 5px
+
+      &:last-child
+        border-radius 0 5px 5px 0
+
+      &:not(:last-child)
+        border-right none
+
+      &:hover:not(.selected)
+        background-color blue-700
+        border-color blue-700
+        color white
+
+        & + .tab
+          border-left-color blue-700
+
+      &.selected
+        background white
+
+  .resource-type-label
+    color grey-700
+    font-size 11px
+    font-weight 600
+    margin-top 12px
+    text-transform uppercase
+
 /* Builder Jade Mixins */
 // secondary-action-pill
 .option-secondary-action

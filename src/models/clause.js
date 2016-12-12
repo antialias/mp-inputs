@@ -56,7 +56,14 @@ export class Clause {
     return newClause;
   }
 }
-Clause.RESOURCE_TYPES = Clause.prototype.RESOURCE_TYPES = [`all`, `events`, `people`];
+Clause.RESOURCE_TYPE_ALL = Clause.prototype.RESOURCE_TYPES = `all`;
+Clause.RESOURCE_TYPE_EVENTS = Clause.prototype.RESOURCE_TYPES = `events`;
+Clause.RESOURCE_TYPE_PEOPLE = Clause.prototype.RESOURCE_TYPES = `people`;
+Clause.RESOURCE_TYPES = Clause.prototype.RESOURCE_TYPES = [
+  Clause.RESOURCE_TYPE_ALL,
+  Clause.RESOURCE_TYPE_EVENTS,
+  Clause.RESOURCE_TYPE_PEOPLE,
+];
 
 export class EventsPropertiesClause extends Clause {
   constructor(attrs={}) {
