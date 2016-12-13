@@ -2,9 +2,10 @@
 import cloneDeep from 'lodash/cloneDeep';
 import { nestedObjectDepth, objectFromPairs } from 'mixpanel-common/util';
 
+import { ShowClause } from './models/clause';
+
 export * from 'mixpanel-common/util';
 export * from 'mixpanel-common/report/util';
-
 
 const MS_IN_HOUR = 60 * 60 * 1000;
 const MS_IN_DAY = MS_IN_HOUR * 24;
@@ -24,13 +25,30 @@ export function getTextWidth(text, font) {
   return context.measureText(text).width;
 }
 
+export function getIconForEvent(mpEvent) {
+  if (mpEvent.name === ShowClause.TOP_EVENTS.name ||
+      mpEvent.name === ShowClause.ALL_EVENTS.name
+  ) {
+    return `star-top-events`;
+  } else if (mpEvent.custom) {
+    return `custom-events`;
+  } else {
+    return `event`;
+  }
+}
+
 const PROPERTY_TYPE_ICON_MAP = {
   string: `text`,
   datetime: `date`,
   object: `list`,
 };
-export function getIconForPropertyType(type) {
-  return type === `unknown` ? null : `type-${PROPERTY_TYPE_ICON_MAP[type] || type}`;
+export function getIconForProperty(property) {
+  const type = property && property.type;
+  if (type && type !== `unknown`) {
+    return `type-${PROPERTY_TYPE_ICON_MAP[type] || type}`;
+  } else {
+    return null;
+  }
 }
 
 // TODO(chi): move to mixpanel-common

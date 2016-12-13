@@ -33,7 +33,7 @@ mixin property-list(properties, options)
       for property in properties
         li.list-option(onclick=() => options.clickedProperty(property))
           +screen-option(util.renameProperty(property.name), {
-            icon: util.getIconForPropertyType(property.type)
+            icon: util.getIconForProperty(property)
           })
     else if !options.loading
       li.list-option.list-empty no properties available

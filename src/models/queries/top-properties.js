@@ -1,4 +1,5 @@
-import { extend } from 'mixpanel-common/util';
+import { extend, sorted } from 'mixpanel-common/util';
+import { renameProperty } from 'mixpanel-common/report/util';
 
 import BaseQuery from './base';
 
@@ -7,13 +8,15 @@ class BaseTopPropertiesQuery extends BaseQuery {
     return {limit: 255};
   }
 
-  processResults(properties) {
-    return Object.keys(properties)
-      .sort((a, b) => properties[b].count - properties[a].count)
-      .map(name => {
-        const { count, type } = properties[name];
-        return {count, type, name, resourceType: this.resourceType};
-      });
+  processResults(results) {
+    const properties = Object.keys(results).map(name => {
+      const { count, type } = results[name];
+      return {count, type, name, resourceType: this.resourceType};
+    });
+
+    return sorted(properties, {
+      transform: prop => renameProperty(prop.name).toLowerCase(),
+    });
   }
 }
 

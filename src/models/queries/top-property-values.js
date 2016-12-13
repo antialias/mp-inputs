@@ -1,3 +1,5 @@
+import { sorted } from 'mixpanel-common/util';
+
 import BaseQuery from './base';
 
 class BasePropertyValuesQuery extends BaseQuery {
@@ -30,6 +32,8 @@ export class TopPeoplePropertyValuesQuery extends BasePropertyValuesQuery {
   }
 
   processResults(results) {
-    return results.results;
+    return sorted(results.results, {
+      transform: value => value.toLowerCase(),
+    });
   }
 }

@@ -3,13 +3,7 @@
 import { Component } from 'panel';
 
 import { Clause, ShowClause } from '../../../models/clause';
-import {
-  extend,
-  replaceByIndex,
-  renameEvent,
-  renameProperty,
-  sorted,
-} from '../../../util';
+import { extend, replaceByIndex } from '../../../util';
 
 import template from './index.jade';
 import eventsTemplate from './events-screen.jade';
@@ -191,11 +185,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
   }
 
   buildList() {
-    const topEvents = sorted(this.state.topEvents, {
-      transform: ev => renameEvent(ev.name).toLowerCase(),
-    }).map(ev => extend(ev, {icon: ev.custom ? `custom-events` : `event`}));
-    const specialEvents = [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS].map(ev => extend(ev, {icon: `star-top-events`}));
-    return specialEvents.concat(topEvents);
+    return [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS].concat(this.state.topEvents);
   }
 });
 
@@ -268,14 +258,8 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
       }
     }
 
-    if (properties) {
-      properties = sorted(properties, {
-        transform: prop => renameProperty(prop.name).toLowerCase(),
-      });
-
-      if (!this.isShowingNonNumericProperties()) {
-        properties = properties.filter(prop => prop.type === `number`);
-      }
+    if (!this.isShowingNonNumericProperties()) {
+      properties = properties && properties.filter(prop => prop.type === `number`);
     }
 
     return properties;

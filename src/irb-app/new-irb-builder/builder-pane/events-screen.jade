@@ -5,5 +5,9 @@ include ./mixins.jade
   ul.screen-options-list(onscroll=$helpers.scrolledList)
     each mpEvent in $helpers.getEvents()
       li.list-option(onclick=() => $helpers.clickedEvent(mpEvent))
-        +screen-option(util.renameEvent(mpEvent.name), {icon: mpEvent.icon})
-        +secondary-action-pill('Properties', {onclick: ev => $helpers.clickedEventProperties(ev, mpEvent)})
+        +screen-option(util.renameEvent(mpEvent.name), {
+          icon: util.getIconForEvent(mpEvent)
+        })
+        +secondary-action-pill('Properties', {
+          onclick: ev => $helpers.clickedEventProperties(ev, mpEvent)
+        })
