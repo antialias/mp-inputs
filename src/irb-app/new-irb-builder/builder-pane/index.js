@@ -180,7 +180,7 @@ class BuilderScreenProperties extends BuilderScreenBase {
           const properties = this.properties;
 
           if (this.numProperties !== (properties && properties.length)) {
-            this.numProperties = properties.length;
+            this.numProperties = properties && properties.length;
             this.updateScreensRenderedSize({
               cancelDuringTransition: true,
             });
