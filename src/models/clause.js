@@ -144,7 +144,7 @@ export class GroupClause extends EventsPropertiesClause {
     return extend(super.attrs, {filterType: this.filterType});
   }
 }
-GroupClause.prototype.TYPE = `group`;
+GroupClause.TYPE = GroupClause.prototype.TYPE = `group`;
 GroupClause.FILTER_TYPES = GroupClause.prototype.FILTER_TYPES = PROPERTY_TYPES;
 
 // Time constants

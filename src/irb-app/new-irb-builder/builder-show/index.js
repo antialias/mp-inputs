@@ -5,10 +5,9 @@ import {
   renameProperty,
 } from '../../../util';
 
-import { AddControl, EditControl } from '../controls';
+import { EditControl } from '../controls';
 
 import template from './index.jade';
-import './index.styl';
 
 document.registerElement(`query-builder-show`, class extends Component {
   get config() {
@@ -63,22 +62,5 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
 
   remove() {
     this.app.updateClause(this.section, this.clauseIndex, {property: null});
-  }
-});
-
-document.registerElement(`builder-add-contextual`, class extends AddControl {
-  clickAdd() {
-    if (!this.isPaneOpen()) {
-      this.app.startBuilderOnScreen(`builder-screen-contextual`);
-    }
-    this.app.updateBuilder({isContextualMenuOpen: !this.isPaneOpen()});
-  }
-
-  isPaneOpen() {
-    return this.state.builderPane.screens.length && this.state.builderPane.isContextualMenuOpen;
-  }
-
-  get elementClasses() {
-    return [`contextual-menu`];
   }
 });

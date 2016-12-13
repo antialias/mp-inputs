@@ -2,7 +2,7 @@
 
 import { Component } from 'panel';
 
-import { Clause, ShowClause } from '../../../models/clause';
+import { Clause, GroupClause, ShowClause } from '../../../models/clause';
 import {
   extend,
   renameEvent,
@@ -179,11 +179,17 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
       template: contextualTemplate,
       helpers: extend(super.config.helpers, {
         clickedOption: option => {
-          // We are currently only allowing event show clauses to be added
-          if (option.clauseType === ShowClause.TYPE) {
-            this.app.stopEditingClause();
-            this.app.startAddingClause(option.clauseType);
-            this.nextScreen(`builder-screen-events`);
+          switch (option.clauseType) {
+            case ShowClause.TYPE:
+              this.app.stopEditingClause();
+              this.app.startAddingClause(option.clauseType);
+              this.nextScreen(`builder-screen-events`);
+              break;
+            case GroupClause.TYPE:
+              this.app.stopEditingClause();
+              this.app.startAddingClause(option.clauseType);
+              this.nextScreen(`builder-screen-group-properties`);
+              break;
           }
         },
         getContextOptions: () => {

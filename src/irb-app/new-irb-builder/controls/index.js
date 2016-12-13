@@ -55,7 +55,12 @@ export class AddControl extends Component {
   get config() {
     return {
       helpers: extend(super.config.helpers, {
-        clickAdd: () => this.clickAdd(),
+        clickAdd: () => {
+          if (!this.isPaneOpen()) {
+            this.clickAdd();
+          }
+          this.app.updateBuilder({isContextualMenuOpen: !this.isPaneOpen()});
+        },
         isPaneOpen: () => this.isPaneOpen(),
         getElementClasses: () => this.elementClasses,
         getPreposition: () => {

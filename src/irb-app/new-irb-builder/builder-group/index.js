@@ -7,7 +7,6 @@ import { renameProperty } from '../../../util';
 import { AddControl, EditControl } from '../controls';
 
 import template from './index.jade';
-import './index.styl';
 
 document.registerElement(`query-builder-group`, class extends Component {
   get config() {
@@ -20,23 +19,25 @@ document.registerElement(`query-builder-group`, class extends Component {
   }
 });
 
-// controls
-document.registerElement(`builder-group-add-control`, class extends AddControl {
-  get section() {
-    return `group`;
+document.registerElement(`query-builder-add-contextual`, class extends AddControl {
+  clickAdd() {
+    this.app.startBuilderOnScreen(`builder-screen-contextual`);
   }
 
-  get label() {
-    return ``;
+  isPaneOpen() {
+    return this.state.builderPane.screens.length && this.state.builderPane.isContextualMenuOpen;
   }
 
-  openPane() {
-    super.openPane();
-    this.app.startBuilderOnScreen(`builder-screen-group-properties`);
+  get elementClasses() {
+    return [`contextual-menu`];
   }
 });
 
 document.registerElement(`builder-group-edit-control`, class extends EditControl {
+  isRemovable() {
+    return true;
+  }
+
   get section() {
     return `group`;
   }

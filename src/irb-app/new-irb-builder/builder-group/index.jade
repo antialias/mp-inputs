@@ -1,23 +1,20 @@
 include ../mixins.jade
+- const groupClauses = report.sections.group.clauses
+- const lenGroupClauses = groupClauses.length
 
-.section.builder-group
-  if !report.sections.group.clauses.length
-    .clause.group
-      h3
-      .control-container= $component.child('builder-group-add-control')
-  else
-    for clause, clauseIndex in report.sections.group.clauses
-      .preposition= clauseIndex ? 'and' : 'by'
-      .clause.group
-        .clause-header
-          .header-controls
-            if clauseIndex > 0
-              button.reorder.reorder-left(onclick=() => $helpers.moveClause(clauseIndex, -1))
-                +small-caret-icon({direction: 'left'})
-            h3= 'Group' + (report.sections.group.clauses.length === 1 ? '' : ' ' + (clauseIndex + 1))
-            if clauseIndex < report.sections.group.clauses.length - 1
-              button.reorder.reorder-right(onclick=() => $helpers.moveClause(clauseIndex, 1))
-                +small-caret-icon({direction: 'right'})
-        .control-container= $component.child('builder-group-edit-control', {attributes: {'clause-index': clauseIndex}})
-        if clauseIndex + 1 === report.sections.group.clauses.length && report.sections.group.clauses.length < 10
-          .control-container= $component.child('builder-group-add-control')
+.builder-section.builder-group
+  for clause, clauseIdx in groupClauses
+    .builder-container
+      .clause-header
+        if clauseIdx > 0
+          button.reorder.reorder-left(onclick=() => $helpers.moveClause(clauseIdx, -1))
+            +small-caret-icon({direction: 'left'})
+        .preposition= clauseIdx ? 'and' : 'by'
+        .header-label= 'Group' + (lenGroupClauses === 1 ? '' : ' ' + (clauseIdx + 1))
+        if clauseIdx < lenGroupClauses - 1
+          button.reorder.reorder-right(onclick=() => $helpers.moveClause(clauseIdx, 1))
+            +small-caret-icon({direction: 'right'})
+      .control-container= $component.child('builder-group-edit-control', {attributes: {'clause-index': clauseIdx}})
+  if lenGroupClauses < 10
+    .builder-container
+      .control-container= $component.child('query-builder-add-contextual')

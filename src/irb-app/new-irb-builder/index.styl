@@ -6,6 +6,57 @@
   padding 34px 36px 18px 36px
   position relative
 
+  .query,
+  .section-container,
+  .builder-container,
+  .builder-section,
+  .clause-header
+    display flex
+
+  .section-container, .builder-container
+    flex-direction column
+    justify-content flex-end
+
+  .builder-container
+    margin-bottom 18px
+    margin-right 12px
+
+  .clause-header
+    display flex
+    align-items flex-end
+    color grey-300
+    font-size 12px
+    font-weight 500
+    line-height 15px
+    margin-bottom 8px
+    text-transform uppercase
+
+    .preposition:after
+      content '\00a0'
+      display inline-block
+
+    button.reorder
+      background none
+      border none
+      padding 0
+      opacity 0
+      transition opacity 0.2s
+      svg-icon-style(grey-300, grey-500, pos-top: 3px)
+
+      &.reorder-left
+        margin-left -16px
+
+    &:hover button.reorder
+      opacity 1
+
+  .clause-langauge
+    color grey-300
+    line-height 36px
+
+  .section.disabled
+    opacity 0.3
+    pointer-events none
+
   .reset-query
     cursor pointer
     position absolute
@@ -29,3 +80,8 @@
     display flex
     justify-content center
     margin 20px 0
+
+/* Builder Jade Mixins */
+// small-caret-icon
+.small-caret
+  svg-icon-style(size: 16px)
