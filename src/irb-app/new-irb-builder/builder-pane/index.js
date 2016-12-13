@@ -233,7 +233,7 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
       if (this.event === ShowClause.TOP_EVENTS.name || this.event === ShowClause.ALL_EVENTS.name) {
         properties = this.state.topEventProperties;
       } else if (this.event) {
-        this.app.getTopPropertiesForEvent(this.event);
+        this.app.fetchTopPropertiesForEvent(this.event);
       }
     }
 
