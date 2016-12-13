@@ -29,6 +29,6 @@ ul.chart-toggle(class={
               class={selected: selectedPlotStyle == plotStyle}
               onclick=() => $helpers.onStyleClick(chartType, plotStyle)
             )
-              - const icon = `${chartType}${plotStyle === `standard` ? `` : `-${plotStyle}`}`
-              svg-icon(attributes={icon})
+              - const iconPlotStyle = plotStyle === `standard` ? `` : `-${plotStyle}`;
+              svg-icon(attributes={icon: chartType + iconPlotStyle})
               = $helpers.formattedChartName(chartType, plotStyle)
