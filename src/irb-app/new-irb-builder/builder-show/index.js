@@ -48,7 +48,7 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
 
   get label() {
     const clause = this.state.report.sections.getClause(`show`, this.clauseIndex);
-    return renameProperty(clause.property.name);
+    return clause && clause.property ? renameProperty(clause.property.name) : ``;
   }
 
   isPaneOpen() {
