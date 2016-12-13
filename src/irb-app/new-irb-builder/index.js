@@ -3,7 +3,7 @@ import { Component } from 'panel';
 import template from './index.jade';
 import './index.styl';
 
-import './builder-sections';
+import './builder-pane';
 import './builder-show';
 import './builder-group';
 
