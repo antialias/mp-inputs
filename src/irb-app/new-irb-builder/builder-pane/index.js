@@ -126,14 +126,14 @@ class BuilderScreenBase extends Component {
   }
 
   increaseProgressiveListSize() {
-    if (this.progressiveListSize < (this.buildList() || []).length) {
+    if (this.progressiveListSize < this.buildList().length) {
       const progressiveListSize = this.progressiveListSize * 2;
       this.app.updateBuilderCurrentScreen({progressiveListSize});
     }
   }
 
   buildProgressiveList() {
-    return (this.buildList() || []).slice(0, this.progressiveListSize);
+    return this.buildList().slice(0, this.progressiveListSize);
   }
 }
 
@@ -195,21 +195,25 @@ class BuilderScreenProperties extends BuilderScreenBase {
       helpers: extend(super.config.helpers, {
         getProperties: () => {
           const properties = this.buildProgressiveList();
+          const isLoading = this.isLoading();
 
-          if (this.numProperties !== (properties && properties.length)) {
-            this.numProperties = properties && properties.length;
+          if (this.prevIsLoading !== isLoading ||
+              this.numProperties !== properties.length
+          ) {
+            this.prevIsLoading = isLoading;
+            this.numProperties = properties.length;
             this.updateScreensRenderedSize({
               cancelDuringTransition: true,
             });
           }
 
-          return properties || [];
+          return properties;
         },
       }),
     };
   }
 
-  get loading() {
+  isLoading() {
     throw `Not implemented!`;
   }
 
@@ -238,7 +242,7 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
     };
   }
 
-  get loading() {
+  isLoading() {
     return !this.state.topEventPropertiesByEvent.hasOwnProperty(this.event);
   }
 
@@ -262,7 +266,7 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
       properties = properties && properties.filter(prop => prop.type === `number`);
     }
 
-    return properties;
+    return properties || [];
   }
 
   isShowingNonNumericProperties() {
@@ -283,30 +287,24 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
     };
   }
 
-  get loading() {
-    switch (this.resourceType) {
-      case Clause.RESOURCE_TYPE_ALL:
-        return !(this.state.topEventProperties.length || this.state.topPeopleProperties.length);
-      case Clause.RESOURCE_TYPE_EVENTS:
-        return !this.state.topEventProperties.length;
-      case Clause.RESOURCE_TYPE_PEOPLE:
-        return !this.state.topPeopleProperties.length;
-    }
+  isLoading() {
+    return !!{
+      [Clause.RESOURCE_TYPE_ALL]: !(this.state.topEventProperties.length || this.state.topPeopleProperties.length),
+      [Clause.RESOURCE_TYPE_EVENTS]: !this.state.topEventProperties.length,
+      [Clause.RESOURCE_TYPE_PEOPLE]: !this.state.topPeopleProperties.length,
+    }[this.getResourceType()];
   }
 
-  get resourceType() {
+  getResourceType() {
     const screen = this.app.getBuilderCurrentScreen();
     return (screen && screen.resourceType) || Clause.RESOURCE_TYPE_ALL;
   }
 
   buildList() {
-    switch (this.resourceType) {
-      case Clause.RESOURCE_TYPE_ALL:
-        return this.state.topEventProperties.concat(this.state.topPeopleProperties);
-      case Clause.RESOURCE_TYPE_EVENTS:
-        return this.state.topEventProperties;
-      case Clause.RESOURCE_TYPE_PEOPLE:
-        return this.state.topPeopleProperties;
-    }
+    return {
+      [Clause.RESOURCE_TYPE_ALL]: this.state.topEventProperties.concat(this.state.topPeopleProperties),
+      [Clause.RESOURCE_TYPE_EVENTS]: this.state.topEventProperties,
+      [Clause.RESOURCE_TYPE_PEOPLE]: this.state.topPeopleProperties,
+    }[this.getResourceType()] || [];
   }
 });

@@ -1,7 +1,7 @@
 include ./mixins.jade
 
 - const properties = $helpers.getProperties();
-- const selectedResourceType = $component.resourceType;
+- const selectedResourceType = $component.getResourceType();
 - const formatResourceType = type => type === `events` ? `event` : type;
 
 .builder-screen.properties
@@ -17,5 +17,5 @@ include ./mixins.jade
   +property-list(properties, {
     clickedProperty: $helpers.clickedProperty,
     scrolledList: $helpers.scrolledList,
-    loading: $component.loading
+    loading: $component.isLoading()
   })
