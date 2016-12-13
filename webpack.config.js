@@ -96,7 +96,7 @@ if (process.env.NODE_ENV === 'development') {
         platformScriptUrl: 'https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js?a=1',
         platformStyleUrl: 'https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.css?a=1',
       }),
-      //new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
+      new webpack.optimize.UglifyJsPlugin({compress: {warnings: false}}),
     ]),
     eslint: {
       failOnWarning: false,
