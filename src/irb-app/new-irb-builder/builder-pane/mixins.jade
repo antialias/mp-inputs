@@ -28,7 +28,7 @@ mixin screen-footer-button(label, options)
   button.screen-footer(onclick=options.onclick)= label
 
 mixin property-list(properties, options)
-  ul.screen-options-list
+  ul.screen-options-list(onscroll=options.scrolledList)
     if properties.length
       for property in properties
         li.list-option(onclick=() => options.clickedProperty(property))

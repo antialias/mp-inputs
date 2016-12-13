@@ -27,6 +27,9 @@ document.registerElement(`builder-pane`, class extends Component {
   }
 });
 
+const PROGRESSIVE_LIST_BUFFER_PX = 50;
+const PROGRESSIVE_LIST_START_SIZE = 20;
+
 class BuilderScreenBase extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
@@ -39,6 +42,12 @@ class BuilderScreenBase extends Component {
         clickedBackButton: () => this.previousScreen(),
         closePane: () => this.app.stopEditingClause(),
         screenIdx: () => this.screenIdx,
+        scrolledList: ev => {
+          const scrollBottom = ev.target.scrollTop + ev.target.offsetHeight;
+          if (scrollBottom + PROGRESSIVE_LIST_BUFFER_PX >= ev.target.scrollHeight) {
+            this.increaseProgressiveListSize();
+          }
+        },
       },
     };
   }
@@ -116,6 +125,22 @@ class BuilderScreenBase extends Component {
   get screenIdx() {
     return Number(this.getAttribute(`screen-index`));
   }
+
+  get progressiveListSize() {
+    const screen = this.app.getBuilderCurrentScreen();
+    return (screen && screen.progressiveListSize) || PROGRESSIVE_LIST_START_SIZE;
+  }
+
+  increaseProgressiveListSize() {
+    if (this.progressiveListSize < (this.buildList() || []).length) {
+      const progressiveListSize = this.progressiveListSize * 2;
+      this.app.updateBuilderCurrentScreen({progressiveListSize});
+    }
+  }
+
+  buildProgressiveList() {
+    return (this.buildList() || []).slice(0, this.progressiveListSize);
+  }
 }
 
 const SOURCES = [
@@ -152,13 +177,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
     return {
       template: eventsTemplate,
       helpers: extend(super.config.helpers, {
-        getEvents: () => {
-          const topEvents = sorted(this.state.topEvents, {
-            transform: ev => renameEvent(ev.name).toLowerCase(),
-          }).map(ev => extend(ev, {icon: ev.custom ? `custom-events` : `event`}));
-          const specialEvents = [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS].map(ev => extend(ev, {icon: `star-top-events`}));
-          return specialEvents.concat(topEvents);
-        },
+        getEvents: () => this.buildProgressiveList(),
         clickedEvent: value => {
           this.updateStageClause({value}, {shouldCommit: true, shouldStopEditing: true});
         },
@@ -170,6 +189,14 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
       }),
     };
   }
+
+  buildList() {
+    const topEvents = sorted(this.state.topEvents, {
+      transform: ev => renameEvent(ev.name).toLowerCase(),
+    }).map(ev => extend(ev, {icon: ev.custom ? `custom-events` : `event`}));
+    const specialEvents = [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS].map(ev => extend(ev, {icon: `star-top-events`}));
+    return specialEvents.concat(topEvents);
+  }
 });
 
 class BuilderScreenProperties extends BuilderScreenBase {
@@ -177,7 +204,7 @@ class BuilderScreenProperties extends BuilderScreenBase {
     return {
       helpers: extend(super.config.helpers, {
         getProperties: () => {
-          const properties = this.properties;
+          const properties = this.buildProgressiveList();
 
           if (this.numProperties !== (properties && properties.length)) {
             this.numProperties = properties && properties.length;
@@ -192,11 +219,11 @@ class BuilderScreenProperties extends BuilderScreenBase {
     };
   }
 
-  get properties() {
+  get loading() {
     throw `Not implemented!`;
   }
 
-  get loading() {
+  buildList() {
     throw `Not implemented!`;
   }
 
@@ -221,12 +248,16 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
     };
   }
 
+  get loading() {
+    return !this.state.topEventPropertiesByEvent.hasOwnProperty(this.event);
+  }
+
   get event() {
     const stageClause = this.app.activeStageClause;
     return stageClause && stageClause.value && stageClause.value.name;
   }
 
-  get properties() {
+  buildList() {
     let properties = this.state.topEventPropertiesByEvent[this.event];
 
     if (!properties) {
@@ -250,10 +281,6 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
     return properties;
   }
 
-  get loading() {
-    return !this.state.topEventPropertiesByEvent.hasOwnProperty(this.event);
-  }
-
   isShowingNonNumericProperties() {
     const screen = this.app.getBuilderCurrentScreen();
     return screen && !!screen.showingNonNumericProperties;
@@ -272,22 +299,6 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
     };
   }
 
-  get resourceType() {
-    const screen = this.app.getBuilderCurrentScreen();
-    return (screen && screen.resourceType) || Clause.RESOURCE_TYPE_ALL;
-  }
-
-  get properties() {
-    switch (this.resourceType) {
-      case Clause.RESOURCE_TYPE_ALL:
-        return this.state.topEventProperties.concat(this.state.topPeopleProperties);
-      case Clause.RESOURCE_TYPE_EVENTS:
-        return this.state.topEventProperties;
-      case Clause.RESOURCE_TYPE_PEOPLE:
-        return this.state.topPeopleProperties;
-    }
-  }
-
   get loading() {
     switch (this.resourceType) {
       case Clause.RESOURCE_TYPE_ALL:
@@ -296,6 +307,22 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
         return !this.state.topEventProperties.length;
       case Clause.RESOURCE_TYPE_PEOPLE:
         return !this.state.topPeopleProperties.length;
+    }
+  }
+
+  get resourceType() {
+    const screen = this.app.getBuilderCurrentScreen();
+    return (screen && screen.resourceType) || Clause.RESOURCE_TYPE_ALL;
+  }
+
+  buildList() {
+    switch (this.resourceType) {
+      case Clause.RESOURCE_TYPE_ALL:
+        return this.state.topEventProperties.concat(this.state.topPeopleProperties);
+      case Clause.RESOURCE_TYPE_EVENTS:
+        return this.state.topEventProperties;
+      case Clause.RESOURCE_TYPE_PEOPLE:
+        return this.state.topPeopleProperties;
     }
   }
 });
