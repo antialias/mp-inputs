@@ -98,7 +98,9 @@ if (process.env.NODE_ENV === 'development') {
       }),
       new webpack.optimize.UglifyJsPlugin({
         compress: {warnings: false},
-        mangle: {except: ['main']},
+        mangle: {except: [
+          'main', // JQL queries need to define 'main()'
+        ]},
       }),
     ]),
     eslint: {
