@@ -6,6 +6,7 @@ import {
 } from '../../../util';
 
 import { EditControl } from '../controls';
+import { ShowClause } from '../../../models/clause';
 
 import template from './index.jade';
 
@@ -26,7 +27,7 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
   }
 
   get section() {
-    return `show`;
+    return ShowClause.TYPE;
   }
 
   isPaneOpen() {
@@ -41,7 +42,7 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
 
 document.registerElement(`builder-numeric-property-edit-control`, class extends EditControl {
   get section() {
-    return `show`;
+    return ShowClause.TYPE;
   }
 
   get label() {

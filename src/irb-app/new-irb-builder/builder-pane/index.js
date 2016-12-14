@@ -169,8 +169,8 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
 
 const CONTEXTUAL_OPTIONS = {
   events: [
-    {name: `Group by a property`, clauseType: `group`},
-    {name: `Compare to an event`, clauseType: `show`},
+    {name: `Group by a property`, clauseType: GroupClause.TYPE},
+    {name: `Compare to an event`, clauseType: ShowClause.TYPE},
   ],
 };
 

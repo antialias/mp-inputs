@@ -8,7 +8,7 @@ include ../mixins.jade
       .clause-langauge.preposition= clauseIdx ? 'and' : 'by'
     .builder-container
       .clause-header
-        if clauseIdx > 0
+        if clauseIdx
           button.reorder.reorder-left(onclick=() => $helpers.moveClause(clauseIdx, -1))
             +small-caret-icon({direction: 'left'})
         .header-label= `${clause.resourceType === 'events' ? 'Event' : 'People'} Property`

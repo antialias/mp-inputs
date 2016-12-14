@@ -5,6 +5,7 @@ import { Component } from 'panel';
 import { renameProperty } from '../../../util';
 
 import { EditControl } from '../controls';
+import { GroupClause } from '../../../models/clause';
 
 import template from './index.jade';
 
@@ -29,7 +30,7 @@ document.registerElement(`builder-group-edit-control`, class extends EditControl
   }
 
   get section() {
-    return `group`;
+    return GroupClause.TYPE;
   }
 
   get label() {

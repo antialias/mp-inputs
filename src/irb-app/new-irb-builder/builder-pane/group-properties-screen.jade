@@ -8,7 +8,7 @@ include ./mixins.jade
   +screen-title(`Group by a property`, {backButton: $helpers.screenIdx() > 1})
   .resource-type-control
     .resource-type-tabs
-      for resourceType in $helpers.RESOURCE_TYPES
+      each resourceType in $helpers.RESOURCE_TYPES
         button.tab(
           class=selectedResourceType === resourceType ? 'selected' : '',
           onclick=() => $helpers.selectResourceType(resourceType)
