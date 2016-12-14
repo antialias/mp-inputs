@@ -3,7 +3,12 @@
 import { Component } from 'panel';
 
 import { Clause, ShowClause } from '../../../models/clause';
-import { extend, replaceByIndex } from '../../../util';
+import {
+  extend,
+  renameEvent,
+  replaceByIndex,
+  sorted,
+} from '../../../util';
 
 import template from './index.jade';
 import eventsTemplate from './events-screen.jade';
@@ -185,7 +190,9 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
   }
 
   buildList() {
-    return [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS].concat(this.state.topEvents);
+    return [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS].concat(sorted(this.state.topEvents, {
+      transform: mpEvent => renameEvent(mpEvent.name).toLowerCase(),
+    }));
   }
 });
 
