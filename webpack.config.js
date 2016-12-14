@@ -20,7 +20,7 @@ var webpackConfig = {
     loaders: [
       {
         test: /\.jade$/,
-        exclude: /node_modules/,
+        exclude: /node_modules|mixpanel-common/,
         loaders: [babelLoader, 'virtual-jade'],
       },
       {
@@ -34,7 +34,7 @@ var webpackConfig = {
       },
       {
         test: /\.styl$/,
-        exclude: /node_modules/,
+        exclude: /node_modules|mixpanel-common/,
         loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader!stylus-loader'),
       },
     ],
