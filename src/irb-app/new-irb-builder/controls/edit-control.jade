@@ -2,7 +2,7 @@
 
 .irb-new-control.new-query-builder(class={'pane-open': open})
   .control-buttons.edit-control
-    button.control-label(onclick=$helpers.clickLabel)
+    button.control-label(onclick=$helpers.clickedLabel)
       span= $helpers.getLabel()
   if $helpers.isRemovable()
     button.remove(onclick=$helpers.removeClause)

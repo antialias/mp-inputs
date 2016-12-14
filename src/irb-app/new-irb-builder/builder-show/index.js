@@ -34,8 +34,7 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
   }
 
   openPane() {
-    super.openPane();
-    this.app.startBuilderOnScreen(`builder-screen-sources`);
+    this.app.startBuilderOnScreen(`builder-screen-events`);
     this.app.update({isEditingNumericProperty: false});
   }
 });
@@ -55,7 +54,6 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
   }
 
   openPane() {
-    super.openPane();
     this.app.startBuilderOnScreen(`builder-screen-numeric-properties`);
     this.app.update({isEditingNumericProperty: true});
   }

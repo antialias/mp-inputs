@@ -34,6 +34,10 @@ document.registerElement(`query-builder-add-contextual`, class extends AddContro
 });
 
 document.registerElement(`builder-group-edit-control`, class extends EditControl {
+  openPane() {
+    this.app.startBuilderOnScreen(`builder-screen-group-properties`);
+  }
+
   isRemovable() {
     return true;
   }
@@ -45,10 +49,5 @@ document.registerElement(`builder-group-edit-control`, class extends EditControl
   get label() {
     const clause = this.state.report.sections.getClause(`group`, this.clauseIndex);
     return clause && clause.value && renameProperty(clause.value);
-  }
-
-  openPane() {
-    super.openPane();
-    this.app.startBuilderOnScreen(`builder-screen-group-properties`);
   }
 });

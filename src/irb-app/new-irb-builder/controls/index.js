@@ -15,8 +15,8 @@ export class EditControl extends Component {
   get config() {
     return {
       helpers: extend(super.config.helpers, {
-        clickLabel: () => {
-          this.app.startBuilderOnScreen(`builder-screen-sources`);
+        clickedLabel: () => {
+          this.openPane()
           this.app.stopEditingClause();
           this.app.startEditingClause(this.section, this.clauseIndex);
         },
@@ -27,6 +27,10 @@ export class EditControl extends Component {
       }),
       template: editTemplate,
     };
+  }
+
+  clickedLabel() {
+    throw `Not implemented!`;
   }
 
   shouldUpdate(state) {
