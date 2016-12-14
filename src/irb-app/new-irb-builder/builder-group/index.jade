@@ -5,12 +5,13 @@ include ../mixins.jade
 .builder-section.builder-group
   for clause, clauseIdx in groupClauses
     .builder-container
+      .clause-langauge.preposition= clauseIdx ? 'and' : 'by'
+    .builder-container
       .clause-header
         if clauseIdx > 0
           button.reorder.reorder-left(onclick=() => $helpers.moveClause(clauseIdx, -1))
             +small-caret-icon({direction: 'left'})
-        .preposition= clauseIdx ? 'and' : 'by'
-        .header-label= 'Group' + (lenGroupClauses === 1 ? '' : ' ' + (clauseIdx + 1))
+        .header-label= `${clause.resourceType === 'events' ? 'Event' : 'People'} Property`
         if clauseIdx < lenGroupClauses - 1
           button.reorder.reorder-right(onclick=() => $helpers.moveClause(clauseIdx, 1))
             +small-caret-icon({direction: 'right'})

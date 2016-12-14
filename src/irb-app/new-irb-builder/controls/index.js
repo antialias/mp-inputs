@@ -16,7 +16,7 @@ export class EditControl extends Component {
     return {
       helpers: extend(super.config.helpers, {
         clickedLabel: () => {
-          this.openPane()
+          this.openPane();
           this.app.stopEditingClause();
           this.app.startEditingClause(this.section, this.clauseIndex);
         },

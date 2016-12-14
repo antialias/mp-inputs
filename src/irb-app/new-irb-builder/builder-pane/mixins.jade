@@ -1,7 +1,7 @@
 include ../mixins.jade
 
 mixin generic-options-list-item(label, options)
-  li.list-option(onclick= options.onclick)
+  li.list-option.generic-list(onclick= options.onclick)
     +screen-option(label)
     +small-caret-icon()
 

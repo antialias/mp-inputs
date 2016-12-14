@@ -24,11 +24,11 @@
   .clause-header
     display flex
     align-items flex-end
-    color grey-300
-    font-size 12px
-    font-weight 500
-    line-height 15px
-    margin-bottom 8px
+    color grey-700
+    font-size 11px
+    font-weight 900
+    line-height 12px
+    margin-bottom 4px
     text-transform uppercase
 
     .preposition:after
@@ -41,10 +41,10 @@
       padding 0
       opacity 0
       transition opacity 0.2s
-      svg-icon-style(grey-300, grey-500, pos-top: 3px)
+      svg-icon-style(grey-500, grey-700, pos-top: 3px)
 
       &.reorder-left
-        margin-left -16px
+        margin-left -16px // reorder button width
 
     &:hover button.reorder
       opacity 1

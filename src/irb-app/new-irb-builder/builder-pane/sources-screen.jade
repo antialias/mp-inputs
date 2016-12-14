@@ -3,6 +3,4 @@ include ./mixins.jade
 .builder-screen.sources
   ul.screen-options-list
     for source in $helpers.SOURCES
-      li.list-option(onclick=() => $helpers.clickedSource(source))
-        +screen-option(source.name)
-        +small-caret-icon()
+      +generic-options-list-item(source.name, {onclick: () => $helpers.clickedSource(source)})
