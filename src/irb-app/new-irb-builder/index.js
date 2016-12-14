@@ -26,15 +26,15 @@ document.registerElement(`new-irb-builder`, class extends Component {
 });
 
 document.registerElement(`query-builder-add-contextual`, class extends AddControl {
-  clickAdd() {
+  get elementClasses() {
+    return [`contextual-menu`];
+  }
+
+  openPane() {
     this.app.startBuilderOnScreen(`builder-screen-contextual`);
   }
 
   isPaneOpen() {
     return this.state.builderPane.screens.length && this.state.builderPane.isContextualMenuOpen;
-  }
-
-  get elementClasses() {
-    return [`contextual-menu`];
   }
 });

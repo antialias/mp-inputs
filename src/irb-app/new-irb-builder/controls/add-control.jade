@@ -3,7 +3,7 @@
 .builder-container
   .irb-new-control.new-query-builder(class={'pane-open': open})
     .control-buttons.add-control(class=$helpers.getElementClasses())
-      button.add-button(onclick=$helpers.clickAdd)
+      button.add-button(onclick=$helpers.clickedAdd)
         svg-icon(attributes={icon: 'plus-large'})
       button.control-label
         span.label-preposition= $helpers.getPreposition()

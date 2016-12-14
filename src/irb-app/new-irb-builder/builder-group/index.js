@@ -21,20 +21,20 @@ document.registerElement(`query-builder-group`, class extends Component {
 });
 
 document.registerElement(`builder-group-edit-control`, class extends EditControl {
-  openPane() {
-    this.app.startBuilderOnScreen(`builder-screen-group-properties`);
+  get section() {
+    return GroupClause.TYPE;
+  }
+
+  getLabel() {
+    const clause = this.state.report.sections.getClause(`group`, this.clauseIndex);
+    return clause && clause.value && renameProperty(clause.value);
   }
 
   isRemovable() {
     return true;
   }
 
-  get section() {
-    return GroupClause.TYPE;
-  }
-
-  get label() {
-    const clause = this.state.report.sections.getClause(`group`, this.clauseIndex);
-    return clause && clause.value && renameProperty(clause.value);
+  openPane() {
+    this.app.startBuilderOnScreen(`builder-screen-group-properties`);
   }
 });

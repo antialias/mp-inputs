@@ -168,7 +168,7 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
 });
 
 const CONTEXTUAL_OPTIONS = {
-  events: [
+  [ShowClause.RESOURCE_TYPE_EVENTS]: [
     {name: `Group by a property`, clauseType: GroupClause.TYPE},
     {name: `Compare to an event`, clauseType: ShowClause.TYPE},
   ],
@@ -197,9 +197,10 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
           const firstShowClause = this.state.report.sections.show.clauses[0];
           let options = [];
           switch (firstShowClause.resourceType) {
-            case `all`:
-            case `events`:
-              options = CONTEXTUAL_OPTIONS[`events`];
+            case ShowClause.RESOURCE_TYPE_ALL:
+            case ShowClause.RESOURCE_TYPE_EVENTS:
+              options = CONTEXTUAL_OPTIONS[ShowClause.RESOURCE_TYPE_EVENTS];
+              break;
           }
           return options;
         },

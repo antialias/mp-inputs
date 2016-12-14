@@ -17,21 +17,21 @@ document.registerElement(`query-builder-show`, class extends Component {
 });
 
 document.registerElement(`builder-show-edit-control`, class extends EditControl {
-  isRemovable() {
-    return this.state.report.sections.show.clauses.length > 1;
-  }
-
-  get label() {
-    const clause = this.state.report.sections.getClause(this.section, this.clauseIndex);
-    return renameEvent(clause.value.name);
-  }
-
   get section() {
     return ShowClause.TYPE;
   }
 
+  getLabel() {
+    const clause = this.state.report.sections.getClause(this.section, this.clauseIndex);
+    return renameEvent(clause.value.name);
+  }
+
   isPaneOpen() {
     return super.isPaneOpen() && !this.state.isEditingNumericProperty;
+  }
+
+  isRemovable() {
+    return this.state.report.sections.show.clauses.length > 1;
   }
 
   openPane() {
@@ -45,7 +45,7 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
     return ShowClause.TYPE;
   }
 
-  get label() {
+  getLabel() {
     const clause = this.state.report.sections.getClause(`show`, this.clauseIndex);
     return clause && clause.property ? renameProperty(clause.property.name) : ``;
   }

@@ -22,13 +22,17 @@ export class EditControl extends Component {
           this.app.stopEditingClause();
           this.app.startEditingClause(this.section, this.clauseIndex);
         },
-        getLabel: () => this.label,
+        getLabel: () => this.getLabel(),
         isPaneOpen: () => !!this.state.builderPane.screens.length && this.app.isEditingClause(this.section, this.clauseIndex),
         isRemovable: () => this.isRemovable(),
         removeClause: () => this.app.removeClause(this.section, this.clauseIndex),
       }),
       template: editTemplate,
     };
+  }
+
+  get clauseIndex() {
+    return Number(this.getAttribute(`clause-index`));
   }
 
   clickedLabel() {
@@ -43,11 +47,7 @@ export class EditControl extends Component {
     throw `Not implemented!`;
   }
 
-  get clauseIndex() {
-    return Number(this.getAttribute(`clause-index`));
-  }
-
-  get label() {
+  getLabel() {
     throw `Not implemented!`;
   }
 }
@@ -61,37 +61,21 @@ export class AddControl extends Component {
   get config() {
     return {
       helpers: extend(super.config.helpers, {
-        clickAdd: () => {
+        clickedAdd: () => {
           if (!this.isPaneOpen()) {
-            this.clickAdd();
+            this.openPane();
           }
           this.app.updateBuilder({isContextualMenuOpen: !this.isPaneOpen()});
         },
         isPaneOpen: () => this.isPaneOpen(),
         getElementClasses: () => this.elementClasses,
-        getPreposition: () => {
-          let preposition = ``;
-          switch(this.app.originStageClauseType()) {
-            case ShowClause.TYPE:
-              preposition = `and`;
-              break;
-            case GroupClause.TYPE:
-              preposition = `by`;
-              break;
-          }
-          return preposition;
-        },
+        getPreposition: () => ({
+          [ShowClause.TYPE]: `and`,
+          [GroupClause.TYPE]: `by`,
+        }[this.app.originStageClauseType()] || ``),
       }),
       template: addTemplate,
     };
-  }
-
-  clickAdd() {
-    throw `Not implemented!`;
-  }
-
-  isPaneOpen() {
-    throw `Not implemented!`;
   }
 
   get controlType() {
@@ -100,5 +84,13 @@ export class AddControl extends Component {
 
   get elementClasses() {
     return [];
+  }
+
+  isPaneOpen() {
+    throw `Not implemented!`;
+  }
+
+  openPane() {
+    throw `Not implemented!`;
   }
 }
