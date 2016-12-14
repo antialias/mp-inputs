@@ -109,6 +109,7 @@ class BuilderScreenBase extends Component {
       this.app.updateStageClause(clauseAttrs);
       if (shouldCommit) {
         this.app.commitStageClause({shouldStopEditing});
+        this.app.stopBuildingQuery();
       }
     }
   }

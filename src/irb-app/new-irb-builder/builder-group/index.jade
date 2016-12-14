@@ -16,6 +16,3 @@ include ../mixins.jade
           button.reorder.reorder-right(onclick=() => $helpers.moveClause(clauseIdx, 1))
             +small-caret-icon({direction: 'right'})
       .control-container= $component.child('builder-group-edit-control', {attributes: {'clause-index': clauseIdx}})
-  if lenGroupClauses < 10
-    .builder-container
-      .control-container= $component.child('query-builder-add-contextual')

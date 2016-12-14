@@ -1,11 +1,13 @@
 - const open = $helpers.isPaneOpen()
 
-.irb-new-control.new-query-builder(class={'pane-open': open})
-  .control-buttons.add-control(class=$helpers.getElementClasses())
-    button.control-label
-      span.label-preposition= $helpers.getPreposition()
-    button.add-button(onclick=$helpers.clickAdd)
-      svg-icon(attributes={icon: 'plus-large'})
-  .drop-menu
-    mp-drop-menu(attributes={open})
-      .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)
+.builder-container
+  .irb-new-control.new-query-builder(class={'pane-open': open})
+    .control-buttons.add-control(class=$helpers.getElementClasses())
+      button.add-button(onclick=$helpers.clickAdd)
+        svg-icon(attributes={icon: 'plus-large'})
+      button.control-label
+        span.label-preposition= $helpers.getPreposition()
+    if open
+      .drop-menu
+        mp-drop-menu(attributes={open})
+          .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)

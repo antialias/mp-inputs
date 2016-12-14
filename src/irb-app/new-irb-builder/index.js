@@ -1,5 +1,7 @@
 import { Component } from 'panel';
 
+import { AddControl } from './controls';
+
 import template from './index.jade';
 import './index.styl';
 
@@ -20,5 +22,19 @@ document.registerElement(`new-irb-builder`, class extends Component {
       },
       template,
     };
+  }
+});
+
+document.registerElement(`query-builder-add-contextual`, class extends AddControl {
+  clickAdd() {
+    this.app.startBuilderOnScreen(`builder-screen-contextual`);
+  }
+
+  isPaneOpen() {
+    return this.state.builderPane.screens.length && this.state.builderPane.isContextualMenuOpen;
+  }
+
+  get elementClasses() {
+    return [`contextual-menu`];
   }
 });

@@ -3,6 +3,7 @@
     .query
       .section-container= $component.child('query-builder-show')
       .section-container= $component.child('query-builder-group')
+      .section-container= $component.child('query-builder-add-contextual')
     .reset-query(onclick=$helpers.reset title='Reset query')
       svg-icon(attributes={icon: 'x'})
   else

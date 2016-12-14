@@ -1,5 +1,7 @@
 @import "../../../stylesheets/common"
 
+animation-time = .25s
+
 .irb-new-control.new-query-builder
   position relative
 
@@ -15,6 +17,7 @@
       padding 0
 
     button.control-label
+      border none
       border-bottom 1px dotted grey-500
       color blue-700
       font-family font-helvetica-neue
@@ -27,9 +30,12 @@
       color blue-300
 
   .add-control
+    display flex
+
     button.control-label
+      order 1
+      transition width 0s, transform 1s
       width 0px
-      transition .25s
 
       .label-preposition
         color grey-300
@@ -42,6 +48,7 @@
       box-shadow 0 1px 1px 0 rgba(76, 96, 113, 0.08)
       height 28px
       margin-left 2px
+      order 2
       svg-icon-style(grey-700, size: 16px, pos-top: 1px)
       width 28px
       &:hover
@@ -50,6 +57,7 @@
   &.pane-open .add-control
     button.control-label
       text-align left
+      transition width animation-time, transform animation-time
       width 200px
 
       .label-preposition

@@ -2,6 +2,8 @@ import { Component } from 'panel';
 
 import { extend } from '../../../util';
 
+import { GroupClause, ShowClause } from '../../../models/clause';
+
 import addTemplate from './add-control.jade';
 import editTemplate from './edit-control.jade';
 import './index.styl';
@@ -68,10 +70,14 @@ export class AddControl extends Component {
         isPaneOpen: () => this.isPaneOpen(),
         getElementClasses: () => this.elementClasses,
         getPreposition: () => {
-          let preposition;
+          let preposition = ``;
           switch(this.app.originStageClauseType()) {
-            case `show`:
+            case ShowClause.TYPE:
               preposition = `and`;
+              break;
+            case GroupClause.TYPE:
+              preposition = `by`;
+              break;
           }
           return preposition;
         },
