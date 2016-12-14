@@ -1,5 +1,3 @@
-- const clauses = report.sections.show.clauses
-
 .builder-section.builder-show
   for clause, clauseIdx in report.sections.show.clauses
     if clauseIdx
@@ -13,4 +11,3 @@
         .control-container= $component.child('builder-numeric-property-edit-control')
         .preposition on
       .clause-container= $component.child('builder-show-edit-control', {attributes: {'clause-index': clauseIdx}})
-  //- .builder-container= $component.child('builder-add-contextual')

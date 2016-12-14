@@ -195,13 +195,13 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
         },
         getContextOptions: () => {
           const firstShowClause = this.state.report.sections.show.clauses[0];
-          let option;
+          let options = [];
           switch (firstShowClause.resourceType) {
             case `all`:
             case `events`:
-              option = CONTEXTUAL_OPTIONS[`events`];
+              options = CONTEXTUAL_OPTIONS[`events`];
           }
-          return option;
+          return options;
         },
       }),
     };
