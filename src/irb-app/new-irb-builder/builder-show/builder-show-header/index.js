@@ -11,12 +11,11 @@ document.registerElement(`query-builder-show-header`, class extends Component {
           return this.state.report.sections.show.clauses[this.clauseIndex].math;
         },
         headerClicked: ev => {
-          //start editing this
           ev.stopPropagation();
-          this.app.startBuilderOnScreen('builder-screen-math');
-          this.app.startEditingClause('show', this.clauseIndex);
-          //open pane on math screen
-
+          var currentIdx = this.clauseIndex;
+          this.app.update({activeMathMenuIndex: currentIdx});
+          this.app.startBuilderOnScreen(`builder-screen-math`);
+          this.app.startEditingClause(`show`, currentIdx);
         },
       },
       template,

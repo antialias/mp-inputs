@@ -127,6 +127,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           plotStyle: `standard`,
         },
       },
+      activeMathMenuIndex: null,
       isEditingExtrasMenu: false,
       isEditingNumericProperty: false,
       newCachedData: false,
