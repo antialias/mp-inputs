@@ -4,9 +4,7 @@
       .clause-container
         .clause-langauge.preposition and
     .clause-container
-      .clause-header
-        .preposition Show
-        .header-controls Total
+      .clause-header= $component.child('query-builder-show-header')
       .clause-body
         if clause.property
           .control-container= $component.child('builder-numeric-property-edit-control', {attributes: {'clause-index': clauseIdx}})
