@@ -2,6 +2,6 @@ include ../../mixins.jade
 
 h3.query-builder-show-header
   span Show 
-  span(onclick=() => $helpers.headerClicked($component.clauseIndex))
+  span(onclick= $helpers.headerClicked)
     span.math-header-type=$helpers.getCurrentMathChoice()
     svg-icon.math-caret(attributes={icon: 'caret-down'})
