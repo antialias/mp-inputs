@@ -1,4 +1,3 @@
-
 import { Component } from 'panel';
 
 import template from './index.jade';
@@ -15,7 +14,7 @@ document.registerElement(`query-builder-show-header`, class extends Component {
         getCurrentMathChoice: () => {
           return this.state.report.sections.show.clauses[this.clauseIndex].math;
         },
-        headerClicked: index => {
+        headerClicked: () => {
           alert('click!');
         },
       },

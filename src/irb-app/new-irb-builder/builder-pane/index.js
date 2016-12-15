@@ -16,6 +16,7 @@ import eventsTemplate from './events-screen.jade';
 import groupPropertiesTemplate from './group-properties-screen.jade';
 import numericPropertiesTemplate from './numeric-properties-screen.jade';
 import sourcesTemplate from './sources-screen.jade';
+import mathTemplate from './math-screen.jade';
 
 import './index.styl';
 
@@ -353,5 +354,20 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
       [Clause.RESOURCE_TYPE_EVENTS]: this.state.topEventProperties,
       [Clause.RESOURCE_TYPE_PEOPLE]: this.state.topPeopleProperties,
     }[this.getResourceType()] || [];
+  }
+});
+
+document.registerElement(`builder-screen-math`, class extends BuilderScreenBase {
+  get config() {
+    return {
+      template: mathTemplate,
+      helpers: extend(super.config.helpers, {
+        MATH_TYPES: ShowClause.MATH_TYPES,
+        mathTypeClicked: clauseData => {
+          this.app.updateClause(`show`, this.state.activeMathMenuIndex, clauseData);
+          this.app.stopEditingClause();
+        },
+      }),
+    };
   }
 });
