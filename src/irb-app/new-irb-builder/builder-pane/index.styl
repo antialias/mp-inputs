@@ -57,8 +57,7 @@ transition-time = .25s
         pointer-events none
         justify-content center
 
-    &.sources
-        width 260px
+    &.sources, &.math
 
         li.list-option
           font-size 11px
@@ -71,6 +70,12 @@ transition-time = .25s
 
           &:hover .caret-icon
             visibility visible
+
+    &.sources
+        width 260px
+
+    &.math
+      width 110px
 
 .resource-type-control
   border-bottom 1px solid grey-150

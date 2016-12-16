@@ -6,6 +6,6 @@
       button.control-label(onclick=$helpers.clickedLabel)= $helpers.getLabel()
       if $helpers.isRemovable()
         button.remove(onclick=$helpers.removeClause)
-    .drop-menu
+    .drop-menu(class= $helpers.headerMenu() ? 'header-menu' : '')
       mp-drop-menu(attributes={open})
         .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)

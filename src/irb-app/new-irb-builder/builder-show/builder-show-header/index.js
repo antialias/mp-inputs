@@ -13,8 +13,8 @@ document.registerElement(`query-builder-show-header`, class extends Component {
         headerClicked: ev => {
           ev.stopPropagation();
           var currentIdx = this.clauseIndex;
-          this.app.update({activeMathMenuIndex: currentIdx});
           this.app.startBuilderOnScreen(`builder-screen-math`);
+          this.app.update({activeMathMenuIndex: currentIdx});
           this.app.startEditingClause(`show`, currentIdx);
         },
       },
