@@ -357,7 +357,7 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
   }
 });
 
-document.registerElement(`builder-screen-math`, class extends BuilderScreenBase {
+document.registerElement(`builder-screen-event-operator`, class extends BuilderScreenBase {
   get config() {
     return {
       template: mathTemplate,

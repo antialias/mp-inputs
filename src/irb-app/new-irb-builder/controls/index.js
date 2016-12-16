@@ -40,7 +40,9 @@ export class EditControl extends Component {
   }
 
   isPaneOpen() {
-    return !!this.state.builderPane.screens.length && this.app.isEditingClause(this.section, this.clauseIndex);
+    return !!this.state.builderPane.screens.length
+      && this.app.isEditingClause(this.section, this.clauseIndex)
+      && this.state.activeMathMenuIndex === null;
   }
 
   isRemovable() {

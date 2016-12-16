@@ -1,5 +1,7 @@
 import { Component } from 'panel';
 
+import { ShowClause } from '../../../../models/clause';
+
 import template from './index.jade';
 import './index.styl';
 
@@ -12,11 +14,12 @@ document.registerElement(`query-builder-show-header`, class extends Component {
         },
         headerClicked: ev => {
           ev.stopPropagation();
-          var currentIdx = this.clauseIndex;
-          this.app.startBuilderOnScreen(`builder-screen-math`);
-          this.app.update({activeMathMenuIndex: currentIdx});
-          this.app.startEditingClause(`show`, currentIdx);
+          const activeMathMenuIndex = this.clauseIndex;
+          this.app.startBuilderOnScreen(`builder-screen-event-operator`);
+          this.app.update({activeMathMenuIndex});
+          this.app.startEditingClause(ShowClause.TYPE, activeMathMenuIndex);
         },
+        isOpen: () => this.state.activeMathMenuIndex === this.clauseIndex,
       },
       template,
     };

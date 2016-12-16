@@ -1,12 +1,17 @@
 @import "../../../../stylesheets/common"
 
 .query-builder-show-header
-  svg-icon-style(mp-blue, pos-top: 6px)
+  position relative
+  svg-icon-style(mp-blue, pos-top: 4px, size: 16px)
 
   .math-header-type
     color mp-blue
     cursor pointer
     font-weight 600
 
-  svg-icon
+    &:before
+      content '\00a0'
+      display inline-block
+
+  .math-caret
     cursor pointer

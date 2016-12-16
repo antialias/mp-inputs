@@ -1,7 +1,11 @@
 include ../../mixins.jade
 
-.header-controls.query-builder-show-header
-  span Show 
-  span(onclick= $helpers.headerClicked)
-    span.math-header-type=$helpers.getCurrentMathChoice()
-    svg-icon.math-caret(attributes={icon: 'caret-down'})
+.query-builder-show-header
+  .header-label
+    span Show
+    span(onclick= $helpers.headerClicked)
+      span.math-header-type=$helpers.getCurrentMathChoice()
+      svg-icon.math-caret(attributes={icon: 'caret-down'})
+  .drop-menu
+    mp-drop-menu(attributes={open: $helpers.isOpen()})
+      .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)
