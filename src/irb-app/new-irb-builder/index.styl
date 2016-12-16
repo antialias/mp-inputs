@@ -8,18 +8,25 @@
 
   .query,
   .section-container,
-  .builder-container,
   .builder-section,
-  .clause-header
+  .clause-container,
+  .clause-header,
+  .clause-body
     display flex
 
-  .section-container, .builder-container
+  .section-container, .clause-container
     flex-direction column
     justify-content flex-end
 
-  .builder-container
+  .clause-container, .builder-container
     margin-bottom 18px
     margin-right 12px
+
+  .clause-body > div
+    margin-right 10px
+
+    &:last-child
+     margin-right 0px
 
   .clause-header
     align-items flex-end

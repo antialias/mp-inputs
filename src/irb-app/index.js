@@ -657,6 +657,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
     if (shouldStopEditing) {
       this.stopEditingClause();
+      this.stopBuildingQuery();
     }
   }
 

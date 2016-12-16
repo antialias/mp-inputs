@@ -7,7 +7,6 @@
         svg-icon(attributes={icon: 'plus-large'})
       button.control-label
         span.label-preposition= $helpers.getPreposition()
-    if open
-      .drop-menu
-        mp-drop-menu(attributes={open})
-          .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)
+    .drop-menu
+      mp-drop-menu(attributes={open})
+        .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)

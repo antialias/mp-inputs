@@ -30,10 +30,6 @@ document.registerElement(`builder-group-edit-control`, class extends EditControl
     return clause && clause.value && renameProperty(clause.value);
   }
 
-  isRemovable() {
-    return true;
-  }
-
   openPane() {
     this.app.startBuilderOnScreen(`builder-screen-group-properties`);
   }

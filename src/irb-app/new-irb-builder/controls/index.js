@@ -23,9 +23,9 @@ export class EditControl extends Component {
           this.app.startEditingClause(this.section, this.clauseIndex);
         },
         getLabel: () => this.getLabel(),
-        isPaneOpen: () => !!this.state.builderPane.screens.length && this.app.isEditingClause(this.section, this.clauseIndex),
+        isPaneOpen: () => this.isPaneOpen(),
         isRemovable: () => this.isRemovable(),
-        removeClause: () => this.app.removeClause(this.section, this.clauseIndex),
+        removeClause: () => this.remove(),
       }),
       template: editTemplate,
     };
@@ -35,7 +35,19 @@ export class EditControl extends Component {
     return Number(this.getAttribute(`clause-index`));
   }
 
-  clickedLabel() {
+  getLabel() {
+    throw `Not implemented!`;
+  }
+
+  isPaneOpen() {
+    return !!this.state.builderPane.screens.length && this.app.isEditingClause(this.section, this.clauseIndex);
+  }
+
+  isRemovable() {
+    return true;
+  }
+
+  openPane() {
     throw `Not implemented!`;
   }
 
@@ -43,12 +55,8 @@ export class EditControl extends Component {
     return !!state.report.sections.getClause(this.section, this.clauseIndex);
   }
 
-  isRemovable() {
-    throw `Not implemented!`;
-  }
-
-  getLabel() {
-    throw `Not implemented!`;
+  remove() {
+    this.app.removeClause(this.section, this.clauseIndex);
   }
 }
 

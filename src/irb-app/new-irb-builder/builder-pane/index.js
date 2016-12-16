@@ -22,6 +22,9 @@ import './index.styl';
 document.registerElement(`builder-pane`, class extends Component {
   get config() {
     return {
+      helpers: {
+        getSizeStyle: () => this.state.builderPane && this.state.builderPane.sizeStyle || this.app.defaultBuilderState.sizeStyle,
+      },
       template,
     };
   }
@@ -109,7 +112,6 @@ class BuilderScreenBase extends Component {
       this.app.updateStageClause(clauseAttrs);
       if (shouldCommit) {
         this.app.commitStageClause({shouldStopEditing});
-        this.app.stopBuildingQuery();
       }
     }
   }

@@ -4,9 +4,9 @@ include ../mixins.jade
 
 .builder-section.builder-group
   for clause, clauseIdx in groupClauses
-    .builder-container
+    .clause-container
       .clause-langauge.preposition= clauseIdx ? 'and' : 'by'
-    .builder-container
+    .clause-container
       .clause-header
         if clauseIdx
           button.reorder.reorder-left(onclick=() => $helpers.moveClause(clauseIdx, -1))
@@ -15,4 +15,5 @@ include ../mixins.jade
         if clauseIdx < lenGroupClauses - 1
           button.reorder.reorder-right(onclick=() => $helpers.moveClause(clauseIdx, 1))
             +small-caret-icon({direction: 'right'})
-      .control-container= $component.child('builder-group-edit-control', {attributes: {'clause-index': clauseIdx}})
+      .clause-body
+        .control-container= $component.child('builder-group-edit-control', {attributes: {'clause-index': clauseIdx}})
