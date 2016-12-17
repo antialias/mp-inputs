@@ -10,7 +10,8 @@ document.registerElement(`query-builder-show-header`, class extends Component {
     return {
       helpers: {
         getCurrentMathChoice: () => {
-          return this.state.report.sections.show.clauses[this.clauseIndex].math;
+          const associatedClause = this.state.report.sections.show.clauses[this.clauseIndex];
+          return associatedClause && associatedClause.math;
         },
         headerClicked: ev => {
           ev.stopPropagation();
