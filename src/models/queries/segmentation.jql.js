@@ -63,52 +63,21 @@ function main() {
   }
 
   if (usesEventData) {
-    var bucketParams = {offset: 0};
-    switch (params.dates.unit) {
-      case 'all':
-        groups.push(function() {
-          return 'all';
-        });
-        break;
-      case 'hour':
-        bucketParams.bucket_size = 3600000;
-        break;
-      case 'day':
-        bucketParams.bucket_size = 86400000;
-        break;
-      case 'week':
-        var getMonday = function(date) {
-          date = new Date(date);
-          var day = date.getDay();
-          var offset = day > 0 ? day - 1 : 6;
-          date.setDate(date.getDate() - offset);
-          return date.toISOString().split('T')[0];
-        };
-        params.dates.from = getMonday(params.dates.from);
-        bucketParams.bucket_size = 604800000;
-        bucketParams.offset = 345600000; // epoch starts on a Thursday. offset 4 days to start bucketing on Monday.
-        break;
-      case 'month':
-      case 'quarter':
-        var monthBucketing = params.dates.unit === 'quarter' ? 3 : 1;
-        var getStartOfMonths = function(date) {
-          date = new Date(date);
-          var monthStart = Math.floor(date.getMonth() / monthBucketing) * monthBucketing;
-          return new Date(date.getFullYear(), monthStart, monthBucketing);
-        };
-
-        bucketParams = [];
-        var lastQuarterStart = getStartOfMonths(params.dates.to);
-        for (var quarterStart = getStartOfMonths(params.dates.from);
-             quarterStart <= lastQuarterStart;
-             quarterStart.setMonth(quarterStart.getMonth() + monthBucketing)) {
-          bucketParams.push(quarterStart.getTime());
-        }
-        params.dates.from = getStartOfMonths(params.dates.from).toISOString().split('T')[0];
-        break;
-    }
-    if (params.dates.unit !== 'all') {
-      groups.push(mixpanel.numeric_bucket(usesPeopleData ? 'event.time' : 'time', bucketParams));
+    if (params.dates.unit === 'all') {
+      groups.push(function() {
+        return 'all';
+      });
+    } else {
+      var bucketOptions = {
+        hour: mixpanel.hourly_time_buckets,
+        day: mixpanel.daily_time_buckets,
+        week: mixpanel.weekly_time_buckets,
+        month: mixpanel.monthly_time_buckets,
+        quarter: mixpanel.quarterly_time_buckets,
+      };
+      groups.push(
+        mixpanel.numeric_bucket(usesPeopleData ? 'event.time' : 'time', bucketOptions[params.dates.unit])
+      );
     }
   }
 
