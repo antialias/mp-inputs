@@ -11,10 +11,9 @@ mixin secondary-action-pill(label, options)
     +small-caret-icon()
 
 mixin screen-option(label, options)
-  - options = options || {}
-  if options.icon
-    .option-icon
-      svg-icon(attributes={icon: options.icon})
+  - const icon = options && options.icon
+  .option-icon
+    svg-icon(attributes={icon, empty: !icon})
   .option-label= label
 
 mixin screen-title(title, options)
