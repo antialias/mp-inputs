@@ -9,7 +9,7 @@ import { extend } from '../../../util';
 
 import template from './index.jade';
 import filterAddTemplate from './builder-filter-add-control.jade';
-import filterPropertiesTemplate from './builder-screen-filter-properties.jade';
+import filterPropertiesTemplate from './builder-screen-filter-properties-list.jade';
 
 import './index.styl';
 
@@ -53,7 +53,7 @@ document.registerElement(`builder-filter-add-control`, class extends Component {
   }
 
   openPane() {
-    this.app.startBuilderOnScreen(`builder-screen-filter-properties`);
+    this.app.startBuilderOnScreen(`builder-screen-filter-properties-list`);
     this.app.startAddingClause(FilterClause.TYPE);
   }
 });
@@ -69,15 +69,26 @@ document.registerElement(`builder-filter-edit-control`, class extends EditContro
 
   openPane() {
     super.openPane();
-    this.app.startBuilderOnScreen(`builder-screen-filter-properties`);
+    this.app.startBuilderOnScreen(`builder-screen-filter-properties-list`);
   }
 });
 
-document.registerElement(`builder-screen-filter-properties`, class extends BuilderScreenProperties {
+document.registerElement(`builder-screen-filter-properties-list`, class extends BuilderScreenProperties {
   get config() {
     return {
       template: filterPropertiesTemplate,
       helpers: extend(super.config.helpers, {
+        clickedProperty: (ev, property) => {
+          ev.stopPropagation();
+          // this.updateStageClause({value}, {shouldCommit: true});
+          this.updateStageClause({
+            filterType: property.type,
+            resourceType: property.resourceType,
+            value: property.name,
+          });
+          this.nextScreen(`builder-screen-filter-property`);
+        },
+
         // RESOURCE_TYPES: Clause.RESOURCE_TYPES,
         // selectResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
         // clickedProperty: property => this.updateStageClause({resourceType: property.resourceType, value: property.name}),

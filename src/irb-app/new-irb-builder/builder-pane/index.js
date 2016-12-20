@@ -272,13 +272,6 @@ export class BuilderScreenProperties extends BuilderScreenBase {
   get properties() {
     throw new Error(`Not implemented!`);
   }
-
-  updateStageClause(update) {
-    super.updateStageClause(update, {
-      shouldCommit: true,
-      shouldStopEditing: true,
-    });
-  }
 }
 
 document.registerElement(`builder-screen-numeric-properties`, class extends BuilderScreenProperties {
@@ -289,7 +282,10 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
         toggleNonNumericProperties: () => this.app.updateBuilderCurrentScreen({
           showingNonNumericProperties: !this.isShowingNonNumericProperties(),
         }),
-        clickedProperty: property => this.updateStageClause({property}),
+        clickedProperty: (ev, property) => this.updateStageClause({property}, {
+          shouldCommit: true,
+          shouldStopEditing: true,
+        }),
       }),
     };
   }
@@ -334,7 +330,13 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
       helpers: extend(super.config.helpers, {
         RESOURCE_TYPES: Clause.RESOURCE_TYPES,
         selectResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
-        clickedProperty: property => this.updateStageClause({resourceType: property.resourceType, value: property.name}),
+        clickedProperty: (ev, property) => this.updateStageClause({
+          resourceType: property.resourceType,
+          value: property.name,
+        }, {
+          shouldCommit: true,
+          shouldStopEditing: true,
+        }),
       }),
     };
   }

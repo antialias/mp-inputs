@@ -35,7 +35,7 @@ mixin property-list(properties, options)
   ul.screen-options-list(onscroll=options.scrolledList)
     if properties.length
       for property in properties
-        li.list-option(onclick=() => options.clickedProperty(property))
+        li.list-option(onclick=ev => options.clickedProperty(ev, property))
           +screen-option(util.renameProperty(property.name), {
             icon: util.getIconForProperty(property)
           })
