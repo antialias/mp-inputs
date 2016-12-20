@@ -16,5 +16,6 @@ include ../builder-pane/mixins.jade
   //-   .resource-type-label= `${formatResourceType(selectedResourceType)} properties`
   +property-list(properties, {
     clickedProperty: $helpers.clickedProperty,
-    loading: $helpers.isLoading(),
+    loading: $component.isLoading(),
+    scrolledList: $helpers.scrolledList,
   })

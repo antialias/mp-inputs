@@ -267,6 +267,7 @@ export class BuilderScreenProperties extends BuilderScreenBase {
 
   buildList() {
     throw new Error(`Not implemented!`);
+  }
 
   get properties() {
     throw new Error(`Not implemented!`);

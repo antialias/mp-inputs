@@ -65,10 +65,6 @@ export class EditControl extends Component {
     return true;
   }
 
-  isPaneOpen() {
-    throw new Error(`Not implemented!`);
-  }
-
   openPane() {
     throw new Error(`Not implemented!`);
   }
@@ -82,6 +78,8 @@ export class EditControl extends Component {
   }
 }
 
+// TODO this is specific to contextual menu, not a generic 'add' control
+// so make it queryBuilderAddContextual and move it
 export class AddControl extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);

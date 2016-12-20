@@ -3,10 +3,12 @@
 import { Component } from 'panel';
 
 import { BuilderScreenProperties } from '../builder-pane';
-import { AddControl, EditControl } from '../controls';
+import { EditControl } from '../controls';
+import { FilterClause } from '../../../models/clause';
 import { extend } from '../../../util';
 
 import template from './index.jade';
+import filterAddTemplate from './builder-filter-add-control.jade';
 import filterPropertiesTemplate from './builder-screen-filter-properties.jade';
 
 import './index.styl';
@@ -22,24 +24,43 @@ document.registerElement(`query-builder-filter`, class extends Component {
 });
 
 // controls
-document.registerElement(`builder-filter-add-control`, class extends AddControl {
-  get section() {
-    return `filter`;
+document.registerElement(`builder-filter-add-control`, class extends Component {
+  get config() {
+    return {
+      helpers: {
+        clickedAdd: () => {
+          if (!this.isPaneOpen()) {
+            this.openPane();
+          } else {
+            this.app.stopBuildingQuery(this.tagName);
+          }
+        },
+        isPaneOpen: () => this.isPaneOpen(),
+      },
+      template: filterAddTemplate,
+    };
   }
 
-  get label() {
-    return `Filter`;
+  attachedCallback() {
+    super.attachedCallback(...arguments);
+    this.app.onClickOutside(this.tagName, `stopBuildingQuery`);
+  }
+
+  isPaneOpen() {
+    return !!this.state.builderPane.screens.length
+      && this.app.isAddingClause(FilterClause.TYPE)
+      && this.state.activeMathMenuIndex === null;
   }
 
   openPane() {
-    super.openPane();
     this.app.startBuilderOnScreen(`builder-screen-filter-properties`);
+    this.app.startAddingClause(FilterClause.TYPE);
   }
 });
 
 document.registerElement(`builder-filter-edit-control`, class extends EditControl {
   get section() {
-    return `filter`;
+    return FilterClause.TYPE;
   }
 
   get label() {
@@ -57,8 +78,6 @@ document.registerElement(`builder-screen-filter-properties`, class extends Build
     return {
       template: filterPropertiesTemplate,
       helpers: extend(super.config.helpers, {
-        isLoading: () => !this.properties.length,
-
         // RESOURCE_TYPES: Clause.RESOURCE_TYPES,
         // selectResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
         // clickedProperty: property => this.updateStageClause({resourceType: property.resourceType, value: property.name}),
@@ -73,5 +92,13 @@ document.registerElement(`builder-screen-filter-properties`, class extends Build
 
   get properties() {
     return this.state.topEventProperties.concat(this.state.topPeopleProperties);
+  }
+
+  buildList() {
+    return this.properties;
+  }
+
+  isLoading() {
+    return !this.properties.length;
   }
 });
