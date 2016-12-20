@@ -237,7 +237,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
   }
 });
 
-class BuilderScreenProperties extends BuilderScreenBase {
+export class BuilderScreenProperties extends BuilderScreenBase {
   get config() {
     return {
       helpers: extend(super.config.helpers, {
@@ -262,11 +262,14 @@ class BuilderScreenProperties extends BuilderScreenBase {
   }
 
   isLoading() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 
   buildList() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
+
+  get properties() {
+    throw new Error(`Not implemented!`);
   }
 
   updateStageClause(update) {
