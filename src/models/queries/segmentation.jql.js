@@ -84,7 +84,7 @@ function main() {
   groups = [mixpanel.multiple_keys(groups)];
 
   var getReducerFunc = function(type, propertyPaths) {
-    var accessor = mixpanel.to_number(propertyPaths.join('.'));
+    var accessor = propertyPaths ? mixpanel.to_number(propertyPaths.join('.')) : 'value';
     switch (type) {
       case 'average': return mixpanel.reducer.avg(accessor);
       case 'max'    : return mixpanel.reducer.max(accessor);
