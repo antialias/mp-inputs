@@ -68,6 +68,7 @@ function main() {
         return 'all';
       });
     } else {
+      // TODO (jordan): handle resetting dates when building params
       var bucketOptions = {
         hour: mixpanel.hourly_time_buckets,
         day: mixpanel.daily_time_buckets,
