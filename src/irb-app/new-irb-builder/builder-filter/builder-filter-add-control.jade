@@ -1,20 +1,14 @@
 - const open = $helpers.isPaneOpen()
 
 .add-filter
-  button.add-filter-button(onclick=$helpers.clickedAdd)
-    svg-icon(attributes={icon: 'plus'})
-    span.add-filter-label Filter
+  .add-filter-controls
+    input.builder-search-input(
+      class={'search-active': open}
+      attributes={placeholder: 'Search'}
+    )
+    button.add-filter-button(onclick=$helpers.clickedAdd)
+      svg-icon(attributes={icon: open ? 'x' : 'plus'})
+      span.add-filter-label Filter
   .drop-menu
     mp-drop-menu(attributes={open})
       .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)
-
-//- .builder-container
-//-   .irb-new-control.new-query-builder(class={'pane-open': open})
-//-     .control-buttons.add-control(class=$helpers.getElementClasses())
-//-       button.add-button(onclick=$helpers.clickedAdd)
-//-         svg-icon(attributes={icon: 'plus-large'})
-//-       button.control-label
-//-         span.label-preposition= $helpers.getPreposition()
-//-     .drop-menu
-//-       mp-drop-menu(attributes={open})
-//-         .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)
