@@ -39,5 +39,7 @@ mixin property-list(properties, options)
           +screen-option(util.renameProperty(property.name), {
             icon: util.getIconForProperty(property)
           })
+          if options.caret
+            +small-caret-icon()
     else if !options.loading
       li.list-option.list-empty no properties available
