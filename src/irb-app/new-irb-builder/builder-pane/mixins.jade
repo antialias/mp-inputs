@@ -19,7 +19,9 @@ mixin screen-option(label, options)
 mixin screen-title(title, options)
   - options = options || {}
   .screen-title
-    .title-label= title
+    if title
+      .title-label= title
+    block
     if options.backButton && builderPane.screens.length > 1
       .title-button.back-button(onclick=$helpers.clickedBackButton)
         svg-icon(attributes={icon: 'caret-left'})
