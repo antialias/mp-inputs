@@ -19,7 +19,7 @@ export default class Toggle extends Component {
   }
 
   get choices() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 
   formatChoice(choice) {
@@ -32,10 +32,10 @@ export default class Toggle extends Component {
 
   // expected args: choice (the option to select)
   select() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 
   get selected() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 }

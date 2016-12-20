@@ -35,27 +35,27 @@ class ControlComponent extends Component {
   }
 
   get section() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 
   get elementClass() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 
   get label() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 
   get isRemoveable() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 
   get isPaneOpen() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 
   openPane() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 
   updatePosition(ev) {

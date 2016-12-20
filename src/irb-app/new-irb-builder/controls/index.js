@@ -36,7 +36,23 @@ export class EditControl extends Component {
   }
 
   getLabel() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
+  }
+
+  get section() {
+    throw new Error(`Not implemented!`);
+  }
+
+  get elementClass() {
+    throw new Error(`Not implemented!`);
+  }
+
+  get label() {
+    throw new Error(`Not implemented!`);
+  }
+
+  get isRemoveable() {
+    throw new Error(`Not implemented!`);
   }
 
   isPaneOpen() {
@@ -49,8 +65,12 @@ export class EditControl extends Component {
     return true;
   }
 
+  isPaneOpen() {
+    throw new Error(`Not implemented!`);
+  }
+
   openPane() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 
   shouldUpdate(state) {
@@ -97,10 +117,10 @@ export class AddControl extends Component {
   }
 
   isPaneOpen() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 
   openPane() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 }

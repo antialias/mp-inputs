@@ -25,7 +25,7 @@ export default class Dropdown extends Component {
   }
 
   get choices() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 
   formatChoice(choice) {
@@ -33,18 +33,18 @@ export default class Dropdown extends Component {
   }
 
   get isOpen() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 
   select() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 
   get selected() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 
   toggleOpen() {
-    throw `Not implemented!`;
+    throw new Error(`Not implemented!`);
   }
 }
