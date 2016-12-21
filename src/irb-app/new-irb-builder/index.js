@@ -1,14 +1,13 @@
 import { Component } from 'panel';
 
-import { AddControl } from './controls';
-
 import template from './index.jade';
 import './index.styl';
 
+import './builder-contextual-add-control';
+import './builder-filter';
+import './builder-group';
 import './builder-pane';
 import './builder-show';
-import './builder-group';
-import './builder-filter';
 
 document.registerElement(`new-irb-builder`, class extends Component {
   get config() {
@@ -23,19 +22,5 @@ document.registerElement(`new-irb-builder`, class extends Component {
       },
       template,
     };
-  }
-});
-
-document.registerElement(`query-builder-add-contextual`, class extends AddControl {
-  get elementClasses() {
-    return [`contextual-menu`];
-  }
-
-  openPane() {
-    this.app.startBuilderOnScreen(`builder-screen-contextual`);
-  }
-
-  isPaneOpen() {
-    return this.state.builderPane.screens.length && this.state.builderPane.isContextualMenuOpen;
   }
 });

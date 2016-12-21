@@ -419,7 +419,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   getClausesForType(type) {
-    return this.state.report.sections[type].clauses
+    return this.state.report.sections[type].clauses;
   }
 
   // State modifiers

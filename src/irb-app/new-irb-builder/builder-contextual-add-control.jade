@@ -2,7 +2,7 @@
 
 .builder-container
   .irb-new-control.new-query-builder(class={'pane-open': open})
-    .control-buttons.add-control(class=$helpers.getElementClasses())
+    .control-buttons.add-control.contextual-menu
       button.add-button(onclick=$helpers.clickedAdd)
         svg-icon(attributes={icon: 'plus-large'})
       button.control-label
