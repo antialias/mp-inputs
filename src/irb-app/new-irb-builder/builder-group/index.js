@@ -4,7 +4,7 @@ import { Component } from 'panel';
 
 import { renameProperty } from '../../../util';
 
-import { EditControl } from '../controls';
+import { EditControl } from '../edit-control';
 import { GroupClause } from '../../../models/clause';
 
 import './builder-screen-group-properties';

@@ -5,7 +5,7 @@ import {
   renameProperty,
 } from '../../../util';
 
-import { EditControl } from '../controls';
+import { EditControl } from '../edit-control';
 import { ShowClause } from '../../../models/clause';
 
 import './builder-screen-event-operator';

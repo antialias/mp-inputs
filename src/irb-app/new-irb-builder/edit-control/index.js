@@ -2,7 +2,7 @@ import { Component } from 'panel';
 
 import { extend } from '../../../util';
 
-import editTemplate from './edit-control.jade';
+import template from './index.jade';
 import './index.styl';
 
 export class EditControl extends Component {
@@ -24,7 +24,7 @@ export class EditControl extends Component {
         isRemovable: () => this.isRemovable(),
         removeClause: () => this.remove(),
       }),
-      template: editTemplate,
+      template,
     };
   }
 

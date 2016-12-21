@@ -1,8 +1,8 @@
 - const open = $helpers.isPaneOpen()
 
-.builder-container
+.builder-container.contextual-menu
   .irb-new-control.new-query-builder(class={'pane-open': open})
-    .control-buttons.add-control.contextual-menu
+    .control-buttons.add-control
       button.add-button(onclick=$helpers.clickedAdd)
         svg-icon(attributes={icon: 'plus-large'})
       button.control-label

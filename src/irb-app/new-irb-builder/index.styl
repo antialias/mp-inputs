@@ -55,6 +55,46 @@
     color grey-300
     line-height 36px
 
+  .contextual-menu
+    .add-control
+      display flex
+
+      button.control-label
+        order 1
+        transition width 0s, transform 1s
+        width 0px
+
+        .label-preposition
+          color grey-300
+          visibility hidden
+
+      button.add-button
+        background-color grey-50
+        border 1px solid grey-150
+        border-radius 50%
+        box-shadow 0 1px 1px 0 rgba(76, 96, 113, 0.08)
+        height 28px
+        margin-left 2px
+        order 2
+        svg-icon-style(grey-700, size: 16px, pos-top: 1px)
+        width 28px
+        &:hover
+          svg-icon-style(mp-blue, size: 16px, pos-top: 1px)
+
+    .pane-open
+      button.control-label
+        text-align left
+        transition width animation-time, transform animation-time
+        width 200px
+
+        .label-preposition
+          visibility visible
+
+
+        button.add-button
+          svg-icon svg
+            transform rotate(45deg)
+
   .section.disabled
     opacity 0.3
     pointer-events none
