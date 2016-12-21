@@ -7,6 +7,8 @@ import {
 
 import { EditControl } from '../controls';
 import { ShowClause } from '../../../models/clause';
+
+import './builder-screen-numeric-properties';
 import './builder-show-header';
 
 import template from './index.jade';

@@ -13,7 +13,6 @@ import {
 import template from './index.jade';
 import contextualTemplate from './contextual-screen.jade';
 import eventsTemplate from './events-screen.jade';
-import numericPropertiesTemplate from './numeric-properties-screen.jade';
 import sourcesTemplate from './sources-screen.jade';
 import mathTemplate from './math-screen.jade';
 
@@ -284,55 +283,6 @@ export class BuilderScreenProperties extends BuilderScreenBase {
     }[this.getResourceType()] || [];
   }
 }
-
-document.registerElement(`builder-screen-numeric-properties`, class extends BuilderScreenProperties {
-  get config() {
-    return {
-      template: numericPropertiesTemplate,
-      helpers: extend(super.config.helpers, {
-        toggleNonNumericProperties: () => this.app.updateBuilderCurrentScreen({
-          showingNonNumericProperties: !this.isShowingNonNumericProperties(),
-        }),
-        clickedProperty: (ev, property) => this.updateStageClause({property}, {
-          shouldCommit: true,
-          shouldStopEditing: true,
-        }),
-      }),
-    };
-  }
-
-  isLoading() {
-    return !this.state.topEventPropertiesByEvent.hasOwnProperty(this.event);
-  }
-
-  get event() {
-    const stageClause = this.app.activeStageClause;
-    return stageClause && stageClause.value && stageClause.value.name;
-  }
-
-  buildList() {
-    let properties = this.state.topEventPropertiesByEvent[this.event];
-
-    if (!properties) {
-      if (this.event === ShowClause.TOP_EVENTS.name || this.event === ShowClause.ALL_EVENTS.name) {
-        properties = this.state.topEventProperties;
-      } else if (this.event) {
-        this.app.fetchTopPropertiesForEvent(this.event);
-      }
-    }
-
-    if (!this.isShowingNonNumericProperties()) {
-      properties = properties && properties.filter(prop => prop.type === `number`);
-    }
-
-    return properties || [];
-  }
-
-  isShowingNonNumericProperties() {
-    const screen = this.app.getBuilderCurrentScreen();
-    return screen && !!screen.showingNonNumericProperties;
-  }
-});
 
 document.registerElement(`builder-screen-event-operator`, class extends BuilderScreenBase {
   get config() {
