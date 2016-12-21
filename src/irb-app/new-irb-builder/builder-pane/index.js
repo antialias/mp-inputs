@@ -2,7 +2,7 @@
 
 import { Component } from 'panel';
 
-import { Clause, ShowClause } from '../../../models/clause';
+import { Clause } from '../../../models/clause';
 import { extend } from '../../../util';
 
 import { BuilderScreenBase } from './builder-screen-base';
@@ -10,7 +10,6 @@ import './builder-screen-contextual';
 import './builder-screen-sources';
 
 import template from './index.jade';
-import mathTemplate from './math-screen.jade';
 
 import './index.styl';
 
@@ -74,18 +73,3 @@ export class BuilderScreenProperties extends BuilderScreenBase {
     }[this.getResourceType()] || [];
   }
 }
-
-document.registerElement(`builder-screen-event-operator`, class extends BuilderScreenBase {
-  get config() {
-    return {
-      template: mathTemplate,
-      helpers: extend(super.config.helpers, {
-        MATH_TYPES: ShowClause.MATH_TYPES,
-        mathTypeClicked: clauseData => {
-          this.app.updateClause(`show`, this.state.activeMathMenuIndex, clauseData);
-          this.app.stopEditingClause();
-        },
-      }),
-    };
-  }
-});
