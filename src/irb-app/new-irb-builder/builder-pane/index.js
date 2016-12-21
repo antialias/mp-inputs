@@ -3,18 +3,13 @@
 import { Component } from 'panel';
 
 import { Clause, ShowClause } from '../../../models/clause';
-import {
-  extend,
-  renameEvent,
-  sorted,
-} from '../../../util';
+import { extend } from '../../../util';
 
 import { BuilderScreenBase } from './builder-screen-base';
 import './builder-screen-contextual';
+import './builder-screen-sources';
 
 import template from './index.jade';
-import eventsTemplate from './events-screen.jade';
-import sourcesTemplate from './sources-screen.jade';
 import mathTemplate from './math-screen.jade';
 
 import './index.styl';
@@ -22,59 +17,12 @@ import './index.styl';
 document.registerElement(`builder-pane`, class extends Component {
   get config() {
     return {
+      template,
+
       helpers: {
         getSizeStyle: () => this.state.builderPane && this.state.builderPane.sizeStyle || this.app.defaultBuilderState.sizeStyle,
       },
-      template,
     };
-  }
-});
-
-const SOURCES = [
-  {name: `Event`, resourceType: `events`},
-  {name: `People`, resourceType: `people`},
-];
-
-document.registerElement(`builder-screen-sources`, class extends BuilderScreenBase {
-  get config() {
-    return {
-      template: sourcesTemplate,
-      helpers: extend(super.config.helpers, {
-        SOURCES,
-        clickedSource: source => {
-          const {resourceType} = source;
-          if (resourceType === `events`) {
-            this.updateStageClause({resourceType});
-            this.nextScreen(`builder-screen-${resourceType}`);
-          }
-        },
-      }),
-    };
-  }
-});
-
-document.registerElement(`builder-screen-events`, class extends BuilderScreenBase {
-  get config() {
-    return {
-      template: eventsTemplate,
-      helpers: extend(super.config.helpers, {
-        getEvents: () => this.buildProgressiveList(),
-        clickedEvent: value => {
-          this.updateStageClause({value}, {shouldCommit: true, shouldStopEditing: true});
-        },
-        clickedEventProperties: (ev, value) => {
-          ev.stopPropagation();
-          this.updateStageClause({value}, {shouldCommit: true});
-          this.nextScreen(`builder-screen-numeric-properties`);
-        },
-      }),
-    };
-  }
-
-  buildList() {
-    return [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS].concat(sorted(this.state.topEvents, {
-      transform: mpEvent => renameEvent(mpEvent.name).toLowerCase(),
-    }));
   }
 });
 

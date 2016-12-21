@@ -8,6 +8,7 @@ import {
 import { EditControl } from '../controls';
 import { ShowClause } from '../../../models/clause';
 
+import './builder-screen-events';
 import './builder-screen-numeric-properties';
 import './builder-show-header';
 
