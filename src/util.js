@@ -38,17 +38,17 @@ export function getIconForEvent(mpEvent) {
 }
 
 const PROPERTY_TYPE_ICON_MAP = {
-  string: `text`,
-  datetime: `date`,
-  object: `list`,
+  boolean:  `type-boolean`,
+  datetime: `type-date`,
+  list:     `type-list`,
+  number:   `type-number`,
+  string:   `type-text`,
 };
+export function getIconForPropertyType(propType) {
+  return PROPERTY_TYPE_ICON_MAP[propType];
+}
 export function getIconForProperty(property) {
-  const type = property && property.type;
-  if (type && type !== `unknown`) {
-    return `type-${PROPERTY_TYPE_ICON_MAP[type] || type}`;
-  } else {
-    return null;
-  }
+  return getIconForPropertyType(property && property.type);
 }
 
 // TODO(chi): move to mixpanel-common
