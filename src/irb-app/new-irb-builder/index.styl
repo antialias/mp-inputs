@@ -70,24 +70,184 @@
     position relative
     top 6px
 
-.error-no-project-data .irb-builder
-  .builder-error-caption
-    color grey-700
-    font-size 14px
-    text-align center
-    padding 5px 0
+  .error-no-project-data .irb-builder
+    .builder-error-caption
+      color grey-700
+      font-size 14px
+      text-align center
+      padding 5px 0
 
-  .error-title
-    color grey-900
-    font-size 16px
-    font-weight 900
+    .error-title
+      color grey-900
+      font-size 16px
+      font-weight 900
 
-  .error-builder-button
+    .error-builder-button
+      display flex
+      justify-content center
+      margin 20px 0
+
+  /* Builder Jade Mixins */
+
+  option-height = 30px
+
+  // property-list
+  ul.screen-options-list
+    margin 0 10px
+    flex 1 1 auto
+    overflow auto
+
+    &:empty
+      loader(4px)
+      margin 12px auto
+
+  li.list-option
+    align-items center
+    border-radius 3px
+    cursor pointer
     display flex
-    justify-content center
-    margin 20px 0
+    font-size 12px
+    font-weight 500
+    height option-height
+    justify-content flex-end
 
-/* Builder Jade Mixins */
-// small-caret-icon
-.small-caret
-  svg-icon-style(size: 16px)
+    &:first-child
+      margin-top 10px
+
+    &:last-child
+      margin-bottom 10px
+
+    &:hover
+      background-color grey-100
+      color mp-blue
+
+      .option-icon
+        svg-icon-style(mp-blue)
+
+      .option-secondary-action
+        display flex
+
+    .list-option.list-empty
+      pointer-events none
+      justify-content center
+
+  // resource-type-toggle
+  .resource-type-control
+    border-bottom 1px solid grey-150
+    padding 12px
+    padding-bottom 8px
+
+    .resource-type-tabs
+      display flex
+
+      .tab
+        border 1px solid grey-200
+        background grey-100
+        color grey-700
+        font-size 11px
+        font-weight 600
+        flex 1 1
+        padding 8px
+        text-transform capitalize
+
+        &:first-child
+          border-radius 5px 0 0 5px
+
+        &:last-child
+          border-radius 0 5px 5px 0
+
+        &:not(:last-child)
+          border-right none
+
+        &:hover:not(.selected)
+          background-color mp-blue
+          border-color mp-blue
+          color white
+
+          & + .tab
+            border-left-color mp-blue
+
+        &.selected
+          background white
+
+  // screen-footer-button
+  button.screen-footer
+    background none
+    border none
+    border-top 1px solid grey-150
+    color grey-500
+    font-size 12px
+    font-weight 500
+    line-height 100%
+    min-height 48px
+    padding 0
+
+  // screen-option
+  .option-label
+    padding-left 8px
+    ellipsis()
+    flex 1 1
+
+  .option-icon
+    padding-left 5px
+    svg-icon-style(grey-700)
+
+  // screen-title
+  .screen-title
+    align-items center
+    box-shadow 0 1px 3px 0 rgba(156,172,187,0.37), 0 1px 0 0 #E5EAEF;
+    color grey-700
+    display flex
+    flex none
+    font-size 11px
+    font-weight 900
+    height 48px
+    position relative
+
+
+    .title-button
+      cursor pointer
+      padding 10px
+      position absolute
+      svg-icon-style(grey-500, grey-700)
+
+      &.close-button
+        right 0
+
+    .title-label
+      ellipsis()
+      padding 0 30px
+      text-align center
+      text-transform uppercase
+      width 100%
+
+  // secondary-action-pill
+  .option-secondary-action
+    align-items center
+    display none
+    flex none
+    padding 0 10px
+    margin-right 10px
+
+    &.pill
+      background-color grey-50
+      border-radius 40px
+      color grey-500
+      font-size 10px
+      font-weight 900
+      height 18px
+
+      .secondary-label
+        vertical-align middle
+
+      .caret-icon
+        svg-icon-style(grey-500, speed: 0s, pos-top: 1px)
+
+      &:hover
+        background-color mp-blue
+        color #fff
+        svg-icon-style(#fff, speed: 0s, pos-top: 1px)
+
+  // small-caret-icon
+  .small-caret
+    svg-icon-style(size: 16px)

@@ -1,8 +1,10 @@
+//- COVERED
 mixin generic-options-list-item(label, options)
   li.list-option.generic-list(onclick= options.onclick)
     +screen-option(label, {noIcon: true})
     +small-caret-icon()
 
+//- COVERED
 mixin property-list(properties, options)
   ul.screen-options-list(onscroll=options.scrolledList)
     if properties.length
@@ -27,15 +29,18 @@ mixin resource-type-toggle()
         )= $helpers.formatResourceType(resourceType)
     .resource-type-label #{$helpers.formatResourceType(selectedResourceType)} properties
 
+//- COVERED
 mixin secondary-action-pill(label, options)
   .option-secondary-action.pill(onclick=options.onclick)
     span.secondary-label= label
     +small-caret-icon()
 
+//- COVERED
 mixin screen-footer-button(label, options)
   - options = options || {}
   button.screen-footer(onclick=options.onclick)= label
 
+//- COVERED
 mixin screen-option(label, options)
   - options = options || {}
   if !options.noIcon
@@ -44,6 +49,7 @@ mixin screen-option(label, options)
       svg-icon(attributes={icon, empty: !icon})
   .option-label= label
 
+//- COVERED
 mixin screen-title(title, options)
   - options = options || {}
   .screen-title
@@ -57,6 +63,7 @@ mixin screen-title(title, options)
       .title-button.close-button(onclick=$helpers.closePane)
         svg-icon(attributes={icon: 'x'})
 
+//- COVERED
 mixin small-caret-icon(options)
   - options = options || {}
   .caret-icon.small-caret
