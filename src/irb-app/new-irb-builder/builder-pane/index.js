@@ -34,7 +34,7 @@ document.registerElement(`builder-pane`, class extends Component {
 const PROGRESSIVE_LIST_BUFFER_PX = 50;
 const PROGRESSIVE_LIST_START_SIZE = 20;
 
-class BuilderScreenBase extends Component {
+export class BuilderScreenBase extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
     this.updateScreensRenderedSize();

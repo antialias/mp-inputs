@@ -42,3 +42,31 @@ builder-screen-filter-properties-list
     &:hover
       .caret-icon
         opacity 1
+
+builder-screen-filter-property
+  .builder-screen.filter-property
+    .screen-title
+      justify-content center
+
+      .back-button
+        left 0
+
+      button.filter-type-dropdown
+        align-items center
+        background none
+        border none
+        color grey-900
+        display flex
+        font-size 14px
+        text-transform uppercase
+        transition color 0.2s
+        svg-icon-style(grey-900, mp-blue)
+        &:hover
+          color mp-blue
+
+        .filter-prop-name
+          margin-left 5px
+
+    button.screen-footer
+      background-color mp-blue
+      color white

@@ -3,8 +3,10 @@
 import { Component } from 'panel';
 
 // import { EditControl } from '../controls';
+import { FilterClause } from '../../../models/clause';
 
 import './builder-filter-add-control';
+import './builder-screen-filter-property';
 import './builder-screen-filter-properties-list';
 
 import template from './index.jade';
@@ -15,7 +17,9 @@ document.registerElement(`query-builder-filter`, class extends Component {
   get config() {
     return {
       template,
+
       helpers: {
+        isAddingClause: () => this.app.isAddingClause(FilterClause.TYPE),
       },
     };
   }
@@ -36,7 +40,4 @@ document.registerElement(`query-builder-filter`, class extends Component {
 //     super.openPane();
 //     this.app.startBuilderOnScreen(`builder-screen-filter-properties-list`);
 //   }
-// });
-
-// document.registerElement(`builder-screen-filter-property`, class extends BuilderScreenBase {
 // });
