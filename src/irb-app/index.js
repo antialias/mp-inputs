@@ -418,6 +418,10 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     return this.state.projectHasEvents;
   }
 
+  getClausesForType(type) {
+    return this.state.report.sections[type].clauses
+  }
+
   // State modifiers
 
   resetTopQueries() {

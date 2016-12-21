@@ -48,7 +48,7 @@ mixin screen-title(title, options)
   - options = options || {}
   .screen-title
     if title
-      .title-label= title
+      .title-label(title=title)= title
     block
     if options.backButton && builderPane.screens.length > 1
       .title-button.back-button(onclick=$helpers.clickedBackButton)

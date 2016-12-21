@@ -31,7 +31,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
           }
         },
         getContextOptions: () => {
-          const firstShowClause = this.state.report.sections.show.clauses[0];
+          const firstShowClause = this.state.report.sections.getClause(ShowClause.TYPE, 0);
           let options = [];
           switch (firstShowClause.resourceType) {
             case ShowClause.RESOURCE_TYPE_ALL:

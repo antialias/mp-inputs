@@ -36,7 +36,7 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
   }
 
   isRemovable() {
-    return this.state.report.sections.show.clauses.length > 1;
+    return this.app.getClausesForType(this.section).length > 1;
   }
 
   openPane() {
@@ -51,7 +51,7 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
   }
 
   getLabel() {
-    const clause = this.state.report.sections.getClause(`show`, this.clauseIndex);
+    const clause = this.state.report.sections.getClause(this.section, this.clauseIndex);
     return clause && clause.property ? renameProperty(clause.property.name) : ``;
   }
 
