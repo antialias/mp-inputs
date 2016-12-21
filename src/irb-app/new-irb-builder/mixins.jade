@@ -1,6 +1,6 @@
 mixin generic-options-list-item(label, options)
   li.list-option.generic-list(onclick= options.onclick)
-    +screen-option(label)
+    +screen-option(label, {noIcon: true})
     +small-caret-icon()
 
 mixin property-list(properties, options)
@@ -37,9 +37,11 @@ mixin screen-footer-button(label, options)
   button.screen-footer(onclick=options.onclick)= label
 
 mixin screen-option(label, options)
-  - const icon = options && options.icon
-  .option-icon
-    svg-icon(attributes={icon, empty: !icon})
+  - options = options || {}
+  if !options.noIcon
+    - const icon = options.icon
+    .option-icon
+      svg-icon(attributes={icon, empty: !icon})
   .option-label= label
 
 mixin screen-title(title, options)
