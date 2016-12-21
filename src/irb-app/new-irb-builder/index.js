@@ -12,6 +12,7 @@ import './builder-show';
 document.registerElement(`new-irb-builder`, class extends Component {
   get config() {
     return {
+      template,
       helpers: {
         clickSetupMixpanel: () => this.app.navigateToSetup(),
         reset: () => {
@@ -20,7 +21,6 @@ document.registerElement(`new-irb-builder`, class extends Component {
           this.app.trackEvent(`Reset Report`, reportTrackingData);
         },
       },
-      template,
     };
   }
 });

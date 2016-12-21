@@ -4,7 +4,6 @@ import { FilterClause } from '../../../models/clause';
 
 import template from './builder-filter-add-control.jade';
 
-
 document.registerElement(`builder-filter-add-control`, class extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
@@ -13,6 +12,7 @@ document.registerElement(`builder-filter-add-control`, class extends Component {
 
   get config() {
     return {
+      template,
       helpers: {
         clickedAdd: () => {
           if (!this.isPaneOpen()) {
@@ -23,7 +23,6 @@ document.registerElement(`builder-filter-add-control`, class extends Component {
         },
         isPaneOpen: () => this.isPaneOpen(),
       },
-      template,
     };
   }
 

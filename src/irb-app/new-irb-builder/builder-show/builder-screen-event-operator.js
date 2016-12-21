@@ -8,7 +8,6 @@ document.registerElement(`builder-screen-event-operator`, class extends BuilderS
   get config() {
     return {
       template,
-
       helpers: extend(super.config.helpers, {
         MATH_TYPES: ShowClause.MATH_TYPES,
         mathTypeClicked: clauseData => {

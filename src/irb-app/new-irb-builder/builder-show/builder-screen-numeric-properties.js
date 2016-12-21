@@ -8,7 +8,6 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
   get config() {
     return {
       template,
-
       helpers: extend(super.config.helpers, {
         toggleNonNumericProperties: () => this.app.updateBuilderCurrentScreen({
           showingNonNumericProperties: !this.isShowingNonNumericProperties(),

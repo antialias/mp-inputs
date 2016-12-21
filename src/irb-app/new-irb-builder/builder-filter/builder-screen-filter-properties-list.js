@@ -7,7 +7,6 @@ document.registerElement(`builder-screen-filter-properties-list`, class extends 
   get config() {
     return {
       template,
-
       helpers: extend(super.config.helpers, {
         clickedProperty: (ev, property) => {
           ev.stopPropagation();

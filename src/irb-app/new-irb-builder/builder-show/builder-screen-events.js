@@ -12,7 +12,6 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
   get config() {
     return {
       template,
-
       helpers: extend(super.config.helpers, {
         getEvents: () => this.buildProgressiveList(),
         clickedEvent: value => {

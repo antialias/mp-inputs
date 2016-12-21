@@ -1,5 +1,3 @@
-// "Group by" controls for segmenting
-
 import { Component } from 'panel';
 
 import { renameProperty } from '../../../util';

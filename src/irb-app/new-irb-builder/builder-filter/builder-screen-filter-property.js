@@ -9,11 +9,10 @@ import template from './builder-screen-filter-property.jade';
 document.registerElement(`builder-screen-filter-property`, class extends BuilderScreenBase {
   get config() {
     return {
+      template,
       helpers: extend(super.config.helpers, {
         getActiveClause: () => this.app.hasStageClause() ? this.app.activeStageClause : {},
       }),
-
-      template,
     };
   }
 });

@@ -1,5 +1,3 @@
-// "Filter" controls
-
 import { Component } from 'panel';
 
 import { FilterClause } from '../../../models/clause';
@@ -17,7 +15,6 @@ document.registerElement(`query-builder-filter`, class extends Component {
   get config() {
     return {
       template,
-
       helpers: {
         isAddingClause: () => this.app.isAddingClause(FilterClause.TYPE),
       },

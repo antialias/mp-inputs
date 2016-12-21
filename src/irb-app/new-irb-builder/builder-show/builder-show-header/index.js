@@ -8,6 +8,7 @@ import './index.styl';
 document.registerElement(`query-builder-show-header`, class extends Component {
   get config() {
     return {
+      template,
       helpers: {
         getCurrentMathChoice: () => {
           const associatedClause = this.state.report.sections.getClause(ShowClause.TYPE, this.clauseIndex);
@@ -22,7 +23,6 @@ document.registerElement(`query-builder-show-header`, class extends Component {
         },
         isOpen: () => this.state.activeMathMenuIndex === this.clauseIndex,
       },
-      template,
     };
   }
 

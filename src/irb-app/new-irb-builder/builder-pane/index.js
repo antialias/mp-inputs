@@ -13,7 +13,6 @@ document.registerElement(`builder-pane`, class extends Component {
   get config() {
     return {
       template,
-
       helpers: {
         getSizeStyle: () => this.state.builderPane && this.state.builderPane.sizeStyle || this.app.defaultBuilderState.sizeStyle,
       },

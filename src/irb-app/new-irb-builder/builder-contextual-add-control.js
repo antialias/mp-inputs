@@ -12,6 +12,7 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
 
   get config() {
     return {
+      template,
       helpers: {
         clickedAdd: () => {
           if (!this.isPaneOpen()) {
@@ -26,7 +27,6 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
         }[this.app.originStageClauseType()] || ``),
         isPaneOpen: () => this.isPaneOpen(),
       },
-      template,
     };
   }
 
