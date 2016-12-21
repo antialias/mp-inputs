@@ -1,10 +1,10 @@
-import { BuilderScreenProperties } from '../builder-pane';
+import { BuilderScreenPropertiesBase } from '../builder-pane/builder-screen-properties-base';
 import { ShowClause } from '../../../models/clause';
 import { extend } from '../../../util';
 
 import template from './builder-screen-numeric-properties.jade';
 
-document.registerElement(`builder-screen-numeric-properties`, class extends BuilderScreenProperties {
+document.registerElement(`builder-screen-numeric-properties`, class extends BuilderScreenPropertiesBase {
   get config() {
     return {
       template,

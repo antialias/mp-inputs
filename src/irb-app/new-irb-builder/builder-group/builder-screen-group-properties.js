@@ -1,9 +1,9 @@
-import { BuilderScreenProperties } from '../builder-pane';
+import { BuilderScreenPropertiesBase } from '../builder-pane/builder-screen-properties-base';
 import { extend } from '../../../util';
 
 import template from './builder-screen-group-properties.jade';
 
-document.registerElement(`builder-screen-group-properties`, class extends BuilderScreenProperties {
+document.registerElement(`builder-screen-group-properties`, class extends BuilderScreenPropertiesBase {
   get config() {
     return {
       template,
