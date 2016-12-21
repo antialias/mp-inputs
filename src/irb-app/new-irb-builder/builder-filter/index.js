@@ -2,10 +2,10 @@
 
 import { Component } from 'panel';
 
-// import { EditControl } from '../controls';
 import { FilterClause } from '../../../models/clause';
 
 import './builder-filter-add-control';
+// TODO import './builder-filter-edit-control';
 import './builder-screen-filter-property';
 import './builder-screen-filter-properties-list';
 
@@ -24,20 +24,3 @@ document.registerElement(`query-builder-filter`, class extends Component {
     };
   }
 });
-
-
-// TODO
-// document.registerElement(`builder-filter-edit-control`, class extends EditControl {
-//   get section() {
-//     return FilterClause.TYPE;
-//   }
-
-//   get label() {
-//     return `TODO`;
-//   }
-
-//   openPane() {
-//     super.openPane();
-//     this.app.startBuilderOnScreen(`builder-screen-filter-properties-list`);
-//   }
-// });
