@@ -6,6 +6,8 @@ import template from './builder-screen-filter-properties-list.jade';
 document.registerElement(`builder-screen-filter-properties-list`, class extends BuilderScreenProperties {
   get config() {
     return {
+      template,
+
       helpers: extend(super.config.helpers, {
         clickedProperty: (ev, property) => {
           ev.stopPropagation();
@@ -17,7 +19,6 @@ document.registerElement(`builder-screen-filter-properties-list`, class extends 
           this.nextScreen(`builder-screen-filter-property`);
         },
       }),
-      template,
     };
   }
 });

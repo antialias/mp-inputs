@@ -7,6 +7,8 @@ import { renameProperty } from '../../../util';
 import { EditControl } from '../controls';
 import { GroupClause } from '../../../models/clause';
 
+import './builder-screen-group-properties';
+
 import template from './index.jade';
 
 document.registerElement(`query-builder-group`, class extends Component {

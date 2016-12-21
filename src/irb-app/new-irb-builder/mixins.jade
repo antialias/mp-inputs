@@ -1,3 +1,60 @@
+mixin generic-options-list-item(label, options)
+  li.list-option.generic-list(onclick= options.onclick)
+    +screen-option(label)
+    +small-caret-icon()
+
+mixin property-list(properties, options)
+  ul.screen-options-list(onscroll=options.scrolledList)
+    if properties.length
+      for property in properties
+        li.list-option(onclick=ev => options.clickedProperty(ev, property))
+          +screen-option(util.renameProperty(property.name), {
+            icon: util.getIconForProperty(property)
+          })
+          if options.caret
+            +small-caret-icon()
+    else if !options.loading
+      li.list-option.list-empty no properties available
+
+mixin resource-type-toggle()
+  - const selectedResourceType = $component.getResourceType()
+  .resource-type-control
+    .resource-type-tabs
+      each resourceType in $helpers.RESOURCE_TYPES
+        button.tab(
+          class=selectedResourceType === resourceType ? 'selected' : '',
+          onclick=() => $helpers.selectResourceType(resourceType)
+        )= $helpers.formatResourceType(resourceType)
+    .resource-type-label #{$helpers.formatResourceType(selectedResourceType)} properties
+
+mixin secondary-action-pill(label, options)
+  .option-secondary-action.pill(onclick=options.onclick)
+    span.secondary-label= label
+    +small-caret-icon()
+
+mixin screen-footer-button(label, options)
+  - options = options || {}
+  button.screen-footer(onclick=options.onclick)= label
+
+mixin screen-option(label, options)
+  - const icon = options && options.icon
+  .option-icon
+    svg-icon(attributes={icon, empty: !icon})
+  .option-label= label
+
+mixin screen-title(title, options)
+  - options = options || {}
+  .screen-title
+    if title
+      .title-label= title
+    block
+    if options.backButton && builderPane.screens.length > 1
+      .title-button.back-button(onclick=$helpers.clickedBackButton)
+        svg-icon(attributes={icon: 'caret-left'})
+    if options.closeButton
+      .title-button.close-button(onclick=$helpers.closePane)
+        svg-icon(attributes={icon: 'x'})
+
 mixin small-caret-icon(options)
   - options = options || {}
   .caret-icon.small-caret

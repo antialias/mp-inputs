@@ -13,7 +13,6 @@ import {
 import template from './index.jade';
 import contextualTemplate from './contextual-screen.jade';
 import eventsTemplate from './events-screen.jade';
-import groupPropertiesTemplate from './group-properties-screen.jade';
 import numericPropertiesTemplate from './numeric-properties-screen.jade';
 import sourcesTemplate from './sources-screen.jade';
 import mathTemplate from './math-screen.jade';
@@ -332,23 +331,6 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
   isShowingNonNumericProperties() {
     const screen = this.app.getBuilderCurrentScreen();
     return screen && !!screen.showingNonNumericProperties;
-  }
-});
-
-document.registerElement(`builder-screen-group-properties`, class extends BuilderScreenProperties {
-  get config() {
-    return {
-      template: groupPropertiesTemplate,
-      helpers: extend(super.config.helpers, {
-        clickedProperty: (ev, property) => this.updateStageClause({
-          resourceType: property.resourceType,
-          value: property.name,
-        }, {
-          shouldCommit: true,
-          shouldStopEditing: true,
-        }),
-      }),
-    };
   }
 });
 
