@@ -1,21 +1,10 @@
 include ./mixins.jade
 
-- const properties = $helpers.getProperties();
-- const selectedResourceType = $component.getResourceType();
-- const formatResourceType = type => type === `events` ? `event` : type;
-
 .builder-screen.properties
   +screen-title(`Group by a property`, {backButton: $helpers.screenIdx() > 1})
-  .resource-type-control
-    .resource-type-tabs
-      each resourceType in $helpers.RESOURCE_TYPES
-        button.tab(
-          class=selectedResourceType === resourceType ? 'selected' : '',
-          onclick=() => $helpers.selectResourceType(resourceType)
-        )= formatResourceType(resourceType)
-    .resource-type-label= `${formatResourceType(selectedResourceType)} properties`
-  +property-list(properties, {
+  +resource-type-toggle()
+  +property-list($helpers.getProperties(), {
     clickedProperty: $helpers.clickedProperty,
+    loading: $component.isLoading(),
     scrolledList: $helpers.scrolledList,
-    loading: $component.isLoading()
   })

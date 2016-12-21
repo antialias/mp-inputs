@@ -5,10 +5,38 @@ mixin generic-options-list-item(label, options)
     +screen-option(label)
     +small-caret-icon()
 
+mixin property-list(properties, options)
+  ul.screen-options-list(onscroll=options.scrolledList)
+    if properties.length
+      for property in properties
+        li.list-option(onclick=ev => options.clickedProperty(ev, property))
+          +screen-option(util.renameProperty(property.name), {
+            icon: util.getIconForProperty(property)
+          })
+          if options.caret
+            +small-caret-icon()
+    else if !options.loading
+      li.list-option.list-empty no properties available
+
+mixin resource-type-toggle()
+  - const selectedResourceType = $component.getResourceType()
+  .resource-type-control
+    .resource-type-tabs
+      each resourceType in $helpers.RESOURCE_TYPES
+        button.tab(
+          class=selectedResourceType === resourceType ? 'selected' : '',
+          onclick=() => $helpers.selectResourceType(resourceType)
+        )= $helpers.formatResourceType(resourceType)
+    .resource-type-label #{$helpers.formatResourceType(selectedResourceType)} properties
+
 mixin secondary-action-pill(label, options)
   .option-secondary-action.pill(onclick=options.onclick)
     span.secondary-label= label
     +small-caret-icon()
+
+mixin screen-footer-button(label, options)
+  - options = options || {}
+  button.screen-footer(onclick=options.onclick)= label
 
 mixin screen-option(label, options)
   - const icon = options && options.icon
@@ -28,20 +56,3 @@ mixin screen-title(title, options)
     if options.closeButton
       .title-button.close-button(onclick=$helpers.closePane)
         svg-icon(attributes={icon: 'x'})
-
-mixin screen-footer-button(label, options)
-  - options = options || {}
-  button.screen-footer(onclick=options.onclick)= label
-
-mixin property-list(properties, options)
-  ul.screen-options-list(onscroll=options.scrolledList)
-    if properties.length
-      for property in properties
-        li.list-option(onclick=ev => options.clickedProperty(ev, property))
-          +screen-option(util.renameProperty(property.name), {
-            icon: util.getIconForProperty(property)
-          })
-          if options.caret
-            +small-caret-icon()
-    else if !options.loading
-      li.list-option.list-empty no properties available

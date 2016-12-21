@@ -241,6 +241,8 @@ export class BuilderScreenProperties extends BuilderScreenBase {
   get config() {
     return {
       helpers: extend(super.config.helpers, {
+        RESOURCE_TYPES: Clause.RESOURCE_TYPES,
+        formatResourceType: type => type === `events` ? `event` : type,
         getProperties: () => {
           const properties = this.buildProgressiveList();
           const isLoading = this.isLoading();
@@ -257,20 +259,30 @@ export class BuilderScreenProperties extends BuilderScreenBase {
 
           return properties;
         },
+        selectResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
       }),
     };
   }
 
+  getResourceType() {
+    const screen = this.app.getBuilderCurrentScreen();
+    return (screen && screen.resourceType) || Clause.RESOURCE_TYPE_ALL;
+  }
+
   isLoading() {
-    throw new Error(`Not implemented!`);
+    return !!{
+      [Clause.RESOURCE_TYPE_ALL]: !(this.state.topEventProperties.length || this.state.topPeopleProperties.length),
+      [Clause.RESOURCE_TYPE_EVENTS]: !this.state.topEventProperties.length,
+      [Clause.RESOURCE_TYPE_PEOPLE]: !this.state.topPeopleProperties.length,
+    }[this.getResourceType()];
   }
 
   buildList() {
-    throw new Error(`Not implemented!`);
-  }
-
-  get properties() {
-    throw new Error(`Not implemented!`);
+    return {
+      [Clause.RESOURCE_TYPE_ALL]: this.state.topEventProperties.concat(this.state.topPeopleProperties),
+      [Clause.RESOURCE_TYPE_EVENTS]: this.state.topEventProperties,
+      [Clause.RESOURCE_TYPE_PEOPLE]: this.state.topPeopleProperties,
+    }[this.getResourceType()] || [];
   }
 }
 
@@ -328,8 +340,6 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
     return {
       template: groupPropertiesTemplate,
       helpers: extend(super.config.helpers, {
-        RESOURCE_TYPES: Clause.RESOURCE_TYPES,
-        selectResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
         clickedProperty: (ev, property) => this.updateStageClause({
           resourceType: property.resourceType,
           value: property.name,
@@ -339,27 +349,6 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
         }),
       }),
     };
-  }
-
-  isLoading() {
-    return !!{
-      [Clause.RESOURCE_TYPE_ALL]: !(this.state.topEventProperties.length || this.state.topPeopleProperties.length),
-      [Clause.RESOURCE_TYPE_EVENTS]: !this.state.topEventProperties.length,
-      [Clause.RESOURCE_TYPE_PEOPLE]: !this.state.topPeopleProperties.length,
-    }[this.getResourceType()];
-  }
-
-  getResourceType() {
-    const screen = this.app.getBuilderCurrentScreen();
-    return (screen && screen.resourceType) || Clause.RESOURCE_TYPE_ALL;
-  }
-
-  buildList() {
-    return {
-      [Clause.RESOURCE_TYPE_ALL]: this.state.topEventProperties.concat(this.state.topPeopleProperties),
-      [Clause.RESOURCE_TYPE_EVENTS]: this.state.topEventProperties,
-      [Clause.RESOURCE_TYPE_PEOPLE]: this.state.topPeopleProperties,
-    }[this.getResourceType()] || [];
   }
 });
 
