@@ -6,6 +6,11 @@ import template from './builder-filter-add-control.jade';
 
 
 document.registerElement(`builder-filter-add-control`, class extends Component {
+  attachedCallback() {
+    super.attachedCallback(...arguments);
+    this.app.onClickOutside(this.tagName, `stopBuildingQuery`);
+  }
+
   get config() {
     return {
       helpers: {
@@ -20,11 +25,6 @@ document.registerElement(`builder-filter-add-control`, class extends Component {
       },
       template,
     };
-  }
-
-  attachedCallback() {
-    super.attachedCallback(...arguments);
-    this.app.onClickOutside(this.tagName, `stopBuildingQuery`);
   }
 
   isPaneOpen() {

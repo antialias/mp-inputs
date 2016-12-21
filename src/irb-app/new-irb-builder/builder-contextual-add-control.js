@@ -15,9 +15,10 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
       helpers: {
         clickedAdd: () => {
           if (!this.isPaneOpen()) {
-            this.app.startBuilderOnScreen(`builder-screen-contextual`);
+            this.openPane();
+          } else {
+            this.app.stopBuildingQuery();
           }
-          this.app.updateBuilder({isContextualMenuOpen: !this.isPaneOpen()});
         },
         getPreposition: () => ({
           [ShowClause.TYPE]: `and`,
@@ -31,5 +32,10 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
 
   isPaneOpen() {
     return this.state.builderPane.screens.length && this.state.builderPane.isContextualMenuOpen;
+  }
+
+  openPane() {
+    this.app.startBuilderOnScreen(`builder-screen-contextual`);
+    this.app.updateBuilder({isContextualMenuOpen: true});
   }
 });
