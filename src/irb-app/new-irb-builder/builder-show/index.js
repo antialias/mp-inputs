@@ -8,6 +8,7 @@ import {
 import { EditControl } from '../edit-control';
 import { ShowClause } from '../../../models/clause';
 
+import './builder-screen-people';
 import './builder-screen-event-operator';
 import './builder-screen-events';
 import './builder-screen-numeric-properties';
@@ -40,7 +41,9 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
   }
 
   openPane() {
-    this.app.startBuilderOnScreen(`builder-screen-events`);
+    const showClauses = this.app.getClausesForType(this.section);
+    const startingScreen = showClauses.length > 1 ? showClauses[0].resourceType : `sources`;
+    this.app.startBuilderOnScreen(`builder-screen-${startingScreen}`);
     this.app.update({isEditingNumericProperty: false});
   }
 });

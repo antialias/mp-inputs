@@ -16,10 +16,8 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
         SOURCES,
         clickedSource: source => {
           const {resourceType} = source;
-          if (resourceType === `events`) {
-            this.updateStageClause({resourceType});
-            this.nextScreen(`builder-screen-${resourceType}`);
-          }
+          this.updateStageClause({resourceType});
+          this.nextScreen(`builder-screen-${resourceType}`);
         },
       }),
     };
