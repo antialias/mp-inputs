@@ -26,8 +26,8 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
         getContextOptions: () => {
           const showClauseType = this.app.getShowClausesType();
           const options = [{name: `Group by a property`, clauseType: GroupClause.TYPE}];
-          if ([ShowClause.RESOURCE_TYPE_EVENTS, ShowClause.RESOURCE_ALL_EVENTS].includes(showClauseType)) {
-            options.concat({name: `Compare to an event`, clauseType: ShowClause.TYPE});
+          if (showClauseType === ShowClause.RESOURCE_TYPE_EVENTS) {
+            options.push({name: `Compare to an event`, clauseType: ShowClause.TYPE});
           }
           return options;
         },
