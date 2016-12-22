@@ -12,9 +12,10 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
         clickedOption: option => {
           const {clauseType} = option;
           if (clauseType === ShowClause.TYPE) {
+            const resourceType = this.app.getShowClausesResource();
             this.app.stopEditingClause();
-            this.app.startAddingClause(clauseType);
-            this.nextScreen(`builder-screen-${this.app.getShowClausesResource()}`);
+            this.app.startAddingClause(clauseType, {resourceType});
+            this.nextScreen(`builder-screen-${resourceType}`);
           } else if (clauseType === GroupClause.TYPE) {
             this.app.stopEditingClause();
             this.app.startAddingClause(clauseType);
