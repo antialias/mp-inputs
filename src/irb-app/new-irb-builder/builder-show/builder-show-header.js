@@ -1,9 +1,8 @@
 import { Component } from 'panel';
 
-import { ShowClause } from '../../../../models/clause';
+import { ShowClause } from '../../../models/clause';
 
-import template from './index.jade';
-import './index.styl';
+import template from './builder-show-header.jade';
 
 document.registerElement(`query-builder-show-header`, class extends Component {
   get config() {

@@ -2,3 +2,25 @@
 
 .people-properties-lists
   overflow auto
+
+.query-builder-show-header
+  position relative
+  svg-icon-style(mp-blue, pos-top: 2px, size: 16px)
+
+  .header-label, .active-math-header
+    align-items flex-end
+    display flex
+
+  .header-label
+    height 15px
+
+  .active-math-header
+    .header-word
+      color mp-blue
+      cursor pointer
+      font-weight 600
+      &:before
+        content '\00a0'
+
+  .math-caret
+    cursor pointer
