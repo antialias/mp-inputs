@@ -4,7 +4,7 @@
       h3
       .control-container= $component.child('show-add-control')
   else
-    for clause, clauseIndex in report.sections.show.clauses
+    each clause, clauseIndex in report.sections.show.clauses
       if clauseIndex
         .preposition and
       .clause.comparison

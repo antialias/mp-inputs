@@ -4,7 +4,7 @@
       h3
       .control-container= $component.child('group-add-control')
   else
-    for clause, clauseIndex in report.sections.group.clauses
+    each clause, clauseIndex in report.sections.group.clauses
       .preposition= clauseIndex ? 'and' : 'by'
       .clause.group
         .clause-header

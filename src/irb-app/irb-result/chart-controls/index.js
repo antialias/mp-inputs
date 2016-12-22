@@ -8,8 +8,8 @@ import chartToggleTemplate from './chart-toggle.jade';
 import extrasMenuTemplate from './extras-menu.jade';
 import './index.styl';
 
-const ANALYSIS_CHOICES = [`linear`, `rolling`, `logarithmic`, `cumulative`];
-const VALUE_CHOICES = [`absolute`, `relative`];
+const ANALYSIS_LIST = [`linear`, `rolling`, `logarithmic`, `cumulative`];
+const VALUE_LIST = [`absolute`, `relative`];
 
 document.registerElement(`chart-toggle`, class extends Component {
   attachedCallback() {
@@ -74,8 +74,8 @@ document.registerElement(`extras-menu`, class extends Component {
       template: extrasMenuTemplate,
 
       helpers: {
-        analysisChoices: () => ANALYSIS_CHOICES,
-        valueChoices: () => VALUE_CHOICES,
+        analysisChoices: () => ANALYSIS_LIST,
+        valueChoices: () => VALUE_LIST,
         isAnalysisDisabled: analysis => !this.IRBResult.isAnalysisEnabled(analysis),
         isValueToggleDisabled: () => !this.IRBResult.isValueToggleEnabled(),
         onClickExtrasMenu: () => this.update({isEditingExtrasMenu: !this.state.isEditingExtrasMenu}),

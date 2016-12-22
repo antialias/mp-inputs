@@ -3,7 +3,7 @@
     if typeof $component.label === 'string'
       span= $component.label
     else if $component.label
-      for part, i in $component.label
+      each part, i in $component.label
         if i % 2
             span.preposition= ` ${part} `
         else

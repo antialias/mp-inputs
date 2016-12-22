@@ -6,7 +6,7 @@
 
 .property.pane-content(class=selectedType ? `filter-type-${selectedType}` : '')
   .filter-tabs
-    for typeChoice in $component.filterTypeChoices
+    each typeChoice in $component.filterTypeChoices
       .filter-tab(class={
         selected: typeChoice === selectedType,
         [`type-${typeChoice}`]: true,
@@ -48,7 +48,7 @@
                 )
 
             ul.filter-string-equals-choices
-              for value in $helpers.getEqualsMatches()
+              each value in $helpers.getEqualsMatches()
                 li(class={selected: selectedValue && selectedValue.indexOf(value) !== -1})
                   button(onclick=() => $helpers.toggleStringEqualsValueSelected(value))= util.renamePropertyValue(value)
 
@@ -68,7 +68,7 @@
 
               if selectedValue
                 ul.filter-string-contains-matches
-                  for value in $helpers.getValueMatches(selectedValue, selectedOperator === 'does not contain')
+                  each value in $helpers.getValueMatches(selectedValue, selectedOperator === 'does not contain')
                     li= util.renamePropertyValue(value)
 
       when 'number'

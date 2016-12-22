@@ -102,7 +102,7 @@ document.registerElement(`date-unit-dropdown`, class extends Dropdown {
   }
 
   get choices() {
-    return TimeClause.UNIT_CHOICES;
+    return TimeClause.UNIT_LIST;
   }
 
   get selected() {

@@ -3,9 +3,9 @@ include ../mixins.jade
 - const lenGroupClauses = groupClauses.length
 
 .builder-section.builder-group
-  for clause, clauseIdx in groupClauses
+  each clause, clauseIdx in groupClauses
     .clause-container
-      .clause-langauge.preposition= clauseIdx ? 'and' : 'by'
+      .clause-language.preposition= clauseIdx ? 'and' : 'by'
     .clause-container
       .clause-header
         if clauseIdx

@@ -3,6 +3,6 @@
   if selected
     button.label(onclick=$helpers.onLabelClick)= $helpers.formatChoice(selected)
     ul
-      for choice in $helpers.getChoices()
+      each choice in $helpers.getChoices()
         li(class={selected: choice === selected})
           button(onclick=() => $helpers.onChoiceClick(choice))= $helpers.formatChoice(choice)

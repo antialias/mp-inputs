@@ -157,10 +157,10 @@ const CUSTOM = `Custom date range ...`;
 const RANGES = {
   HOURS, WEEK, MONTH, QUARTER, YEAR, CUSTOM,
 };
-const RANGE_CHOICES = [
+const RANGE_LIST = [
   HOURS, WEEK, MONTH, QUARTER, YEAR, CUSTOM,
 ];
-const UNIT_CHOICES = [
+const UNIT_LIST = [
   `hour`, `day`, `week`, `month`, `quarter`, `year`,
 ];
 const RANGE_TO_VALUE_AND_UNIT = {
@@ -208,7 +208,7 @@ export class TimeClause extends Clause {
 
   get valid() {
     /* conditions:
-     * - unit must be one of TimeClause.UNIT_CHOICES
+     * - unit must be one of TimeClause.UNIT_LIST
      * - value must exist
      * - value must be either a single entry OR an array of entries
      * - entries in value must be numbers OR Dates
@@ -216,7 +216,7 @@ export class TimeClause extends Clause {
      * - Dates in value must occur before now
      */
     return (
-      this.UNIT_CHOICES.indexOf(this.unit) !== -1 &&
+      this.UNIT_LIST.indexOf(this.unit) !== -1 &&
       this.value &&
       (
         (typeof this.value === `number` && this.value > 0) ||
@@ -258,10 +258,10 @@ export class TimeClause extends Clause {
     return (unitVals && unitVals[value]) || null;
   }
 }
-TimeClause.RANGE_CHOICES = RANGE_CHOICES;
+TimeClause.RANGE_LIST = RANGE_LIST;
 TimeClause.RANGES = TimeClause.prototype.RANGES = RANGES;
 TimeClause.TYPE = TimeClause.prototype.TYPE = `time`;
-TimeClause.UNIT_CHOICES = TimeClause.prototype.UNIT_CHOICES = UNIT_CHOICES;
+TimeClause.UNIT_LIST = TimeClause.prototype.UNIT_LIST = UNIT_LIST;
 
 export class FilterClause extends EventsPropertiesClause {
   constructor(attrs={}) {
@@ -278,7 +278,7 @@ export class FilterClause extends EventsPropertiesClause {
 
     this.filterValue = attrs.filterValue || null;
     this.filterSearch = attrs.filterSearch || null;
-    this.filterDateUnit = attrs.filterDateUnit || TimeClause.UNIT_CHOICES[0];
+    this.filterDateUnit = attrs.filterDateUnit || TimeClause.UNIT_LIST[0];
 
     this.editing = attrs.editing || null;
   }

@@ -2,7 +2,7 @@ ul.chart-toggle(class={
   'editing-charttype': chartToggle.editingType,
   'enabled': projectHasEvents,
 })
-  for chartType in $helpers.chartTypes()
+  each chartType in $helpers.chartTypes()
     - const isEditingCurrentStyle = chartToggle.editingType === chartType
     - const selectedPlotStyle = $helpers.selectedPlotStyle(chartType)
     - const styleChoicesForChartType = $helpers.styleChoicesForChartType(chartType)

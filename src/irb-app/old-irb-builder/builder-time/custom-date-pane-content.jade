@@ -12,7 +12,7 @@
     h4 Display unit
     ol.toggle
       - const selectedUnit = $helpers.getActiveClauseProperty('unit');
-      for unit in $component.constants.unitChoices
+      each unit in $component.constants.unitChoices
         li(
           class={selected: unit === selectedUnit}
           onclick=() => $helpers.selectUnit(unit)

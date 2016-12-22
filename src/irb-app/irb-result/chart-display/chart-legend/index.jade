@@ -69,12 +69,12 @@ include ../../../mixins.jade
                       - const dataTitle = value.formattedText.join(' / ');
                       if isSearchActive
                         .label.search-result(title=dataTitle)
-                          for match in value.matches
+                          each match in value.matches
                             .flattened-segment
                               +highlight-matches(match)
                       else
                         .label(title=dataTitle)
-                          for text in value.formattedText
+                          each text in value.formattedText
                             .flattened-segment= text
                     else
                       if isSearchActive

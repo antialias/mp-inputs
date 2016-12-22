@@ -1,12 +1,12 @@
 .builder-section.builder-show
-  for clause, clauseIdx in report.sections.show.clauses
+  each clause, clauseIdx in report.sections.show.clauses
     if clauseIdx
       .clause-container
-        .clause-langauge.preposition and
+        .clause-language.preposition and
     .clause-container
       .clause-header= $component.child('query-builder-show-header', {attributes: {'clause-index': clauseIdx}})
       .clause-body
         if clause.property
           .control-container= $component.child('builder-numeric-property-edit-control', {attributes: {'clause-index': clauseIdx}})
-          .clause-langauge.preposition on
+          .clause-language.preposition on
         .control-container= $component.child('builder-show-edit-control', {attributes: {'clause-index': clauseIdx}})

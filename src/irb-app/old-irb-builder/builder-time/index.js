@@ -104,7 +104,7 @@ document.registerElement(`time-pane-content`, class extends PaneContent {
 
   get constants() {
     return extend(super.constants, {
-      rangeChoices: TimeClause.RANGE_CHOICES,
+      rangeChoices: TimeClause.RANGE_LIST,
       customRange: TimeClause.RANGES.CUSTOM,
     });
   }
@@ -153,7 +153,7 @@ document.registerElement(`custom-date-pane-content`, class extends PaneContent {
 
   get constants() {
     return extend(super.constants, {
-      unitChoices: TimeClause.UNIT_CHOICES.filter(choice => choice !== `year`),
+      unitChoices: TimeClause.UNIT_LIST.filter(choice => choice !== `year`),
     });
   }
 

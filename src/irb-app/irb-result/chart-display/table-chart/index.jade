@@ -5,7 +5,7 @@
   table-manager(data=JSON.stringify({headers, rows, columnHeaders, columnRows, displayOptions}))
   .left-table-container
     .fixed-header.chart-header-container
-      for header, idx in headers
+      each header, idx in headers
         .fixed-header-cell(onclick=() => $helpers.clickHeader('left', idx, header))
           span= header === '$event' ? 'Event' : util.renameProperty(header)
           .sort-arrows(class=$helpers.leftSortArrowClasses(idx))
@@ -15,13 +15,13 @@
       table
         thead
           tr.chart-header-container
-            for header in headers
+            each header in headers
               th= util.renameProperty(header)
         tbody
           -let firstColIdx = 0
-          for row in rows
+          each row in rows
             tr
-              for cell, cellIdx in row
+              each cell, cellIdx in row
                 -const isFirstCol = cellIdx === 0;
                 if cell
                   - const value = headers[cellIdx] === '$event' ? util.renameEvent(cell.value) : util.renamePropertyValue(cell.value)
@@ -37,7 +37,7 @@
   if fullWidthTable
     .right-table-container
       .fixed-header.chart-header-container
-        for header, idx in columnHeaders
+        each header, idx in columnHeaders
           .fixed-header-cell(onclick=() => $helpers.clickHeader('right', idx, header.value))
             span= header.display
             .sort-arrows(class=$helpers.rightSortArrowClasses(header.value))
@@ -48,13 +48,13 @@
         table
           thead
             tr.chart-header-container
-              for header in columnHeaders
+              each header in columnHeaders
                 th= header.display
           tbody
-            for row in columnRows
+            each row in columnRows
               tr
                 - const segmentMax = singleValueColumnSum ? singleValueColumnSum : util.sum(row.filter(val => val))
-                for cell in row
+                each cell in row
                   if cell || cell === 0
                     - let cellValue = cell.value || cell
                     if isRelativeValue

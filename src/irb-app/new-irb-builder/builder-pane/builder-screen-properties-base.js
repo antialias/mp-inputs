@@ -1,13 +1,14 @@
 import { BuilderScreenBase } from './builder-screen-base';
 import { Clause } from '../../../models/clause';
-import { extend } from '../../../util';
+import { extend, formatResourceType } from '../../../util';
 
 export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   get config() {
     return {
       helpers: extend(super.config.helpers, {
         RESOURCE_TYPES: Clause.RESOURCE_TYPES,
-        formatResourceType: type => type === `events` ? `event` : type,
+        clickedResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
+        getSelectedResourceType: () => this.getSelectedResourceType(),
         getProperties: () => {
           const properties = this.buildProgressiveList();
           const isLoading = this.isLoading();
@@ -24,12 +25,11 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
 
           return properties;
         },
-        selectResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
       }),
     };
   }
 
-  getResourceType() {
+  getSelectedResourceType() {
     const screen = this.app.getBuilderCurrentScreen();
     return (screen && screen.resourceType) || Clause.RESOURCE_TYPE_ALL;
   }
@@ -39,7 +39,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       [Clause.RESOURCE_TYPE_ALL]: !(this.state.topEventProperties.length || this.state.topPeopleProperties.length),
       [Clause.RESOURCE_TYPE_EVENTS]: !this.state.topEventProperties.length,
       [Clause.RESOURCE_TYPE_PEOPLE]: !this.state.topPeopleProperties.length,
-    }[this.getResourceType()];
+    }[this.getSelectedResourceType()];
   }
 
   buildList() {
@@ -47,6 +47,6 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       [Clause.RESOURCE_TYPE_ALL]: this.state.topEventProperties.concat(this.state.topPeopleProperties),
       [Clause.RESOURCE_TYPE_EVENTS]: this.state.topEventProperties,
       [Clause.RESOURCE_TYPE_PEOPLE]: this.state.topPeopleProperties,
-    }[this.getResourceType()] || [];
+    }[this.getSelectedResourceType()] || [];
   }
 }

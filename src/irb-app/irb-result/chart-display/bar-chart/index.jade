@@ -20,10 +20,10 @@
             onchange=$helpers.sortChange
           )
     tbody
-      for row, i in rows
+      each row, i in rows
         - const isMultiColor = row.length > 2 || isStacked
         tr
-          for cell, j in row
+          each cell, j in row
             if cell
               if j < row.length - 1
                 - const headerText = headersToDisplay[j] === '$event' ? 'Events' : util.renameProperty(headersToDisplay[j])
@@ -39,7 +39,7 @@
                       .chart-header-text(title=getLabel(cellLabel))= getLabel(cellLabel)
                     else
                       ul
-                        for value in cell
+                        each value in cell
                           li(title=getLabel(value))= getLabel(value)
 
               else
@@ -57,7 +57,7 @@
                         - segmentMax = util.sum(segmentCell)
                       else
                         - segmentMax = Math.max(...segmentCell)
-                    for value, k in cell
+                    each value, k in cell
                       - const percent = isLogarithmic ? (Math.log10(value) / segmentMax) : (value / segmentMax)
                       - const percentValueString = util.formatPercent(percent)
                       - const segmentName = row[j - 1][k]

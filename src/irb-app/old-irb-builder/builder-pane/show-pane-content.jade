@@ -7,13 +7,13 @@ include ./mixins.jade
 
 .show-pane-content
   ul.column.toggle.math
-    for math in $component.constants.mathChoices
+    each math in $component.constants.mathChoices
       li(
         class={selected: math === selectedMath}
         onclick=() => $helpers.updateStageClause({math})
       )= util.capitalize(math)
   ul.column.toggle.resource-type
-    for resourceType in $component.resourceTypeChoices
+    each resourceType in $component.resourceTypeChoices
       li(
         class={selected: resourceType === selectedResourceType}
         onclick=() => $helpers.updateStageClause({resourceType})
@@ -22,7 +22,7 @@ include ./mixins.jade
 
     if $helpers.showResource('events', selectedResourceType)
       li.resource-title Events
-      for value in $component.eventChoices
+      each value in $component.eventChoices
         - const valueName = util.renameEvent(value.name)
         - const matches = $helpers.searchMatches(valueName)
         if !!matches
@@ -38,8 +38,8 @@ include ./mixins.jade
 
     if $helpers.showResource('properties', selectedResourceType)
       li.resource-title Event properties
-      for property in $component.eventPropertyChoices
+      each property in $component.eventPropertyChoices
         +property-entry(property, property.name === selectedValueName)
       li.resource-title People properties
-      for property in $component.peoplePropertyChoices
+      each property in $component.peoplePropertyChoices
         +property-entry(property, property.name === selectedValueName)

@@ -9,3 +9,36 @@
   border-radius 5px
   box-shadow 0px 1px 1.8px 0.2px rgba(69, 81, 113, 0.15)
   margin 20px
+
+.irb-toggle
+  display flex
+
+  button
+    border 1px solid grey-200
+    background grey-100
+    color grey-700
+    font-size 11px
+    font-weight 600
+    flex 1 1
+    padding 8px
+    text-transform capitalize
+
+    &:first-child
+      border-radius 5px 0 0 5px
+
+    &:last-child
+      border-radius 0 5px 5px 0
+
+    &:not(:last-child)
+      border-right none
+
+    &:hover:not(.selected)
+      background-color blue-700
+      border-color blue-700
+      color white
+
+      & + .irb-tab
+        border-left-color blue-700
+
+    &.irb-toggle-selected
+      background white

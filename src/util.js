@@ -25,6 +25,10 @@ export function getTextWidth(text, font) {
   return context.measureText(text).width;
 }
 
+export function formatResourceType(type) {
+  return type === `events` ? `event` : type;
+}
+
 export function getIconForEvent(mpEvent) {
   if (mpEvent.name === ShowClause.TOP_EVENTS.name ||
       mpEvent.name === ShowClause.ALL_EVENTS.name

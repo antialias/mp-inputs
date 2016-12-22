@@ -335,7 +335,7 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
       break;
 
     default:
-      throw Error(`Unknown sortBy type: ${sortConfig.sortBy}`);
+      throw new Error(`Unknown sortBy type: ${sortConfig.sortBy}`);
 
   }
   return arr;

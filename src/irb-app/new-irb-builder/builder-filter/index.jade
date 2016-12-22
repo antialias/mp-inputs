@@ -3,7 +3,7 @@
     .clause.filter
       .control-container= $component.child('builder-filter-add-control')
   else
-    for clause, clauseIndex in report.sections.filter.clauses
+    each clause, clauseIndex in report.sections.filter.clauses
       .clause-language.preposition= clauseIndex ? 'and' : ''
       .clause.filter
         .control-container= $component.child('builder-filter-edit-control', {attributes: {'clause-index': clauseIndex}})

@@ -5,7 +5,7 @@ include ./mixins.jade
 
 .event-pane-content
   ul.column.resource-value
-    for value in $component.eventChoices
+    each value in $component.eventChoices
       - const valueName = util.renameEvent(value.name)
       - const matches = $helpers.searchMatches(valueName)
       if !!matches

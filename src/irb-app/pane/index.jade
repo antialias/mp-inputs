@@ -32,7 +32,7 @@ mixin paneContent(contentData, isPaneActive, paneIndex)
 .pane-view
   if $component.subpanes
     - const activePaneIndex = $helpers.activePaneIndex()
-    for subpane, paneIndex in $component.subpanes
+    each subpane, paneIndex in $component.subpanes
       .pane(style={
         '-webkit-transform': `translateX(${(paneIndex - activePaneIndex) * 500}px)`,
         transform: `translateX(${(paneIndex - activePaneIndex) * 500}px)`,
