@@ -10,21 +10,24 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
     return {
       template,
       helpers: extend(super.config.helpers, {
+        clickedProperty: (ev, property) => this.updateStageClause({property}, {
+          shouldCommit: true,
+          shouldStopEditing: true,
+        }),
         toggleNonNumericProperties: () => this.app.updateBuilderCurrentScreen({
           showingNonNumericProperties: !this.isShowingNonNumericProperties(),
         }),
-        clickedProperty: (ev, property) => this.updateAndCommitStageClause({property}),
       }),
     };
-  }
-
-  isLoading() {
-    return this.state.topEventPropertiesByEvent[this.event] === BaseQuery.LOADING;
   }
 
   get event() {
     const stageClause = this.app.activeStageClause;
     return stageClause && stageClause.value && stageClause.value.name;
+  }
+
+  isLoading() {
+    return this.state.topEventPropertiesByEvent[this.event] === BaseQuery.LOADING;
   }
 
   buildList() {

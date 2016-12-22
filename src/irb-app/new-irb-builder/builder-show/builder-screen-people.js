@@ -1,4 +1,4 @@
-import { BuilderScreenBase } from '../builder-pane/builder-screen-base';
+import { BuilderScreenPropertiesBase } from '../builder-pane/builder-screen-properties-base';
 import { ShowClause } from '../../../models/clause';
 
 import {
@@ -7,7 +7,7 @@ import {
 
 import template from './builder-screen-people.jade';
 
-document.registerElement(`builder-screen-people`, class extends BuilderScreenBase {
+document.registerElement(`builder-screen-people`, class extends BuilderScreenPropertiesBase {
   get config() {
     return {
       template,
@@ -22,14 +22,27 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenBas
         clickedSpecialOptions: (ev, value) => {
           this.updateStageClause({value}, {shouldCommit: true, shouldStopEditing: true});
         },
-        getProperties: () => {
-          return this.state.topPeopleProperties.filter(prop => prop.type === `number`);
-        },
         getSpecialOptions: () => ([
           extend(ShowClause.ALL_PEOPLE, {icon: `profile`}),
         ]),
-        isLoading: () => !!this.state.topPeopleProperties,
+        isLoading: () => !this.state.topPeopleProperties,
+        toggleNonNumericProperties: () => this.app.updateBuilderCurrentScreen({
+          showingNonNumericProperties: !this.isShowingNonNumericProperties(),
+        }),
       }),
     };
+  }
+
+  buildList() {
+    let properties = this.state.topPeopleProperties;
+    if (!this.isShowingNonNumericProperties()) {
+      properties = properties && properties.filter(prop => prop.type === `number`);
+    }
+    return properties || [];
+  }
+
+  isShowingNonNumericProperties() {
+    const screen = this.app.getBuilderCurrentScreen();
+    return screen && !!screen.showingNonNumericProperties;
   }
 });
