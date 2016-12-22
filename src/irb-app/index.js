@@ -451,9 +451,11 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     return this.state.report.sections[type].clauses;
   }
 
-  getShowClausesType() {
+  getShowClausesResource() {
     let uniqueShowTypes = this.getClausesForType(ShowClause.TYPE).reduce(
-      (types, clause) => types.add(clause.resourceType),
+      (types, clause) => types.add(
+        clause.resourceType === Clause.RESOURCE_TYPE_ALL ? Clause.RESOURCE_TYPE_EVENTS : clause.resourceType
+      ),
       new Set()
     );
     uniqueShowTypes = Array.from(uniqueShowTypes);

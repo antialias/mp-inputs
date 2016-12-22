@@ -134,7 +134,6 @@ ShowClause.MATH_TYPES = ShowClause.prototype.MATH_TYPES = [
   ShowClause.MATH_TYPE_MIN,
   ShowClause.MATH_TYPE_MAX,
 ];
-ShowClause.RESOURCE_TYPES = ShowClause.prototype.RESOURCE_TYPES = [`all`, `events`, `properties`, `people`];
 
 const PROPERTY_TYPES = [
   `string`, `number`, `datetime`, `boolean`, `list`,

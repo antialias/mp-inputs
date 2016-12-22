@@ -12,7 +12,7 @@ document.registerElement(`query-builder-show-header`, class extends Component {
         isStaticHeader: () => {
           // Static Header for "All People" with no numeric properties
           const associatedClause = this.getAssociatedClause();
-          return associatedClause.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE
+          return associatedClause && associatedClause.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE
             && !associatedClause.property;
         },
         getCurrentMathChoice: () => {

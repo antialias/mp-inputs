@@ -10,24 +10,30 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
       template,
       helpers: extend(super.config.helpers, {
         clickedOption: option => {
-          switch (option.clauseType) {
-            case ShowClause.TYPE:
-              this.app.stopEditingClause();
-              this.app.startAddingClause(option.clauseType);
-              this.nextScreen(`builder-screen-events`);
-              break;
-            case GroupClause.TYPE:
-              this.app.stopEditingClause();
-              this.app.startAddingClause(option.clauseType);
-              this.nextScreen(`builder-screen-group-properties`);
-              break;
+          const {clauseType} = option;
+          if (clauseType === ShowClause.TYPE) {
+            this.app.stopEditingClause();
+            this.app.startAddingClause(clauseType);
+            this.nextScreen(`builder-screen-${this.app.getShowClausesResource()}`);
+          } else if (clauseType === GroupClause.TYPE) {
+            this.app.stopEditingClause();
+            this.app.startAddingClause(clauseType);
+            this.nextScreen(`builder-screen-group-properties`);
           }
         },
         getContextOptions: () => {
-          const showClauseType = this.app.getShowClausesType();
-          const options = [{name: `Group by a property`, clauseType: GroupClause.TYPE}];
+          const showClauseType = this.app.getShowClausesResource();
+          let options = [];
           if (showClauseType === ShowClause.RESOURCE_TYPE_EVENTS) {
-            options.push({name: `Compare to an event`, clauseType: ShowClause.TYPE});
+            options = [
+              {name: `Group by a property`, clauseType: GroupClause.TYPE},
+              {name: `Compare to an event`, clauseType: ShowClause.TYPE},
+            ];
+          } else if (showClauseType === ShowClause.RESOURCE_TYPE_PEOPLE) {
+            options = [
+              {name: `Group by a people property`, clauseType: GroupClause.TYPE},
+              {name: `Compare to a people property`, clauseType: ShowClause.TYPE},
+            ];
           }
           return options;
         },
