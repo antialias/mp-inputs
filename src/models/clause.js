@@ -120,8 +120,19 @@ ShowClause.ALL_PEOPLE = ShowClause.prototype.ALL_PEOPLE = {
   name: `All People`,
   resourceType: `people`,
 };
+ShowClause.MATH_TYPE_TOTAL = ShowClause.prototype.MATH_TYPE_TOTAL = `total`;
+ShowClause.MATH_TYPE_UNIQUE = ShowClause.prototype.MATH_TYPE_UNIQUE = `unique`;
+ShowClause.MATH_TYPE_AVERAGE = ShowClause.prototype.MATH_TYPE_AVERAGE = `average`;
+ShowClause.MATH_TYPE_MEDIAN = ShowClause.prototype.MATH_TYPE_MEDIAN = `median`;
+ShowClause.MATH_TYPE_MIN = ShowClause.prototype.MATH_TYPE_MIN = `min`;
+ShowClause.MATH_TYPE_MAX = ShowClause.prototype.MATH_TYPE_MAX = `max`;
 ShowClause.MATH_TYPES = ShowClause.prototype.MATH_TYPES = [
-  `total`, `unique`, `average`, `median`, `min`, `max`,
+  ShowClause.MATH_TYPE_TOTAL,
+  ShowClause.MATH_TYPE_UNIQUE,
+  ShowClause.MATH_TYPE_AVERAGE,
+  ShowClause.MATH_TYPE_MEDIAN,
+  ShowClause.MATH_TYPE_MIN,
+  ShowClause.MATH_TYPE_MAX,
 ];
 ShowClause.RESOURCE_TYPES = ShowClause.prototype.RESOURCE_TYPES = [`all`, `events`, `properties`, `people`];
 

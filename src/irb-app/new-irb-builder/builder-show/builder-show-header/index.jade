@@ -2,13 +2,13 @@ include ../../mixins.jade
 
 .query-builder-show-header
   .header-label
-    span Show
     if $helpers.isStaticHeader()
-      span.math-header-type Total
+      | Show Total
     else
-      span.active-math-header(onclick= $helpers.headerClicked)
-        span.math-header-type=$helpers.getCurrentMathChoice()
-        svg-icon.math-caret(attributes={icon: 'caret-down'})
+      .header-word Show
+      .active-math-header(onclick= $helpers.headerClicked)
+        .header-word(onclick= $helpers.headerClicked)=$helpers.getCurrentMathChoice()
+        svg-icon.math-caret(onclick= $helpers.headerClicked)(attributes={icon: 'caret-down'})
   .drop-menu
     mp-drop-menu(attributes={open: $helpers.isOpen()})
       .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)
