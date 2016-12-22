@@ -12,10 +12,7 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
         toggleNonNumericProperties: () => this.app.updateBuilderCurrentScreen({
           showingNonNumericProperties: !this.isShowingNonNumericProperties(),
         }),
-        clickedProperty: (ev, property) => this.updateStageClause({property}, {
-          shouldCommit: true,
-          shouldStopEditing: true,
-        }),
+        clickedProperty: (ev, property) => this.updateAndCommitStageClause({property}),
       }),
     };
   }

@@ -23,6 +23,8 @@ export class BuilderScreenBase extends Component {
             this.increaseProgressiveListSize();
           }
         },
+        getStageClauseAttr: attr =>
+          this.app.hasStageClause() && this.app.activeStageClause[attr],
       },
     };
   }
@@ -79,6 +81,15 @@ export class BuilderScreenBase extends Component {
     }
   }
 
+  updateScreensRenderedSize({cancelDuringTransition=false}={}) {
+    requestAnimationFrame(() => {
+      if (!(cancelDuringTransition && this.state.builderPane.inTransition)) {
+        const {width, height} = this.firstChild.getBoundingClientRect();
+        this.setPaneSizeAndPosition(width, height);
+      }
+    });
+  }
+
   updateStageClause(clauseAttrs, {shouldCommit=false, shouldStopEditing=false}={}) {
     if (!this.state.builderPane.inTransition) {
       this.app.updateStageClause(clauseAttrs);
@@ -88,12 +99,10 @@ export class BuilderScreenBase extends Component {
     }
   }
 
-  updateScreensRenderedSize({cancelDuringTransition=false}={}) {
-    requestAnimationFrame(() => {
-      if (!(cancelDuringTransition && this.state.builderPane.inTransition)) {
-        const {width, height} = this.firstChild.getBoundingClientRect();
-        this.setPaneSizeAndPosition(width, height);
-      }
+  updateAndCommitStageClause(clauseAttrs) {
+    this.updateStageClause(clauseAttrs, {
+      shouldCommit: true,
+      shouldStopEditing: true,
     });
   }
 

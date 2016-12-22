@@ -9,12 +9,9 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
       template,
 
       helpers: extend(super.config.helpers, {
-        clickedProperty: (ev, property) => this.updateStageClause({
+        clickedProperty: (ev, property) => this.updateAndCommitStageClause({
           resourceType: property.resourceType,
           value: property.name,
-        }, {
-          shouldCommit: true,
-          shouldStopEditing: true,
         }),
       }),
     };

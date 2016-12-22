@@ -14,9 +14,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
       template,
       helpers: extend(super.config.helpers, {
         getEvents: () => this.buildProgressiveList(),
-        clickedEvent: value => {
-          this.updateStageClause({value}, {shouldCommit: true, shouldStopEditing: true});
-        },
+        clickedEvent: value => this.updateAndCommitStageClause({value}),
         clickedEventProperties: (ev, value) => {
           ev.stopPropagation();
           this.updateStageClause({value}, {shouldCommit: true});

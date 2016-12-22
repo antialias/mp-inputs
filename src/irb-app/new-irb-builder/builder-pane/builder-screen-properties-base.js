@@ -1,6 +1,6 @@
 import { BuilderScreenBase } from './builder-screen-base';
 import { Clause } from '../../../models/clause';
-import { extend, formatResourceType } from '../../../util';
+import { extend } from '../../../util';
 
 export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   get config() {
