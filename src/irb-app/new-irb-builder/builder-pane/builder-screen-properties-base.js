@@ -49,10 +49,16 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   }
 
   buildList() {
+    let resourceType;
+    if (this.app.getShowClausesType() === Clause.RESOURCE_TYPE_PEOPLE) {
+      resourceType = Clause.RESOURCE_TYPE_PEOPLE;
+    } else {
+      resourceType = this.getResourceType();
+    }
     return {
       [Clause.RESOURCE_TYPE_ALL]: this.state.topEventProperties.concat(this.state.topPeopleProperties),
       [Clause.RESOURCE_TYPE_EVENTS]: this.state.topEventProperties,
       [Clause.RESOURCE_TYPE_PEOPLE]: this.state.topPeopleProperties,
-    }[this.getSelectedResourceType()] || [];
+    }[resourceType] || [];
   }
 }

@@ -4,13 +4,6 @@ import { extend } from '../../../util';
 
 import template from './builder-screen-contextual.jade';
 
-const CONTEXTUAL_OPTIONS = {
-  [ShowClause.RESOURCE_TYPE_EVENTS]: [
-    {name: `Group by a property`, clauseType: GroupClause.TYPE},
-    {name: `Compare to an event`, clauseType: ShowClause.TYPE},
-  ],
-};
-
 document.registerElement(`builder-screen-contextual`, class extends BuilderScreenBase {
   get config() {
     return {
@@ -31,13 +24,10 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
           }
         },
         getContextOptions: () => {
-          const firstShowClause = this.state.report.sections.getClause(ShowClause.TYPE, 0);
-          let options = [];
-          switch (firstShowClause.resourceType) {
-            case ShowClause.RESOURCE_TYPE_ALL:
-            case ShowClause.RESOURCE_TYPE_EVENTS:
-              options = CONTEXTUAL_OPTIONS[ShowClause.RESOURCE_TYPE_EVENTS];
-              break;
+          const showClauseType = this.app.getShowClausesType();
+          const options = [{name: `Group by a property`, clauseType: GroupClause.TYPE}];
+          if ([ShowClause.RESOURCE_TYPE_EVENTS, ShowClause.RESOURCE_ALL_EVENTS].includes(showClauseType)) {
+            options.concat({name: `Compare to an event`, clauseType: ShowClause.TYPE});
           }
           return options;
         },

@@ -1,6 +1,8 @@
 import { BuilderScreenPropertiesBase } from '../builder-pane/builder-screen-properties-base';
 import { extend } from '../../../util';
 
+import { Clause } from '../../../models/clause';
+
 import template from './builder-screen-group-properties.jade';
 
 document.registerElement(`builder-screen-group-properties`, class extends BuilderScreenPropertiesBase {
@@ -14,8 +16,14 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
           this.updateAndCommitStageClause({
             resourceType: property.resourceType,
             value: property.name,
+          }, {
+            shouldCommit: true,
+            shouldStopEditing: true,
           });
         },
+        isEventsOnlyQuery: () => (
+          this.app.getShowClausesType() === Clause.RESOURCE_TYPE_EVENTS
+        ),
       }),
     };
   }

@@ -39,10 +39,11 @@ mixin resource-type-control(resourceTypes, options)
     +tabs(resourceTypes.map(type => ({value: type, label: util.formatResourceType(type)})), options)
 
 mixin property-screen-body(options)
-  +resource-type-control(options.resourceTypes, {
-    selected: options.selectedResourceType,
-    onclick: options.clickedResourceType,
-  })
+  if options.resourceTypes
+    +resource-type-control(options.resourceTypes, {
+      selected: options.selectedResourceType,
+      onclick: options.clickedResourceType,
+    })
   .screen-list-container(onscroll=options.scrolledList)
     if options.recentProperties.length
       .builder-label Recently viewed

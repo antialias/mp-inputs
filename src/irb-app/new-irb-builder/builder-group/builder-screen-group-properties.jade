@@ -1,13 +1,14 @@
 include ../mixins.jade
 
-- const resourceType = $helpers.getSelectedResourceType();
-- const properties = $helpers.getProperties();
-- const recentProperties = $helpers.getRecentProperties();
+- const isEventsOnlyQuery = $helpers.isEventsOnlyQuery()
+- const resourceType = $helpers.getSelectedResourceType()
+- const properties = $helpers.getProperties()
+- const recentProperties = $helpers.getRecentProperties()
 
 .builder-screen.properties
-  +screen-title(`Group by a property`, {backButton: $helpers.screenIdx() > 1})
+  +screen-title(`Group by a ${isEventsOnlyQuery ? `` : `people`} property`, {backButton: $helpers.screenIdx() > 1})
   +property-screen-body({
-    resourceTypes: $helpers.RESOURCE_TYPES,
+    resourceTypes: isEventsOnlyQuery && $helpers.RESOURCE_TYPES,
     selectedResourceType: $helpers.getSelectedResourceType(),
     clickedResourceType: $helpers.clickedResourceType,
     properties: $helpers.getProperties(),

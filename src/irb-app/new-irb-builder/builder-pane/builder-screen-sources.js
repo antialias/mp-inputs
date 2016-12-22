@@ -1,5 +1,4 @@
 import { BuilderScreenBase } from './builder-screen-base';
-import { ShowClause } from '../../../models/clause';
 
 import { extend } from '../../../util';
 
@@ -18,7 +17,7 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
         SOURCES,
         clickedSource: source => {
           const {resourceType} = source;
-          this.updateStageClause({resourceType, value: ShowClause.ALL_PEOPLE});
+          this.updateStageClause({resourceType, value: {}});
           this.nextScreen(`builder-screen-${resourceType}`);
         },
       }),

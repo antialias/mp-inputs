@@ -1,4 +1,5 @@
 import { BuilderScreenBase } from '../builder-pane/builder-screen-base';
+import { ShowClause } from '../../../models/clause';
 
 import {
   extend,
@@ -12,7 +13,11 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenBas
       template,
       helpers: extend(super.config.helpers, {
         clickedProperty: (ev, property) => {
-          this.updateStageClause({property}, {shouldCommit: true, shouldStopEditing: true});
+          const stageClause = {
+            property,
+            value: ShowClause.ALL_PEOPLE,
+          };
+          this.updateStageClause(stageClause, {shouldCommit: true, shouldStopEditing: true});
         },
         getProperties: () => {
           return this.state.topPeopleProperties.filter(prop => prop.type === `number`);
