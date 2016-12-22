@@ -10,8 +10,14 @@ document.registerElement(`query-builder-show-header`, class extends Component {
     return {
       template,
       helpers: {
+        isStaticHeader: () => {
+          // Static Header for "All People" with no numeric properties
+          const associatedClause = this.getAssociatedClause();
+          return associatedClause.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE
+            && !associatedClause.property;
+        },
         getCurrentMathChoice: () => {
-          const associatedClause = this.state.report.sections.getClause(ShowClause.TYPE, this.clauseIndex);
+          const associatedClause = this.getAssociatedClause();
           return associatedClause && associatedClause.math;
         },
         headerClicked: ev => {
@@ -28,6 +34,10 @@ document.registerElement(`query-builder-show-header`, class extends Component {
         isOpen: () => this.isPaneOpen(),
       },
     };
+  }
+
+  getAssociatedClause() {
+    return this.state.report.sections.getClause(ShowClause.TYPE, this.clauseIndex);
   }
 
   get clauseIndex() {

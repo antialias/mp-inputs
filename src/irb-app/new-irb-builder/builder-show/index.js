@@ -15,6 +15,7 @@ import './builder-screen-numeric-properties';
 import './builder-show-header';
 
 import template from './index.jade';
+import './index.styl';
 
 document.registerElement(`query-builder-show`, class extends Component {
   get config() {

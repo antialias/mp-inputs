@@ -4,14 +4,15 @@
   position relative
   svg-icon-style(mp-blue, pos-top: 4px, size: 16px)
 
-  .math-header-type
-    color mp-blue
-    cursor pointer
-    font-weight 600
+  .math-header-type:before
+    content '\00a0'
+    display inline-block
 
-    &:before
-      content '\00a0'
-      display inline-block
+  .active-math-header
+    .math-header-type
+      color mp-blue
+      cursor pointer
+      font-weight 600
 
   .math-caret
     cursor pointer

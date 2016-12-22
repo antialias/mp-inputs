@@ -19,9 +19,15 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenBas
           };
           this.updateStageClause(stageClause, {shouldCommit: true, shouldStopEditing: true});
         },
+        clickedSpecialOptions: (ev, value) => {
+          this.updateStageClause({value}, {shouldCommit: true, shouldStopEditing: true});
+        },
         getProperties: () => {
           return this.state.topPeopleProperties.filter(prop => prop.type === `number`);
         },
+        getSpecialOptions: () => ([
+          extend(ShowClause.ALL_PEOPLE, {icon: `profile`}),
+        ]),
         isLoading: () => !!this.state.topPeopleProperties,
       }),
     };

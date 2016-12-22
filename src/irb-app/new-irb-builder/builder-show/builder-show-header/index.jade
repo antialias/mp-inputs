@@ -3,9 +3,12 @@ include ../../mixins.jade
 .query-builder-show-header
   .header-label
     span Show
-    span(onclick= $helpers.headerClicked)
-      span.math-header-type=$helpers.getCurrentMathChoice()
-      svg-icon.math-caret(attributes={icon: 'caret-down'})
+    if $helpers.isStaticHeader()
+      span.math-header-type Total
+    else
+      span.active-math-header(onclick= $helpers.headerClicked)
+        span.math-header-type=$helpers.getCurrentMathChoice()
+        svg-icon.math-caret(attributes={icon: 'caret-down'})
   .drop-menu
     mp-drop-menu(attributes={open: $helpers.isOpen()})
       .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)
