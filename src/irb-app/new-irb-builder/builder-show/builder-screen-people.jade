@@ -1,1 +1,14 @@
-.people PEOPLE
+include ../mixins.jade
+
+- const properties = $helpers.getProperties();
+
+.builder-screen.properties
+  +screen-title(`People`, {backButton: !!$helpers.screenIdx()})
+  +property-list(properties, {
+    clickedProperty: $helpers.clickedProperty,
+    loading: $helpers.isLoading()
+  })
+  //- if !$component.isLoading()
+  //-   +screen-footer-button(($component.isShowingNonNumericProperties() ? `Hide` : `View all`) + ` non-numeric properties`, {
+  //-     onclick: $helpers.toggleNonNumericProperties
+  //-   })

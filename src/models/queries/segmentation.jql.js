@@ -110,8 +110,7 @@ function main() {
       query = Events(queryParams);
       break;
     case 'people':
-      queryParams.user_selectors = params.selectors;
-      query = People(queryParams);
+      query = People({user_selectors: params.selectors});
       break;
   }
 

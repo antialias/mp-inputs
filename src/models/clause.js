@@ -123,7 +123,7 @@ ShowClause.ALL_PEOPLE = ShowClause.prototype.ALL_PEOPLE = {
 ShowClause.MATH_TYPES = ShowClause.prototype.MATH_TYPES = [
   `total`, `unique`, `average`, `median`, `min`, `max`,
 ];
-ShowClause.RESOURCE_TYPES = ShowClause.prototype.RESOURCE_TYPES = [`all`, `events`, `properties`];
+ShowClause.RESOURCE_TYPES = ShowClause.prototype.RESOURCE_TYPES = [`all`, `events`, `properties`, `people`];
 
 const PROPERTY_TYPES = [
   `string`, `number`, `datetime`, `boolean`, `list`,

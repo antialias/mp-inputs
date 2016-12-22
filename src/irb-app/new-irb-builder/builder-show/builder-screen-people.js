@@ -1,4 +1,3 @@
-// import { Clause, GroupClause, ShowClause } from '../../../../models/clause';
 import { BuilderScreenBase } from '../builder-pane/builder-screen-base';
 
 import {
@@ -12,7 +11,13 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenBas
     return {
       template,
       helpers: extend(super.config.helpers, {
-
+        clickedProperty: (ev, property) => {
+          this.updateStageClause({property}, {shouldCommit: true, shouldStopEditing: true});
+        },
+        getProperties: () => {
+          return this.state.topPeopleProperties.filter(prop => prop.type === `number`);
+        },
+        isLoading: () => !!this.state.topPeopleProperties,
       }),
     };
   }
