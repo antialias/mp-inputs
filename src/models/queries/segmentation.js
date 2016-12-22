@@ -476,7 +476,12 @@ export default class SegmentationQuery extends BaseQuery {
           }
           obj = obj[key];
         }
-        obj[getDateKey(item.key[item.key.length - 1])] = isPeopleOnlyQuery ? {value: item.value} : item.value;
+
+        if (isPeopleOnlyQuery) {
+          obj[item.key[item.key.length - 1]] = {value: item.value};
+        } else {
+          obj[getDateKey(item.key[item.key.length - 1])] = item.value;
+        }
         return seriesObj;
       }, {});
     }
