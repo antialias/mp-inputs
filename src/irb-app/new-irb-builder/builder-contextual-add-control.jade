@@ -6,9 +6,9 @@
       button.add-button(onclick=$helpers.clickedAdd)
         svg-icon(attributes={icon: 'plus-large'})
       input.control-label(
-          autoFocus=true
           oninput=$helpers.searchHandler
           type='text'
+          value=contextFilter
         )
         span.label-preposition= $helpers.getPreposition()
     .drop-menu

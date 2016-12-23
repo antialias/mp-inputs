@@ -8,9 +8,10 @@ mixin property-list(properties, options)
   ul.screen-options-list(onscroll=options.scrolledList)
     if properties.length
       for property in properties
-        if property.name.toLowerCase().includes(contextFilter.toLowerCase())
+        - const renamedProperty = util.renameProperty(property.name)
+        if renamedProperty.toLowerCase().includes(contextFilter.toLowerCase())
           li.list-option(onclick=ev => options.clickedProperty(ev, property))
-            +screen-option(util.renameProperty(property.name), {
+            +screen-option(renamedProperty, {
               icon: util.getIconForProperty(property)
             })
             if options.caret

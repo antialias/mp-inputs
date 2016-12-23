@@ -572,6 +572,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     this.stopEditingClauseAttrs();
     const newState = {
       activeMathMenuIndex: null,
+      contextFilter: ``,
       stageClauses: [],
       stageClauseIndex: null,
       resourceTypeFilter: `all`,
