@@ -67,7 +67,9 @@ mixin small-caret-icon(options)
     svg-icon(attributes={icon: `caret-${options.direction || 'right'}`})
 
 mixin highlight-match(label, match)
-  - var startIndex = label.indexOf(match)
+  - lowercaseLabel = label.toLowerCase()
+  - lowercaseMatch = match.toLowerCase()
+  - var startIndex = lowercaseLabel.indexOf(lowercaseMatch)
   - var endIndex = startIndex + match.length
   span=label.slice(0, startIndex)
   span.highlight-match=label.slice(startIndex, endIndex)
