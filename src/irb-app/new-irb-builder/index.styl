@@ -59,7 +59,9 @@
     .add-control
       display flex
 
-      button.control-label
+      .control-label
+        border: none;
+        border-bottom: 1px dashed blueviolet;
         order 1
         transition width 0s, transform 1s
         width 0px
@@ -82,7 +84,7 @@
           svg-icon-style(mp-blue, size: 16px, pos-top: 1px)
 
     .pane-open
-      button.control-label
+      .control-label
         text-align left
         transition width animation-time, transform animation-time
         width 200px

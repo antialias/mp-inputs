@@ -1,7 +1,8 @@
 mixin generic-options-list-item(label, options)
-  li.list-option.generic-list(onclick= options.onclick)
-    +screen-option(label, {noIcon: true})
-    +small-caret-icon()
+  if label.includes(contextFilter)
+    li.list-option.generic-list(onclick= options.onclick)
+      +screen-option(label, {noIcon: true})
+      +small-caret-icon()
 
 mixin property-list(properties, options)
   ul.screen-options-list(onscroll=options.scrolledList)

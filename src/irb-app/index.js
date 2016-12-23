@@ -128,6 +128,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         },
       },
       activeMathMenuIndex: null,
+      contextFilter: ``,
       isEditingExtrasMenu: false,
       isEditingNumericProperty: false,
       newCachedData: false,
@@ -539,6 +540,10 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   stopEditingExtrasMenu() {
     this.update({isEditingExtrasMenu: false});
+  }
+
+  updateContextFilter(filter) {
+    this.update({contextFilter: filter});
   }
 
   startAddingClause(sectionType, attrs={}) {

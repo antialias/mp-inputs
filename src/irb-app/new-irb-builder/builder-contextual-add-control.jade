@@ -5,7 +5,11 @@
     .control-buttons.add-control
       button.add-button(onclick=$helpers.clickedAdd)
         svg-icon(attributes={icon: 'plus-large'})
-      button.control-label
+      input.control-label(
+          autoFocus=true
+          oninput=$helpers.searchHandler
+          type='text'
+        )
         span.label-preposition= $helpers.getPreposition()
     .drop-menu
       mp-drop-menu(attributes={open})
