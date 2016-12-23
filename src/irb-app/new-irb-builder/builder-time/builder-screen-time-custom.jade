@@ -1,0 +1,24 @@
+include ../../mixins.jade
+include ../mixins.jade
+
+- const {from, to} = $helpers.getDates();
+
+.builder-screen.time-custom
+  +screen-title('Choose a date range', {backButton: true})
+  .range-control
+    .range-inputs
+      date-input(value=from onchange=$helpers.changedFrom)
+      .preposition to
+      date-input(value=to onchange=$helpers.changedTo)
+    .range-calendar
+      irb-calendar(
+        attributes={range: true}
+        value=JSON.stringify({from, to})
+        onchange=$helpers.changedDates
+      )
+  .unit-control
+    .builder-label Time unit
+    +toggle($helpers.UNITS, {
+      selected: $helpers.getStageClauseAttr('unit'),
+      onclick: $helpers.clickedUnit
+    })

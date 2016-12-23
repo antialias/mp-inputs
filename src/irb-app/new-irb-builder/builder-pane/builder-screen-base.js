@@ -24,7 +24,7 @@ export class BuilderScreenBase extends Component {
           }
         },
         getStageClauseAttr: attr =>
-          this.app.hasStageClause() && this.app.activeStageClause[attr],
+          this.app.activeStageClause && this.app.activeStageClause[attr],
       },
     };
   }

@@ -1,0 +1,9 @@
+.builder-section.builder-time
+  if report.sections.time.clauses.length
+    .clause-container
+      .clause-language.preposition in the
+    .clause-container
+      .clause-header
+        h3 Time
+      .clause-body
+        .control-container= $component.child('builder-time-edit-control', {attributes: {'clause-index': 0}})

@@ -1,0 +1,8 @@
+.date-input
+  input(
+    type='text'
+    value=$helpers.formatDateDisplay(dateValue)
+    onfocus=$helpers.focussedInput
+    onblur=$helpers.blurredInput
+    onchange=$helpers.changedInput
+  )

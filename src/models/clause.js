@@ -148,27 +148,34 @@ GroupClause.TYPE = GroupClause.prototype.TYPE = `group`;
 GroupClause.FILTER_TYPES = GroupClause.prototype.FILTER_TYPES = PROPERTY_TYPES;
 
 // Time constants
-const HOURS = `last 96 hours`;
-const WEEK = `last week`;
-const MONTH = `last 30 days`;
-const QUARTER = `last quarter`;
-const YEAR = `last 12 months`;
-const CUSTOM = `Custom date range ...`;
 const RANGES = {
-  HOURS, WEEK, MONTH, QUARTER, YEAR, CUSTOM,
+  HOURS: `last 96 hours`,
+  WEEK: `last week`,
+  MONTH: `last 30 days`,
+  QUARTER: `last quarter`,
+  YEAR: `last 12 months`,
+  CUSTOM: `Choose a date range ...`,
 };
 const RANGE_LIST = [
-  HOURS, WEEK, MONTH, QUARTER, YEAR, CUSTOM,
+  RANGES.HOURS, RANGES.WEEK, RANGES.MONTH, RANGES.QUARTER, RANGES.YEAR, RANGES.CUSTOM,
 ];
+const UNITS = {
+  HOUR: `hour`,
+  DAY: `day`,
+  WEEK: `week`,
+  MONTH: `month`,
+  QUARTER: `quarter`,
+  YEAR: `year`,
+};
 const UNIT_LIST = [
-  `hour`, `day`, `week`, `month`, `quarter`, `year`,
+  UNITS.HOUR, UNITS.DAY, UNITS.WEEK, UNITS.MONTH, UNITS.QUARTER, UNITS.YEAR,
 ];
 const RANGE_TO_VALUE_AND_UNIT = {
-  [RANGES.HOURS]:   {value: 96, unit: `hour` },
-  [RANGES.WEEK]:    {value: 7,  unit: `day`  },
-  [RANGES.MONTH]:   {value: 30, unit: `day`  },
-  [RANGES.QUARTER]: {value: 12, unit: `week` },
-  [RANGES.YEAR]:    {value: 12, unit: `month`},
+  [RANGES.HOURS]:   {value: 96, unit: UNITS.HOUR },
+  [RANGES.WEEK]:    {value: 7,  unit: UNITS.DAY  },
+  [RANGES.MONTH]:   {value: 30, unit: UNITS.DAY  },
+  [RANGES.QUARTER]: {value: 12, unit: UNITS.WEEK },
+  [RANGES.YEAR]:    {value: 12, unit: UNITS.MONTH},
 };
 const UNIT_AND_VALUE_TO_RANGE = {
   hour: {
@@ -258,9 +265,10 @@ export class TimeClause extends Clause {
     return (unitVals && unitVals[value]) || null;
   }
 }
-TimeClause.RANGE_LIST = RANGE_LIST;
-TimeClause.RANGES = TimeClause.prototype.RANGES = RANGES;
 TimeClause.TYPE = TimeClause.prototype.TYPE = `time`;
+TimeClause.RANGES = TimeClause.prototype.RANGES = RANGES;
+TimeClause.RANGE_LIST = TimeClause.prototype.RANGE_LIST = RANGE_LIST;
+TimeClause.UNITS = TimeClause.prototype.UNITS = UNITS;
 TimeClause.UNIT_LIST = TimeClause.prototype.UNIT_LIST = UNIT_LIST;
 
 export class FilterClause extends EventsPropertiesClause {

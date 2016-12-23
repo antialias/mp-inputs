@@ -1,0 +1,161 @@
+@import "~pikaday/css/pikaday.css"
+@import "../../stylesheets/common"
+
+irb-calendar .pika-mixpanel
+  border none
+  border-radius 10px
+  width 492px
+
+  &::after
+    border 10px solid transparent
+    border-bottom-color white
+    content ''
+    display block
+    left 231px
+    position absolute
+    top -19px
+    width 0
+
+  .pika-lendar
+    padding 8px 0
+    margin-left 0
+    margin-right 0
+    width 246px
+
+    &:first-child table
+      border-right 1px solid grey-200
+
+    &:last-child table
+      border-left 1px solid grey-200
+
+  .pika-title
+    color grey-900
+    font-size 14px
+    margin-bottom 7px
+    text-align center
+
+    .pika-label + .pika-label
+      display none  // this hides the year in the date picker month titles
+
+    .pika-prev,
+    .pika-next
+      background-color grey-500
+      background-image none
+      border-radius 20px
+      height 24px
+      position absolute
+      top 2px
+      width 24px
+
+      &::before
+        content ''
+        display block
+        height 30px
+        position relative
+        top -3px
+        width 30px
+
+    .pika-prev
+      left 20px
+      &::before
+        background url("~mixpanel-common/assets/icons/caret-left.svg") no-repeat center
+        left -4px
+
+    .pika-next
+      right 20px
+      &::before
+        background url("~mixpanel-common/assets/icons/caret-right.svg") no-repeat center
+        left -2px
+
+  table.pika-table
+    border-collapse separate
+    border-spacing 0 4px
+
+    th
+      color grey-700
+      padding-bottom 8px
+
+    th, td
+      position relative
+
+      &:first-child
+        padding-left 18px
+
+      &:last-child
+        padding-right 18px
+
+    /* --- button styles --- */
+
+    .pika-button
+      width 30px
+      background-color transparent
+      color grey-700
+      font-weight bold
+      height 30px
+      position relative
+      text-align center
+
+    td:not(.is-startrange):not(.is-endrange):not(.is-disabled):not(.is-outside-current-month):hover
+      .pika-button
+        background-color grey-100
+        border-radius 15px
+        width 30px
+
+      &.is-inrange .pika-button
+        background-color blue-900
+
+    td.is-startrange:not(.is-outside-current-month),
+    td.is-endrange:not(.is-outside-current-month)
+      .pika-button
+        background-color blue-900
+        border-radius 15px
+        color white
+        text-shadow 0.5px 0.9px 0 rgba(0, 0, 0, 0.26)
+        width 30px
+
+    td.is-inrange .pika-button
+      color white
+
+    td.is-disabled .pika-button
+      opacity 0.5
+
+    td.is-outside-current-month .pika-button
+      color transparent
+
+/* --- highlight styles --- */
+
+.new-query-builder .pika-mixpanel:not(.incomplete-range) table.pika-table
+  td.is-startrange,
+  td.is-endrange
+    &:not(.is-outside-current-month)
+      &::before
+        content ''
+        width 15px
+        height 100%
+        background-color mp-blue
+        top 0
+        position absolute
+
+      &.is-startrange
+        &:not(:last-child)::before
+          right 0
+        &:last-child
+          background-color mp-blue
+          &::before
+            background-color white
+            left 0
+
+      &.is-endrange
+        &:not(:first-child)::before
+          left 0
+        &:first-child
+          background-color mp-blue
+          &::before
+            background-color white
+            right 0
+
+  td.is-startrange.is-endrange::before
+    display none
+
+  td.is-inrange
+    background-color mp-blue

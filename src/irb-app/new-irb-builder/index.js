@@ -8,6 +8,7 @@ import './builder-filter';
 import './builder-group';
 import './builder-pane';
 import './builder-show';
+import './builder-time';
 
 document.registerElement(`new-irb-builder`, class extends Component {
   get config() {

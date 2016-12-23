@@ -1,6 +1,7 @@
 // IRB-specific utils
 import cloneDeep from 'lodash/cloneDeep';
 import { nestedObjectDepth, objectFromPairs } from 'mixpanel-common/util';
+import moment from 'moment';
 
 import { ShowClause } from './models/clause';
 
@@ -17,6 +18,19 @@ export const MS_BY_UNIT = {
   quarter: MS_IN_DAY * 90,
   year: MS_IN_DAY * 365,
 };
+
+export function formatDateISO(date) {
+  return date && date.toISOString().slice(0, 10);
+}
+
+export function formatDateDisplay(date) {
+  return moment(date).format(`MMM D, YYYY`);
+}
+
+export function parseDate(dateString) {
+  const timestamp = Number(moment(dateString));
+  return isNaN(timestamp) ? null : new Date(timestamp);
+}
 
 export function getTextWidth(text, font) {
   const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement(`canvas`));
