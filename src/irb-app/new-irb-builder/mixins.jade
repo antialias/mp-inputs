@@ -45,7 +45,8 @@ mixin screen-option(label, options)
     - const icon = options.icon
     .option-icon
       svg-icon(attributes={icon, empty: !icon})
-  .option-label= label
+  .option-label
+    +highlight-match(label, contextFilter)
 
 mixin screen-title(title, options)
   - options = options || {}
@@ -64,3 +65,10 @@ mixin small-caret-icon(options)
   - options = options || {}
   .caret-icon.small-caret
     svg-icon(attributes={icon: `caret-${options.direction || 'right'}`})
+
+mixin highlight-match(label, match)
+  - var startIndex = label.indexOf(match)
+  - var endIndex = startIndex + match.length
+  span=label.slice(0, startIndex)
+  span.highlight-match=label.slice(startIndex, endIndex)
+  span=label.slice(-1 * (label.length - endIndex))
