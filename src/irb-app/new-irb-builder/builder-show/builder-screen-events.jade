@@ -4,10 +4,12 @@ include ../mixins.jade
   +screen-title('All Events', {backButton: true})
   ul.screen-options-list(onscroll=$helpers.scrolledList)
     each mpEvent in $helpers.getEvents()
-      li.list-option(onclick=() => $helpers.clickedEvent(mpEvent))
-        +screen-option(util.renameEvent(mpEvent.name), {
-          icon: util.getIconForEvent(mpEvent)
-        })
-        +secondary-action-pill('Properties', {
-          onclick: ev => $helpers.clickedEventProperties(ev, mpEvent)
-        })
+      - const renamedMpEvent = util.renameEvent(mpEvent.name)
+      if renamedMpEvent.toLowerCase().includes(contextFilter.toLowerCase())
+        li.list-option(onclick=() => $helpers.clickedEvent(mpEvent))
+          +screen-option(renamedMpEvent, {
+            icon: util.getIconForEvent(mpEvent)
+          })
+          +secondary-action-pill('Properties', {
+            onclick: ev => $helpers.clickedEventProperties(ev, mpEvent)
+          })
