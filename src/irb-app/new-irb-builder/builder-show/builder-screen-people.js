@@ -20,7 +20,7 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenPro
           this.updateStageClause(stageClause, {shouldCommit: true, shouldStopEditing: true});
         },
         clickedSpecialOptions: (ev, value) => {
-          this.updateStageClause({value}, {shouldCommit: true, shouldStopEditing: true});
+          this.updateStageClause({value, property: null}, {shouldCommit: true, shouldStopEditing: true});
         },
         getSpecialOptions: () => ([
           extend(ShowClause.ALL_PEOPLE, {icon: `profile`}),

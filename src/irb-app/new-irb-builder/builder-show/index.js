@@ -19,7 +19,14 @@ import './index.styl';
 
 document.registerElement(`query-builder-show`, class extends Component {
   get config() {
-    return {template};
+    return {
+      template,
+      helpers: {
+        showSourceForNumericProperties: () => (
+          this.app.getShowClausesResource() !== ShowClause.RESOURCE_TYPE_PEOPLE
+        ),
+      },
+    };
   }
 });
 
@@ -29,8 +36,14 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
   }
 
   getLabel() {
+    let label = ``;
     const clause = this.state.report.sections.getClause(this.section, this.clauseIndex);
-    return renameEvent(clause.value.name);
+    if (clause.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE) {
+      label = clause.property ? clause.property.name : clause.value.name;
+    } else {
+      label = renameEvent(clause.value.name);
+    }
+    return label;
   }
 
   isPaneOpen() {
