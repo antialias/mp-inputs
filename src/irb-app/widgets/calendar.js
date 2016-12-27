@@ -55,38 +55,14 @@ class Calendar extends WebComponent {
       i18n: extend(Pikaday.prototype.config().i18n, {
         weekdaysShort: [`SU`, `MO`, `TU`, `WE`, `TH`, `FR`, `SA`],
       }),
-      onSelect: date => this.selectDate(date),
       showDaysInNextAndPreviousMonths: true,
       theme: `pika-mixpanel`,
       yearRange: 10,
+      onSelect: date => this.selectDate(date),
+      onDraw: () => this.emitResize(),
     });
     this.appendChild(this.picker.el);
     this.updatePicker();
-  }
-
-  emitChange() {
-    let detail = null;
-
-    if (!this.isRangeInput) {
-      if (this.date) {
-        detail = {
-          date: formatDateISO(this.date),
-        };
-      }
-    } else if (this.from && this.to) {
-      detail = {
-        from: formatDateISO(this.from),
-        to: formatDateISO(this.to),
-      };
-    }
-
-    if (detail) {
-      this.dispatchEvent(new CustomEvent(`change`, {detail}));
-    }
-  }
-
-  emitResize() {
-    this.dispatchEvent(new CustomEvent(`resize`));
   }
 
   updatePicker() {
@@ -129,6 +105,31 @@ class Calendar extends WebComponent {
     if (emit) {
       this.emitChange();
     }
+  }
+
+  emitChange() {
+    let detail = null;
+
+    if (!this.isRangeInput) {
+      if (this.date) {
+        detail = {
+          date: formatDateISO(this.date),
+        };
+      }
+    } else if (this.from && this.to) {
+      detail = {
+        from: formatDateISO(this.from),
+        to: formatDateISO(this.to),
+      };
+    }
+
+    if (detail) {
+      this.dispatchEvent(new CustomEvent(`change`, {detail}));
+    }
+  }
+
+  emitResize() {
+    this.dispatchEvent(new CustomEvent(`resize`));
   }
 }
 
