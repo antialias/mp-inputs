@@ -2,12 +2,12 @@ mixin highlight-matches(matches)
   each substr, si in matches
     span.substr(class={'matches-search': !(si % 2)})= substr
 
-mixin toggle(list, options)
-  .irb-toggle
+mixin tabs(list, options)
+  .irb-tabs
     each item in list
       - const value = item.value || item;
       - const label = item.label || item;
-      button(
-        class=options.selected === value ? 'irb-toggle-selected' : '',
+      button.irb-tab(
+        class=options.selected === value ? 'irb-tab-selected' : '',
         onclick=ev => options.onclick(value, ev)
       )= label

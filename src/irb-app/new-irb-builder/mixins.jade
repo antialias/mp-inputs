@@ -18,10 +18,10 @@ mixin property-list(properties, options)
     else if !options.loading
       li.list-option.list-empty no properties available
 
-mixin resource-type-toggle(resourceTypes, options)
+mixin resource-type-control(resourceTypes, options)
   .resource-type-control
-    +toggle(resourceTypes.map(type => ({value: type, label: util.formatResourceType(type)})), options)
-    .resource-type-label #{util.formatResourceType(options.selected)} properties
+    +tabs(resourceTypes.map(type => ({value: type, label: util.formatResourceType(type)})), options)
+    .builder-label #{util.formatResourceType(options.selected)} properties
 
 mixin secondary-action-pill(label, options)
   .option-secondary-action.pill(onclick=options.onclick)

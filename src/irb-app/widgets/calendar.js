@@ -2,6 +2,7 @@ import Pikaday from 'pikaday';
 import WebComponent from 'webcomponent';
 
 import {
+  extend,
   formatDateISO,
   parseDate,
 } from '../../util';
@@ -51,11 +52,9 @@ class Calendar extends WebComponent {
       mainCalendar: `right`,
       maxDate: new Date(),
       numberOfMonths: this.isRangeInput ? 2 : 1,
-      i18n: {
-        months: [`January`, `February`, `March`, `April`, `May`, `June`, `July`, `August`, `September`, `October`, `November`, `December`],
-        weekdays: [`Sunday`, `Monday`, `Tuesday`, `Wednesday`, `Thursday`, `Friday`, `Saturday`],
+      i18n: extend(Pikaday.prototype.config().i18n, {
         weekdaysShort: [`SU`, `MO`, `TU`, `WE`, `TH`, `FR`, `SA`],
-      },
+      }),
       onSelect: date => this.selectDate(date),
       showDaysInNextAndPreviousMonths: true,
       theme: `pika-mixpanel`,

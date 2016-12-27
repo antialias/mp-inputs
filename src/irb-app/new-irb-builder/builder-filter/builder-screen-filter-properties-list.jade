@@ -2,7 +2,7 @@ include ../mixins.jade
 
 .builder-screen.properties
   +screen-title(`Filter by a property`, {backButton: $helpers.screenIdx() > 1})
-  +resource-type-toggle($helpers.RESOURCE_TYPES, {
+  +resource-type-control($helpers.RESOURCE_TYPES, {
     selected: $helpers.getSelectedResourceType(),
     onclick: $helpers.clickedResourceType,
   })
