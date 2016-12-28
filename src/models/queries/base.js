@@ -68,3 +68,7 @@ export default class BaseQuery {
     return results;
   }
 }
+
+// special string value used to mark pieces of state as "loading"
+// while queries to populate the state are in flight
+BaseQuery.LOADING = `$IRB_QUERY_LOADING`;

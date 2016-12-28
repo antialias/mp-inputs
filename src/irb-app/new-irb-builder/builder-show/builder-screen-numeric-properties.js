@@ -1,5 +1,6 @@
 import { BuilderScreenPropertiesBase } from '../builder-pane/builder-screen-properties-base';
 import { ShowClause } from '../../../models/clause';
+import BaseQuery from '../../../models/queries/base';
 import { extend } from '../../../util';
 
 import template from './builder-screen-numeric-properties.jade';
@@ -18,7 +19,7 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
   }
 
   isLoading() {
-    return !this.state.topEventPropertiesByEvent.hasOwnProperty(this.event);
+    return this.state.topEventPropertiesByEvent[this.event] === BaseQuery.LOADING;
   }
 
   get event() {
@@ -37,11 +38,15 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
       }
     }
 
-    if (!this.isShowingNonNumericProperties()) {
-      properties = properties && properties.filter(prop => prop.type === `number`);
+    if (!Array.isArray(properties)) {
+      properties = [];
     }
 
-    return properties || [];
+    if (!this.isShowingNonNumericProperties()) {
+      properties = properties.filter(prop => prop.type === `number`);
+    }
+
+    return properties;
   }
 
   isShowingNonNumericProperties() {
