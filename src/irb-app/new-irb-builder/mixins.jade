@@ -1,4 +1,9 @@
 mixin generic-options-list-item(label, options)
+  li.list-option.generic-list(onclick= options.onclick)
+    +screen-option(label.toLowerCase(), {noIcon: true})
+    +small-caret-icon()
+
+mixin filterable-options-list-item(label, options)
   if label.toLowerCase().includes(contextFilter.toLowerCase())
     li.list-option.generic-list(onclick= options.onclick)
       +screen-option(label, {noIcon: true})
@@ -70,7 +75,11 @@ mixin highlight-match(label, match)
   - lowercaseLabel = label.toLowerCase()
   - lowercaseMatch = match.toLowerCase()
   - var startIndex = lowercaseLabel.indexOf(lowercaseMatch)
-  - var endIndex = startIndex + match.length
-  span=label.slice(0, startIndex)
-  span.highlight-match=label.slice(startIndex, endIndex)
-  span=label.slice(-1 * (label.length - endIndex))
+  if startIndex !== -1
+    - var endIndex = startIndex + match.length
+    span=label.slice(0, startIndex)
+    span.highlight-match=label.slice(startIndex, endIndex)
+    if endIndex !== label.length
+      span=label.slice(-1 * (label.length - endIndex))
+  else
+    span=label

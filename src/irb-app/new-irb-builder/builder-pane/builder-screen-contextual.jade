@@ -4,3 +4,5 @@ include ../mixins.jade
   ul.screen-options-list
     each option in $helpers.getContextOptions()
       +generic-options-list-item(option.name, {onclick: () => $helpers.clickedOption(option)})
+      each item in $helpers.optionList(option)
+        +filterable-options-list-item(item.name, {onclick: () => $helpers.clickedEventOption(item)})
