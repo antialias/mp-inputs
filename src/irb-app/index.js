@@ -128,7 +128,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         },
       },
       activeMathMenuIndex: null,
-      contextFilter: ``,
       isEditingExtrasMenu: false,
       isEditingNumericProperty: false,
       newCachedData: false,
@@ -542,10 +541,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     this.update({isEditingExtrasMenu: false});
   }
 
-  updateContextFilter(filter) {
-    this.update({contextFilter: filter});
-  }
-
   startAddingClause(sectionType, attrs={}) {
     this.update({stageClauses: this.state.stageClauses.concat(Clause.create(sectionType, attrs))});
   }
@@ -572,7 +567,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     this.stopEditingClauseAttrs();
     const newState = {
       activeMathMenuIndex: null,
-      contextFilter: ``,
       stageClauses: [],
       stageClauseIndex: null,
       resourceTypeFilter: `all`,
