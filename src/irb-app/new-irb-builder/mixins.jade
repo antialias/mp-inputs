@@ -1,26 +1,18 @@
 mixin generic-options-list-item(label, options)
   li.list-option.generic-list(onclick= options.onclick)
-    +screen-option(label.toLowerCase(), {noIcon: true})
+    +screen-option(label, {noIcon: true})
     +small-caret-icon()
-
-mixin filterable-options-list-item(label, options)
-  if label.toLowerCase().includes(contextFilter.toLowerCase())
-    li.list-option.generic-list(onclick= options.onclick)
-      +screen-option(label, {noIcon: true})
-      +small-caret-icon()
 
 mixin property-list(properties, options)
   ul.screen-options-list(onscroll=options.scrolledList)
     if properties.length
       for property in properties
-        - const renamedProperty = util.renameProperty(property.name)
-        if renamedProperty.toLowerCase().includes(contextFilter.toLowerCase())
-          li.list-option(onclick=ev => options.clickedProperty(ev, property))
-            +screen-option(renamedProperty, {
-              icon: util.getIconForProperty(property)
-            })
-            if options.caret
-              +small-caret-icon()
+        li.list-option(onclick=ev => options.clickedProperty(ev, property))
+          +screen-option(util.renameProperty(property.name), {
+            icon: util.getIconForProperty(property)
+          })
+          if options.caret
+            +small-caret-icon()
     else if !options.loading
       li.list-option.list-empty no properties available
 
@@ -50,8 +42,7 @@ mixin screen-option(label, options)
     - const icon = options.icon
     .option-icon
       svg-icon(attributes={icon, empty: !icon})
-  .option-label
-    +highlight-match(label, contextFilter)
+  .option-label= label
 
 mixin screen-title(title, options)
   - options = options || {}
@@ -70,16 +61,3 @@ mixin small-caret-icon(options)
   - options = options || {}
   .caret-icon.small-caret
     svg-icon(attributes={icon: `caret-${options.direction || 'right'}`})
-
-mixin highlight-match(label, match)
-  - lowercaseLabel = label.toLowerCase()
-  - lowercaseMatch = match.toLowerCase()
-  - var startIndex = lowercaseLabel.indexOf(lowercaseMatch)
-  if startIndex !== -1
-    - var endIndex = startIndex + match.length
-    span=label.slice(0, startIndex)
-    span.highlight-match=label.slice(startIndex, endIndex)
-    if endIndex !== label.length
-      span=label.slice(-1 * (label.length - endIndex))
-  else
-    span=label

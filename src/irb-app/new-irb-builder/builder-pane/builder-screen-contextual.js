@@ -41,21 +41,6 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
           }
           return options;
         },
-        optionList: option => {
-          var filter = this.state.contextFilter;
-          if (!filter.length) {
-            return [];
-          }
-
-          switch(option.clauseType) {
-            case `group`:
-              return this.state.topEventProperties;
-            case `show`:
-              return this.state.topEvents;
-            default:
-              return [];
-          }
-        },
       }),
     };
   }

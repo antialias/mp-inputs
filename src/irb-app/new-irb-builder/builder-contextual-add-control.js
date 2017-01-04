@@ -26,9 +26,6 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
           [GroupClause.TYPE]: `by`,
         }[this.app.originStageClauseType()] || ``),
         isPaneOpen: () => this.isPaneOpen(),
-        searchHandler: ev => {
-          this.app.updateContextFilter(ev.target.value);
-        },
       },
     };
   }

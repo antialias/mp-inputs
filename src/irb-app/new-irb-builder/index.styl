@@ -59,9 +59,7 @@
     .add-control
       display flex
 
-      .control-label
-        border: none;
-        border-bottom: 1px dashed blueviolet;
+      button.control-label
         order 1
         transition width 0s, transform 1s
         width 0px
@@ -84,7 +82,7 @@
           svg-icon-style(mp-blue, size: 16px, pos-top: 1px)
 
     .pane-open
-      .control-label
+      button.control-label
         text-align left
         transition width animation-time, transform animation-time
         width 200px
@@ -138,8 +136,6 @@
     margin 0 10px
     flex 1 1 auto
     overflow auto
-    .highlight-match
-      color mp-blue
 
     &:empty
       loader(4px)
@@ -231,8 +227,6 @@
     padding-left 8px
     ellipsis()
     flex 1 1
-    .highlight-match
-      color mp-blue
 
   .option-icon
     padding-left 5px
