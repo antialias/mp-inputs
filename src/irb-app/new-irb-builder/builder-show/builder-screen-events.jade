@@ -1,5 +1,7 @@
 include ../mixins.jade
 
+- const recentEvents = $helpers.getRecentEvents();
+
 mixin events-list(mpEvents)
   ul.screen-options-list
     each mpEvent in mpEvents
@@ -14,6 +16,7 @@ mixin events-list(mpEvents)
 .builder-screen.events
   +screen-title('All Events', {backButton: true})
   .screen-list-container(onscroll=$helpers.scrolledList)
-    .builder-label Recently viewed
-    +events-list($helpers.getRecentEvents())
+    if recentEvents.length
+      .builder-label Recently viewed
+      +events-list(recentEvents)
     +events-list($helpers.getEvents())
