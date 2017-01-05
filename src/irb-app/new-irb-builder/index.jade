@@ -5,8 +5,7 @@
       .section-container= $component.child('query-builder-group')
       .section-container= $component.child('query-builder-contextual-add')
       .section-container= $component.child('query-builder-time')
-    //- TODO: finish filters
-    //- .filters= $component.child('query-builder-filter')
+    .filters= $component.child('query-builder-filter')
     .reset-query(on={click: $helpers.reset} attrs={title: 'Reset query'})
       svg-icon(attrs={icon: 'x'})
   else
