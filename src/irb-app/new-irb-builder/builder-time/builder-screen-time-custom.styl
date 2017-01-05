@@ -43,7 +43,12 @@
       margin-bottom 12px
 
   .range-calendar
-    mp-box-shadow(2)
+    // TODO epurcer - switch to mixin once it's in mixpanel-common
+    box-shadow 0 2px 8px rgba(0, 0, 0, 0.15)
+    //mp-box-shadow(2)
 
     calendar, .pika-mixpanel
       display inline-block
+
+      &::after
+        display none
