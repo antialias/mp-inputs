@@ -7,6 +7,7 @@ import {
 } from '../../../util';
 
 import template from './builder-screen-events.jade';
+import './builder-screen-events.styl';
 
 document.registerElement(`builder-screen-events`, class extends BuilderScreenBase {
   get config() {
@@ -14,6 +15,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
       template,
       helpers: extend(super.config.helpers, {
         getEvents: () => this.buildProgressiveList(),
+        getRecentEvents: () => this.buildProgressiveList().slice(2, 5),
         clickedEvent: value => this.updateAndCommitStageClause({value}),
         clickedEventProperties: (ev, value) => {
           ev.stopPropagation();
