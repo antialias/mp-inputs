@@ -10,7 +10,7 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
 
       helpers: extend(super.config.helpers, {
         clickedProperty: (ev, property) => {
-          this.app.updateRecentProperties(property, this.getSelectedResourceType());
+          this.app.updateRecentProperties(property);
           this.updateAndCommitStageClause({
             resourceType: property.resourceType,
             value: property.name,

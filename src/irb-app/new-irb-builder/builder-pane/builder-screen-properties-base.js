@@ -7,8 +7,8 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     return {
       helpers: extend(super.config.helpers, {
         RESOURCE_TYPES: Clause.RESOURCE_TYPES,
-        getSelectedResourceType: () => this.getSelectedResourceType(),
         clickedResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
+        getSelectedResourceType: () => this.getSelectedResourceType(),
         getProperties: () => {
           const properties = this.buildProgressiveList();
           const isLoading = this.isLoading();

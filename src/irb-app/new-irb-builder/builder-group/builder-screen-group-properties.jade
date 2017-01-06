@@ -6,19 +6,12 @@ include ../mixins.jade
 
 .builder-screen.properties
   +screen-title(`Group by a property`, {backButton: $helpers.screenIdx() > 1})
-  +resource-type-control($helpers.RESOURCE_TYPES, {
-    selected: resourceType,
-    onclick: $helpers.clickedResourceType,
+  +property-screen-body({
+    resourceTypes: $helpers.RESOURCE_TYPES,
+    selectedResourceType: $helpers.getSelectedResourceType(),
+    clickedResourceType: $helpers.clickedResourceType,
+    properties: $helpers.getProperties(),
+    recentProperties: $helpers.getRecentProperties(),
+    clickedProperty: $helpers.clickedProperty,
+    scrolledList: $helpers.scrolledList,
   })
-  .screen-list-container(onscroll=$helpers.scrolledList)
-    if recentProperties.length
-      .builder-label Recently viewed
-      +property-list(recentProperties, {
-        clickedProperty: $helpers.clickedProperty,
-        loading: $component.isLoading(),
-      })
-    .builder-label #{util.formatResourceType(resourceType)} properties
-    +property-list(properties, {
-      clickedProperty: $helpers.clickedProperty,
-      loading: $component.isLoading(),
-    })

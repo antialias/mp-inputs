@@ -5,19 +5,21 @@ mixin generic-options-list-item(label, options)
     +screen-option(label, {noIcon: true})
     +small-caret-icon()
 
+mixin secondary-action-pill(label, options)
+  .option-secondary-action.pill(onclick=options.onclick)
+    span.secondary-label= label
+    +small-caret-icon()
+
 mixin event-list(mpEvents, options)
   ul.screen-options-list
-    if mpEvents.length
-      each mpEvent in mpEvents
-        li.list-option(onclick=() => $helpers.clickedEvent(mpEvent))
-          +screen-option(util.renameEvent(mpEvent.name), {
-            icon: util.getIconForEvent(mpEvent)
-          })
-          +secondary-action-pill('Properties', {
-            onclick: ev => $helpers.clickedEventProperties(ev, mpEvent)
-          })
-    else if !options.loading
-      li.list-option.list-empty no events available
+    each mpEvent in mpEvents
+      li.list-option(onclick=() => options.clickedEvent(mpEvent))
+        +screen-option(util.renameEvent(mpEvent.name), {
+          icon: util.getIconForEvent(mpEvent)
+        })
+        +secondary-action-pill('Properties', {
+          onclick: ev => options.clickedEventProperties(ev, mpEvent)
+        })
 
 mixin property-list(properties, options)
   ul.screen-options-list
@@ -36,10 +38,17 @@ mixin resource-type-control(resourceTypes, options)
   .resource-type-control
     +tabs(resourceTypes.map(type => ({value: type, label: util.formatResourceType(type)})), options)
 
-mixin secondary-action-pill(label, options)
-  .option-secondary-action.pill(onclick=options.onclick)
-    span.secondary-label= label
-    +small-caret-icon()
+mixin property-screen-body(options)
+  +resource-type-control(options.resourceTypes, {
+    selected: options.selectedResourceType,
+    onclick: options.clickedResourceType,
+  })
+  .screen-list-container(onscroll=options.scrolledList)
+    if options.recentProperties.length
+      .builder-label Recently viewed
+      +property-list(options.recentProperties, options)
+    .builder-label #{util.formatResourceType(options.selectedResourceType)} properties
+    +property-list(options.properties, options)
 
 mixin screen-footer-button(label, options)
   - options = options || {}

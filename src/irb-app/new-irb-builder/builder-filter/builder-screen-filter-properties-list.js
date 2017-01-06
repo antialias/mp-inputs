@@ -10,7 +10,7 @@ document.registerElement(`builder-screen-filter-properties-list`, class extends 
       helpers: extend(super.config.helpers, {
         clickedProperty: (ev, property) => {
           ev.stopPropagation();
-          this.app.updateRecentProperties(property, this.getSelectedResourceType());
+          this.app.updateRecentProperties(property);
           this.updateStageClause({
             filterType: property.type,
             resourceType: property.resourceType,

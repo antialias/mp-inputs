@@ -36,8 +36,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           // The following states should persist through reset.
           features: {},
           savedReports: [],
-          recentEvents: this._getRecent(`recentEvents`),
-          recentProperties: this._getRecent(`recentProperties`),
+          recentEvents: this._getRecentList(`events`),
+          recentProperties: this._getRecentList(`properties`),
           util,
         }
       ),
@@ -249,6 +249,30 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   fromSerializationAttrs(attrs) {
     return attrs.sections ? {report: Report.deserialize(attrs)} : {};
+  }
+
+  updateRecentEvents(mpEvent) {
+    this._updateRecentList(`events`, mpEvent);
+  }
+
+  updateRecentProperties(property) {
+    this._updateRecentList(`properties`, property);
+  }
+
+  _getRecentPersistenceKey(type) {
+    return `recent-${type}`;
+  }
+
+  _getRecentList(type) {
+    return JSON.parse(this.persistence.get(this._getRecentPersistenceKey(type))) || [];
+  }
+
+  _updateRecentList(type, value) {
+    const stateKey = type === `events` ? `recentEvents` : `recentProperties`;
+    this.update({[stateKey]: [
+      value, ...this.state[stateKey].filter(oldValue => !util.isEqual(value, oldValue)),
+    ].slice(0, 10)});
+    this.persistence.set(this._getRecentPersistenceKey(type), JSON.stringify(this.state[stateKey]));
   }
 
   // Report management
@@ -749,25 +773,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         const sorting = shouldResetSorting ? this.sortConfigFor(this.state.result) : this.state.report.sorting;
         this.updateReport({displayOptions, sorting});
       });
-  }
-
-  updateRecentEvents(mpEvent) {
-    this._updateRecent(`recentEvents`, mpEvent);
-  }
-
-  updateRecentProperties(property) {
-    this._updateRecent(`recentProperties`, property);
-  }
-
-  _getRecent(name) {
-    return JSON.parse(this.persistence.get(name) || `[]`);
-  }
-
-  _updateRecent(name, value) {
-    this.update({[name]: [
-      value, ...this.state[name].filter(oldValue => !util.isEqual(value, oldValue)),
-    ].slice(0, 10)});
-    this.persistence.set(name, JSON.stringify(this.state[name]));
   }
 
   resetToastTimer() {

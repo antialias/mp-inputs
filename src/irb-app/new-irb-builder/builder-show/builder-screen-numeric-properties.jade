@@ -5,9 +5,9 @@ include ../mixins.jade
   .screen-list-container(onscroll=$helpers.scrolledList)
     +property-list($helpers.getProperties(), {
       clickedProperty: $helpers.clickedProperty,
-      loading: $component.isLoading()
+      loading: $component.isLoading(),
     })
   if !$component.isLoading()
     +screen-footer-button(($component.isShowingNonNumericProperties() ? `Hide` : `View all`) + ` non-numeric properties`, {
-      onclick: $helpers.toggleNonNumericProperties
+      onclick: $helpers.toggleNonNumericProperties,
     })
