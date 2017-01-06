@@ -36,8 +36,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           // The following states should persist through reset.
           features: {},
           savedReports: [],
-          recentEvents: this._getRecentList(`events`),
-          recentProperties: this._getRecentList(`properties`),
+          recentEvents: [],
+          recentProperties: [],
           util,
         }
       ),
@@ -179,6 +179,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       queryBuilderVersion,
       queryOnAllPeople,
     };
+
+    this.state.recentEvents = this._getRecentList(`events`);
+    this.state.recentProperties = this._getRecentList(`properties`);
 
     if (this.parentFrame) {
       this.parentFrame.addHandler(`deleteBookmark`, this.deleteReport.bind(this));
