@@ -36,8 +36,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           // The following states should persist through reset.
           features: {},
           savedReports: [],
-          recentEvents: [],
-          recentProperties: [],
+          recentEvents: this._getRecent(`recentEvents`),
+          recentProperties: this._getRecent(`recentProperties`),
           util,
         }
       ),
@@ -244,15 +244,11 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   toSerializationAttrs() {
-    const { report, recentEvents, recentProperties } = this.state;
-    const attrs = report ? report.serialize() : {};
-    return extend(attrs, {recentEvents, recentProperties});
+    return this.state.report ? this.state.report.serialize() : {};
   }
 
   fromSerializationAttrs(attrs) {
-    let { sections, recentEvents=[], recentProperties=[] } = attrs;
-    const state = sections ? {report: Report.deserialize(attrs)} : {};
-    return extend(state, {recentEvents, recentProperties});
+    return attrs.sections ? {report: Report.deserialize(attrs)} : {};
   }
 
   // Report management
@@ -756,18 +752,22 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   updateRecentEvents(mpEvent) {
-    this._updateRecent(mpEvent, `recentEvents`);
+    this._updateRecent(`recentEvents`, mpEvent);
   }
 
   updateRecentProperties(property) {
-    this._updateRecent(property, `recentProperties`);
+    this._updateRecent(`recentProperties`, property);
   }
 
-  _updateRecent(value, stateKey) {
-    this.update({[stateKey]: [
-      value,
-      ...this.state[stateKey].filter(oldValue => !util.isEqual(value, oldValue)),
+  _getRecent(name) {
+    return JSON.parse(this.persistence.get(name) || `[]`);
+  }
+
+  _updateRecent(name, value) {
+    this.update({[name]: [
+      value, ...this.state[name].filter(oldValue => !util.isEqual(value, oldValue)),
     ].slice(0, 10)});
+    this.persistence.set(name, JSON.stringify(this.state[name]));
   }
 
   resetToastTimer() {
