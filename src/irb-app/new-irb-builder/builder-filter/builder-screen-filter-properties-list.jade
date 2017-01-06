@@ -1,14 +1,24 @@
 include ../mixins.jade
 
+- const resourceType = $helpers.getSelectedResourceType();
+- const properties = $helpers.getProperties();
+- const recentProperties = $helpers.getRecentProperties();
+
 .builder-screen.properties
   +screen-title(`Filter by a property`, {backButton: $helpers.screenIdx() > 1})
   +resource-type-control($helpers.RESOURCE_TYPES, {
-    selected: $helpers.getSelectedResourceType(),
+    selected: resourceType,
     onclick: $helpers.clickedResourceType,
   })
-  +property-list($helpers.getProperties(), {
-    caret: true,
-    clickedProperty: $helpers.clickedProperty,
-    loading: $component.isLoading(),
-    scrolledList: $helpers.scrolledList,
-  })
+  .screen-list-container(onscroll=$helpers.scrolledList)
+    if recentProperties.length
+      .builder-label Recently viewed
+      +property-list(recentProperties, {
+        clickedProperty: $helpers.clickedProperty,
+        loading: $component.isLoading(),
+      })
+    .builder-label #{util.formatResourceType(resourceType)} properties
+    +property-list(properties, {
+      clickedProperty: $helpers.clickedProperty,
+      loading: $component.isLoading(),
+    })

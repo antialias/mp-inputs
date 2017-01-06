@@ -132,6 +132,15 @@
   option-height = 30px
 
   // property-list
+  .screen-list-container
+    overflow auto
+
+    ul.screen-options-list
+      overflow visible
+
+    .builder-label
+      margin 20px 18px 0
+
   ul.screen-options-list
     margin 0 10px
     flex 1 1 auto
@@ -140,6 +149,11 @@
     &:empty
       loader(4px)
       margin 12px auto
+
+    & + ul.screen-options-list
+      border-top 1px solid grey-150
+      margin-top 2px
+      padding-top 2px
 
   li.list-option
     align-items center
@@ -175,7 +189,6 @@
   .resource-type-control
     border-bottom 1px solid grey-150
     padding 12px
-    padding-bottom 8px
 
     .resource-type-tabs
       display flex

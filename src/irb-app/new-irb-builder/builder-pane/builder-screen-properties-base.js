@@ -7,8 +7,8 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     return {
       helpers: extend(super.config.helpers, {
         RESOURCE_TYPES: Clause.RESOURCE_TYPES,
-        clickedResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
         getSelectedResourceType: () => this.getSelectedResourceType(),
+        clickedResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
         getProperties: () => {
           const properties = this.buildProgressiveList();
           const isLoading = this.isLoading();
@@ -24,6 +24,12 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
           }
 
           return properties;
+        },
+        getRecentProperties: () => {
+          const resourceType = this.getSelectedResourceType();
+          return this.state.recentProperties
+            .filter(property => resourceType === Clause.RESOURCE_TYPE_ALL || property.resourceType === resourceType)
+            .slice(0, 3);
         },
       }),
     };

@@ -1,22 +1,12 @@
 include ../mixins.jade
 
+- const mpEvents = $helpers.getEvents();
 - const recentEvents = $helpers.getRecentEvents();
-
-mixin events-list(mpEvents)
-  ul.screen-options-list
-    each mpEvent in mpEvents
-      li.list-option(onclick=() => $helpers.clickedEvent(mpEvent))
-        +screen-option(util.renameEvent(mpEvent.name), {
-          icon: util.getIconForEvent(mpEvent)
-        })
-        +secondary-action-pill('Properties', {
-          onclick: ev => $helpers.clickedEventProperties(ev, mpEvent)
-        })
 
 .builder-screen.events
   +screen-title('All Events', {backButton: true})
   .screen-list-container(onscroll=$helpers.scrolledList)
     if recentEvents.length
       .builder-label Recently viewed
-      +events-list(recentEvents)
-    +events-list($helpers.getEvents())
+      +event-list(recentEvents)
+    +event-list(mpEvents)

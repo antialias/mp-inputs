@@ -5,8 +5,22 @@ mixin generic-options-list-item(label, options)
     +screen-option(label, {noIcon: true})
     +small-caret-icon()
 
+mixin event-list(mpEvents, options)
+  ul.screen-options-list
+    if mpEvents.length
+      each mpEvent in mpEvents
+        li.list-option(onclick=() => $helpers.clickedEvent(mpEvent))
+          +screen-option(util.renameEvent(mpEvent.name), {
+            icon: util.getIconForEvent(mpEvent)
+          })
+          +secondary-action-pill('Properties', {
+            onclick: ev => $helpers.clickedEventProperties(ev, mpEvent)
+          })
+    else if !options.loading
+      li.list-option.list-empty no events available
+
 mixin property-list(properties, options)
-  ul.screen-options-list(onscroll=options.scrolledList)
+  ul.screen-options-list
     if properties.length
       each property in properties
         li.list-option(onclick=ev => options.clickedProperty(ev, property))
@@ -21,7 +35,6 @@ mixin property-list(properties, options)
 mixin resource-type-control(resourceTypes, options)
   .resource-type-control
     +tabs(resourceTypes.map(type => ({value: type, label: util.formatResourceType(type)})), options)
-    .builder-label #{util.formatResourceType(options.selected)} properties
 
 mixin secondary-action-pill(label, options)
   .option-secondary-action.pill(onclick=options.onclick)

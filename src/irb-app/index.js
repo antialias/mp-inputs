@@ -36,6 +36,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           // The following states should persist through reset.
           features: {},
           savedReports: [],
+          recentEvents: [],
+          recentProperties: [],
           util,
         }
       ),
@@ -242,11 +244,15 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   toSerializationAttrs() {
-    return this.state.report ? this.state.report.serialize() : {};
+    const { report, recentEvents, recentProperties } = this.state;
+    const attrs = report ? report.serialize() : {};
+    return extend(attrs, {recentEvents, recentProperties});
   }
 
   fromSerializationAttrs(attrs) {
-    return attrs.sections ? {report: Report.deserialize(attrs)} : {};
+    let { sections, recentEvents=[], recentProperties=[] } = attrs;
+    const state = sections ? {report: Report.deserialize(attrs)} : {};
+    return extend(state, {recentEvents, recentProperties});
   }
 
   // Report management
@@ -747,6 +753,21 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         const sorting = shouldResetSorting ? this.sortConfigFor(this.state.result) : this.state.report.sorting;
         this.updateReport({displayOptions, sorting});
       });
+  }
+
+  updateRecentEvents(mpEvent) {
+    this._updateRecent(mpEvent, `recentEvents`);
+  }
+
+  updateRecentProperties(property) {
+    this._updateRecent(property, `recentProperties`);
+  }
+
+  _updateRecent(value, stateKey) {
+    this.update({[stateKey]: [
+      value,
+      ...this.state[stateKey].filter(oldValue => !util.isEqual(value, oldValue)),
+    ].slice(0, 10)});
   }
 
   resetToastTimer() {

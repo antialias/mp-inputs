@@ -9,10 +9,13 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
       template,
 
       helpers: extend(super.config.helpers, {
-        clickedProperty: (ev, property) => this.updateAndCommitStageClause({
-          resourceType: property.resourceType,
-          value: property.name,
-        }),
+        clickedProperty: (ev, property) => {
+          this.app.updateRecentProperties(property, this.getSelectedResourceType());
+          this.updateAndCommitStageClause({
+            resourceType: property.resourceType,
+            value: property.name,
+          });
+        },
       }),
     };
   }
