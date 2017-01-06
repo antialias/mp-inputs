@@ -4,14 +4,27 @@ include ../mixins.jade
 
 .builder-screen.filter-property
   +screen-title('', {backButton: true})
-    button.filter-type-dropdown
-      - const icon = util.getIconForPropertyType(clause.filterType)
-      svg-icon(attrs={icon, empty: !icon})
-      span.filter-prop-name= util.renameProperty(clause.value)
-      svg-icon(attrs={icon: 'caret-down'})
-      //- TODO throw a drop menu in here
+    .filter-type-dropdown
+      button.filter-menu-button(on={click: $helpers.toggleTypeMenu})
+        - const icon = util.getIconForPropertyType(clause.filterType)
+        svg-icon(attrs={icon, empty: !icon})
+        span.filter-prop-name= util.renameProperty(clause.value)
+        svg-icon(attrs={icon: 'caret-down'})
+      .filter-type-menu
+        mp-drop-menu(attrs={open: $helpers.isTypeMenuOpen()})
+          ol.filter-types
+            each filterType in $helpers.FILTER_TYPES
+              li
+                svg-icon(attrs={icon: filterType.icon})
+                = filterType.name
 
-  p Some content
-  //- TODO here goes different content depending on filterType
+  .filter-chooser
+    case clause.filterType
+
+      when 'string'
+        p Do some kind of string filtering!
+
+      default
+        p this is #{clause.filterType}
 
   +screen-footer-button('Add filter')

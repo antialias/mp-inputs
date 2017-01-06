@@ -12,6 +12,8 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
       template,
       helpers: extend(super.config.helpers, {
         getActiveClause: () => this.app.hasStageClause() ? this.app.activeStageClause : {},
+        isTypeMenuOpen: () => !!this.app.getBuilderCurrentScreen().typeMenuOpen,
+        toggleTypeMenu: () => this.app.updateBuilderCurrentScreen({typeMenuOpen: !this.config.helpers.isTypeMenuOpen()}),
       }),
     };
   }

@@ -43,6 +43,8 @@ builder-screen-filter-properties-list
       .caret-icon
         opacity 1
 
+$type-menu-width = 200px
+
 builder-screen-filter-property
   .builder-screen.filter-property
     .screen-title
@@ -51,21 +53,39 @@ builder-screen-filter-property
       .back-button
         left 0
 
-      button.filter-type-dropdown
-        align-items center
-        background none
-        border none
-        color grey-900
-        display flex
-        font-size 14px
-        text-transform uppercase
-        transition color 0.2s
-        svg-icon-style(grey-900, mp-blue)
-        &:hover
-          color mp-blue
+      .filter-type-dropdown
+        button.filter-menu-button
+          align-items center
+          background none
+          border none
+          color grey-900
+          display flex
+          font-size 14px
+          position relative
+          text-transform uppercase
+          transition color 0.2s
+          svg-icon-style(grey-900, mp-blue)
+          &:hover
+            color mp-blue
 
-        .filter-prop-name
-          margin-left 5px
+          .filter-prop-name
+            margin-left 5px
+
+        .filter-type-menu
+          bottom 0
+          left 50%
+          position absolute
+          text-align left
+          text-transform none
+          transform translateX(-50%)
+          width $type-menu-width
+
+          ol.filter-types
+            padding 10px
+            width $type-menu-width
+
+    .filter-chooser
+      padding 10px 15px
 
     button.screen-footer
       background-color mp-blue
