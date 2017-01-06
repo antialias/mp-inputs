@@ -337,7 +337,7 @@ export default class SegmentationQuery extends BaseQuery {
       const scriptParams = {
         // filter clauses are global to all show clauses.
         outputName: jqlQuery.outputName,
-        groups: groups,
+        groups,
         type: jqlQuery.type,
         property: jqlQuery.property,
       };

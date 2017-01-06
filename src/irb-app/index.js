@@ -846,7 +846,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
             queryEventProperties[`latency ms`] = Math.round(window.performance.now() - queryStartTime);
           }
 
-          this.update({result: result, newCachedData: false, resultLoading: false});
+          this.update({result, newCachedData: false, resultLoading: false});
           // TODO: Handle searching better by only updating legend data on different queries
           this.updateReport({
             sorting: this.sortConfigFor(result, this.state.report.sorting),

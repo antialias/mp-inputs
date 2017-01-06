@@ -267,7 +267,7 @@ function flattenNestedObjectToArray(obj) {
         const value = obj[label];
         if (typeof value === `object`) {
           entry = flattenNestedObjectToArray(value).map(child => ({
-            label: label,
+            label,
             children: [child],
             value: child.value,
           }));
