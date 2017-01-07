@@ -43,7 +43,7 @@ builder-screen-filter-properties-list
       .caret-icon
         opacity 1
 
-$type-menu-width = 200px
+$type-menu-width = 150px
 
 builder-screen-filter-property
   .builder-screen.filter-property
@@ -83,8 +83,24 @@ builder-screen-filter-property
           ol.filter-types
             padding 10px
             width $type-menu-width
+            li
+              align-items center
+              cursor pointer
+              display flex
+              font-size 14px
+              font-weight normal
+              padding 5px 10px
+              text-transform capitalize
+              transition color 0.2s
+              svg-icon-style(grey-900, mp-blue)
+              svg-icon
+                margin-right 10px
+              &:hover
+                background-color grey-50
+                color mp-blue
 
     .filter-chooser
+      height 150px
       padding 10px 15px
 
     button.screen-footer
