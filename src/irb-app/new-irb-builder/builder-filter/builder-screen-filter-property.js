@@ -17,9 +17,14 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           icon: getIconForPropertyType(name),
         })),
 
+        chooseFilterType: filterType => {
+          this.config.helpers.updateTypeMenu(false);
+          this.app.updateStageClause({filterType});
+        },
         getActiveClause: () => this.app.hasStageClause() ? this.app.activeStageClause : {},
         isTypeMenuOpen: () => !!this.app.getBuilderCurrentScreen().typeMenuOpen,
-        toggleTypeMenu: () => this.app.updateBuilderCurrentScreen({typeMenuOpen: !this.config.helpers.isTypeMenuOpen()}),
+        toggleTypeMenu: () => this.config.helpers.updateTypeMenu(!this.config.helpers.isTypeMenuOpen()),
+        updateTypeMenu: typeMenuOpen => this.app.updateBuilderCurrentScreen({typeMenuOpen}),
       }),
     };
   }

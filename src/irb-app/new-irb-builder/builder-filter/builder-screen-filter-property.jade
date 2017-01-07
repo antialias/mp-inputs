@@ -14,7 +14,10 @@ include ../mixins.jade
         mp-drop-menu(attrs={open: $helpers.isTypeMenuOpen()})
           ol.filter-types
             each filterType in $helpers.FILTER_TYPES
-              li
+              li(
+                class={'filter-type-selected': filterType.name === clause.filterType}
+                on={click: () => $helpers.chooseFilterType(filterType.name)}
+              )
                 svg-icon(attrs={icon: filterType.icon})
                 = filterType.name
 
