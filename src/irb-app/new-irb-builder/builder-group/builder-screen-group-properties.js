@@ -9,7 +9,6 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
   get config() {
     return {
       template,
-
       helpers: extend(super.config.helpers, {
         clickedProperty: (ev, property) => {
           this.app.updateRecentProperties(property);

@@ -1,6 +1,4 @@
 import { BuilderScreenPropertiesBase } from '../builder-pane/builder-screen-properties-base';
-import { ShowClause } from '../../../models/clause';
-import BaseQuery from '../../../models/queries/base';
 import { extend } from '../../../util';
 
 import template from './builder-screen-numeric-properties.jade';
@@ -18,9 +16,14 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
     };
   }
 
-  get event() {
+  getEvents() {
     const stageClause = this.app.activeStageClause;
-    return stageClause && stageClause.value && stageClause.value.name;
+    return stageClause && stageClause.value ? [stageClause.value.name] : [];
+  }
+
+  isShowingNonNumericProperties() {
+    const screen = this.app.getBuilderCurrentScreen();
+    return screen && !!screen.showingNonNumericProperties;
   }
 
   isLoading() {
@@ -28,24 +31,12 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
   }
 
   buildList() {
-    let properties = this.state.topEventPropertiesByEvent[this.event];
+    const properties = super.buildList();
 
-    if (!properties) {
-      if (this.event === ShowClause.TOP_EVENTS.name || this.event === ShowClause.ALL_EVENTS.name) {
-        properties = this.state.topEventProperties;
-      } else if (this.event) {
-        this.app.fetchTopPropertiesForEvent(this.event);
-      }
+    if (this.isShowingNonNumericProperties()) {
+      return properties;
+    } else {
+      return properties.filter(prop => prop.type === `number`);
     }
-
-    if (!Array.isArray(properties)) {
-      properties = [];
-    }
-
-    if (!this.isShowingNonNumericProperties()) {
-      properties = properties.filter(prop => prop.type === `number`);
-    }
-
-    return properties;
   }
 });

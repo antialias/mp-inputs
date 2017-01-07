@@ -1,6 +1,7 @@
 import { BuilderScreenBase } from './builder-screen-base';
-import { Clause } from '../../../models/clause';
-import { extend } from '../../../util';
+import { Clause, ShowClause } from '../../../models/clause';
+import BaseQuery from '../../../models/queries/base';
+import { extend, sorted } from '../../../util';
 
 export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   get config() {
@@ -62,16 +63,41 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     return (screen && screen.resourceType) || Clause.RESOURCE_TYPE_ALL;
   }
 
-  isLoading() {
-    return !!{
-      [Clause.RESOURCE_TYPE_ALL]: !(this.state.topEventProperties.length || this.state.topPeopleProperties.length),
-      [Clause.RESOURCE_TYPE_EVENTS]: !this.state.topEventProperties.length,
-      [Clause.RESOURCE_TYPE_PEOPLE]: !this.state.topPeopleProperties.length,
-    }[this.getSelectedResourceType()];
+  getEvents() {
+    return this.app.getClausesForType(`show`).map(clause => clause.value.name) || [];
   }
 
-  isShowingNonNumericProperties() {
-    const screen = this.app.getBuilderCurrentScreen();
-    return screen && !!screen.showingNonNumericProperties;
+  isLoading() {
+    return this.getEvents().every(mpEvent =>
+      this.state.topEventPropertiesByEvent[mpEvent] === BaseQuery.LOADING
+    );
+  }
+
+  buildList() {
+    let properties = this.getEvents().map(event => {
+      let properties = this.state.topEventPropertiesByEvent[event];
+      if (properties) {
+        return properties;
+      } else if (event === ShowClause.TOP_EVENTS.name || event === ShowClause.ALL_EVENTS.name) {
+        return this.state.topEventProperties;
+      } else if (event) {
+        this.app.fetchTopPropertiesForEvent(event);
+      }
+      return null;
+    });
+
+    properties = properties.filter(Array.isArray); // filter out `null`, `BaseQuery.LOADING`
+    properties = Array.prototype.concat.apply([], properties); // flatten
+
+    // ensure properties are unique
+    return sorted(properties, {
+      transform: property => property.name + property.type + property.resourceType,
+    }).filter((prop, index, props) => {
+      const prev = props[index - 1];
+      return !prev
+        || prop.name !== prev.name
+        || prop.type !== prev.type
+        || prop.resourceType !== prev.resourceType;
+    });
   }
 }
