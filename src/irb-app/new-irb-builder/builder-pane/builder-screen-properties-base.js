@@ -53,7 +53,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     if (this.app.getShowClausesResource() === Clause.RESOURCE_TYPE_PEOPLE) {
       resourceType = Clause.RESOURCE_TYPE_PEOPLE;
     } else {
-      resourceType = this.getResourceType();
+      resourceType = this.getSelectedResourceType();
     }
     return {
       [Clause.RESOURCE_TYPE_ALL]: this.state.topEventProperties.concat(this.state.topPeopleProperties),

@@ -22,7 +22,7 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
           });
         },
         isEventsOnlyQuery: () => (
-          this.app.getShowClausesType() === Clause.RESOURCE_TYPE_EVENTS
+          this.app.getShowClausesResource() === Clause.RESOURCE_TYPE_EVENTS
         ),
       }),
     };
