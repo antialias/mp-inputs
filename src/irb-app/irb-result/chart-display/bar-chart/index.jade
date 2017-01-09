@@ -48,6 +48,7 @@
                     each _ in Array(8).fill()
                       .grid-line
                   ul(class={stacked: isStacked})
+                    - const segmentSum = util.sum(cell)
                     - const segmentCell = isLogarithmic ? cell.map(value => Math.log10(value)) : cell
                     - let segmentMax
                     if isValueAbsolute
@@ -58,12 +59,13 @@
                       else
                         - segmentMax = Math.max(...segmentCell)
                     each value, k in cell
-                      - const percent = isLogarithmic ? (Math.log10(value) / segmentMax) : (value / segmentMax)
+                      - const percent = value / segmentSum
                       - const percentValueString = util.formatPercent(percent)
+                      - let widthAsPercentage = (isLogarithmic ? Math.log10(value) : value) / segmentMax
                       - const segmentName = row[j - 1][k]
                       - const segmentColorClassName = `segment-color-${segmentColorMap[segmentName]}`
                       li.chart-bar(
-                        style={width: percentValueString}
+                        style={width: util.formatPercent(widthAsPercentage)}
                         onmouseenter=ev => $helpers.onMouseEnter(ev, i, k)
                         onmouseleave=$helpers.onMouseLeave
                       )

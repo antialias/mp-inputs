@@ -212,7 +212,7 @@ document.registerElement(`irb-bar-chart-header`, class extends WebComponent {
         headersEl.dispatchEvent(new CustomEvent(`change`, {detail: {axis: true, maxValueText: true}}));
         ev.stopPropagation();
       })
-      .html(this.displayOptions.value === `absolute` ? util.abbreviateNumber(this.chartMax) : `100%`);
+      .html(this.displayOptions.value === `absolute` ? util.abbreviateNumber(this.chartMax) : `%`);
 
     let $axis = $(`<div class="bar-chart-axis"></div>`)
       .on(`click`, () => {
