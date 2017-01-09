@@ -74,20 +74,17 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   }
 
   buildList() {
-    let properties = this.getEvents().map(event => {
-      let properties = this.state.topEventPropertiesByEvent[event];
-      if (properties) {
-        return properties;
-      } else if (event === ShowClause.TOP_EVENTS.name || event === ShowClause.ALL_EVENTS.name) {
-        return this.state.topEventProperties;
-      } else if (event) {
-        this.app.fetchTopPropertiesForEvent(event);
+    const properties = this.getEvents().reduce((props, mpEvent) => {
+      const eventProps = this.state.topEventPropertiesByEvent[mpEvent];
+      if (mpEvent === ShowClause.TOP_EVENTS.name || mpEvent === ShowClause.ALL_EVENTS.name) {
+        return props.concat(this.state.topEventProperties);
+      } else if (!eventProps) {
+        this.app.fetchTopPropertiesForEvent(mpEvent);
+      } else if (eventProps !== BaseQuery.LOADING) {
+        return props.concat(eventProps);
       }
-      return null;
-    });
-
-    properties = properties.filter(Array.isArray); // filter out `null`, `BaseQuery.LOADING`
-    properties = Array.prototype.concat.apply([], properties); // flatten
+      return props;
+    }, []);
 
     // ensure properties are unique
     return sorted(properties, {
