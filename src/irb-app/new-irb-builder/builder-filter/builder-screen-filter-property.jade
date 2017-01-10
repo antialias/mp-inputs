@@ -1,30 +1,42 @@
 include ../mixins.jade
 
+mixin filter-dropdown(name, title, icon)
+  div(class={[`filter-${name}-dropdown`]: true})
+    button.filter-menu-button(on={click: () => $helpers.toggleMenu(name)})
+      svg-icon(attrs={icon, empty: !icon})
+      span.filter-prop-name= title
+      svg-icon(attrs={icon: 'caret-down'})
+    .filter-menu
+      mp-drop-menu(attrs={open: $helpers.isMenuOpen(name)})
+        block
+
 - const clause = $helpers.getActiveClause()
 
 .builder-screen.filter-property
   +screen-title('', {backButton: true})
-    .filter-type-dropdown
-      button.filter-menu-button(on={click: $helpers.toggleTypeMenu})
-        - const icon = util.getIconForPropertyType(clause.filterType)
-        svg-icon(attrs={icon, empty: !icon})
-        span.filter-prop-name= util.renameProperty(clause.value)
-        svg-icon(attrs={icon: 'caret-down'})
-      .filter-type-menu
-        mp-drop-menu(attrs={open: $helpers.isTypeMenuOpen()})
-          ol.filter-types
-            each filterType in $helpers.FILTER_TYPES
-              li(
-                class={'filter-type-selected': filterType.name === clause.filterType}
-                on={click: () => $helpers.chooseFilterType(filterType.name)}
-              )
-                svg-icon(attrs={icon: filterType.icon})
-                = filterType.name
+    +filter-dropdown('type', util.renameProperty(clause.value), util.getIconForPropertyType(clause.filterType))
+      ol.filter-types
+        each filterType in $helpers.FILTER_TYPES
+          li.filter-menu-item(
+            class={'filter-menu-item-selected': filterType.name === clause.filterType}
+            on={click: () => $helpers.chooseFilterType(filterType.name)}
+          )
+            svg-icon(attrs={icon: filterType.icon})
+            = filterType.name
 
   .filter-chooser
     case clause.filterType
 
       when 'string'
+        +filter-dropdown('operator', clause.filterOperator)
+          ol.filter-operators
+            each filterOperator in $helpers.filterOperators(clause.filterType)
+              li.filter-menu-item(
+                class={'filter-menu-item-selected': filterOperator === clause.filterOperator}
+                on={click: () => $helpers.chooseFilterOperator(filterOperator)}
+              )
+                = filterOperator
+
         p Do some kind of string filtering!
 
       default

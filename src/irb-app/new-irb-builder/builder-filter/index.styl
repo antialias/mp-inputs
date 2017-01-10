@@ -47,6 +47,64 @@ $type-menu-width = 150px
 
 builder-screen-filter-property
   .builder-screen.filter-property
+    li.filter-menu-item
+      cursor pointer
+      font-weight normal
+      padding 5px 10px
+      &.filter-menu-item-selected
+        color #000
+      &:hover
+        background-color grey-50
+        color mp-blue
+
+    button.filter-menu-button
+      align-items center
+      background none
+      border none
+      color grey-900
+      display flex
+      font-size 14px
+      position relative
+      text-transform uppercase
+      transition color 0.2s
+      svg-icon-style(grey-900, mp-blue)
+      &:hover
+        color mp-blue
+
+      .filter-prop-name
+        margin-left 5px
+
+    .filter-menu
+      bottom 0
+      left 50%
+      position absolute
+      text-align left
+      text-transform none
+      transform translateX(-50%)
+      width $type-menu-width
+      z-index 10
+
+    .filter-operator-dropdown
+      position relative
+
+      .filter-menu-button
+        border 1px solid grey-500
+        border-radius 3px
+        width 100%
+        .filter-prop-name
+          margin-right auto
+        svg-icon[empty]
+          display none
+
+      .filter-menu
+        width 100%
+        ol.filter-operators
+          padding 10px
+          text-transform uppercase
+          width 270px
+          li
+            font-size 12px
+
     .screen-title
       justify-content center
 
@@ -54,55 +112,21 @@ builder-screen-filter-property
         left 0
 
       .filter-type-dropdown
-        button.filter-menu-button
-          align-items center
-          background none
-          border none
-          color grey-900
-          display flex
-          font-size 14px
-          position relative
-          text-transform uppercase
-          transition color 0.2s
-          svg-icon-style(grey-900, mp-blue)
-          &:hover
-            color mp-blue
-
-          .filter-prop-name
-            margin-left 5px
-
-        .filter-type-menu
-          bottom 0
-          left 50%
-          position absolute
-          text-align left
-          text-transform none
-          transform translateX(-50%)
+        ol.filter-types
+          padding 10px
           width $type-menu-width
-
-          ol.filter-types
-            padding 10px
-            width $type-menu-width
-            li
-              align-items center
-              cursor pointer
-              display flex
-              font-size 14px
-              font-weight normal
-              padding 5px 10px
-              text-transform capitalize
-              transition color 0.2s
-              svg-icon-style(grey-900, mp-blue)
-              svg-icon
-                margin-right 10px
-              &.filter-type-selected
-                color #000
-              &:hover
-                background-color grey-50
-                color mp-blue
+          li
+            align-items center
+            display flex
+            font-size 14px
+            text-transform capitalize
+            transition color 0.2s
+            svg-icon-style(grey-900, mp-blue)
+            svg-icon
+              margin-right 10px
 
     .filter-chooser
-      height 150px
+      height 200px
       padding 10px 15px
 
     button.screen-footer

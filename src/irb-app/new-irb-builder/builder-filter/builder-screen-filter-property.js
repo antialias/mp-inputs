@@ -17,17 +17,24 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           icon: getIconForPropertyType(name),
         })),
 
+        chooseFilterOperator: filterOperator => {
+          this.config.helpers.updateMenu(`operator`, false);
+          this.app.updateStageClause({filterOperator});
+        },
         chooseFilterType: filterType => {
-          this.config.helpers.updateTypeMenu(false);
+          this.config.helpers.updateMenu(`type`, false);
           this.app.updateStageClause({filterType});
         },
+        filterOperators: filterType => FilterClause.FILTER_OPERATORS[filterType],
         getActiveClause: () => this.app.hasStageClause() ? this.app.activeStageClause : {},
-        isTypeMenuOpen: () => {
+
+        // dropdowns
+        isMenuOpen: menu => {
           const currentScreen = this.app.getBuilderCurrentScreen();
-          return !!currentScreen && !!currentScreen.typeMenuOpen;
+          return !!currentScreen && !!currentScreen[`${menu}MenuOpen`];
         },
-        toggleTypeMenu: () => this.config.helpers.updateTypeMenu(!this.config.helpers.isTypeMenuOpen()),
-        updateTypeMenu: typeMenuOpen => this.app.updateBuilderCurrentScreen({typeMenuOpen}),
+        toggleMenu: menu => this.config.helpers.updateMenu(menu, !this.config.helpers.isMenuOpen(menu)),
+        updateMenu: (menu, open) => this.app.updateBuilderCurrentScreen({[`${menu}MenuOpen`]: open}),
       }),
     };
   }
