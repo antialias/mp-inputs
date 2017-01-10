@@ -456,6 +456,10 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     return this.state.report.sections[type].clauses;
   }
 
+  getClauseValuesForType(type) {
+    return this.app.getClausesForType(type).map(clause => clause.value);
+  }
+
   // State modifiers
 
   resetTopQueries() {

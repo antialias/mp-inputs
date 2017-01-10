@@ -16,7 +16,7 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
     };
   }
 
-  getEvents() {
+  getRelevantBuilderEvents() {
     const stageClause = this.app.activeStageClause;
     return stageClause && stageClause.value ? [stageClause.value.name] : [];
   }

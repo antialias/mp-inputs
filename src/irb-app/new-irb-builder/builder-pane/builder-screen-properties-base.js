@@ -63,23 +63,23 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     return (screen && screen.resourceType) || Clause.RESOURCE_TYPE_ALL;
   }
 
-  getEvents() {
-    return this.app.getClausesForType(`show`).map(clause => clause.value.name) || [];
+  getRelevantBuilderEvents() {
+    return this.app.getClauseValuesForType(ShowClause.TYPE);
   }
 
   isLoading() {
-    return this.getEvents().every(mpEvent =>
-      this.state.topEventPropertiesByEvent[mpEvent] === BaseQuery.LOADING
+    return this.getRelevantBuilderEvents().every(mpEvent =>
+      this.state.topEventPropertiesByEvent[mpEvent.name] === BaseQuery.LOADING
     );
   }
 
   buildList() {
-    const properties = this.getEvents().reduce((props, mpEvent) => {
-      const eventProps = this.state.topEventPropertiesByEvent[mpEvent];
-      if (mpEvent === ShowClause.TOP_EVENTS.name || mpEvent === ShowClause.ALL_EVENTS.name) {
+    const properties = this.getRelevantBuilderEvents().reduce((props, mpEvent) => {
+      const eventProps = this.state.topEventPropertiesByEvent[mpEvent.name];
+      if ([ShowClause.TOP_EVENTS.name, ShowClause.ALL_EVENTS.name].includes(mpEvent.name)) {
         return props.concat(this.state.topEventProperties);
       } else if (!eventProps) {
-        this.app.fetchTopPropertiesForEvent(mpEvent);
+        this.app.fetchTopPropertiesForEvent(mpEvent.name);
       } else if (eventProps !== BaseQuery.LOADING) {
         return props.concat(eventProps);
       }
