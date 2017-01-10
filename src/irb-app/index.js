@@ -676,10 +676,15 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         const newClause = clause.extend({paneIndex: 0});
         let newSection = null;
         const isEditingClause = clause === newClauses[0] && typeof this.state.stageClauseIndex === `number`;
+        if (newClause.TYPE === ShowClause.TYPE && newClause.resourceType === Clause.RESOURCE_TYPE_PEOPLE) {
+          if (reportAttrs.displayOptions.chartType === `line`) {
+            reportAttrs.displayOptions.chartType = `bar`;
+          }
+        }
         if (isEditingClause) {
           newSection = reportAttrs.sections[newClause.TYPE].replaceClause(this.state.stageClauseIndex, newClause);
         } else {
-          if (clause === newClauses[1] && newClause.TYPE === `show` && newClauses[0].TYPE === `show`) {
+          if (clause === newClauses[1] && newClause.TYPE === ShowClause.TYPE && newClauses[0].TYPE === ShowClause.TYPE) {
             // operator on property + event
             let showClauseIdx = this.state.stageClauseIndex;
             if (typeof showClauseIdx !== `number`) {

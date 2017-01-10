@@ -8,7 +8,10 @@ ul.chart-toggle(class={
     - const styleChoicesForChartType = $helpers.styleChoicesForChartType(chartType)
     li.chart-type(
       class=chartType
-      class={editing: isEditingCurrentStyle}
+      class={
+        editing: isEditingCurrentStyle,
+        disabled: $helpers.isChartTypeDisabled(chartType),
+      }
     )
       .toggle-button
         button.label(

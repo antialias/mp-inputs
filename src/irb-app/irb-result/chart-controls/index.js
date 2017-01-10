@@ -1,6 +1,7 @@
 import { Component } from 'panel';
 
 import { formattedChartName, styleChoicesForChartType } from '../chart-util';
+import { Clause } from '../../../models/clause';
 import { extend, pick } from '../../../util';
 
 import template from './index.jade';
@@ -10,6 +11,9 @@ import './index.styl';
 
 const ANALYSIS_LIST = [`linear`, `rolling`, `logarithmic`, `cumulative`];
 const VALUE_LIST = [`absolute`, `relative`];
+const BAR_CHART = `bar`;
+const LINE_CHART = `line`;
+const TABLE_CHART = `table`;
 
 document.registerElement(`chart-toggle`, class extends Component {
   attachedCallback() {
@@ -24,21 +28,20 @@ document.registerElement(`chart-toggle`, class extends Component {
     return {
       template: chartToggleTemplate,
       helpers: {
-        chartTypes: () => [`bar`, `line`, `table`],
-        selectedPlotStyle: type => this.state.chartToggle[type].plotStyle,
-
         formattedChartName,
         styleChoicesForChartType,
-
+        chartTypes: () => [BAR_CHART, LINE_CHART, TABLE_CHART],
+        isChartTypeDisabled: type => this.isChartTypeDisabled(type),
+        selectedPlotStyle: type => this.state.chartToggle[type].plotStyle,
         onDropdownClick: type => {
-          if (this.app.state.projectHasEvents) {
+          if (this.app.state.projectHasEvents && !this.isChartTypeDisabled(type)) {
             this.app.updateChartToggle({
               editingType: this.state.chartToggle.editingType === type ? null : type,
             });
           }
         },
         onStyleClick: (chartType, plotStyle) => {
-          if (this.app.state.projectHasEvents) {
+          if (this.app.state.projectHasEvents && !this.isChartTypeDisabled(chartType)) {
             const reportTrackingData = this.state.report.toTrackingData();
             const displayOptions = this.state.report.displayOptions;
             this.IRBResult.updateDisplayOptions({chartType, plotStyle});
@@ -55,6 +58,14 @@ document.registerElement(`chart-toggle`, class extends Component {
         },
       },
     };
+  }
+
+  isChartTypeDisabled(type) {
+    const disabledChartTypes = [];
+    if (this.app.getShowClausesResource() === Clause.RESOURCE_TYPE_PEOPLE) {
+      disabledChartTypes.push(LINE_CHART);
+    }
+    return disabledChartTypes.includes(type);
   }
 
   get IRBResult() {
