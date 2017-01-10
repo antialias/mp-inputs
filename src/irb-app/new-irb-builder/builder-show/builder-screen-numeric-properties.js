@@ -51,9 +51,4 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
 
     return properties;
   }
-
-  isShowingNonNumericProperties() {
-    const screen = this.app.getBuilderCurrentScreen();
-    return screen && !!screen.showingNonNumericProperties;
-  }
 });

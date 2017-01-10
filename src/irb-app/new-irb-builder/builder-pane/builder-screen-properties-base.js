@@ -35,6 +35,20 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     };
   }
 
+  buildList() {
+    let resourceType;
+    if (this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE) {
+      resourceType = Clause.RESOURCE_TYPE_PEOPLE;
+    } else {
+      resourceType = this.getSelectedResourceType();
+    }
+    return {
+      [Clause.RESOURCE_TYPE_ALL]: this.state.topEventProperties.concat(this.state.topPeopleProperties),
+      [Clause.RESOURCE_TYPE_EVENTS]: this.state.topEventProperties,
+      [Clause.RESOURCE_TYPE_PEOPLE]: this.state.topPeopleProperties,
+    }[resourceType] || [];
+  }
+
   getSelectedResourceType() {
     const screen = this.app.getBuilderCurrentScreen();
     return (screen && screen.resourceType) || Clause.RESOURCE_TYPE_ALL;
@@ -48,17 +62,8 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     }[this.getSelectedResourceType()];
   }
 
-  buildList() {
-    let resourceType;
-    if (this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE) {
-      resourceType = Clause.RESOURCE_TYPE_PEOPLE;
-    } else {
-      resourceType = this.getSelectedResourceType();
-    }
-    return {
-      [Clause.RESOURCE_TYPE_ALL]: this.state.topEventProperties.concat(this.state.topPeopleProperties),
-      [Clause.RESOURCE_TYPE_EVENTS]: this.state.topEventProperties,
-      [Clause.RESOURCE_TYPE_PEOPLE]: this.state.topPeopleProperties,
-    }[resourceType] || [];
+  isShowingNonNumericProperties() {
+    const screen = this.app.getBuilderCurrentScreen();
+    return screen && !!screen.showingNonNumericProperties;
   }
 }

@@ -35,9 +35,4 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenPro
     }
     return properties || [];
   }
-
-  isShowingNonNumericProperties() {
-    const screen = this.app.getBuilderCurrentScreen();
-    return screen && !!screen.showingNonNumericProperties;
-  }
 });
