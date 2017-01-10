@@ -38,7 +38,7 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
   getLabel() {
     const clause = this.state.report.sections.getClause(this.section, this.clauseIndex);
     if (clause.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE) {
-      return clause.property ? clause.property.name : clause.value.name;
+      return renameProperty(clause.property ? clause.property.name : clause.value.name) || ``;
     }
     return renameEvent(clause.value.name);
   }
