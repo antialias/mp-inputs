@@ -71,6 +71,7 @@ document.registerElement(`bar-chart`, class extends Component {
     let {headers, series} = this.getJSONAttribute(`data`);
     const segmentColorMap = this.getJSONAttribute(`segment-color-map`) || {};
     const chartLabel = this.getJSONAttribute(`chart-label`) || ``;
+    const legendChangeID = this.getJSONAttribute(`legend-change-id`);
     const displayOptions = this.getJSONAttribute(`display-options`) || {};
     const functionLabel = this.getJSONAttribute(`function-label`) || ``;
     let sortConfig = this.getJSONAttribute(`sorting`);
@@ -89,6 +90,7 @@ document.registerElement(`bar-chart`, class extends Component {
     this.update({
       chartLabel,
       chartMax,
+      legendChangeID,
       segmentColorMap,
       displayOptions,
       functionLabel,

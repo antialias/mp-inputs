@@ -93,7 +93,6 @@ document.registerElement(`chart-display`, class extends Component {
           const isFlattenedData = this.state.report.displayOptions.chartType === `line`;
           if (this.config.helpers.showLegend()) {
             const legend = this.state.report.legend;
-            legend.buildColorMap();
             result.series = filterObject(result.series, (value, depth, parentKeys) => {
               if (isFlattenedData) {
                 return depth === 2 ? legend.data[0].flattenedData[parentKeys.concat(value).join(` `)] : true;

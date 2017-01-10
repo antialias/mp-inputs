@@ -34,7 +34,6 @@ export default class Legend {
     if (this.data && this.data.length) {
       let colorIdx = 0;
       this.data[0][`${dataKey}SortedKeys`]
-        .filter(series => this.data[0][dataKey][series])
         .forEach(series => {
           this[mapName][series] = this[mapName][series] || (colorIdx++ % numColors) + 1;
         });
@@ -132,8 +131,8 @@ export default class Legend {
   }
 
   updateSeriesAtIndex(seriesIdx, dataKey, attrs) {
+    this.changeID++;
     Object.assign(this.data[seriesIdx][dataKey], attrs);
-    this.buildColorMap();
     return this;
   }
 
