@@ -16,9 +16,6 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
           this.updateAndCommitStageClause({
             resourceType: property.resourceType,
             value: property.name,
-          }, {
-            shouldCommit: true,
-            shouldStopEditing: true,
           });
         },
         isEventsOnlyQuery: () => (
