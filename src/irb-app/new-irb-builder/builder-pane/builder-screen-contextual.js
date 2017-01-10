@@ -11,7 +11,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
       helpers: extend(super.config.helpers, {
         clickedOption: option => {
           const {clauseType} = option;
-          switch (clauseType) {
+          switch(clauseType) {
             case ShowClause.TYPE: {
               const resourceType = this.state.report.sections.show.clauseResourceTypes();
               this.app.stopEditingClause();
@@ -29,16 +29,19 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
         getContextOptions: () => {
           const showClauseType = this.state.report.sections.show.clauseResourceTypes();
           let options = [];
-          if (showClauseType === ShowClause.RESOURCE_TYPE_EVENTS) {
-            options = [
-              {name: `Group by a property`, clauseType: GroupClause.TYPE},
-              {name: `Compare to an event`, clauseType: ShowClause.TYPE},
-            ];
-          } else if (showClauseType === ShowClause.RESOURCE_TYPE_PEOPLE) {
-            options = [
-              {name: `Group by a people property`, clauseType: GroupClause.TYPE},
-              {name: `Compare to a people property`, clauseType: ShowClause.TYPE},
-            ];
+          switch(showClauseType) {
+            case ShowClause.RESOURCE_TYPE_EVENTS:
+              options = [
+                {name: `Group by a property`, clauseType: GroupClause.TYPE},
+                {name: `Compare to an event`, clauseType: ShowClause.TYPE},
+              ];
+              break;
+            case ShowClause.RESOURCE_TYPE_PEOPLE:
+              options = [
+                {name: `Group by a people property`, clauseType: GroupClause.TYPE},
+                {name: `Compare to a people property`, clauseType: ShowClause.TYPE},
+              ];
+              break;
           }
           return options;
         },
