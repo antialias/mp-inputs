@@ -21,7 +21,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
         },
         clickedEventProperties: (ev, value) => {
           ev.stopPropagation();
-          this.updateStageClause({value}, {shouldCommit: true});
+          this.updateStageClause({value, property: null}, {shouldCommit: true});
           this.app.updateBuilder({isContextualMenuOpen: false});
           this.app.update({stageClauseIndex: this.app.getClausesForType(ShowClause.TYPE).length - 1});
           this.nextScreen(`builder-screen-numeric-properties`);

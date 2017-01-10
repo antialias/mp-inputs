@@ -10,10 +10,7 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
     return {
       template,
       helpers: extend(super.config.helpers, {
-        clickedProperty: (ev, property) => this.updateStageClause({property}, {
-          shouldCommit: true,
-          shouldStopEditing: true,
-        }),
+        clickedProperty: (ev, property) => this.updateAndCommitStageClause({property}),
         toggleNonNumericProperties: () => this.app.updateBuilderCurrentScreen({
           showingNonNumericProperties: !this.isShowingNonNumericProperties(),
         }),
