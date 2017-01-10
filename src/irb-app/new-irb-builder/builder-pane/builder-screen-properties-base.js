@@ -1,7 +1,7 @@
 import { BuilderScreenBase } from './builder-screen-base';
 import { Clause, ShowClause } from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
-import { extend, sorted } from '../../../util';
+import { extend, unique } from '../../../util';
 
 export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   get config() {
@@ -86,15 +86,8 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       return props;
     }, []);
 
-    // ensure properties are unique
-    return sorted(properties, {
-      transform: property => property.name + property.type + property.resourceType,
-    }).filter((prop, index, props) => {
-      const prev = props[index - 1];
-      return !prev
-        || prop.name !== prev.name
-        || prop.type !== prev.type
-        || prop.resourceType !== prev.resourceType;
+    return unique(properties, {
+      hash: prop => [prop.name, prop.type, prop.resourceType].join(`:`),
     });
   }
 }
