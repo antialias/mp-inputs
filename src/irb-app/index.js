@@ -451,21 +451,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     return this.state.report.sections[type].clauses;
   }
 
-  getShowClausesResource() {
-    let uniqueShowTypes = this.getClausesForType(ShowClause.TYPE).reduce(
-      (types, clause) => types.add(
-        clause.resourceType === Clause.RESOURCE_TYPE_ALL ? Clause.RESOURCE_TYPE_EVENTS : clause.resourceType
-      ),
-      new Set()
-    );
-    uniqueShowTypes = Array.from(uniqueShowTypes);
-    if (uniqueShowTypes.length === 1) {
-      return uniqueShowTypes[0];
-    } else {
-      throw new Error(`Show clauses contain more than one type`);
-    }
-  }
-
   // State modifiers
 
   resetTopQueries() {

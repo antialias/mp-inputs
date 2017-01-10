@@ -84,6 +84,17 @@ export class ShowSection extends Section {
     return super.valid &&
       this.clauses.every(clause => clause instanceof ShowClause);
   }
+
+  clauseResourceTypes() {
+    let uniqueShowTypes = this.clauses.reduce(
+      (types, clause) => types.add(
+        clause.resourceType === Clause.RESOURCE_TYPE_ALL ? Clause.RESOURCE_TYPE_EVENTS : clause.resourceType
+      ),
+      new Set()
+    );
+    uniqueShowTypes = Array.from(uniqueShowTypes);
+    return uniqueShowTypes.length === 1 ? uniqueShowTypes[0] : uniqueShowTypes;
+  }
 }
 ShowSection.TYPE = ShowSection.prototype.TYPE = `show`;
 

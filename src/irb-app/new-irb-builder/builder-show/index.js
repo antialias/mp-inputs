@@ -23,7 +23,7 @@ document.registerElement(`query-builder-show`, class extends Component {
       template,
       helpers: {
         showSourceForNumericProperties: () => (
-          this.app.getShowClausesResource() !== ShowClause.RESOURCE_TYPE_PEOPLE
+          this.state.report.sections.show.clauseResourceTypes() !== ShowClause.RESOURCE_TYPE_PEOPLE
         ),
       },
     };

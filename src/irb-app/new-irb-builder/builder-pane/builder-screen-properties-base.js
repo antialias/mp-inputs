@@ -50,7 +50,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
 
   buildList() {
     let resourceType;
-    if (this.app.getShowClausesResource() === Clause.RESOURCE_TYPE_PEOPLE) {
+    if (this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE) {
       resourceType = Clause.RESOURCE_TYPE_PEOPLE;
     } else {
       resourceType = this.getSelectedResourceType();

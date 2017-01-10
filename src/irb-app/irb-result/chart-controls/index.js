@@ -62,7 +62,7 @@ document.registerElement(`chart-toggle`, class extends Component {
 
   isChartTypeDisabled(type) {
     const disabledChartTypes = [];
-    if (this.app.getShowClausesResource() === Clause.RESOURCE_TYPE_PEOPLE) {
+    if (this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE) {
       disabledChartTypes.push(LINE_CHART);
     }
     return disabledChartTypes.includes(type);

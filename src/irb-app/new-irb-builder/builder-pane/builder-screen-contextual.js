@@ -12,7 +12,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
         clickedOption: option => {
           const {clauseType} = option;
           if (clauseType === ShowClause.TYPE) {
-            const resourceType = this.app.getShowClausesResource();
+            const resourceType = this.state.report.sections.show.clauseResourceTypes();
             this.app.stopEditingClause();
             this.app.startAddingClause(clauseType, {resourceType});
             this.nextScreen(`builder-screen-${resourceType}`);
@@ -23,7 +23,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
           }
         },
         getContextOptions: () => {
-          const showClauseType = this.app.getShowClausesResource();
+          const resourceType = this.state.report.sections.show.clauseResourceTypes();
           let options = [];
           if (showClauseType === ShowClause.RESOURCE_TYPE_EVENTS) {
             options = [
