@@ -15,18 +15,26 @@ document.registerElement(`query-builder-show-header`, class extends Component {
           return associatedClause && associatedClause.math;
         },
         headerClicked: ev => {
-          ev.stopPropagation();
-          const activeMathMenuIndex = this.clauseIndex;
-          this.app.startBuilderOnScreen(`builder-screen-event-operator`);
-          this.app.update({activeMathMenuIndex});
-          this.app.startEditingClause(ShowClause.TYPE, activeMathMenuIndex);
+          if (this.isPaneOpen()) {
+            this.app.stopEditingClause();
+          } else {
+            ev.stopPropagation();
+            const activeMathMenuIndex = this.clauseIndex;
+            this.app.startBuilderOnScreen(`builder-screen-event-operator`);
+            this.app.update({activeMathMenuIndex});
+            this.app.startEditingClause(ShowClause.TYPE, activeMathMenuIndex);
+          }
         },
-        isOpen: () => this.state.activeMathMenuIndex === this.clauseIndex,
+        isOpen: () => this.isPaneOpen(),
       },
     };
   }
 
   get clauseIndex() {
     return Number(this.getAttribute(`clause-index`));
+  }
+
+  isPaneOpen() {
+    return this.state.activeMathMenuIndex === this.clauseIndex;
   }
 });
