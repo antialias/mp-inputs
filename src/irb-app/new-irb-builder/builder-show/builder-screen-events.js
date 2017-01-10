@@ -17,7 +17,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
         getRecentEvents: () => this.state.recentEvents.slice(0, 3),
         clickedEvent: value => {
           this.app.updateRecentEvents(value);
-          this.updateAndCommitStageClause({value});
+          this.updateAndCommitStageClause({value, property: null});
         },
         clickedEventProperties: (ev, value) => {
           ev.stopPropagation();
