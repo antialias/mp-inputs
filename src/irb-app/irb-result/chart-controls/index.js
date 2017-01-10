@@ -61,11 +61,11 @@ document.registerElement(`chart-toggle`, class extends Component {
   }
 
   isChartTypeDisabled(type) {
-    const disabledChartTypes = [];
+    const disabledChartTypes = new Set();
     if (this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE) {
-      disabledChartTypes.push(LINE_CHART);
+      disabledChartTypes.add(LINE_CHART);
     }
-    return disabledChartTypes.includes(type);
+    return disabledChartTypes.has(type);
   }
 
   get IRBResult() {
