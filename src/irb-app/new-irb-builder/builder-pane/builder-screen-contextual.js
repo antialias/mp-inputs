@@ -11,15 +11,19 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
       helpers: extend(super.config.helpers, {
         clickedOption: option => {
           const {clauseType} = option;
-          if (clauseType === ShowClause.TYPE) {
-            const resourceType = this.state.report.sections.show.clauseResourceTypes();
-            this.app.stopEditingClause();
-            this.app.startAddingClause(clauseType, {resourceType});
-            this.nextScreen(`builder-screen-${resourceType}`);
-          } else if (clauseType === GroupClause.TYPE) {
-            this.app.stopEditingClause();
-            this.app.startAddingClause(clauseType);
-            this.nextScreen(`builder-screen-group-properties`);
+          switch (clauseType) {
+            case ShowClause.TYPE: {
+              const resourceType = this.state.report.sections.show.clauseResourceTypes();
+              this.app.stopEditingClause();
+              this.app.startAddingClause(clauseType, {resourceType});
+              this.nextScreen(`builder-screen-${resourceType}`);
+              break;
+            }
+            case GroupClause.TYPE:
+              this.app.stopEditingClause();
+              this.app.startAddingClause(clauseType);
+              this.nextScreen(`builder-screen-group-properties`);
+              break;
           }
         },
         getContextOptions: () => {
