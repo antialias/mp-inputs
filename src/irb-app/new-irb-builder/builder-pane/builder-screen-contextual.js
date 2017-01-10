@@ -23,7 +23,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
           }
         },
         getContextOptions: () => {
-          const resourceType = this.state.report.sections.show.clauseResourceTypes();
+          const showClauseType = this.state.report.sections.show.clauseResourceTypes();
           let options = [];
           if (showClauseType === ShowClause.RESOURCE_TYPE_EVENTS) {
             options = [
