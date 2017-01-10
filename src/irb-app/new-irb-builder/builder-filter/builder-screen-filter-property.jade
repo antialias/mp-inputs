@@ -25,18 +25,18 @@ mixin filter-dropdown(name, title, icon)
             = filterType.name
 
   .filter-chooser
+    +filter-dropdown('operator', clause.filterOperator)
+      ol.filter-operators
+        each filterOperator in $helpers.filterOperators(clause.filterType)
+          li.filter-menu-item(
+            class={'filter-menu-item-selected': filterOperator === clause.filterOperator}
+            on={click: () => $helpers.chooseFilterOperator(filterOperator)}
+          )
+            = filterOperator
+
     case clause.filterType
 
       when 'string'
-        +filter-dropdown('operator', clause.filterOperator)
-          ol.filter-operators
-            each filterOperator in $helpers.filterOperators(clause.filterType)
-              li.filter-menu-item(
-                class={'filter-menu-item-selected': filterOperator === clause.filterOperator}
-                on={click: () => $helpers.chooseFilterOperator(filterOperator)}
-              )
-                = filterOperator
-
         p Do some kind of string filtering!
 
       default
