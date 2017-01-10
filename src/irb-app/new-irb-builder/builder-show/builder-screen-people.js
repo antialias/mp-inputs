@@ -12,19 +12,14 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenPro
     return {
       template,
       helpers: extend(super.config.helpers, {
-        clickedProperty: (ev, property) => {
-          const stageClause = {
-            property,
-            value: ShowClause.ALL_PEOPLE,
-          };
-          this.updateStageClause(stageClause, {shouldCommit: true, shouldStopEditing: true});
-        },
+        clickedProperty: (ev, property) => this.updateAndCommitStageClause({
+          property,
+          value: ShowClause.ALL_PEOPLE,
+        }),
         clickedSpecialOptions: (ev, value) => {
-          this.updateStageClause({value, property: null}, {shouldCommit: true, shouldStopEditing: true});
+          this.updateAndCommitStageClause({value, property: null});
         },
-        getSpecialOptions: () => ([
-          extend(ShowClause.ALL_PEOPLE, {icon: `profile`}),
-        ]),
+        getSpecialOptions: () => [extend(ShowClause.ALL_PEOPLE, {icon: `profile`})],
         isLoading: () => !this.state.topPeopleProperties,
         toggleNonNumericProperties: () => this.app.updateBuilderCurrentScreen({
           showingNonNumericProperties: !this.isShowingNonNumericProperties(),

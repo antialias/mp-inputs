@@ -36,14 +36,11 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
   }
 
   getLabel() {
-    let label = ``;
     const clause = this.state.report.sections.getClause(this.section, this.clauseIndex);
     if (clause.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE) {
-      label = clause.property ? clause.property.name : clause.value.name;
-    } else {
-      label = renameEvent(clause.value.name);
+      return clause.property ? clause.property.name : clause.value.name;
     }
-    return label;
+    return renameEvent(clause.value.name);
   }
 
   isPaneOpen() {

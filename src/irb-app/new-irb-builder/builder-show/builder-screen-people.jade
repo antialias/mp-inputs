@@ -6,13 +6,13 @@ include ../mixins.jade
   +screen-title(`People`, {backButton: !!$helpers.screenIdx()})
   .people-properties-lists(onscroll=$helpers.scrolledList)
     +property-list($helpers.getSpecialOptions(), {
-      clickedProperty: $helpers.clickedSpecialOptions
+      clickedProperty: $helpers.clickedSpecialOptions,
     })
     +property-list($helpers.getProperties(), {
       clickedProperty: $helpers.clickedProperty,
-      loading
+      loading,
     })
   if !loading
     +screen-footer-button(($component.isShowingNonNumericProperties() ? `Hide` : `View all`) + ` non-numeric properties`, {
-      onclick: $helpers.toggleNonNumericProperties
+      onclick: $helpers.toggleNonNumericProperties,
     })
