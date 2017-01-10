@@ -4,7 +4,7 @@ include ../mixins.jade
 
 .builder-screen.properties
   +screen-title(`People`, {backButton: !!$helpers.screenIdx()})
-  .people-properties-lists(onscroll=$helpers.scrolledList)
+  .screen-list-container(onscroll=$helpers.scrolledList)
     +property-list($helpers.getSpecialOptions(), {
       clickedProperty: $helpers.clickedSpecialOptions,
     })
