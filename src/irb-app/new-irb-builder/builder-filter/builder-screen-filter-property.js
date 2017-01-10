@@ -22,7 +22,10 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           this.app.updateStageClause({filterType});
         },
         getActiveClause: () => this.app.hasStageClause() ? this.app.activeStageClause : {},
-        isTypeMenuOpen: () => !!this.app.getBuilderCurrentScreen().typeMenuOpen,
+        isTypeMenuOpen: () => {
+          const currentScreen = this.app.getBuilderCurrentScreen();
+          return !!currentScreen && !!currentScreen.typeMenuOpen;
+        },
         toggleTypeMenu: () => this.config.helpers.updateTypeMenu(!this.config.helpers.isTypeMenuOpen()),
         updateTypeMenu: typeMenuOpen => this.app.updateBuilderCurrentScreen({typeMenuOpen}),
       }),
