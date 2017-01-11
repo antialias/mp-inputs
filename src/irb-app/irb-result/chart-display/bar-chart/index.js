@@ -108,7 +108,7 @@ document.registerElement(`bar-chart`, class extends Component {
     sortConfig = util.extend(sortConfig, {hideFirstSort: displayOptions.plotStyle === `stacked` && rows.length === 1});
 
     let headersStyle = this.state.headersStyle;
-    if (headers.length !== headersStyle.length) {
+    if (headers && headers.length !== (headersStyle && headersStyle.length)) {
       // setup min-width for chart-headers during rendering
       headersStyle = headers.map(header => ({name: header, width: 100}));
     }
