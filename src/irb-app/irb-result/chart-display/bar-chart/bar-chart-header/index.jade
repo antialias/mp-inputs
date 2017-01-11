@@ -18,7 +18,7 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, headerIdx)
             svg-icon(attributes=({icon:`sort-${$helpers.SORT_ICONS[sortBy]}-${sortOrder}`}))
 
 .chart-header-container
-  each header, idx in headers
+  each header, idx in headersStyle
     .bar-chart-header(
       class={'active-sort-panel': activeSortPanel === idx}
       onclick=() => $helpers.clickedHeader(idx)

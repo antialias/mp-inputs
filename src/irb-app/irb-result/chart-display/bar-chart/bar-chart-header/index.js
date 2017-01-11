@@ -1,5 +1,3 @@
-/* global $ */
-
 import { Component } from 'panel';
 
 import { abbreviateNumber, renameProperty } from '../../../../../util';
@@ -15,15 +13,6 @@ const SORT_ICONS = {
 document.registerElement(`irb-bar-chart-header`, class extends Component {
   get config() {
     return {
-      defaultState: {
-        activeSortPanel: null,
-        chartLabel: ``,
-        chartMax: null,
-        displayOptions: {},
-        functionLabel: ``,
-        headers: [],
-        sortConfig: {},
-      },
       helpers: {
         SORT_ICONS,
         clickedHeader: section => {
@@ -73,41 +62,5 @@ document.registerElement(`irb-bar-chart-header`, class extends Component {
       },
       template,
     };
-  }
-
-  attributeChangedCallback() {
-    super.attributeChangedCallback(...arguments);
-    const chartMax = this.getJSONAttribute(`chart-max`);
-    const displayOptions = this.getJSONAttribute(`display-options`) || {};
-    const headerNames = this.getJSONAttribute(`headers`) || [];
-    const sortConfig = this.getJSONAttribute(`sort-config`) || {};
-
-
-    let chartLabel = this.getJSONAttribute(`chart-label`);
-    const functionLabel = this.getJSONAttribute(`function-label`);
-    if (functionLabel) {
-      chartLabel = `${chartLabel} ${functionLabel}`;
-    }
-
-    window.requestAnimationFrame(() => { // defer so we can inspect the fully-rendered table
-
-      const headers = $(this).parents(`table`)
-        .find(`tbody tr:first-child td`).map((i, el) => ({
-          name: headerNames[i],
-          width: $(el).outerWidth(),
-        })).get().slice(0, -1);
-
-      const headerWidths = headers.reduce((sum, header) => sum + header.width, 0);
-      const axisWidthStyle = (`calc(100% - ${headerWidths}px)`);
-
-      this.update({
-        axisWidthStyle,
-        chartLabel,
-        chartMax,
-        displayOptions,
-        headers,
-        sortConfig,
-      });
-    });
   }
 });

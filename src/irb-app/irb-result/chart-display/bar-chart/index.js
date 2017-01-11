@@ -19,15 +19,17 @@ document.registerElement(`bar-chart`, class extends Component {
     return {
       template,
       defaultState: {
-        headers: [],
-        headerSortPanel: null,
-        rows: [],
+        axisWidthStyle: {},
         chartMax: 0,
-        segmentColorMap: {},
-        displayOptions: {},
         chartLabel: ``,
+        displayOptions: {},
         functionLabel: ``,
         hoverTooltip: {rowIdx: null, cellIdx: null},
+        headers: [],
+        headersStyle: [],
+        headerSortPanel: null,
+        rows: [],
+        segmentColorMap: {},
         showValueNames: [],
         util,
       },
@@ -66,10 +68,25 @@ document.registerElement(`bar-chart`, class extends Component {
     this.updateStateFromAttributes();
   }
 
+  calculateHeaderWidths() {
+    window.requestAnimationFrame(() => { // defer so we can inspect the fully-rendered table
+      const tableHeaderColumns = Array.from(this.querySelectorAll(`table tbody tr:first-child td.chart-header`));
+      const headersStyle = tableHeaderColumns.map((el, idx) => ({name: this.state.headers[idx], width: el.offsetWidth}));
+
+      const headerWidths = headersStyle && headersStyle.reduce((sum, header) => sum + header.width, 0);
+      const axisWidthStyle = (`calc(100% - ${headerWidths}px)`);
+
+      this.update({
+        axisWidthStyle,
+        headersStyle,
+      });
+    });
+  }
+
   updateStateFromAttributes() {
     let {headers, series} = this.getJSONAttribute(`data`);
     const segmentColorMap = this.getJSONAttribute(`segment-color-map`) || {};
-    const chartLabel = this.getJSONAttribute(`chart-label`) || ``;
+    let chartLabel = this.getJSONAttribute(`chart-label`) || ``;
     const legendChangeID = this.getJSONAttribute(`legend-change-id`);
     const displayOptions = this.getJSONAttribute(`display-options`) || {};
     const functionLabel = this.getJSONAttribute(`function-label`) || ``;
@@ -79,6 +96,10 @@ document.registerElement(`bar-chart`, class extends Component {
       return;
     }
 
+    if (functionLabel) {
+      chartLabel = `${chartLabel} ${functionLabel}`;
+    }
+
     series = util.nestedObjectSum(series);
     const rows = nestedObjectToBarChartData(series, sortConfig);
 
@@ -86,17 +107,26 @@ document.registerElement(`bar-chart`, class extends Component {
 
     sortConfig = util.extend(sortConfig, {hideFirstSort: displayOptions.plotStyle === `stacked` && rows.length === 1});
 
+    let headersStyle = this.state.headersStyle;
+    if (headers.length !== headersStyle.length) {
+      // setup min-width for chart-headers during rendering
+      headersStyle = headers.map(header => ({name: header, width: 100}));
+    }
+
     this.update({
       chartLabel,
       chartMax,
-      legendChangeID,
-      segmentColorMap,
       displayOptions,
       functionLabel,
       headers,
+      headersStyle,
+      legendChangeID,
       rows,
+      segmentColorMap,
       sortConfig,
     });
+
+    this.calculateHeaderWidths();
   }
 
   validSortConfig(headers, sortConfig) {
