@@ -85,17 +85,15 @@ min-bar-chart-height = 600px
       display flex
 
       .header-text-container
+        align-items center
         display flex
-        flex-direction row
         justify-content center
         width 100%
 
         .header-text
           background-color grey-200
-          height 16px
-          left 16px
-          position relative
-          top 12px
+          border-radius 3px
+          height loader-bar-height
           width 30%
 
       .header-icon
@@ -105,22 +103,22 @@ min-bar-chart-height = 600px
         svg-icon-style(grey-700, pos-top: 7px, pos-left: 5px)
 
     .chart-graph
+      align-items center
       background-color white
       border-radius 0 0 15px 15px
       display flex
-      flex-direction row
+      flex-direction column
       height 559px
       justify-content center
       width 100%
 
       .chart-graph-text
-        line-height 25
+        line-height 25px
+        margin 20px 0
 
-      .loader
-        left 63px
-        loader(10px)
-        position relative
-        top -190px
+      mp-spinner
+        height 75px
+        width 75px
 
   .legend
     flex 0 0 legend-width

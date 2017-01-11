@@ -155,14 +155,20 @@
     &:last-of-type
       border-bottom none
 
-    &.show-loader:empty
-      loader(4px)
-      margin 12px auto
-
     & + ul.screen-options-list
       border-top 1px solid grey-150
       margin-top 2px
       padding-top 2px
+
+    .loading-properties
+      align-items center
+      display flex
+      height 80px
+      justify-content center
+
+      mp-spinner
+        width 30px
+        height 30px
 
   li.list-option
     color grey-700

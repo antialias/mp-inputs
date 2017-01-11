@@ -21,9 +21,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
           ) {
             this.prevIsLoading = isLoading;
             this.numProperties = properties.length;
-            this.updateScreensRenderedSize({
-              cancelDuringTransition: true,
-            });
+            this.updateScreensRenderedSize();
           }
 
           return properties;

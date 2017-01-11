@@ -1,4 +1,5 @@
 import { Component } from 'panel';
+import throttle from 'lodash/throttle';
 
 import { extend } from '../../../util';
 
@@ -22,8 +23,10 @@ export class EditControl extends Component {
           requestAnimationFrame(() => this.el.querySelector(`input.control-label`).focus());
         },
         menuChange: ev => ev.detail && ev.detail.state === `closed` && this.app.stopBuildingQuery(),
-        changedSearch: ev => this.update({contextFilter: ev.target.value}),
-
+        changedSearch: throttle(ev => {
+          this.update({contextFilter: ev.target.value});
+          this.app.updateBuilderCurrentScreen({progressiveListSize: null});
+        }, 200, {leading: true, maxWait: 200}),
         getLabel: () => this.getLabel(),
         isPaneOpen: () => this.isPaneOpen(),
         isRemovable: () => this.isRemovable(),

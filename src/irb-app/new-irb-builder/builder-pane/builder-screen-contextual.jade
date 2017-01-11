@@ -1,7 +1,7 @@
 include ../mixins.jade
 
 .builder-screen.sources
-  ul.screen-options-list
+  ul.screen-options-list(on={scroll: $helpers.scrolledList})
     if contextFilter
       +filtered-options-lists($helpers.getContextLists())
     else

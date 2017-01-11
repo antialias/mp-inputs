@@ -1,6 +1,6 @@
 import WebComponent from 'webcomponent';
 
-import debounce from 'lodash/debounce';
+import throttle from 'lodash/throttle';
 
 import './sticky-scroll.styl';
 
@@ -15,7 +15,7 @@ document.registerElement(`sticky-scroll`, class extends WebComponent {
     this.stickyHeader = null;
     this.stuckTitle = null;
 
-    this.onBodyScrollHandler = debounce(() => this.updateStuckHeader(), 10, {leading: true, trailing: true});
+    this.onBodyScrollHandler = throttle(() => this.updateStuckHeader(), 10);
     this.onFirstScrollHandler = ()=> {
       if (this.firstScroll) {
         this.style.overflowY = `hidden`;

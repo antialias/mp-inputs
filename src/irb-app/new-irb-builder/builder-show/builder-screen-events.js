@@ -18,6 +18,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
   }
 
   buildList() {
+    this.updateScreensRenderedSize();
     return this.allMatchingEvents();
   }
 });

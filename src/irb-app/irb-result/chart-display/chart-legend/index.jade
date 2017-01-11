@@ -8,82 +8,93 @@ include ../../../mixins.jade
 .chart-legend
   .header Legend
   .content-wrapper
-    .search(class={active: isSearchActive})
-      svg-icon(attrs={icon: 'search'})
-      focus-input(
-        attrs={placeholder: 'search'}
-        props={focusDelay: 200}
-        on={input: $helpers.changedSearch}
+    if resultLoading
+      .search
+        svg-icon(attrs={icon: 'search'})
+        input(attrs={type: 'text', placeholder: 'search'})
+      .body-loader
+        - const numOfLoaderLines = 6
+        each _ in Array(numOfLoaderLines).fill()
+          .series-loader
+            .select-icon-loader
+            .label-loader
+    else
+      .search(class={active: isSearchActive})
+        svg-icon(attrs={icon: 'search'})
+        focus-input(
+          attrs={placeholder: 'search'}
+          props={focusDelay: 200}
+          on={input: $helpers.changedSearch}
+        )
+      sticky-scroll(
+        attrs={'refresh-data': JSON.stringify({showing: report.legend.seriesShowing, legendDataToDisplay})}
+        class={'has-results': legendDataToDisplay.length}
       )
-    sticky-scroll(
-      attrs={'refresh-data': JSON.stringify({showing: report.legend.seriesShowing, legendDataToDisplay})}
-      class={'has-results': legendDataToDisplay.length}
-    )
-      .body
-        if !legendDataToDisplay.length
-          .no-result Your search didn't return any results
-        each series, seriesIdx in legendDataToDisplay
-          - const isSeriesShowing = report.legend.isSeriesShowing(seriesIdx)
-          - const seriesDisplay = report.legend.getSeriesDisplayAtIndex(seriesIdx)
-          - const seriesDisplayLabel = $helpers.seriesDisplayOption(seriesIdx)
-          if !isFlattenedData
-            .sticky-title.info(on={click: () => report.legend.toggleShowSeries(seriesIdx)})
-              - const titleName = util.renameProperty(series.seriesName)
-              .name(
-                class={showing: isSeriesShowing}
-                attrs={title: titleName}
-              )
-                svg-icon(attrs={icon: 'triangle-right'})
-                = titleName
-              .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
-          ul.series-values
-            if isSeriesShowing
-              if !isSearchActive
-                +checkbox-select-all($helpers.allSeriesSelected(seriesIdx), () => $helpers.toggleAllSeriesValue(seriesIdx))
-              if !series.seriesValues.length
-                .no-result= 'No results'
-              each value in series.seriesValues
-                - const showing = $helpers.isSeriesValueShowing(seriesIdx, value.originalValue)
-                li.checkbox-item.series(
-                  class={
-                    'is-event': series.seriesName === '$event',
-                    showing,
-                  }
-                  on={
-                    click: () => $helpers.toggleShowSeriesValue(seriesIdx, value.originalValue),
-                  }
+        .body
+          if !legendDataToDisplay.length
+            .no-result Your search didn't return any results
+          each series, seriesIdx in legendDataToDisplay
+            - const isSeriesShowing = report.legend.isSeriesShowing(seriesIdx)
+            - const seriesDisplay = report.legend.getSeriesDisplayAtIndex(seriesIdx)
+            - const seriesDisplayLabel = $helpers.seriesDisplayOption(seriesIdx)
+            if !isFlattenedData
+              .sticky-title.info(on={click: () => report.legend.toggleShowSeries(seriesIdx)})
+                - const titleName = util.renameProperty(series.seriesName)
+                .name(
+                  class={showing: isSeriesShowing}
+                  attrs={title: titleName}
                 )
-                  .checkbox-select-icon.series-icon(class={
-                    color: seriesIdx === 0 && isMultiColor,
-                    [`segment-color-${report.legend.getColorForSeries(value.originalValue, isFlattenedData)}`]: showing && seriesIdx === 0,
-                  })
-                    svg-icon(attrs={icon: 'check-checkbox', empty: !showing})
-                  if isFlattenedData
-                    - const dataTitle = value.formattedText.join(' / ');
-                    if isSearchActive
-                      .checkbox-label.search-result(attrs={title: dataTitle})
-                        each match in value.matches
-                          .flattened-segment
-                            +highlight-matches(match)
+                  svg-icon(attrs={icon: 'triangle-right'})
+                  = titleName
+                .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
+            ul.series-values
+              if isSeriesShowing
+                if !isSearchActive
+                  +checkbox-select-all($helpers.allSeriesSelected(seriesIdx), () => $helpers.toggleAllSeriesValue(seriesIdx))
+                if !series.seriesValues.length
+                  .no-result= 'No results'
+                each value in series.seriesValues
+                  - const showing = $helpers.isSeriesValueShowing(seriesIdx, value.originalValue)
+                  li.checkbox-item.series(
+                    class={
+                      'is-event': series.seriesName === '$event',
+                      showing,
+                    }
+                    on={
+                      click: () => $helpers.toggleShowSeriesValue(seriesIdx, value.originalValue),
+                    }
+                  )
+                    .checkbox-select-icon.series-icon(class={
+                      color: seriesIdx === 0 && isMultiColor,
+                      [`segment-color-${report.legend.getColorForSeries(value.originalValue, isFlattenedData)}`]: showing && seriesIdx === 0,
+                    })
+                      svg-icon(attrs={icon: 'check-checkbox', empty: !showing})
+                    if isFlattenedData
+                      - const dataTitle = value.formattedText.join(' / ');
+                      if isSearchActive
+                        .checkbox-label.search-result(attrs={title: dataTitle})
+                          each match in value.matches
+                            .flattened-segment
+                              +highlight-matches(match)
+                      else
+                        .checkbox-label(attrs={title: dataTitle})
+                          each text in value.formattedText
+                            .flattened-segment= text
                     else
-                      .checkbox-label(attrs={title: dataTitle})
-                        each text in value.formattedText
-                          .flattened-segment= text
-                  else
-                    if isSearchActive
-                      .checkbox-label.search-result(attrs={title: value.formattedText})
-                        +highlight-matches(value.matches)
-                    else
-                      .checkbox-label(attrs={title: value.formattedText})= value.formattedText
-                    .delete-wrapper
-                      .delete-icon
-                        svg-icon(
-                          attrs={icon: 'x'}
-                          on={
-                            click: ev => $helpers.deleteToFilter(ev, seriesIdx, value.originalValue),
-                          }
-                        )
-          if isSeriesShowing && seriesDisplayLabel
-            .display-option(on={
-              click: () => report.legend.toggleSeriesDisplaySetting(seriesIdx),
-            })= seriesDisplayLabel
+                      if isSearchActive
+                        .checkbox-label.search-result(attrs={title: value.formattedText})
+                          +highlight-matches(value.matches)
+                      else
+                        .checkbox-label(attrs={title: value.formattedText})= value.formattedText
+                      .delete-wrapper
+                        .delete-icon
+                          svg-icon(
+                            attrs={icon: 'x'}
+                            on={
+                              click: ev => $helpers.deleteToFilter(ev, seriesIdx, value.originalValue),
+                            }
+                          )
+            if isSeriesShowing && seriesDisplayLabel
+              .display-option(on={
+                click: () => report.legend.toggleSeriesDisplaySetting(seriesIdx),
+              })= seriesDisplayLabel

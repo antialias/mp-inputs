@@ -62,8 +62,12 @@ mixin property-list(properties, options)
           })
           if options.caret
             +small-caret-icon()
-    else if !options.loading
-      li.list-option.list-empty no properties available
+    else
+      if options.loading
+        .loading-properties
+          mp-spinner
+      else
+        li.list-option.list-empty no properties available
 
 mixin resource-type-control(resourceTypes, options)
   .resource-type-control

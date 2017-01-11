@@ -1,4 +1,5 @@
 import { Component } from 'panel';
+import throttle from 'lodash/throttle';
 
 import { GroupClause, ShowClause } from '../../models/clause';
 
@@ -30,7 +31,10 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
           [GroupClause.TYPE]: `by`,
         }[this.app.originStageClauseType()] || ``),
         isPaneOpen: () => this.isPaneOpen(),
-        changedSearch: ev => this.update({contextFilter: ev.target.value}),
+        changedSearch: throttle(ev => {
+          this.update({contextFilter: ev.target.value});
+          this.app.updateBuilderCurrentScreen({progressiveListSize: null});
+        }, 200, {leading: true, maxWait: 200}),
       },
     };
   }

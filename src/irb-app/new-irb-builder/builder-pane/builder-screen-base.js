@@ -17,7 +17,7 @@ const PROGRESSIVE_LIST_START_SIZE = 20;
 export class BuilderScreenBase extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
-    this.updateScreensRenderedSize();
+    this.updateScreensRenderedSize({cancelDuringTransition: false});
   }
 
   get config() {
@@ -71,7 +71,7 @@ export class BuilderScreenBase extends Component {
     const lastScreen = screens[screens.length - 1];
     return {
       width: `${lastScreen.width}px`,
-      'min-height': `${lastScreen.height}px`,
+      height: `${lastScreen.height}px`,
     };
   }
 
@@ -132,11 +132,11 @@ export class BuilderScreenBase extends Component {
   }
 
   setPaneSizeAndPosition(width, height) {
-    if (width && height) {
+    if (width || height) {
       let screens = this.app.state.builderPane.screens;
       let screen = screens[this.screenIdx];
 
-      if (screen) {
+      if (screen && (screen.width !== width || screen.height !== height)) {
         screen = extend(screen, {width, height});
         screens = replaceByIndex(screens, this.screenIdx, screen);
 
@@ -149,7 +149,7 @@ export class BuilderScreenBase extends Component {
     }
   }
 
-  updateScreensRenderedSize({cancelDuringTransition=false}={}) {
+  updateScreensRenderedSize({cancelDuringTransition=true}={}) {
     requestAnimationFrame(() => {
       if (!(cancelDuringTransition && this.state.builderPane.inTransition)) {
         const {width, height} = this.firstChild.getBoundingClientRect();
@@ -184,7 +184,7 @@ export class BuilderScreenBase extends Component {
   }
 
   increaseProgressiveListSize() {
-    if (this.progressiveListSize < this.buildList().length) {
+    if (this.progressiveListSize < this.progressiveListLength()) {
       const progressiveListSize = this.progressiveListSize * 2;
       this.app.updateBuilderCurrentScreen({progressiveListSize});
     }
@@ -192,5 +192,9 @@ export class BuilderScreenBase extends Component {
 
   buildProgressiveList() {
     return this.buildList().slice(0, this.progressiveListSize);
+  }
+
+  progressiveListLength() {
+    return this.buildList().length;
   }
 }

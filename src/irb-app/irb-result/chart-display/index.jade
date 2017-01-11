@@ -9,7 +9,7 @@
             svg-icon(attrs={icon: 'ellipsis'})
         .chart-graph
           .chart-graph-text Gathering all the data...
-            .loader
+          mp-spinner
     else if !projectHasEvents
       .chart-loader
         .chart-header-container
@@ -60,18 +60,4 @@
             }
           )
   if $helpers.showLegend()
-    if resultLoading
-      .legend
-        .chart-legend
-          .header Legend
-          .content-wrapper
-            .search
-              svg-icon(attrs={icon: 'search'})
-              input(attrs={type: `text`, placeholder: `search`})
-            .body-loader
-              each i in _.range(5)
-                .series-loader
-                  .select-icon-loader
-                  .label-loader
-    else
-      .legend= $component.child('chart-legend')
+    .legend= $component.child('chart-legend')

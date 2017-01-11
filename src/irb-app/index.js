@@ -1,4 +1,4 @@
-import debounce from 'lodash/debounce';
+import throttle from 'lodash/throttle';
 import MPApp from 'mixpanel-common/report/mp-app';
 import { extend } from 'mixpanel-common/util';
 import * as util from '../util';
@@ -211,7 +211,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
     window.requestAnimationFrame(() => {
       const stickyClassName = `sticky-chart-headers`;
-      window.addEventListener(`scroll`, debounce(() => {
+      window.addEventListener(`scroll`, throttle(() => {
         const chart = this.querySelector(`.chart`);
         const isBarChart = this.state.report.displayOptions.chartType === `bar`;
         if (isBarChart && chart && chart.getBoundingClientRect().top <= 0) {
@@ -232,7 +232,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         } else {
           this.parentNode.classList.remove(stickyClassName);
         }
-      }, 10, {leading: true, trailing: true}));
+      }, 10));
     });
   }
 
@@ -351,7 +351,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       screens: [],
       sizeStyle: {
         width: `0px`,
-        'min-height': `0px`,
+        height: `0px`,
       },
     };
   }

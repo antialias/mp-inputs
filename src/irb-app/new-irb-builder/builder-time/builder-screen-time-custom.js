@@ -57,9 +57,7 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
           from: this.getDates().from,
           to: ev.detail,
         }}),
-        resizedCalendar: () => this.updateScreensRenderedSize({
-          cancelDuringTransition: true,
-        }),
+        resizedCalendar: () => this.updateScreensRenderedSize(),
       }),
     };
   }

@@ -15,31 +15,57 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
     return {
       template,
       helpers: extend(super.config.helpers, {
-        SOURCES,
+        getSources: () => {
+          this.updateScreensRenderedSize();
+          return SOURCES;
+        },
 
         clickedSource: source => {
           const {resourceType} = source;
           this.updateStageClause({resourceType, value: {}});
           this.nextScreen(`builder-screen-${resourceType}`);
         },
-        getFilteredLists: () => [
-          {
-            label: `Events`,
-            list: this.allMatchingEvents(),
-            resourceType: `event`,
-            itemOptions: {
-              clickedEvent: this.helpers.clickedEvent,
-              clickedEventProperties: this.helpers.clickedEventProperties,
-              showPill: true,
-            },
-          },
-          {
-            label: `People properties`,
-            list: this.allMatchingProperties(Clause.RESOURCE_TYPE_PEOPLE),
-            resourceType: `property`,
-          },
-        ],
+        getFilteredLists: () => {
+          this.updateScreensRenderedSize();
+          return this.buildProgressiveList();
+        },
       }),
     };
+  }
+
+  buildList() {
+    return [
+      {
+        label: `Events`,
+        list: this.allMatchingEvents(),
+        resourceType: `event`,
+        itemOptions: {
+          clickedEvent: this.config.helpers.clickedEvent,
+          clickedEventProperties: this.config.helpers.clickedEventProperties,
+          showPill: true,
+        },
+      },
+      {
+        label: `People properties`,
+        list: this.allMatchingProperties(Clause.RESOURCE_TYPE_PEOPLE),
+        resourceType: `property`,
+      },
+    ];
+  }
+
+  buildProgressiveList() {
+    let listSize = this.progressiveListSize;
+    const fullList = this.buildList();
+    const outList = [];
+    while (listSize > 0 && fullList.length) {
+      let source = fullList.shift();
+      outList.push(extend(source, {list: source.list.slice(0, listSize)}));
+      listSize -= source.list.length;
+    }
+    return outList;
+  }
+
+  progressiveListLength() {
+    return this.buildList().reduce((sum, source) => sum + source.list.length, 0);
   }
 });

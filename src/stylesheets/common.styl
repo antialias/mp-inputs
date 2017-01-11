@@ -16,6 +16,8 @@ segment-color-6 = mp-aquamarine
 segment-color-7 = mp-orange
 segment-color-8 = mp-yellow
 
+loader-bar-height = 12px
+
 :export
   grey-150 grey-150
   segment-color-1 segment-color-1
@@ -50,30 +52,6 @@ ellipsis()
   overflow hidden
   text-overflow ellipsis
   white-space nowrap
-
-loader(size)
-  animation load8 1.1s infinite linear
-  border-bottom 1.1em solid rgba(200, 200, 200, 0.2)
-  border-left 1.1em solid grey-500
-  border-right 1.1em solid rgba(200, 200, 200, 0.2)
-  border-top 1.1em solid rgba(200, 200, 200, 0.2)
-  font-size size
-  margin 60px auto
-  margin-left -5em
-  position relative
-  text-indent -9999em
-  transform translateZ(0)
-
-  &, &::after
-    border-radius 50%
-    height 10em
-    width 10em
-
-  @keyframes load8
-    0%
-      transform rotate(0deg)
-    100%
-      transform rotate(360deg)
 
 panel-top()
   background-color header-gray

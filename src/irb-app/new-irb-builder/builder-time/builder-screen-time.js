@@ -10,7 +10,10 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
       template,
       helpers: extend(super.config.helpers, {
         RANGES: TimeClause.RANGES,
-        RANGE_LIST: TimeClause.RANGE_LIST,
+        getRangeList: () => {
+          this.updateScreensRenderedSize();
+          return TimeClause.RANGE_LIST.filter(range => range.includes(this.state.contextFilter));
+        },
         isRangeSelected: range => {
           const selectedRange = this.helpers.getStageClauseAttr(`range`);
           return range === selectedRange || (
@@ -20,9 +23,7 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
         clickedRange: range => {
           if (range === TimeClause.RANGES.CUSTOM) {
             this.nextScreen(`builder-screen-time-custom`);
-            this.updateScreensRenderedSize({
-              cancelDuringTransition: true,
-            });
+            this.updateScreensRenderedSize();
           } else {
             this.updateAndCommitStageClause({range});
           }
