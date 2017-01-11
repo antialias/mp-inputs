@@ -464,14 +464,17 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   resetTopQueries() {
     if (this.canMakeQueries()) {
+      this.update({topEventProperties: TopEventPropertiesQuery.LOADING});
       this.queries.topEventProperties.build(this.state).run().then(topEventProperties => {
         this.update({topEventProperties});
       });
 
+      this.update({topPeopleProperties: TopPeoplePropertiesQuery.LOADING});
       this.queries.topPeopleProperties.build(this.state).run().then(topPeopleProperties => {
         this.update({topPeopleProperties});
       });
 
+      this.update({topEvents: TopEventsQuery.LOADING});
       const topEventsQuery = this.queries.topEvents.build(this.state).run().then(topEvents => {
         this.update({
           topEvents: topEvents

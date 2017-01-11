@@ -1,7 +1,7 @@
 import { BuilderScreenBase } from './builder-screen-base';
 import { Clause, ShowClause } from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
-import { extend, unique } from '../../../util';
+import { extend, sorted, renameProperty, unique } from '../../../util';
 
 export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   get config() {
@@ -36,28 +36,6 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     };
   }
 
-  buildList() {
-    let resourceType;
-    if (this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE) {
-      resourceType = Clause.RESOURCE_TYPE_PEOPLE;
-    } else {
-      resourceType = this.getSelectedResourceType();
-    }
-    switch(resourceType) {
-      case Clause.RESOURCE_TYPE_ALL:
-        return [
-          ...this.allMatchingProperties(Clause.RESOURCE_TYPE_EVENTS),
-          ...this.allMatchingProperties(Clause.RESOURCE_TYPE_PEOPLE),
-        ];
-      case Clause.RESOURCE_TYPE_EVENTS:
-        return this.allMatchingProperties(Clause.RESOURCE_TYPE_EVENTS);
-      case Clause.RESOURCE_TYPE_PEOPLE:
-        return this.allMatchingProperties(Clause.RESOURCE_TYPE_PEOPLE);
-      default:
-        return [];
-    }
-  }
-
   getSelectedResourceType() {
     const screen = this.app.getBuilderCurrentScreen();
     return (screen && screen.resourceType) || Clause.RESOURCE_TYPE_ALL;
@@ -73,21 +51,45 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     );
   }
 
-  buildList() {
-    const properties = this.getRelevantBuilderEvents().reduce((props, mpEvent) => {
-      const eventProps = this.state.topEventPropertiesByEvent[mpEvent.name];
-      if ([ShowClause.TOP_EVENTS.name, ShowClause.ALL_EVENTS.name].includes(mpEvent.name)) {
-        return props.concat(this.state.topEventProperties);
-      } else if (!eventProps) {
-        this.app.fetchTopPropertiesForEvent(mpEvent.name);
-      } else if (eventProps !== BaseQuery.LOADING) {
-        return props.concat(eventProps);
+  buildList(resourceType) {
+    if (!resourceType) {
+      if (this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE) {
+        resourceType = Clause.RESOURCE_TYPE_PEOPLE;
+      } else {
+        resourceType = this.getSelectedResourceType();
       }
-      return props;
-    }, []);
+    }
 
-    return unique(properties, {
-      hash: prop => [prop.name, prop.type, prop.resourceType].join(`:`),
+    let properties = [];
+
+    if ([Clause.RESOURCE_TYPE_ALL, Clause.RESOURCE_TYPE_EVENTS].includes(resourceType)) {
+      let relevantEventProperties = this.getRelevantBuilderEvents().reduce((props, mpEvent) => {
+        const eventProps = this.state.topEventPropertiesByEvent[mpEvent.name];
+        if ([ShowClause.TOP_EVENTS.name, ShowClause.ALL_EVENTS.name].includes(mpEvent.name)) {
+          return props.concat(this.state.topEventProperties);
+        } else if (!eventProps) {
+          this.app.fetchTopPropertiesForEvent(mpEvent.name);
+        } else if (eventProps !== BaseQuery.LOADING) {
+          return props.concat(eventProps);
+        }
+        return props;
+      }, []);
+
+      relevantEventProperties = unique(relevantEventProperties, {
+        hash: prop => `${prop.name}:${prop.type}:${prop.resourceType}`,
+      });
+
+      properties = properties.concat(relevantEventProperties);
+    }
+
+    if ([Clause.RESOURCE_TYPE_ALL, Clause.RESOURCE_TYPE_PEOPLE].includes(resourceType)) {
+      properties = properties.concat(this.state.topPeopleProperties);
+    }
+
+    properties = sorted(this.matchingItems(properties, renameProperty), {
+      transform: prop => renameProperty(prop.name).toLowerCase(),
     });
+
+    return properties;
   }
 }

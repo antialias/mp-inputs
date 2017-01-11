@@ -1,6 +1,6 @@
 include ../mixins.jade
 
-- const loading = $helpers.isLoading()
+- const loading = $component.isLoading()
 
 .builder-screen.properties
   +screen-title(`People`, {backButton: !!$helpers.screenIdx()})

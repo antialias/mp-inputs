@@ -1,6 +1,7 @@
 import { Component } from 'panel';
 
 import { Clause, ShowClause } from '../../../models/clause';
+import BaseQuery from '../../../models/queries/base';
 import {
   extend,
   renameEvent,
@@ -85,24 +86,26 @@ export class BuilderScreenBase extends Component {
   }
 
   allMatchingEvents() {
+    const mpEvents = this.state.topEvents === BaseQuery.LOADING ? [] : this.state.topEvents;
     return [
       ...this.matchingItems([
         ShowClause.TOP_EVENTS,
         ShowClause.ALL_EVENTS,
       ], renameEvent),
-      ...sorted(
-        this.matchingItems(this.state.topEvents, renameEvent),
-        {transform: mpEvent => renameEvent(mpEvent.name).toLowerCase()}
-      ),
+      ...sorted(this.matchingItems(mpEvents, renameEvent), {
+        transform: mpEvent => renameEvent(mpEvent.name).toLowerCase(),
+      }),
     ];
   }
 
   allMatchingProperties(propType) {
-    propType = propType === Clause.RESOURCE_TYPE_PEOPLE ? `People` : `Event`;
-    return sorted(
-      this.matchingItems(this.state[`top${propType}Properties`], renameProperty),
-      {transform: prop => renameProperty(prop.name).toLowerCase()}
-    );
+    const isPeople = propType === Clause.RESOURCE_TYPE_PEOPLE;
+    let properties = isPeople ? this.state.topPeopleProperties : this.state.topEventProperties;
+    properties = properties === BaseQuery.LOADING ? [] : properties;
+
+    return sorted(this.matchingItems(properties, renameProperty), {
+      transform: prop => renameProperty(prop.name).toLowerCase(),
+    });
   }
 
   previousScreen() {
