@@ -1,3 +1,13 @@
+mixin sort-icon(headerIdx)
+  - const isAxis = !isFinite(headerIdx)
+  .sort-icon(class={
+    'sort-axis': isAxis,
+    'sort-bar-header': !isAxis,
+  })
+    - const icon = isAxis ? $helpers.getAxisSortIcon() : $helpers.getHeaderSortActive(headerIdx);
+    svg-icon(attributes=({icon, empty: !icon}))
+
+
 mixin sort-holder(type, sortByOptions, sortOrderOptions, headerIdx)
   - headerIdx = headerIdx || 0
   .sort-holder
@@ -12,35 +22,19 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, headerIdx)
     .bar-chart-header(
       class={'active-sort-panel': activeSortPanel === idx}
       onclick=() => $helpers.clickedHeader(idx)
-      data-header-idx = idx
       style={width: `${header.width}px`}
     )
       .text= $helpers.renameHeaderLabel(header.name)
+      +sort-icon(idx)
       +sort-holder(`colSort`, [`label`, `value`], [`asc`, `desc`], idx)
   .bar-chart-axis(
     class={'active-sort-panel': activeSortPanel === `axis`}
     onclick=() => $helpers.clickedHeader(`axis`)
+    style={width: axisWidthStyle}
   )
-    .axis-title(style={width: axisWidthStyle})
+    .axis-title
       .text= chartLabel
+      +sort-icon()
       +sort-holder(`axisSort`, [`value`], [`asc`, `desc`])
     .max-value
-
-
-//- let headers = this.headers.map((header, idx) => {
-//-   const sortHolder = this.createSortHolder(`colSort`, [`label`, `value`], [`asc`, `desc`], idx);
-//-   this.sortHolders.push(sortHolder);
-//-   return $(`<div>`)
-//-     .addClass(`bar-chart-header`)
-//-     .data(`header-idx`, idx)
-//-     .on(`click`, () => {
-//-       this.hideAllSortHolders(sortHolder);
-//-       sortHolder.toggleClass(`active-sort-panel`);
-//-     })
-//-     .append($(`<div>`).addClass(`text`).html(
-//-       header === `$event` ? `Events` : util.renameProperty(header)
-//-     ))
-//-     .append($(`<div class="sort-icon sort-bar-header">`).append(headersEl.createSortIcon(idx)))
-//-     .append(sortHolder)
-//-     .get(0);
-//- });
+      .text(onclick=$helpers.clickedMaxValue)= $helpers.getMaxValueLabel()
