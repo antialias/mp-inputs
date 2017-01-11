@@ -15,16 +15,28 @@ document.registerElement(`irb-bar-chart-header`, class extends Component {
   get config() {
     return {
       defaultState: {
+        activeSortPanel: null,
+        headers: [],
       },
       helpers: {
-
+        SORT_ICONS,
+        clickedHeader: (section) => this.update({activeSortPanel: section}),
+        renameHeaderLabel: (header) => header === `$event` ? `Events` : util.renameProperty(header),
+        selectedHeaderSort: (type, colIdx, sortBy, sortOrder) => this.dispatchEvent(new CustomEvent(`change`, {
+          detail: {
+            colIdx,
+            sortBy,
+            sortOrder,
+            type,
+          },
+        })),
       },
       template,
     };
   }
 
   createdCallback() {
-    this.$el = $(`<div>`).addClass(`chart-header-container`).appendTo(this);
+    super.createdCallback(...arguments);
     this.chartLabel = ``;
     this.chartMax = null;
     this.displayOptions = {};
@@ -34,28 +46,37 @@ document.registerElement(`irb-bar-chart-header`, class extends Component {
   }
 
   attributeChangedCallback() {
-    this.chartLabel = this.getJSONAttribute(`chart-label`);
+    super.attributeChangedCallback(...arguments);
     this.chartMax = this.getJSONAttribute(`chart-max`);
     this.displayOptions = this.getJSONAttribute(`display-options`) || {};
-    this.functionLabel = this.getJSONAttribute(`function-label`);
     this.headers = this.getJSONAttribute(`headers`) || [];
     this.sortConfig = this.getJSONAttribute(`sort-config`) || {};
-    this.render();
-  }
 
-  createSortHolder(type, sortByOptions, sortOrderOptions, headerIdx=0) {
-    const $sortControls = $(`<div>`).addClass(`sort-controls`);
 
-    sortByOptions.forEach(sortBy => {
-      sortOrderOptions.forEach(sortOrder => {
-        const $sortButton = $(`<div class="sort-icon">`)
-          .append($(`<svg-icon icon="sort-${SORT_ICONS[sortBy]}-${sortOrder}">`));
-        $sortButton.on(`click`, () => this.selectHeaderSort(type, headerIdx, sortBy, sortOrder));
-        $sortControls.append($sortButton);
-      });
+    let chartLabel = this.getJSONAttribute(`chart-label`);
+    const functionLabel = this.getJSONAttribute(`function-label`);
+    if (functionLabel) {
+      chartLabel = `${chartLabel} ${functionLabel}`;
+    }
+
+
+    window.requestAnimationFrame(() => { // defer so we can inspect the fully-rendered table
+
+      const headers = $(this).parents(`table`)
+        .find(`tbody tr:first-child td`).map((i, el) => ({
+          name: this.headers[i],
+          width: $(el).outerWidth(),
+        })).get().slice(0, -1);
+
+      const headerWidths = headers.reduce((sum, header) => sum + header.width, 0);
+      const axisWidthStyle = (`calc(100% - ${headerWidths}px)`);
+
+      this.update({
+        axisWidthStyle,
+        headers,
+        chartLabel,
+      })
     });
-
-    return $(`<div>`).addClass(`sort-holder`).append($sortControls);
   }
 
   selectHeaderSort(type, colIdx, sortBy, sortOrder) {
@@ -80,76 +101,76 @@ document.registerElement(`irb-bar-chart-header`, class extends Component {
   }
 
   render() {
-    this.$el.empty();
-    this.sortHolders = [];
-    let headersEl = this;
-    let $headers = $(this.headers.map((header, idx) => {
-      const sortHolder = this.createSortHolder(`colSort`, [`label`, `value`], [`asc`, `desc`], idx);
-      this.sortHolders.push(sortHolder);
-      return $(`<div>`)
-        .addClass(`bar-chart-header`)
-        .data(`header-idx`, idx)
-        .on(`click`, () => {
-          this.hideAllSortHolders(sortHolder);
-          sortHolder.toggleClass(`active-sort-panel`);
-        })
-        .append($(`<div>`).addClass(`text`).html(
-          header === `$event` ? `Events` : util.renameProperty(header)
-        ))
-        .append($(`<div class="sort-icon sort-bar-header">`).append(headersEl.createSortIcon(idx)))
-        .append(sortHolder)
-        .get(0);
-    }));
+    // this.sortHolders = [];
+    // let headersEl = this;
 
-    this.$el
-      .addClass(`loading`)
-      .append($headers);
+    // let headers = this.headers.map((header, idx) => {
+    //   const sortHolder = this.createSortHolder(`colSort`, [`label`, `value`], [`asc`, `desc`], idx);
+    //   this.sortHolders.push(sortHolder);
+    //   return $(`<div>`)
+    //     .addClass(`bar-chart-header`)
+    //     .data(`header-idx`, idx)
+    //     .on(`click`, () => {
+    //       this.hideAllSortHolders(sortHolder);
+    //       sortHolder.toggleClass(`active-sort-panel`);
+    //     })
+    //     .append($(`<div>`).addClass(`text`).html(
+    //       header === `$event` ? `Events` : util.renameProperty(header)
+    //     ))
+    //     .append($(`<div class="sort-icon sort-bar-header">`).append(headersEl.createSortIcon(idx)))
+    //     .append(sortHolder)
+    //     .get(0);
+    // });
 
-    let chartTitle = this.chartLabel;
-    if (this.functionLabel) {
-      chartTitle += ` ${this.functionLabel}`;
-    }
+    // this.$el
+    //   .addClass(`loading`)
+    //   .append($headers);
 
-    const sortAxisHolder = this.createSortHolder(`axisSort`, [`value`], [`asc`, `desc`]);
-    this.sortHolders.push(sortAxisHolder);
-    const $axisTitle = $(`<div>`)
-      .addClass(`axis-title`)
-      .append($(`<div>`).addClass(`text`).html(chartTitle))
-      .append($(`<div class="sort-icon sort-axis">`).append(headersEl.createAxisSortIcon()))
-      .append(sortAxisHolder);
+    // let chartTitle = this.chartLabel;
+    // if (this.functionLabel) {
+    //   chartTitle += ` ${this.functionLabel}`;
+    // }
 
-    const $axisMaxValue = $(`<div>`)
-      .addClass(`text`)
-      .on(`click`, function(ev) {
-        headersEl.dispatchEvent(new CustomEvent(`change`, {detail: {axis: true, maxValueText: true}}));
-        ev.stopPropagation();
-      })
-      .html(this.displayOptions.value === `absolute` ? util.abbreviateNumber(this.chartMax) : `%`);
+    // const sortAxisHolder = this.createSortHolder(`axisSort`, [`value`], [`asc`, `desc`]);
+    // this.sortHolders.push(sortAxisHolder);
+    // const $axisTitle = $(`<div>`)
+    //   .addClass(`axis-title`)
+    //   .append($(`<div>`).addClass(`text`).html(chartTitle))
+    //   .append($(`<div class="sort-icon sort-axis">`).append(headersEl.createAxisSortIcon()))
+    //   .append(sortAxisHolder);
 
-    let $axis = $(`<div class="bar-chart-axis"></div>`)
-      .on(`click`, () => {
-        this.hideAllSortHolders(sortAxisHolder);
-        sortAxisHolder.toggleClass(`active-sort-panel`);
-      })
-      .append($axisTitle)
-      .append($(`<div>`).addClass(`max-value`).append($axisMaxValue));
+    // const $axisMaxValue = $(`<div>`)
+    //   .addClass(`text`)
+    //   .on(`click`, function(ev) {
+    //     headersEl.dispatchEvent(new CustomEvent(`change`, {detail: {axis: true, maxValueText: true}}));
+    //     ev.stopPropagation();
+    //   })
+    //   .html(this.displayOptions.value === `absolute` ? util.abbreviateNumber(this.chartMax) : `%`);
 
-    this.$el.append($axis);
+    // let $axis = $(`<div class="bar-chart-axis"></div>`)
+    //   .on(`click`, () => {
+    //     this.hideAllSortHolders(sortAxisHolder);
+    //     sortAxisHolder.toggleClass(`active-sort-panel`);
+    //   })
+    //   .append($axisTitle)
+    //   .append($(`<div>`).addClass(`max-value`).append($axisMaxValue));
 
-    window.requestAnimationFrame(() => { // defer so we can inspect the fully-rendered table
-      const tableColWidths = this.$el.parents(`table`)
-        .find(`tbody tr:first-child td`).map((i, el) => $(el).outerWidth()).get();
+    // this.$el.append($axis);
 
-      // set header widths
-      $headers.each((i, el) => {
-        $(el).width(tableColWidths[i]);
-      });
+    // window.requestAnimationFrame(() => { // defer so we can inspect the fully-rendered table
+    //   const tableColWidths = this.$el.parents(`table`)
+    //     .find(`tbody tr:first-child td`).map((i, el) => $(el).outerWidth()).get();
 
-      // set axis width
-      const headerWidths = tableColWidths.slice(0, -1).reduce((sum, width) => sum + width, 0);
-      $axis.width(`calc(100% - ${headerWidths}px)`);
-      this.$el.removeClass(`loading`);
-    });
+    //   // set header widths
+    //   $headers.each((i, el) => {
+    //     $(el).width(tableColWidths[i]);
+    //   });
+
+    //   // set axis width
+    //   const headerWidths = tableColWidths.slice(0, -1).reduce((sum, width) => sum + width, 0);
+    //   $axis.width(`calc(100% - ${headerWidths}px)`);
+    //   this.$el.removeClass(`loading`);
+    // });
   }
 
   createSortIcon(headerIdx) {

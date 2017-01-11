@@ -1,1 +1,46 @@
-.test
+mixin sort-holder(type, sortByOptions, sortOrderOptions, headerIdx)
+  - headerIdx = headerIdx || 0
+  .sort-holder
+    .sort-controls
+      each sortBy in sortByOptions
+        each sortOrder in sortOrderOptions
+          .sort-icon(onclick=() => $helpers.selectedHeaderSort(type, headerIdx, sortBy, sortOrder))
+            svg-icon(attributes=({icon:`sort-${$helpers.SORT_ICONS[sortBy]}-${sortOrder}`}))
+
+.chart-header-container
+  each header, idx in headers
+    .bar-chart-header(
+      class={'active-sort-panel': activeSortPanel === idx}
+      onclick=() => $helpers.clickedHeader(idx)
+      data-header-idx = idx
+      style={width: `${header.width}px`}
+    )
+      .text= $helpers.renameHeaderLabel(header.name)
+      +sort-holder(`colSort`, [`label`, `value`], [`asc`, `desc`], idx)
+  .bar-chart-axis(
+    class={'active-sort-panel': activeSortPanel === `axis`}
+    onclick=() => $helpers.clickedHeader(`axis`)
+  )
+    .axis-title(style={width: axisWidthStyle})
+      .text= chartLabel
+      +sort-holder(`axisSort`, [`value`], [`asc`, `desc`])
+    .max-value
+
+
+//- let headers = this.headers.map((header, idx) => {
+//-   const sortHolder = this.createSortHolder(`colSort`, [`label`, `value`], [`asc`, `desc`], idx);
+//-   this.sortHolders.push(sortHolder);
+//-   return $(`<div>`)
+//-     .addClass(`bar-chart-header`)
+//-     .data(`header-idx`, idx)
+//-     .on(`click`, () => {
+//-       this.hideAllSortHolders(sortHolder);
+//-       sortHolder.toggleClass(`active-sort-panel`);
+//-     })
+//-     .append($(`<div>`).addClass(`text`).html(
+//-       header === `$event` ? `Events` : util.renameProperty(header)
+//-     ))
+//-     .append($(`<div class="sort-icon sort-bar-header">`).append(headersEl.createSortIcon(idx)))
+//-     .append(sortHolder)
+//-     .get(0);
+//- });
