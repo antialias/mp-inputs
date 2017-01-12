@@ -1,7 +1,28 @@
 include ../mixins.jade
 
+//- apply context filter to one or more resource types in
+//- a single pane
+mixin filtered-options-lists(lists)
+  each listOptions in lists
+    if listOptions.list.length
+      .builder-label= listOptions.label
+      case listOptions.resourceType
+        when `event`
+          +event-list(listOptions.list, listOptions.itemOptions || {
+            clickedEvent: $helpers.clickedEvent,
+            hideLoader: true,
+          })
+        when `property`
+          +property-list(listOptions.list, listOptions.itemOptions || {
+            clickedProperty: $helpers.clickedProperty,
+            hideLoader: true,
+          })
+
 mixin generic-options-list-item(label, options)
-  li.list-option.generic-list(onclick= options.onclick)
+  li.list-option.generic-list(
+    class=options.class
+    onclick=options.onclick
+  )
     +screen-option(label, {noIcon: true})
     +small-caret-icon()
 
@@ -10,24 +31,34 @@ mixin secondary-action-pill(label, options)
     span.secondary-label= label
     +small-caret-icon()
 
-mixin event-list(mpEvents, options)
-  ul.screen-options-list
-    each mpEvent in mpEvents
+mixin event-list(events, options)
+  ul.screen-options-list(
+    class=options.hideLoader ? '': 'show-loader'
+    onscroll=$helpers.scrolledList
+  )
+    each mpEvent in events
+      - const renamedMpEvent = util.renameEvent(mpEvent.name)
       li.list-option(onclick=() => options.clickedEvent(mpEvent))
-        +screen-option(util.renameEvent(mpEvent.name), {
-          icon: util.getIconForEvent(mpEvent)
+        +screen-option(renamedMpEvent, {
+          icon: util.getIconForEvent(mpEvent),
+          matches: mpEvent.matches,
         })
-        +secondary-action-pill('Properties', {
-          onclick: ev => options.clickedEventProperties(ev, mpEvent)
-        })
+        if options.showPill
+          +secondary-action-pill('Properties', {
+            onclick: ev => options.clickedEventProperties(ev, mpEvent),
+          })
 
 mixin property-list(properties, options)
-  ul.screen-options-list
+  ul.screen-options-list(
+    class=options.hideLoader ? '': 'show-loader'
+    onscroll=options.scrolledList
+  )
     if properties.length
       each property in properties
         li.list-option(onclick=ev => options.clickedProperty(ev, property))
           +screen-option(util.renameProperty(property.name), {
-            icon: property.icon || util.getIconForProperty(property)
+            icon: property.icon || util.getIconForProperty(property),
+            matches: property.matches,
           })
           if options.caret
             +small-caret-icon()
@@ -61,7 +92,11 @@ mixin screen-option(label, options)
     - const icon = options.icon
     .option-icon
       svg-icon(attributes={icon, empty: !icon})
-  .option-label= label
+  .option-label
+    if options.matches
+      +highlight-matches(options.matches)
+    else
+      span= label
 
 mixin screen-title(title, options)
   - options = options || {}

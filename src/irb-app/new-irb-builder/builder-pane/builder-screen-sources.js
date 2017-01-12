@@ -1,4 +1,5 @@
 import { BuilderScreenBase } from './builder-screen-base';
+import { Clause } from '../../../models/clause';
 
 import { extend } from '../../../util';
 
@@ -15,11 +16,29 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
       template,
       helpers: extend(super.config.helpers, {
         SOURCES,
+
         clickedSource: source => {
           const {resourceType} = source;
           this.updateStageClause({resourceType, value: {}});
           this.nextScreen(`builder-screen-${resourceType}`);
         },
+        getFilteredLists: () => [
+          {
+            label: `Events`,
+            list: this.allMatchingEvents(),
+            resourceType: `event`,
+            itemOptions: {
+              clickedEvent: this.config.helpers.clickedEvent,
+              clickedEventProperties: this.config.helpers.clickedEventProperties,
+              showPill: true,
+            },
+          },
+          {
+            label: `People properties`,
+            list: this.allMatchingProperties(Clause.RESOURCE_TYPE_PEOPLE),
+            resourceType: `property`,
+          },
+        ],
       }),
     };
   }

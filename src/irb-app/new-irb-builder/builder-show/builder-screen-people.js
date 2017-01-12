@@ -12,10 +12,6 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenPro
     return {
       template,
       helpers: extend(super.config.helpers, {
-        clickedProperty: (ev, property) => this.updateAndCommitStageClause({
-          property,
-          value: ShowClause.ALL_PEOPLE,
-        }),
         clickedSpecialOptions: (ev, value) => {
           this.updateAndCommitStageClause({value, property: null});
         },

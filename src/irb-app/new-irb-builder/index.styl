@@ -59,9 +59,13 @@
     .add-control
       display flex
 
-      button.control-label
+      input.control-label
+        border none
+        border-bottom 1px dashed mp-blue
+        border-radius 0
         order 1
-        transition width 0s, transform 1s
+        padding 0
+        transition width input-animation-time, transform input-animation-time
         width 0px
 
         .label-preposition
@@ -82,9 +86,9 @@
           svg-icon-style(mp-blue, size: 16px, pos-top: 1px)
 
     .pane-open
-      button.control-label
+      input.control-label
         text-align left
-        transition width animation-time, transform animation-time
+        transition width input-animation-time, transform input-animation-time
         width 200px
 
         .label-preposition
@@ -145,11 +149,13 @@
     margin 0 10px
     flex 1 1 auto
     overflow auto
+    .matches-search
+      color mp-blue
 
     &:last-of-type
       border-bottom none
 
-    &:empty
+    &.show-loader:empty
       loader(4px)
       margin 12px auto
 
@@ -243,6 +249,8 @@
     padding-left 8px
     ellipsis()
     flex 1 1
+    .highlight-match
+      color mp-blue
 
   .option-icon
     padding-left 5px

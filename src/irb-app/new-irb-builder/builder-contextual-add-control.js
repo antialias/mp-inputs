@@ -17,15 +17,20 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
         clickedAdd: () => {
           if (!this.isPaneOpen()) {
             this.openPane();
+            this.el.querySelector(`input.control-label`).focus();
           } else {
             this.app.stopBuildingQuery();
           }
         },
+        clickedInput: ev => ev.stopPropagation(), // don't close menu!
+        menuChange: ev => ev.detail && ev.detail.state === `closed` && this.app.stopBuildingQuery(),
+
         getPreposition: () => ({
           [ShowClause.TYPE]: `and`,
           [GroupClause.TYPE]: `by`,
         }[this.app.originStageClauseType()] || ``),
         isPaneOpen: () => this.isPaneOpen(),
+        searchHandler: ev => this.update({contextFilter: ev.target.value}),
       },
     };
   }

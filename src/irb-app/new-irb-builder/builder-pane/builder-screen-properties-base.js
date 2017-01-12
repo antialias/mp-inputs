@@ -42,11 +42,19 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     } else {
       resourceType = this.getSelectedResourceType();
     }
-    return {
-      [Clause.RESOURCE_TYPE_ALL]: this.state.topEventProperties.concat(this.state.topPeopleProperties),
-      [Clause.RESOURCE_TYPE_EVENTS]: this.state.topEventProperties,
-      [Clause.RESOURCE_TYPE_PEOPLE]: this.state.topPeopleProperties,
-    }[resourceType] || [];
+    switch(resourceType) {
+      case Clause.RESOURCE_TYPE_ALL:
+        return [
+          ...this.allMatchingProperties(Clause.RESOURCE_TYPE_EVENTS),
+          ...this.allMatchingProperties(Clause.RESOURCE_TYPE_PEOPLE),
+        ];
+      case Clause.RESOURCE_TYPE_EVENTS:
+        return this.allMatchingProperties(Clause.RESOURCE_TYPE_EVENTS);
+      case Clause.RESOURCE_TYPE_PEOPLE:
+        return this.allMatchingProperties(Clause.RESOURCE_TYPE_PEOPLE);
+      default:
+        return [];
+    }
   }
 
   getSelectedResourceType() {

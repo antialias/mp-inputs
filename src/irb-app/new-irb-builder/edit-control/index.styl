@@ -1,7 +1,5 @@
 @import "../../../stylesheets/common"
 
-animation-time = .25s
-
 .irb-new-control.new-query-builder
   position relative
 
@@ -16,12 +14,14 @@ animation-time = .25s
       height 36px
       padding 0
 
-    button.control-label
+    button.control-label, input.control-label
       border none
       border-bottom 1px dotted grey-500
+      border-radius 0
       color mp-blue
       font-family font-helvetica-neue
       font-size 16px
+      line-height 30px
 
       &:hover
         border-bottom 1px solid mp-blue
@@ -32,7 +32,7 @@ animation-time = .25s
   &.pane-open .add-control
     button.control-label
       text-align left
-      transition width animation-time, transform animation-time
+      transition width input-animation-time, transform input-animation-time
       width 200px
 
       .label-preposition

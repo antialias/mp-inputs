@@ -33,6 +33,28 @@ transition-time = .25s
     &.sources
         width 260px
 
+        .contextual-menu-option .option-label
+          color grey-700
+          font-size 11px
+          font-weight 600
+          text-transform uppercase
+
+        .screen-options-list
+          border-bottom 1px solid grey-150
+
+          .list-option
+            color grey-500
+            font-size 12px
+            font-weight 500
+            text-transform none
+            svg-icon-style grey-300
+            &:hover
+              color grey-700
+              svg-icon-style mp-blue
+
+          &:empty, &:last-of-type
+            border-bottom none
+
     &.math
       width 110px
 
