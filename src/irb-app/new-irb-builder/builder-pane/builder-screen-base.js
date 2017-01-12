@@ -50,8 +50,13 @@ export class BuilderScreenBase extends Component {
         },
         getStageClauseAttr: attr =>
           this.app.activeStageClause && this.app.activeStageClause[attr],
+        isLoading: () => this.isLoading(),
       },
     };
+  }
+
+  isLoading() {
+    throw new Error(`Not implemented!`);
   }
 
   createPaneOffsetStyle(screens) {
