@@ -2,6 +2,7 @@
 
 bar-height = 22px
 bar-bottom = 8px
+vertical-lines = 1px dotted border-gray
 
 .bar-chart
   table
@@ -41,9 +42,32 @@ bar-bottom = 8px
     tr:last-child td
       border-bottom-color transparent
 
+      &:after
+        border-right vertical-lines
+        content ''
+        cursor default
+        display block
+        height 100vh
+        left 0
+        position absolute
+        top 100%
+        width 100%
+
+      .grid-line
+        &:after
+          border-right vertical-lines
+          content ''
+          display block
+          height 100vh
+          left 0
+          position absolute
+          top 100%
+          width 100%
+
     td
       border 1px dotted border-gray
       border-bottom-color border-gray
+      border-right vertical-lines
       border-top none
       color grey-500
       font-size 12px
@@ -94,15 +118,15 @@ bar-bottom = 8px
           display flex
           height 100%
           left 0
-          opacity .3
           position absolute
           top 0
           width 100%
 
           .grid-line
-            border-right 2px solid grey-100
+            border-right vertical-lines
             flex-grow 1
             height 100%
+            position relative
 
             &:last-child
               border 0 none
