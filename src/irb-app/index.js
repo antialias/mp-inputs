@@ -130,6 +130,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         },
       },
       activeMathMenuIndex: null,
+      contextFilter: ``,
       isEditingExtrasMenu: false,
       isEditingNumericProperty: false,
       newCachedData: false,
@@ -271,6 +272,10 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   _updateRecentList(type, value) {
+    // remove any match data from view object
+    value = extend(value);
+    delete value.matches;
+
     const stateKey = type === `events` ? `recentEvents` : `recentProperties`;
     this.update({[stateKey]: [
       value, ...this.state[stateKey].filter(oldValue => !util.isEqual(value, oldValue)),
@@ -346,7 +351,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       screens: [],
       sizeStyle: {
         width: `0px`,
-        height: `0px`,
+        'min-height': `0px`,
       },
     };
   }
@@ -602,6 +607,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     this.stopEditingClauseAttrs();
     const newState = {
       activeMathMenuIndex: null,
+      contextFilter: ``,
       stageClauses: [],
       stageClauseIndex: null,
       resourceTypeFilter: `all`,

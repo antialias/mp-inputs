@@ -1,6 +1,14 @@
 import { Component } from 'panel';
 
-import { extend, replaceByIndex } from '../../../util';
+import { Clause, ShowClause } from '../../../models/clause';
+import {
+  extend,
+  renameEvent,
+  renameProperty,
+  replaceByIndex,
+  sorted,
+  stringFilterMatches,
+} from '../../../util';
 
 const PROGRESSIVE_LIST_BUFFER_PX = 50;
 const PROGRESSIVE_LIST_START_SIZE = 20;
@@ -14,6 +22,22 @@ export class BuilderScreenBase extends Component {
   get config() {
     return {
       helpers: {
+        clickedEvent: value => {
+          this.app.updateRecentEvents(value);
+          this.updateAndCommitStageClause({value, property: null});
+        },
+        clickedEventProperties: (ev, value) => {
+          ev.stopPropagation();
+          this.updateStageClause({value, property: null}, {shouldCommit: true});
+          this.app.updateBuilder({isContextualMenuOpen: false});
+          this.app.update({stageClauseIndex: this.app.getClausesForType(ShowClause.TYPE).length - 1});
+          this.nextScreen(`builder-screen-numeric-properties`);
+        },
+        clickedProperty: (ev, property) => this.updateAndCommitStageClause({
+          property,
+          value: ShowClause.ALL_PEOPLE,
+        }),
+
         clickedBackButton: () => this.previousScreen(),
         closePane: () => this.app.stopEditingClause(),
         screenIdx: () => this.screenIdx,
@@ -41,8 +65,44 @@ export class BuilderScreenBase extends Component {
     const lastScreen = screens[screens.length - 1];
     return {
       width: `${lastScreen.width}px`,
-      height: `${lastScreen.height}px`,
+      'min-height': `${lastScreen.height}px`,
     };
+  }
+
+  /**
+   * filter item list against contextFilter, and add match
+   * data to every matching item (for highlighting)
+   */
+  matchingItems(items, renameFunc) {
+    if (this.state.contextFilter) {
+      items = items
+        .map(item => extend(item, {
+          matches: stringFilterMatches(renameFunc(item.name), this.state.contextFilter),
+        }))
+        .filter(item => !!item.matches);
+    }
+    return items;
+  }
+
+  allMatchingEvents() {
+    return [
+      ...this.matchingItems([
+        ShowClause.TOP_EVENTS,
+        ShowClause.ALL_EVENTS,
+      ], renameEvent),
+      ...sorted(
+        this.matchingItems(this.state.topEvents, renameEvent),
+        {transform: mpEvent => renameEvent(mpEvent.name).toLowerCase()}
+      ),
+    ];
+  }
+
+  allMatchingProperties(propType) {
+    propType = propType === Clause.RESOURCE_TYPE_PEOPLE ? `People` : `Event`;
+    return sorted(
+      this.matchingItems(this.state[`top${propType}Properties`], renameProperty),
+      {transform: prop => renameProperty(prop.name).toLowerCase()}
+    );
   }
 
   previousScreen() {

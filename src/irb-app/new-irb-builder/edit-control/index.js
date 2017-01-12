@@ -14,11 +14,16 @@ export class EditControl extends Component {
   get config() {
     return {
       helpers: extend(super.config.helpers, {
+        clickedInput: ev => ev.stopPropagation(), // don't close menu!
         clickedLabel: () => {
           this.openPane();
           this.app.stopEditingClause();
           this.app.startEditingClause(this.section, this.clauseIndex);
+          requestAnimationFrame(() => this.el.querySelector(`input.control-label`).focus());
         },
+        menuChange: ev => ev.detail && ev.detail.state === `closed` && this.app.stopBuildingQuery(),
+        searchHandler: ev => this.update({contextFilter: ev.target.value}),
+
         getLabel: () => this.getLabel(),
         isPaneOpen: () => this.isPaneOpen(),
         isRemovable: () => this.isRemovable(),

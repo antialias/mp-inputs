@@ -5,8 +5,14 @@
     .control-buttons.add-control
       button.add-button(onclick=$helpers.clickedAdd)
         svg-icon(attributes={icon: 'plus-large'})
-      button.control-label
+      input.control-label(
+        autofocus
+        onclick=$helpers.clickedInput
+        oninput=$helpers.searchHandler
+        type='text'
+        value=contextFilter
+      )
         span.label-preposition= $helpers.getPreposition()
     .drop-menu
-      mp-drop-menu(attributes={open})
+      mp-drop-menu(attributes={open} onchange=$helpers.menuChange)
         .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)

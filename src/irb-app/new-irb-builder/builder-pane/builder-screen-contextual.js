@@ -1,8 +1,19 @@
 import { BuilderScreenBase } from './builder-screen-base';
-import { GroupClause, ShowClause } from '../../../models/clause';
+import { Clause, GroupClause, ShowClause } from '../../../models/clause';
 import { extend } from '../../../util';
 
 import template from './builder-screen-contextual.jade';
+
+const CONTEXT_OPTIONS = {
+  [ShowClause.RESOURCE_TYPE_EVENTS]: [
+    {name: `Group by a property`, clauseType: GroupClause.TYPE},
+    {name: `Compare to an event`, clauseType: ShowClause.TYPE},
+  ],
+  [ShowClause.RESOURCE_TYPE_PEOPLE]: [
+    {name: `Group by a people property`,   clauseType: GroupClause.TYPE},
+    {name: `Compare to a people property`, clauseType: ShowClause.TYPE},
+  ],
+};
 
 document.registerElement(`builder-screen-contextual`, class extends BuilderScreenBase {
   get config() {
@@ -26,24 +37,50 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
               break;
           }
         },
-        getContextOptions: () => {
-          const showClauseType = this.state.report.sections.show.clauseResourceTypes();
-          let options = [];
-          switch(showClauseType) {
+        getContextOptions: () =>
+          CONTEXT_OPTIONS[this.state.report.sections.show.clauseResourceTypes()] || [],
+        getContextLists: () => {
+          switch(this.state.report.sections.show.clauseResourceTypes()) {
             case ShowClause.RESOURCE_TYPE_EVENTS:
-              options = [
-                {name: `Group by a property`, clauseType: GroupClause.TYPE},
-                {name: `Compare to an event`, clauseType: ShowClause.TYPE},
+              return [
+                {
+                  label: `Group by an event property`,
+                  list: this.allMatchingProperties(Clause.RESOURCE_TYPE_EVENTS),
+                  resourceType: `property`,
+                },
+                {
+                  label: `Group by a people property`,
+                  list: this.allMatchingProperties(Clause.RESOURCE_TYPE_PEOPLE),
+                  resourceType: `property`,
+                },
+                {
+                  label: `Compare to an event`,
+                  list: this.allMatchingEvents(),
+                  resourceType: `event`,
+                },
               ];
-              break;
             case ShowClause.RESOURCE_TYPE_PEOPLE:
-              options = [
-                {name: `Group by a people property`, clauseType: GroupClause.TYPE},
-                {name: `Compare to a people property`, clauseType: ShowClause.TYPE},
+              return [
+                {
+                  label: `Group by a people property`,
+                  list: this.allMatchingProperties(Clause.RESOURCE_TYPE_PEOPLE),
+                  resourceType: `property`,
+                },
               ];
-              break;
+            default:
+              return [];
           }
-          return options;
+        },
+        clickedProperty: (ev, property) => {
+          this.app.startAddingClause(`group`);
+          this.updateAndCommitStageClause({
+            resourceType: property.resourceType,
+            value: property.name,
+          });
+        },
+        clickedEvent: value => {
+          this.app.startAddingClause(`show`);
+          this.updateStageClause({value}, {shouldCommit: true, shouldStopEditing: true});
         },
       }),
     };

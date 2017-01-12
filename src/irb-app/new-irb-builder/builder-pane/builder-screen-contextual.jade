@@ -2,5 +2,11 @@ include ../mixins.jade
 
 .builder-screen.sources
   ul.screen-options-list
-    each option in $helpers.getContextOptions()
-      +generic-options-list-item(option.name, {onclick: () => $helpers.clickedOption(option)})
+    if contextFilter
+      +filtered-options-lists($helpers.getContextLists())
+    else
+      each option in $helpers.getContextOptions()
+        +generic-options-list-item(option.name, {
+          class: `contextual-menu-option`,
+          onclick: () => $helpers.clickedOption(option),
+        })
