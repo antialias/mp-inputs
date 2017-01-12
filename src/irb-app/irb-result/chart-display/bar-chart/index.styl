@@ -74,6 +74,7 @@ bar-bottom = 8px
 
       &.chart-header
         max-width 160px
+        cursor pointer
 
         .chart-header-text
           overflow hidden
@@ -126,6 +127,7 @@ bar-bottom = 8px
           .label-wrapper
             height bar-height
             overflow hidden
+            pointer-events none
             position absolute
             top 0
             width 100%
@@ -144,10 +146,20 @@ bar-bottom = 8px
               position relative
               z-index 1
 
-  .hover-label
-    display flex
-    justify-content center
+  .chart-header
     position relative
+    
+    .hover-label
+      width auto
+      
+      .content
+        left 10px
+        top -100px
+
+  .hover-label
+    pointer-events none
+    position absolute
+    transition translate-x .1s
     width 100%
 
     .content

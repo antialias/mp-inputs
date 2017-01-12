@@ -3,6 +3,18 @@
 - const isValueAbsolute = displayOptions.value === 'absolute'
 - const headersToDisplay = $helpers.headersToDisplay()
 
+mixin tooltip(className, shouldHaveClass, title, count, percent)
+  .hover-label(attributes={'style' : 'left: ' + hoverTooltip.mouseXPos + 'px'})
+    .content
+      .title(
+        class={[className]: shouldHaveClass}
+        title=title
+      )= title
+      .results
+        .absolute
+          .count= count
+        .percent= util.formatPercent(percent)
+
 .bar-chart
   table
     thead
@@ -10,14 +22,16 @@
         th(colSpan=0)
           .irb-bar-chart-header= $component.child('irb-bar-chart-header', {onchange: $helpers.sortChange})
     tbody
-      each row, i in rows
+      each row, rowIndex in rows
         - const isMultiColor = row.length > 2 || isStacked
         tr
-          each cell, j in row
+          each cell, cellIndex in row
+            - const lastCellIdx = row.length - 1
+            - const segmentSum = util.sum(row[lastCellIdx])
+            - const getLabel = value => headersToDisplay[cellIndex] === '$event' ? util.renameEvent(value) : util.renamePropertyValue(value)
             if cell
-              if j < row.length - 1
-                - const headerText = headersToDisplay[j] === '$event' ? 'Events' : util.renameProperty(headersToDisplay[j])
-                - const getLabel = value => headersToDisplay[j] === '$event' ? util.renameEvent(value) : util.renamePropertyValue(value)
+              if cellIndex < lastCellIdx
+                - const headerText = headersToDisplay[cellIndex] === '$event' ? 'Events' : util.renameProperty(headersToDisplay[cellIndex])
 
                 if !Array.isArray(cell) || !isStacked || rows.length <= 1
                   td.chart-header(
@@ -29,8 +43,19 @@
                       .chart-header-text(title=getLabel(cellLabel))= getLabel(cellLabel)
                     else
                       ul
-                        each value in cell
-                          li(title=getLabel(value))= getLabel(value)
+                        each value, valueIndex in cell
+                          - const title = getLabel(value)
+                          li(
+                            title=title
+                            onmouseenter=ev => $helpers.onMouseEnterAndMove(ev, rowIndex, title)
+                            onmousemove=ev => _.throttle($helpers.onMouseEnterAndMove(ev, rowIndex, title), 100)
+                            onmouseleave=$helpers.onMouseLeave
+                          )= title
+                          if hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === title
+                            - const segmentColorClassName = `segment-color-${segmentColorMap[value]}`
+                            - const count = row[lastCellIdx][valueIndex]
+                            - const percent = count / segmentSum
+                            +tooltip(segmentColorClassName, isMultiColor, title, count, percent)
 
               else
                 td.chart-data
@@ -38,7 +63,6 @@
                     each _ in Array(8).fill()
                       .grid-line
                   ul(class={stacked: isStacked})
-                    - const segmentSum = util.sum(cell)
                     - const segmentCell = isLogarithmic ? cell.map(value => Math.log10(value)) : cell
                     - let segmentMax
                     if isValueAbsolute
@@ -48,28 +72,20 @@
                         - segmentMax = util.sum(segmentCell)
                       else
                         - segmentMax = Math.max(...segmentCell)
-                    each value, k in cell
+                    each value, valueIndex in cell
                       - const percent = value / segmentSum
                       - const percentValueString = util.formatPercent(percent)
                       - let widthAsPercentage = (isLogarithmic ? Math.log10(value) : value) / segmentMax
-                      - const segmentName = row[j - 1][k]
+                      - const segmentName = row[cellIndex - 1][valueIndex]
                       - const segmentColorClassName = `segment-color-${segmentColorMap[segmentName]}`
                       li.chart-bar(
                         style={width: util.formatPercent(widthAsPercentage)}
-                        onmouseenter=ev => $helpers.onMouseEnter(ev, i, k)
+                        onmouseenter=ev => $helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex)
+                        onmousemove=ev => _.throttle($helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex), 100)
                         onmouseleave=$helpers.onMouseLeave
                       )
-                        if hoverTooltip.rowIdx === i && hoverTooltip.cellIdx === k
-                          .hover-label
-                            .content
-                              .title(
-                                class={[segmentColorClassName]: isMultiColor}
-                                title=segmentName
-                              )= segmentName
-                              .results
-                                .absolute
-                                  .count= value
-                                .percent= percentValueString
+                        if hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === valueIndex
+                          +tooltip(segmentColorClassName, isMultiColor, getLabel(segmentName), value, percent)
                         .bar-color(class={[segmentColorClassName]: isMultiColor})
                         .label-wrapper
                           .bar-text-nudger
