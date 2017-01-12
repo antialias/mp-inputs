@@ -36,7 +36,7 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
   }
 
   getLabel() {
-    const clause = this.state.report.sections.getClause(this.section, this.clauseIndex);
+    const clause = this.getClause();
     if (clause.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE) {
       return renameProperty(clause.property ? clause.property.name : clause.value.name) || ``;
     }
@@ -65,7 +65,7 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
   }
 
   getLabel() {
-    const clause = this.state.report.sections.getClause(this.section, this.clauseIndex);
+    const clause = this.getClause();
     return clause && clause.property ? renameProperty(clause.property.name) : ``;
   }
 

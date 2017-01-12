@@ -20,9 +20,15 @@ export class EditControl extends Component {
           this.openPane();
           this.app.stopEditingClause();
           this.app.startEditingClause(this.section, this.clauseIndex);
-          requestAnimationFrame(() => this.el.querySelector(`input.control-label`).focus());
+          requestAnimationFrame(() => {
+            const el = this.el.querySelector(`input.control-label`);
+            if (el) {
+              el.focus();
+            }
+          });
         },
-        menuChange: ev => ev.detail && ev.detail.state === `closed` && this.app.stopBuildingQuery(),
+        labelPrefixComponent: () => this.labelPrefixComponent(),
+        menuChange: ev => ev.detail && ev.detail.state === `closed` && this.isPaneOpen() && this.app.stopBuildingQuery(),
         changedSearch: throttle(ev => {
           this.update({contextFilter: ev.target.value});
           this.app.updateBuilderCurrentScreen({progressiveListSize: null});
@@ -40,11 +46,11 @@ export class EditControl extends Component {
     return Number(this.getAttribute(`clause-index`));
   }
 
-  getLabel() {
+  get elementClass() {
     throw new Error(`Not implemented!`);
   }
 
-  get section() {
+  get isRemoveable() {
     throw new Error(`Not implemented!`);
   }
 
@@ -52,8 +58,16 @@ export class EditControl extends Component {
     throw new Error(`Not implemented!`);
   }
 
-  get isRemoveable() {
+  get section() {
     throw new Error(`Not implemented!`);
+  }
+
+  getLabel() {
+    throw new Error(`Not implemented!`);
+  }
+
+  getClause(state) {
+    return (state || this.state).report.sections.getClause(this.section, this.clauseIndex);
   }
 
   isPaneOpen() {
@@ -66,15 +80,22 @@ export class EditControl extends Component {
     return true;
   }
 
+  labelPrefixComponent() {
+    return {
+      componentName: false,
+      attrs: false,
+    };
+  }
+
   openPane() {
     throw new Error(`Not implemented!`);
   }
 
-  shouldUpdate(state) {
-    return !!state.report.sections.getClause(this.section, this.clauseIndex);
-  }
-
   remove() {
     this.app.removeClause(this.section, this.clauseIndex);
+  }
+
+  shouldUpdate(state) {
+    return !!this.getClause(state);
   }
 }

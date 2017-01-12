@@ -133,6 +133,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       contextFilter: ``,
       isEditingExtrasMenu: false,
       isEditingNumericProperty: false,
+      isEditingTypecast: false,
       newCachedData: false,
       resourceTypeFilter: `all`,
       result: new Result({
@@ -347,6 +348,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     return {
       inTransition: false,
       isContextualMenuOpen: false,
+      isEditingTypecast: false,
       offsetStyle: {},
       screens: [],
       sizeStyle: {

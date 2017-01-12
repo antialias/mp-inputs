@@ -56,7 +56,8 @@ mixin property-list(properties, options)
     if properties.length
       each property in properties
         li.list-option(on={click: ev => options.clickedProperty(ev, property)})
-          +screen-option(util.renameProperty(property.name), {
+          - const label = util.renameProperty(property.name) || property.name
+          +screen-option(label, {
             icon: property.icon || util.getIconForProperty(property),
             matches: property.matches,
           })

@@ -18,13 +18,16 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
         clickedAdd: () => {
           if (!this.isPaneOpen()) {
             this.openPane();
-            this.el.querySelector(`input.control-label`).focus();
+            const el = this.el.querySelector(`input.control-label`);
+            if (el) {
+              el.focus();
+            }
           } else {
             this.app.stopBuildingQuery();
           }
         },
         clickedInput: ev => ev.stopPropagation(), // don't close menu!
-        menuChange: ev => ev.detail && ev.detail.state === `closed` && this.app.stopBuildingQuery(),
+        menuChange: ev => ev.detail && ev.detail.state === `closed` && this.isPaneOpen() && this.app.stopBuildingQuery(),
 
         getPreposition: () => ({
           [ShowClause.TYPE]: `and`,
@@ -40,7 +43,7 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
   }
 
   isPaneOpen() {
-    return this.state.builderPane.screens.length && this.state.builderPane.isContextualMenuOpen;
+    return this.state.builderPane.screens.length && this.state.builderPane.isContextualMenuOpen && this.state.stageClauseIndex === null;
   }
 
   openPane() {

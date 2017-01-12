@@ -1,0 +1,6 @@
+- const icon = $helpers.typeIcon()
+
+.property-prefix-icon(on={click: $helpers.clickedIcon})
+  if icon
+    svg-icon(attrs={icon})
+    .typecast-pane= $component.child('typecast-pane', {attrs: $helpers.attrsForTypecast()})

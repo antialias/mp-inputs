@@ -56,7 +56,19 @@ function main() {
     groups = groups.concat(params.groups.map(function(group) {
       var jqlGroup = getPropertyPaths(group.value, group.resourceType).join('.');
       if (group.buckets) {
-        jqlGroup = mixpanel.numeric_bucket(jqlGroup, group.buckets);
+        jqlGroup = mixpanel.numeric_bucket(mixpanel.to_number(jqlGroup), group.buckets);
+      } else if (group.typeCast) {
+        switch (group.typeCast) {
+          case 'number':
+            jqlGroup = mixpanel.to_number(jqlGroup);
+            break;
+          case 'string':
+            jqlGroup = mixpanel.to_string(jqlGroup);
+            break;
+          case 'boolean':
+            jqlGroup = mixpanel.to_boolean(jqlGroup);
+            break;
+        }
       }
       return jqlGroup;
     }));

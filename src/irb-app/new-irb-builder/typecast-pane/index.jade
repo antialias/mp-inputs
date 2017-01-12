@@ -1,0 +1,9 @@
+include ../mixins.jade
+
+mp-drop-menu(
+  attrs={open: $helpers.isPaneOpen()}
+  on={change: $helpers.menuChange}
+)
+  +property-list($helpers.avaliableTypes(), {
+    clickedProperty: $helpers.clickedType,
+  })

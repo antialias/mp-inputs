@@ -16,13 +16,17 @@
           }
         )
       else
-        - const label = $helpers.getLabel()
-        button.control-label(on={click: $helpers.clickedLabel})
-          if typeof label === 'string'
-            = label
-          else
-            each labelPart in label
-              span.edit-label-part= labelPart
+        - const prefix = $helpers.labelPrefixComponent()
+        .control-label
+          if prefix && prefix.componentName
+            .control-label-prefix= $component.child(prefix.componentName, {attrs: prefix.attrs})
+          .control-label-text(on={click: $helpers.clickedLabel})
+            - const label = $helpers.getLabel()
+            if typeof label === 'string'
+              = label
+            else
+              each labelPart in label
+                span.edit-label-part= labelPart
         if $helpers.isRemovable()
           button.remove(on={click: $helpers.removeClause})
     .drop-menu

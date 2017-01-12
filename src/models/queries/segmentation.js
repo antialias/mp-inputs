@@ -253,7 +253,7 @@ export default class SegmentationQuery extends BaseQuery {
     );
 
     // data global to all JQL queries.
-    const segments = sections.group.clauses.map(clause => pick(clause, [`value`, `resourceType`, `filterType`]));
+    const segments = sections.group.clauses.map(clause => pick(clause, [`value`, `resourceType`, `typeCast`]));
 
     const filterArbSelectors = sections.filter.clauses
       .map(clause => clause.attrs)

@@ -1,0 +1,16 @@
+@import "../../../../stylesheets/common"
+
+.property-prefix-icon
+  align-items center
+  display flex
+  svg-icon-style(mp-blue, blue-100)
+
+  &:after
+    content space-character + "|" + space-character
+    color grey-300
+    font-weight 200
+
+  typecast-pane
+    bottom -5px
+    left -15px
+    position absolute

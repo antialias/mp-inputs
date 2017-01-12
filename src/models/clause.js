@@ -141,21 +141,29 @@ const PROPERTY_TYPES = [
 export class GroupClause extends EventsPropertiesClause {
   constructor(attrs={}) {
     super(...arguments);
-
     this.filterType = attrs.filterType || GroupClause.FILTER_TYPES[0];
+    this.propertyType = attrs.propertyType || GroupClause.PROPERTY_TYPES[0];
+    this.typeCast = attrs.typeCast || null;
   }
 
   get valid() {
     return super.valid &&
-      this.FILTER_TYPES.indexOf(this.filterType) !== -1;
+      this.FILTER_TYPES.indexOf(this.filterType) !== -1 &&
+      this.PROPERTY_TYPES.includes(this.propertyType);
   }
 
   get attrs() {
-    return extend(super.attrs, {filterType: this.filterType});
+    return extend(super.attrs, {
+      filterType: this.filterType,
+      propertyType: this.propertyType,
+      typeCast: this.typeCast,
+    });
   }
 }
 GroupClause.TYPE = GroupClause.prototype.TYPE = `group`;
 GroupClause.FILTER_TYPES = GroupClause.prototype.FILTER_TYPES = PROPERTY_TYPES;
+GroupClause.PROPERTY_TYPES = GroupClause.prototype.PROPERTY_TYPES = PROPERTY_TYPES;
+GroupClause.PROPERTY_TYPECASTS = GroupClause.prototype.PROPERTY_TYPECASTS = [`string`, `number`, `boolean`];
 
 // Time constants
 const RANGES = {

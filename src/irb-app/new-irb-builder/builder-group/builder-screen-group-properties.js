@@ -13,6 +13,7 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
         clickedProperty: (ev, property) => {
           this.app.updateRecentProperties(property);
           this.updateAndCommitStageClause({
+            propertyType: property.type,
             resourceType: property.resourceType,
             value: property.name,
           });

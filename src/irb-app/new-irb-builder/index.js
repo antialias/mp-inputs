@@ -9,6 +9,7 @@ import './builder-group';
 import './builder-pane';
 import './builder-show';
 import './builder-time';
+import './typecast-pane';
 
 document.registerElement(`new-irb-builder`, class extends Component {
   get config() {

@@ -6,6 +6,7 @@ import { EditControl } from '../edit-control';
 import { GroupClause } from '../../../models/clause';
 
 import './builder-screen-group-properties';
+import './property-type-prefix';
 
 import template from './index.jade';
 
@@ -26,8 +27,19 @@ document.registerElement(`builder-group-edit-control`, class extends EditControl
   }
 
   getLabel() {
-    const clause = this.state.report.sections.getClause(`group`, this.clauseIndex);
+    const clause = this.getClause();
     return clause && clause.value && renameProperty(clause.value);
+  }
+
+  labelPrefixComponent() {
+    const clause = this.getClause();
+    return {
+      componentName: `property-type-prefix`,
+      attrs: {
+        'clause-index': this.clauseIndex,
+        'property-type': clause.typeCast || clause.propertyType,
+      },
+    };
   }
 
   openPane() {
