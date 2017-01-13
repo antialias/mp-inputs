@@ -11,8 +11,10 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
         clickedResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
         getSelectedResourceType: () => this.getSelectedResourceType(),
         getProperties: () => {
-          const properties = this.buildProgressiveList();
           const isLoading = this.isLoading();
+          const properties = sorted(this.buildProgressiveList(), {
+            transform: prop => renameProperty(prop.name).toLowerCase(),
+          });
 
           if (this.prevIsLoading !== isLoading ||
               this.numProperties !== properties.length
@@ -51,7 +53,31 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     );
   }
 
+  getEventProperties() {
+    const properties = this.getRelevantBuilderEvents().reduce((props, mpEvent) => {
+      const eventProps = this.state.topEventPropertiesByEvent[mpEvent.name];
+      if ([ShowClause.TOP_EVENTS.name, ShowClause.ALL_EVENTS.name].includes(mpEvent.name)) {
+        return props.concat(this.state.topEventProperties);
+      } else if (!eventProps) {
+        this.app.fetchTopPropertiesForEvent(mpEvent.name);
+      } else if (eventProps !== BaseQuery.LOADING) {
+        return props.concat(eventProps);
+      }
+      return props;
+    }, []);
+
+    return unique(properties, {
+      hash: prop => `${prop.name}:${prop.type}:${prop.resourceType}`,
+    });
+  }
+
+  getPeopleProperties() {
+    return this.state.topPeopleProperties;
+  }
+
   buildList(resourceType) {
+    let properties = [];
+
     if (!resourceType) {
       if (this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE) {
         resourceType = Clause.RESOURCE_TYPE_PEOPLE;
@@ -60,36 +86,14 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       }
     }
 
-    let properties = [];
-
     if ([Clause.RESOURCE_TYPE_ALL, Clause.RESOURCE_TYPE_EVENTS].includes(resourceType)) {
-      let relevantEventProperties = this.getRelevantBuilderEvents().reduce((props, mpEvent) => {
-        const eventProps = this.state.topEventPropertiesByEvent[mpEvent.name];
-        if ([ShowClause.TOP_EVENTS.name, ShowClause.ALL_EVENTS.name].includes(mpEvent.name)) {
-          return props.concat(this.state.topEventProperties);
-        } else if (!eventProps) {
-          this.app.fetchTopPropertiesForEvent(mpEvent.name);
-        } else if (eventProps !== BaseQuery.LOADING) {
-          return props.concat(eventProps);
-        }
-        return props;
-      }, []);
-
-      relevantEventProperties = unique(relevantEventProperties, {
-        hash: prop => `${prop.name}:${prop.type}:${prop.resourceType}`,
-      });
-
-      properties = properties.concat(relevantEventProperties);
+      properties = properties.concat(this.getEventProperties());
     }
 
     if ([Clause.RESOURCE_TYPE_ALL, Clause.RESOURCE_TYPE_PEOPLE].includes(resourceType)) {
-      properties = properties.concat(this.state.topPeopleProperties);
+      properties = properties.concat(this.getPeopleProperties());
     }
 
-    properties = sorted(this.matchingItems(properties, renameProperty), {
-      transform: prop => renameProperty(prop.name).toLowerCase(),
-    });
-
-    return properties;
+    return this.matchingItems(properties, renameProperty);
   }
 }

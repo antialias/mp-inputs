@@ -9,7 +9,7 @@ include ../mixins.jade
       clickedProperty: $helpers.clickedProperty,
       loading,
     })
-  if loading
+  if !loading
     +screen-footer-button(($component.isShowingNonNumericProperties() ? `Hide` : `View all`) + ` non-numeric properties`, {
       onclick: $helpers.toggleNonNumericProperties,
     })

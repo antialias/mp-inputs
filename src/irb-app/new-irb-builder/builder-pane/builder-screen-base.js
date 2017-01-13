@@ -31,7 +31,7 @@ export class BuilderScreenBase extends Component {
           ev.stopPropagation();
           this.updateStageClause({value, property: null}, {shouldCommit: true});
           this.app.updateBuilder({isContextualMenuOpen: false});
-          this.app.update({stageClauseIndex: this.app.getClausesForType(ShowClause.TYPE).length - 1});
+          this.app.update({contextFilter: ``});
           this.nextScreen(`builder-screen-numeric-properties`);
         },
         clickedProperty: (ev, property) => this.updateAndCommitStageClause({
