@@ -22,6 +22,9 @@ import './irb-result';
 import './new-irb-builder';
 import './old-irb-builder';
 
+import LearnFlow from './irb-learn/flow';
+import './irb-learn';
+
 import template from './index.jade';
 import './index.styl';
 
@@ -43,9 +46,10 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       ),
 
       routes: {
-        'nofeatures': this.routeHandlers.noFeatures,
+        'nofeatures':       this.routeHandlers.noFeatures,
         'report/:reportId': this.routeHandlers.load,
         'reset':            this.routeHandlers.reset,
+        'learn':            this.routeHandlers.learn,
         '':                 this.routeHandlers.index,
       },
 
@@ -79,10 +83,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       index: (stateUpdate={}) => {
         if (this.state.report.id) {
           stateUpdate = extend(stateUpdate, this.resetQuery());
-        } else {
-          if (!stateUpdate.report) {
-            this.resetTopQueries();
-          }
+        } else if (!stateUpdate.report) {
+          this.resetTopQueries();
         }
         return stateUpdate;
       },
@@ -91,6 +93,11 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         return this.navigate(``, extend(stateUpdate, this.resetQuery()));
       },
 
+      learn: (stateUpdate={}) => {
+        return extend(stateUpdate, this.resetQuery(), {
+          learnFlow: new LearnFlow({app: this, step: 0}),
+        });
+      },
     });
   }
 
