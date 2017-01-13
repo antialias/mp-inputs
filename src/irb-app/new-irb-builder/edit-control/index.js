@@ -45,10 +45,6 @@ export class EditControl extends Component {
     throw new Error(`Not implemented!`);
   }
 
-  get elementClass() {
-    throw new Error(`Not implemented!`);
-  }
-
   get label() {
     throw new Error(`Not implemented!`);
   }
