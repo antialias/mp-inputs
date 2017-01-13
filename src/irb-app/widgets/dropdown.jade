@@ -1,8 +1,8 @@
 - const selected = $helpers.getSelected();
 .dropdown(class={'menu-open': $helpers.isOpen()})
   if selected
-    button.label(onclick=$helpers.onLabelClick)= $helpers.formatChoice(selected)
+    button.label(on={click: $helpers.onLabelClick})= $helpers.formatChoice(selected)
     ul
       each choice in $helpers.getChoices()
         li(class={selected: choice === selected})
-          button(onclick=() => $helpers.onChoiceClick(choice))= $helpers.formatChoice(choice)
+          button(on={click: () => $helpers.onChoiceClick(choice)})= $helpers.formatChoice(choice)
