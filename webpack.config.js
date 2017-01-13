@@ -53,6 +53,10 @@ var webpackConfig = {
   resolveLoader: {
     root: path.join(__dirname, 'node_modules'),
   },
+  virtualJadeLoader: {
+    vdom: 'snabbdom',
+    runtime: 'var h = require("panel").h;',
+  },
 };
 
 if (process.env.NODE_ENV === 'development') {
