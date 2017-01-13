@@ -22,25 +22,21 @@ irb-bar-chart-header
       opacity 1
 
     .sort-holder
-      bottom -20px
+      bottom 10px
       display flex
+      height 0
       justify-content center
       left 0
       position absolute
       width 100%
 
-    .sort-controls
-      background-color #fff
-      border-radius 5px
-      box-shadow 2px 3px 10px -4px black
-      height 30px
-      opacity 0
-      transition opacity 0.1s
-      z-index 1
+      .sort-controls
+        position relative
 
-      .sort-icon
+      .sort-controls, .sort-icon
         height 30px
 
+      .sort-icon
         &:not(:last-child)
           border-right 1px solid grey-100
 
@@ -51,13 +47,8 @@ irb-bar-chart-header
         &:hover::before
           background blue-300
 
-    &.active-sort-panel .sort-controls
-      opacity 1
-
   .bar-chart-header:first-child .sort-holder
     min-width 120px
-
-
 
   .bar-chart-header
     border-right 1px solid border-gray
