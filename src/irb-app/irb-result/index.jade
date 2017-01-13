@@ -2,11 +2,13 @@
   .result-controls= $component.child('chart-controls')
   .result-display= $component.child('chart-display')
   mp-toast(
-    attributes={
+    attrs={
       'message': 'You have new data.',
       'select-text': 'Refresh',
-      'showToast': newCachedData
+      'showToast': newCachedData,
     }
-    onclose=$helpers.toastClosed
-    onselect=$helpers.toastSelected
+    on={
+      close: $helpers.toastClosed,
+      select: $helpers.toastSelected,
+    }
   )
