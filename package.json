@@ -30,11 +30,10 @@
     "babel-polyfill": "6.7.4",
     "framesg": "0.1.2",
     "lodash": "4.15.0",
-    "mixpanel-common": "0.32.2",
+    "mixpanel-common": "0.33.0-rc1",
     "moment": "2.13.0",
-    "panel": "0.9.1",
+    "panel": "0.10.0-rc2",
     "pikaday": "1.5.1",
-    "virtual-dom": "2.1.1",
     "webcomponent": "0.1.2",
     "webcomponents.js": "0.7.22"
   },
