@@ -24,15 +24,16 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, headerIdx)
             svg-icon(attributes=({icon:`sort-${$helpers.SORT_ICONS[sortBy]}-${sortOrder}`}))
 
 .chart-header-container
-  each header, idx in headersStyle
-    .bar-chart-header(style={width: `${header.width}px`})
-      .text(onclick=() => $helpers.clickedHeader(idx))= $helpers.renameHeaderLabel(header.name)
-      +sort-icon(idx)
-      +sort-holder(`colSort`, [`label`, `value`], [`asc`, `desc`], idx)
-  .bar-chart-axis(style={width: axisWidthStyle})
-    .axis-title
-      .text(onclick=() => $helpers.clickedHeader(`axis`))= chartLabel
-      +sort-icon()
-      +sort-holder(`axisSort`, [`value`], [`asc`, `desc`], `axis`)
-    .max-value
-      .text(onclick=$helpers.clickedMaxValue)= $helpers.getMaxValueLabel()
+  if headersStyle
+    each header, idx in headersStyle
+      .bar-chart-header(style={width: `${header.width}px`})
+        .text(onclick=() => $helpers.clickedHeader(idx))= $helpers.renameHeaderLabel(header.name)
+        +sort-icon(idx)
+        +sort-holder(`colSort`, [`label`, `value`], [`asc`, `desc`], idx)
+    .bar-chart-axis(style={width: axisWidthStyle})
+      .axis-title
+        .text(onclick=() => $helpers.clickedHeader(`axis`))= chartLabel
+        +sort-icon()
+        +sort-holder(`axisSort`, [`value`], [`asc`, `desc`], `axis`)
+      .max-value
+        .text(onclick=$helpers.clickedMaxValue)= $helpers.getMaxValueLabel()

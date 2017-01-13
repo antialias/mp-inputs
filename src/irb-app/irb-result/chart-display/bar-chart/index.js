@@ -75,7 +75,6 @@ document.registerElement(`bar-chart`, class extends Component {
 
       const headerWidths = headersStyle && headersStyle.reduce((sum, header) => sum + header.width, 0);
       const axisWidthStyle = (`calc(100% - ${headerWidths}px)`);
-
       this.update({
         axisWidthStyle,
         headersStyle,
@@ -109,8 +108,8 @@ document.registerElement(`bar-chart`, class extends Component {
 
     let headersStyle = this.state.headersStyle;
     if (headers && headers.length !== (headersStyle && headersStyle.length)) {
-      // setup min-width for chart-headers during rendering
-      headersStyle = headers.map(header => ({name: header, width: 100}));
+      // prevent glitching widths by waiting until render on new column counts
+      headersStyle = null;
     }
 
     this.update({
