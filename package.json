@@ -30,7 +30,7 @@
     "babel-polyfill": "6.7.4",
     "framesg": "0.1.2",
     "lodash": "4.15.0",
-    "mixpanel-common": "0.33.0-rc1",
+    "mixpanel-common": "0.34.0-rc1",
     "moment": "2.13.0",
     "panel": "0.10.0-rc2",
     "pikaday": "1.5.1",
@@ -62,7 +62,7 @@
     "stylus": "0.53.0",
     "stylus-loader": "1.6.1",
     "url-loader": "0.5.7",
-    "virtual-jade": "0.7.1",
+    "virtual-jade": "0.8.1",
     "virtual-jade-loader": "0.5.0",
     "webpack": "1.12.9",
     "webpack-dev-server": "1.14.1"
