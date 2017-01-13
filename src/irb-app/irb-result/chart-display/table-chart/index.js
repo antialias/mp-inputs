@@ -205,7 +205,7 @@ document.registerElement(`table-manager`, class extends WebComponent {
   }
 
   set data(data) {
-    this._data = JSON.parse(data);
+    this._data = data;
     // allow time for table to fully render so we can check width
     window.requestAnimationFrame(() => this.render());
   }
