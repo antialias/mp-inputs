@@ -1,4 +1,4 @@
 .builder-pane(style=builderPane.sizeStyle)
   .builder-pane-offset(style=builderPane.offsetStyle)
     each screen, screenIdx in builderPane.screens
-      = $component.child(screen.componentName, {attributes: {'screen-index': screenIdx}})
+      = $component.child(screen.componentName, {attrs: {'screen-index': screenIdx}})

@@ -4,7 +4,7 @@ include ../mixins.jade
   ul.screen-options-list
     each range in $helpers.RANGE_LIST
       if range.includes(contextFilter)
-        li.list-option(onclick=() => $helpers.clickedRange(range))
+        li.list-option(on={click: () => $helpers.clickedRange(range)})
           +screen-option(range, {noIcon: true})
           if range === $helpers.RANGES.CUSTOM
             +small-caret-icon()

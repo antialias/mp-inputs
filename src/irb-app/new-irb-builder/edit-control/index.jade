@@ -5,16 +5,20 @@
     .control-buttons.edit-control
       if $helpers.isPaneOpen()
         input.control-label(
-          autofocus
-          onclick=$helpers.clickedInput
-          oninput=$helpers.searchHandler
-          type='text'
-          value=contextFilter
+          props={
+            autoFocus: true,
+            type: `text`,
+            value: contextFilter,
+          }
+          on={
+            click: $helpers.clickedInput,
+            input: $helpers.searchHandler,
+          }
         )
       else
-        button.control-label(onclick=$helpers.clickedLabel)= $helpers.getLabel()
+        button.control-label(on={click: $helpers.clickedLabel})= $helpers.getLabel()
         if $helpers.isRemovable()
-          button.remove(onclick=$helpers.removeClause)
+          button.remove(on={click: $helpers.removeClause})
     .drop-menu
-      mp-drop-menu(attributes={open} onchange=$helpers.menuChange)
-        .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)
+      mp-drop-menu(attrs={open} on={change: $helpers.menuChange})
+        .new-pane-content(attrs={'slot-body': true})= $component.child(`builder-pane`)

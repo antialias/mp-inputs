@@ -7,19 +7,21 @@ include ../mixins.jade
   +screen-title('Choose a date range', {backButton: true})
   .range-control
     .range-inputs
-      date-input(value=from onchange=$helpers.changedFrom)
+      date-input(props={value: from} on={change: $helpers.changedFrom})
       .preposition to
-      date-input(value=to onchange=$helpers.changedTo)
+      date-input(props={value: to} on={change: $helpers.changedTo})
     .range-calendar
       irb-calendar(
-        attributes={range: true}
-        value=JSON.stringify({from, to})
-        onchange=$helpers.changedDates
-        onresize=$helpers.resizedCalendar
+        attrs={range: true}
+        props={value: JSON.stringify({from, to})}
+        on={
+          change: $helpers.changedDates,
+          resize: $helpers.resizedCalendar,
+        }
       )
   .unit-control
     .builder-label Time unit
     +tabs($helpers.UNITS, {
       selected: $helpers.getStageClauseAttr('unit'),
-      onclick: $helpers.clickedUnit
+      onclick: $helpers.clickedUnit,
     })
