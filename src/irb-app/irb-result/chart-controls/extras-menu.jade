@@ -2,9 +2,9 @@ ul.toggle-view
   li(class={selected: isEditingExtrasMenu})
     button.extras-menu(
       class={selected: isEditingExtrasMenu}
-      onclick=$helpers.onClickExtrasMenu
+      on={click: $helpers.onClickExtrasMenu}
     )
-      svg-icon(attributes={icon: 'ellipsis'})
+      svg-icon(attrs={icon: 'ellipsis'})
     if isEditingExtrasMenu
       .extras-menu-options.options
         .analysis.section
@@ -13,14 +13,16 @@ ul.toggle-view
             each analysis in $helpers.analysisChoices()
               li
                 button.button-option(
-                  class=analysis
                   class={
+                    [analysis]: true,
                     selected: analysis == report.displayOptions.analysis,
                     disabled: $helpers.isAnalysisDisabled(analysis),
                   }
-                  onclick=() => $helpers.onAnalysisClick(analysis)
+                  on={
+                    click: () => $helpers.onAnalysisClick(analysis),
+                  }
                 )
-                  svg-icon(attributes={icon: `analysis-${analysis}`})
+                  svg-icon(attrs={icon: `analysis-${analysis}`})
                   = analysis
         .value.section
           .title(class={disabled: $helpers.isValueToggleDisabled()}) value
@@ -28,12 +30,14 @@ ul.toggle-view
             each value in $helpers.valueChoices()
               li
                 button.button-option(
-                  class=value
                   class={
+                    [value]: true,
                     selected: value == report.displayOptions.value,
                     disabled: $helpers.isValueToggleDisabled(),
                   }
-                  onclick=() => $helpers.onValueClick(value)
+                  on={
+                    click: () => $helpers.onValueClick(value),
+                  }
                 )
-                  svg-icon(attributes={icon: `value-${value}`})
+                  svg-icon(attrs={icon: `value-${value}`})
                   = value
