@@ -3,16 +3,20 @@
 .builder-container.contextual-menu
   .irb-new-control.new-query-builder(class={'pane-open': open})
     .control-buttons.add-control
-      button.add-button(onclick=$helpers.clickedAdd)
-        svg-icon(attributes={icon: 'plus-large'})
+      button.add-button(on={click: $helpers.clickedAdd})
+        svg-icon(attrs={icon: 'plus-large'})
       input.control-label(
-        autofocus
-        onclick=$helpers.clickedInput
-        oninput=$helpers.searchHandler
-        type='text'
-        value=contextFilter
+        props={
+          autoFocus: true,
+          type: `text`,
+          value: contextFilter,
+        }
+        on={
+          click: $helpers.clickedInput,
+          input: $helpers.searchHandler,
+        }
       )
         span.label-preposition= $helpers.getPreposition()
     .drop-menu
-      mp-drop-menu(attributes={open} onchange=$helpers.menuChange)
-        .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)
+      mp-drop-menu(attrs={open} on={change: $helpers.menuChange})
+        .new-pane-content(attrs={'slot-body': true})= $component.child(`builder-pane`)

@@ -20,25 +20,25 @@ mixin filtered-options-lists(lists)
 
 mixin generic-options-list-item(label, options)
   li.list-option.generic-list(
-    class=options.class
-    onclick=options.onclick
+    class={[options.class]: true}
+    on={click: options.onclick}
   )
     +screen-option(label, {noIcon: true})
     +small-caret-icon()
 
 mixin secondary-action-pill(label, options)
-  .option-secondary-action.pill(onclick=options.onclick)
+  .option-secondary-action.pill(on={click: options.onclick})
     span.secondary-label= label
     +small-caret-icon()
 
 mixin event-list(events, options)
   ul.screen-options-list(
-    class=options.hideLoader ? '': 'show-loader'
-    onscroll=$helpers.scrolledList
+    class={'show-loader': !options.hideLoader}
+    on={scroll: $helpers.scrolledList}
   )
     each mpEvent in events
       - const renamedMpEvent = util.renameEvent(mpEvent.name)
-      li.list-option(onclick=() => options.clickedEvent(mpEvent))
+      li.list-option(on={click: () => options.clickedEvent(mpEvent)})
         +screen-option(renamedMpEvent, {
           icon: util.getIconForEvent(mpEvent),
           matches: mpEvent.matches,
@@ -50,12 +50,12 @@ mixin event-list(events, options)
 
 mixin property-list(properties, options)
   ul.screen-options-list(
-    class=options.hideLoader ? '': 'show-loader'
-    onscroll=options.scrolledList
+    class={'show-loader': !options.hideLoader}
+    on={scroll: options.scrolledList}
   )
     if properties.length
       each property in properties
-        li.list-option(onclick=ev => options.clickedProperty(ev, property))
+        li.list-option(on={click: ev => options.clickedProperty(ev, property)})
           +screen-option(util.renameProperty(property.name), {
             icon: property.icon || util.getIconForProperty(property),
             matches: property.matches,
@@ -75,7 +75,7 @@ mixin property-screen-body(options)
       selected: options.selectedResourceType,
       onclick: options.clickedResourceType,
     })
-  .screen-list-container(onscroll=options.scrolledList)
+  .screen-list-container(on={scroll: options.scrolledList})
     if options.recentProperties.length
       .builder-label Recently viewed
       +property-list(options.recentProperties, options)
@@ -84,14 +84,14 @@ mixin property-screen-body(options)
 
 mixin screen-footer-button(label, options)
   - options = options || {}
-  button.screen-footer(onclick=options.onclick)= label
+  button.screen-footer(on={click: options.onclick})= label
 
 mixin screen-option(label, options)
   - options = options || {}
   if !options.noIcon
     - const icon = options.icon
     .option-icon
-      svg-icon(attributes={icon, empty: !icon})
+      svg-icon(attrs={icon, empty: !icon})
   .option-label
     if options.matches
       +highlight-matches(options.matches)
@@ -102,16 +102,16 @@ mixin screen-title(title, options)
   - options = options || {}
   .screen-title
     if title
-      .title-label(title=title)= title
+      .title-label(attrs={title})= title
     block
     if options.backButton && builderPane.screens.length > 1
-      .title-button.back-button(onclick=$helpers.clickedBackButton)
-        svg-icon(attributes={icon: 'caret-left'})
+      .title-button.back-button(on={click: $helpers.clickedBackButton})
+        svg-icon(attrs={icon: 'caret-left'})
     if options.closeButton
-      .title-button.close-button(onclick=$helpers.closePane)
-        svg-icon(attributes={icon: 'x'})
+      .title-button.close-button(on={click: $helpers.closePane})
+        svg-icon(attrs={icon: 'x'})
 
 mixin small-caret-icon(options)
   - options = options || {}
   .caret-icon.small-caret
-    svg-icon(attributes={icon: `caret-${options.direction || 'right'}`})
+    svg-icon(attrs={icon: `caret-${options.direction || 'right'}`})

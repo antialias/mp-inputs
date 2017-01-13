@@ -7,10 +7,10 @@
       .section-container= $component.child('query-builder-time')
     //- TODO: finish filters
     //- .filters= $component.child('query-builder-filter')
-    .reset-query(onclick=$helpers.reset title='Reset query')
-      svg-icon(attributes={icon: 'x'})
+    .reset-query(on={click: $helpers.reset} attrs={title: 'Reset query'})
+      svg-icon(attrs={icon: 'x'})
   else
     .builder-error-caption.error-title We haven't recieved any events from you yet
     .builder-error-caption You'll need to install Mixpanel's library on your site and start tracking your user's actions.
     .error-builder-button
-      mp-button(onclick= $helpers.clickSetupMixpanel).mp-button-primary Install Mixpanel
+      mp-button(on={click: $helpers.clickSetupMixpanel}).mp-button-primary Install Mixpanel
