@@ -10,7 +10,7 @@ mixin paneContent(contentData, isPaneActive, paneIndex)
     .header
       span= header
       if paneIndex
-        button.back(onclick=$helpers.backButtonHandler)
+        button.back(on={click: $helpers.backButtonHandler})
 
   if paneConstants.search !== false && $component.constants.search !== false
     .search
@@ -18,16 +18,20 @@ mixin paneContent(contentData, isPaneActive, paneIndex)
       //-       limitations of the focus-input; this shouldn't be necessary
       if isPaneActive
         focus-input(
-          autoFocus=isPaneActive
-          focusDelay=200
-          oninput=$helpers.searchHandler
-          type='text'
+          props={
+            autoFocus: isPaneActive,
+            focusDelay: 200,
+            type: 'text',
+          }
+          on={
+            input: $helpers.searchHandler,
+          }
         )
 
-  .content= $component.child(contentData.tag, {attributes: {'is-pane-active': isPaneActive}})
+  .content= $component.child(contentData.tag, {attrs: {'is-pane-active': isPaneActive}})
 
   if commitLabel && commitHandler
-    button.commit(onclick=commitHandler)= commitLabel
+    button.commit(on={click: commitHandler})= commitLabel
 
 .pane-view
   if $component.subpanes
