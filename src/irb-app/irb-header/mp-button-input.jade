@@ -2,17 +2,23 @@
   if enabled
     input(
       class={active}
-      maxlength=50
-      type="text"
-      value=inputValue
-      onchange=$helpers.inputChange
-      onblur=$helpers.blur
-      onfocus=$helpers.focus
+      props={
+        maxLength: 50,
+        type: `text`,
+        value: inputValue,
+      }
+      on={
+        change: $helpers.inputChange,
+        blur: $helpers.blur,
+        focus: $helpers.focus,
+      }
     )
     button.input-button(
       class={active}
-      onclick=$helpers.clickSave
-      onmousedown=$helpers.buttonMousedown
-    )= $component.getAttribute('buttonText')
+      on={
+        click: $helpers.clickSave,
+        mousedown: $helpers.buttonMousedown,
+      }
+    )= $component.getAttribute(`buttonText`)
   else
     .disabled-input= inputValue

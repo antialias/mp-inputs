@@ -8,6 +8,6 @@ mixin tabs(list, options)
       - const value = item.value || item;
       - const label = item.label || item;
       button.irb-tab(
-        class=options.selected === value ? 'irb-tab-selected' : '',
-        onclick=ev => options.onclick(value, ev)
+        class={'irb-tab-selected': options.selected === value}
+        on={click: ev => options.onclick(value, ev)}
       )= label

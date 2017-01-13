@@ -1,21 +1,24 @@
 .irb-header
   mp-button-input(
-    value=report.title
-    attributes={buttonText: 'Save', disabled: !projectHasEvents}
-    onchange=$helpers.updateTitle
+    attrs={buttonText: `Save`, disabled: !projectHasEvents}
+    props={value: report.title}
+    on={change: $helpers.updateTitle}
   )
   .loading-dock
-    button.refresh-query(onclick=$helpers.refresh title="Refresh results")
-      svg-icon(attributes={icon: 'refresh'})
+    button.refresh-query(
+      attrs={title: `Refresh results`}
+      on={click: $helpers.refresh}
+    )
+      svg-icon(attrs={icon: `refresh`})
     button.download(
-      onclick=$helpers.clickExportCSV
+      attrs={title: `Download CSV`}
       class={enabled: !resultLoading}
-      title="Download CSV"
+      on={click: $helpers.clickExportCSV}
     )
-      svg-icon(attributes={icon: 'export'})
+      svg-icon(attrs={icon: `export`})
     button.report-list-button(
-      onclick=$helpers.clickReportList
+      attrs={title: `Saved reports`}
       class={enabled: $helpers.reportListEnabled()}
-      title="Saved reports"
+      on={click: $helpers.clickReportList}
     )
-      svg-icon(attributes={icon: 'saved-reports'})
+      svg-icon(attrs={icon: `saved-reports`})
