@@ -18,6 +18,10 @@ irb-bar-chart-header
       align-items center
       cursor pointer
 
+      &.shrinkable-label
+        ellipsis()
+        flex 1 1
+
       &:hover
         color mp-blue
 
@@ -71,16 +75,20 @@ irb-bar-chart-header
       width 50%
 
       .text
+        text-align center
         margin-left 36px
 
     .max-value
-      color blue-700
+      color mp-blue
       display flex
       justify-content flex-end
       width 25%
 
       .text
-        border-bottom 1px dotted blue-700
+        border-bottom 1px dotted mp-blue
         line-height 20px
         margin-right 30px
         padding-bottom 1px
+
+        &:hover
+          border-bottom-style solid

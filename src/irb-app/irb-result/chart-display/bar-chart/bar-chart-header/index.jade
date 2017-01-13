@@ -13,7 +13,7 @@ mixin sort-icon(colAccessor)
     svg-icon(attrs=({icon, empty: !icon}))
 
 
-mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor)
+mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor=`axis`)
   .sort-holder
     mp-drop-menu.sort-controls(
       attrs={open: activeSortPanel === colAccessor}
@@ -28,12 +28,19 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor)
   if headersStyle
     each header, idx in headersStyle
       .bar-chart-header(style={width: `${header.width}px`})
-        .text(on={click: () => $helpers.clickedHeader(idx)})= $helpers.renameHeaderLabel(header.name)
+        - const headerLabel = $helpers.renameHeaderLabel(header.name)
+        .text.shrinkable-label(
+          on={click: () => $helpers.clickedHeader(idx)}
+          props={title: headerLabel}
+        )= headerLabel
         +sort-icon(idx)
         +sort-holder(`colSort`, [`label`, `value`], [`asc`, `desc`], idx)
     .bar-chart-axis(style={width: axisWidthStyle})
       .axis-title
-        .text(on={click: () => $helpers.clickedHeader(`axis`)})= chartLabel
+        .text.shrinkable-label(
+          on={click: () => $helpers.clickedHeader(`axis`)}
+          props={title: chartLabel}
+        )= chartLabel
         +sort-icon(`axis`)
         +sort-holder(`axisSort`, [`value`], [`asc`, `desc`], `axis`)
       .max-value
