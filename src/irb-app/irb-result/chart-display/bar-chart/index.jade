@@ -1,7 +1,6 @@
 - const isStacked = displayOptions.plotStyle === 'stacked'
 - const isLogarithmic = displayOptions.analysis === 'logarithmic'
 - const isValueAbsolute = displayOptions.value === 'absolute'
-- const headersToDisplay = $helpers.headersToDisplay()
 
 mixin tooltip(className, shouldHaveClass, title, count, percent)
   .hover-label(style={left: `${hoverTooltip.mouseXPos}px`})
@@ -29,9 +28,10 @@ mixin tooltip(className, shouldHaveClass, title, count, percent)
           each cell, cellIndex in row
             - const lastCellIdx = row.length - 1
             - const segmentSum = util.sum(row[lastCellIdx])
-            - const getLabel = value => headersToDisplay[cellIndex] === '$event' ? util.renameEvent(value) : util.renamePropertyValue(value)
             if cell
+              - const headersToDisplay = $helpers.headersToDisplay()
               if cellIndex < lastCellIdx
+                - const colHeader = headersToDisplay[cellIndex]
                 - const headerText = headersToDisplay[cellIndex] === '$event' ? 'Events' : util.renameProperty(headersToDisplay[cellIndex])
 
                 if !Array.isArray(cell) || !isStacked || rows.length <= 1
@@ -41,11 +41,12 @@ mixin tooltip(className, shouldHaveClass, title, count, percent)
                   )
                     if !Array.isArray(cell) || isStacked
                       - const cellLabel = isStacked && rows.length == 1 ? showValueNames[0] : cell.value
-                      .chart-header-text(attrs={title: getLabel(cellLabel)})= getLabel(cellLabel)
+                      - const title = $helpers.formatLabel(colHeader, cellLabel)
+                      .chart-header-text(attrs={title})= title
                     else
                       ul
                         each value, valueIndex in cell
-                          - const title = getLabel(value)
+                          - const title = $helpers.formatLabel(colHeader, value)
                           li(
                             attrs={title}
                             on={
@@ -78,8 +79,8 @@ mixin tooltip(className, shouldHaveClass, title, count, percent)
                     each value, valueIndex in cell
                       - const percent = value / segmentSum
                       - const percentValueString = util.formatPercent(percent)
-                      - let widthAsPercentage = (isLogarithmic ? Math.log10(value) : value) / segmentMax
-                      - const segmentName = row[cellIndex - 1][valueIndex]
+                      - const widthAsPercentage = (isLogarithmic ? Math.log10(value) : value) / segmentMax
+                      - const segmentName = $helpers.formatLabel(headersToDisplay[cellIndex - 1], row[cellIndex - 1][valueIndex])
                       - const segmentColorClassName = `segment-color-${segmentColorMap[segmentName]}`
                       li.chart-bar(
                         style={width: util.formatPercent(widthAsPercentage)}
@@ -90,7 +91,7 @@ mixin tooltip(className, shouldHaveClass, title, count, percent)
                         }
                       )
                         if hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === valueIndex
-                          +tooltip(segmentColorClassName, isMultiColor, getLabel(segmentName), value, percent)
+                          +tooltip(segmentColorClassName, isMultiColor, segmentName, value, percent)
                         .bar-color(class={[segmentColorClassName]: isMultiColor})
                         .label-wrapper
                           .bar-text-nudger

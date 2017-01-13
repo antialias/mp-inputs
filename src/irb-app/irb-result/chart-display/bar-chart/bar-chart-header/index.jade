@@ -13,7 +13,7 @@ mixin sort-icon(colAccessor)
     svg-icon(attrs=({icon, empty: !icon}))
 
 
-mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor=`axis`)
+mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor)
   .sort-holder
     mp-drop-menu.sort-controls(
       attrs={open: activeSortPanel === colAccessor}
@@ -31,7 +31,7 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor=`axis`)
         - const headerLabel = $helpers.renameHeaderLabel(header.name)
         .text.shrinkable-label(
           on={click: () => $helpers.clickedHeader(idx)}
-          props={title: headerLabel}
+          attrs={title: headerLabel}
         )= headerLabel
         +sort-icon(idx)
         +sort-holder(`colSort`, [`label`, `value`], [`asc`, `desc`], idx)
@@ -39,7 +39,7 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor=`axis`)
       .axis-title
         .text.shrinkable-label(
           on={click: () => $helpers.clickedHeader(`axis`)}
-          props={title: chartLabel}
+          attrs={title: chartLabel}
         )= chartLabel
         +sort-icon(`axis`)
         +sort-holder(`axisSort`, [`value`], [`asc`, `desc`], `axis`)

@@ -182,12 +182,15 @@ class JQLQuery {
 
   displayName(name) {
     const operation = this.type;
-    const event = renameEvent(name);
+
+    const isEventQuery = this.resourceType === ShowClause.RESOURCE_TYPE_EVENTS;
+    name = isEventQuery ? renameEvent(name) : renameProperty(name);
     let display;
     if (this.property) {
-      display = `${operation} of ${renameProperty(this.property.name)} on ${event}`;
+      const onEvent = isEventQuery ? ` on ${name}` : ``;
+      display = `${operation} of ${renameProperty(this.property.name)}${onEvent}`;
     } else {
-      display = `${operation} number of ${event}`;
+      display = `${operation} number of ${name}`;
     }
 
     return capitalize(display);
@@ -500,7 +503,7 @@ export default class SegmentationQuery extends BaseQuery {
     // Add the special $event header when not doing groupBy or when there is more than one event
     // name.
     if (queriedEventNames.length > 1 || this.query.segments.length === 0) {
-      headers = [`$event`].concat(headers);
+      headers = [isPeopleOnlyQuery ? `$people` : `$event`].concat(headers);
     }
     return new Result({series, headers});
   }

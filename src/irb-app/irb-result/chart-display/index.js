@@ -9,7 +9,10 @@ import {
   mapObjectKeys,
   pick,
   renameEvent,
+  renameProperty,
 } from '../../../util';
+
+import { Clause } from '../../../models/clause';
 
 import './chart-legend';
 import './bar-chart';
@@ -44,7 +47,7 @@ document.registerElement(`chart-display`, class extends Component {
 
           const showValueNames = this.config.helpers.getShowValueNames();
           const headers = this.state.result.headers;
-          if (headers.length === 1 && headers[0] !== `$event` && showValueNames.length === 1) {
+          if (headers.length === 1 && ![`$event`, `$people`].includes(headers[0]) && showValueNames.length === 1) {
             chartLabel.push(showValueNames[0]);
           }
 
@@ -68,7 +71,12 @@ document.registerElement(`chart-display`, class extends Component {
           // nothing for 'linear'
           return null;
         },
-        getShowValueNames: () => this.state.report.sections.show.clauses.map(clause => renameEvent(clause.value.name)),
+        getShowValueNames: () => this.state.report.sections.show.clauses.map(clause => {
+          if (clause.type === Clause.RESOURCE_TYPE_EVENTS) {
+            return renameEvent(clause.value.name);
+          }
+          return renameProperty(clause.value.name);
+        }),
         getUniqueShowMathTypes: () => new Set(this.state.report.sections.show.clauses.map(clause => clause.math)),
         stringifyObjValues: obj => mapObjectKeys(obj, JSON.stringify),
         showLegend: () => {

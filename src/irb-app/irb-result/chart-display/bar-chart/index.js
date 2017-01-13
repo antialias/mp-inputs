@@ -34,6 +34,15 @@ document.registerElement(`bar-chart`, class extends Component {
         util,
       },
       helpers: {
+        formatLabel: (header, value) => {
+          switch (header) {
+            case `$event`:
+              return util.renameEvent(value);
+            case `$people`:
+              return util.renameProperty(value);
+          }
+          return util.renamePropertyValue(value);
+        },
         getHeaderWidth: text => util.getTextWidth(text, `bold 14px Helvetica`) + SORT_ICON_WIDTH,
         headersToDisplay: () => {
           let headers = null;
