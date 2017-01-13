@@ -68,13 +68,13 @@ document.registerElement(`bar-chart`, class extends Component {
     this.updateStateFromAttributes();
   }
 
-  calculateHeaderWidths() {
+  updateHeaderWidths() {
     window.requestAnimationFrame(() => { // defer so we can inspect the fully-rendered table
       const tableHeaderColumns = Array.from(this.querySelectorAll(`table tbody tr:first-child td.chart-header`));
       const headersStyle = tableHeaderColumns.map((el, idx) => ({name: this.state.headers[idx], width: el.offsetWidth}));
 
       const headerWidths = headersStyle && headersStyle.reduce((sum, header) => sum + header.width, 0);
-      const axisWidthStyle = (`calc(100% - ${headerWidths}px)`);
+      const axisWidthStyle = `calc(100% - ${headerWidths}px)`;
       this.update({
         axisWidthStyle,
         headersStyle,
@@ -106,9 +106,12 @@ document.registerElement(`bar-chart`, class extends Component {
 
     sortConfig = util.extend(sortConfig, {hideFirstSort: displayOptions.plotStyle === `stacked` && rows.length === 1});
 
+
+    // prevent glitching widths by waiting until render on new column counts
     let headersStyle = this.state.headersStyle;
-    if (headers && headers.length !== (headersStyle && headersStyle.length)) {
-      // prevent glitching widths by waiting until render on new column counts
+    const numOfHeaders = headers && headers.length;
+    const numOfHeadersStyles = headersStyle && headersStyle.length;
+    if (numOfHeaders !== numOfHeadersStyles) {
       headersStyle = null;
     }
 
@@ -125,7 +128,7 @@ document.registerElement(`bar-chart`, class extends Component {
       sortConfig,
     });
 
-    this.calculateHeaderWidths();
+    this.updateHeaderWidths();
   }
 
   validSortConfig(headers, sortConfig) {
