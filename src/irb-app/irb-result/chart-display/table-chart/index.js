@@ -35,23 +35,23 @@ document.registerElement(`table-chart`, class extends Component {
 
         leftSortArrowClasses: idx => {
           if (this.sortConfig.sortBy === `column`) {
-            return [
-              `sort-active`,
-              `sort-${this.sortConfig.colSortAttrs[idx].sortOrder}`,
-            ];
+            return {
+              'sort-active': true,
+              [`sort-${this.sortConfig.colSortAttrs[idx].sortOrder}`]: true,
+            };
           } else {
-            return [];
+            return {};
           }
         },
 
         rightSortArrowClasses: header => {
           if (this.sortConfig.sortBy === `value` && this.sortConfig.sortColumn === header) {
-            return [
-              `sort-active`,
-              `sort-${this.sortConfig.sortOrder}`,
-            ];
+            return {
+              'sort-active': true,
+              [`sort-${this.sortConfig.sortOrder}`]: true,
+            };
           } else {
-            return [];
+            return {};
           }
         },
       },

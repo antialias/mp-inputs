@@ -2,15 +2,17 @@
 - const isRelativeValue = displayOptions.value === 'relative'
 
 .table-chart(class={'full-width': fullWidthTable})
-  table-manager(data=JSON.stringify({headers, rows, columnHeaders, columnRows, displayOptions}))
+  table-manager(attrs={
+    data: JSON.stringify({headers, rows, columnHeaders, columnRows, displayOptions}),
+  })
   .left-table-container
     .fixed-header.chart-header-container
       each header, idx in headers
-        .fixed-header-cell(onclick=() => $helpers.clickHeader('left', idx, header))
+        .fixed-header-cell(on={click: () => $helpers.clickHeader('left', idx, header)})
           span= header === '$event' ? 'Event' : util.renameProperty(header)
           .sort-arrows(class=$helpers.leftSortArrowClasses(idx))
-            svg-icon.triangle-up(attributes={icon: 'triangle-up'})
-            svg-icon.triangle-down(attributes={icon: 'triangle-down'})
+            svg-icon.triangle-up(attrs={icon: 'triangle-up'})
+            svg-icon.triangle-down(attrs={icon: 'triangle-down'})
     .left-table
       table
         thead
@@ -30,19 +32,21 @@
                       'first-column-cell': isFirstCol,
                       'even': isFirstCol && firstColIdx++ % 2,
                     }
-                    rowSpan=cell.rowSpan || 1
-                    title=value
+                    props={
+                      rowSpan: cell.rowSpan || 1,
+                      title: value,
+                    }
                   )= value
 
   if fullWidthTable
     .right-table-container
       .fixed-header.chart-header-container
         each header, idx in columnHeaders
-          .fixed-header-cell(onclick=() => $helpers.clickHeader('right', idx, header.value))
+          .fixed-header-cell(on={click: () => $helpers.clickHeader('right', idx, header.value)})
             span= header.display
             .sort-arrows(class=$helpers.rightSortArrowClasses(header.value))
-              svg-icon.triangle-up(attributes={icon: 'triangle-up'})
-              svg-icon.triangle-down(attributes={icon: 'triangle-down'})
+              svg-icon.triangle-up(attrs={icon: 'triangle-up'})
+              svg-icon.triangle-down(attrs={icon: 'triangle-down'})
 
       .right-table
         table
@@ -60,6 +64,6 @@
                     if isRelativeValue
                       - percent = util.formatPercent(cellValue / segmentMax)
                       - cellValue = percent === '0%' ? '< 0.01%' : percent
-                    td(rowSpan=cell.rowSpan || 1)= cellValue
+                    td(props={rowSpan: cell.rowSpan || 1})= cellValue
                   else
                     td

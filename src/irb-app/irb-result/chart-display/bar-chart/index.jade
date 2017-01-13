@@ -4,11 +4,11 @@
 - const headersToDisplay = $helpers.headersToDisplay()
 
 mixin tooltip(className, shouldHaveClass, title, count, percent)
-  .hover-label(attributes={'style' : 'left: ' + hoverTooltip.mouseXPos + 'px'})
+  .hover-label(style={left: `${hoverTooltip.mouseXPos}px`})
     .content
       .title(
+        attrs={title}
         class={[className]: shouldHaveClass}
-        title=title
       )= title
       .results
         .absolute
@@ -19,8 +19,9 @@ mixin tooltip(className, shouldHaveClass, title, count, percent)
   table
     thead
       tr
-        th(colSpan=0)
-          .irb-bar-chart-header= $component.child('irb-bar-chart-header', {onchange: $helpers.sortChange})
+        th(props={colSpan: 0})
+          .irb-bar-chart-header
+            = $component.child('irb-bar-chart-header', {on: {change: $helpers.sortChange}})
     tbody
       each row, rowIndex in rows
         - const isMultiColor = row.length > 2 || isStacked
@@ -35,21 +36,23 @@ mixin tooltip(className, shouldHaveClass, title, count, percent)
 
                 if !Array.isArray(cell) || !isStacked || rows.length <= 1
                   td.chart-header(
-                    rowSpan=cell.rowSpan || 1
+                    attrs={rowSpan: cell.rowSpan || 1}
                     style={'min-width': `${$helpers.getHeaderWidth(headerText)}px`}
                   )
                     if !Array.isArray(cell) || isStacked
                       - const cellLabel = isStacked && rows.length == 1 ? showValueNames[0] : cell.value
-                      .chart-header-text(title=getLabel(cellLabel))= getLabel(cellLabel)
+                      .chart-header-text(attrs={title: getLabel(cellLabel)})= getLabel(cellLabel)
                     else
                       ul
                         each value, valueIndex in cell
                           - const title = getLabel(value)
                           li(
-                            title=title
-                            onmouseenter=ev => $helpers.onMouseEnterAndMove(ev, rowIndex, title)
-                            onmousemove=ev => _.throttle($helpers.onMouseEnterAndMove(ev, rowIndex, title), 100)
-                            onmouseleave=$helpers.onMouseLeave
+                            attrs={title}
+                            on={
+                              mouseenter: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, title),
+                              mousemove: ev => _.throttle($helpers.onMouseEnterAndMove(ev, rowIndex, title), 100),
+                              mouseleave: $helpers.onMouseLeave,
+                            }
                           )= title
                           if hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === title
                             - const segmentColorClassName = `segment-color-${segmentColorMap[value]}`
@@ -80,9 +83,11 @@ mixin tooltip(className, shouldHaveClass, title, count, percent)
                       - const segmentColorClassName = `segment-color-${segmentColorMap[segmentName]}`
                       li.chart-bar(
                         style={width: util.formatPercent(widthAsPercentage)}
-                        onmouseenter=ev => $helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex)
-                        onmousemove=ev => _.throttle($helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex), 100)
-                        onmouseleave=$helpers.onMouseLeave
+                        on={
+                          mouseenter: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex),
+                          mousemove: ev => _.throttle($helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex), 100),
+                          mouseleave: $helpers.onMouseLeave,
+                        }
                       )
                         if hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === valueIndex
                           +tooltip(segmentColorClassName, isMultiColor, getLabel(segmentName), value, percent)

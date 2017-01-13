@@ -1,4 +1,4 @@
-.chart(class=`${report.displayOptions.chartType}-chart-type`)
+.chart(class={[`${report.displayOptions.chartType}-chart-type`]: true})
   .main-chart
     if resultLoading && projectHasEvents
       .chart-loader
@@ -6,7 +6,7 @@
           .header-text-container
             .header-text
           .header-icon
-            svg-icon(attributes={icon: 'ellipsis'})
+            svg-icon(attrs={icon: 'ellipsis'})
         .chart-graph
           .chart-graph-text Gathering all the data...
             .loader
@@ -24,7 +24,7 @@
         when 'bar'
           .extras-menu-container.chart-control= $component.child('extras-menu')
           bar-chart(
-            attributes=$helpers.stringifyObjValues({
+            attrs=$helpers.stringifyObjValues({
               'data': processedResult,
               'segment-color-map': report.legend.colorMap,
               'chart-label': $helpers.getChartLabel(),
@@ -33,12 +33,14 @@
               'sorting': report.sorting.bar,
               'legend-change-id': report.legend.changeID,
             })
-            onchange=$helpers.barChartChange
+            on={
+              change: $helpers.barChartChange,
+            }
           )
         when 'line'
           .extras-menu-container.chart-control= $component.child('extras-menu')
           line-chart(
-            attributes=$helpers.stringifyObjValues({
+            attrs=$helpers.stringifyObjValues({
               'chart-label': $helpers.getChartLabel(),
               'data': processedResult,
               'display-options': $helpers.getDisplayOptions(),
@@ -48,12 +50,14 @@
           - const functionLabel = $helpers.getFunctionLabel();
           - const resourceDescription = $helpers.getChartLabel() + (functionLabel ? ` ${functionLabel}` : '');
           table-chart(
-            attributes=$helpers.stringifyObjValues({
+            attrs=$helpers.stringifyObjValues({
               'data': util.extend(processedResult, {resourceDescription: resourceDescription}),
               'display-options': $helpers.getDisplayOptions(),
               'sorting': report.sorting.table,
             })
-            onchange=$helpers.tableChange
+            on={
+              change: $helpers.tableChange,
+            }
           )
   if $helpers.showLegend()
     if resultLoading
@@ -62,8 +66,8 @@
           .header Legend
           .content-wrapper
             .search
-              svg-icon(attributes={icon: 'search'})
-              input(type="text", placeholder="search")
+              svg-icon(attrs={icon: 'search'})
+              input(attrs={type: `text`, placeholder: `search`})
             .body-loader
               each i in _.range(5)
                 .series-loader
