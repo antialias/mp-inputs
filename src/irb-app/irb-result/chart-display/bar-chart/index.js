@@ -46,7 +46,7 @@ document.registerElement(`bar-chart`, class extends Component {
           return headers || this.state.headers;
         },
         onMouseEnterAndMove: (ev, rowIdx, cellIdx) => {
-          const hoverTooltip = util.extend(this.state.hoverTooltip, {rowIdx, cellIdx, x: ev.offsetX});
+          const hoverTooltip = util.extend(this.state.hoverTooltip, {rowIdx, cellIdx, mouseXPos: ev.offsetX});
           this.update({hoverTooltip});
         },
         onMouseLeave: () => {
