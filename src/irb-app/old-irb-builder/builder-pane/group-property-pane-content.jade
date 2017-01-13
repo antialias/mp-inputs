@@ -5,7 +5,7 @@ include ./mixins.jade
     each resourceType in $component.resourceTypeChoices
       li(
         class={selected: resourceType === resourceTypeFilter}
-        onclick=() => $helpers.updateResourceTypeFilter(resourceType)
+        on={click: () => $helpers.updateResourceTypeFilter(resourceType)}
       )= util.capitalize(resourceType)
   ul.column.resource-value
     each property in $helpers.topProperties()

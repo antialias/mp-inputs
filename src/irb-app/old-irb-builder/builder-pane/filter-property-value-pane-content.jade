@@ -4,15 +4,15 @@
 - const selectedValue = $helpers.getActiveClauseProperty('filterValue');
 - const selectedDateUnit = $helpers.getActiveClauseProperty('filterDateUnit');
 
-.property.pane-content(class=selectedType ? `filter-type-${selectedType}` : '')
+.property.pane-content(class={[`filter-type-${selectedType}`]: !!selectedType})
   .filter-tabs
     each typeChoice in $component.filterTypeChoices
       .filter-tab(class={
         selected: typeChoice === selectedType,
         [`type-${typeChoice}`]: true,
       })
-        .filter-button-wrapper(onclick=() => $helpers.selectFilterType(typeChoice))
-          svg-icon(attributes={icon: $helpers.typeIcon(typeChoice)})
+        .filter-button-wrapper(on={click: () => $helpers.selectFilterType(typeChoice)})
+          svg-icon(attrs={icon: $helpers.typeIcon(typeChoice)})
           button= util.renamePropertyType(typeChoice)
 
   if selectedType
@@ -41,16 +41,18 @@
               //       limitations of the focus-input; this shouldn't be necessary
               if $component.isPaneActive()
                 focus-input(
-                  autoFocus=$component.isPaneActive()
-                  focusDelay=200
-                  type='text'
-                  oninput=event => $helpers.updateStageClause({filterSearch: event.target.value})
+                  props={
+                    autoFocus: $component.isPaneActive(),
+                    focusDelay: 200,
+                    type: 'text',
+                  }
+                  on={input: event => $helpers.updateStageClause({filterSearch: event.target.value})}
                 )
 
             ul.filter-string-equals-choices
               each value in $helpers.getEqualsMatches()
                 li(class={selected: selectedValue && selectedValue.indexOf(value) !== -1})
-                  button(onclick=() => $helpers.toggleStringEqualsValueSelected(value))= util.renamePropertyValue(value)
+                  button(on={click: () => $helpers.toggleStringEqualsValueSelected(value)})= util.renamePropertyValue(value)
 
           when 'contains'
           when 'does not contain'
@@ -59,11 +61,13 @@
               //       limitations of the focus-input; this shouldn't be necessary
               if $component.isPaneActive()
                 focus-input(
-                  autoFocus=$component.isPaneActive()
-                  focusDelay=200
-                  type='text'
-                  value=selectedValue
-                  oninput=ev => $helpers.updateStageClause({filterValue: ev.target.value})
+                  props={
+                    autoFocus: $component.isPaneActive(),
+                    focusDelay: 200,
+                    type: 'text',
+                    value: selectedValue,
+                  }
+                  on={input: ev => $helpers.updateStageClause({filterValue: event.target.value})}
                 )
 
               if selectedValue
@@ -81,17 +85,22 @@
               //       limitations of the focus-input; this shouldn't be necessary
               if $component.isPaneActive()
                 focus-input(
-                  autoFocus=$component.isPaneActive()
-                  focusDelay=200
-                  type='number'
-                  value=betweenStart
-                  oninput=ev => $helpers.updateStageClause({filterValue: [Number(ev.target.value), betweenEnd]})
+                  props={
+                    autoFocus: $component.isPaneActive(),
+                    focusDelay: 200,
+                    type: 'number',
+                    value: betweenStart,
+                  }
+                  on={input: ev => $helpers.updateStageClause({filterValue: [Number(ev.target.value), betweenEnd]})}
                 )
+
               .connector and
               input(
-                type='number'
-                value=betweenEnd
-                oninput=ev => $helpers.updateStageClause({filterValue: [betweenStart, Number(ev.target.value)]})
+                props={
+                  type: 'number',
+                  value: betweenEnd,
+                }
+                on={input: ev => $helpers.updateStageClause({filterValue: [betweenStart, Number(ev.target.value)]})}
               )
           default
             .filter-value-input
@@ -99,11 +108,13 @@
               //       limitations of the focus-input; this shouldn't be necessary
               if $component.isPaneActive()
                 focus-input(
-                  autoFocus=$component.isPaneActive()
-                  focusDelay=200
-                  type='number'
-                  value=selectedValue
-                  oninput=ev => $helpers.updateStageClause({filterValue: Number(ev.target.value)})
+                  props={
+                    autoFocus: $component.isPaneActive(),
+                    focusDelay: 200,
+                    type: 'number',
+                    value: selectedValue,
+                  }
+                  on={input: ev => $helpers.updateStageClause({filterValue: Number(ev.target.value)})}
                 )
 
       when 'datetime'
@@ -113,24 +124,26 @@
             - const to = selectedValue ? selectedValue[1] : null;
             .filter-value-input.filter-date
               mp-calendar(
-                attributes={range: true}
-                value=JSON.stringify({from, to})
-                onchange=$helpers.updateDate
+                attrs={range: true}
+                props={value: JSON.stringify({from, to})}
+                on={change: $helpers.updateDate}
               )
           when 'was on'
             .filter-value-input.filter-date
-              mp-calendar(onchange=$helpers.updateDate)
+              mp-calendar(on={change: $helpers.updateDate})
           default
             .filter-value-input.filter-days-ago
               // TODO: we are required to recreate this input between panes switches because of
               //       limitations of the focus-input; this shouldn't be necessary
               if $component.isPaneActive()
                 focus-input(
-                  autoFocus=$component.isPaneActive()
-                  focusDelay=200
-                  type='number'
-                  value=selectedValue
-                  oninput=ev => $helpers.updateStageClause({filterValue: Number(ev.target.value)})
+                  props={
+                    autoFocus: $component.isPaneActive(),
+                    focusDelay: 200,
+                    type: 'number',
+                    value: selectedValue,
+                  }
+                  on={input: ev => $helpers.updateStageClause({filterValue: Number(ev.target.value)})}
                 )
               .filter-unit-input= $component.child('date-unit-dropdown')
               .connector ago
@@ -141,9 +154,11 @@
           //       limitations of the focus-input; this shouldn't be necessary
           if $component.isPaneActive()
             focus-input(
-              autoFocus=$component.isPaneActive()
-              focusDelay=200
-              type='text'
-              value=selectedValue
-              oninput=ev => $helpers.updateStageClause({filterValue: ev.target.value})
+              props={
+                autoFocus: $component.isPaneActive(),
+                focusDelay: 200,
+                type: 'text',
+                value: selectedValue,
+              }
+              on={input: ev => $helpers.updateStageClause({filterValue: ev.target.value})}
             )

@@ -10,13 +10,13 @@ include ./mixins.jade
     each math in $component.constants.mathChoices
       li(
         class={selected: math === selectedMath}
-        onclick=() => $helpers.updateStageClause({math})
+        on={click: () => $helpers.updateStageClause({math})}
       )= util.capitalize(math)
   ul.column.toggle.resource-type
     each resourceType in $component.resourceTypeChoices
       li(
         class={selected: resourceType === selectedResourceType}
-        onclick=() => $helpers.updateStageClause({resourceType})
+        on={click: () => $helpers.updateStageClause({resourceType})}
       )= util.capitalize(resourceType)
   ul.column.resource-value
 
@@ -27,14 +27,14 @@ include ./mixins.jade
         - const matches = $helpers.searchMatches(valueName)
         if !!matches
           li(
+            attrs={title: valueName}
             class={selected: value.name === selectedValueName, custom: !!value.custom}
-            onclick=() => $helpers.updateStageClause({property: null, value}, true)
-            title=valueName
+            on={click: () => $helpers.updateStageClause({property: null, value}, true)}
           )
             - const attrs = !!value.custom ? {icon: 'custom-events'} : {empty: true}
-            svg-icon(attributes=attrs)
+            svg-icon(attrs=attrs)
             +highlight-matches(matches)
-            button.next-arrow(onclick=ev => $helpers.onArrowClick(ev, value)) ›
+            button.next-arrow(on={click: ev => $helpers.onArrowClick(ev, value)}) ›
 
     if $helpers.showResource('properties', selectedResourceType)
       li.resource-title Event properties

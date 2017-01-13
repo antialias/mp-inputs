@@ -4,9 +4,9 @@
     - const from = Array.isArray(selectedValue) ? selectedValue[0] : null;
     - const to = Array.isArray(selectedValue) ? selectedValue[1] : null;
     mp-calendar(
-      attributes={range: true}
-      value=JSON.stringify({from, to})
-      onchange=$helpers.selectDateRange
+      attrs={range: true}
+      props={value: JSON.stringify({from, to})}
+      on={change: $helpers.selectDateRange}
     )
   .date-unit-select
     h4 Display unit
@@ -15,5 +15,5 @@
       each unit in $component.constants.unitChoices
         li(
           class={selected: unit === selectedUnit}
-          onclick=() => $helpers.selectUnit(unit)
+          on={click: () => $helpers.selectUnit(unit)}
         )= unit

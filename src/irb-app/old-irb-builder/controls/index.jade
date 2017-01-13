@@ -1,6 +1,6 @@
-.irb-control.old-query-builder(class=$component.elementClass)
-  button.modify(onclick=$helpers.clickModify)
-    if typeof $component.label === 'string'
+.irb-control.old-query-builder(class={[$component.elementClass]: true})
+  button.modify(on={click: $helpers.clickModify})
+    if typeof $component.label === `string`
       span= $component.label
     else if $component.label
       each part, i in $component.label
@@ -9,7 +9,7 @@
         else
           span= part
   if $component.isRemoveable
-    button.remove(onclick=$helpers.removeClause)
+    button.remove(on={click: $helpers.removeClause})
   if $component.isPaneOpen
     .pane-container(style={
       height: `${$component.constants.paneHeight}px`,

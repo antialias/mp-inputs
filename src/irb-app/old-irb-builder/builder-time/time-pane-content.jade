@@ -3,5 +3,5 @@
     each range in $component.constants.rangeChoices
       li(
         class={selected: $helpers.isRangeSelected(range)}
-        onclick=() => $helpers.selectTimeRange(range)
+        on={click: () => $helpers.selectTimeRange(range)}
       )= range
