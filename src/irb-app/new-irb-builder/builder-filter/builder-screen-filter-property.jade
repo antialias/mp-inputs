@@ -3,9 +3,10 @@ include ../mixins.jade
 mixin filter-dropdown(name, title, icon)
   div(class={[`filter-${name}-dropdown`]: true})
     button.filter-menu-button(on={click: () => $helpers.toggleMenu(name)})
-      svg-icon(attrs={icon, empty: !icon})
-      span.filter-prop-name= title
-      svg-icon(attrs={icon: 'caret-down'})
+      span.button-flex-wrapper
+        svg-icon(attrs={icon, empty: !icon})
+        span.filter-prop-name= title
+        svg-icon(attrs={icon: 'caret-down'})
     .filter-menu
       mp-drop-menu(attrs={open: $helpers.isMenuOpen(name)})
         block

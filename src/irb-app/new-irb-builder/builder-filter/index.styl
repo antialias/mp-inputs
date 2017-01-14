@@ -60,16 +60,19 @@ builder-screen-filter-property
         color mp-blue
 
     button.filter-menu-button
-      align-items center
       background none
       border none
       color grey-900
-      display flex
       font-size 14px
       position relative
       text-transform uppercase
       transition color 0.2s
       svg-icon-style(grey-900, mp-blue)
+
+      .button-flex-wrapper
+        align-items center
+        display flex
+
       &:hover
         color mp-blue
 
@@ -112,6 +115,7 @@ builder-screen-filter-property
 
       .back-button
         left 0
+        top 0
 
       .filter-type-dropdown
         ol.filter-types
