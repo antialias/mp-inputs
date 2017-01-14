@@ -60,19 +60,20 @@ toggle-height = 34px
   button
     svg-icon-style(grey-500, mp-blue, pos-left: -5px)
     svg-height(toggle-height)
-    align-items center
     background none
     background-color initial
     background-position center
     background-repeat no-repeat
     border none
     color grey-500
-    display flex
     font-weight 700
     height 100%
-    justify-content center
     padding 0
     white-space nowrap
+    .button-flex-wrapper
+      align-items center
+      display flex
+      justify-content center
 
     &.selected
       color grey-900
@@ -162,7 +163,7 @@ toggle-height = 34px
     top toggle-height
     z-index 3
 
-    button
+    .button-flex-wrapper
       justify-content flex-start
 
     .button-option
