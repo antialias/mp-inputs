@@ -5,34 +5,36 @@ mixin sort-icon(colAccessor)
       'sort-axis': isAxis,
       'sort-bar-header': !isAxis,
     }
-    onclick=() => $helpers.clickedHeader(colAccessor)
+    on={
+      click: () => $helpers.clickedHeader(colAccessor),
+    }
   )
     - const icon = isAxis ? $helpers.getAxisSortIcon() : $helpers.getHeaderSortActive(colAccessor);
-    svg-icon(attributes=({icon, empty: !icon}))
+    svg-icon(attrs=({icon, empty: !icon}))
 
 
 mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor)
   .sort-holder
     mp-drop-menu.sort-controls(
-      attributes={open: activeSortPanel === colAccessor}
-      onchange=ev => $helpers.menuChange(ev, colAccessor)
+      attrs={open: activeSortPanel === colAccessor}
+      on={change: ev => $helpers.menuChange(ev, colAccessor)}
     )
       each sortBy in sortByOptions
         each sortOrder in sortOrderOptions
-          .sort-icon(onclick=() => $helpers.selectedHeaderSort(type, colAccessor, sortBy, sortOrder))
-            svg-icon(attributes=({icon:`sort-${$helpers.SORT_ICONS[sortBy]}-${sortOrder}`}))
+          .sort-icon(on={click: () => $helpers.selectedHeaderSort(type, colAccessor, sortBy, sortOrder)})
+            svg-icon(attrs=({icon: `sort-${$helpers.SORT_ICONS[sortBy]}-${sortOrder}`}))
 
 .chart-header-container
   if headersStyle
     each header, idx in headersStyle
       .bar-chart-header(style={width: `${header.width}px`})
-        .text(onclick=() => $helpers.clickedHeader(idx))= $helpers.renameHeaderLabel(header.name)
+        .text(on={click: () => $helpers.clickedHeader(idx)})= $helpers.renameHeaderLabel(header.name)
         +sort-icon(idx)
         +sort-holder(`colSort`, [`label`, `value`], [`asc`, `desc`], idx)
     .bar-chart-axis(style={width: axisWidthStyle})
       .axis-title
-        .text(onclick=() => $helpers.clickedHeader(`axis`))= chartLabel
+        .text(on={click: () => $helpers.clickedHeader(`axis`)})= chartLabel
         +sort-icon(`axis`)
         +sort-holder(`axisSort`, [`value`], [`asc`, `desc`], `axis`)
       .max-value
-        .text(onclick=$helpers.clickedMaxValue)= $helpers.getMaxValueLabel()
+        .text(on={click: $helpers.clickedMaxValue})= $helpers.getMaxValueLabel()
