@@ -6,9 +6,9 @@ include ../../mixins.jade
       | Show Total
     else
       .header-word Show
-      .active-math-header(onclick= $helpers.headerClicked)
-        .header-word=$helpers.getCurrentMathChoice()
-        svg-icon.math-caret(attributes={icon: 'caret-down'})
+      .active-math-header(on={click: $helpers.headerClicked})
+        .header-word= $helpers.getCurrentMathChoice()
+        svg-icon.math-caret(attrs={icon: 'caret-down'})
   .drop-menu
-    mp-drop-menu(attributes={open: $helpers.isOpen()})
-      .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)
+    mp-drop-menu(attrs={open: $helpers.isOpen()})
+      .new-pane-content(attrs={'slot-body': true})= $component.child(`builder-pane`)

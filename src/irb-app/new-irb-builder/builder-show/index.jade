@@ -1,13 +1,13 @@
 .builder-section.builder-show
   each clause, clauseIdx in report.sections.show.clauses
-    - const attributes = {'clause-index': clauseIdx}
+    - const attrs = {'clause-index': clauseIdx}
     if clauseIdx
       .clause-container
         .clause-language.preposition and
     .clause-container
-      .clause-header= $component.child('query-builder-show-header', {attributes})
+      .clause-header= $component.child('query-builder-show-header', {attrs})
       .clause-body
         if clause.property && $helpers.showSourceForNumericProperties()
-          .control-container= $component.child('builder-numeric-property-edit-control', {attributes})
+          .control-container= $component.child('builder-numeric-property-edit-control', {attrs})
           .clause-language.preposition on
-        .control-container= $component.child('builder-show-edit-control', {attributes})
+        .control-container= $component.child('builder-show-edit-control', {attrs})

@@ -3,5 +3,5 @@ include ../mixins.jade
 .builder-screen.math
   ul.screen-options-list
     each math in $helpers.MATH_TYPES
-      li.list-option(onclick=() => $helpers.mathTypeClicked({math}))
+      li.list-option(on={click: () => $helpers.mathTypeClicked({math})})
         +screen-option(math, {noIcon: true})
