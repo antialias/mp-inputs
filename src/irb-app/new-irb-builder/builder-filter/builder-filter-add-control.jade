@@ -7,8 +7,9 @@
       attrs={placeholder: 'Search'}
     )
     button.add-filter-button(on={click: $helpers.clickedAdd})
-      svg-icon(attrs={icon: open ? 'x' : 'plus'})
-      span.add-filter-label Filter
+      span.button-flex-wrapper
+        svg-icon(attrs={icon: open ? 'x' : 'plus'})
+        span.add-filter-label Filter
   .drop-menu
     mp-drop-menu(attrs={open})
       .new-pane-content(attrs={'slot-body': true})= $component.child(`builder-pane`)
