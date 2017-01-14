@@ -4,11 +4,11 @@
   .add-filter-controls
     input.builder-search-input(
       class={'search-active': open}
-      attributes={placeholder: 'Search'}
+      attrs={placeholder: 'Search'}
     )
-    button.add-filter-button(onclick=$helpers.clickedAdd)
-      svg-icon(attributes={icon: open ? 'x' : 'plus'})
+    button.add-filter-button(on={click: $helpers.clickedAdd})
+      svg-icon(attrs={icon: open ? 'x' : 'plus'})
       span.add-filter-label Filter
   .drop-menu
-    mp-drop-menu(attributes={open})
-      .new-pane-content(attributes={'slot-body': true})= $component.child(`builder-pane`)
+    mp-drop-menu(attrs={open})
+      .new-pane-content(attrs={'slot-body': true})= $component.child(`builder-pane`)

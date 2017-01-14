@@ -6,9 +6,9 @@ include ../mixins.jade
   +screen-title('', {backButton: true})
     button.filter-type-dropdown
       - const icon = util.getIconForPropertyType(clause.filterType)
-      svg-icon(attributes={icon, empty: !icon})
+      svg-icon(attrs={icon, empty: !icon})
       span.filter-prop-name= util.renameProperty(clause.value)
-      svg-icon(attributes={icon: 'caret-down'})
+      svg-icon(attrs={icon: 'caret-down'})
       //- TODO throw a drop menu in here
 
   p Some content
