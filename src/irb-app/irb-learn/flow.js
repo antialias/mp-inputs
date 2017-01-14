@@ -3,19 +3,17 @@ import { ShowClause, GroupClause } from '../../models/clause';
 export default class LearnFlow {
   constructor(attrs) {
     this.app = attrs.app;
-    this.stepIndex = attrs.step;
+    this.numModalsViewed = 1;
     this.steps = [{
       name: `introduction`,
-      cls: `irb-learn-modal`,
-      condition: () => this.stepIndex === 0,
+      condition: () => this.numModalsViewed === 1,
     }, {
       name: `getting-started`,
-      cls: `irb-learn-modal`,
-      condition: () => this.stepIndex === 1,
+      condition: () => this.numModalsViewed === 2,
     }, {
       name: `choose-event`,
       cls: `irb-learn-choose-event`,
-      condition: () => this.stepIndex === 2,
+      condition: () => this.numModalsViewed === 3,
     }, {
       name: `compare-event`,
       cls: `irb-learn-compare-event`,
@@ -30,13 +28,20 @@ export default class LearnFlow {
       condition: () => this.getGroupClauseProperties().length === 1,
     }, {
       name: `conclusion`,
-      cls: `irb-learn-modal`,
-      condition: () => this.stepIndex === 6,
+      condition: () => (
+        this.app.state.report.displayOptions.chartType !== `bar` ||
+        this.app.state.report.displayOptions.value !== `absolute`
+      ),
     }];
   }
 
   get step() {
     return [...this.steps].reverse().find(step => step.condition());
+  }
+
+  get stepIndex() {
+    const currentStep = this.step;
+    return this.steps.findIndex(step => step.name === currentStep.name);
   }
 
   getShowClauseEvents() {

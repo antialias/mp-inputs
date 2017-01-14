@@ -1,9 +1,57 @@
 @import "../../stylesheets/common"
 
-.irb-app.irb-learn
-  color: red
-  //&.irb-learn-modal
-  //&.irb-learn-choose-event
-  //&.irb-learn-compare-event
-  //&.irb-learn-group-by
-  //&.irb-learn-manipulate-data
+.irb-app.irb-learn-active
+
+  &.irb-learn-choose-event
+    .irb-header,
+    .builder-section:not(.builder-show),
+    .builder-section.builder-show .builder-screen.sources .list-option:not(:first-child),
+    .builder-section.builder-show .builder-screen.events .builder-label,
+    .builder-section.builder-show .builder-screen.events .option-secondary-action,
+    .builder-section.builder-show .builder-screen.events .screen-options-list:not(:last-child),
+    .builder-container,
+    .reset-query,
+    .irb-result
+      opacity 0.5
+      pointer-events none
+
+  &.irb-learn-compare-event
+    .irb-header,
+    .builder-section:not(.builder-show),
+    .builder-section.builder-show .builder-screen.sources .list-option:not(:first-child),
+    .builder-section.builder-show .builder-screen.events .builder-label,
+    .builder-section.builder-show .builder-screen.events .option-secondary-action,
+    .builder-section.builder-show .builder-screen.events .screen-options-list:not(:last-child),
+    .builder-container.contextual-menu .builder-screen.sources .list-option:not(:last-child),
+    .builder-container.contextual-menu .builder-screen.events .builder-label,
+    .builder-container.contextual-menu .builder-screen.events .option-secondary-action,
+    .builder-container.contextual-menu .builder-screen.events .screen-options-list:not(:last-child),
+    .reset-query,
+    .irb-result
+      opacity 0.5
+      pointer-events none
+
+  &.irb-learn-group-by
+    .irb-header,
+    .builder-section:not(.builder-show),
+    .builder-section.builder-show .builder-screen.sources .list-option:not(:first-child),
+    .builder-section.builder-show .builder-screen.events .builder-label,
+    .builder-section.builder-show .builder-screen.events .option-secondary-action,
+    .builder-section.builder-show .builder-screen.events .screen-options-list:not(:last-child),
+    .builder-container.contextual-menu .builder-screen.sources .list-option:not(:first-child),
+    .builder-container.contextual-menu .builder-screen.properties .builder-label,
+    .builder-container.contextual-menu .builder-screen.properties .option-secondary-action,
+    .builder-container.contextual-menu .builder-screen.properties .screen-options-list:not(:last-child),
+    .reset-query,
+    .irb-result
+      opacity 0.5
+      pointer-events none
+
+  &.irb-learn-manipulate-data
+    .irb-header,
+    .new-irb-builder,
+    .irb-result .bar-chart-header,
+    .irb-result .legend,
+    .irb-result tbody
+      opacity 0.5
+      pointer-events none

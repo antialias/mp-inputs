@@ -95,7 +95,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
       learn: (stateUpdate={}) => {
         return extend(stateUpdate, this.resetQuery(), {
-          learnFlow: new LearnFlow({app: this, step: 0}),
+          learnFlow: new LearnFlow({app: this}),
         });
       },
     });

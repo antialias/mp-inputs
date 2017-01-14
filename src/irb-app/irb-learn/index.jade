@@ -1,16 +1,77 @@
+mixin tutorial-tooltip(options)
+  mp-tutorial-tooltip(attributes={
+    open: true,
+    left: 800,
+    top: 100,
+    numSteps: 4,
+    currStep: learnFlow.stepIndex - 2,
+  })
+    .mp-tooltip-content
+      .mp-tooltip-title= options.title
+      .mp-tooltip-subtitle= options.subtitle
+
 .irb-learn
   case learnFlow.step.name
+
     when `introduction`
-      span test modal introduction
+      mp-modal(attributes={open: true})
+        .mp-modal-content
+          .mp-modal-title
+            | Introducing Inquiry
+          .mp-modal-subtitle
+            | Inquiry is a robust and flexible natural language analytics tool that lets you query your data in ways never before possible.
+        mp-button-bar.mp-button-bar-primary(
+          onclick=$helpers.clickedNext
+        ) Next
+
     when `getting-started`
-      span test modal getting-started
+      mp-modal(attributes={open: true})
+        .mp-modal-content
+          .mp-modal-title
+            | Constructing an Inquiry query
+          .mp-modal-subtitle
+            | We built Atlas to make
+            span.code counting
+            | your events, properties, and users easier than ever. It also has powerful
+            span.code compare
+            | and
+            span.code group by
+            | functions.
+        mp-button-bar.mp-button-bar-primary(
+          onclick=$helpers.clickedNext
+        ) Let's get started
+
     when `choose-event`
-      span test modal choose-event
+      +tutorial-tooltip({
+        title: "Let's start by choosing an event",
+        subtitle: "The Show Menu lets you specify a dataset to measure, like an event for instance.",
+      })
+
     when `compare-event`
-      span test modal compare-event
+      +tutorial-tooltip({
+        title: "Next, let's compare it to another event",
+        subtitle: "The modifier button gives you different options based on the dataset that you select.",
+      })
+
     when `group-by`
-      span test modal group-by
+      +tutorial-tooltip({
+        title: "Now let's add a group by function",
+        subtitle: "The Group By function in Inquiry lets you look at different segments of your datasets.",
+      })
+
     when `manipulate-data`
-      span test modal manipulate-data
+      +tutorial-tooltip({
+        title: "Manipulate your data",
+        subtitle: "Choose a different chart, analysis, and value types really get a handle on your data.",
+      })
+
     when `conclusion`
-      span test modal conclusion
+      mp-modal(attributes={open: true})
+        .mp-modal-content
+          .mp-modal-title
+            | You've built your first Inquiry query
+          .mp-modal-subtitle
+            | You can save it, export it, add it to your dashboard, and even filter your results. Click the button below to start exploring Inquiry's powers on your own.
+        mp-button-bar.mp-button-bar-primary(
+          onclick=$helpers.clickedFinish
+        ) Explore Inquiry on your own

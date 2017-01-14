@@ -1,7 +1,9 @@
+- const learnClass = learnFlow && learnFlow.step.cls;
+
 .irb-app(class={
   'error-no-project-data': !projectHasEvents,
-  'irb-learn': !!learnFlow,
-  [learnFlow.step.cls]: !!learnFlow,
+  'irb-learn-active': !!learnFlow,
+  [learnClass]: !!learnClass,
 })
   if learnFlow
     = $component.child('irb-learn')
