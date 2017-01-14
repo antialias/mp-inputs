@@ -25,8 +25,9 @@ ul.toggle-view
                     click: () => $helpers.onAnalysisClick(analysis),
                   }
                 )
-                  svg-icon(attrs={icon: `analysis-${analysis}`})
-                  = analysis
+                  span.button-flex-wrapper
+                    svg-icon(attrs={icon: `analysis-${analysis}`})
+                    = analysis
         .value.section
           .title(class={disabled: $helpers.isValueToggleDisabled()}) value
           ul
@@ -42,5 +43,6 @@ ul.toggle-view
                     click: () => $helpers.onValueClick(value),
                   }
                 )
-                  svg-icon(attrs={icon: `value-${value}`})
-                  = value
+                  span.button-flex-wrapper
+                    svg-icon(attrs={icon: `value-${value}`})
+                    = value
