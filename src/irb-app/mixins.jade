@@ -1,3 +1,9 @@
+mixin checkbox-item(label, value, selected, toggleFunc)
+  li.checkbox-item(on={click: () => toggleFunc(value)})
+    .checkbox-select-icon
+      svg-icon(attrs={icon: 'check-checkbox', empty: !selected})
+    .checkbox-label= label
+
 mixin checkbox-select-all(allSelected, toggleFunc)
   li.checkbox-item.checkbox-select-all(on={click: toggleFunc})
     .checkbox-select-icon(class={'checkbox-dash': !allSelected})

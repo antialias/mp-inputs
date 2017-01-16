@@ -39,13 +39,22 @@ mixin filter-dropdown(name, title, icon)
     case clause.filterType
 
       when 'string'
-        p Do some kind of string filtering!
         case clause.filterOperator
           when 'equals'
           when 'does not equal'
             //- TODO search goes here
             ol.filter-string-equals-choices
-              +checkbox-select-all(allFilterValuesSelected, $helpers.toggleAllFilterValues)
+              +checkbox-select-all(
+                $helpers.allEqualsValuesSelected(),
+                $helpers.toggleAllFilterValues
+              )
+              each value in $helpers.getEqualsMatches()
+                +checkbox-item(
+                  util.renamePropertyValue(value),
+                  value,
+                  clause.filterValue && clause.filterValue.indexOf(value) !== -1,
+                  $helpers.toggleStringEqualsValueSelected
+                )
 
       default
         p this is #{clause.filterType}
