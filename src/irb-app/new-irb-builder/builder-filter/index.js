@@ -3,7 +3,7 @@ import { Component } from 'panel';
 import { FilterClause } from '../../../models/clause';
 
 import './builder-filter-add-control';
-// TODO import './builder-filter-edit-control';
+import './builder-filter-edit-control';
 import './builder-screen-filter-property';
 import './builder-screen-filter-properties-list';
 
