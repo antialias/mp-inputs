@@ -55,7 +55,7 @@ document.registerElement(`builder-filter-edit-control`, class extends EditContro
       }
     });
 
-    return [property, operator, ...propertyValue].join(` `);
+    return [property, operator, ...propertyValue];
   }
 
   openPane() {

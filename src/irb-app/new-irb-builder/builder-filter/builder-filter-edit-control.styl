@@ -2,6 +2,20 @@
 
 builder-filter-edit-control
   .control-container .irb-new-control.new-query-builder
-    .edit-control button.control-label
-      border-bottom none
-      color grey-700
+    .edit-control
+      margin-right 12px
+
+      button.control-label
+        border-bottom none
+        color grey-700
+        font-size 14px
+
+        .edit-label-part
+          margin-right 4px
+          &:nth-child(odd)
+            color grey-700
+          &:nth-child(even)
+            color grey-500
+
+      button.remove
+        right 6px
