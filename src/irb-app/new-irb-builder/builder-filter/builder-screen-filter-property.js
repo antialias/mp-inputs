@@ -22,6 +22,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           icon: getIconForPropertyType(name),
         })),
 
+        // screen/type selection
         chooseFilterOperator: filterOperator => {
           this.config.helpers.updateMenu(`operator`, false);
           this.app.updateStageClause({filterOperator});
@@ -32,6 +33,14 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
         },
         filterOperators: filterType => FilterClause.FILTER_OPERATORS[filterType],
         getActiveClause: () => this.app.hasStageClause() ? this.app.activeStageClause : {},
+
+        // dropdowns
+        isMenuOpen: menu => {
+          const currentScreen = this.app.getBuilderCurrentScreen();
+          return !!currentScreen && !!currentScreen[`${menu}MenuOpen`];
+        },
+        toggleMenu: menu => this.config.helpers.updateMenu(menu, !this.config.helpers.isMenuOpen(menu)),
+        updateMenu: (menu, open) => this.app.updateBuilderCurrentScreen({[`${menu}MenuOpen`]: open}),
 
         // filter content selection
         allEqualsValuesSelected: () => false,
@@ -53,14 +62,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
 
           this.app.updateStageClause({filterValue});
         },
-
-        // dropdowns
-        isMenuOpen: menu => {
-          const currentScreen = this.app.getBuilderCurrentScreen();
-          return !!currentScreen && !!currentScreen[`${menu}MenuOpen`];
-        },
-        toggleMenu: menu => this.config.helpers.updateMenu(menu, !this.config.helpers.isMenuOpen(menu)),
-        updateMenu: (menu, open) => this.app.updateBuilderCurrentScreen({[`${menu}MenuOpen`]: open}),
+        commitFilter: () => this.updateAndCommitStageClause({}),
       }),
     };
   }

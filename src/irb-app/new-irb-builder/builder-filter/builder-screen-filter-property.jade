@@ -59,4 +59,4 @@ mixin filter-dropdown(name, title, icon)
       default
         p this is #{clause.filterType}
 
-  +screen-footer-button('Add filter')
+  +screen-footer-button('Add filter', {onclick: $helpers.commitFilter})
