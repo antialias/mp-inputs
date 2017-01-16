@@ -3,17 +3,17 @@ import { ShowClause, GroupClause } from '../../models/clause';
 export default class LearnFlow {
   constructor(attrs) {
     this.app = attrs.app;
-    this.numModalsViewed = 1;
+    this.modalsSeen = 1;
     this.steps = [{
       name: `introduction`,
-      condition: () => this.numModalsViewed === 1,
+      condition: () => this.modalsSeen === 1,
     }, {
       name: `getting-started`,
-      condition: () => this.numModalsViewed === 2,
+      condition: () => this.modalsSeen === 2,
     }, {
       name: `choose-event`,
       cls: `irb-learn-choose-event`,
-      condition: () => this.numModalsViewed === 3,
+      condition: () => this.modalsSeen === 3,
     }, {
       name: `compare-event`,
       cls: `irb-learn-compare-event`,

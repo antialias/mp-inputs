@@ -11,7 +11,7 @@ document.registerElement(`irb-learn`, class extends Component {
       helpers: {
         clickedNext: () => this.app.update({
           learnFlow: Object.assign(this.state.learnFlow, {
-            numModalsViewed: this.state.learnFlow.numModalsViewed + 1,
+            modalsSeen: this.state.learnFlow.modalsSeen + 1,
           }),
         }),
         clickedFinish: () => {
