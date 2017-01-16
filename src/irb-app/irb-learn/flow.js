@@ -36,12 +36,13 @@ export default class LearnFlow {
   }
 
   get step() {
-    return [...this.steps].reverse().find(step => step.condition());
+    return this.steps[this.stepIndex];
   }
 
   get stepIndex() {
-    const currentStep = this.step;
-    return this.steps.findIndex(step => step.name === currentStep.name);
+    return this.steps.length - 1 - (
+      [...this.steps].reverse().findIndex(step => step.condition())
+    );
   }
 
   getShowClauseEvents() {
