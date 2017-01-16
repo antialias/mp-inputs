@@ -1,5 +1,5 @@
 mixin tutorial-tooltip(options)
-  mp-tutorial-tooltip(attributes={
+  mp-tutorial-tooltip(props={
     open: true,
     left: 800,
     top: 100,
@@ -14,18 +14,18 @@ mixin tutorial-tooltip(options)
   case learnFlow.step.name
 
     when `introduction`
-      mp-modal(attributes={open: true})
+      mp-modal(props={open: true})
         .mp-modal-content
           .mp-modal-title
             | Introducing Inquiry
           .mp-modal-subtitle
             | Inquiry is a robust and flexible natural language analytics tool that lets you query your data in ways never before possible.
-        mp-button-bar.mp-button-bar-primary(
-          onclick=$helpers.clickedNext
-        ) Next
+        mp-button-bar.mp-button-bar-primary(on={
+          click: $helpers.clickedNext,
+        }) Next
 
     when `getting-started`
-      mp-modal(attributes={open: true})
+      mp-modal(props={open: true})
         .mp-modal-content
           .mp-modal-title
             | Constructing an Inquiry query
@@ -37,9 +37,9 @@ mixin tutorial-tooltip(options)
             | and
             span.code group by
             | functions.
-        mp-button-bar.mp-button-bar-primary(
-          onclick=$helpers.clickedNext
-        ) Let's get started
+        mp-button-bar.mp-button-bar-primary(on={
+          click: $helpers.clickedNext,
+        }) Let's get started
 
     when `choose-event`
       +tutorial-tooltip({
@@ -66,12 +66,12 @@ mixin tutorial-tooltip(options)
       })
 
     when `conclusion`
-      mp-modal(attributes={open: true})
+      mp-modal(props={open: true})
         .mp-modal-content
           .mp-modal-title
             | You've built your first Inquiry query
           .mp-modal-subtitle
             | You can save it, export it, add it to your dashboard, and even filter your results. Click the button below to start exploring Inquiry's powers on your own.
-        mp-button-bar.mp-button-bar-primary(
-          onclick=$helpers.clickedFinish
-        ) Explore Inquiry on your own
+        mp-button-bar.mp-button-bar-primary(on={
+          click: $helpers.clickedFinish,
+        }) Explore Inquiry on your own
