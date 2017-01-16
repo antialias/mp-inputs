@@ -1,3 +1,4 @@
+include ../../mixins.jade
 include ../mixins.jade
 
 mixin filter-dropdown(name, title, icon)
@@ -39,6 +40,12 @@ mixin filter-dropdown(name, title, icon)
 
       when 'string'
         p Do some kind of string filtering!
+        case clause.filterOperator
+          when 'equals'
+          when 'does not equal'
+            //- TODO search goes here
+            ol.filter-string-equals-choices
+              +checkbox-select-all(allFilterValuesSelected, $helpers.toggleAllFilterValues)
 
       default
         p this is #{clause.filterType}

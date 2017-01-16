@@ -17,7 +17,7 @@ label-line-height = 18px
   .has-results
     flex-grow 1
 
-    .select-all
+    .checkbox-select-all
       margin-top 5px
 
   .header
@@ -158,34 +158,10 @@ label-line-height = 18px
     .no-result
       padding 0 30px
 
-    button
-      align-items flex-start
-      background none
-      border none
-      display flex
-      padding 6px 0 6px legend-left-padding
-      width 100%
+    .checkbox-item
+      padding-left legend-left-padding
 
-      .select-icon
-        background-color #fff
-        border 1px solid border-gray
-        border-radius 3px
-        box-sizing border-box
-        flex 0 0 label-line-height
-        height label-line-height
-        margin-right 11px
-        svg-icon-style(grey-900, pos-left: -11px, pos-top: -2px)
-        svg-icon
-          position absolute
-        &.color
-          svg-icon-style(#fff, pos-left: -11px, pos-top: -2px)
-
-      .label
-        color #858ea4
-        font 500 12px font-helvetica-neue
-        line-height label-line-height
-        text-align left
-
+      .checkbox-label
         .flattened-segment
           line-height label-line-height
 
@@ -216,7 +192,7 @@ label-line-height = 18px
         .label
           transform rotate(0)
 
-        .select-icon
+        .checkbox-select-icon
           &:before
             display inline-block
 

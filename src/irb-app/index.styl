@@ -10,6 +10,45 @@
   box-shadow 0px 1px 1.8px 0.2px rgba(69, 81, 113, 0.15)
   margin 20px
 
+.button-flex-wrapper
+  align-items center
+  display flex
+
+
+// styles for mixins.jade
+
+$checkbox-label-line-height = 18px
+
+.checkbox-item
+  align-items flex-start
+  cursor pointer
+  display flex
+  padding 6px 0
+  width 100%
+
+  .checkbox-select-icon
+    background-color #fff
+    border 1px solid border-gray
+    border-radius 3px
+    box-sizing border-box
+    flex 0 0 $checkbox-label-line-height
+    height $checkbox-label-line-height
+    margin-right 11px
+    svg-icon-style(grey-900, pos-left: -5px, pos-top: -4px)
+    svg-icon
+      position absolute
+    &.color
+      svg-icon-style(#fff, pos-left: -5px, pos-top: -4px)
+    &.checkbox-dash
+      svg-icon-style(grey-900, pos-left: -3px, pos-top: -3px)
+
+  .checkbox-label
+    color grey-700
+    font 500 12px font-helvetica-neue
+    line-height $checkbox-label-line-height
+    text-align left
+
+
 .irb-tabs
   display flex
 

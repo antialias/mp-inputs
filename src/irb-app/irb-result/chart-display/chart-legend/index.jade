@@ -39,59 +39,50 @@ include ../../../mixins.jade
           ul.series-values
             if isSeriesShowing
               if !isSearchActive
-                li
-                  - const allSelected = $helpers.allSeriesSelected(seriesIdx)
-                  button.select-all(
-                    class={showing: allSelected}
-                    on={click: () => $helpers.toggleAllSeriesValue(seriesIdx)}
-                  )
-                    .select-icon.select-all-icon
-                      svg-icon(attrs={icon: allSelected ? 'check-checkbox' : 'dash'})
-                    .label Select all
+                +checkbox-select-all($helpers.allSeriesSelected(seriesIdx), () => $helpers.toggleAllSeriesValue(seriesIdx))
               if !series.seriesValues.length
                 .no-result= 'No results'
               each value in series.seriesValues
                 - const showing = $helpers.isSeriesValueShowing(seriesIdx, value.originalValue)
-                li
-                  button.series(
-                    class={
-                      'is-event': series.seriesName === '$event',
-                      showing,
-                    }
-                    on={
-                      click: () => $helpers.toggleShowSeriesValue(seriesIdx, value.originalValue),
-                    }
-                  )
-                    .select-icon.series-icon(class={
-                      color: seriesIdx === 0 && isMultiColor,
-                      [`segment-color-${report.legend.getColorForSeries(value.originalValue, isFlattenedData)}`]: showing && seriesIdx === 0,
-                    })
-                      svg-icon(attrs={icon: 'check-checkbox', empty: !showing})
-                    if isFlattenedData
-                      - const dataTitle = value.formattedText.join(' / ');
-                      if isSearchActive
-                        .label.search-result(attrs={title: dataTitle})
-                          each match in value.matches
-                            .flattened-segment
-                              +highlight-matches(match)
-                      else
-                        .label(attrs={title: dataTitle})
-                          each text in value.formattedText
-                            .flattened-segment= text
+                li.checkbox-item.series(
+                  class={
+                    'is-event': series.seriesName === '$event',
+                    showing,
+                  }
+                  on={
+                    click: () => $helpers.toggleShowSeriesValue(seriesIdx, value.originalValue),
+                  }
+                )
+                  .checkbox-select-icon.series-icon(class={
+                    color: seriesIdx === 0 && isMultiColor,
+                    [`segment-color-${report.legend.getColorForSeries(value.originalValue, isFlattenedData)}`]: showing && seriesIdx === 0,
+                  })
+                    svg-icon(attrs={icon: 'check-checkbox', empty: !showing})
+                  if isFlattenedData
+                    - const dataTitle = value.formattedText.join(' / ');
+                    if isSearchActive
+                      .checkbox-label.search-result(attrs={title: dataTitle})
+                        each match in value.matches
+                          .flattened-segment
+                            +highlight-matches(match)
                     else
-                      if isSearchActive
-                        .label.search-result(attrs={title: value.formattedText})
-                          +highlight-matches(value.matches)
-                      else
-                        .label(attrs={title: value.formattedText})= value.formattedText
-                      .delete-wrapper
-                        .delete-icon
-                          svg-icon(
-                            attrs={icon: 'x'}
-                            on={
-                              click: ev => $helpers.deleteToFilter(ev, seriesIdx, value.originalValue),
-                            }
-                          )
+                      .checkbox-label(attrs={title: dataTitle})
+                        each text in value.formattedText
+                          .flattened-segment= text
+                  else
+                    if isSearchActive
+                      .checkbox-label.search-result(attrs={title: value.formattedText})
+                        +highlight-matches(value.matches)
+                    else
+                      .checkbox-label(attrs={title: value.formattedText})= value.formattedText
+                    .delete-wrapper
+                      .delete-icon
+                        svg-icon(
+                          attrs={icon: 'x'}
+                          on={
+                            click: ev => $helpers.deleteToFilter(ev, seriesIdx, value.originalValue),
+                          }
+                        )
           if isSeriesShowing && seriesDisplayLabel
             .display-option(on={
               click: () => report.legend.toggleSeriesDisplaySetting(seriesIdx),
