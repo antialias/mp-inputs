@@ -12,7 +12,7 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
         RANGES: TimeClause.RANGES,
         RANGE_LIST: TimeClause.RANGE_LIST,
         isRangeSelected: range => {
-          const selectedRange = this.config.helpers.getStageClauseAttr(`range`);
+          const selectedRange = this.helpers.getStageClauseAttr(`range`);
           return range === selectedRange || (
             !selectedRange && range === TimeClause.RANGES.CUSTOM
           );

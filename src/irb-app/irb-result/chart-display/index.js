@@ -45,7 +45,7 @@ document.registerElement(`chart-display`, class extends Component {
             chartLabel.unshift(mathTypes[0]);
           }
 
-          const showValueNames = this.config.helpers.getShowValueNames();
+          const showValueNames = this.helpers.getShowValueNames();
           const headers = this.state.result.headers;
           if (headers.length === 1 && ![`$event`, `$people`].includes(headers[0]) && showValueNames.length === 1) {
             chartLabel.push(showValueNames[0]);
@@ -58,7 +58,7 @@ document.registerElement(`chart-display`, class extends Component {
           {timeUnit: this.state.report.sections.time.clauses[0].unit}
         ),
         getFunctionLabel: () => {
-          switch (this.config.helpers.getDisplayOptions().analysis) {
+          switch (this.helpers.getDisplayOptions().analysis) {
             case `logarithmic`:
               return `(Logarithmic - base 10)`;
             case `cumulative`:
@@ -99,7 +99,7 @@ document.registerElement(`chart-display`, class extends Component {
             windowSize: ROLLING_WINDOWS_BY_UNIT[this.state.report.sections.time.clauses[0].unit],
           });
           const isFlattenedData = this.state.report.displayOptions.chartType === `line`;
-          if (this.config.helpers.showLegend()) {
+          if (this.helpers.showLegend()) {
             const legend = this.state.report.legend;
             result.series = filterObject(result.series, (value, depth, parentKeys) => {
               if (isFlattenedData) {
@@ -215,7 +215,7 @@ document.registerElement(`chart-display`, class extends Component {
         legendRevision: state.report.legend.revisionStr,
         resultID: state.result.id,
         resultLoading: state.resultLoading,
-        showLegend: this.config.helpers.showLegend(state),
+        showLegend: this.helpers.showLegend(state),
         sortConfig: cloneDeep(state.report.sorting),
         windowSize: ROLLING_WINDOWS_BY_UNIT[state.report.sections.time.clauses[0].unit],
       };

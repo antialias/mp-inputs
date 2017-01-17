@@ -24,11 +24,11 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
 
         // screen/type selection
         chooseFilterOperator: filterOperator => {
-          this.config.helpers.updateMenu(`operator`, false);
+          this.helpers.updateMenu(`operator`, false);
           this.app.updateStageClause({filterOperator});
         },
         chooseFilterType: filterType => {
-          this.config.helpers.updateMenu(`type`, false);
+          this.helpers.updateMenu(`type`, false);
           this.app.updateStageClause({filterType});
         },
         filterOperators: filterType => FilterClause.FILTER_OPERATORS[filterType],
@@ -40,19 +40,19 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           return !!currentScreen && !!currentScreen[`${menu}MenuOpen`];
         },
         menuChange: (ev, menu) => // check for close
-          ev.detail && ev.detail.state === `closed` && this.config.helpers.updateMenu(menu, false),
-        toggleMenu: menu => this.config.helpers.updateMenu(menu, !this.config.helpers.isMenuOpen(menu)),
+          ev.detail && ev.detail.state === `closed` && this.helpers.updateMenu(menu, false),
+        toggleMenu: menu => this.helpers.updateMenu(menu, !this.helpers.isMenuOpen(menu)),
         updateMenu: (menu, open) => this.app.updateBuilderCurrentScreen({[`${menu}MenuOpen`]: open}),
 
         // filter content selection
         allEqualsValuesSelected: () => false, // TODO implement me!
         getContainsMatches: () =>
-          this.getConfig(`helpers`).getValueMatches(
+          this.helpers.getValueMatches(
             this.app.activeStageClause.filterValue,
             this.app.activeStageClause.filterOperator === `does not contain`
           ),
         getEqualsMatches: () =>
-          this.getConfig(`helpers`).getValueMatches(this.app.activeStageClause.filterSearch),
+          this.helpers.getValueMatches(this.app.activeStageClause.filterSearch),
         getValueMatches: (string, invert) =>
           this.state.topPropertyValues
             .filter(value => !string || renamePropertyValue(value).toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert),

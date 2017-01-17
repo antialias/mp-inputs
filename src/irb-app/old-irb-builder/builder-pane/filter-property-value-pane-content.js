@@ -24,7 +24,7 @@ document.registerElement(`filter-property-value-pane-content`, class extends Pan
       helpers: extend(super.config.helpers, {
         getDoneLabel: () => this.app.isAddingClause() ? `Add` : `Update`,
         getEqualsMatches: () =>
-          this.config.helpers.getValueMatches(this.app.activeStageClause.filterSearch),
+          this.helpers.getValueMatches(this.app.activeStageClause.filterSearch),
         getValueMatches: (string, invert) =>
           this.state.topPropertyValues
             .filter(value => !string || renamePropertyValue(value).toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert),

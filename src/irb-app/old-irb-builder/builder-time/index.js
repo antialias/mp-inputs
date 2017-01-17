@@ -85,7 +85,7 @@ document.registerElement(`time-pane-content`, class extends PaneContent {
 
       helpers: extend(super.config.helpers, {
         isRangeSelected: range => {
-          const selectedRange = this.config.helpers.getActiveClauseProperty(`range`);
+          const selectedRange = this.helpers.getActiveClauseProperty(`range`);
           return range === selectedRange || (!selectedRange && range === this.constants.customRange);
         },
         selectTimeRange: range => {
@@ -123,8 +123,8 @@ document.registerElement(`custom-date-pane-content`, class extends PaneContent {
         selectUnit: unit => this.app.updateStageClause({unit, paneIndex: 1}),
         selectDateRange: ev => {
           if (ev.detail) {
-            let unit = this.config.helpers.getActiveClauseProperty(`unit`);
-            const currentVal = this.config.helpers.getActiveClauseProperty(`value`);
+            let unit = this.helpers.getActiveClauseProperty(`unit`);
+            const currentVal = this.helpers.getActiveClauseProperty(`value`);
             if (
               !Array.isArray(currentVal) ||
               currentVal[0] !== ev.detail[0] ||

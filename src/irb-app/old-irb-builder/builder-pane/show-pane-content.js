@@ -37,7 +37,7 @@ document.registerElement(`show-pane-content`, class extends PaneContent {
           if (property.name === ShowClause.ALL_PEOPLE.name) {
             this.app.commitStageClause();
           } else {
-            this.config.helpers.updateStageClause({value: ShowClause.ALL_EVENTS}, true);
+            this.helpers.updateStageClause({value: ShowClause.ALL_EVENTS}, true);
           }
         },
       }),

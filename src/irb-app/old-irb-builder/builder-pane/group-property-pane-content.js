@@ -21,7 +21,7 @@ document.registerElement(`group-property-pane-content`, class extends PaneConten
           const resourceType = property.resourceType;
           const value = property.name;
 
-          this.config.helpers.updateStageClause({filterType, resourceType, value}, shouldClosePane);
+          this.helpers.updateStageClause({filterType, resourceType, value}, shouldClosePane);
 
           // when a property is selected, switch to the property value inner pane
           // - requestAnimationFrame allows the add pane to be re-rendered as an
@@ -40,9 +40,9 @@ document.registerElement(`group-property-pane-content`, class extends PaneConten
         },
         onPropertyArrowClick: (ev, property) => {
           ev.stopPropagation();
-          this.config.helpers.paneHandler(property, false);
+          this.helpers.paneHandler(property, false);
         },
-        selectProperty: property => this.config.helpers.paneHandler(property, this.app.originStageClauseType() !== `filter`),
+        selectProperty: property => this.helpers.paneHandler(property, this.app.originStageClauseType() !== `filter`),
         topProperties: () => {
           switch (this.state.resourceTypeFilter) {
             case `events`:

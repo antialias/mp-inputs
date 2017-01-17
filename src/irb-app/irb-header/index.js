@@ -39,7 +39,7 @@ document.registerElement(`irb-header`, class extends Component {
           }
         },
         clickReportList: () => {
-          if (this.config.helpers.reportListEnabled()) {
+          if (this.helpers.reportListEnabled()) {
             this.app.openReportList();
           }
         },

@@ -49,11 +49,11 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
             }
           }
         },
-        changedFrom: ev => this.config.helpers.changedDates({detail: {
+        changedFrom: ev => this.helpers.changedDates({detail: {
           from: ev.detail,
           to: this.getDates().to,
         }}),
-        changedTo: ev => this.config.helpers.changedDates({detail: {
+        changedTo: ev => this.helpers.changedDates({detail: {
           from: this.getDates().from,
           to: ev.detail,
         }}),
@@ -65,7 +65,7 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
   }
 
   getDates() {
-    const value = this.config.helpers.getStageClauseAttr(`value`);
+    const value = this.helpers.getStageClauseAttr(`value`);
     let from = null;
     let to = null;
 
@@ -94,7 +94,7 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
   }
 
   relativeToAbsoluteDate(relativeDateInt) {
-    const unit = this.config.helpers.getStageClauseAttr(`unit`);
+    const unit = this.helpers.getStageClauseAttr(`unit`);
     return new Date(moment().subtract(relativeDateInt, `${unit}s`));
   }
 });

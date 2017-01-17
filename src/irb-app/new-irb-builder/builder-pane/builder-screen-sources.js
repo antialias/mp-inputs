@@ -28,8 +28,8 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
             list: this.allMatchingEvents(),
             resourceType: `event`,
             itemOptions: {
-              clickedEvent: this.config.helpers.clickedEvent,
-              clickedEventProperties: this.config.helpers.clickedEventProperties,
+              clickedEvent: this.helpers.clickedEvent,
+              clickedEventProperties: this.helpers.clickedEventProperties,
               showPill: true,
             },
           },
