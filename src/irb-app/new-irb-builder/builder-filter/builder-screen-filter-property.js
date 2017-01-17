@@ -45,7 +45,12 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
         updateMenu: (menu, open) => this.app.updateBuilderCurrentScreen({[`${menu}MenuOpen`]: open}),
 
         // filter content selection
-        allEqualsValuesSelected: () => false,
+        allEqualsValuesSelected: () => false, // TODO implement me!
+        getContainsMatches: () =>
+          this.getConfig(`helpers`).getValueMatches(
+            this.app.activeStageClause.filterValue,
+            this.app.activeStageClause.filterOperator === `does not contain`
+          ),
         getEqualsMatches: () =>
           this.getConfig(`helpers`).getValueMatches(this.app.activeStageClause.filterSearch),
         getValueMatches: (string, invert) =>
@@ -64,6 +69,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
 
           this.app.updateStageClause({filterValue});
         },
+        updateFilterString: ev => this.app.updateStageClause({filterValue: ev.target.value}),
         commitFilter: () => this.updateAndCommitStageClause({}),
       }),
     };

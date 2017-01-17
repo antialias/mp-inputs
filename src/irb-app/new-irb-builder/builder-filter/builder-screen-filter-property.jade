@@ -41,10 +41,10 @@ mixin filter-dropdown(name, title, icon)
 
     case clause.filterType
 
-      when 'string'
+      when `string`
         case clause.filterOperator
-          when 'equals'
-          when 'does not equal'
+          when `equals`
+          when `does not equal`
             //- TODO search goes here
             ol.filter-string-equals-choices
               +checkbox-select-all(
@@ -58,6 +58,23 @@ mixin filter-dropdown(name, title, icon)
                   clause.filterValue && clause.filterValue.indexOf(value) !== -1,
                   $helpers.toggleStringEqualsValueSelected
                 )
+
+          when `contains`
+          when `does not contain`
+            input.filter-string-input(
+              props={
+                autoFocus: true,
+                focusDelay: 200,
+                type: 'text',
+                value: clause.filterValue,
+              }
+              on={
+                input: $helpers.updateFilterString,
+              }
+            )
+            ol.filter-string-contains-choices
+              each value in $helpers.getContainsMatches()
+                li.string-contains-match= value
 
       default
         p this is #{clause.filterType}
