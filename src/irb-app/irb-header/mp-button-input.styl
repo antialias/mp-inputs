@@ -9,15 +9,15 @@ active-input()
   outline none
 
 mp-button-input
-  display inline-block
+  height button-height
   position relative
 
   .mp-button-input
-    width 310px
+    display flex
     &:hover input
       active-input()
 
-  .disabled-input, input[type=text]
+  .disabled-input, input[type=text], span.mp-name-input-dummy
     background-color inherit
     border 1px solid transparent
     border-radius border-curve
@@ -27,7 +27,6 @@ mp-button-input
     height button-height
     outline none
     padding 0 20px
-    width 270px
 
   .disabled-input
     line-height button-height
@@ -36,9 +35,9 @@ mp-button-input
     &:focus, &:hover
       active-input()
     &.active
+      border-radius border-curve 0 0 border-curve
       border-right none
       padding-right 10px
-      width 208px
 
   button.input-button
     background-image linear-gradient(to top, blue-300, blue-100), linear-gradient(blue-300, blue-300)
@@ -46,13 +45,10 @@ mp-button-input
     border-radius 0 border-curve border-curve 0
     color #fff
     cursor text
+    font-size 14px
     font-weight bold
-    height 38px
+    height button-height
     opacity 0
-    position absolute
-    right 0
-    text-transform uppercase
-    top 0
     transition opacity 0.3s
     width 72px
     &.active

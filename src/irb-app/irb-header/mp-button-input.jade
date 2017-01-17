@@ -3,12 +3,14 @@
     input(
       class={active}
       props={
-        maxLength: 50,
+        maxLength: 80,
+        placeholder: `Untitled Report`,
+        style: `width: ${inputWidth}px`,
         type: `text`,
         value: inputValue,
       }
       on={
-        change: $helpers.inputChange,
+        input: $helpers.inputChange,
         blur: $helpers.blur,
         focus: $helpers.focus,
       }
@@ -21,4 +23,4 @@
       }
     )= $component.getAttribute(`buttonText`)
   else
-    .disabled-input= inputValue
+    .disabled-input(style={width: inputWidth})= inputValue

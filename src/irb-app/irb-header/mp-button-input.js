@@ -3,6 +3,8 @@ import { Component } from 'panel';
 import template from './mp-button-input.jade';
 import './mp-button-input.styl';
 
+const MIN_INPUT_WIDTH = `170`;
+
 document.registerElement(`mp-button-input`, class extends Component {
   get config() {
     return {
@@ -10,13 +12,14 @@ document.registerElement(`mp-button-input`, class extends Component {
         enabled: true,
         active: false,
         inputValue: ``,
+        inputWidth: MIN_INPUT_WIDTH,
       },
       helpers: {
         blur: () => this.update({active: false}),
         focus: () => this.update({active: true}),
-        inputChange: ev => {
-          ev.stopPropagation();
+        inputChange: () => {
           this.update({inputValue: this.value});
+          this._resizeInput();
           this.dispatchChange();
         },
 
@@ -49,6 +52,18 @@ document.registerElement(`mp-button-input`, class extends Component {
 
   detachedCallback() {
     document.body.removeEventListener(`keydown`, this.closeOnEscape);
+    this._resizeInput();
+  }
+
+  _resizeInput() {
+    // make the search input width dynamic
+    const span = document.createElement(`span`);
+    span.className = `mp-name-input-dummy`;
+    span.innerText = this.state.inputValue;
+    this.el.appendChild(span);
+    const buffer = 12;
+    this.update({inputWidth: Math.max(span.offsetWidth + buffer, MIN_INPUT_WIDTH)});
+    this.el.removeChild(span);
   }
 
   attributeChangedCallback() {
