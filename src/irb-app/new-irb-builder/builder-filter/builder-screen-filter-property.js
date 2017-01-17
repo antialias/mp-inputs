@@ -39,6 +39,8 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           const currentScreen = this.app.getBuilderCurrentScreen();
           return !!currentScreen && !!currentScreen[`${menu}MenuOpen`];
         },
+        menuChange: (ev, menu) => // check for close
+          ev.detail && ev.detail.state === `closed` && this.config.helpers.updateMenu(menu, false),
         toggleMenu: menu => this.config.helpers.updateMenu(menu, !this.config.helpers.isMenuOpen(menu)),
         updateMenu: (menu, open) => this.app.updateBuilderCurrentScreen({[`${menu}MenuOpen`]: open}),
 

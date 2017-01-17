@@ -9,7 +9,10 @@ mixin filter-dropdown(name, title, icon)
         span.filter-prop-name= title
         svg-icon(attrs={icon: 'caret-down'})
     .filter-menu
-      mp-drop-menu(attrs={open: $helpers.isMenuOpen(name)})
+      mp-drop-menu(
+        attrs={open: $helpers.isMenuOpen(name)}
+        on={change: ev => $helpers.menuChange(ev, name)}
+      )
         block
 
 - const clause = $helpers.getActiveClause()
