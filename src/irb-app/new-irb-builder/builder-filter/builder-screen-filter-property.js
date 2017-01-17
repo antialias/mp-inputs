@@ -74,4 +74,9 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
       }),
     };
   }
+
+  shouldUpdate(state) {
+    const clause = this.app.getActiveStageClause(state);
+    return clause && !!clause.filterType;
+  }
 });

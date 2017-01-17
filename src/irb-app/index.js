@@ -405,12 +405,16 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   // State helpers
 
-  hasStageClause() {
-    return !!(this.state.stageClauses && this.state.stageClauses.length);
+  hasStageClause(state=this.state) {
+    return !!(state.stageClauses && state.stageClauses.length);
+  }
+
+  getActiveStageClause(state=this.state) {
+    return this.hasStageClause() ? state.stageClauses[this.state.stageClauses.length - 1] : null;
   }
 
   get activeStageClause() {
-    return this.hasStageClause() ? this.state.stageClauses[this.state.stageClauses.length - 1] : null;
+    return this.getActiveStageClause();
   }
 
   originStageClauseType() {
