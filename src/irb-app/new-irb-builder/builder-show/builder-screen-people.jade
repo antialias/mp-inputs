@@ -4,7 +4,7 @@ include ../mixins.jade
 
 .builder-screen.properties
   +screen-title(`People`, {backButton: !!$helpers.screenIdx()})
-  .screen-list-container(
+  .screen-list-container.irb-learn-disabled-except-last-child(
     hook={postpatch: $helpers.updateRenderedSize}
     on={scroll: $helpers.scrolledList}
   )

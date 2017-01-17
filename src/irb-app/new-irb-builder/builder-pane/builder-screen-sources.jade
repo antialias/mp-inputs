@@ -1,7 +1,7 @@
 include ../mixins.jade
 
 .builder-screen.sources
-  ul.screen-options-list(
+  ul.screen-options-list.irb-learn-disabled-except-first-child(
     hook={postpatch: $helpers.updateRenderedSize}
     on={scroll: $helpers.scrolledList}
   )

@@ -27,7 +27,7 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor)
 .chart-header-container
   if headersStyle
     each header, idx in headersStyle
-      .bar-chart-header(style={width: `${header.width}px`})
+      .bar-chart-header.irb-learn-manipulate-data-disabled(style={width: `${header.width}px`})
         - const headerLabel = $helpers.renameHeaderLabel(header.name)
         .text.shrinkable-label(
           on={click: () => $helpers.clickedHeader(idx)}

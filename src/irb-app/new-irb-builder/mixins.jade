@@ -5,7 +5,7 @@ include ../mixins.jade
 mixin filtered-options-lists(lists)
   each listOptions in lists
     if listOptions.list.length
-      .builder-label= listOptions.label
+      .builder-label.irb-learn-disabled= listOptions.label
       case listOptions.resourceType
         when `event`
           +event-list(listOptions.list, listOptions.itemOptions || {
@@ -27,7 +27,7 @@ mixin generic-options-list-item(label, options)
     +small-caret-icon()
 
 mixin secondary-action-pill(label, options)
-  .option-secondary-action.pill(on={click: options.onclick})
+  .option-secondary-action.irb-learn-disabled.pill(on={click: options.onclick})
     span.secondary-label= label
     +small-caret-icon()
 
