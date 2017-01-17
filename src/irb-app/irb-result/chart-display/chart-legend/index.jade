@@ -13,7 +13,7 @@ include ../../../mixins.jade
       focus-input(
         attrs={placeholder: 'search'}
         props={focusDelay: 200}
-        on={input: $helpers.searchHandler}
+        on={input: $helpers.changedSearch}
       )
     sticky-scroll(
       attrs={'refresh-data': JSON.stringify({showing: report.legend.seriesShowing, legendDataToDisplay})}

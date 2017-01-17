@@ -23,7 +23,7 @@ document.registerElement(`builder-filter-add-control`, class extends Component {
         },
         clickedInput: ev => ev.stopPropagation(), // don't close menu!
         isPaneOpen: () => this.isPaneOpen(),
-        searchHandler: ev => this.update({contextFilter: ev.target.value}),
+        changedSearch: ev => this.update({contextFilter: ev.target.value}),
       },
     };
   }

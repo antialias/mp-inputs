@@ -30,7 +30,7 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
           [GroupClause.TYPE]: `by`,
         }[this.app.originStageClauseType()] || ``),
         isPaneOpen: () => this.isPaneOpen(),
-        searchHandler: ev => this.update({contextFilter: ev.target.value}),
+        changedSearch: ev => this.update({contextFilter: ev.target.value}),
       },
     };
   }

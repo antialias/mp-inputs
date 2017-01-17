@@ -87,7 +87,7 @@ document.registerElement(`chart-legend`, class extends Component {
         renameSeriesValue: (seriesIdx, name) => (
           this.state.report.legend.data[seriesIdx].seriesName === `$event` ? renameEvent(name) : renamePropertyValue(name)
         ),
-        searchHandler: ev => {
+        changedSearch: ev => {
           if (ev.target.value) {
             this.state.report.legend.showAllSeries();
             if (!this.state.report.legend.search) {

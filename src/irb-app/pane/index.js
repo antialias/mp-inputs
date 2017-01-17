@@ -29,7 +29,7 @@ export class Pane extends Component {
             }
           });
         },
-        searchHandler: ev => {
+        changedSearch: ev => {
           this.config.helpers.updateStageClause({search: ev.target.value});
         },
         updateStageClause: clauseData => this.app.updateStageClause(clauseData),

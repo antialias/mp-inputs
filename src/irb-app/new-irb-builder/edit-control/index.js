@@ -22,7 +22,7 @@ export class EditControl extends Component {
           requestAnimationFrame(() => this.el.querySelector(`input.control-label`).focus());
         },
         menuChange: ev => ev.detail && ev.detail.state === `closed` && this.app.stopBuildingQuery(),
-        searchHandler: ev => this.update({contextFilter: ev.target.value}),
+        changedSearch: ev => this.update({contextFilter: ev.target.value}),
 
         getLabel: () => this.getLabel(),
         isPaneOpen: () => this.isPaneOpen(),
