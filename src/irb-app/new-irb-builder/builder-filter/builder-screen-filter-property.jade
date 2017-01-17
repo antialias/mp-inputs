@@ -20,7 +20,7 @@ mixin filter-dropdown(name, title, icon)
 .builder-screen.filter-property
   +screen-title('', {backButton: true})
     +filter-dropdown('type', util.renameProperty(clause.value), util.getIconForPropertyType(clause.filterType))
-      ol.filter-types
+      ul.filter-types
         each filterType in $helpers.FILTER_TYPES
           li.filter-menu-item(
             class={'filter-menu-item-selected': filterType.name === clause.filterType}
@@ -31,7 +31,7 @@ mixin filter-dropdown(name, title, icon)
 
   .filter-chooser
     +filter-dropdown('operator', clause.filterOperator)
-      ol.filter-operators
+      ul.filter-operators
         each filterOperator in $helpers.filterOperators(clause.filterType)
           li.filter-menu-item(
             class={'filter-menu-item-selected': filterOperator === clause.filterOperator}
@@ -46,7 +46,7 @@ mixin filter-dropdown(name, title, icon)
           when `equals`
           when `does not equal`
             //- TODO search goes here
-            ol.filter-string-equals-choices
+            ul.filter-string-equals-choices
               +checkbox-select-all(
                 $helpers.allEqualsValuesSelected(),
                 $helpers.toggleAllFilterValues
@@ -72,7 +72,7 @@ mixin filter-dropdown(name, title, icon)
                 input: $helpers.updateFilterString,
               }
             )
-            ol.filter-string-contains-choices
+            ul.filter-string-contains-choices
               each value in $helpers.getContainsMatches()
                 li.string-contains-match= value
 
