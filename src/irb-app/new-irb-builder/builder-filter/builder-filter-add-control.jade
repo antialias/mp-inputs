@@ -1,15 +1,25 @@
 - const open = $helpers.isPaneOpen()
 
-.add-filter
-  .add-filter-controls
-    input.builder-search-input(
-      class={'search-active': open}
-      attrs={placeholder: 'Search'}
-    )
-    button.add-filter-button(on={click: $helpers.clickedAdd})
-      span.button-flex-wrapper
-        svg-icon(attrs={icon: open ? 'x' : 'plus'})
-        span.add-filter-label Filter
+.control-container
+  .irb-new-control.new-query-builder(class={'pane-open': open})
+    .control-buttons.add-filter-control
+      input.control-label.builder-search-input(
+        class={'search-active': open}
+        props={
+          autoFocus: true,
+          placeholder: 'Search',
+          type: `text`,
+          value: contextFilter,
+        }
+        on={
+          click: $helpers.clickedInput,
+          input: $helpers.searchHandler,
+        }
+      )
+      button.add-filter-button(on={click: $helpers.clickedAdd})
+        span.button-flex-wrapper
+          svg-icon(attrs={icon: open ? 'x' : 'plus'})
+          span.add-filter-label Filter
   .drop-menu
     mp-drop-menu(attrs={open})
       .new-pane-content(attrs={'slot-body': true})= $component.child(`builder-pane`)

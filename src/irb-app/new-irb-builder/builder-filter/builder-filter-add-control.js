@@ -21,7 +21,9 @@ document.registerElement(`builder-filter-add-control`, class extends Component {
             this.app.stopBuildingQuery(this.tagName);
           }
         },
+        clickedInput: ev => ev.stopPropagation(), // don't close menu!
         isPaneOpen: () => this.isPaneOpen(),
+        searchHandler: ev => this.update({contextFilter: ev.target.value}),
       },
     };
   }

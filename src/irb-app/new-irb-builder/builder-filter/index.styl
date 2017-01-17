@@ -3,37 +3,36 @@
 .clause.filter
   display flex
 
-// TODO extract
-.builder-search-input
-  border none
-  font-size 13px
-  width 0
-  transition width 0.25s
-  &.search-active
-    border-bottom 1px dotted grey-500
-    margin-right 10px
-    width 200px
-    &:hover
-      border-bottom 1px solid mp-blue
-
 builder-filter-add-control
-  .add-filter
-    display inline-block
+  .irb-new-control.new-query-builder .add-filter-control
+    display flex
 
-    .add-filter-controls
+    // TODO extract/consolidate search input styles
+    .builder-search-input
+      border none
+      font-size 13px
+      padding 0
+      width 0
+      transition width 0.25s
+      &.search-active
+        border-bottom 1px dotted grey-500
+        margin-right 10px
+        width 200px
+        &:hover
+          border-bottom 1px solid mp-blue
+
+    .add-filter-button
+      background none
+      border 2px solid grey-150
+      border-radius 5px
+      color grey-900
+      font-size 13px
+      padding 0
+    .button-flex-wrapper
+      align-items center
       display flex
-      .add-filter-button
-        background none
-        border 2px solid grey-150
-        border-radius 5px
-        color grey-900
-        font-size 13px
-        padding 0
-      .button-flex-wrapper
-        align-items center
-        display flex
-        padding 7px 8px
-        svg-icon-style(grey-700, blue-300)
+      padding 7px 8px
+      svg-icon-style(grey-700, blue-300)
 
 builder-filter-edit-control
   .irb-control button.modify
