@@ -32,7 +32,7 @@
     "lodash": "4.15.0",
     "mixpanel-common": "0.34.0",
     "moment": "2.13.0",
-    "panel": "0.10.0-rc3",
+    "panel": "0.10.0-rc4",
     "pikaday": "1.5.1",
     "webcomponent": "0.1.2",
     "webcomponents.js": "0.7.22"
