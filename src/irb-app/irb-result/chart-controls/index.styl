@@ -123,13 +123,13 @@ toggle-height = 34px
 
   .options
     background-color white
-    border-radius 4px
+    border-radius 5px
     box-shadow 0 7px 18px 0 rgba(121,124,135,0.26)
     margin-top 2px
     min-width 100px
-    padding 16px 0
     position absolute
     left 0
+    padding 8px 10px 9px 10px
     top toggle-height
     z-index 3
 
@@ -138,16 +138,17 @@ toggle-height = 34px
 
     .button-option
       color grey-700
-      font-weight bold
+      font-weight 600
       font-size 12px
       height inherit
-      line-height 25px
-      padding 6px 24px 6px 26px
+      line-height 30px
+      padding 0px 10px
       position relative
       text-align left
       white-space nowrap
       width 100%
       svg-icon-style(grey-700, blue-300, pos-left: -5px)
+      border-radius 3px
 
       &::before
         background-color grey-700
@@ -156,7 +157,14 @@ toggle-height = 34px
         background-color grey-100
         color blue-300
 
+        &.selected
+          color grey-900
+          background white
+          svg-icon-style(grey-900, pos-left: -5px)
+          cursor default
+
       &.selected
+        font-weight bold
         color grey-900
         svg-icon-style(grey-900, pos-left: -5px)
 
@@ -193,12 +201,14 @@ button.extras-menu
 .options.extras-menu-options
   display flex
   left auto
-  padding-bottom 18px
+  padding 15px 0 10px
   right 0
   top 40px
+  width 276px
+  border-radius 5px 0 5px 5px
 
   .disabled
-    opacity .5
+    opacity .3
     pointer-events none
 
   .analysis ul
@@ -206,23 +216,26 @@ button.extras-menu
 
   .section
     flex-grow 1
+    width 138px
 
     li
       border none
       height inherit
       justify-content flex-start
+      margin 0 10px
 
       button
         height inherit
         margin 0
-        padding 6px 48px 6px 26px
         text-transform capitalize
+        cursor default
 
     .title
-      color grey-900
-      font-size 12px
+      color grey-700
+      font-size 11px
       font-weight bold
-      padding 6px 18px
+      padding 5px 20px
+      margin-bottom 5px
       text-transform uppercase
 
 .error-no-project-data .irb-result .chart-toggle
