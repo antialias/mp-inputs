@@ -1,7 +1,12 @@
 @import "../../../stylesheets/common"
 
-.clause.filter
-  display flex
+query-builder-filter
+  .clause.filter
+    display inline-flex
+
+  .clause-language
+    display inline-flex
+    margin-right 12px
 
 builder-filter-add-control
   .irb-new-control.new-query-builder .add-filter-control
@@ -31,7 +36,7 @@ builder-filter-add-control
     .button-flex-wrapper
       align-items center
       display flex
-      padding 7px 8px
+      padding 5px 10px 5px 4px
       svg-icon-style(grey-700, blue-300)
 
 builder-filter-edit-control
