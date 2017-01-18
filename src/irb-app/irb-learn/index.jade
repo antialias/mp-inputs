@@ -1,73 +1,68 @@
 - const step = $helpers.getStep();
 - const modalClickHandler = step.name === `conclusion` ? $helpers.clickedFinish : $helpers.clickedNext;
+- const isModalStep = [`introduction`, `getting-started`, `conclusion`].includes(step.name);
 
 .irb-learn
-  case step.name
-    when `introduction`
-    when `getting-started`
-    when `conclusion`
-      mp-modal(attrs={open: true})
-        .mp-modal-content
-          .mp-modal-title
-            case step.name
-              when `introduction`
-                | Introducing Inquiry
-              when `getting-started`
-                | Constructing an Inquiry query
-              when `conclusion`
-                | You've built your first Inquiry query
-          .mp-modal-subtitle
-            case step.name
-              when `introduction`
-                | Inquiry is a robust and flexible natural language analytics tool that lets you query your data in ways never before possible.
-              when `getting-started`
-                | We built Atlas to make
-                span.code counting
-                | your events, properties, and users easier than ever. It also has powerful
-                span.code compare
-                | and
-                span.code group by
-                | functions.
-              when `conclusion`
-                | You can save it, export it, add it to your dashboard, and even filter your results. Click the button below to start exploring Inquiry's powers on your own.
-        mp-button-bar.mp-button-bar-primary(on={click: modalClickHandler})
+  if isModalStep
+    mp-modal(attrs={open: true})
+      .mp-modal-content
+        .mp-modal-title
           case step.name
             when `introduction`
-              | Next
+              | Introducing Inquiry
             when `getting-started`
-              | Let's get started
+              | Constructing an Inquiry query
             when `conclusion`
-              | Explore Inquiry on your own
+              | You've built your first Inquiry query
+        .mp-modal-subtitle
+          case step.name
+            when `introduction`
+              | Inquiry is a robust and flexible natural language analytics tool that lets you query your data in ways never before possible.
+            when `getting-started`
+              | We built Atlas to make
+              span.code counting
+              | your events, properties, and users easier than ever. It also has powerful
+              span.code compare
+              | and
+              span.code group by
+              | functions.
+            when `conclusion`
+              | You can save it, export it, add it to your dashboard, and even filter your results. Click the button below to start exploring Inquiry's powers on your own.
+      mp-button-bar.mp-button-bar-primary(on={click: modalClickHandler})
+        case step.name
+          when `introduction`
+            | Next
+          when `getting-started`
+            | Let's get started
+          when `conclusion`
+            | Explore Inquiry on your own
 
-    when `choose-event`
-    when `compare-event`
-    when `group-by`
-    when `manipulate-data`
-      mp-tutorial-tooltip(attrs={
-        open: true,
-        left: 800,
-        top: 100,
-        numSteps: 4,
-        currStep: step.index - 2,
-      })
-        .mp-tooltip-content
-          .mp-tooltip-title
-            case step.name
-              when `choose-event`
-                | Let's start by choosing an event
-              when `compare-event`
-                | Next, let's compare it to another event
-              when `group-by`
-                | Now let's add a group by function
-              when `manipulate-data`
-                | Manipulate your data
-          .mp-tooltip-subtitle
-            case step.name
-              when `choose-event`
-                | The Show Menu lets you specify a dataset to measure, like an event for instance.
-              when `compare-event`
-                | The modifier button gives you different options based on the dataset that you select.
-              when `group-by`
-                | The Group By function in Inquiry lets you look at different segments of your datasets.
-              when `manipulate-data`
-                | Choose a different chart, analysis, and value types really get a handle on your data.
+  else
+    mp-tutorial-tooltip(attrs={
+      open: true,
+      left: 800,
+      top: 100,
+      numSteps: 4,
+      currStep: step.index - 2,
+    })
+      .mp-tooltip-content
+        .mp-tooltip-title
+          case step.name
+            when `choose-event`
+              | Let's start by choosing an event
+            when `compare-event`
+              | Next, let's compare it to another event
+            when `group-by`
+              | Now let's add a group by function
+            when `manipulate-data`
+              | Manipulate your data
+        .mp-tooltip-subtitle
+          case step.name
+            when `choose-event`
+              | The Show Menu lets you specify a dataset to measure, like an event for instance.
+            when `compare-event`
+              | The modifier button gives you different options based on the dataset that you select.
+            when `group-by`
+              | The Group By function in Inquiry lets you look at different segments of your datasets.
+            when `manipulate-data`
+              | Choose a different chart, analysis, and value types really get a handle on your data.
