@@ -21,8 +21,6 @@ import './irb-header';
 import './irb-result';
 import './new-irb-builder';
 import './old-irb-builder';
-
-import LearnFlow from './irb-learn/flow';
 import './irb-learn';
 
 import template from './index.jade';
@@ -94,9 +92,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       },
 
       learn: (stateUpdate={}) => {
-        return extend(stateUpdate, this.resetQuery(), {
-          learnFlow: new LearnFlow({app: this}),
-        });
+        return extend(stateUpdate, this.resetQuery(), {learnActive: true});
       },
     });
   }

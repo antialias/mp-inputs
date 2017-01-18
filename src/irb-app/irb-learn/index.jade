@@ -1,15 +1,15 @@
-- const stepName = learnFlow.step.name;
-- const modalClickHandler = stepName === `conclusion` ? $helpers.clickedFinish : $helpers.clickedNext;
+- const step = $helpers.getStep();
+- const modalClickHandler = step.name === `conclusion` ? $helpers.clickedFinish : $helpers.clickedNext;
 
 .irb-learn
-  case stepName
+  case step.name
     when `introduction`
     when `getting-started`
     when `conclusion`
-      mp-modal(props={open: true})
+      mp-modal(attrs={open: true})
         .mp-modal-content
           .mp-modal-title
-            case stepName
+            case step.name
               when `introduction`
                 | Introducing Inquiry
               when `getting-started`
@@ -17,7 +17,7 @@
               when `conclusion`
                 | You've built your first Inquiry query
           .mp-modal-subtitle
-            case stepName
+            case step.name
               when `introduction`
                 | Inquiry is a robust and flexible natural language analytics tool that lets you query your data in ways never before possible.
               when `getting-started`
@@ -31,7 +31,7 @@
               when `conclusion`
                 | You can save it, export it, add it to your dashboard, and even filter your results. Click the button below to start exploring Inquiry's powers on your own.
         mp-button-bar.mp-button-bar-primary(on={click: modalClickHandler})
-          case stepName
+          case step.name
             when `introduction`
               | Next
             when `getting-started`
@@ -43,16 +43,16 @@
     when `compare-event`
     when `group-by`
     when `manipulate-data`
-      mp-tutorial-tooltip(props={
+      mp-tutorial-tooltip(attrs={
         open: true,
         left: 800,
         top: 100,
         numSteps: 4,
-        currStep: learnFlow.stepIndex - 2,
+        currStep: step.index - 2,
       })
         .mp-tooltip-content
           .mp-tooltip-title
-            case stepName
+            case step.name
               when `choose-event`
                 | Let's start by choosing an event
               when `compare-event`
@@ -62,7 +62,7 @@
               when `manipulate-data`
                 | Manipulate your data
           .mp-tooltip-subtitle
-            case stepName
+            case step.name
               when `choose-event`
                 | The Show Menu lets you specify a dataset to measure, like an event for instance.
               when `compare-event`

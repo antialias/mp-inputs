@@ -1,11 +1,9 @@
-- const learnClass = learnFlow && learnFlow.step.cls;
-
 .irb-app(class={
   'error-no-project-data': !projectHasEvents,
-  'irb-learn-active': !!learnFlow,
-  [learnClass]: !!learnClass,
+  'irb-learn-active': !!learnActive,
+  [learnStep && learnStep.cls]: !!(learnStep && learnStep.cls),
 })
-  if learnFlow
+  if learnActive
     = $component.child('irb-learn')
   .irb-main-panel.top-panel
     = $component.child('irb-header')
