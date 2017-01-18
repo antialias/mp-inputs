@@ -14,6 +14,24 @@ mixin tooltip(className, shouldHaveClass, title, count, percent)
           .count= mp.utility.commaize(count)
         .percent= util.formatPercent(percent)
 
+mixin bar-color-with-label(options={})
+  .bar-color(
+    class=options.colorClass
+    style={width: util.formatPercent(options.width)}
+  )
+    .label-wrapper
+      .bar-text-nudger
+      .label= options.label
+  if options.width < .5
+    .label-wrapper.outside-label
+      .outside-label-wrapper(
+        style={width: util.formatPercent(options.width)}
+      )
+        .bar-text-nudger
+        .label(
+          class=options.colorClass
+        )= options.label
+
 .bar-chart
   table
     thead
@@ -89,19 +107,10 @@ mixin tooltip(className, shouldHaveClass, title, count, percent)
                           mouseleave: $helpers.onMouseLeave,
                         }
                       )
-                        .bar-color(
-                          class={[segmentColorClassName]: isMultiColor}
-                          style={width: util.formatPercent(widthAsPercentage)}
-                        )
-                          .label-wrapper
-                            .bar-text-nudger
-                            .label= isValueAbsolute ? util.abbreviateNumber(value) : percentValueString
-                        if widthAsPercentage < .5
-                          .label-wrapper.outside-label
-                            .outside-label-wrapper(
-                              style={width: util.formatPercent(widthAsPercentage)}
-                            )
-                              .bar-text-nudger
-                              .label= isValueAbsolute ? util.abbreviateNumber(value) : percentValueString
+                        +bar-color-with-label({
+                          colorClass: {[isMultiColor ? segmentColorClassName : `not-multi-color`]: true},
+                          width: widthAsPercentage,
+                          label: isValueAbsolute ? util.abbreviateNumber(value) : percentValueString,
+                        })
                         if hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === valueIndex
                           +tooltip(segmentColorClassName, isMultiColor, segmentName, value, percent)
