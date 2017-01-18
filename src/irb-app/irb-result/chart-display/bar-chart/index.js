@@ -1,4 +1,5 @@
 import { Component } from 'panel';
+import throttle from 'lodash/throttle';
 
 import * as util from '../../../../util';
 import {
@@ -54,10 +55,10 @@ document.registerElement(`bar-chart`, class extends Component {
           }
           return headers || this.state.headers;
         },
-        onMouseEnterAndMove: (ev, rowIdx, cellIdx) => {
+        onMouseEnterAndMove: throttle((ev, rowIdx, cellIdx) => {
           const hoverTooltip = util.extend(this.state.hoverTooltip, {rowIdx, cellIdx, mouseXPos: ev.offsetX});
           this.update({hoverTooltip});
-        },
+        }, 50, {leading: true, trailing: false}),
         onMouseLeave: () => {
           this.update({hoverTooltip: util.extend(this.state.hoverTooltip, {rowIdx: null, cellIdx: null, mouseXPos: null})});
         },

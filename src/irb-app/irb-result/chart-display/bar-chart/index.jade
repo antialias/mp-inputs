@@ -17,6 +17,7 @@ mixin tooltip(className, shouldHaveClass, title, count, percent)
 mixin bar-color-with-label(options={})
   .bar-color(
     class=options.colorClass
+    on=options.onEvents
     style={width: util.formatPercent(options.width)}
   )
     .label-wrapper
@@ -69,7 +70,7 @@ mixin bar-color-with-label(options={})
                             attrs={title}
                             on={
                               mouseenter: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, title),
-                              mousemove: ev => _.throttle($helpers.onMouseEnterAndMove(ev, rowIndex, title), 100),
+                              mousemove: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, title),
                               mouseleave: $helpers.onMouseLeave,
                             }
                           )= title
@@ -100,17 +101,16 @@ mixin bar-color-with-label(options={})
                       - const widthAsPercentage = (isLogarithmic ? Math.log10(value) : value) / segmentMax
                       - const segmentName = $helpers.formatLabel(headersToDisplay[cellIndex - 1], row[cellIndex - 1][valueIndex])
                       - const segmentColorClassName = `segment-color-${segmentColorMap[segmentName]}`
-                      li.chart-bar(
-                        on={
-                          mouseenter: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex),
-                          mousemove: ev => _.throttle($helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex), 100),
-                          mouseleave: $helpers.onMouseLeave,
-                        }
-                      )
+                      li.chart-bar
                         +bar-color-with-label({
                           colorClass: {[isMultiColor ? segmentColorClassName : `not-multi-color`]: true},
                           width: widthAsPercentage,
                           label: isValueAbsolute ? util.abbreviateNumber(value) : percentValueString,
+                          onEvents:{
+                            mouseenter: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex),
+                            mousemove: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex),
+                            mouseleave: $helpers.onMouseLeave,
+                          }
                         })
                         if hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === valueIndex
                           +tooltip(segmentColorClassName, isMultiColor, segmentName, value, percent)
