@@ -21,7 +21,7 @@ mixin chart-bar(options={})
   )
     .bar-color(
       class=options.colorClass
-      on=options.onEvents
+      on=options.on
       style=isStacked ? {} : widthStyle
     )
       .label-wrapper
@@ -111,7 +111,7 @@ mixin chart-bar(options={})
                         outsideLabel: !isStacked,
                         colorClass: {[isMultiColor ? segmentColorClassName : `not-multi-color`]: true},
                         label: isValueAbsolute ? util.abbreviateNumber(value) : percentValueString,
-                        onEvents:{
+                        on:{
                           mouseenter: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex),
                           mousemove: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex),
                           mouseleave: $helpers.onMouseLeave,
