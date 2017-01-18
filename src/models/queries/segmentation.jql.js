@@ -63,23 +63,18 @@ function main() {
   }
 
   if (usesEventData) {
-    if (params.dates.unit === 'all') {
-      groups.push(function() {
-        return 'all';
-      });
-    } else {
-      // TODO (jordan): handle resetting dates when building params
-      var bucketOptions = {
-        hour: mixpanel.hourly_time_buckets,
-        day: mixpanel.daily_time_buckets,
-        week: mixpanel.weekly_time_buckets,
-        month: mixpanel.monthly_time_buckets,
-        quarter: mixpanel.quarterly_time_buckets,
-      };
-      groups.push(
-        mixpanel.numeric_bucket(usesPeopleData ? 'event.time' : 'time', bucketOptions[params.dates.unit])
-      );
-    }
+    // TODO (jordan): handle resetting dates when building params
+    var dateBuckets = {
+      all: [],
+      hour: mixpanel.hourly_time_buckets,
+      day: mixpanel.daily_time_buckets,
+      week: mixpanel.weekly_time_buckets,
+      month: mixpanel.monthly_time_buckets,
+      quarter: mixpanel.quarterly_time_buckets,
+    };
+    groups.push(
+      mixpanel.numeric_bucket(usesPeopleData ? 'event.time' : 'time', dateBuckets[params.dates.unit])
+    );
   }
 
   groups = [mixpanel.multiple_keys(groups)];
