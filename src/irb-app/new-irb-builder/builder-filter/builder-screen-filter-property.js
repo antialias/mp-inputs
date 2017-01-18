@@ -70,7 +70,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           this.app.updateStageClause({filterValue});
         },
         updateFilterString: ev => this.app.updateStageClause({filterValue: ev.target.value}),
-        commitFilter: () => this.updateAndCommitStageClause({}),
+        commitFilter: () => this.updateAndCommitStageClause(),
       }),
     };
   }

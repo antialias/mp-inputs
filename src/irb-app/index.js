@@ -633,7 +633,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     }
   }
 
-  updateStageClause(clauseData) {
+  updateStageClause(clauseData={}) {
     const stageClauses = this.state.stageClauses.concat();
     let currentClause = stageClauses.pop();
     if (currentClause) {
