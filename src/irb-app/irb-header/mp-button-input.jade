@@ -5,9 +5,11 @@
       props={
         maxLength: 80,
         placeholder: `Untitled Report`,
-        style: `width: ${inputWidth}px`,
         type: `text`,
         value: inputValue,
+      }
+      style={
+        width: `${inputWidth}px`
       }
       on={
         input: $helpers.inputChange,
@@ -23,4 +25,4 @@
       }
     )= $component.getAttribute(`buttonText`)
   else
-    .disabled-input(style={width: inputWidth})= inputValue
+    .disabled-input(style={width: `${inputWidth}px`})= inputValue

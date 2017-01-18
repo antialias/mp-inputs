@@ -48,11 +48,11 @@ document.registerElement(`mp-button-input`, class extends Component {
     super.attachedCallback(...arguments);
     this.closeOnEscape = e => e.keyCode === 27 && this.inputEl.blur();
     document.body.addEventListener(`keydown`, this.closeOnEscape);
+    this._resizeInput();
   }
 
   detachedCallback() {
     document.body.removeEventListener(`keydown`, this.closeOnEscape);
-    this._resizeInput();
   }
 
   _resizeInput() {
