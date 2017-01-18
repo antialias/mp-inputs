@@ -56,6 +56,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
         getValueMatches: (string, invert) =>
           this.state.topPropertyValues
             .filter(value => !string || renamePropertyValue(value).toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert),
+        selectBooleanOption: value => this.app.updateStageClause({filterOperator: value}),
         toggleStringEqualsValueSelected: value => {
           const clause = this.app.activeStageClause;
           const selected = (clause && clause.filterValue) || [];
