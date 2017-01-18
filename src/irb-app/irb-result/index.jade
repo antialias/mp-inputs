@@ -1,4 +1,6 @@
-.irb-result
+include ../irb-learn/tooltip.jade
+
+.irb-result.irb-learn-tooltip-container
   .result-controls= $component.child('chart-controls')
   .result-display= $component.child('chart-display')
   mp-toast(
@@ -12,3 +14,5 @@
       select: $helpers.toastSelected,
     }
   )
+
+  +irb-learn-tooltip(`manipulate-data`)

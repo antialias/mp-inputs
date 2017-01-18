@@ -2,7 +2,7 @@ include ../irb-learn/tooltip.jade
 
 - const open = $helpers.isPaneOpen()
 
-.builder-container.contextual-menu.irb-learn-choose-event-disabled
+.builder-container.contextual-menu.irb-learn-tooltip-container.irb-learn-choose-event-disabled
   .irb-new-control.new-query-builder(class={'pane-open': open})
     .control-buttons.add-control
       button.add-button(on={click: $helpers.clickedAdd})
@@ -28,7 +28,8 @@ include ../irb-learn/tooltip.jade
           }
         )
           span.label-preposition= $helpers.getPreposition()
-      +irb-learn-tooltip(`compare-event`)
     .drop-menu
       mp-drop-menu(attrs={open} on={change: $helpers.menuChange})
         .new-pane-content(attrs={'slot-body': true})= $component.child(`builder-pane`)
+
+  +irb-learn-tooltip(`compare-event`, `group-by`)

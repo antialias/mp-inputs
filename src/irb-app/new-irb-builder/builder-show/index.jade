@@ -1,6 +1,6 @@
 include ../../irb-learn/tooltip.jade
 
-.builder-section.builder-show
+.builder-section.builder-show.irb-learn-tooltip-container
   each clause, clauseIdx in report.sections.show.clauses
     - const attrs = {'clause-index': clauseIdx}
     if clauseIdx
@@ -13,4 +13,5 @@ include ../../irb-learn/tooltip.jade
           .control-container= $component.child('builder-numeric-property-edit-control', {attrs})
           .clause-language.preposition on
         .control-container= $component.child('builder-show-edit-control', {attrs})
-      +irb-learn-tooltip(`choose-event`)
+
+  +irb-learn-tooltip(`choose-event`)
