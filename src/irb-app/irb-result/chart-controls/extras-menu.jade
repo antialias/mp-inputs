@@ -5,8 +5,11 @@ ul.toggle-view
       on={click: $helpers.onClickExtrasMenu}
     )
       svg-icon(attrs={icon: 'ellipsis'})
-    if isEditingExtrasMenu
-      .extras-menu-options.options
+    mp-drop-menu(
+      attrs={open: isEditingExtrasMenu}
+      on={change: $helpers.menuChange}
+    )
+      .extras-menu-options.options(attrs={'slot-body': true})
         .analysis.section
           .title analysis
           ul

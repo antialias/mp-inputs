@@ -29,8 +29,11 @@ ul.chart-toggle(class={
         if styleChoicesForChartType.length > 1
           button.dropdown(on={click: () => $helpers.onDropdownClick(chartType)})
             svg-icon(attrs={icon: 'caret-down'})
-      if isEditingCurrentStyle
-        .chart-style.options
+      mp-drop-menu(
+        attrs={open: isEditingCurrentStyle}
+        on={change: ev => $helpers.menuChange(ev, chartType)}
+      )
+        .chart-style.options(attrs={'slot-body': true})
           each plotStyle in styleChoicesForChartType
             button.button-option(
               class={

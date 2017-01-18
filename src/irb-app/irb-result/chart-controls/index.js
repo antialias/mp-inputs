@@ -33,6 +33,7 @@ document.registerElement(`chart-toggle`, class extends Component {
         chartTypes: () => [BAR_CHART, LINE_CHART, TABLE_CHART],
         isChartTypeDisabled: type => this.isChartTypeDisabled(type),
         selectedPlotStyle: type => this.state.chartToggle[type].plotStyle,
+        menuChange: (ev, type) => (type === this.state.chartToggle.editingType && ev.detail && ev.detail.state === `closed` && this.app.stopEditingChartToggle()),        
         onDropdownClick: type => {
           if (this.app.state.projectHasEvents && !this.isChartTypeDisabled(type)) {
             this.app.updateChartToggle({
@@ -75,11 +76,6 @@ document.registerElement(`chart-toggle`, class extends Component {
 });
 
 document.registerElement(`extras-menu`, class extends Component {
-  attachedCallback() {
-    super.attachedCallback(...arguments);
-    this.app.onClickOutside(this.tagName, `stopEditingExtrasMenu`);
-  }
-
   get config() {
     return {
       template: extrasMenuTemplate,
@@ -89,6 +85,7 @@ document.registerElement(`extras-menu`, class extends Component {
         valueChoices: () => VALUE_LIST,
         isAnalysisDisabled: analysis => !this.IRBResult.isAnalysisEnabled(analysis),
         isValueToggleDisabled: () => !this.IRBResult.isValueToggleEnabled(),
+        menuChange: ev => ev.detail && ev.detail.state === `closed` && this.app.stopEditingExtrasMenu(),
         onClickExtrasMenu: () => this.update({isEditingExtrasMenu: !this.state.isEditingExtrasMenu}),
         onAnalysisClick: analysis => {
           const reportTrackingData = this.state.report.toTrackingData();
