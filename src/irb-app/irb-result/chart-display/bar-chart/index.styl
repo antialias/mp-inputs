@@ -107,22 +107,26 @@ bar-bottom = 8px
             &:last-child
               border 0 none
 
-        li
+        ul:not(.stacked) li
           display flex
+          width 100%
+
+        li
           height bar-height
           margin-bottom bar-bottom
           min-width 1px
           position relative
           text-align right
+          transition width .3s
           user-select none
-          width 100%
+
 
           .bar-color
             background mp-blue
             cursor pointer
             position relative
             height 100%
-            transition width .5s
+            transition width .3s
             width 100%
             z-index 0
 

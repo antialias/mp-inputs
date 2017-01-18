@@ -14,24 +14,30 @@ mixin tooltip(className, shouldHaveClass, title, count, percent)
           .count= mp.utility.commaize(count)
         .percent= util.formatPercent(percent)
 
-mixin bar-color-with-label(options={})
-  .bar-color(
-    class=options.colorClass
-    on=options.onEvents
-    style={width: util.formatPercent(options.width)}
+mixin chart-bar(options={})
+  - const widthStyle = {width: util.formatPercent(options.width)}
+  li.chart-bar(
+    style=isStacked ? widthStyle : {}
   )
-    .label-wrapper
-      .bar-text-nudger
-      .label= options.label
-  if options.width < .5
-    .label-wrapper.outside-label
-      .outside-label-wrapper(
-        style={width: util.formatPercent(options.width)}
-      )
+    .bar-color(
+      class=options.colorClass
+      on=options.onEvents
+      style=isStacked ? {} : widthStyle
+    )
+      .label-wrapper
         .bar-text-nudger
-        .label(
-          class=options.colorClass
-        )= options.label
+        .label= options.label
+    if options.outsideLabel && options.width < .5
+      .label-wrapper.outside-label
+        .outside-label-wrapper(
+          style=isStacked ? {} : widthStyle
+        )
+          .bar-text-nudger
+          .label(
+            class=options.colorClass
+          )= options.label
+    if block
+      block
 
 .bar-chart
   table
@@ -101,16 +107,16 @@ mixin bar-color-with-label(options={})
                       - const widthAsPercentage = (isLogarithmic ? Math.log10(value) : value) / segmentMax
                       - const segmentName = $helpers.formatLabel(headersToDisplay[cellIndex - 1], row[cellIndex - 1][valueIndex])
                       - const segmentColorClassName = `segment-color-${segmentColorMap[segmentName]}`
-                      li.chart-bar
-                        +bar-color-with-label({
-                          colorClass: {[isMultiColor ? segmentColorClassName : `not-multi-color`]: true},
-                          width: widthAsPercentage,
-                          label: isValueAbsolute ? util.abbreviateNumber(value) : percentValueString,
-                          onEvents:{
-                            mouseenter: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex),
-                            mousemove: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex),
-                            mouseleave: $helpers.onMouseLeave,
-                          }
-                        })
+                      +chart-bar({
+                        outsideLabel: !isStacked,
+                        colorClass: {[isMultiColor ? segmentColorClassName : `not-multi-color`]: true},
+                        label: isValueAbsolute ? util.abbreviateNumber(value) : percentValueString,
+                        onEvents:{
+                          mouseenter: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex),
+                          mousemove: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex),
+                          mouseleave: $helpers.onMouseLeave,
+                        },
+                        width: widthAsPercentage,
+                      })
                         if hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === valueIndex
                           +tooltip(segmentColorClassName, isMultiColor, segmentName, value, percent)
