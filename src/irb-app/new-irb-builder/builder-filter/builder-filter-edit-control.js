@@ -59,6 +59,6 @@ document.registerElement(`builder-filter-edit-control`, class extends EditContro
   }
 
   openPane() {
-    this.app.startBuilderOnScreen(`builder-screen-filter-properties-list`);
+    this.app.startBuilderOnScreen(`builder-screen-filter-property`);
   }
 });

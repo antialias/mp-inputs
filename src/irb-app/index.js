@@ -609,6 +609,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         stageClauses,
         stageClauseIndex: clauseIndex,
       });
+      this.updateStageClause(this.activeStageClause); // check for new data to fetch
     } else {
       throw new Error(`app.startEditingClause error: invalid clauseIndex provided`);
     }
