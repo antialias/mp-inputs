@@ -11,7 +11,7 @@ include ../mixins.jade
 
 .builder-screen.events
   +screen-title('All Events', {backButton: true})
-  .screen-list-container.irb-learn-disabled-except-last-child(
+  .screen-list-container(
     hook={postpatch: $helpers.updateRenderedSize}
     on={scroll: $helpers.scrolledList}
   )

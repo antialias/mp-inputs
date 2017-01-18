@@ -5,7 +5,7 @@ include ../mixins.jade
 mixin filtered-options-lists(lists)
   each listOptions in lists
     if listOptions.list.length
-      .builder-label.irb-learn-disabled= listOptions.label
+      .builder-label= listOptions.label
       case listOptions.resourceType
         when `event`
           +event-list(listOptions.list, listOptions.itemOptions || {
@@ -42,7 +42,10 @@ mixin event-list(events, options)
       - const renamedMpEvent = util.renameEvent(mpEvent.name)
       - const isSelected = eventsSource && mpEvent.name === selected
       li.list-option(
-        class={'list-option-selected': isSelected}
+        class={
+          'list-option-selected': isSelected,
+          'irb-learn-disabled': util.isSpecialEvent(mpEvent),
+        }
         on={click: isSelected ? null : () => options.clickedEvent(mpEvent)}
       )
         +screen-option(renamedMpEvent, {

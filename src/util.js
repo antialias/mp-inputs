@@ -44,10 +44,12 @@ export function formatResourceType(type) {
   return type === `events` ? `event` : type;
 }
 
+export function isSpecialEvent(mpEvent) {
+  return [ShowClause.TOP_EVENTS.name, ShowClause.ALL_EVENTS.name].includes(mpEvent.name);
+}
+
 export function getIconForEvent(mpEvent) {
-  if (mpEvent.name === ShowClause.TOP_EVENTS.name ||
-      mpEvent.name === ShowClause.ALL_EVENTS.name
-  ) {
+  if (isSpecialEvent(mpEvent)) {
     return `star-top-events`;
   } else if (mpEvent.custom) {
     return `custom-events`;
