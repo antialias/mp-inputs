@@ -78,14 +78,15 @@ mixin filter-dropdown(name, title, icon)
                 li.string-contains-match= value
 
       when `boolean`
-        .radio-button(
-          class={'radio-selected': clause.filterOperator === `is true`}
-          on={click: () => $helpers.selectBooleanOption(`is true`)}
-        ) True
-        .radio-button(
-          class={'radio-selected': clause.filterOperator === `is false`}
-          on={click: () => $helpers.selectBooleanOption(`is false`)}
-        ) False
+        .filter-boolean-radio-list
+          .radio-button(
+            class={'radio-selected': clause.filterOperator === `is true`}
+            on={click: () => $helpers.selectBooleanOption(`is true`)}
+          ) True
+          .radio-button(
+            class={'radio-selected': clause.filterOperator === `is false`}
+            on={click: () => $helpers.selectBooleanOption(`is false`)}
+          ) False
 
       default
         p this is #{clause.filterType}

@@ -150,7 +150,41 @@ builder-screen-filter-property
         height 310px
         padding 0 15px
 
+      .filter-boolean-radio-list
+        align-items center
+        display flex
+        margin 10px 70px
+        .radio-button
+          flex-grow 1
+          justify-content center
+
     button.screen-footer
       background-color mp-blue
       border-radius 0 0 5px 5px
       color white
+
+.radio-button
+  align-items center
+  color grey-700
+  display flex
+  font-family HelveticaNeue
+  font-size 11px
+  font-weight bold
+  font-style normal
+  font-stretch normal
+  line-height normal
+  letter-spacing normal
+  text-align left
+  text-transform uppercase
+  &::before
+    content ''
+    border 1px solid grey-200
+    border-radius 10px
+    display inline-block
+    height 15px
+    margin-right 8px
+    width 15px
+  &.radio-selected::before
+    border 6px solid mp-blue
+    height 5px
+    width 5px
