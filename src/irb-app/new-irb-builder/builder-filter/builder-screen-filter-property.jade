@@ -46,18 +46,19 @@ mixin filter-dropdown(name, title, icon)
           when `equals`
           when `does not equal`
             //- TODO search goes here
-            ul.filter-string-equals-choices
-              +checkbox-select-all(
-                $helpers.allEqualsValuesSelected(),
-                $helpers.toggleAllFilterValues
-              )
-              each value in $helpers.getEqualsMatches()
-                +checkbox-item(
-                  util.renamePropertyValue(value),
-                  value,
-                  clause.filterValue && clause.filterValue.indexOf(value) !== -1,
-                  $helpers.toggleStringEqualsValueSelected
+            .screen-list-container
+              ul.filter-string-equals-choices
+                +checkbox-select-all(
+                  $helpers.allEqualsValuesSelected(),
+                  $helpers.toggleAllFilterValues
                 )
+                each value in $helpers.getEqualsMatches()
+                  +checkbox-item(
+                    util.renamePropertyValue(value),
+                    value,
+                    clause.filterValue && clause.filterValue.indexOf(value) !== -1,
+                    $helpers.toggleStringEqualsValueSelected
+                  )
 
           when `contains`
           when `does not contain`
