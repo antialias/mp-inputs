@@ -43,11 +43,7 @@ document.registerElement(`mp-button-input`, class extends Component {
 
   attachedCallback() {
     super.attachedCallback(...arguments);
-    this.closeOnEscape = e => {
-      if (e.keyCode === 27) {
-        this.inputEl.blur();
-      }
-    };
+    this.closeOnEscape = e => e.keyCode === 27 && this.inputEl.blur();
     document.body.addEventListener(`keydown`, this.closeOnEscape);
   }
 
