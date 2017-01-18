@@ -67,7 +67,6 @@ bar-bottom = 8px
 
       li
         white-space nowrap
-        transition width .5s
 
         &:not(:last-child)
           margin-bottom 7px
@@ -110,17 +109,20 @@ bar-bottom = 8px
 
         li
           cursor pointer
+          display flex
           height bar-height
           margin-bottom bar-bottom
           min-width 1px
           position relative
           text-align right
           user-select none
+          width 100%
 
           .bar-color
-            background blue-500
-            height 100%
+            background mp-blue
             position relative
+            height 100%
+            transition width .5s
             width 100%
             z-index 0
 
@@ -146,12 +148,26 @@ bar-bottom = 8px
               position relative
               z-index 1
 
+            &.outside-label
+              position relative
+
+              .outside-label-wrapper
+                height 100%
+                left 0
+                position absolute
+                top -100%
+                width 100%
+
+              .label
+                color mp-blue
+                float left
+
   .chart-header
     position relative
-    
+
     .hover-label
       width auto
-      
+
       .content
         left 10px
         top -100px

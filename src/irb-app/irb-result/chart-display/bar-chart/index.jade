@@ -83,16 +83,25 @@ mixin tooltip(className, shouldHaveClass, title, count, percent)
                       - const segmentName = $helpers.formatLabel(headersToDisplay[cellIndex - 1], row[cellIndex - 1][valueIndex])
                       - const segmentColorClassName = `segment-color-${segmentColorMap[segmentName]}`
                       li.chart-bar(
-                        style={width: util.formatPercent(widthAsPercentage)}
                         on={
                           mouseenter: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex),
                           mousemove: ev => _.throttle($helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex), 100),
                           mouseleave: $helpers.onMouseLeave,
                         }
                       )
+                        .bar-color(
+                          class={[segmentColorClassName]: isMultiColor}
+                          style={width: util.formatPercent(widthAsPercentage)}
+                        )
+                          .label-wrapper
+                            .bar-text-nudger
+                            .label= isValueAbsolute ? util.abbreviateNumber(value) : percentValueString
+                        if widthAsPercentage < .5
+                          .label-wrapper.outside-label
+                            .outside-label-wrapper(
+                              style={width: util.formatPercent(widthAsPercentage)}
+                            )
+                              .bar-text-nudger
+                              .label= isValueAbsolute ? util.abbreviateNumber(value) : percentValueString
                         if hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === valueIndex
                           +tooltip(segmentColorClassName, isMultiColor, segmentName, value, percent)
-                        .bar-color(class={[segmentColorClassName]: isMultiColor})
-                        .label-wrapper
-                          .bar-text-nudger
-                          .label= isValueAbsolute ? util.abbreviateNumber(value) : percentValueString
