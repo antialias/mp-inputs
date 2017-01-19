@@ -1,4 +1,5 @@
 import { Component } from 'panel';
+import throttle from 'lodash/throttle';
 
 import { Clause, ShowClause } from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
@@ -51,6 +52,7 @@ export class BuilderScreenBase extends Component {
         getStageClauseAttr: attr =>
           this.app.activeStageClause && this.app.activeStageClause[attr],
         isLoading: () => this.isLoading(),
+        updateRenderedSize: throttle(() => this.updateRenderedSize(), 200, {leading: true}),
       },
     };
   }
@@ -149,12 +151,16 @@ export class BuilderScreenBase extends Component {
     }
   }
 
+  updateRenderedSize({cancelDuringTransition=true}={}) {
+    if (!(cancelDuringTransition && this.state.builderPane.inTransition)) {
+      const {width, height} = this.firstChild.getBoundingClientRect();
+      this.setPaneSizeAndPosition(width, height);
+    }
+  }
+
   updateScreensRenderedSize({cancelDuringTransition=true}={}) {
     requestAnimationFrame(() => {
-      if (!(cancelDuringTransition && this.state.builderPane.inTransition)) {
-        const {width, height} = this.firstChild.getBoundingClientRect();
-        this.setPaneSizeAndPosition(width, height);
-      }
+      this.updateRenderedSize({cancelDuringTransition});
     });
   }
 

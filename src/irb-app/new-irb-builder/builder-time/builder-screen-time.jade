@@ -1,7 +1,7 @@
 include ../mixins.jade
 
 .builder-screen.time
-  ul.screen-options-list
+  ul.screen-options-list(hook={postpatch: $helpers.updateRenderedSize})
       each range in $helpers.RANGE_LIST
         if range.includes(contextFilter)
           li.list-option(on={click: () => $helpers.clickedRange(range)})
