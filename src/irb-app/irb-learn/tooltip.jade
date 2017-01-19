@@ -1,9 +1,15 @@
 mixin irb-learn-tooltip(...stepNames)
+  - const learnStep = learn && learn.step({learn, report});
+
   if learnStep && stepNames.includes(learnStep.name)
+    - const placement = learnStep.name === `manipulate-data` ? `center` : `right`;
+    - const overrideTop = placement === `center` ? `70px` : null;
+
     mp-tutorial-tooltip(attrs={
-      placement: learnStep.name === `manipulate-data` ? `center` : `right`,
+      placement,
+      overrideTop,
       numSteps: 4,
-      currStep: learnStepIndex - 2,
+      currStep: learnStep.index - 2,
     })
       .mp-tooltip-title
         case learnStep.name

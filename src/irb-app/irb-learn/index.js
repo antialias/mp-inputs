@@ -12,79 +12,66 @@ document.registerElement(`irb-learn`, class extends Component {
       template,
       helpers: {
         getStep: () => this.step,
-        clickedNext: () => this.update({learnStepIndex: this.state.learnStepIndex + 1}),
+        clickedNext: () => {
+          const modalIndex = (this.state.learn.modalIndex || 0) + 1;
+          this.update({learn: extend(this.state.learn, {modalIndex})});
+        },
         clickedFinish: () => {
-          this.app.update({learnActive: false, learnStep: null, learnStepIndex: null});
-          this.app.navigate(``);
+          this.update({learn: null});
+          this.navigate(``);
         },
       },
     };
   }
-
-  createdCallback() {
-    super.createdCallback(...arguments);
-
-    this.steps = [{
-      name: `introduction`,
-      condition: () => this.state.learnActive,
-    }, {
-      name: `getting-started`,
-      condition: () => this.state.learnStepIndex === 1,
-    }, {
-      name: `choose-event`,
-      cls: `irb-learn-choose-event`,
-      condition: () => this.state.learnStepIndex === 2,
-    }, {
-      name: `compare-event`,
-      cls: `irb-learn-compare-event`,
-      condition: () => this.getShowClauseEvents().length === 1,
-    }, {
-      name: `group-by`,
-      cls: `irb-learn-group-by`,
-      condition: () => this.getShowClauseEvents().length === 2,
-    }, {
-      name: `manipulate-data`,
-      cls: `irb-learn-manipulate-data`,
-      condition: () => this.getGroupClauseProperties().length === 1,
-    }, {
-      name: `conclusion`,
-      condition: () => (
-        this.state.report.displayOptions.chartType !== `bar` ||
-        this.state.report.displayOptions.value !== `absolute`
-      ),
-    }];
-  }
-
-  get step() {
-    const index = this.stepIndex;
-    const step = this.steps[index];
-
-    if (step.name !== (this.state.learnStep && this.state.learnStep.name)) {
-      setTimeout(() => this.update({learnStep: step, learnStepIndex: index}));
-    }
-
-    return extend(step, {index});
-  }
-
-  get stepIndex() {
-    return this.steps.length - 1 - (
-      [...this.steps].reverse().findIndex(step => step.condition())
-    );
-  }
-
-  getShowClauseEvents() {
-    return this.app
-      .getClausesForType(ShowClause.TYPE)
-      .map(clause => clause.value.name)
-      .filter(mpEvent =>
-        mpEvent !== ShowClause.ALL_EVENTS.name &&
-        mpEvent !== ShowClause.TOP_EVENTS.name
-      );
-  }
-
-  getGroupClauseProperties() {
-    return this.app
-      .getClausesForType(GroupClause.TYPE)
-      .map(clause => clause.value.name);
-  }
 });
+
+function getShowClauseEvents(state) {
+  return state.report.sections[ShowClause.TYPE].clauses
+    .map(clause => clause.value.name)
+    .filter(mpEvent =>
+      mpEvent !== ShowClause.ALL_EVENTS.name &&
+      mpEvent !== ShowClause.TOP_EVENTS.name
+    );
+}
+
+function getGroupClauseProperties(state) {
+  return state.report.sections[GroupClause.TYPE].clauses
+    .map(clause => clause.value.name);
+}
+
+const steps = [{
+  name: `introduction`,
+  condition: state => state.learn,
+}, {
+  name: `getting-started`,
+  condition: state => state.learn && state.learn.modalIndex === 1,
+}, {
+  name: `choose-event`,
+  cls: `irb-learn-choose-event`,
+  condition: state => state.learn && state.learn.modalIndex === 2,
+}, {
+  name: `compare-event`,
+  cls: `irb-learn-compare-event`,
+  condition: state => getShowClauseEvents(state).length === 1,
+}, {
+  name: `group-by`,
+  cls: `irb-learn-group-by`,
+  condition: state => getShowClauseEvents(state).length === 2,
+}, {
+  name: `manipulate-data`,
+  cls: `irb-learn-manipulate-data`,
+  condition: state => getGroupClauseProperties(state).length === 1,
+}, {
+  name: `conclusion`,
+  condition: state => (
+    state.report.displayOptions.chartType !== `bar` ||
+    state.report.displayOptions.value !== `absolute`
+  ),
+}];
+
+export default function step(state) {
+  const index = steps.length - 1 - (
+    [...steps].reverse().findIndex(step => step.condition(state))
+  );
+  return extend(steps[index], {index});
+}

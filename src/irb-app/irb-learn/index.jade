@@ -1,8 +1,9 @@
 include ./tooltip.jade
 
-- const step = $helpers.getStep();
-- const modalClickHandler = step.name === `conclusion` ? $helpers.clickedFinish : $helpers.clickedNext;
-- const isModalStep = [`introduction`, `getting-started`, `conclusion`].includes(step.name);
+- const step = learn && learn.step({learn, report});
+- const stepName = step && step.name;
+- const modalClickHandler = stepName === `conclusion` ? $helpers.clickedFinish : $helpers.clickedNext;
+- const isModalStep = [`introduction`, `getting-started`, `conclusion`].includes(stepName);
 
 .irb-learn
   if isModalStep
@@ -17,7 +18,7 @@ include ./tooltip.jade
             when `conclusion`
               | You've built your first Inquiry query
         .mp-modal-subtitle
-          case step.name
+          case stepName
             when `introduction`
               | Inquiry is a robust and flexible natural language analytics tool that lets you query your data in ways never before possible.
             when `getting-started`
@@ -31,7 +32,7 @@ include ./tooltip.jade
             when `conclusion`
               | You can save it, export it, add it to your dashboard, and even filter your results. Click the button below to start exploring Inquiry's powers on your own.
       mp-button-bar.mp-button-bar-primary(on={click: modalClickHandler})
-        case step.name
+        case stepName
           when `introduction`
             | Next
           when `getting-started`

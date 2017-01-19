@@ -21,7 +21,7 @@ import './irb-header';
 import './irb-result';
 import './new-irb-builder';
 import './old-irb-builder';
-import './irb-learn';
+import step from './irb-learn';
 
 import template from './index.jade';
 import './index.styl';
@@ -92,7 +92,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       },
 
       learn: (stateUpdate={}) => {
-        return extend(stateUpdate, this.resetQuery(), {learnActive: true});
+        return extend(stateUpdate, this.resetQuery(), {learn: {step}});
       },
     });
   }
