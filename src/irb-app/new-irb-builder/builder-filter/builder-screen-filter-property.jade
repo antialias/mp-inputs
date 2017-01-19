@@ -29,13 +29,14 @@ mixin filter-string-input
   .filter-string-input-wrapper
     input.filter-string-input(
       props={
-        autoFocus: true,
-        focusDelay: 200,
         type: 'text',
         value: clause.filterValue,
       }
       on={
         input: $helpers.updateFilterString,
+      }
+      hook={
+        insert: vnode => vnode.elm.focus(),
       }
     )
 
