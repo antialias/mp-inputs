@@ -20,6 +20,12 @@ export class TopEventPropertyValuesQuery extends BasePropertyValuesQuery {
   buildParams() {
     return {name: this.query.property};
   }
+
+  processResults(results) {
+    return sorted(results, {
+      transform: value => value.toLowerCase(),
+    });
+  }
 }
 
 export class TopPeoplePropertyValuesQuery extends BasePropertyValuesQuery {
