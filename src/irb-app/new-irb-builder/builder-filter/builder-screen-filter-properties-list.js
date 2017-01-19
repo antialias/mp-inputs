@@ -21,13 +21,4 @@ document.registerElement(`builder-screen-filter-properties-list`, class extends 
       }),
     };
   }
-
-  // TODO remove me after general min-height fix is shipped
-  createPaneSizeStyle(screens) {
-    const lastScreen = screens[screens.length - 1];
-    return {
-      width: `${lastScreen.width}px`,
-      height: `${lastScreen.height}px`,
-    };
-  }
 });

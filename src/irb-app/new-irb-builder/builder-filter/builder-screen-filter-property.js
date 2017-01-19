@@ -86,13 +86,4 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
     const clause = this.app.getActiveStageClause(state);
     return clause && !!clause.filterType;
   }
-
-  // TODO remove me after general min-height fix is shipped
-  createPaneSizeStyle(screens) {
-    const lastScreen = screens[screens.length - 1];
-    return {
-      width: `${lastScreen.width}px`,
-      height: `${lastScreen.height}px`,
-    };
-  }
 });
