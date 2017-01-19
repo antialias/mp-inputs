@@ -38,9 +38,7 @@ ul.chart-toggle(class={
         attrs={open: isEditingCurrentStyle}
         on={change: ev => $helpers.menuChange(ev, chartType)}
       )
-        .chart-style.options(
-          attrs={'slot-body': true}
-        )
+        .chart-style.options(attrs={'slot-body': true})
           each plotStyle in styleChoicesForChartType
             button.button-option(
               class={
