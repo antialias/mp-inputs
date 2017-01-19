@@ -25,11 +25,19 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
         // screen/type selection
         chooseFilterOperator: filterOperator => {
           this.helpers.updateMenu(`operator`, false);
-          this.app.updateStageClause({filterOperator});
+          const clause = this.app.getActiveStageClause();
+          if (clause.filterOperator != filterOperator) {
+            this.resetProgressiveList();
+            this.app.updateStageClause({filterOperator});
+          }
         },
         chooseFilterType: filterType => {
           this.helpers.updateMenu(`type`, false);
-          this.app.updateStageClause({filterType});
+          const clause = this.app.getActiveStageClause();
+          if (clause.filterType != filterType) {
+            this.resetProgressiveList();
+            this.app.updateStageClause({filterType});
+          }
         },
         filterOperators: filterType => FilterClause.FILTER_OPERATORS[filterType],
         getActiveClause: () => this.app.hasStageClause() ? this.app.activeStageClause : {},
@@ -57,11 +65,13 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           if (typeof string !== `string`) {
             string = ``;
           }
-          return this.state.topPropertyValues
+          const list = this.state.topPropertyValues
             .filter(value =>
               !string ||
               renamePropertyValue(value).toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert
             );
+          this._progressiveListLength = list.length;
+          return list.slice(0, this.progressiveListSize);
         },
         toggleStringEqualsValueSelected: value => {
           const clause = this.app.activeStageClause;
@@ -76,10 +86,17 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
 
           this.app.updateStageClause({filterValue});
         },
-        updateFilterValue: filterValue => this.app.updateStageClause({filterValue}),
+        updateFilterValue: filterValue => {
+          this.resetProgressiveList();
+          this.app.updateStageClause({filterValue});
+        },
         commitFilter: () => this.updateAndCommitStageClause(),
       }),
     };
+  }
+
+  progressiveListLength() {
+    return this._progressiveListLength || 0;
   }
 
   shouldUpdate(state) {

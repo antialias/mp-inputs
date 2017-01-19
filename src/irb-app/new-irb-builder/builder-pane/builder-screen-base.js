@@ -197,4 +197,8 @@ export class BuilderScreenBase extends Component {
   progressiveListLength() {
     return this.buildList().length;
   }
+
+  resetProgressiveList() {
+    this.app.updateBuilderCurrentScreen({progressiveListSize: null});
+  }
 }

@@ -81,7 +81,7 @@ mixin filter-date-input
           when `equals`
           when `does not equal`
             //- TODO search goes here
-            .screen-list-container
+            .screen-list-container(on={scroll: $helpers.scrolledList})
               ul.filter-string-equals-choices
                 +checkbox-select-all(
                   $helpers.allEqualsValuesSelected(),
@@ -98,9 +98,10 @@ mixin filter-date-input
           when `contains`
           when `does not contain`
             +filter-string-input
-            ul.filter-string-contains-choices
-              each value in $helpers.getContainsMatches()
-                li.string-contains-match= value
+            .screen-list-container(on={scroll: $helpers.scrolledList})
+              ul.filter-string-contains-choices
+                each value in $helpers.getContainsMatches()
+                  li.string-contains-match= value
 
       when `number`
         +filter-operator-dropdown
