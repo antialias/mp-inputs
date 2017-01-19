@@ -42,7 +42,7 @@ mixin filter-string-input
 
 mixin filter-number-input(value, oninput, options)
   .filter-number-input-wrapper
-    input.filter-number-input(
+    input.filter-numdate-input(
       props={
         type: 'text',
         value,
@@ -53,6 +53,9 @@ mixin filter-number-input(value, oninput, options)
       hook=options.autofocus ? {insert: vnode => vnode.elm.focus()} : {}
       key=options.key
     )
+
+mixin filter-date-input
+  input.filter-numdate-input(props={type: 'text'})
 
 
 - const clause = $helpers.getActiveClause()
@@ -103,25 +106,39 @@ mixin filter-number-input(value, oninput, options)
         +filter-operator-dropdown
         if clause.filterOperator === `is between`
           - const [start, end] = clause.filterValue || [null, null]
-          .filter-number-between
+          .filter-numdate.filter-numdate-between
             +filter-number-input(
               start,
               ev => $helpers.updateFilterValue([Number(ev.target.value), end]),
               {autofocus: true, key: `num-start`}
             )
-            span and
+            span.filter-conjunction and
             +filter-number-input(
               end,
               ev => $helpers.updateFilterValue([start, Number(ev.target.value)]),
               {autofocus: false, key: `num-end`}
             )
         else
-          .filter-number
+          .filter-numdate
             +filter-number-input(
               clause.filterValue,
               ev => $helpers.updateFilterValue(Number(ev.target.value)),
               {autofocus: true, key: `num-val: ${clause.filterOperator}`}
             )
+
+      when `datetime`
+        +filter-operator-dropdown
+        if clause.filterOperator === `was between`
+          .filter-numdate.filter-numdate-between.filter-datetime
+            +filter-date-input
+            span.filter-conjunction and
+            +filter-date-input
+        else
+          .filter-numdate.filter-datetime
+            +filter-date-input
+
+        //- TODO attach datepicker!
+        .filter-numdate Under construction!
 
       when `boolean`
         .filter-radio-list.filter-boolean

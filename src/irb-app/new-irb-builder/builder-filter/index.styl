@@ -183,24 +183,27 @@ builder-screen-filter-property
         .filter-string-input
           width 100%
 
-      .filter-number-between
-        align-items center
+      .filter-numdate
         box-sizing border-box
         display flex
-        justify-content space-between
         padding 0 15px
         width 100%
-        .filter-number-input
-          width 112px
-        span
+        &.filter-numdate-between
           align-items center
-          background-color grey-100
-          border-radius 3px
-          display inline-flex
-          height 36px
-          justify-content center
-          width 46px
-          control-font()
+          justify-content space-between
+
+        .filter-numdate-input
+          width 112px
+
+      span.filter-conjunction
+        align-items center
+        background-color grey-100
+        border-radius 3px
+        display inline-flex
+        height 36px
+        justify-content center
+        width 46px
+        control-font()
 
     button.screen-footer
       background-color mp-blue
