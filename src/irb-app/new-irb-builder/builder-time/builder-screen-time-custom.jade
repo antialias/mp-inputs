@@ -7,12 +7,24 @@ include ../mixins.jade
   +screen-title('Choose a date range', {backButton: true})
   .range-control
     .range-inputs
-      date-input(props={value: from} on={change: $helpers.changedFrom})
+      date-input(props={value: from} on={
+        focus: $helpers.focusedFrom,
+        blur: $helpers.blurredFrom,
+        change: $helpers.changedFrom,
+      })
       .preposition to
-      date-input(props={value: to} on={change: $helpers.changedTo})
+      date-input(props={value: to} on={
+        focus: $helpers.focusedTo,
+        blur: $helpers.blurredTo,
+        change: $helpers.changedTo,
+      })
     .range-calendar
       irb-calendar(
-        attrs={range: true}
+        attrs={
+          range: true,
+          fromFocused: $helpers.fromFocused(),
+          toFocused: $helpers.toFocused(),
+        }
         props={value: JSON.stringify({from, to})}
         on={change: $helpers.changedDates}
       )

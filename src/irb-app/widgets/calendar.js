@@ -63,7 +63,7 @@ class Calendar extends WebComponent {
     });
 
     // Pikaday registers a keydown event handler on the document (?#&!), get rid of it
-    document.removeEventListener('keydown', this.picker._onKeyChange);
+    document.removeEventListener(`keydown`, this.picker._onKeyChange);
 
     this.appendChild(this.picker.el);
     this.updatePicker();
@@ -90,18 +90,21 @@ class Calendar extends WebComponent {
   selectDate(date, emit=true) {
     if (!this.isRangeInput) {
       this.date = date;
+    } else if (this.isAttributeEnabled(`fromFocused`)) {
+      this.from = date;
+    } else if (this.isAttributeEnabled(`toFocused`)) {
+      this.to = date;
     } else if (!this.from) {
       this.from = date;
     } else if (!this.to) {
-      if (date < this.from) {
-        this.to = this.from;
-        this.from = date;
-      } else {
-        this.to = date;
-      }
+      this.to = date;
     } else {
       this.from = date;
       this.to = null;
+    }
+
+    if (this.from && this.to && this.from > this.to) {
+      [this.from, this.to] = [this.to, this.from];
     }
 
     this.updatePicker();

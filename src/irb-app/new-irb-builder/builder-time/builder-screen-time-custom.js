@@ -73,6 +73,18 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
           from: this.getDates().from,
           to: ev.detail,
         }}),
+        focusedFrom: () => this.app.updateBuilderCurrentScreen({fromFocused: true}),
+        blurredFrom: () => this.app.updateBuilderCurrentScreen({fromFocused: false}),
+        fromFocused: () => {
+          const screen = this.app.getBuilderCurrentScreen();
+          return !!(screen && screen.fromFocused);
+        },
+        focusedTo: () => this.app.updateBuilderCurrentScreen({toFocused: true}),
+        blurredTo: () => this.app.updateBuilderCurrentScreen({toFocused: false}),
+        toFocused: () => {
+          const screen = this.app.getBuilderCurrentScreen();
+          return !!(screen && screen.toFocused);
+        },
       }),
     };
   }

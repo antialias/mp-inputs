@@ -18,8 +18,10 @@ class DateInput extends Component {
       },
       helpers: {
         formatDateDisplay,
+        focusedInput: () => this.emitFocus(),
         blurredInput: () => {
-          this.inputEl.value = '';
+          this.inputEl.value = ``;
+          this.emitBlur();
         },
         changedInput: ev => {
           ev.stopPropagation();
@@ -28,6 +30,14 @@ class DateInput extends Component {
         },
       },
     };
+  }
+
+  emitFocus() {
+    this.dispatchEvent(new CustomEvent(`focus`));
+  }
+
+  emitBlur() {
+    this.dispatchEvent(new CustomEvent(`blur`));
   }
 
   emitChange() {
