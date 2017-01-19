@@ -33,11 +33,25 @@ mixin filter-string-input
         value: clause.filterValue,
       }
       on={
-        input: $helpers.updateFilterString,
+        input: ev => $helpers.updateFilterValue(ev.target.value),
       }
       hook={
         insert: vnode => vnode.elm.focus(),
       }
+    )
+
+mixin filter-number-input(value, oninput, options)
+  .filter-number-input-wrapper
+    input.filter-number-input(
+      props={
+        type: 'text',
+        value,
+      }
+      on={
+        input: oninput,
+      }
+      hook=options.autofocus ? {insert: vnode => vnode.elm.focus()} : {}
+      key=options.key
     )
 
 
@@ -84,6 +98,30 @@ mixin filter-string-input
             ul.filter-string-contains-choices
               each value in $helpers.getContainsMatches()
                 li.string-contains-match= value
+
+      when `number`
+        +filter-operator-dropdown
+        if clause.filterOperator === `is between`
+          - const [start, end] = clause.filterValue || [null, null]
+          .filter-number-between
+            +filter-number-input(
+              start,
+              ev => $helpers.updateFilterValue([Number(ev.target.value), end]),
+              {autofocus: true, key: `num-start`}
+            )
+            span and
+            +filter-number-input(
+              end,
+              ev => $helpers.updateFilterValue([start, Number(ev.target.value)]),
+              {autofocus: false, key: `num-end`}
+            )
+        else
+          .filter-number
+            +filter-number-input(
+              clause.filterValue,
+              ev => $helpers.updateFilterValue(Number(ev.target.value)),
+              {autofocus: true, key: `num-val: ${clause.filterOperator}`}
+            )
 
       when `boolean`
         .filter-radio-list.filter-boolean

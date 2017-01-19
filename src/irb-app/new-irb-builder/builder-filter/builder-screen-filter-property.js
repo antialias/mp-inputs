@@ -76,7 +76,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
 
           this.app.updateStageClause({filterValue});
         },
-        updateFilterString: ev => this.app.updateStageClause({filterValue: ev.target.value}),
+        updateFilterValue: filterValue => this.app.updateStageClause({filterValue}),
         commitFilter: () => this.updateAndCommitStageClause(),
       }),
     };
