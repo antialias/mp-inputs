@@ -18,11 +18,8 @@ class DateInput extends Component {
       },
       helpers: {
         formatDateDisplay,
-        focusedInput: () => {
-          this.inputEl.value = this.state.textValue;
-        },
         blurredInput: () => {
-          this.inputEl.value = formatDateDisplay(this.value);
+          this.inputEl.value = '';
         },
         changedInput: ev => {
           ev.stopPropagation();

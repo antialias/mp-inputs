@@ -1,11 +1,10 @@
 .date-input
   input(
-    props={
+    attrs={
       type: 'text',
-      value: $helpers.formatDateDisplay(dateValue),
+      placeholder: $helpers.formatDateDisplay(dateValue),
     }
     on={
-      focus: $helpers.focusedInput,
       blur: $helpers.blurredInput,
       change: $helpers.changedInput,
     }
