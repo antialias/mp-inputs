@@ -10,10 +10,7 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
       template,
       helpers: extend(super.config.helpers, {
         RANGES: TimeClause.RANGES,
-        getRangeList: () => {
-          this.updateScreensRenderedSize();
-          return TimeClause.RANGE_LIST.filter(range => range.includes(this.state.contextFilter));
-        },
+        RANGE_LIST: TimeClause.RANGE_LIST,
         isRangeSelected: range => {
           const selectedRange = this.helpers.getStageClauseAttr(`range`);
           return range === selectedRange || (

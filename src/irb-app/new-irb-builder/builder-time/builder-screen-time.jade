@@ -2,8 +2,9 @@ include ../mixins.jade
 
 .builder-screen.time
   ul.screen-options-list
-    each range in $helpers.getRangeList()
-      li.list-option(on={click: () => $helpers.clickedRange(range)})
-        +screen-option(range, {noIcon: true})
-        if range === $helpers.RANGES.CUSTOM
-          +small-caret-icon()
+      each range in $helpers.RANGE_LIST
+        if range.includes(contextFilter)
+          li.list-option(on={click: () => $helpers.clickedRange(range)})
+            +screen-option(range, {noIcon: true})
+            if range === $helpers.RANGES.CUSTOM
+              +small-caret-icon()
