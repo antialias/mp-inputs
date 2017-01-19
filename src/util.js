@@ -21,7 +21,7 @@ export const MS_BY_UNIT = {
 };
 
 export function formatDateISO(date) {
-  return date && date.toISOString().slice(0, 10);
+  return moment(date).format().slice(0, 10);
 }
 
 export function formatDateDisplay(date) {

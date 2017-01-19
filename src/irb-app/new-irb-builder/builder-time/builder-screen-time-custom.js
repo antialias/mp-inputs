@@ -23,23 +23,39 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
         clickedUnit: unit => this.updateStageClause({unit}, {shouldCommit: true}),
         getDates: () => this.getDates(),
         changedDates: ev => {
+          const now = moment();
           let {from, to} = ev.detail;
+
           if (from && to) {
-            const oldRange  = this.getDates();
+            from = moment(from);
+            to = moment(to);
+
+            if (from > now) {
+              from = now;
+            }
+
+            if (to > now) {
+              to = now;
+            }
 
             if (from > to) {
               [from, to] = [to, from];
             }
 
+            const oldRange = this.getDates();
+            const daysApart = to.diff(from, `days`) + 1;
+
+            from = formatDateISO(from);
+            to = formatDateISO(to);
+
             if (from !== oldRange.from || to !== oldRange.to) {
               // auto-adjust unit when changing date value
               let unit = null;
-              const days = moment.utc(to).diff(moment.utc(from), `days`) + 1;
-              if (days <= 4) {
+              if (daysApart <= 4) {
                 unit = `hour`;
-              } else if (days <= 31) {
+              } else if (daysApart <= 31) {
                 unit = `day`;
-              } else if (days <= 183) {
+              } else if (daysApart <= 183) {
                 unit = `week`;
               } else {
                 unit = `month`;
