@@ -27,7 +27,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
         chooseFilterOperator: filterOperator => {
           this.helpers.updateMenu(`operator`, false);
           const clause = this.app.getActiveStageClause();
-          if (clause.filterOperator != filterOperator) {
+          if (clause.filterOperator !== filterOperator) {
             this.resetProgressiveList();
             this.app.updateStageClause({filterOperator});
           }
@@ -35,7 +35,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
         chooseFilterType: filterType => {
           this.helpers.updateMenu(`type`, false);
           const clause = this.app.getActiveStageClause();
-          if (clause.filterType != filterType) {
+          if (clause.filterType !== filterType) {
             this.resetProgressiveList();
             this.app.updateStageClause({filterType});
           }
