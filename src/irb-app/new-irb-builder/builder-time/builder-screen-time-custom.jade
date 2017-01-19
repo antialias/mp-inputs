@@ -14,10 +14,7 @@ include ../mixins.jade
       irb-calendar(
         attrs={range: true}
         props={value: JSON.stringify({from, to})}
-        on={
-          change: $helpers.changedDates,
-          resize: $helpers.resizedCalendar,
-        }
+        on={change: $helpers.changedDates}
       )
   .unit-control
     .builder-label Time unit
