@@ -57,11 +57,8 @@ toggle-height = 34px
       &:after
         content none
 
-    &.enabled:hover, &.editing
-      background-color grey-50
-
   button
-    svg-icon-style(grey-700, blue-300, pos-left: -5px)
+    svg-icon-style(grey-500, mp-blue, pos-left: -5px)
     svg-height(toggle-height)
     align-items center
     background none
@@ -69,9 +66,9 @@ toggle-height = 34px
     background-position center
     background-repeat no-repeat
     border none
-    color grey-700
+    color grey-500
     display flex
-    font-weight 500
+    font-weight 700
     height 100%
     justify-content center
     padding 0
@@ -79,14 +76,16 @@ toggle-height = 34px
 
     &.selected
       color grey-900
+      font-weight 900
       svg-icon-style(grey-900, pos-left: -5px)
+
 
     &::before, &::after
       content none
 
   ul.chart-toggle.enabled
-    button:hover
-      color blue-300
+    button:hover:not(.selected)
+      color mp-blue
 
     .chart-type.disabled
       svg-icon-style(grey-500, pos-left: -5px)
@@ -97,29 +96,61 @@ toggle-height = 34px
         &:hover
           color grey-500
 
-  .toggle-button
+  .chart-type:not(.selected) .toggle-button
     display flex
 
-    button
-      &.dropdown
-        padding 0
-        width 20px
-        svg-icon-style(grey-300, grey-500, size: 20px)
-        svg-height(toggle-height)
+    &:hover
+      background-color grey-50
 
+  button.dropdown
+    padding 0
+    position absolute
+    right 7px
+    svg-icon-style(grey-300, mp-blue, pos-top: 1px)
+    svg-height(toggle-height)
+
+    .button-flex-wrapper
+      background-color grey-100
+      border 1px solid transparent
+      border-radius 3px
+      height 22px
+      margin-left 3px
+      width 22px
+
+      &:hover
+        background-color grey-50
+
+  li.has-dropdown
+    button.label
+        margin-right 24px
+    &:hover, &.editing
+      button.dropdown .button-flex-wrapper
+          border-color grey-300
+
+    &.editing
+      button.dropdown .button-flex-wrapper
+          background-color grey-50
+          svg-icon-style(grey-500, mp-blue, pos-top: 1px)
+
+    &.selected
+      button.dropdown .button-flex-wrapper
+          svg-icon-style(grey-900, mp-blue, pos-top: 1px)
+
+
+  button
+    &.label
+      font-size 12px
+      padding-left 20px
+      padding-right 5px
+      line-height toggle-height
+
+    &:last-child
       &.label
-        font-size 12px
-        padding-left 20px
-        padding-right 5px
-        line-height toggle-height
+        padding-right 15px
 
-      &:last-child
-        &.label
-          padding-right 15px
-
-        &.dropdown
-          padding-right 10px
-          width 30px
+      &.dropdown
+        padding-right 10px
+        width 30px
 
   .options
     background-color white
@@ -148,14 +179,14 @@ toggle-height = 34px
       text-align left
       white-space nowrap
       width 100%
-      svg-icon-style(grey-700, blue-300, pos-left: -5px)
+      svg-icon-style(grey-700, mp-blue, pos-left: -5px)
 
       &::before
         background-color grey-700
 
       &:hover
         background-color grey-100
-        color blue-300
+        color mp-blue
 
       &.selected
         color grey-900
@@ -192,7 +223,7 @@ button.extras-menu
   height 30px
   margin 3px 0
   width 30px
-  svg-icon-style(grey-700, blue-300)
+  svg-icon-style(grey-700, mp-blue)
 
   &.selected
     svg-icon-style(grey-900)

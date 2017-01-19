@@ -1,16 +1,19 @@
 ul.chart-toggle(class={
-  'editing-charttype': chartToggle.editingType,
+  'editing-charttype': chartToggle.editingType !== null,
   'enabled': projectHasEvents,
 })
   each chartType in $helpers.chartTypes()
     - const isEditingCurrentStyle = chartToggle.editingType === chartType
     - const selectedPlotStyle = $helpers.selectedPlotStyle(chartType)
     - const styleChoicesForChartType = $helpers.styleChoicesForChartType(chartType)
+    - const hasDropDown = styleChoicesForChartType.length > 1
     li.chart-type(
       class={
         [chartType]: true,
-        editing: isEditingCurrentStyle,
         disabled: $helpers.isChartTypeDisabled(chartType),
+        editing: isEditingCurrentStyle,
+        'has-dropdown': hasDropDown,
+        selected: chartType == report.displayOptions.chartType,
       }
     )
       .toggle-button
@@ -24,16 +27,20 @@ ul.chart-toggle(class={
             click: () => $helpers.onStyleClick(chartType, selectedPlotStyle),
           }
         )
-          svg-icon(attrs={icon: chartType})
-          = $helpers.formattedChartName(chartType, selectedPlotStyle)
-        if styleChoicesForChartType.length > 1
-          button.dropdown(on={click: () => $helpers.onDropdownClick(chartType)})
+          span.button-flex-wrapper
+            svg-icon(attrs={icon: chartType})
+            = $helpers.formattedChartName(chartType, selectedPlotStyle)
+      if hasDropDown
+        button.dropdown(on={click: () => $helpers.onDropdownClick(chartType)})
+          span.button-flex-wrapper
             svg-icon(attrs={icon: 'caret-down'})
       mp-drop-menu(
         attrs={open: isEditingCurrentStyle}
         on={change: ev => $helpers.menuChange(ev, chartType)}
       )
-        .chart-style.options(attrs={'slot-body': true})
+        .chart-style.options(
+          attrs={'slot-body': true}
+        )
           each plotStyle in styleChoicesForChartType
             button.button-option(
               class={
@@ -45,6 +52,7 @@ ul.chart-toggle(class={
                click: () => $helpers.onStyleClick(chartType, plotStyle),
               }
             )
-              - const iconPlotStyle = plotStyle === `standard` ? `` : `-${plotStyle}`;
-              svg-icon(attrs={icon: chartType + iconPlotStyle})
-              = $helpers.formattedChartName(chartType, plotStyle)
+              span.button-flex-wrapper
+                - const iconPlotStyle = plotStyle === `standard` ? `` : `-${plotStyle}`;
+                svg-icon(attrs={icon: chartType + iconPlotStyle})
+                = $helpers.formattedChartName(chartType, plotStyle)
