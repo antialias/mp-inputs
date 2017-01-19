@@ -5,7 +5,7 @@ import BaseQuery from './base';
 
 class BaseTopPropertiesQuery extends BaseQuery {
   buildParams() {
-    return {limit: 1500};
+    return {limit: 255};
   }
 
   processResults(results) {
