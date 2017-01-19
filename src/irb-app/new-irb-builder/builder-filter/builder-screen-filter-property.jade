@@ -76,32 +76,39 @@ mixin filter-date-input
     case clause.filterType
 
       when `string`
+        - const isLoading = $helpers.isLoading()
         +filter-operator-dropdown
         case clause.filterOperator
           when `equals`
           when `does not equal`
             //- TODO search goes here
             .screen-list-container(on={scroll: $helpers.scrolledList})
-              ul.filter-string-equals-choices
-                +checkbox-select-all(
-                  $helpers.allEqualsValuesSelected(),
-                  $helpers.toggleAllFilterValues
-                )
-                each value in $helpers.getEqualsMatches()
-                  +checkbox-item(
-                    util.renamePropertyValue(value),
-                    value,
-                    clause.filterValue && clause.filterValue.indexOf(value) !== -1,
-                    $helpers.toggleStringEqualsValueSelected
+              if isLoading
+                +pane-loader
+              else
+                ul.filter-string-equals-choices
+                  +checkbox-select-all(
+                    $helpers.allEqualsValuesSelected(),
+                    $helpers.toggleAllFilterValues
                   )
+                  each value in $helpers.getEqualsMatches()
+                    +checkbox-item(
+                      util.renamePropertyValue(value),
+                      value,
+                      clause.filterValue && clause.filterValue.indexOf(value) !== -1,
+                      $helpers.toggleStringEqualsValueSelected
+                    )
 
           when `contains`
           when `does not contain`
             +filter-string-input
-            .screen-list-container(on={scroll: $helpers.scrolledList})
-              ul.filter-string-contains-choices
-                each value in $helpers.getContainsMatches()
-                  li.string-contains-match= value
+            if isLoading
+              +pane-loader
+            else
+              .screen-list-container(on={scroll: $helpers.scrolledList})
+                ul.filter-string-contains-choices
+                  each value in $helpers.getContainsMatches()
+                    li.string-contains-match= value
 
       when `number`
         +filter-operator-dropdown

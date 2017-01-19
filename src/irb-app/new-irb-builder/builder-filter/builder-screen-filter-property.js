@@ -3,6 +3,7 @@
 
 import { BuilderScreenBase } from '../builder-pane/builder-screen-base';
 import { FilterClause } from '../../../models/clause';
+import BaseQuery from '../../../models/queries/base';
 import {
   extend,
   getIconForPropertyType,
@@ -93,6 +94,10 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
         commitFilter: () => this.updateAndCommitStageClause(),
       }),
     };
+  }
+
+  isLoading() {
+    return this.state.topPropertyValues === BaseQuery.LOADING;
   }
 
   progressiveListLength() {

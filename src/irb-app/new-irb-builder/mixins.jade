@@ -64,8 +64,7 @@ mixin property-list(properties, options)
             +small-caret-icon()
     else
       if options.loading
-        .loading-properties
-          mp-spinner
+        +pane-loader
       else
         li.list-option.list-empty no properties available
 
@@ -119,3 +118,7 @@ mixin small-caret-icon(options)
   - options = options || {}
   .caret-icon.small-caret
     svg-icon(attrs={icon: `caret-${options.direction || 'right'}`})
+
+mixin pane-loader()
+  .loading-properties
+    mp-spinner

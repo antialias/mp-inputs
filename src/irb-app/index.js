@@ -653,6 +653,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           topPropertyValues = this.queries.topEventPropertyValues;
           break;
       }
+      this.update({topPropertyValues: TopEventsQuery.LOADING});
       const query = topPropertyValues.build(newState).query;
       const cachedResult = this.queries.topPropertyValuesCache.get(query);
 
