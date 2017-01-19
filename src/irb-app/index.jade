@@ -1,12 +1,12 @@
-- const learnStep = learn && learn.step({learn, report});
+- const learnStep = learnActive && util.getLearnStep(learnModalStepIndex, report);
 - const learnClass = learnStep && learnStep.cls;
 
 .irb-app(class={
   'error-no-project-data': !projectHasEvents,
-  'irb-learn-active': !!learn,
+  'irb-learn-active': !!learnActive,
   [learnClass]: !!learnClass,
 })
-  if learn
+  if learnActive
     = $component.child('irb-learn')
   .irb-main-panel.top-panel
     = $component.child('irb-header')

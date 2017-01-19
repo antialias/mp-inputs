@@ -12,12 +12,11 @@ document.registerElement(`irb-learn`, class extends Component {
       template,
       helpers: {
         getStep: () => this.step,
-        clickedNext: () => {
-          const modalIndex = (this.state.learn.modalIndex || 0) + 1;
-          this.update({learn: extend(this.state.learn, {modalIndex})});
-        },
+        clickedNext: () => this.update({
+          learnModalStepIndex: (this.state.learnModalStepIndex || 0) + 1,
+        }),
         clickedFinish: () => {
-          this.update({learn: null});
+          this.update({learnActive: false, learnModalStepIndex: null});
           this.navigate(``);
         },
       },
@@ -25,8 +24,8 @@ document.registerElement(`irb-learn`, class extends Component {
   }
 });
 
-function getShowClauseEvents(state) {
-  return state.report.sections[ShowClause.TYPE].clauses
+function getShowClauseEvents(report) {
+  return report.sections[ShowClause.TYPE].clauses
     .map(clause => clause.value.name)
     .filter(mpEvent =>
       mpEvent !== ShowClause.ALL_EVENTS.name &&
@@ -34,44 +33,44 @@ function getShowClauseEvents(state) {
     );
 }
 
-function getGroupClauseProperties(state) {
-  return state.report.sections[GroupClause.TYPE].clauses
+function getGroupClauseProperties(report) {
+  return report.sections[GroupClause.TYPE].clauses
     .map(clause => clause.value.name);
 }
 
 const steps = [{
   name: `introduction`,
-  condition: state => state.learn,
+  condition: () => true,
 }, {
   name: `getting-started`,
-  condition: state => state.learn && state.learn.modalIndex === 1,
+  condition: index => index === 1,
 }, {
   name: `choose-event`,
   cls: `irb-learn-choose-event`,
-  condition: state => state.learn && state.learn.modalIndex === 2,
+  condition: index => index === 2,
 }, {
   name: `compare-event`,
   cls: `irb-learn-compare-event`,
-  condition: state => getShowClauseEvents(state).length === 1,
+  condition: (index, report) => getShowClauseEvents(report).length === 1,
 }, {
   name: `group-by`,
   cls: `irb-learn-group-by`,
-  condition: state => getShowClauseEvents(state).length === 2,
+  condition: (index, report) => getShowClauseEvents(report).length === 2,
 }, {
   name: `manipulate-data`,
   cls: `irb-learn-manipulate-data`,
-  condition: state => getGroupClauseProperties(state).length === 1,
+  condition: (index, report) => getGroupClauseProperties(report).length === 1,
 }, {
   name: `conclusion`,
-  condition: state => (
-    state.report.displayOptions.chartType !== `bar` ||
-    state.report.displayOptions.value !== `absolute`
+  condition: (index, report) => (
+    report.displayOptions.chartType !== `bar` ||
+    report.displayOptions.value !== `absolute`
   ),
 }];
 
-export default function step(state) {
-  const index = steps.length - 1 - (
-    [...steps].reverse().findIndex(step => step.condition(state))
+export function getLearnStep(index, report) {
+  index = steps.length - 1 - (
+    [...steps].reverse().findIndex(step => step.condition(index, report))
   );
   return extend(steps[index], {index});
 }

@@ -1,41 +1,41 @@
 include ./tooltip.jade
 
-- const step = learn && learn.step({learn, report});
-- const stepName = step && step.name;
-- const modalClickHandler = stepName === `conclusion` ? $helpers.clickedFinish : $helpers.clickedNext;
-- const isModalStep = [`introduction`, `getting-started`, `conclusion`].includes(stepName);
-
 .irb-learn
-  if isModalStep
-    mp-modal(attrs={open: true})
-      .mp-modal-content
-        .mp-modal-title
+  if learnActive
+    - const step = util.getLearnStep(learnModalStepIndex, report);
+    - const modalClickHandler = step.name === `conclusion` ? $helpers.clickedFinish : $helpers.clickedNext;
+    - const isModalStep = [`introduction`, `getting-started`, `conclusion`].includes(step.name);
+
+    if isModalStep
+      mp-modal(attrs={open: true})
+        .mp-modal-content
+          .mp-modal-title
+            case step.name
+              when `introduction`
+                | Introducing Inquiry
+              when `getting-started`
+                | Constructing an Inquiry query
+              when `conclusion`
+                | You've built your first Inquiry query
+          .mp-modal-subtitle
+            case step.name
+              when `introduction`
+                | Inquiry is a robust and flexible natural language analytics tool that lets you query your data in ways never before possible.
+              when `getting-started`
+                | We built Atlas to make
+                span.code counting
+                | your events, properties, and users easier than ever. It also has powerful
+                span.code compare
+                | and
+                span.code group by
+                | functions.
+              when `conclusion`
+                | You can save it, export it, add it to your dashboard, and even filter your results. Click the button below to start exploring Inquiry's powers on your own.
+        mp-button-bar.mp-button-bar-primary(on={click: modalClickHandler})
           case step.name
             when `introduction`
-              | Introducing Inquiry
+              | Next
             when `getting-started`
-              | Constructing an Inquiry query
+              | Let's get started
             when `conclusion`
-              | You've built your first Inquiry query
-        .mp-modal-subtitle
-          case stepName
-            when `introduction`
-              | Inquiry is a robust and flexible natural language analytics tool that lets you query your data in ways never before possible.
-            when `getting-started`
-              | We built Atlas to make
-              span.code counting
-              | your events, properties, and users easier than ever. It also has powerful
-              span.code compare
-              | and
-              span.code group by
-              | functions.
-            when `conclusion`
-              | You can save it, export it, add it to your dashboard, and even filter your results. Click the button below to start exploring Inquiry's powers on your own.
-      mp-button-bar.mp-button-bar-primary(on={click: modalClickHandler})
-        case stepName
-          when `introduction`
-            | Next
-          when `getting-started`
-            | Let's get started
-          when `conclusion`
-            | Explore Inquiry on your own
+              | Explore Inquiry on your own

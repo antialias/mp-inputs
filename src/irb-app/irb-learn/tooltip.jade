@@ -1,33 +1,34 @@
 mixin irb-learn-tooltip(...stepNames)
-  - const learnStep = learn && learn.step({learn, report});
+  if learnActive
+    - const step = util.getLearnStep(learnModalStepIndex, report);
 
-  if learnStep && stepNames.includes(learnStep.name)
-    - const placement = learnStep.name === `manipulate-data` ? `center` : `right`;
-    - const overrideTop = placement === `center` ? `70px` : null;
+    if stepNames.includes(step.name)
+      - const placement = step.name === `manipulate-data` ? `center` : `right`;
+      - const overrideTop = placement === `center` ? `70px` : null;
 
-    mp-tutorial-tooltip(attrs={
-      placement,
-      overrideTop,
-      numSteps: 4,
-      currStep: learnStep.index - 2,
-    })
-      .mp-tooltip-title
-        case learnStep.name
-          when `choose-event`
-            | Let's start by choosing an event
-          when `compare-event`
-            | Next, let's compare it to another event
-          when `group-by`
-            | Now let's add a group by function
-          when `manipulate-data`
-            | Manipulate your data
-      .mp-tooltip-subtitle
-        case learnStep.name
-          when `choose-event`
-            | The Show Menu lets you specify a dataset to measure, like an event for instance.
-          when `compare-event`
-            | The modifier button gives you different options based on the dataset that you select.
-          when `group-by`
-            | The Group By function in Inquiry lets you look at different segments of your datasets.
-          when `manipulate-data`
-            | Choose a different chart, analysis, and value types to really get a handle on your data.
+      mp-tutorial-tooltip(attrs={
+        placement,
+        overrideTop,
+        numSteps: 4,
+        currStep: step.index - 2,
+      })
+        .mp-tooltip-title
+          case step.name
+            when `choose-event`
+              | Let's start by choosing an event
+            when `compare-event`
+              | Next, let's compare it to another event
+            when `group-by`
+              | Now let's add a group by function
+            when `manipulate-data`
+              | Manipulate your data
+        .mp-tooltip-subtitle
+          case step.name
+            when `choose-event`
+              | The Show Menu lets you specify a dataset to measure, like an event for instance.
+            when `compare-event`
+              | The modifier button gives you different options based on the dataset that you select.
+            when `group-by`
+              | The Group By function in Inquiry lets you look at different segments of your datasets.
+            when `manipulate-data`
+              | Choose a different chart, analysis, and value types to really get a handle on your data.
