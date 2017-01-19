@@ -5,6 +5,7 @@
     .control-buttons.edit-control
       if $helpers.isPaneOpen()
         input.control-label(
+          hook={insert: $helpers.insertedInput}
           props={
             autoFocus: true,
             type: `text`,

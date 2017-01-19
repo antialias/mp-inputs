@@ -20,12 +20,6 @@ export class EditControl extends Component {
           this.openPane();
           this.app.stopEditingClause();
           this.app.startEditingClause(this.section, this.clauseIndex);
-          requestAnimationFrame(() => {
-            const el = this.el.querySelector(`input.control-label`);
-            if (el) {
-              el.focus();
-            }
-          });
         },
         labelPrefixComponent: () => this.labelPrefixComponent(),
         menuChange: ev => ev.detail && ev.detail.state === `closed` && this.isPaneOpen() && this.app.stopBuildingQuery(),
@@ -34,6 +28,7 @@ export class EditControl extends Component {
           this.app.updateBuilderCurrentScreen({progressiveListSize: null});
         }, 200, {leading: true, maxWait: 200}),
         getLabel: () => this.getLabel(),
+        insertedInput: vnode => vnode.elm.focus(),
         isPaneOpen: () => this.isPaneOpen(),
         isRemovable: () => this.isRemovable(),
         removeClause: () => this.remove(),

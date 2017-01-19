@@ -18,10 +18,6 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
         clickedAdd: () => {
           if (!this.isPaneOpen()) {
             this.openPane();
-            const el = this.el.querySelector(`input.control-label`);
-            if (el) {
-              el.focus();
-            }
           } else {
             this.app.stopBuildingQuery();
           }
@@ -33,6 +29,7 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
           [ShowClause.TYPE]: `and`,
           [GroupClause.TYPE]: `by`,
         }[this.app.originStageClauseType()] || ``),
+        insertedInput: vnode => vnode.elm.focus(),
         isPaneOpen: () => this.isPaneOpen(),
         changedSearch: throttle(ev => {
           this.update({contextFilter: ev.target.value});

@@ -5,18 +5,22 @@
     .control-buttons.add-control
       button.add-button(on={click: $helpers.clickedAdd})
         svg-icon(attrs={icon: 'plus-large'})
-      input.control-label(
-        props={
-          autoFocus: true,
-          type: `text`,
-          value: contextFilter,
-        }
-        on={
-          click: $helpers.clickedInput,
-          input: $helpers.changedSearch,
-        }
-      )
-        span.label-preposition= $helpers.getPreposition()
+      if open
+        input.control-label(
+          hook={
+            insert: $helpers.insertedInput,
+          }
+          on={
+            click: $helpers.clickedInput,
+            input: $helpers.changedSearch,
+          }
+          props={
+            autoFocus: true,
+            type: `text`,
+            value: contextFilter,
+          }
+        )
+          span.label-preposition= $helpers.getPreposition()
     .drop-menu
       mp-drop-menu(attrs={open} on={change: $helpers.menuChange})
         .new-pane-content(attrs={'slot-body': true})= $component.child(`builder-pane`)

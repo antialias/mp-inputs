@@ -3,19 +3,21 @@
 .control-container
   .irb-new-control.new-query-builder(class={'pane-open': open})
     .control-buttons.add-filter-control
-      input.control-label.builder-search-input(
-        class={'search-active': open}
-        props={
-          autoFocus: true,
-          placeholder: 'Search',
-          type: `text`,
-          value: contextFilter,
-        }
-        on={
-          click: $helpers.clickedInput,
-          input: $helpers.changedSearch,
-        }
-      )
+      if open
+        input.control-label.builder-search-input(
+          class={'search-active': open}
+          hook={insert: $helpers.insertedInput}
+          props={
+            autoFocus: true,
+            placeholder: 'Search',
+            type: `text`,
+            value: contextFilter,
+          }
+          on={
+            click: $helpers.clickedInput,
+            input: $helpers.changedSearch,
+          }
+        )
       button.add-filter-button(on={click: $helpers.clickedAdd})
         span.button-flex-wrapper
           svg-icon(attrs={icon: open ? 'x' : 'plus'})
