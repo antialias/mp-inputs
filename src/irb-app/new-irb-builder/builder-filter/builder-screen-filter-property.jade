@@ -25,6 +25,21 @@ mixin filter-operator-dropdown
         )
           = filterOperator
 
+mixin filter-string-input
+  .filter-string-input-wrapper
+    input.filter-string-input(
+      props={
+        autoFocus: true,
+        focusDelay: 200,
+        type: 'text',
+        value: clause.filterValue,
+      }
+      on={
+        input: $helpers.updateFilterString,
+      }
+    )
+
+
 - const clause = $helpers.getActiveClause()
 
 .builder-screen.filter-property
@@ -64,31 +79,33 @@ mixin filter-operator-dropdown
 
           when `contains`
           when `does not contain`
-            input.filter-string-input(
-              props={
-                autoFocus: true,
-                focusDelay: 200,
-                type: 'text',
-                value: clause.filterValue,
-              }
-              on={
-                input: $helpers.updateFilterString,
-              }
-            )
+            +filter-string-input
             ul.filter-string-contains-choices
               each value in $helpers.getContainsMatches()
                 li.string-contains-match= value
 
       when `boolean`
-        .filter-boolean-radio-list
+        .filter-radio-list.filter-boolean
           .radio-button(
             class={'radio-selected': clause.filterOperator === `is true`}
-            on={click: () => $helpers.selectBooleanOption(`is true`)}
+            on={click: () => $helpers.chooseFilterOperator(`is true`)}
           ) True
           .radio-button(
             class={'radio-selected': clause.filterOperator === `is false`}
-            on={click: () => $helpers.selectBooleanOption(`is false`)}
+            on={click: () => $helpers.chooseFilterOperator(`is false`)}
           ) False
+
+      when `list`
+        .filter-radio-list.filter-list
+          .radio-button(
+            class={'radio-selected': clause.filterOperator === `contains`}
+            on={click: () => $helpers.chooseFilterOperator(`contains`)}
+          ) Contains
+          .radio-button(
+            class={'radio-selected': clause.filterOperator === `does not contain`}
+            on={click: () => $helpers.chooseFilterOperator(`does not contain`)}
+          ) Does not contain
+        +filter-string-input
 
       default
         +filter-operator-dropdown

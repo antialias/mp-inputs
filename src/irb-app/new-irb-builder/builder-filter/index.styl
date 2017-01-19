@@ -150,13 +150,25 @@ builder-screen-filter-property
         height 310px
         padding 0 15px
 
-      .filter-boolean-radio-list
+      .filter-radio-list
         align-items center
         display flex
-        margin 23px 70px
+        margin 23px 10px
+        &.filter-boolean
+          margin 23px 70px
+        &.filter-list
+          border-bottom 1px solid grey-150
+          padding-bottom 23px
         .radio-button
           flex-grow 1
           justify-content center
+
+      .filter-string-input-wrapper
+        box-sizing border-box
+        padding 0 15px
+        width 100%
+        .filter-string-input
+          width 100%
 
     button.screen-footer
       background-color mp-blue

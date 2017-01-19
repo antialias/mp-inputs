@@ -53,10 +53,16 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           ),
         getEqualsMatches: () =>
           this.helpers.getValueMatches(this.app.activeStageClause.filterSearch),
-        getValueMatches: (string, invert) =>
-          this.state.topPropertyValues
-            .filter(value => !string || renamePropertyValue(value).toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert),
-        selectBooleanOption: value => this.app.updateStageClause({filterOperator: value}),
+        getValueMatches: (string, invert) => {
+          if (typeof string !== `string`) {
+            string = ``;
+          }
+          return this.state.topPropertyValues
+            .filter(value =>
+              !string ||
+              renamePropertyValue(value).toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert
+            );
+        },
         toggleStringEqualsValueSelected: value => {
           const clause = this.app.activeStageClause;
           const selected = (clause && clause.filterValue) || [];
