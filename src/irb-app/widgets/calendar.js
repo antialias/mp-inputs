@@ -61,6 +61,10 @@ class Calendar extends WebComponent {
       onSelect: date => this.selectDate(date),
       onDraw: () => this.emitResize(),
     });
+
+    // Pikaday registers a keydown event handler on the document (?#&!), get rid of it
+    document.removeEventListener('keydown', this.picker._onKeyChange);
+
     this.appendChild(this.picker.el);
     this.updatePicker();
   }
