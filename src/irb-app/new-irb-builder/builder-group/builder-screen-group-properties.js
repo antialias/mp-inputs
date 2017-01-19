@@ -15,6 +15,7 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
           this.updateAndCommitStageClause({
             propertyType: property.type,
             resourceType: property.resourceType,
+            typeCast: null,
             value: property.name,
           });
         },
