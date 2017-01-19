@@ -37,14 +37,8 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
               break;
           }
         },
-        getContextOptions: () => {
-          this.updateScreensRenderedSize();
-          return CONTEXT_OPTIONS[this.state.report.sections.show.clauseResourceTypes()] || [];
-        },
-        getContextLists: () => {
-          this.updateScreensRenderedSize();
-          return this.buildProgressiveList();
-        },
+        getContextOptions: () => CONTEXT_OPTIONS[this.state.report.sections.show.clauseResourceTypes()] || [],
+        getContextLists: () => this.buildProgressiveList(),
         clickedProperty: (ev, property) => {
           this.app.startAddingClause(`group`);
           this.updateAndCommitStageClause({

@@ -16,7 +16,7 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
       template,
       helpers: extend(super.config.helpers, {
         getSources: () => {
-          this.updateScreensRenderedSize();
+          this.updateRenderedSizeOnNextFrame();
           return SOURCES;
         },
 
@@ -26,7 +26,7 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
           this.nextScreen(`builder-screen-${resourceType}`);
         },
         getFilteredLists: () => {
-          this.updateScreensRenderedSize();
+          this.updateRenderedSizeOnNextFrame();
           return this.buildProgressiveList();
         },
       }),

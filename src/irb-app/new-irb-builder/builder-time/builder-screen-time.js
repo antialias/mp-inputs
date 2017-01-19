@@ -20,7 +20,6 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
         clickedRange: range => {
           if (range === TimeClause.RANGES.CUSTOM) {
             this.nextScreen(`builder-screen-time-custom`);
-            this.updateScreensRenderedSize();
           } else {
             this.updateAndCommitStageClause({range});
           }

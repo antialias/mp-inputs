@@ -4,7 +4,10 @@ include ../mixins.jade
 
 .builder-screen.properties
   +screen-title(`People`, {backButton: !!$helpers.screenIdx()})
-  .screen-list-container(on={scroll: $helpers.scrolledList})
+  .screen-list-container(
+    hook={postpatch: $helpers.updateRenderedSize}
+    on={scroll: $helpers.scrolledList}
+  )
     +property-list($helpers.getSpecialOptions(), {
       clickedProperty: $helpers.clickedSpecialOptions,
     })

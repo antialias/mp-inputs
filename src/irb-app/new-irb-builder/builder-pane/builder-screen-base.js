@@ -18,7 +18,7 @@ const PROGRESSIVE_LIST_START_SIZE = 20;
 export class BuilderScreenBase extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
-    this.updateScreensRenderedSize({cancelDuringTransition: false});
+    this.updateRenderedSizeOnNextFrame({cancelDuringTransition: false});
   }
 
   get config() {
@@ -152,13 +152,13 @@ export class BuilderScreenBase extends Component {
   }
 
   updateRenderedSize({cancelDuringTransition=true}={}) {
-    if (!(cancelDuringTransition && this.state.builderPane.inTransition)) {
+    if (!(cancelDuringTransition && this.state.builderPane.inTransition) && this.firstChild) {
       const {width, height} = this.firstChild.getBoundingClientRect();
       this.setPaneSizeAndPosition(width, height);
     }
   }
 
-  updateScreensRenderedSize({cancelDuringTransition=true}={}) {
+  updateRenderedSizeOnNextFrame({cancelDuringTransition=true}={}) {
     requestAnimationFrame(() => {
       this.updateRenderedSize({cancelDuringTransition});
     });
