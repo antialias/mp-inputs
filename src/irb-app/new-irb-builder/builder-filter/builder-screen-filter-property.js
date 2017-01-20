@@ -59,7 +59,9 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           if (!Array.isArray(selected)) {
             return false;
           } else {
-            const values = new Set(this.helpers.getValueMatches(this.app.activeStageClause.filterSearch, false, false));
+            const values = new Set(this.helpers.getValueMatches(
+              this.app.activeStageClause.filterSearch, {progressive: false}
+            ));
             return values.size === selected.length && selected.every(val => values.has(val));
           }
         },
@@ -70,7 +72,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           ),
         getEqualsMatches: () =>
           this.helpers.getValueMatches(this.app.activeStageClause.filterSearch),
-        getValueMatches: (string, invert, progressive=true) => {
+        getValueMatches: (string, {invert=false, progressive=true}={}) => {
           if (typeof string !== `string`) {
             string = ``;
           }
@@ -90,7 +92,9 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
         toggleAllFilterValues: () => {
           let filterValue = [];
           if (!this.helpers.allEqualsValuesSelected()) {
-            filterValue = this.helpers.getValueMatches(this.app.activeStageClause.filterSearch, false, false);
+            filterValue = this.helpers.getValueMatches(
+              this.app.activeStageClause.filterSearch, {progressive: false}
+            );
           }
           this.app.updateStageClause({filterValue});
         },
