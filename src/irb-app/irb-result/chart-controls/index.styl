@@ -86,6 +86,9 @@ toggle-height = 34px
           cursor default
           svg-icon-style(grey-900, pos-left: -5px)
 
+      &:not(.selected):not(.disabled)
+        cursor pointer
+
 .error-no-project-data .irb-result .chart-toggle
   button, button:hover
     color grey-500
