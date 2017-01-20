@@ -54,7 +54,15 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
         updateMenu: (menu, open) => this.app.updateBuilderCurrentScreen({[`${menu}MenuOpen`]: open}),
 
         // filter content selection
-        allEqualsValuesSelected: () => false, // TODO implement me!
+        allEqualsValuesSelected: () => {
+          const selected = this.app.activeStageClause.filterValue;
+          if (!Array.isArray(selected)) {
+            return false;
+          } else {
+            const values = new Set(this.helpers.getValueMatches(this.app.activeStageClause.filterSearch, false, false));
+            return values.size === selected.length && selected.every(val => values.has(val));
+          }
+        },
         getContainsMatches: () =>
           this.helpers.getValueMatches(
             this.app.activeStageClause.filterValue,
@@ -62,17 +70,22 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           ),
         getEqualsMatches: () =>
           this.helpers.getValueMatches(this.app.activeStageClause.filterSearch),
-        getValueMatches: (string, invert) => {
+        getValueMatches: (string, invert, progressive=true) => {
           if (typeof string !== `string`) {
             string = ``;
           }
-          const list = this.state.topPropertyValues
-            .filter(value =>
-              !string ||
+          let list = this.state.topPropertyValues;
+          if (string) {
+            list = list.filter(value =>
               renamePropertyValue(value).toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert
             );
-          this._progressiveListLength = list.length;
-          return list.slice(0, this.progressiveListSize);
+          }
+          if (progressive) {
+            this._progressiveListLength = list.length;
+            return list.slice(0, this.progressiveListSize);
+          } else {
+            return list;
+          }
         },
         toggleStringEqualsValueSelected: value => {
           const clause = this.app.activeStageClause;
