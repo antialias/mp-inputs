@@ -1,0 +1,58 @@
+@import "../../../../stylesheets/common"
+
+button.extras-menu
+  height 30px
+  margin 3px 0
+  width 30px
+  svg-icon-style(grey-700, mp-blue)
+
+  &.selected
+    svg-icon-style(grey-900)
+
+.options.extras-menu-options
+  border-radius 5px 0 5px 5px
+  display flex
+  left auto
+  padding 15px 0 10px
+  right 0
+  top 40px
+  width 276px
+
+  .disabled
+    opacity .3
+    pointer-events none
+
+  .analysis ul
+    border-right 1px solid grey-200
+
+  .section
+    flex-grow 1
+    width 138px
+
+    li
+      border none
+      height inherit
+      justify-content flex-start
+      margin 0 10px
+
+      button
+        height inherit
+        margin 0
+        text-transform capitalize
+        cursor default
+
+    .title
+      color grey-700
+      font-size 11px
+      font-weight bold
+      margin-bottom 5px
+      padding 5px 20px
+      text-transform uppercase
+
+
+.extras-menu-container
+  z-index 2
+
+  .toggle-view > li
+    position absolute
+    right 0

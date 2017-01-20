@@ -1,0 +1,201 @@
+@import "../../../../stylesheets/common"
+
+toggle-height = 34px
+
+ul.chart-toggle
+  border solid 1px transparent
+  border-radius 3px
+  display flex
+
+  &.enabled:hover, &.editing-charttype
+    border-color border-gray
+    box-shadow 0 1px 2px 0 rgba(0, 0, 0, 0.05)
+
+    .chart-type
+      border-color border-gray
+
+      &:after
+        content none
+
+.chart-type
+  border-right 1px solid transparent
+  display flex
+  justify-content flex-end
+  position relative
+  z-index 3
+
+  &:after
+    background-color border-gray
+    content ''
+    display block
+    height 28px
+    margin 3px 0
+    position absolute
+    right -1px
+    width 1px
+
+  &:first-child
+    border-bottom-left-radius 3px
+    border-top-left-radius 3px
+
+  &:last-child
+    border-right none
+    border-bottom-right-radius 3px
+    border-top-right-radius 3px
+
+    &:after
+      content none
+
+  button
+    svg-icon-style(grey-500, mp-blue, pos-left: -5px)
+    svg-height(toggle-height)
+    background none
+    background-color initial
+    background-position center
+    background-repeat no-repeat
+    border none
+    color grey-500
+    font-weight 700
+    height 100%
+    padding 0
+    white-space nowrap
+    .button-flex-wrapper
+      align-items center
+      display flex
+      justify-content center
+
+    &.selected
+      color grey-900
+      font-weight 900
+      svg-icon-style(grey-900, pos-left: -5px)
+
+    &::before, &::after
+      content none
+
+ul.chart-toggle.enabled
+  button:hover:not(.selected)
+    color mp-blue
+
+  .chart-type.disabled
+    svg-icon-style(grey-500, pos-left: -5px)
+    button
+      color grey-500
+      cursor default
+
+      &:hover
+        color grey-500
+
+.chart-type:not(.selected) .toggle-button
+  display flex
+
+  &:hover
+    background-color grey-50
+
+button.dropdown
+  padding 0
+  position absolute
+  right 7px
+  svg-icon-style(grey-300, mp-blue, pos-top: 1px)
+  svg-height(toggle-height)
+
+  .button-flex-wrapper
+    background-color grey-100
+    border 1px solid transparent
+    border-radius 3px
+    height 22px
+    margin-left 3px
+    width 22px
+
+    &:hover
+      background-color grey-50
+
+li.has-dropdown
+  button.label
+      margin-right 24px
+  &:hover, &.editing
+    button.dropdown .button-flex-wrapper
+      border-color grey-300
+
+  &.editing
+    button.dropdown .button-flex-wrapper
+      background-color grey-50
+       svg-icon-style(grey-500, mp-blue, pos-top: 1px)
+
+  &.selected
+    button.dropdown .button-flex-wrapper
+      svg-icon-style(grey-900, mp-blue, pos-top: 1px)
+
+button
+  &.label
+    font-size 12px
+    padding-left 20px
+    padding-right 5px
+    line-height toggle-height
+
+  &:last-child
+    &.label
+      padding-right 15px
+
+    &.dropdown
+      padding-right 10px
+      width 30px
+
+.options
+  background-color white
+  border-radius 5px
+  box-shadow 0 7px 18px 0 rgba(121,124,135,0.26)
+  margin-top 2px
+  min-width 100px
+  position absolute
+  left 0
+  padding 8px 10px 9px 10px
+  top toggle-height
+  z-index 3
+
+  .button-flex-wrapper
+    justify-content flex-start
+
+  .button-option
+    border-radius 3px
+    color grey-700
+    font-weight 500
+    font-size 12px
+    height inherit
+    line-height 30px
+    padding 0px 10px
+    position relative
+    text-align left
+    white-space nowrap
+    width 100%
+    svg-icon-style(grey-700, mp-blue, pos-left: -5px)
+
+    &::before
+      background-color grey-700
+
+    &:hover
+      background-color grey-100
+      color mp-blue
+
+    &.selected
+      color grey-900
+      font-weight bold
+      svg-icon-style(grey-900, pos-left: -5px)
+      &:hover
+        background white
+        color grey-900
+        cursor default
+        svg-icon-style(grey-900, pos-left: -5px)
+
+&.chart-type:hover, &.editing
+  border-color grey-300
+
+  button.dropdown
+    border-color grey-300
+
+    .extras-menu-container
+      z-index 2
+
+      .extras-menu
+        margin 5px 0
+        position absolute
+        right 0
