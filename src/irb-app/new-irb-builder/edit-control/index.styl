@@ -5,14 +5,9 @@
 
   .control-buttons
     align-items center
+    cursor pointer
     display flex
     height 36px
-
-    &:not(.add-control)
-      border-bottom 1px dotted grey-500
-
-      &:hover
-        border-bottom 1px solid mp-blue
 
     button
       background transparent
@@ -21,29 +16,46 @@
       padding 0
 
     .control-label, input.control-label
-      border none
+      border-bottom 1px dotted mp-blue
       border-radius 0
       color mp-blue
-      cursor pointer
+
       font-family font-helvetica-neue
       font-size 16px
       line-height 30px
 
-    .control-label
+      &:hover
+        border-bottom-style solid
+
+
+
+    input.control-label
+      border none
+      border-bottom 1px dotted mp-blue
       align-items center
       display flex
+
+    .control-label
+      align-items center
+      box-sizing border-box
+      display flex
+      height 100%
 
     &:hover
       color blue-300
 
-  &.pane-open .add-control
-    .control-label
-      text-align left
-      transition width input-animation-time, transform input-animation-time
-      width 200px
+  &.pane-open
+    .control-label, input.control-label
+      border-bottom-style solid
 
-      .label-preposition
-        visibility visible
+    .add-control
+      .control-label
+        text-align left
+        transition width input-animation-time, transform input-animation-time
+        width 200px
+
+        .label-preposition
+          visibility visible
 
 
     button.add-button
