@@ -1,5 +1,7 @@
 import { Component } from 'panel';
 
+import { ShowClause } from '../../models/clause';
+
 import template from './index.jade';
 import './index.styl';
 
@@ -22,6 +24,9 @@ document.registerElement(`new-irb-builder`, class extends Component {
           this.app.navigate(``, this.app.resetQuery());
           this.app.trackEvent(`Reset Report`, reportTrackingData);
         },
+        shouldShowTimeBuilder: () => (
+          this.state.report.sections.show.clauseResourceTypes() !== ShowClause.RESOURCE_TYPE_PEOPLE
+        ),
       },
     };
   }
