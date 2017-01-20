@@ -1,6 +1,6 @@
 @import "../../../../stylesheets/common"
+@import "../index"
 
-toggle-height = 34px
 
 ul.chart-toggle
   border solid 1px transparent
@@ -44,32 +44,6 @@ ul.chart-toggle
     border-top-right-radius 3px
 
     &:after
-      content none
-
-  button
-    svg-icon-style(grey-500, mp-blue, pos-left: -5px)
-    svg-height(toggle-height)
-    background none
-    background-color initial
-    background-position center
-    background-repeat no-repeat
-    border none
-    color grey-500
-    font-weight 700
-    height 100%
-    padding 0
-    white-space nowrap
-    .button-flex-wrapper
-      align-items center
-      display flex
-      justify-content center
-
-    &.selected
-      color grey-900
-      font-weight 900
-      svg-icon-style(grey-900, pos-left: -5px)
-
-    &::before, &::after
       content none
 
 ul.chart-toggle.enabled

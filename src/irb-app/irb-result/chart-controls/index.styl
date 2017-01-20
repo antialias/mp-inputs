@@ -1,5 +1,7 @@
 @import "../../../stylesheets/common"
 
+toggle-height = 34px
+
 .chart-controls-container
   align-items center
   border-bottom 1px solid border-gray
@@ -10,6 +12,32 @@
 
 .chart-control
   position relative
+
+  button
+    svg-icon-style(grey-500, mp-blue, pos-left: -5px)
+    svg-height(toggle-height)
+    background none
+    background-color initial
+    background-position center
+    background-repeat no-repeat
+    border none
+    color grey-500
+    font-weight 700
+    height 100%
+    padding 0
+    white-space nowrap
+    .button-flex-wrapper
+      align-items center
+      display flex
+      justify-content center
+
+    &.selected
+      color grey-900
+      font-weight 900
+      svg-icon-style(grey-900, pos-left: -5px)
+
+    &::before, &::after
+      content none
 
 .error-no-project-data .irb-result .chart-toggle
   button, button:hover
