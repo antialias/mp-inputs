@@ -69,11 +69,11 @@ export default class Legend {
   }
 
   get dataKeyForSeriesData() {
-    return `seriesData`;
+    return Legend.SERIES_DATA;
   }
 
   get dataKeyForFlatData() {
-    return `flattenedData`;
+    return Legend.FLAT_DATA;
   }
 
   getColorForSeries(series, flattenedData=false) {
@@ -130,9 +130,11 @@ export default class Legend {
     return Object.assign(this, attrs);
   }
 
-  updateSeriesAtIndex(seriesIdx, dataKey, attrs) {
+  updateSeriesAtIndex({dataKey=this.SERIES_DATA, legendUpdate={}}={}) {
     this.changeID++;
-    Object.assign(this.data[seriesIdx][dataKey], attrs);
+    Object.keys(legendUpdate).forEach(seriesIdx => {
+      Object.assign(this.data[seriesIdx][dataKey], legendUpdate[seriesIdx]);
+    });
     return this;
   }
 
@@ -183,3 +185,6 @@ export default class Legend {
     return Object.values(this.data[seriesIdx][dataKey]).filter(value => !value).length;
   }
 }
+
+Legend.SERIES_DATA = Legend.prototype.SERIES_DATA = `seriesData`;
+Legend.FLAT_DATA = Legend.prototype.FLAT_DATA = `flattenedData`;

@@ -773,9 +773,27 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     this.updateReport({legend: this.state.report.legend.update(newState)});
   }
 
-  updateLegendSeriesAtIndex(sereiesIdx, dataKey, attrs) {
+  updateLegendSeriesAtIndex(seriesIdx, dataKey, attrs) {
     this.resetToastTimer();
-    this.updateReport({legend: this.state.report.legend.updateSeriesAtIndex(sereiesIdx, dataKey, attrs)});
+    let legendUpdate = {[seriesIdx]: attrs};
+    if (dataKey === this.state.report.legend.SERIES_DATA) {
+      const trueKeys = Object.keys(attrs).filter(key => Boolean(attrs[key]));
+      if (trueKeys.length) {
+        const depthOffsetForData = 2;
+        const ancestors = util.ancestorsOfKeysAtDepth({
+          series: this.state.result.series,
+          depth: seriesIdx + depthOffsetForData,
+          keys: trueKeys,
+        });
+        legendUpdate = Object.keys(ancestors).reduce((obj, key) => {
+          obj[Number(key) - depthOffsetForData] = ancestors[key];
+          return obj;
+        }, {});
+      }
+    }
+    this.updateReport({
+      legend: this.state.report.legend.updateSeriesAtIndex({dataKey, legendUpdate}),
+    });
   }
 
   stopEditingChartToggle() {

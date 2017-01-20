@@ -247,14 +247,24 @@ export function nestedObjectRolling(obj, windowSize) {
   }
 }
 
-function _callbackIntoObject(obj, callback) {
+function _callbackIntoObject(obj, callback, {minDepth=0, startAtDeepest=false}={}) {
   const depth = nestedObjectDepth(obj);
-  Object.keys(obj).forEach(key => callback(key, obj, depth));
-  Object.keys(obj).forEach(key => {
-    if (typeof obj[key] === `object`) {
-      _callbackIntoObject(obj[key], callback);
-    }
-  });
+  const shouldContinue = depth >= minDepth;
+  const objKeys = Object.keys(obj);
+
+  if (!startAtDeepest) {
+    objKeys.forEach(key => shouldContinue && callback(key, obj, depth));
+  }
+  if (shouldContinue) {
+    objKeys.forEach(key => {
+      if (typeof obj[key] === `object`) {
+        _callbackIntoObject(obj[key], callback, {minDepth, startAtDeepest});
+      }
+    });
+  }
+  if (startAtDeepest) {
+    objKeys.forEach(key => shouldContinue && callback(key, obj, depth));
+  }
 }
 
 export function uniqueObjKeysAtDepth(obj, depth) {
@@ -293,4 +303,26 @@ export function flattenNestedObjectToPath(obj, options={}, parentKeys=[], result
     }
   });
   return results;
+}
+
+/*
+ */
+export function ancestorsOfKeysAtDepth({series={}, depth=1, keys=[]}={}) {
+  const ANCESTORS = {[depth]: keys.reduce((obj, key) => {
+    obj[key] = true;
+    return obj;
+  }, {})};
+
+  _callbackIntoObject(series, (value, seriesObj, d) => {
+    const seriesKeys = Object.keys(seriesObj[value]);
+    const keysToMatch = Object.keys(ANCESTORS[d - 1] || {});
+    const objectHasMatch = keysToMatch.some(matchKey => seriesKeys.includes(matchKey));
+    if (objectHasMatch) {
+      ANCESTORS[d] = Object.assign({}, ANCESTORS[d], {[value]: true});
+    }}, {
+      minDepth: depth + 1, // only look at parents so we have their reference
+      startAtDeepest: true,
+    });
+
+  return ANCESTORS;
 }
