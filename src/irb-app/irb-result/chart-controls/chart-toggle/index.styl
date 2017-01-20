@@ -44,13 +44,15 @@ ul.chart-toggle
       width 1px
 
     &:first-child
-      border-bottom-left-radius 3px
-      border-top-left-radius 3px
+      .toggle-button
+        border-bottom-left-radius 3px
+        border-top-left-radius 3px
 
     &:last-child
       border-right none
-      border-bottom-right-radius 3px
-      border-top-right-radius 3px
+      .toggle-button
+        border-bottom-right-radius 3px
+        border-top-right-radius 3px
 
       &:after
         content none
@@ -64,7 +66,7 @@ ul.chart-toggle
 
       button.dropdown
         > .button-flex-wrapper
-          border-color grey-300
+          border-color border-gray
 
         .extras-menu-container
           z-index 2
@@ -98,7 +100,7 @@ ul.chart-toggle
 
     &.has-dropdown
       button.label
-        margin-right 24px
+        margin-right 17px
 
       &.selected
         button.dropdown .button-flex-wrapper
@@ -107,12 +109,8 @@ ul.chart-toggle
   button
     &.label
       font-size 12px
-      padding-left 20px
-      padding-right 5px
+      padding 0 20px
       line-height toggle-height
-
-      &:last-child
-        padding-right 15px
 
     &.dropdown
       cursor pointer
@@ -133,7 +131,7 @@ ul.chart-toggle
       &:hover
         > .button-flex-wrapper
           background-color grey-50
-          border-color grey-300
+          border-color border-gray
 
       &:last-child
         padding-right 10px
@@ -143,4 +141,4 @@ ul.chart-toggle
       button.dropdown
         > .button-flex-wrapper
           background-color grey-50
-          border-color grey-300
+          border-color border-gray
