@@ -44,23 +44,42 @@
       opacity 0.5
       pointer-events none
 
-.irb-learn-tooltip-container
-  position relative
+  .irb-learn
+    mp-modal
+      width 520px
 
-  mp-tutorial-tooltip
-    z-index 99 // allow drop-menus to overlap tooltips
+      .mp-modal-content
+        padding 190px 70px 30px
+        text-align center
 
-    &[placement="center"]
-      top 70px
+        .mp-modal-title
+          font-size 16px
+          font-weight bold
+          line-height 1.13em
 
-  .mp-tooltip-title
-    color grey-50
-    font-size 16px
-    font-weight bold
-    line-height 2.2em
+        .mp-modal-subtitle
+          color var(--mp-grey)
+          font-size 12px
+          font-weight 500
+          line-height 1.5em
 
-  .mp-tooltip-subtitle
-    color grey-100
-    font-size 14px
-    font-weight 500
-    line-height 1.7em
+  .irb-learn-tooltip-container
+    position relative
+
+    mp-tutorial-tooltip
+      z-index 99 // allow drop-menus to overlap tooltips
+
+      &[placement="center"]
+        top 70px
+
+    .mp-tooltip-title
+      color grey-50
+      font-size 16px
+      font-weight bold
+      line-height 2.2em
+
+    .mp-tooltip-subtitle
+      color grey-100
+      font-size 14px
+      font-weight 500
+      line-height 1.7em
