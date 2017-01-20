@@ -13,7 +13,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
         getProperties: () => {
           const isLoading = this.isLoading();
           const properties = sorted(this.buildProgressiveList(), {
-            transform: prop => renameProperty(prop.name).toLowerCase(),
+            transform: prop => (renameProperty(prop.name) || String(prop.name)).toLowerCase(),
           });
 
           if (this.prevIsLoading !== isLoading ||
