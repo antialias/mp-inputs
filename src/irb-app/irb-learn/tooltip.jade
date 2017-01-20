@@ -3,14 +3,10 @@ mixin irb-learn-tooltip(...stepNames)
     - const step = util.getLearnStep(learnModalStepIndex, report);
 
     if stepNames.includes(step.name)
-      - const placement = step.name === `manipulate-data` ? `center` : `right`;
-      - const overrideTop = placement === `center` ? `70px` : null;
-
       mp-tutorial-tooltip(attrs={
-        placement,
-        overrideTop,
-        numSteps: 4,
-        currStep: step.index - 2,
+        'placement': step.name === `manipulate-data` ? `center` : `right`,
+        'num-steps': 4,
+        'curr-step': step.index - 2,
       })
         .mp-tooltip-title
           case step.name
