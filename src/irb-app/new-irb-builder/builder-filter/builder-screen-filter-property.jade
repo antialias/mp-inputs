@@ -7,7 +7,7 @@ mixin filter-dropdown(name, title, icon)
       span.button-flex-wrapper
         svg-icon(attrs={icon, empty: !icon})
         span.filter-prop-name= title
-        svg-icon(attrs={icon: 'caret-down'})
+        svg-icon(attrs={icon: `caret-down`})
     .filter-menu
       mp-drop-menu(
         attrs={open: $helpers.isMenuOpen(name)}
@@ -16,7 +16,7 @@ mixin filter-dropdown(name, title, icon)
         block
 
 mixin filter-operator-dropdown
-  +filter-dropdown('operator', clause.filterOperator)
+  +filter-dropdown(`operator`, clause.filterOperator)
     ul.filter-operators
       each filterOperator in $helpers.filterOperators(clause.filterType)
         li.filter-menu-item(
@@ -29,7 +29,7 @@ mixin filter-string-input
   .filter-string-input-wrapper
     input.filter-string-input(
       props={
-        type: 'text',
+        type: `text`,
         value: clause.filterValue,
       }
       on={
@@ -44,7 +44,7 @@ mixin filter-number-input(value, oninput, options)
   .filter-number-input-wrapper
     input.filter-numdate-input(
       props={
-        type: 'text',
+        type: `text`,
         value,
       }
       on={
@@ -55,14 +55,14 @@ mixin filter-number-input(value, oninput, options)
     )
 
 mixin filter-date-input
-  input.filter-numdate-input(props={type: 'text'})
+  input.filter-numdate-input(props={type: `text`})
 
 
 - const clause = $helpers.getActiveClause()
 
 .builder-screen.filter-property
-  +screen-title('', {backButton: true})
-    +filter-dropdown('type', util.renameProperty(clause.value), util.getIconForPropertyType(clause.filterType))
+  +screen-title(``, {backButton: true})
+    +filter-dropdown(`type`, util.renameProperty(clause.value), util.getIconForPropertyType(clause.filterType))
       ul.filter-types
         each filterType in $helpers.FILTER_TYPES
           li.filter-menu-item(
@@ -82,11 +82,11 @@ mixin filter-date-input
           when `equals`
           when `does not equal`
             .filter-string-input-wrapper.filter-string-search
-              svg-icon(attrs={icon: 'search'})
+              svg-icon(attrs={icon: `search`})
               input.filter-string-input(
                 props={
-                  type: 'text',
-                  placeholder: 'Search',
+                  type: `text`,
+                  placeholder: `Search`,
                   value: clause.filterSearch,
                 }
                 on={
@@ -183,8 +183,4 @@ mixin filter-date-input
           ) Does not contain
         +filter-string-input
 
-      default
-        +filter-operator-dropdown
-        p this is #{clause.filterType}
-
-  +screen-footer-button('Add filter', {onclick: $helpers.commitFilter})
+  +screen-footer-button(`Add filter`, {onclick: $helpers.commitFilter})
