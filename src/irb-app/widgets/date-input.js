@@ -13,8 +13,7 @@ class DateInput extends Component {
     return {
       template,
       defaultState: {
-        dateValue: null,
-        textValue: null,
+        value: null,
       },
       helpers: {
         formatDateDisplay,
@@ -25,7 +24,8 @@ class DateInput extends Component {
         },
         changedInput: ev => {
           ev.stopPropagation();
-          this.update({dateValue: parseDate(this.inputEl.value), textValue: this.inputEl.value});
+          const value = this.inputEl.value.length ? parseDate(this.inputEl.value) : null;
+          this.update({value});
           this.emitChange();
         },
       },
@@ -50,12 +50,11 @@ class DateInput extends Component {
   }
 
   get value() {
-    return this.state.dateValue;
+    return this.state.value;
   }
 
-  set value(dateValue) {
-    const textValue = this.state.textValue || formatDateDisplay(dateValue);
-    this.update({dateValue, textValue});
+  set value(value) {
+    this.update({value});
   }
 }
 

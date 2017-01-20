@@ -123,10 +123,10 @@ class Calendar extends WebComponent {
           date: formatDateISO(this.date),
         };
       }
-    } else if (this.from && this.to) {
+    } else {
       detail = {
-        from: formatDateISO(this.from),
-        to: formatDateISO(this.to),
+        from: this.from ? formatDateISO(this.from) : null,
+        to: this.to ? formatDateISO(this.to) : null,
       };
     }
 

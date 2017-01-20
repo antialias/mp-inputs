@@ -2,7 +2,7 @@
   input(
     attrs={
       type: 'text',
-      placeholder: $helpers.formatDateDisplay(dateValue),
+      placeholder: value ? $helpers.formatDateDisplay(value) : '',
     }
     on={
       focus: $helpers.focusedInput,

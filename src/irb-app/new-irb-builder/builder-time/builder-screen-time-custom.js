@@ -24,45 +24,42 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
         getDates: () => this.getDates(),
         changedDates: ev => {
           const now = moment();
+          const oldRange = this.getDates();
+          let unit = null;
           let {from, to} = ev.detail;
 
+          from = from && moment(from);
+          to = to && moment(to);
+
+          if (from && from > now) {
+            from = formatDateISO(now);
+          }
+
+          if (to && to > now) {
+            to = formatDateISO(now);
+          }
+
           if (from && to) {
-            from = moment(from);
-            to = moment(to);
-
-            if (from > now) {
-              from = now;
-            }
-
-            if (to > now) {
-              to = now;
-            }
-
-            if (from > to) {
+            if (moment(from) > moment(to)) {
               [from, to] = [to, from];
             }
 
-            const oldRange = this.getDates();
-            const daysApart = to.diff(from, `days`) + 1;
+            const daysApart = moment(to).diff(moment(from), `days`) + 1;
 
-            from = formatDateISO(from);
-            to = formatDateISO(to);
-
-            if (from !== oldRange.from || to !== oldRange.to) {
-              // auto-adjust unit when changing date value
-              let unit = null;
-              if (daysApart <= 4) {
-                unit = `hour`;
-              } else if (daysApart <= 31) {
-                unit = `day`;
-              } else if (daysApart <= 183) {
-                unit = `week`;
-              } else {
-                unit = `month`;
-              }
-
-              this.setDates(from, to, unit);
+            // auto-adjust unit when changing date value
+            if (daysApart <= 4) {
+              unit = `hour`;
+            } else if (daysApart <= 31) {
+              unit = `day`;
+            } else if (daysApart <= 183) {
+              unit = `week`;
+            } else {
+              unit = `month`;
             }
+          }
+
+          if (from !== oldRange.from || to !== oldRange.to || unit !== oldRange.unit) {
+            this.setDates(from, to, unit);
           }
         },
         changedFrom: ev => this.helpers.changedDates({detail: {
@@ -91,6 +88,7 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
 
   getDates() {
     const value = this.helpers.getStageClauseAttr(`value`);
+    const unit = this.helpers.getStageClauseAttr(`unit`);
     let from = null;
     let to = null;
 
@@ -107,7 +105,7 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
       }
     }
 
-    return {from, to};
+    return {from, to, unit};
   }
 
   setDates(from, to, unit) {
