@@ -81,7 +81,17 @@ mixin filter-date-input
         case clause.filterOperator
           when `equals`
           when `does not equal`
-            //- TODO search goes here
+            .filter-string-input-wrapper
+              input.filter-string-input(
+                props={
+                  type: 'text',
+                  value: clause.filterSearch,
+                }
+                on={
+                  input: ev => $helpers.updateFilterSearch(ev.target.value),
+                }
+              )
+
             .screen-list-container(on={scroll: $helpers.scrolledList})
               if isLoading
                 +pane-loader

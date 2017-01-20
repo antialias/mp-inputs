@@ -107,6 +107,10 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
 
           this.app.updateStageClause({filterValue});
         },
+        updateFilterSearch: filterSearch => {
+          this.resetProgressiveList();
+          this.app.updateStageClause({filterSearch});
+        },
         updateFilterValue: filterValue => {
           this.resetProgressiveList();
           this.app.updateStageClause({filterValue});
