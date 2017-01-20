@@ -120,7 +120,7 @@ mixin filter-date-input
               .screen-list-container(on={scroll: $helpers.scrolledList})
                 ul.filter-string-contains-choices
                   each value in $helpers.getContainsMatches()
-                    li.string-contains-match= value
+                    li.string-contains-match= util.renamePropertyValue(value)
 
       when `number`
         +filter-operator-dropdown
