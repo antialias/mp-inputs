@@ -87,6 +87,13 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
             return list;
           }
         },
+        toggleAllFilterValues: () => {
+          let filterValue = [];
+          if (!this.helpers.allEqualsValuesSelected()) {
+            filterValue = this.helpers.getValueMatches(this.app.activeStageClause.filterSearch, false, false);
+          }
+          this.app.updateStageClause({filterValue});
+        },
         toggleStringEqualsValueSelected: value => {
           const clause = this.app.activeStageClause;
           const selected = (clause && clause.filterValue) || [];
