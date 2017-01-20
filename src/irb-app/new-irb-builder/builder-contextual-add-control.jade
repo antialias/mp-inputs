@@ -19,6 +19,11 @@
             type: `text`,
             value: contextFilter,
           }
+          style={
+            width: 0,
+            delayed: {width: ''},
+            remove: {width: '0'},
+          }
         )
           span.label-preposition= $helpers.getPreposition()
     .drop-menu

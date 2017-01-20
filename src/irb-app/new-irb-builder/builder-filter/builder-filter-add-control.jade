@@ -17,6 +17,11 @@
             click: $helpers.clickedInput,
             input: $helpers.changedSearch,
           }
+          style={
+            width: 0,
+            delayed: {width: ''},
+            remove: {width: '0'},
+          }
         )
       button.add-filter-button(on={click: $helpers.clickedAdd})
         span.button-flex-wrapper
