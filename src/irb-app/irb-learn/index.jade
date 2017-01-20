@@ -31,7 +31,11 @@ include ./tooltip.jade
                 | functions.
               when `conclusion`
                 | You can save it, export it, add it to your dashboard, and even filter your results. Click the button below to start exploring Inquiry's powers on your own.
-        mp-button-bar.mp-button-bar-primary(on={click: modalClickHandler})
+          .mp-modal-close(on={click: $helpers.clickedFinish})
+        mp-button-bar.mp-button-bar-primary(
+          attrs={'arrow-next': step.name === `introduction`}
+          on={click: modalClickHandler}
+        )
           case step.name
             when `introduction`
               | Next

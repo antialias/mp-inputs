@@ -11,12 +11,15 @@ document.registerElement(`irb-learn`, class extends Component {
       helpers: {
         clickedNext: () => this.update({
           learnModalStepIndex: (this.state.learnModalStepIndex || 0) + 1,
+          learnFinish: this.finish.bind(this), // allow tooltips to finish learn flow
         }),
-        clickedFinish: () => {
-          this.update({learnActive: false, learnModalStepIndex: null});
-          this.navigate(``);
-        },
+        clickedFinish: () => this.finish(),
       },
     };
+  }
+
+  finish() {
+    this.update({learnActive: false, learnModalStepIndex: null, learnFinish: null});
+    this.navigate(``);
   }
 });
