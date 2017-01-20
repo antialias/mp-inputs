@@ -81,10 +81,12 @@ mixin filter-date-input
         case clause.filterOperator
           when `equals`
           when `does not equal`
-            .filter-string-input-wrapper
+            .filter-string-input-wrapper.filter-string-search
+              svg-icon(attrs={icon: 'search'})
               input.filter-string-input(
                 props={
                   type: 'text',
+                  placeholder: 'Search',
                   value: clause.filterSearch,
                 }
                 on={
