@@ -28,14 +28,11 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
           let unit = null;
           let {from, to} = ev.detail;
 
-          from = from && moment(from);
-          to = to && moment(to);
-
-          if (from && from > now) {
+          if (from && moment(from) > now) {
             from = formatDateISO(now);
           }
 
-          if (to && to > now) {
+          if (to && moment(to) > now) {
             to = formatDateISO(now);
           }
 
