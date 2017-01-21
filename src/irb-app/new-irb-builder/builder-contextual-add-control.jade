@@ -2,7 +2,9 @@ include ../irb-learn/tooltip.jade
 
 - const open = $helpers.isPaneOpen()
 
-.builder-container.contextual-menu.irb-learn-tooltip-container.irb-learn-choose-event-disabled
+.builder-container.contextual-menu(
+  class=util.learnDisabledClasses({steps: [`choose-event`], tooltip: true})
+)
   .irb-new-control.new-query-builder(class={'pane-open': open})
     .control-buttons.add-control
       button.add-button(on={click: $helpers.clickedAdd})

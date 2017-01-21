@@ -1,4 +1,4 @@
-.new-irb-builder
+.new-irb-builder.irb-learn-manipulate-data-disabled
   if projectHasEvents
     .query
       .section-container= $component.child('query-builder-show')
@@ -7,7 +7,7 @@
       if $helpers.shouldShowTimeBuilder()
         .section-container= $component.child('query-builder-time')
     .filters= $component.child('query-builder-filter')
-    .reset-query(on={click: $helpers.reset} attrs={title: 'Reset query'})
+    .reset-query.irb-learn-disabled(on={click: $helpers.reset} attrs={title: 'Reset query'})
       svg-icon(attrs={icon: 'x'})
   else
     .builder-error-caption.error-title We haven't recieved any events from you yet

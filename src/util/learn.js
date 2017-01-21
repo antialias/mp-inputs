@@ -51,3 +51,29 @@ export function getLearnStep(index, report) {
   );
   return extend(steps[index], {index});
 }
+
+export function learnDisabledClasses({steps=[], childExceptions=[], tooltip=false}={}) {
+  const childClasses = childExceptions.map(child => ({
+    first: `-except-first-child`,
+    last: `-except-last-child`,
+  }[child] || ``));
+
+  let classes = [];
+
+  if (steps.length) {
+    classes = steps.map((step, i) => {
+      const childClass = childClasses[i] || ``;
+      return `irb-learn-${step}-disabled${childClass}`;
+    });
+  } else if (childExceptions.length) {
+    classes = childClasses.map(cls => `irb-learn-disabled${cls}`);
+  } else {
+    classes = [`irb-learn-disabled`];
+  }
+
+  if (tooltip) {
+    classes.push(`irb-learn-tooltip-container`);
+  }
+
+  return Object.assign(...classes.map(cls => ({[cls]: true})));
+}

@@ -3,7 +3,7 @@ include ../mixins.jade
 - const groupClauses = report.sections.group.clauses
 - const lenGroupClauses = groupClauses.length
 
-.builder-section.builder-group
+.builder-section.builder-group.irb-learn-disabled
   each clause, clauseIdx in groupClauses
     .clause-container
       .clause-language.preposition= clauseIdx ? 'and' : 'by'

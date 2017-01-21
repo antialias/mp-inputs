@@ -7,7 +7,7 @@ include ../../irb-learn/tooltip.jade
       .clause-container
         .clause-language.preposition and
     .clause-container
-      .clause-header= $component.child('query-builder-show-header', {attrs})
+      .clause-header.irb-learn-disabled= $component.child('query-builder-show-header', {attrs})
       .clause-body
         if clause.property && $helpers.showSourceForNumericProperties()
           .control-container= $component.child('builder-numeric-property-edit-control', {attrs})
