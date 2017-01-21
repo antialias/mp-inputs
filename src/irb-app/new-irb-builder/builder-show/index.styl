@@ -11,13 +11,18 @@
   .header-label
     height 15px
 
-  .active-math-header
-    .header-word
-      color mp-blue
-      cursor pointer
-      font-weight 600
-      &:before
-        content space-character
+    .active-math-header
+      .header-word
+        color mp-blue
+        cursor pointer
+        font-weight 600
+        &::before
+          content space-character
+      .math-caret
+        cursor pointer
 
-  .math-caret
-    cursor pointer
+    &.header-disabled
+      svg-icon-style(grey-500, pos-top: 2px, size: 16px)
+      .header-word, .math-caret
+        color grey-500
+        cursor initial
