@@ -6,6 +6,7 @@
       if open
         input.control-label(
           hook={insert: $helpers.insertedInput}
+          attrs={placeholder: $helpers.getLabelText()}
           props={
             autoFocus: true,
             type: `text`,

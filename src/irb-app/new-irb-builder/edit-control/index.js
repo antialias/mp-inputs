@@ -28,6 +28,10 @@ export class EditControl extends Component {
           this.app.updateBuilderCurrentScreen({progressiveListSize: null});
         }, 200, {leading: true, maxWait: 200}),
         getLabel: () => this.getLabel(),
+        getLabelText: () => {
+          const label = this.getLabel();
+          return Array.isArray(label) ? label[0] : label;
+        },
         insertedInput: vnode => vnode.elm.focus(),
         isPaneOpen: () => this.isPaneOpen(),
         isRemovable: () => this.isRemovable(),
