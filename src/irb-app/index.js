@@ -31,6 +31,7 @@ const MINUTE_MS = 1000 * 60;
 document.registerElement(`irb-app`, class IRBApp extends MPApp {
   get config() {
     return {
+      template,
       defaultState: extend(
         this.resettableState,
         {
@@ -42,7 +43,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           util,
         }
       ),
-
       routes: {
         'nofeatures':       this.routeHandlers.noFeatures,
         'report/:reportId': this.routeHandlers.load,
@@ -50,8 +50,12 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         'learn':            this.routeHandlers.learn,
         '':                 this.routeHandlers.index,
       },
-
-      template,
+      helpers: {
+        finishLearn: () => {
+          this.update({learnActive: false, learnModalStepIndex: null});
+          this.navigate(``);
+        },
+      },
     };
   }
 

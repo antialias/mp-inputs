@@ -3,7 +3,6 @@ include ./tooltip.jade
 .irb-learn
   if learnActive
     - const step = util.getLearnStep(learnModalStepIndex, report);
-    - const modalClickHandler = step.name === `conclusion` ? $helpers.clickedFinish : $helpers.clickedNext;
     - const isModalStep = [`introduction`, `getting-started`, `conclusion`].includes(step.name);
 
     if isModalStep
@@ -31,10 +30,10 @@ include ./tooltip.jade
                 | functions.
               when `conclusion`
                 | You can save it, export it, add it to your dashboard, and even filter your results. Click the button below to start exploring Inquiry's powers on your own.
-          .mp-modal-close(on={click: $helpers.clickedFinish})
+          .mp-modal-close(on={click: $component.app.helpers.finishLearn})
         mp-button-bar.mp-button-bar-primary(
           attrs={'arrow-next': step.name === `introduction`}
-          on={click: modalClickHandler}
+          on={click: () => $helpers.clickedModalButton(step.name)}
         )
           case step.name
             when `introduction`

@@ -9,17 +9,16 @@ document.registerElement(`irb-learn`, class extends Component {
     return {
       template,
       helpers: {
-        clickedNext: () => this.update({
-          learnModalStepIndex: (this.state.learnModalStepIndex || 0) + 1,
-          learnFinish: this.finish.bind(this), // allow tooltips to finish learn flow
-        }),
-        clickedFinish: () => this.finish(),
+        clickedModalButton: step => {
+          if (step === `conclusion`) {
+            this.app.helpers.finishLearn();
+          } else {
+            this.update({
+              learnModalStepIndex: (this.state.learnModalStepIndex || 0) + 1,
+            });
+          }
+        },
       },
     };
-  }
-
-  finish() {
-    this.update({learnActive: false, learnModalStepIndex: null, learnFinish: null});
-    this.navigate(``);
   }
 });
