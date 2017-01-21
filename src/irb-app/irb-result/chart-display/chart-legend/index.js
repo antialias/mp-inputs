@@ -138,6 +138,6 @@ document.registerElement(`chart-legend`, class extends Component {
 
   get legendDataKey() {
     const legend = this.state.report.legend;
-    return this.helpers.isFlattenedData() ? legend.dataKeyForFlatData : legend.dataKeyForSeriesData;
+    return this.helpers.isFlattenedData() ? legend.FLAT_DATA : legend.SERIES_DATA;
   }
 });

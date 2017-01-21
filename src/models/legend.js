@@ -51,8 +51,8 @@ export default class Legend {
           seriesDataSortedKeys: [],
         });
       } else {
-        this._buildColorMap(`_colorMap`,  this.dataKeyForSeriesData, numColors);
-        this._buildColorMap(`_flattenedColorMap`, this.dataKeyForFlatData, numColors);
+        this._buildColorMap(`_colorMap`,  Legend.SERIES_DATA, numColors);
+        this._buildColorMap(`_flattenedColorMap`, Legend.SERIES_DATA, numColors);
       }
     }
     this.changeID++;
@@ -66,14 +66,6 @@ export default class Legend {
   get colorMap() {
     this._colorMap = this._colorMap || {};
     return this._colorMap;
-  }
-
-  get dataKeyForSeriesData() {
-    return Legend.SERIES_DATA;
-  }
-
-  get dataKeyForFlatData() {
-    return Legend.FLAT_DATA;
   }
 
   getColorForSeries(series, flattenedData=false) {
