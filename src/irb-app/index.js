@@ -777,13 +777,13 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     this.resetToastTimer();
     let legendUpdate = {[seriesIdx]: attrs};
     if (dataType === this.state.report.legend.SERIES_DATA) {
-      const trueKeys = Object.keys(attrs).filter(key => Boolean(attrs[key]));
-      if (trueKeys.length) {
+      const keys = Object.keys(attrs).filter(key => Boolean(attrs[key]));
+      if (keys.length) {
         const depthOffsetForData = 2;
         const ancestors = util.ancestorsOfKeysAtDepth({
           series: this.state.result.series,
           depth: seriesIdx + depthOffsetForData,
-          keys: trueKeys,
+          keys,
         });
         legendUpdate = Object.keys(ancestors).reduce((obj, key) => {
           obj[Number(key) - depthOffsetForData] = ancestors[key];

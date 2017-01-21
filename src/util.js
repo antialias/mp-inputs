@@ -247,22 +247,22 @@ export function nestedObjectRolling(obj, windowSize) {
   }
 }
 
-function _callbackIntoObject(obj, callback, {minDepth=0, startAtDeepest=false}={}) {
+function _callbackIntoObject(obj, callback, {minDepth=0, depthFirst=false}={}) {
   const depth = nestedObjectDepth(obj);
   const shouldContinue = depth >= minDepth;
   const objKeys = Object.keys(obj);
 
-  if (!startAtDeepest) {
+  if (!depthFirst) {
     objKeys.forEach(key => shouldContinue && callback(key, obj, depth));
   }
   if (shouldContinue) {
     objKeys.forEach(key => {
       if (typeof obj[key] === `object`) {
-        _callbackIntoObject(obj[key], callback, {minDepth, startAtDeepest});
+        _callbackIntoObject(obj[key], callback, {minDepth, depthFirst});
       }
     });
   }
-  if (startAtDeepest) {
+  if (depthFirst) {
     objKeys.forEach(key => shouldContinue && callback(key, obj, depth));
   }
 }
@@ -306,6 +306,7 @@ export function flattenNestedObjectToPath(obj, options={}, parentKeys=[], result
 }
 
 /*
+TODO: CREATE TESTS + ADD DESCRIPTION
  */
 export function ancestorsOfKeysAtDepth({series={}, depth=1, keys=[]}={}) {
   const ANCESTORS = {[depth]: keys.reduce((obj, key) => {
@@ -313,15 +314,17 @@ export function ancestorsOfKeysAtDepth({series={}, depth=1, keys=[]}={}) {
     return obj;
   }, {})};
 
-  _callbackIntoObject(series, (value, seriesObj, d) => {
-    const seriesKeys = Object.keys(seriesObj[value]);
-    const keysToMatch = Object.keys(ANCESTORS[d - 1] || {});
-    const objectHasMatch = keysToMatch.some(matchKey => seriesKeys.includes(matchKey));
+  _callbackIntoObject(series, (value, objectHoldingValue, depthInSeries) => {
+    const valueChilden = Object.keys(objectHoldingValue[value]);
+    const keysToMatch = Object.keys(ANCESTORS[depthInSeries - 1] || {});
+    const objectHasMatch = keysToMatch.some(matchKey => valueChilden.includes(matchKey));
     if (objectHasMatch) {
-      ANCESTORS[d] = Object.assign({}, ANCESTORS[d], {[value]: true});
+      ANCESTORS[depthInSeries] = Object.assign((ANCESTORS[depthInSeries] || {}),
+        {[value]: true}
+      );
     }}, {
       minDepth: depth + 1, // only look at parents so we have their reference
-      startAtDeepest: true,
+      depthFirst: true,
     });
 
   return ANCESTORS;
