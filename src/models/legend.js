@@ -29,11 +29,11 @@ export default class Legend {
     return Object.keys(series.seriesData).length > 20 ? `minimized` : `all`;
   }
 
-  _buildColorMap(mapName, dataKey, numColors) {
+  _buildColorMap(mapName, dataType, numColors) {
     this[mapName] = {};
     if (this.data && this.data.length) {
       let colorIdx = 0;
-      this.data[0][`${dataKey}SortedKeys`]
+      this.data[0][`${dataType}SortedKeys`]
         .forEach(series => {
           this[mapName][series] = this[mapName][series] || (colorIdx++ % numColors) + 1;
         });
@@ -122,10 +122,10 @@ export default class Legend {
     return Object.assign(this, attrs);
   }
 
-  updateSeriesAtIndex({dataKey=this.SERIES_DATA, legendUpdate={}}={}) {
+  updateSeriesAtIndex({dataType=this.SERIES_DATA, legendUpdate={}}={}) {
     this.changeID++;
     Object.keys(legendUpdate).forEach(seriesIdx => {
-      Object.assign(this.data[seriesIdx][dataKey], legendUpdate[seriesIdx]);
+      Object.assign(this.data[seriesIdx][dataType], legendUpdate[seriesIdx]);
     });
     return this;
   }
@@ -173,8 +173,8 @@ export default class Legend {
       .setDefaultSeriesShowing();
   }
 
-  unselectedCount(seriesIdx, dataKey) {
-    return Object.values(this.data[seriesIdx][dataKey]).filter(value => !value).length;
+  unselectedCount(seriesIdx, dataType) {
+    return Object.values(this.data[seriesIdx][dataType]).filter(value => !value).length;
   }
 }
 

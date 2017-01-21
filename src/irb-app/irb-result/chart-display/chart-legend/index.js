@@ -18,7 +18,7 @@ document.registerElement(`chart-legend`, class extends Component {
     return {
       template,
       helpers: {
-        allSeriesSelected: seriesIdx => !this.state.report.legend.unselectedCount(seriesIdx, this.legendDataKey),
+        allSeriesSelected: seriesIdx => !this.state.report.legend.unselectedCount(seriesIdx, this.legendDataType),
         deleteToFilter: (ev, seriesIdx, value) => {
           ev.stopPropagation();
           const reportTrackingData = this.state.report.toTrackingData();
@@ -41,7 +41,7 @@ document.registerElement(`chart-legend`, class extends Component {
         isFlattenedData: () => this.state.report.displayOptions.chartType === `line`,
         isSeriesLargeSearchResult: series => this.helpers.isSearchActive() && series.seriesValues.length > 12,
         isSeriesValueShowing: (seriesIdx, name) => {
-          return this.state.report.legend.data[seriesIdx][this.legendDataKey][name];
+          return this.state.report.legend.data[seriesIdx][this.legendDataType][name];
         },
         isSearchActive: () => !!this.state.report.legend.search,
         legendDataToDisplay: () => {
@@ -50,7 +50,7 @@ document.registerElement(`chart-legend`, class extends Component {
           const data = isFlattenedData ? [legend.data[0]] : legend.data;
 
           const seriesData = data.map((series, idx) => {
-            let seriesValues = Object.keys(series[this.legendDataKey])
+            let seriesValues = Object.keys(series[this.legendDataType])
               .map(originalValue => {
                 let matches = null;
                 let formattedText = null;
@@ -113,30 +113,30 @@ document.registerElement(`chart-legend`, class extends Component {
         },
         toggleAllSeriesValue: seriesIdx => {
           const reportTrackingData = this.state.report.toTrackingData();
-          const dataKey = this.legendDataKey;
-          const seriesData = this.state.report.legend.data[seriesIdx][dataKey];
+          const dataType = this.legendDataType;
+          const seriesData = this.state.report.legend.data[seriesIdx][dataType];
           const newValue = !this.helpers.allSeriesSelected(seriesIdx);
           Object.keys(seriesData).forEach(key => seriesData[key] = newValue);
-          this.app.updateLegendSeriesAtIndex(seriesIdx, dataKey, seriesData);
+          this.app.updateLegendSeriesAtIndex(seriesIdx, dataType, seriesData);
           this.app.trackEvent(`Legend - ${newValue ? `Show` : `Hide`} All`, reportTrackingData);
         },
         toggleShowSeriesValue: (seriesIdx, name) => {
-          const dataKey = this.legendDataKey;
-          const seriesData = this.state.report.legend.data[seriesIdx][dataKey];
+          const dataType = this.legendDataType;
+          const seriesData = this.state.report.legend.data[seriesIdx][dataType];
           if (seriesData.hasOwnProperty(name)) {
             const reportTrackingData = this.state.report.toTrackingData();
-            this.app.updateLegendSeriesAtIndex(seriesIdx, dataKey, {[name]: !seriesData[name]});
+            this.app.updateLegendSeriesAtIndex(seriesIdx, dataType, {[name]: !seriesData[name]});
             this.app.trackEvent(`Legend - ${seriesData[name] ? `Show` : `Hide`}`, reportTrackingData);
           }
         },
         totalSeriesCount: idx => (
-          Object.keys(this.state.report.legend.data[idx][this.legendDataKey]).length
+          Object.keys(this.state.report.legend.data[idx][this.legendDataType]).length
         ),
       },
     };
   }
 
-  get legendDataKey() {
+  get legendDataType() {
     const legend = this.state.report.legend;
     return this.helpers.isFlattenedData() ? legend.FLAT_DATA : legend.SERIES_DATA;
   }
