@@ -5,7 +5,7 @@ include ../mixins.jade
 .builder-screen.properties
   +screen-title(`People`, {backButton: !!$helpers.screenIdx()})
   .screen-list-container(
-    class=util.learnDisabledClasses({childExceptions: [`first`]})
+    class=util.learnClasses({disabledExceptChildren: [`first`]})
     hook={postpatch: $helpers.updateRenderedSize}
     on={scroll: $helpers.scrolledList}
   )

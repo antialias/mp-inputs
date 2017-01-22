@@ -1,7 +1,10 @@
 include ../irb-learn/tooltip.jade
 
 .irb-result(
-  class=util.learnDisabledClasses({steps: [`choose-event`, `compare-event`, `group-by`], tooltip: true})
+  class=util.learnClasses({
+    disabledSteps: [`choose-event`, `compare-event`, `group-by`],
+    tooltipContainer: true,
+  })
 )
   .result-controls= $component.child('chart-controls')
   .result-display= $component.child('chart-display')

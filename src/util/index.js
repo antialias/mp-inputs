@@ -9,7 +9,7 @@ export * from 'mixpanel-common/report/util';
 export * from 'mixpanel-common/util';
 export * from 'mixpanel-common/util/string';
 
-export { getLearnStep, learnDisabledClasses } from './learn';
+export { getLearnStep, learnClasses } from './learn';
 
 const MS_IN_HOUR = 60 * 60 * 1000;
 const MS_IN_DAY = MS_IN_HOUR * 24;

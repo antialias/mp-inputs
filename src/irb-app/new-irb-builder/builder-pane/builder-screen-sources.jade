@@ -2,7 +2,7 @@ include ../mixins.jade
 
 .builder-screen.sources
   ul.screen-options-list(
-    class=util.learnDisabledClasses({childExceptions: [`first`]})
+    class=util.learnClasses({disabledExceptChildren: [`first`]})
     hook={postpatch: $helpers.updateRenderedSize}
     on={scroll: $helpers.scrolledList}
   )
