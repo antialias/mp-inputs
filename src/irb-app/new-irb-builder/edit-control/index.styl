@@ -15,23 +15,23 @@
       font-weight 500
       padding 0
 
-    .control-label, input.control-label
+    .control-label, resize-input.control-label input
       border-bottom 1px dotted mp-blue
       border-radius 0
       color mp-blue
-
       font-family font-helvetica-neue
       font-size 16px
       line-height 30px
+      padding-left 0
+      padding-right 0
 
       &:hover
         border-bottom-style solid
 
-
-
-    input.control-label
+    resize-input.control-label input
       border none
       border-bottom 1px dotted mp-blue
+      border-radius 0
       align-items center
       display flex
 
@@ -45,7 +45,7 @@
       color blue-300
 
   &.pane-open
-    .control-label, input.control-label
+    .control-label, resize-input.control-label input
       border-bottom-style solid
 
     .add-control

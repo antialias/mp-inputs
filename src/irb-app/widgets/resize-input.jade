@@ -1,0 +1,17 @@
+.resize-input
+  input(
+    attrs={
+      placeholder: $component.getAttribute(`placeholder`),
+    }
+    props={
+      maxLength: 50,
+      type: `text`,
+      value: inputValue,
+    }
+    style={
+      width: `${inputWidth}px`,
+    }
+    hook={
+      insert: $helpers.inserted,
+    }
+  )

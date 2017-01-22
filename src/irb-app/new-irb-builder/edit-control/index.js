@@ -3,6 +3,8 @@ import throttle from 'lodash/throttle';
 
 import { extend } from '../../../util';
 
+import '../../widgets/resize-input';
+
 import template from './index.jade';
 import './index.styl';
 
@@ -32,7 +34,6 @@ export class EditControl extends Component {
           const label = this.getLabel();
           return Array.isArray(label) ? label[0] : label;
         },
-        insertedInput: vnode => vnode.elm.focus(),
         isPaneOpen: () => this.isPaneOpen(),
         isRemovable: () => this.isRemovable(),
         removeClause: () => this.remove(),

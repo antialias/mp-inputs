@@ -4,8 +4,7 @@
   .irb-new-control.new-query-builder(class={'pane-open': open})
     .control-buttons.edit-control.control-button-text
       if open
-        input.control-label(
-          hook={insert: $helpers.insertedInput}
+        resize-input.control-label(
           attrs={placeholder: $helpers.getLabelText()}
           props={
             autoFocus: true,
