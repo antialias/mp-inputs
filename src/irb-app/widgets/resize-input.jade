@@ -11,6 +11,9 @@
     style={
       width: `${inputWidth}px`,
     }
+    on={
+      input: $helpers.updatedInput,
+    }
     hook={
       insert: $helpers.inserted,
     }

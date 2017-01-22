@@ -24,6 +24,7 @@ document.registerElement(`resize-input`, class extends Component {
       },
       helpers: {
         inserted: vnode => requestAnimationFrame(() => vnode.elm.focus()),
+        updatedInput: ev => this.value = ev.target.value,
       },
     };
   }
