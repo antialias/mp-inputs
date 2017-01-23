@@ -308,8 +308,8 @@ export function flattenNestedObjectToPath(obj, options={}, parentKeys=[], result
 /*
 TODO: CREATE TESTS + ADD DESCRIPTION
  */
-export function ancestorsOfKeysAtDepth({series={}, depth=1, keys=[]}={}) {
-  const ANCESTORS = {[depth]: keys.reduce((obj, key) => {
+export function ancestorsOfKeysAtDepth({series={}, depth=1, keysToMatch=[]}={}) {
+  const ANCESTORS = {[depth]: keysToMatch.reduce((obj, key) => {
     obj[key] = true;
     return obj;
   }, {})};
@@ -326,6 +326,5 @@ export function ancestorsOfKeysAtDepth({series={}, depth=1, keys=[]}={}) {
       minDepth: depth + 1, // only look at parents so we have their reference
       depthFirst: true,
     });
-
   return ANCESTORS;
 }

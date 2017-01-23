@@ -778,19 +778,19 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     let legendUpdate = {[seriesIdx]: attrs};
     let setAllAncestorsToTrue = false;
     if (dataType === this.state.report.legend.SERIES_DATA) {
-      const keys = Object.keys(attrs).filter(key => Boolean(attrs[key]));
-      if (keys.length === 1) {
+      const keysToMatch = Object.keys(attrs).filter(key => Boolean(attrs[key]));
+      if (keysToMatch.length === 1) {
         const depthOffsetForData = 2;
         const ancestors = util.ancestorsOfKeysAtDepth({
           series: this.state.result.series,
           depth: seriesIdx + depthOffsetForData,
-          keys,
+          keysToMatch,
         });
         legendUpdate = Object.keys(ancestors).reduce((obj, key) => {
           obj[Number(key) - depthOffsetForData] = ancestors[key];
           return obj;
         }, {});
-      } else if (keys.length) {
+      } else if (keysToMatch.length) {
         setAllAncestorsToTrue = true;
       }
     }

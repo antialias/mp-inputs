@@ -5,9 +5,11 @@ import {
   d3Obj,
   d4Obj,
   timeseriesResultObj,
+  d3ResultsObj
 } from './fixtures';
 
 import {
+  ancestorsOfKeysAtDepth,
   filterObject,
   flattenNestedObjectToPath,
   nestedObjectCumulative,
@@ -226,5 +228,56 @@ describe('uniqueObjKeysAtDepth', function() {
     const arr = uniqueObjKeysAtDepth(d4Obj, 4);
     expect(arr).to.have.length(2);
     expect(arr).to.contain('bunnies', 'kittens');
+  });
+});
+
+
+
+describe('ancestorsOfKeysAtDepth', function() {
+  it('finds ancestors for lowest key depth', function() {
+    const ancestorsOfChrome = ancestorsOfKeysAtDepth({
+      series: d3ResultsObj.series,
+      depth: 2,
+      keysToMatch: ['Chrome'],
+    });
+    expect(ancestorsOfChrome).to.eql({
+      '2':  {Chrome: true},
+      '3':  {'Mac OS X': true, Windows: true },
+      '4':  {'Viewed Report': true, 'Viewed Signup': true }
+    });
+
+    const ancestorsOfSafari = ancestorsOfKeysAtDepth({
+      series: d3ResultsObj.series,
+      depth: 2,
+      keysToMatch: ['Safari'],
+    });
+    expect(ancestorsOfSafari).to.eql({
+      '2':  {Safari: true},
+      '3':  {'Mac OS X': true, Linux: true },
+      '4':  {'Viewed Report': true, 'Viewed Signup': true }
+    });
+  });
+
+  it('finds ancestors at random key depth', function() {
+    const ancestorsOfWindows = ancestorsOfKeysAtDepth({
+      series: d3ResultsObj.series,
+      depth: 3,
+      keysToMatch: ['Windows'],
+    });
+    expect(ancestorsOfWindows).to.eql({
+      '3':  {Windows: true },
+      '4':  {'Viewed Report': true, 'Viewed Signup': true }
+    });
+  });
+
+  it('returns keys for heighest key depth', function() {
+    const ancestorsOfWindows = ancestorsOfKeysAtDepth({
+      series: d3ResultsObj.series,
+      depth: 4,
+      keysToMatch: ['Viewed Report'],
+    });
+    expect(ancestorsOfWindows).to.eql({
+      '4':  {'Viewed Report': true}
+    });
   });
 });
