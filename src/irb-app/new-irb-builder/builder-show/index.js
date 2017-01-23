@@ -84,6 +84,14 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
     return clause && clause.property ? renameProperty(clause.property.name) : ``;
   }
 
+  getSelectionAttrs() {
+    const clause = this.getClause();
+    return {
+      source: clause.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE ? `people` : `events`,
+      selected: clause.property.name,
+    };
+  }
+
   isPaneOpen() {
     return super.isPaneOpen() && this.state.isEditingNumericProperty;
   }
