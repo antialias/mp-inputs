@@ -54,10 +54,6 @@ mixin filter-number-input(value, oninput, options)
       key=options.key
     )
 
-mixin filter-date-input
-  input.filter-numdate-input(props={type: `text`})
-
-
 - const clause = $helpers.getActiveClause()
 
 .builder-screen.filter-property
@@ -149,16 +145,20 @@ mixin filter-date-input
       when `datetime`
         +filter-operator-dropdown
         if clause.filterOperator === `was between`
+          - const [from, to] = clause.filterValue || [null, null]
           .filter-numdate.filter-numdate-between.filter-datetime
-            +filter-date-input
-            span.filter-conjunction and
-            +filter-date-input
+            irb-datepicker(
+              attrs={range: true, preposition: `and`}
+              props={value: JSON.stringify({from, to})}
+              on={change: ev => $helpers.updateFilterValue([ev.detail.from, ev.detail.to])}
+            )
         else
           .filter-numdate.filter-datetime
-            +filter-date-input
-
-        //- TODO attach datepicker!
-        .filter-numdate Under construction!
+            irb-datepicker(
+              attrs={range: false}
+              props={value: clause.filterValue}
+              on={change: ev => $helpers.updateFilterValue(ev.detail)}
+            )
 
       when `boolean`
         .filter-radio-list.filter-boolean
