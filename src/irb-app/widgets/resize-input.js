@@ -17,6 +17,7 @@ document.registerElement(`resize-input`, class extends Component {
   get config() {
     return {
       template,
+      updateSync: true,
       defaultState: {
         autofocus: true,
         inputValue: ``,
@@ -89,12 +90,6 @@ document.registerElement(`resize-input`, class extends Component {
   resize() {
     const newWidth = Math.max(this.minimumWidth, this.getTextWidth(this.state.inputValue));
     this.update({inputWidth: newWidth});
-
-    // don't wait for animation frame if input is already available
-    const input = this.el.querySelector(`input`);
-    if (input) {
-      input.style.width = `${newWidth}px`;
-    }
   }
 
   setMinimumWidth(newMin) {
