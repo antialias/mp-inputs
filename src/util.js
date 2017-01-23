@@ -322,22 +322,33 @@ export function flattenNestedObjectToPath(obj, options={}, parentKeys=[], result
 * //{1: {'San Francisco': true}, 2: {'California': true}, 3: {'US': true}}
 */
 export function ancestorsOfKeysAtDepth({series={}, keysToMatch=[], depth=1}={}) {
-  const ANCESTORS = {[depth]: keysToMatch.reduce((obj, key) => {
+  const REACHABLE_NODES = {[depth]: keysToMatch.reduce((obj, key) => {
     obj[key] = true;
     return obj;
   }, {})};
 
+  const _addToFamily = (depth, key) => {
+    REACHABLE_NODES[depth] = Object.assign((REACHABLE_NODES[depth] || {}),
+      {[key]: true}
+    );
+  };
   _callbackIntoObject(series, (value, objectHoldingValue, depthInSeries) => {
-    const valueChilden = Object.keys(objectHoldingValue[value]);
-    const keysToMatch = Object.keys(ANCESTORS[depthInSeries - 1] || {});
-    const objectHasMatch = keysToMatch.some(matchKey => valueChilden.includes(matchKey));
-    if (objectHasMatch) {
-      ANCESTORS[depthInSeries] = Object.assign((ANCESTORS[depthInSeries] || {}),
-        {[value]: true}
-      );
-    }}, {
-      minDepth: depth + 1, // only look at parents so we have their reference
-      depthFirst: true,
-    });
-  return ANCESTORS;
+    if (depthInSeries > depth) {
+      const valueChilden = Object.keys(objectHoldingValue[value]);
+      const keysToMatch = Object.keys(REACHABLE_NODES[depthInSeries - 1] || {});
+      const objectHasMatch = keysToMatch.some(matchKey => valueChilden.includes(matchKey));
+      if (objectHasMatch) {
+        _addToFamily(depth + 1, value);
+      }
+    } else if (depthInSeries === depth && keysToMatch.includes(value)) {
+      _callbackIntoObject(objectHoldingValue[value], (childValue, _, childDepth) => {
+        _addToFamily(childDepth, childValue);
+      }, {minDepth: 2}); // remove time series data
+    }
+  }, {
+    minDepth: depth,
+    depthFirst: true,
+  });
+
+  return REACHABLE_NODES;
 }
