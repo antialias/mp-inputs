@@ -1,12 +1,11 @@
 - const open = $helpers.isPaneOpen()
-- const selected = $helpers.getLabelText()
 
 .control-container
   .irb-new-control.new-query-builder(class={'pane-open': open})
     .control-buttons.edit-control.control-button-text
       if open
         resize-input.control-label(
-          attrs={placeholder: selected}
+          attrs={placeholder: $helpers.getLabelText()}
           props={
             autoFocus: true,
             type: `text`,
@@ -34,4 +33,4 @@
     .drop-menu
       mp-drop-menu(attrs={open} on={change: $helpers.menuChange})
         .new-pane-content(attrs={'slot-body': true})
-          = $component.child(`builder-pane`, {attrs: {selected}})
+          = $component.child(`builder-pane`, {attrs: $helpers.getSelectionAttrs()})

@@ -43,6 +43,21 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
     return renameEvent(clause.value.name);
   }
 
+  getSelectionAttrs() {
+    const clause = this.getClause();
+    if (clause.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE) {
+      return {
+        source: `people`,
+        selected: clause.property ? clause.property.name : clause.value.name,
+      };
+    } else {
+      return {
+        source: `events`,
+        selected: clause.value.name,
+      };
+    }
+  }
+
   isPaneOpen() {
     return super.isPaneOpen() && !this.state.isEditingNumericProperty;
   }

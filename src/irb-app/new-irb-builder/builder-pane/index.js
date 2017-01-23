@@ -15,6 +15,11 @@ document.registerElement(`builder-pane`, class extends Component {
       template,
       helpers: {
         getSizeStyle: () => this.state.builderPane && this.state.builderPane.sizeStyle || this.app.defaultBuilderState.sizeStyle,
+        screenAttrs: screenIdx => ({
+          'screen-index': screenIdx,
+          'selected': this.getAttribute(`selected`),
+          'source': this.getAttribute(`source`),
+        }),
       },
     };
   }

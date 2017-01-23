@@ -34,6 +34,7 @@ export class EditControl extends Component {
           const label = this.getLabel();
           return Array.isArray(label) ? label[0] : label;
         },
+        getSelectionAttrs: () => this.getSelectionAttrs(),
         isPaneOpen: () => this.isPaneOpen(),
         isRemovable: () => this.isRemovable(),
         removeClause: () => this.remove(),
@@ -68,6 +69,10 @@ export class EditControl extends Component {
 
   getClause(state) {
     return (state || this.state).report.sections.getClause(this.section, this.clauseIndex);
+  }
+
+  getSelectionAttrs() {
+    return {};
   }
 
   isPaneOpen() {

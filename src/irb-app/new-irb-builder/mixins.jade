@@ -39,7 +39,7 @@ mixin event-list(events, options)
     - const selected = options.selected
     each mpEvent in events
       - const renamedMpEvent = util.renameEvent(mpEvent.name)
-      - const isSelected = renamedMpEvent === selected
+      - const isSelected = mpEvent.name === selected
       li.list-option(
         class={'list-option-selected': isSelected}
         on={click: isSelected ? null : () => options.clickedEvent(mpEvent)}
@@ -62,7 +62,7 @@ mixin property-list(properties, options)
     if properties.length
       each property in properties
         - const label = util.renameProperty(property.name) || property.name
-        - const isSelected = label === selected
+        - const isSelected = property.name === selected
         li.list-option(
           class={'list-option-selected': isSelected}
           on={click: isSelected ? null : ev => options.clickedProperty(ev, property)}
