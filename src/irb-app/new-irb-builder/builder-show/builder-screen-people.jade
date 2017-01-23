@@ -10,9 +10,11 @@ include ../mixins.jade
   )
     +property-list($helpers.getSpecialOptions(), {
       clickedProperty: $helpers.clickedSpecialOptions,
+      selected: $component.getAttribute(`selected`),
     })
     +property-list($helpers.getProperties(), {
       clickedProperty: $helpers.clickedProperty,
+      selected: $component.getAttribute(`selected`),
       loading,
     })
   if !loading

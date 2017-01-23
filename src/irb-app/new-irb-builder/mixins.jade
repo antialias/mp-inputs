@@ -57,10 +57,14 @@ mixin property-list(properties, options)
     class={'show-loader': !options.hideLoader}
     on={scroll: options.scrolledList}
   )
+    - const selected = options.selected
     if properties.length
       each property in properties
-        li.list-option(on={click: ev => options.clickedProperty(ev, property)})
-          - const label = util.renameProperty(property.name) || property.name
+        - const label = util.renameProperty(property.name) || property.name
+        li.list-option(
+          class={'list-option-selected': label === selected}
+          on={click: ev => options.clickedProperty(ev, property)}
+        )
           +screen-option(label, {
             icon: property.icon || util.getIconForProperty(property),
             matches: property.matches,
