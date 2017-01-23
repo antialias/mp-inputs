@@ -20,46 +20,45 @@ transition-time = .25s
       width 260px
 
     &.sources, &.math
+      li.list-option
+        font-size 11px
+        font-weight 900
+        text-transform uppercase
 
-        li.list-option
-          font-size 11px
-          font-weight 900
-          text-transform uppercase
+        .caret-icon
+          svg-icon-style(mp-blue, speed: 0s)
+          visibility hidden
 
-          .caret-icon
-            svg-icon-style(mp-blue, speed: 0s)
-            visibility hidden
-
-          &:hover .caret-icon
-            visibility visible
+        &:hover .caret-icon
+          visibility visible
 
     &.sources
-        width 260px
+      width 260px
 
-        .contextual-menu-option .option-label
+      .contextual-menu-option .option-label
+        color grey-700
+        font-size 11px
+        font-weight 600
+        text-transform uppercase
+
+      .list-option.generic-list.contextual-menu-option:hover .option-label
+        color mp-blue
+
+      .screen-options-list
+        border-bottom 1px solid grey-150
+
+        .list-option
           color grey-700
           font-size 11px
-          font-weight 600
+          font-weight 700
           text-transform uppercase
+          svg-icon-style grey-300
+          &:hover
+            color mp-blue
+            svg-icon-style mp-blue
 
-        .list-option.generic-list.contextual-menu-option:hover .option-label
-          color mp-blue
-
-        .screen-options-list
-          border-bottom 1px solid grey-150
-
-          .list-option
-            color grey-700
-            font-size 11px
-            font-weight 700
-            text-transform uppercase
-            svg-icon-style grey-300
-            &:hover
-              color mp-blue
-              svg-icon-style mp-blue
-
-          &:empty, &:last-of-type
-            border-bottom none
+        &:empty, &:last-of-type
+          border-bottom none
 
     &.math
       width 110px
