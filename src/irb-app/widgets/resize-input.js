@@ -65,9 +65,9 @@ document.registerElement(`resize-input`, class extends Component {
 
       const tmpInput = document.createElement(`input`);
       this.appendChild(tmpInput);
-      const thisStyle = getComputedStyle(tmpInput);
+      const inputStyle = getComputedStyle(tmpInput);
       for (let prop of SIZER_PROPS) {
-        this.sizer.style[prop] = thisStyle[prop];
+        this.sizer.style[prop] = inputStyle[prop];
       }
       tmpInput.remove();
 
@@ -82,7 +82,7 @@ document.registerElement(`resize-input`, class extends Component {
     while (text.endsWith(` `)) {
       text = `&nbsp;${text.slice(0, text.length - 1)}`;
     }
-    this.sizer.innerHTML = text && text.replace(` `, `&nbsp;`);
+    this.sizer.innerHTML = text.replace(` `, `&nbsp;`);
     return Math.round(this.sizer.getBoundingClientRect().width);
   }
 
