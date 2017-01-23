@@ -11,6 +11,7 @@ include ../mixins.jade
     +property-list($helpers.getProperties(), {
       clickedProperty: $helpers.clickedProperty,
       selected: $component.getAttribute(`selected`),
+      source: $component.getAttribute(`source`),
       loading,
     })
   if !loading
