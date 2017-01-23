@@ -36,11 +36,7 @@ function main() {
   var usesPeopleData = params.resourceTypeNeeded === 'all' || params.resourceTypeNeeded === 'people';
   var usesEventData = params.resourceTypeNeeded === 'all' || params.resourceTypeNeeded === 'events';
 
-  if (params.outputName) {
-    groups.push(function() {
-      return params.outputName;
-    });
-  } else if (params.selectors && params.selectors.length) {
+  if (!params.outputName && params.selectors && params.selectors.length) {
     groups.push(usesPeopleData ? 'event.name' : 'name');
   }
 
@@ -140,6 +136,12 @@ function main() {
   } else {
     query = query.groupByUser(groups, countReducer)
       .groupBy([mixpanel.slice('key', 1)], getReducerFunc(params.type));
+  }
+  if (params.outputName) {
+    query = query.map(function(group) {
+      group.key = [params.outputName].concat(group.key);
+      return group;
+    });
   }
   return params.groupLimits ? query.internalLimitHierarchically(params.groupLimits) : query;
 }
