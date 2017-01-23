@@ -35,6 +35,10 @@ export function parseDate(dateString) {
   return isNaN(timestamp) ? null : new Date(timestamp);
 }
 
+export function relativeToAbsoluteDate(relativeDateInt, unit) {
+  return new Date(moment().subtract(relativeDateInt, `${unit}s`));
+}
+
 export function getTextWidth(text, font) {
   const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement(`canvas`));
   let context = canvas.getContext(`2d`);

@@ -35,8 +35,8 @@ class Calendar extends WebComponent {
       // pass
     }
 
-    this.from = val.from ? parseDate(val.from) : null;
-    this.to = val.to ? parseDate(val.to) : null;
+    this.from = val && val.from ? parseDate(val.from) : null;
+    this.to = val && val.to ? parseDate(val.to) : null;
     this.date = val && !val.from && !val.to ? parseDate(val) : null;
 
     this.updatePicker();
@@ -45,13 +45,12 @@ class Calendar extends WebComponent {
   init() {
     this._initialized = true;
     this.innerHTML = ``;
-    this.isRangeInput = this.isAttributeEnabled(`range`);
     this.picker = new Pikaday({
       bound: false,
       container: document.getElementsByClassName(`calendar-hook`)[0],
       mainCalendar: `right`,
       maxDate: new Date(),
-      numberOfMonths: this.isRangeInput ? 2 : 1,
+      numberOfMonths: this.isRange ? 2 : 1,
       i18n: extend(Pikaday.prototype.config().i18n, {
         weekdaysShort: [`SU`, `MO`, `TU`, `WE`, `TH`, `FR`, `SA`],
       }),
@@ -71,7 +70,7 @@ class Calendar extends WebComponent {
 
   updatePicker() {
     if (this.picker) {
-      if (!this.isRangeInput) {
+      if (!this.isRange) {
         this.picker.setDate(this.date);
       } else {
         this.picker.setStartRange(this.from);
@@ -88,7 +87,11 @@ class Calendar extends WebComponent {
   }
 
   selectDate(date, emit=true) {
-    if (!this.isRangeInput) {
+    const oldDate = this.date;
+    const oldFrom = this.from;
+    const oldTo = this.to;
+
+    if (!this.isRange) {
       this.date = date;
     } else if (this.isAttributeEnabled(`fromFocused`)) {
       this.from = date;
@@ -107,7 +110,13 @@ class Calendar extends WebComponent {
       [this.from, this.to] = [this.to, this.from];
     }
 
-    this.updatePicker();
+    if (
+      formatDateISO(this.date) !== formatDateISO(oldDate) ||
+      formatDateISO(this.from) !== formatDateISO(oldFrom) ||
+      formatDateISO(this.to) !== formatDateISO(oldTo)
+    ) {
+      this.updatePicker();
+    }
 
     if (emit) {
       this.emitChange();
@@ -115,20 +124,10 @@ class Calendar extends WebComponent {
   }
 
   emitChange() {
-    let detail = null;
-
-    if (!this.isRangeInput) {
-      if (this.date) {
-        detail = {
-          date: formatDateISO(this.date),
-        };
-      }
-    } else {
-      detail = {
-        from: this.from ? formatDateISO(this.from) : null,
-        to: this.to ? formatDateISO(this.to) : null,
-      };
-    }
+    const from = this.from ? formatDateISO(this.from) : null;
+    const to = this.to ? formatDateISO(this.to) : null;
+    const date = this.date ? formatDateISO(this.date) : null;
+    const detail = this.isRange ? {from, to} : date;
 
     if (detail) {
       this.dispatchEvent(new CustomEvent(`change`, {detail}));
@@ -137,6 +136,10 @@ class Calendar extends WebComponent {
 
   emitResize() {
     this.dispatchEvent(new CustomEvent(`resize`));
+  }
+
+  get isRange() {
+    return this.isAttributeEnabled(`range`);
   }
 }
 

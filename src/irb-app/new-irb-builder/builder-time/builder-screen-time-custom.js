@@ -2,13 +2,12 @@ import moment from 'moment';
 
 import { BuilderScreenBase } from '../builder-pane/builder-screen-base';
 import { TimeClause } from '../../../models/clause';
-import { extend, formatDateISO } from '../../../util';
+import { extend, formatDateISO, relativeToAbsoluteDate } from '../../../util';
 
 import template from './builder-screen-time-custom.jade';
 import './builder-screen-time-custom.styl';
 
-import '../../widgets/date-input';
-import '../../widgets/calendar';
+import '../../widgets/datepicker';
 
 const UNITS = TimeClause.UNIT_LIST.filter(
   choice => choice !== TimeClause.UNITS.YEAR
@@ -23,61 +22,25 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
         clickedUnit: unit => this.updateStageClause({unit}, {shouldCommit: true}),
         getDates: () => this.getDates(),
         changedDates: ev => {
-          const now = moment();
+          const {from, to} = ev.detail;
           const oldRange = this.getDates();
+          const daysApart = moment(to).diff(moment(from), `days`) + 1;
+
+          // auto-adjust unit when changing date value
           let unit = null;
-          let {from, to} = ev.detail;
-
-          if (from && moment(from) > now) {
-            from = formatDateISO(now);
-          }
-
-          if (to && moment(to) > now) {
-            to = formatDateISO(now);
-          }
-
-          if (from && to) {
-            if (moment(from) > moment(to)) {
-              [from, to] = [to, from];
-            }
-
-            const daysApart = moment(to).diff(moment(from), `days`) + 1;
-
-            // auto-adjust unit when changing date value
-            if (daysApart <= 4) {
-              unit = `hour`;
-            } else if (daysApart <= 31) {
-              unit = `day`;
-            } else if (daysApart <= 183) {
-              unit = `week`;
-            } else {
-              unit = `month`;
-            }
+          if (daysApart <= 4) {
+            unit = `hour`;
+          } else if (daysApart <= 31) {
+            unit = `day`;
+          } else if (daysApart <= 183) {
+            unit = `week`;
+          } else {
+            unit = `month`;
           }
 
           if (from !== oldRange.from || to !== oldRange.to || unit !== oldRange.unit) {
-            this.setDates(from, to, unit);
+            this.setDates(ev.detail.from, ev.detail.to, unit);
           }
-        },
-        changedFrom: ev => this.helpers.changedDates({detail: {
-          from: ev.detail,
-          to: this.getDates().to,
-        }}),
-        changedTo: ev => this.helpers.changedDates({detail: {
-          from: this.getDates().from,
-          to: ev.detail,
-        }}),
-        focusedFrom: () => this.app.updateBuilderCurrentScreen({fromFocused: true}),
-        blurredFrom: () => this.app.updateBuilderCurrentScreen({fromFocused: false}),
-        fromFocused: () => {
-          const screen = this.app.getBuilderCurrentScreen();
-          return !!(screen && screen.fromFocused);
-        },
-        focusedTo: () => this.app.updateBuilderCurrentScreen({toFocused: true}),
-        blurredTo: () => this.app.updateBuilderCurrentScreen({toFocused: false}),
-        toFocused: () => {
-          const screen = this.app.getBuilderCurrentScreen();
-          return !!(screen && screen.toFocused);
         },
       }),
     };
@@ -114,7 +77,6 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
   }
 
   relativeToAbsoluteDate(relativeDateInt) {
-    const unit = this.helpers.getStageClauseAttr(`unit`);
-    return new Date(moment().subtract(relativeDateInt, `${unit}s`));
+    return relativeToAbsoluteDate(relativeDateInt, this.helpers.getStageClauseAttr(`unit`));
   }
 });
