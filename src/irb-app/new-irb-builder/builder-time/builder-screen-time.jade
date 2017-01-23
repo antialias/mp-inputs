@@ -1,10 +1,15 @@
 include ../mixins.jade
 
+- const selected = $component.getAttribute(`selected`)
+
 .builder-screen.time
   ul.screen-options-list(hook={postpatch: $helpers.updateRenderedSize})
-      each range in $helpers.RANGE_LIST
-        if range.includes(contextFilter)
-          li.list-option(on={click: () => $helpers.clickedRange(range)})
-            +screen-option(range, {noIcon: true})
-            if range === $helpers.RANGES.CUSTOM
-              +small-caret-icon()
+    each range in $helpers.RANGE_LIST
+      if range.includes(contextFilter)
+        li.list-option(
+          class={'list-option-selected': range === selected}
+          on={click: () => $helpers.clickedRange(range)}
+        )
+          +screen-option(range, {noIcon: true})
+          if range === $helpers.RANGES.CUSTOM
+            +small-caret-icon()
