@@ -2,7 +2,7 @@ import { Component } from 'panel';
 
 import template from './resize-input.jade';
 
-const GLOBAL_MIN_WIDTH = 100;
+const GLOBAL_MIN_WIDTH = 90;
 const SIZER_PROPS = [
   `fontFamily`,
   `fontSize`,
