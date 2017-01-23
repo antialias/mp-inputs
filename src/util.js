@@ -328,12 +328,12 @@ export function reachableNodesOfKey({series={}, keysToMatch=[], depth=1}={}) {
   }, {})};
 
   const _addToFamily = (depth, key) => {
-    REACHABLE_NODES[depth] = Object.assign((REACHABLE_NODES[depth] || {}),
-      {[key]: true}
-    );
+    REACHABLE_NODES[depth] = (REACHABLE_NODES[depth] || {});
+    REACHABLE_NODES[depth][key] = true;
   };
   _callbackIntoObject(series, (value, objectHoldingValue, depthInSeries) => {
     if (depthInSeries > depth) {
+      // create ancestor list
       const valueChilden = Object.keys(objectHoldingValue[value]);
       const keysToMatch = Object.keys(REACHABLE_NODES[depthInSeries - 1] || {});
       const objectHasMatch = keysToMatch.some(matchKey => valueChilden.includes(matchKey));
@@ -341,6 +341,7 @@ export function reachableNodesOfKey({series={}, keysToMatch=[], depth=1}={}) {
         _addToFamily(depthInSeries, value);
       }
     } else if (depthInSeries === depth && keysToMatch.includes(value)) {
+      // add descendents of matching keys
       _callbackIntoObject(objectHoldingValue[value], (childValue, _, childDepth) => {
         _addToFamily(childDepth, childValue);
       }, {minDepth: 2}); // remove time series data
