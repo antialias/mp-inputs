@@ -6,9 +6,10 @@ include ../mixins.jade
   ul.screen-options-list(hook={postpatch: $helpers.updateRenderedSize})
     each range in $helpers.RANGE_LIST
       if range.includes(contextFilter)
+        - const isSelected = range === selected
         li.list-option(
-          class={'list-option-selected': range === selected}
-          on={click: () => $helpers.clickedRange(range)}
+          class={'list-option-selected': isSelected}
+          on={click: isSelected ? null : () => $helpers.clickedRange(range)}
         )
           +screen-option(range, {noIcon: true})
           if range === $helpers.RANGES.CUSTOM
