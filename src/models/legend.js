@@ -52,7 +52,7 @@ export default class Legend {
         });
       } else {
         this._buildColorMap(`_colorMap`,  Legend.SERIES_DATA, numColors);
-        this._buildColorMap(`_flattenedColorMap`, Legend.SERIES_DATA, numColors);
+        this._buildColorMap(`_flattenedColorMap`, Legend.FLAT_DATA, numColors);
       }
     }
     this.changeID++;
