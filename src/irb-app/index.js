@@ -781,7 +781,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       const keysToMatch = Object.keys(attrs).filter(key => Boolean(attrs[key]));
       if (keysToMatch.length === 1) {
         const depthOffsetForData = 2;
-        const ancestors = util.ancestorsOfKeysAtDepth({
+        const ancestors = util.reachableNodesOfKey({
           series: this.state.result.series,
           depth: seriesIdx + depthOffsetForData,
           keysToMatch,

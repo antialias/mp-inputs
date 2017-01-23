@@ -9,11 +9,11 @@ import {
 } from './fixtures';
 
 import {
-  ancestorsOfKeysAtDepth,
   filterObject,
   flattenNestedObjectToPath,
   nestedObjectCumulative,
   nestedObjectRolling,
+  reachableNodesOfKey,
   uniqueObjKeysAtDepth,
 } from '../src/util';
 
@@ -233,9 +233,9 @@ describe('uniqueObjKeysAtDepth', function() {
 
 
 
-describe('ancestorsOfKeysAtDepth', function() {
-  it('finds ancestors for lowest key depth', function() {
-    const ancestorsOfChrome = ancestorsOfKeysAtDepth({
+describe('reachableNodesOfKey', function() {
+  it('finds family for keys at lowest depth', function() {
+    const ancestorsOfChrome = reachableNodesOfKey({
       series: d3ResultsObj.series,
       depth: 2,
       keysToMatch: ['Chrome'],
@@ -246,7 +246,7 @@ describe('ancestorsOfKeysAtDepth', function() {
       '4':  {'Viewed Report': true, 'Viewed Signup': true }
     });
 
-    const ancestorsOfSafari = ancestorsOfKeysAtDepth({
+    const ancestorsOfSafari = reachableNodesOfKey({
       series: d3ResultsObj.series,
       depth: 2,
       keysToMatch: ['Safari'],
@@ -258,26 +258,30 @@ describe('ancestorsOfKeysAtDepth', function() {
     });
   });
 
-  it('finds ancestors at random key depth', function() {
-    const ancestorsOfWindows = ancestorsOfKeysAtDepth({
+  it('finds family at a center key depth', function() {
+    const ancestorsOfWindows = reachableNodesOfKey({
       series: d3ResultsObj.series,
       depth: 3,
       keysToMatch: ['Windows'],
     });
     expect(ancestorsOfWindows).to.eql({
+      '2':  {Chrome: true, Firefox: true, Opera: true},
       '3':  {Windows: true },
       '4':  {'Viewed Report': true, 'Viewed Signup': true }
     });
   });
 
-  it('returns keys for heighest key depth', function() {
-    const ancestorsOfWindows = ancestorsOfKeysAtDepth({
+  it('finds family at heighest key depth', function() {
+    const ancestorsOfWindows = reachableNodesOfKey({
       series: d3ResultsObj.series,
       depth: 4,
       keysToMatch: ['Viewed Report'],
     });
     expect(ancestorsOfWindows).to.eql({
+      '2':  {Chrome: true, Firefox: true, Opera: true, Safari: true},
+      '3':  {'Mac OS X': true, Windows: true},
       '4':  {'Viewed Report': true}
     });
   });
+
 });

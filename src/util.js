@@ -306,7 +306,7 @@ export function flattenNestedObjectToPath(obj, options={}, parentKeys=[], result
 }
 
 /*
-* Find all ancestors from a list of keys at a depth in a given object
+* Find all reachable notes in an object from a starting key at a depth
 * @param {Object} options
 * @param {Object} options.series - The object searched
 * @param {Object[]} options.keysToMatch - A list of keys that are considered descendents
@@ -314,14 +314,14 @@ export function flattenNestedObjectToPath(obj, options={}, parentKeys=[], result
 * @returns {object} returns a nested object of the matching ancestors set to true inside of
 * the depth which they were found
 * @example
-* ancestorsOfKeysAtDepth({
+* reachableNodesOfKey({
 *   series: {'US': {'California': {'San Francisco': 2}, 'New York' : {'Buffalo': 1}}},
-*   keysToMatch: ['San Francisco'],
+*   keysToMatch: ['California'],
 *   depth: 1,
 * });
 * //{1: {'San Francisco': true}, 2: {'California': true}, 3: {'US': true}}
 */
-export function ancestorsOfKeysAtDepth({series={}, keysToMatch=[], depth=1}={}) {
+export function reachableNodesOfKey({series={}, keysToMatch=[], depth=1}={}) {
   const REACHABLE_NODES = {[depth]: keysToMatch.reduce((obj, key) => {
     obj[key] = true;
     return obj;
@@ -338,7 +338,7 @@ export function ancestorsOfKeysAtDepth({series={}, keysToMatch=[], depth=1}={}) 
       const keysToMatch = Object.keys(REACHABLE_NODES[depthInSeries - 1] || {});
       const objectHasMatch = keysToMatch.some(matchKey => valueChilden.includes(matchKey));
       if (objectHasMatch) {
-        _addToFamily(depth + 1, value);
+        _addToFamily(depthInSeries, value);
       }
     } else if (depthInSeries === depth && keysToMatch.includes(value)) {
       _callbackIntoObject(objectHoldingValue[value], (childValue, _, childDepth) => {
