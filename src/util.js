@@ -306,9 +306,22 @@ export function flattenNestedObjectToPath(obj, options={}, parentKeys=[], result
 }
 
 /*
-TODO: CREATE TESTS + ADD DESCRIPTION
- */
-export function ancestorsOfKeysAtDepth({series={}, depth=1, keysToMatch=[]}={}) {
+* Find all ancestors from a list of keys at a depth in a given object
+* @param {Object} options
+* @param {Object} options.series - The object searched
+* @param {Object[]} options.keysToMatch - A list of keys that are considered descendents
+* @param {String} options.depth - The depth at which keysToMatch exists
+* @returns {object} returns a nested object of the matching ancestors set to true inside of
+* the depth which they were found
+* @example
+* ancestorsOfKeysAtDepth({
+*   series: {'US': {'California': {'San Francisco': 2}, 'New York' : {'Buffalo': 1}}},
+*   keysToMatch: ['San Francisco'],
+*   depth: 1,
+* });
+* //{1: {'San Francisco': true}, 2: {'California': true}, 3: {'US': true}}
+*/
+export function ancestorsOfKeysAtDepth({series={}, keysToMatch=[], depth=1}={}) {
   const ANCESTORS = {[depth]: keysToMatch.reduce((obj, key) => {
     obj[key] = true;
     return obj;
