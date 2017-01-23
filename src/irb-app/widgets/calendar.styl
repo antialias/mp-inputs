@@ -1,10 +1,35 @@
 @import "~pikaday/css/pikaday.css"
 @import "../../stylesheets/common"
 
+irb-calendar
+  display flex
+  align-items center
+  justify-content center
+
+irb-calendar[double-calendar="true"] .pika-mixpanel
+  width 492px
+
+  .pika-lendar
+    width 246px
+
+    &:first-child table
+      border-right 1px solid grey-200
+
+    &:last-child table
+      border-left 1px solid grey-200
+
+    table.pika-table
+      th, td
+        &:first-child
+          padding-left 18px
+
+        &:last-child
+          padding-right 18px
+
 irb-calendar .pika-mixpanel
   border none
   border-radius 10px
-  width 492px
+  width 100%
 
   &::after
     border 10px solid transparent
@@ -20,13 +45,7 @@ irb-calendar .pika-mixpanel
     padding 8px 0
     margin-left 0
     margin-right 0
-    width 246px
-
-    &:first-child table
-      border-right 1px solid grey-200
-
-    &:last-child table
-      border-left 1px solid grey-200
+    width 100%
 
   .pika-title
     color grey-900
@@ -76,10 +95,10 @@ irb-calendar .pika-mixpanel
       position relative
 
       &:first-child
-        padding-left 18px
+        padding-left 40px
 
       &:last-child
-        padding-right 18px
+        padding-right 40px
 
     /* --- button styles --- */
 
@@ -92,7 +111,7 @@ irb-calendar .pika-mixpanel
       position relative
       text-align center
 
-    td:not(.is-startrange):not(.is-endrange):not(.is-disabled):not(.is-outside-current-month):hover
+    td:not(.is-selected):not(.is-startrange):not(.is-endrange):not(.is-disabled):not(.is-outside-current-month):hover
       .pika-button
         background-color grey-100
         border-radius 15px
@@ -101,6 +120,7 @@ irb-calendar .pika-mixpanel
       &.is-inrange .pika-button
         background-color blue-900
 
+    td.is-selected:not(.is-outside-current-month),
     td.is-startrange:not(.is-outside-current-month),
     td.is-endrange:not(.is-outside-current-month)
       .pika-button
@@ -121,7 +141,7 @@ irb-calendar .pika-mixpanel
 
 /* --- highlight styles --- */
 
-.new-query-builder .pika-mixpanel:not(.incomplete-range) table.pika-table
+.pika-mixpanel:not(.incomplete-range) table.pika-table
   td.is-startrange,
   td.is-endrange
     &:not(.is-outside-current-month)

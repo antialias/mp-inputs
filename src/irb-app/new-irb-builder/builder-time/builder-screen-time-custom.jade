@@ -7,8 +7,8 @@ include ../mixins.jade
   +screen-title('Choose a date range', {backButton: true})
   .range-control
     irb-datepicker(
-      attrs={range: true, preposition: `to`}
-      props={value: JSON.stringify({from, to})}
+      attrs={range: true, 'double-calendar': true, preposition: `to`}
+      props={value: {from, to}}
       on={change: $helpers.changedDates}
     )
   if report.displayOptions.chartType === `line`

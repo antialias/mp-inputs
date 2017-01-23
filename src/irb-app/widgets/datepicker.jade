@@ -1,4 +1,5 @@
 - const isRange = $helpers.isRange();
+- const isDoubleCalendar = $helpers.isDoubleCalendar();
 
 .datepicker
   .inputs
@@ -22,9 +23,10 @@
     irb-calendar(
       attrs={
         range: isRange,
-        fromFocused,
-        toFocused,
+        'double-calendar': isDoubleCalendar,
+        'from-focused': fromFocused,
+        'to-focused': toFocused,
       }
-      props={value: isRange ? JSON.stringify({from, to}) : date}
+      props={value: isRange ? {from, to} : date}
       on={change: $helpers.changedDates}
     )

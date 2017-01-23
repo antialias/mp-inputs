@@ -22,23 +22,16 @@ class Calendar extends WebComponent {
     this.init();
   }
 
-  attributeChangedCallback() {
-    if (this._initialized) {
+  attributeChangedCallback(name) {
+    if (!this._initialized || name === `double-calendar`) {
       this.init();
     }
   }
 
   set value(val) {
-    try {
-      val = JSON.parse(val);
-    } catch(e) {
-      // pass
-    }
-
     this.from = val && val.from ? parseDate(val.from) : null;
     this.to = val && val.to ? parseDate(val.to) : null;
     this.date = val && !val.from && !val.to ? parseDate(val) : null;
-
     this.updatePicker();
   }
 
@@ -50,7 +43,7 @@ class Calendar extends WebComponent {
       container: document.getElementsByClassName(`calendar-hook`)[0],
       mainCalendar: `right`,
       maxDate: new Date(),
-      numberOfMonths: this.isRange ? 2 : 1,
+      numberOfMonths: this.isDoubleCalendar ? 2 : 1,
       i18n: extend(Pikaday.prototype.config().i18n, {
         weekdaysShort: [`SU`, `MO`, `TU`, `WE`, `TH`, `FR`, `SA`],
       }),
@@ -70,18 +63,16 @@ class Calendar extends WebComponent {
 
   updatePicker() {
     if (this.picker) {
-      if (!this.isRange) {
-        this.picker.setDate(this.date);
-      } else {
-        this.picker.setStartRange(this.from);
-        this.picker.setEndRange(this.to);
+      this.picker.setDate(this.date);
+      this.picker.setStartRange(this.from);
+      this.picker.setEndRange(this.to);
 
-        if (this.from && !this.to) {
-          this.picker.el.className += ` ${INCOMPLETE_RANGE_CLASS}`;
-        } else {
-          this.picker.el.className = this.picker.el.className.replace(` ${INCOMPLETE_RANGE_CLASS}`, ``);
-        }
+      if (this.from && !this.to) {
+        this.picker.el.className += ` ${INCOMPLETE_RANGE_CLASS}`;
+      } else {
+        this.picker.el.className = this.picker.el.className.replace(` ${INCOMPLETE_RANGE_CLASS}`, ``);
       }
+
       this.picker.draw();
     }
   }
@@ -93,17 +84,23 @@ class Calendar extends WebComponent {
 
     if (!this.isRange) {
       this.date = date;
-    } else if (this.isAttributeEnabled(`fromFocused`)) {
-      this.from = date;
-    } else if (this.isAttributeEnabled(`toFocused`)) {
-      this.to = date;
-    } else if (!this.from) {
-      this.from = date;
-    } else if (!this.to) {
-      this.to = date;
-    } else {
-      this.from = date;
+      this.from = null;
       this.to = null;
+    } else {
+      this.date = null;
+
+      if (this.isAttributeEnabled(`from-focused`)) {
+        this.from = date;
+      } else if (this.isAttributeEnabled(`to-focused`)) {
+        this.to = date;
+      } else if (!this.from) {
+        this.from = date;
+      } else if (!this.to) {
+        this.to = date;
+      } else {
+        this.from = date;
+        this.to = null;
+      }
     }
 
     if (this.from && this.to && this.from > this.to) {
@@ -140,6 +137,10 @@ class Calendar extends WebComponent {
 
   get isRange() {
     return this.isAttributeEnabled(`range`);
+  }
+
+  get isDoubleCalendar() {
+    return this.isAttributeEnabled(`double-calendar`);
   }
 }
 

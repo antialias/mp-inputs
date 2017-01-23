@@ -22,6 +22,7 @@ class DatePicker extends Component {
       },
       helpers: {
         isRange: () => this.isRange,
+        isDoubleCalendar: () => this.isDoubleCalendar,
         getPreposition: () => this.preposition,
         changedDates: ev => {
           const now = moment();
@@ -74,11 +75,6 @@ class DatePicker extends Component {
   }
 
   set value(val) {
-    try {
-      val = JSON.parse(val);
-    } catch(e) {
-      // pass
-    }
     this.update(this.isRange ? {from: val.from, to: val.to} : {date: val});
   }
 
@@ -88,6 +84,10 @@ class DatePicker extends Component {
 
   get isRange() {
     return this.isAttributeEnabled(`range`);
+  }
+
+  get isDoubleCalendar() {
+    return this.isAttributeEnabled(`double-calendar`);
   }
 
   get preposition() {

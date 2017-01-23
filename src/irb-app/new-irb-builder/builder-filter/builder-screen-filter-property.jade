@@ -144,21 +144,14 @@ mixin filter-number-input(value, oninput, options)
 
       when `datetime`
         +filter-operator-dropdown
-        if clause.filterOperator === `was between`
-          - const [from, to] = clause.filterValue || [null, null]
-          .filter-numdate.filter-numdate-between.filter-datetime
-            irb-datepicker(
-              attrs={range: true, preposition: `and`}
-              props={value: JSON.stringify({from, to})}
-              on={change: ev => $helpers.updateFilterValue([ev.detail.from, ev.detail.to])}
-            )
-        else
-          .filter-numdate.filter-datetime
-            irb-datepicker(
-              attrs={range: false}
-              props={value: clause.filterValue}
-              on={change: ev => $helpers.updateFilterValue(ev.detail)}
-            )
+        - const isBetween = clause.filterOperator === `was between`;
+        - const [from, to] = clause.filterValue || [null, null]
+        .filter-numdate
+          irb-datepicker(
+            attrs={range: isBetween, preposition: `and`}
+            props={value: isBetween ? {from, to} : clause.filterValue}
+            on={change: ev => $helpers.updateFilterValue(isBetween ? [ev.detail.from, ev.detail.to] : ev.detail)}
+          )
 
       when `boolean`
         .filter-radio-list.filter-boolean
