@@ -1,4 +1,9 @@
-.chart(class={[`${report.displayOptions.chartType}-chart-type`]: true})
+- const hasLegend = $helpers.showLegend();
+
+.chart(class={
+  [`${report.displayOptions.chartType}-chart-type`]: true,
+  'has-legend': hasLegend,
+})
   .main-chart
     if resultLoading && projectHasEvents
       .chart-loader
@@ -59,5 +64,5 @@
               change: $helpers.tableChange,
             }
           )
-  if $helpers.showLegend()
+  if hasLegend
     .legend= $component.child('chart-legend')

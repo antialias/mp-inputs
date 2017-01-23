@@ -132,31 +132,35 @@ min-bar-chart-height = 600px
   .bar-chart-type
     min-height 100vh
 
-  .main-chart
-    flex 0 0 auto
-
     .extras-menu-container
       z-index 3
 
       .toggle-view > li
         position fixed
-        right "calc(%s + 20px)" % legend-width
+        right irb-panel-margin
         top 0
 
     thead
       position fixed
       top 0
-      width "calc(100vw - 20px - 20px - %s)" % legend-width
+      width "calc(100vw - (%s * 2))" % (irb-panel-margin)
       z-index 2
 
     tbody
       margin-top 40px
 
+  .has-legend
+    .main-chart
+      flex 0 0 auto
+
+    thead
+      width "calc(100vw - %s - (%s * 2))" % (legend-width irb-panel-margin)
+
   .legend
     height 100vh
     min-height min-bar-chart-height
     position fixed
-    right 20px // padding from app
+    right irb-panel-margin
     top 0
     width legend-width
 
