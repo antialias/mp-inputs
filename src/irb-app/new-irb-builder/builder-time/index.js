@@ -25,6 +25,13 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
     return clause.range ? clause.range : `${formatDateDisplay(clause.value[0])} - ${formatDateDisplay(clause.value[1])}`;
   }
 
+  getSelectionAttrs() {
+    return {
+      source: `time`,
+      selected: this.getLabel(),
+    };
+  }
+
   isRemovable() {
     return false;
   }
