@@ -112,13 +112,20 @@ document.registerElement(`chart-legend`, class extends Component {
           return label;
         },
         toggleAllSeriesValue: seriesIdx => {
+          const legend = this.state.report.legend;
           const reportTrackingData = this.state.report.toTrackingData();
           const dataType = this.legendDataType;
-          const seriesData = this.state.report.legend.data[seriesIdx][dataType];
-          const newValue = !this.helpers.allSeriesSelected(seriesIdx);
-          Object.keys(seriesData).forEach(key => seriesData[key] = newValue);
-          this.app.updateLegendSeriesAtIndex(seriesIdx, dataType, seriesData);
-          this.app.trackEvent(`Legend - ${newValue ? `Show` : `Hide`} All`, reportTrackingData);
+          const seriesData = legend.data[seriesIdx][dataType];
+          const showAll = !this.helpers.allSeriesSelected(seriesIdx);
+          if (showAll) {
+            this.app.updateReport({
+              legend: legend.showAllLegendSeries(dataType),
+            });
+          } else {
+            Object.keys(seriesData).forEach(key => seriesData[key] = false);
+            this.app.updateLegendSeriesAtIndex(seriesIdx, dataType, seriesData);
+          }
+          this.app.trackEvent(`Legend - ${showAll ? `Show` : `Hide`} All`, reportTrackingData);
         },
         toggleShowSeriesValue: (seriesIdx, name) => {
           const dataType = this.legendDataType;

@@ -122,20 +122,19 @@ export default class Legend {
     return Object.assign(this, attrs);
   }
 
-  updateSeriesAtIndex({dataType=this.SERIES_DATA, legendUpdate={}, setAllAncestorsToTrue=false}={}) {
+  updateSeriesAtIndex({dataType=this.SERIES_DATA, legendUpdate={}}) {
     this.changeID++;
-    if (setAllAncestorsToTrue) {
-      const baseSeriesIdx = Math.max(...Object.keys(legendUpdate));
-      const ancestorIdxToUpdate = Object.keys(this.data)
-        .filter(seriesIdx => Number(seriesIdx) > baseSeriesIdx);
-
-      ancestorIdxToUpdate.forEach(seriesIdx => {
-        const series = this.data[seriesIdx][dataType];
-        Object.keys(series).forEach(key => series[key] = true);
-      });
-    }
     Object.keys(legendUpdate).forEach(seriesIdx => {
       Object.assign(this.data[seriesIdx][dataType], legendUpdate[seriesIdx]);
+    });
+    return this;
+  }
+
+  showAllLegendSeries(dataType) {
+    this.changeID++;
+    Object.keys(this.data).forEach(seriesIdx => {
+      const series = this.data[seriesIdx][dataType];
+      Object.keys(series).forEach(key => series[key] = true);
     });
     return this;
   }

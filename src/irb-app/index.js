@@ -776,7 +776,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   updateLegendSeriesAtIndex(seriesIdx, dataType, attrs) {
     this.resetToastTimer();
     let legendUpdate = {[seriesIdx]: attrs};
-    let setAllAncestorsToTrue = false;
     if (dataType === this.state.report.legend.SERIES_DATA) {
       const keysToMatch = Object.keys(attrs).filter(key => Boolean(attrs[key]));
       if (keysToMatch.length === 1) {
@@ -790,8 +789,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           obj[Number(key) - depthOffsetForData] = ancestors[key];
           return obj;
         }, {});
-      } else if (keysToMatch.length) {
-        setAllAncestorsToTrue = true;
       }
     }
 
@@ -799,7 +796,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       legend: this.state.report.legend.updateSeriesAtIndex({
         dataType,
         legendUpdate,
-        setAllAncestorsToTrue,
       }),
     });
   }
