@@ -19,12 +19,9 @@ const steps = [{
   name: `introduction`,
   condition: () => true,
 }, {
-  name: `getting-started`,
-  condition: index => index === 1,
-}, {
   name: `choose-event`,
   cls: `irb-learn-choose-event`,
-  condition: index => index === 2,
+  condition: index => index === 1,
 }, {
   name: `compare-event`,
   cls: `irb-learn-compare-event`,

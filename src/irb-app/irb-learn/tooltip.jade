@@ -6,7 +6,7 @@ mixin irb-learn-tooltip(...stepNames)
       mp-tutorial-tooltip(attrs={
         'placement': step.name === `manipulate-data` ? `center` : `right`,
         'num-steps': 4,
-        'curr-step': step.index - 2,
+        'curr-step': step.index - 1,
       })
         .mp-tooltip-title
           case step.name
@@ -29,3 +29,4 @@ mixin irb-learn-tooltip(...stepNames)
             when `manipulate-data`
               | Choose a different chart, analysis, and value types to really get a handle on your data.
         .mp-tooltip-close(on={click: () => $component.app.helpers.finishLearn()})
+          svg-icon(attrs={icon: 'x'})

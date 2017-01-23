@@ -2,3 +2,4 @@
   .toast-section.toast-message= $helpers.getMessage()
   button.toast-section.toast-action(on={click: $helpers.eatToast})= $helpers.getSelectText()
   button.toast-section.toast-exit(on={click: $helpers.trashToast})
+    svg-icon(attrs={icon: 'x'})
