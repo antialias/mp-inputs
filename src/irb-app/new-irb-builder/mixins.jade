@@ -112,7 +112,7 @@ mixin screen-option(label, options)
     if options.matches
       +highlight-matches(options.matches)
     else
-      span= label
+      span.label= label
 
 mixin screen-title(title, options)
   - options = options || {}

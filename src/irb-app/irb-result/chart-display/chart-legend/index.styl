@@ -120,7 +120,7 @@ label-line-height = 18px
 
   .info, .series-values
     box-sizing border-box
-    max-width 159px
+    margin-right 8px
 
   .info
     stick-title-height = 40px
@@ -159,6 +159,7 @@ label-line-height = 18px
       padding 0 30px
 
     .checkbox-item
+      box-sizing border-box
       padding-left legend-left-padding
 
       .checkbox-label
@@ -184,9 +185,8 @@ label-line-height = 18px
          display none
 
       &.series
-        .label, .label .flattened-segment
+        .checkbox-label, .flattened-segment
           ellipsis()
-
 
       &.showing
         .label
