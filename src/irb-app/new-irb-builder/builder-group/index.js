@@ -3,7 +3,7 @@ import { Component } from 'panel';
 import { renameProperty } from '../../../util';
 
 import { EditControl } from '../edit-control';
-import { GroupClause } from '../../../models/clause';
+import { GroupClause, ShowClause } from '../../../models/clause';
 
 import './builder-screen-group-properties';
 import './property-type-prefix';
@@ -29,6 +29,14 @@ document.registerElement(`builder-group-edit-control`, class extends EditControl
   getLabel() {
     const clause = this.getClause();
     return clause && clause.value && renameProperty(clause.value);
+  }
+
+  getSelectionAttrs() {
+    const clause = this.getClause();
+    return {
+      source: clause.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE ? `people` : `events`,
+      selected: clause.value,
+    };
   }
 
   labelPrefixComponent() {
