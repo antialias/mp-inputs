@@ -36,9 +36,13 @@ mixin event-list(events, options)
     class={'show-loader': !options.hideLoader}
     on={scroll: $helpers.scrolledList}
   )
+    - const selected = options.selected
     each mpEvent in events
       - const renamedMpEvent = util.renameEvent(mpEvent.name)
-      li.list-option(on={click: () => options.clickedEvent(mpEvent)})
+      li.list-option(
+        class={'list-option-selected': renamedMpEvent === selected}
+        on={click: () => options.clickedEvent(mpEvent)}
+      )
         +screen-option(renamedMpEvent, {
           icon: util.getIconForEvent(mpEvent),
           matches: mpEvent.matches,
