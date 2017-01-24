@@ -167,11 +167,11 @@ GroupClause.PROPERTY_TYPECASTS = GroupClause.prototype.PROPERTY_TYPECASTS = [`st
 
 // Time constants
 const RANGES = {
-  HOURS: `last 96 hours`,
-  WEEK: `last week`,
-  MONTH: `last 30 days`,
-  QUARTER: `last quarter`,
-  YEAR: `last 12 months`,
+  HOURS: `Last 96 hours`,
+  WEEK: `Last week`,
+  MONTH: `Last 30 days`,
+  QUARTER: `Last quarter`,
+  YEAR: `Last 12 months`,
   CUSTOM: `Choose a date range ...`,
 };
 const RANGE_LIST = [

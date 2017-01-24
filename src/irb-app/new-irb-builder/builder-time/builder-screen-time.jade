@@ -12,5 +12,3 @@ include ../mixins.jade
           on={click: isSelected ? null : () => $helpers.clickedRange(range)}
         )
           +screen-option(range, {noIcon: true})
-          if range === $helpers.RANGES.CUSTOM
-            +small-caret-icon()

@@ -3,6 +3,7 @@ import { TimeClause } from '../../../models/clause';
 import { extend } from '../../../util';
 
 import template from './builder-screen-time.jade';
+import './builder-screen-time.styl';
 
 document.registerElement(`builder-screen-time`, class extends BuilderScreenBase {
   get config() {
