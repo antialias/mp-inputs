@@ -18,7 +18,6 @@ document.registerElement(`irb-header`, class extends Component {
           }
         },
 
-        reportListEnabled: () => this.state.projectHasEvents && !!Object.keys(this.state.savedReports).length,
         updateTitle: ev => {
           if (ev.detail) {
             this.app.updateReport({title: ev.detail.value});
@@ -38,11 +37,7 @@ document.registerElement(`irb-header`, class extends Component {
               }));
           }
         },
-        clickReportList: () => {
-          if (this.helpers.reportListEnabled()) {
-            this.app.openReportList();
-          }
-        },
+        clickReportList: () => this.app.openReportList(),
       },
       template,
     };
