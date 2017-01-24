@@ -3,6 +3,7 @@ import {
   flattenNestedObjectToPath,
   nestedObjectSum,
   pick,
+  sorted,
 } from '../util';
 
 let legendID = 1;
@@ -137,7 +138,10 @@ export default class Legend {
   }
 
   _sortAndLimitSeries(series, defaultValue, showLimit, prevLegendData) {
-    const sortedKeys = Object.keys(series);
+    const sortedKeys = sorted(Object.keys(series), {
+      order: `desc`,
+      transform: item => series[item],
+    });
     const defaultStates = sortedKeys.reduce((obj, key, idx) => {
       if (prevLegendData) {
         obj[key] = !!prevLegendData[key];
