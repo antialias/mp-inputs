@@ -1,3 +1,4 @@
+import kebabCase from 'lodash/kebabCase';
 import throttle from 'lodash/throttle';
 import MPApp from 'mixpanel-common/report/mp-app';
 import { extend } from 'mixpanel-common/util';
@@ -296,7 +297,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   urlForBookmarkId(bookmarkId) {
     let title = this.state.savedReports[bookmarkId] && this.state.savedReports[bookmarkId].title;
-    title = title ? title.trim().toLowerCase().replace(/ /g, `-`).replace(/[^a-z\-]/gi, ``) : ``;
+    title = title ? kebabCase(title) : ``;
     return `report/${bookmarkId}/${title}`;
   }
 
