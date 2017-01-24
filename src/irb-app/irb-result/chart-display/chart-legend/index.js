@@ -74,9 +74,12 @@ document.registerElement(`chart-legend`, class extends Component {
               return matches ? {label, matches, originalValue, value} : null;
             }).filter(Boolean);
 
-            if (!isFlattenedData) {
-              const colSortAttrs = sortConfig.colSortAttrs[sortConfig.colSortAttrs.length - 1 - idx];
-              seriesValues.sort(NESTED_ARRAY_SORT_FUNCS[colSortAttrs.sortBy][colSortAttrs.sortOrder]);
+            if (!isFlattenedData && sortConfig.colSortAttrs) {
+              let configForSeries = sortConfig;
+              if (sortConfig.sortBy !== `value` || !sortConfig.sortOrder) {
+                configForSeries = sortConfig.colSortAttrs[sortConfig.colSortAttrs.length - 1 - idx];
+              }
+              seriesValues.sort(NESTED_ARRAY_SORT_FUNCS[configForSeries.sortBy][configForSeries.sortOrder]);
             }
             if (legend.getSeriesDisplayAtIndex(idx) === `minimized`) {
               seriesValues.splice(12);
