@@ -139,7 +139,7 @@ function main() {
   }
   if (params.outputName) {
     query = query.map(function(group) {
-      group.key = [params.outputName].concat(group.key);
+      group.key.unshift(params.outputName);
       return group;
     });
   }
