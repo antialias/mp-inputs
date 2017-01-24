@@ -1,10 +1,5 @@
 include ../../../mixins.jade
 
-- const legendDataToDisplay = $helpers.legendDataToDisplay()
-- const isSearchActive = $helpers.isSearchActive()
-- const isMultiColor = !(report.displayOptions.chartType === 'bar' && report.displayOptions.plotStyle === 'standard' && legendDataToDisplay.length === 1)
-- const isFlattenedData = $helpers.isFlattenedData()
-
 .chart-legend
   .header Legend
   .content-wrapper
@@ -19,6 +14,10 @@ include ../../../mixins.jade
             .select-icon-loader
             .label-loader
     else
+      - const legendDataToDisplay = $helpers.legendDataToDisplay()
+      - const isFlattenedData = $helpers.isFlattenedData()
+      - const isSearchActive = $helpers.isSearchActive()
+      - const isMultiColor = !(report.displayOptions.chartType === 'bar' && report.displayOptions.plotStyle === 'standard' && legendDataToDisplay.length === 1)
       .search(class={active: isSearchActive})
         svg-icon(attrs={icon: 'search'})
         focus-input(

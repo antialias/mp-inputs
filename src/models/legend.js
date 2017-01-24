@@ -62,7 +62,9 @@ export default class Legend {
   }
 
   get colorMap() {
-    this._colorMap = this._colorMap || {};
+    if (!Object.keys(this._colorMap || {}).length) {
+      this.buildColorMap();
+    }
     return this._colorMap;
   }
 
