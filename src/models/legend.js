@@ -2,10 +2,8 @@ import {
   combineNestedObjKeys,
   flattenNestedObjectToPath,
   nestedObjectSum,
-  objectFromPairs,
   pick,
   sorted,
-  uniqueObjKeysAtDepth,
 } from '../util';
 
 let legendID = 1;
@@ -152,19 +150,19 @@ export default class Legend {
   }
 
   updateLegendData(result, defaultValue=true) {
-    let data = [];
     const segments = result.headers.slice();
-    const sumNestedResults = nestedObjectSum(result.series);
+    let sumNestedResults = nestedObjectSum(result.series);
 
-    for (let i = segments.length - 1; i >= 0; i--) {
-      let seriesName = segments[i];
+    const data = segments.reverse().map((seriesName, idx) => {
       const dataSegment = {seriesName};
 
-      if (!data.length) {
+      if (!idx) {
         const resultsFlattened = flattenNestedObjectToPath(sumNestedResults);
         const flatResults = this._sortAndLimitSeries(resultsFlattened.values, defaultValue, 20); // Line Chart
-        const seriesResults = this._sortAndLimitSeries(combineNestedObjKeys(sumNestedResults), defaultValue, 24); // Bar Chart
+        const combinedResults = combineNestedObjKeys(sumNestedResults);
+        const seriesResults = this._sortAndLimitSeries(combinedResults, defaultValue, 24); // Bar Chart
         Object.assign(dataSegment, {
+          combinedResults,
           flattenedData: flatResults.defaultStates,
           flattenedDataPaths: resultsFlattened.paths,
           flattenedDataSortedKeys: flatResults.sortedKeys,
@@ -172,10 +170,13 @@ export default class Legend {
           seriesDataSortedKeys: seriesResults.sortedKeys,
         });
       } else {
-        dataSegment.seriesData = objectFromPairs(uniqueObjKeysAtDepth(sumNestedResults, segments.length - i).map(v => [v, defaultValue]));
+        sumNestedResults = nestedObjectSum(sumNestedResults);
+        dataSegment.combinedResults = combineNestedObjKeys(sumNestedResults);
+        dataSegment.seriesData = Object.keys(dataSegment.combinedResults)
+          .reduce((obj, key) => Object.assign(obj, {[key]: defaultValue}), {});
       }
-      data.push(dataSegment);
-    }
+      return dataSegment;
+    });
 
     return Object.assign(this, {data})
       .buildColorMap()
