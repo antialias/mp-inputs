@@ -14,7 +14,7 @@ ul.chart-toggle.chart-controls-component(class={
         disabled: $helpers.isChartTypeDisabled(chartType),
         editing: isEditingCurrentStyle,
         'has-dropdown': hasDropDown,
-        selected: chartType == report.displayOptions.chartType,
+        selected: isActiveChartType,
       }
     )
       .toggle-button
@@ -41,14 +41,15 @@ ul.chart-toggle.chart-controls-component(class={
       )
         .chart-style.options(attrs={'slot-body': true})
           each plotStyle in styleChoicesForChartType
+            - const isSelectedStyleOption = isActiveChartType && selectedPlotStyle === plotStyle
             button.button-option(
               class={
                 [chartType]: true,
                 [plotStyle]: true,
-                selected: isActiveChartType && selectedPlotStyle === plotStyle,
+                selected: isSelectedStyleOption,
               }
               on={
-               click: () => $helpers.onStyleClick(chartType, plotStyle),
+               click: () => isSelectedStyleOption ? null : $helpers.onStyleClick(chartType, plotStyle),
               }
             )
               span.button-flex-wrapper
