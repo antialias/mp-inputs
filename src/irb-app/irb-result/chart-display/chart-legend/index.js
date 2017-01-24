@@ -50,6 +50,12 @@ document.registerElement(`chart-legend`, class extends Component {
           const data = isFlattenedData ? [legend.data[0]] : legend.data;
 
           const sortConfig = this.state.report.sorting.bar;
+
+          // safegaurd agaisnt old data without the new combinedResults obj
+          if (data.some(series => !series.combinedResults)) {
+            legend.updateLegendData(this.state.result);
+          }
+
           const seriesData = data.map((series, idx) => {
             let seriesValues = series[this.legendDataType] || [];
             seriesValues = Object.keys(seriesValues).map(originalValue => {
