@@ -58,13 +58,15 @@ mixin chart-bar(options={})
               if cellIndex < lastCellIdx
                 - const colHeader = headersToDisplay[cellIndex]
                 - const headerText = headersToDisplay[cellIndex] === '$event' ? 'Events' : util.renameProperty(headersToDisplay[cellIndex])
-                if !Array.isArray(cell) || !isStacked || rows.length < 1
+
+                if !Array.isArray(cell) || !isStacked || rows.length <= 1
                   td.chart-header(
                     attrs={rowSpan: cell.rowSpan || 1}
                     style={'min-width': `${$helpers.getHeaderWidth(headerText)}px`}
                   )
                     if !Array.isArray(cell) || isStacked
-                      - const title = $helpers.formatLabel(colHeader, cell.value)
+                      - const cellLabel = isStacked && rows.length == 1 ? showValueNames[0] : cell.value
+                      - const title = $helpers.formatLabel(colHeader, cellLabel)
                       .chart-header-text(attrs={title})= title
                     else
                       ul
