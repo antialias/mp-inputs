@@ -14,15 +14,16 @@ ul.toggle-view.chart-controls-component
           .title analysis
           ul
             each analysis in $helpers.analysisChoices()
+              - const analysisIsSelected = analysis == report.displayOptions.analysis
               li
                 button.button-option(
                   class={
                     [analysis]: true,
-                    selected: analysis == report.displayOptions.analysis,
+                    selected: analysisIsSelected,
                     disabled: $helpers.isAnalysisDisabled(analysis),
                   }
                   on={
-                    click: () => $helpers.onAnalysisClick(analysis),
+                    click: () => analysisIsSelected ? null : $helpers.onAnalysisClick(analysis),
                   }
                 )
                   span.button-flex-wrapper
@@ -32,15 +33,16 @@ ul.toggle-view.chart-controls-component
           .title(class={disabled: $helpers.isValueToggleDisabled()}) value
           ul
             each value in $helpers.valueChoices()
+              - const valueIsSelected = value == report.displayOptions.value;
               li
                 button.button-option(
                   class={
                     [value]: true,
-                    selected: value == report.displayOptions.value,
+                    selected: valueIsSelected,
                     disabled: $helpers.isValueToggleDisabled(),
                   }
                   on={
-                    click: () => $helpers.onValueClick(value),
+                    click: () => valueIsSelected ? null : $helpers.onValueClick(value),
                   }
                 )
                   span.button-flex-wrapper
