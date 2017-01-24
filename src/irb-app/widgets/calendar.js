@@ -68,9 +68,9 @@ class Calendar extends WebComponent {
       this.picker.setEndRange(this.to);
 
       if (this.from && !this.to) {
-        this.picker.el.className += ` ${INCOMPLETE_RANGE_CLASS}`;
+        this.picker.el.classList.add(INCOMPLETE_RANGE_CLASS);
       } else {
-        this.picker.el.className = this.picker.el.className.replace(` ${INCOMPLETE_RANGE_CLASS}`, ``);
+        this.picker.el.classList.remove(INCOMPLETE_RANGE_CLASS);
       }
 
       this.picker.draw();

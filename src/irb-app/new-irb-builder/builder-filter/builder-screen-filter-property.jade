@@ -144,7 +144,7 @@ mixin filter-number-input(value, oninput, options)
 
       when `datetime`
         +filter-operator-dropdown
-        - const isBetween = clause.filterOperator === `was between`;
+        - const isBetween = clause.filterOperator === `was between`
         - const [from, to] = clause.filterValue || [null, null]
         .filter-numdate
           irb-datepicker(
