@@ -3,7 +3,6 @@ import {
   flattenNestedObjectToPath,
   nestedObjectSum,
   pick,
-  sorted,
 } from '../util';
 
 let legendID = 1;
@@ -137,13 +136,14 @@ export default class Legend {
     return this;
   }
 
-  _sortAndLimitSeries(series, defaultValue, showLimit) {
-    const sortedKeys = sorted(Object.keys(series), {
-      order: `desc`,
-      transform: item => series[item],
-    });
+  _sortAndLimitSeries(series, defaultValue, showLimit, prevLegendData) {
+    const sortedKeys = Object.keys(series);
     const defaultStates = sortedKeys.reduce((obj, key, idx) => {
-      obj[key] = idx < showLimit ? defaultValue : false;
+      if (prevLegendData) {
+        obj[key] = !!prevLegendData[key];
+      } else {
+        obj[key] = idx < showLimit ? defaultValue : false;
+      }
       return obj;
     }, {});
     return {sortedKeys, defaultStates};
@@ -153,14 +153,20 @@ export default class Legend {
     const segments = result.headers.slice();
     let sumNestedResults = nestedObjectSum(result.series);
 
+    const prevSeriesHeaders = (this.data || []).map(series => series.seriesName);
+
     const data = segments.reverse().map((seriesName, idx) => {
       const dataSegment = {seriesName};
+      let prevSeriesLegend = {};
+      if (prevSeriesHeaders.includes(seriesName)) {
+        prevSeriesLegend = this.data[prevSeriesHeaders.indexOf(seriesName)];
+      }
 
       if (!idx) {
         const resultsFlattened = flattenNestedObjectToPath(sumNestedResults);
-        const flatResults = this._sortAndLimitSeries(resultsFlattened.values, defaultValue, 20); // Line Chart
+        const flatResults = this._sortAndLimitSeries(resultsFlattened.values, defaultValue, 20, prevSeriesLegend.flattenedData); // Line Chart
         const combinedResults = combineNestedObjKeys(sumNestedResults);
-        const seriesResults = this._sortAndLimitSeries(combinedResults, defaultValue, 24); // Bar Chart
+        const seriesResults = this._sortAndLimitSeries(combinedResults, defaultValue, 24, prevSeriesLegend.seriesData); // Bar Chart
         Object.assign(dataSegment, {
           combinedResults,
           flattenedData: flatResults.defaultStates,
@@ -173,7 +179,14 @@ export default class Legend {
         sumNestedResults = nestedObjectSum(sumNestedResults);
         dataSegment.combinedResults = combineNestedObjKeys(sumNestedResults);
         dataSegment.seriesData = Object.keys(dataSegment.combinedResults)
-          .reduce((obj, key) => Object.assign(obj, {[key]: defaultValue}), {});
+          .reduce((obj, key) => {
+            if (prevSeriesLegend.seriesData) {
+              obj[key] = !!prevSeriesLegend.seriesData[key];
+            } else {
+              obj[key] = defaultValue;
+            }
+            return obj;
+          }, {});
       }
       return dataSegment;
     });
