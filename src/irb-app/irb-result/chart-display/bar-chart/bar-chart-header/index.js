@@ -50,6 +50,13 @@ document.registerElement(`irb-bar-chart-header`, class extends Component {
           return icon;
         },
         getMaxValueLabel: () => this.state.displayOptions.value === `absolute` ? abbreviateNumber(this.state.chartMax) : `%`,
+        isSortSelected: (colAccessor, sortBy, sortOrder) => {
+          let sortConfig = this.state.sortConfig;
+          if (isFinite(colAccessor)) {
+            sortConfig = sortConfig.colSortAttrs[colAccessor];
+          }
+          return sortConfig.sortBy === sortBy && sortConfig.sortOrder === sortOrder;
+        },
         menuChange: (ev, idx) => {
           if (ev.detail && ev.detail.state === `closed` && this.state.activeSortPanel === idx) {
             this.update({activeSortPanel: null});

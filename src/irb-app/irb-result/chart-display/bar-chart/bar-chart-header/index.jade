@@ -21,7 +21,11 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor)
     )
       each sortBy in sortByOptions
         each sortOrder in sortOrderOptions
-          .sort-icon(on={click: () => $helpers.selectedHeaderSort(type, colAccessor, sortBy, sortOrder)})
+          - const isSelected = $helpers.isSortSelected(colAccessor, sortBy, sortOrder)
+          .sort-icon(
+            class={selected: isSelected}
+            on={click: () => isSelected ? null : $helpers.selectedHeaderSort(type, colAccessor, sortBy, sortOrder)}
+          )
             svg-icon(attrs=({icon: `sort-${$helpers.SORT_ICONS[sortBy]}-${sortOrder}`}))
 
 .chart-header-container
