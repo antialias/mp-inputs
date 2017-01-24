@@ -44,11 +44,12 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         }
       ),
       routes: {
-        'nofeatures':       this.routeHandlers.noFeatures,
-        'report/:reportId': this.routeHandlers.load,
-        'reset':            this.routeHandlers.reset,
-        'learn':            this.routeHandlers.learn,
-        '':                 this.routeHandlers.index,
+        'nofeatures':                   this.routeHandlers.noFeatures,
+        'report/:reportId':             this.routeHandlers.load,
+        'report/:reportId/:reportName': this.routeHandlers.load,
+        'reset':                        this.routeHandlers.reset,
+        'learn':                        this.routeHandlers.learn,
+        '':                             this.routeHandlers.index,
       },
       helpers: {
         finishLearn: () => {
@@ -62,7 +63,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   get routeHandlers() {
     return (this._routeHandlers = this._routeHandlers || {
 
-      load: (stateUpdate={}, reportId) => {
+      load: (stateUpdate={}, reportId, reportName) => {
         const report = this.state.savedReports && this.state.savedReports[Number(reportId)];
         if (!report) {
           return this.navigate(``);
@@ -293,12 +294,18 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   // Report management
 
+  urlForBookmarkId(bookmarkId) {
+    let title = this.state.savedReports[bookmarkId] && this.state.savedReports[bookmarkId].title;
+    title = title ? title.trim().toLowerCase().replace(/ /g, '-').replace(/[^a-z\-]/gi, '') : ``;
+    return `report/${bookmarkId}/${title}`;
+  }
+
   openReportList() {
     if (this.parentFrame) {
       this.parentFrame.send(`chooseBookmark`)
         .then(bookmarkId => {
           if (bookmarkId) {
-            this.navigate(`report/${bookmarkId}`);
+            this.navigate(this.urlForBookmarkId(bookmarkId));
             this.trackEvent(`Report list - select report`, {'report id': bookmarkId});
           }
         });
@@ -335,7 +342,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         .then(bookmark => {
           const report = Report.fromBookmarkData(bookmark);
           this.update({savedReports: extend(this.state.savedReports, {[report.id]: report})});
-          this.navigate(`report/${report.id}`, {report});
+          this.navigate(this.urlForBookmarkId(report.id), {report});
           this.trackEvent(`Save Report`, extend(reportTrackingData, {
             'new report': !this.state.savedReports.hasOwnProperty(report.id),
             'report title': report.title,
