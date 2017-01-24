@@ -6,8 +6,8 @@ import {
   renamePropertyValue,
   stringFilterMatches,
   pick,
-  sorted,
 } from '../../../../util';
+import { NESTED_ARRAY_SORT_FUNCS } from '../../chart-util';
 import '../../../widgets/sticky-scroll';
 
 import template from './index.jade';
@@ -49,34 +49,35 @@ document.registerElement(`chart-legend`, class extends Component {
           const isFlattenedData = this.helpers.isFlattenedData();
           const data = isFlattenedData ? [legend.data[0]] : legend.data;
 
+          const sortConfig = this.state.report.sorting.bar;
           const seriesData = data.map((series, idx) => {
-            let seriesValues = Object.keys(series[this.legendDataType])
-              .map(originalValue => {
-                let matches = null;
-                let formattedText = null;
-                if (isFlattenedData) {
-                  let dataPath = legend.data[0].flattenedDataPaths[originalValue];
-                  formattedText = dataPath.map((value, idx) => this.helpers.renameSeriesValue(dataPath.length - 1 - idx, value));
-                  const allMatches = formattedText.map(text => stringFilterMatches(
-                    text, legend.search
-                  ));
-                  if (allMatches.some(Boolean)) {
-                    matches = allMatches.map((match, idx) => match || [``, formattedText[idx]]);
-                  }
-                } else {
-                  formattedText = this.helpers.renameSeriesValue(idx, originalValue);
-                  matches = legend && stringFilterMatches(
-                    formattedText, legend.search
-                  );
+            let seriesValues = Object.keys(series[this.legendDataType]);
+            seriesValues = seriesValues.map(originalValue => {
+              let matches = null;
+              let label = null;
+              const value = series.combinedResults[originalValue];
+              if (isFlattenedData) {
+                let dataPath = legend.data[0].flattenedDataPaths[originalValue];
+                label = dataPath.map((value, idx) => this.helpers.renameSeriesValue(dataPath.length - 1 - idx, value));
+                const allMatches = label.map(text => stringFilterMatches(
+                  text, legend.search
+                ));
+                if (allMatches.some(Boolean)) {
+                  matches = allMatches.map((match, idx) => match || [``, label[idx]]);
                 }
-                return matches ? {formattedText, matches, originalValue} : null;
-              })
-              .filter(Boolean);
-            seriesValues = sorted(seriesValues, {
-              transform: v => (
-                isFlattenedData ? v.formattedText.join(` `).toLowerCase() : v.formattedText.toLowerCase()
-              ),
-            });
+              } else {
+                label = this.helpers.renameSeriesValue(idx, originalValue);
+                matches = legend && stringFilterMatches(
+                  label, legend.search
+                );
+              }
+              return matches ? {label, matches, originalValue, value} : null;
+            }).filter(Boolean);
+
+            if (!isFlattenedData) {
+              const colSortAttrs = sortConfig.colSortAttrs[sortConfig.colSortAttrs.length - 1 - idx];
+              seriesValues.sort(NESTED_ARRAY_SORT_FUNCS[colSortAttrs.sortBy][colSortAttrs.sortOrder]);
+            }
             if (legend.getSeriesDisplayAtIndex(idx) === `minimized`) {
               seriesValues.splice(12);
             }

@@ -70,7 +70,7 @@ include ../../../mixins.jade
                     })
                       svg-icon(attrs={icon: 'check-checkbox', empty: !showing})
                     if isFlattenedData
-                      - const dataTitle = value.formattedText.join(' / ');
+                      - const dataTitle = value.label.join(' / ');
                       if isSearchActive
                         .checkbox-label.search-result(attrs={title: dataTitle})
                           each match in value.matches
@@ -78,14 +78,14 @@ include ../../../mixins.jade
                               +highlight-matches(match)
                       else
                         .checkbox-label(attrs={title: dataTitle})
-                          each text in value.formattedText
+                          each text in value.label
                             .flattened-segment= text
                     else
                       if isSearchActive
-                        .checkbox-label.search-result(attrs={title: value.formattedText})
+                        .checkbox-label.search-result(attrs={title: value.label})
                           +highlight-matches(value.matches)
                       else
-                        .checkbox-label(attrs={title: value.formattedText})= value.formattedText
+                        .checkbox-label(attrs={title: value.label})= value.label
                       .delete-wrapper
                         .delete-icon
                           svg-icon(

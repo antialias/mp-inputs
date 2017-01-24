@@ -289,7 +289,7 @@ function compareByValue(a, b) {
   [a, b] = [a.value, b.value];
   return a > b ? 1 : (a < b ? -1 : 0);
 }
-const NESTED_ARRAY_SORT_FUNCS = {
+export const NESTED_ARRAY_SORT_FUNCS = {
   label: {
     asc:  (a, b) => compareByLabel(a, b),
     desc: (a, b) => compareByLabel(a, b) * -1,
