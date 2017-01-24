@@ -63,7 +63,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   get routeHandlers() {
     return (this._routeHandlers = this._routeHandlers || {
 
-      load: (stateUpdate={}, reportId, reportName) => {
+      load: (stateUpdate={}, reportId) => {
         const report = this.state.savedReports && this.state.savedReports[Number(reportId)];
         if (!report) {
           return this.navigate(``);
@@ -296,7 +296,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   urlForBookmarkId(bookmarkId) {
     let title = this.state.savedReports[bookmarkId] && this.state.savedReports[bookmarkId].title;
-    title = title ? title.trim().toLowerCase().replace(/ /g, '-').replace(/[^a-z\-]/gi, '') : ``;
+    title = title ? title.trim().toLowerCase().replace(/ /g, `-`).replace(/[^a-z\-]/gi, ``) : ``;
     return `report/${bookmarkId}/${title}`;
   }
 
