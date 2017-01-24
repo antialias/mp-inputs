@@ -51,8 +51,8 @@ document.registerElement(`chart-legend`, class extends Component {
 
           const sortConfig = this.state.report.sorting.bar;
           const seriesData = data.map((series, idx) => {
-            let seriesValues = Object.keys(series[this.legendDataType]);
-            seriesValues = seriesValues.map(originalValue => {
+            let seriesValues = series[this.legendDataType] || [];
+            seriesValues = Object.keys(seriesValues).map(originalValue => {
               let matches = null;
               let label = null;
               const value = series.combinedResults[originalValue];
