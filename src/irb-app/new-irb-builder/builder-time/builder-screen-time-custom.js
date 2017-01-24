@@ -19,7 +19,7 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
       template,
       helpers: extend(super.config.helpers, {
         UNITS,
-        clickedUnit: unit => this.updateStageClause({unit}, {shouldCommit: true}),
+        changedUnit: ev => this.updateStageClause({unit: ev.detail.selected}, {shouldCommit: true}),
         getDates: () => this.getDates(),
         changedDates: ev => {
           const {from, to} = ev.detail;
