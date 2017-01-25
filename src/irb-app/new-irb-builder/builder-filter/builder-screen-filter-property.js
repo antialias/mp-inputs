@@ -40,7 +40,8 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
             this.app.updateStageClause({filterType});
           }
         },
-        filterOperators: filterType => FilterClause.FILTER_OPERATORS[filterType],
+        filterOperators: filterType => FilterClause.FILTER_OPERATORS[filterType]
+          .filter(op => ![`was less than`, `was more than`].includes(op)), // TODO epurcer - remove once we add relative date filtering to new builder
         getActiveClause: () => this.app.hasStageClause() ? this.app.activeStageClause : {},
 
         // dropdowns

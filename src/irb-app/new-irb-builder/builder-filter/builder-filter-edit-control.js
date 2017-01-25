@@ -1,6 +1,6 @@
 import { EditControl } from '../edit-control';
 import { FilterClause } from '../../../models/clause';
-import { renameProperty } from '../../../util';
+import { renameProperty, parseDate, formatDateDisplay } from '../../../util';
 
 import './builder-filter-edit-control.styl';
 
@@ -14,46 +14,39 @@ document.registerElement(`builder-filter-edit-control`, class extends EditContro
     const property = renameProperty(clause.value);
     const type = clause.filterType;
     let operator = clause.filterOperator;
+    let filterValue = Array.isArray(clause.filterValue) ? clause.filterValue : [clause.filterValue];
     let propertyValue = [];
 
-    if (type === `datetime` && (operator === `was more than` || operator === `was less than`)) {
-      propertyValue = [clause.filterValue, `${clause.filterDateUnit}s`, `ago`];
-    } else {
-      switch (operator) {
-        case `equals`:
-        case `does not equal`:
-          clause.filterValue.forEach(value => {
-            propertyValue.push(value);
-            propertyValue.push(`or`);
-          });
-          propertyValue = propertyValue.slice(0, -1); // remove trailing "or"
-          break;
-        case `is between`:
-        case `was between`:
-          propertyValue = [clause.filterValue[0], `and`, clause.filterValue[1]];
-          break;
-        case `is set`:
-        case `is not set`:
-          propertyValue = [];
-          break;
-        case `is true`:
-        case `is false`:
-          propertyValue = [operator.split(` `).slice(1).join(` `)];
-          operator = operator.split(` `)[0];
-          break;
-        default:
-          propertyValue = [clause.filterValue];
-          break;
-      }
+    if (type === `datetime`) {
+      filterValue = filterValue.map(value => value ? formatDateDisplay(parseDate(value)) : ``);
     }
 
-    propertyValue = propertyValue.map(value => {
-      if (value instanceof Date) {
-        return `${value.getUTCMonth()}/${value.getUTCFullYear().toString().slice(2)}`;
-      } else {
-        return value ? value.toString() : ``;
-      }
-    });
+    switch (operator) {
+      case `equals`:
+      case `does not equal`:
+        filterValue.forEach(value => {
+          propertyValue.push(value);
+          propertyValue.push(`or`);
+        });
+        propertyValue = propertyValue.slice(0, -1); // remove trailing "or"
+        break;
+      case `is between`:
+      case `was between`:
+        propertyValue = [filterValue[0], `and`, filterValue[1]];
+        break;
+      case `is set`:
+      case `is not set`:
+        propertyValue = [];
+        break;
+      case `is true`:
+      case `is false`:
+        propertyValue = [operator.split(` `).slice(1).join(` `)];
+        operator = operator.split(` `)[0];
+        break;
+      default:
+        propertyValue = filterValue;
+        break;
+    }
 
     return [property, operator, ...propertyValue];
   }

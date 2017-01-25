@@ -64,7 +64,13 @@ export class BuilderPane extends Pane {
 document.registerElement(`operator-dropdown`, class extends Dropdown {
   get choices() {
     const clause = this.app.activeStageClause;
-    return clause ? FilterClause.FILTER_OPERATORS[clause.filterType] : [];
+
+    if (clause) {
+      return FilterClause.FILTER_OPERATORS[clause.filterType]
+        .filter(op => ![`was before`, `was after`].includes(op));
+    } else {
+      return [];
+    }
   }
 
   get selected() {

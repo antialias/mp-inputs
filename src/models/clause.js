@@ -366,6 +366,8 @@ FilterClause.FILTER_OPERATORS = FilterClause.prototype.FILTER_OPERATORS = {
   datetime: [
     `was less than`,
     `was more than`,
+    `was before`,
+    `was after`,
     `was on`,
     `was between`,
   ],
