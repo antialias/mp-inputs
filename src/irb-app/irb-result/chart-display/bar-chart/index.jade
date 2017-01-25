@@ -85,12 +85,13 @@ mixin chart-bar(options={})
                               mousemove: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, title),
                               mouseleave: $helpers.onMouseLeave,
                             }
-                          )= title
-                          if hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === title
-                            - const segmentColorClassName = `segment-color-${segmentColorMap[value]}`
-                            - const count = row[lastCellIdx][valueIndex]
-                            - const percent = count / segmentSum
-                            +tooltip(segmentColorClassName, isMultiColor, title, count, percent)
+                          )
+                            .label= title
+                            if hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === title
+                              - const segmentColorClassName = `segment-color-${segmentColorMap[value]}`
+                              - const count = row[lastCellIdx][valueIndex]
+                              - const percent = count / segmentSum
+                              +tooltip(segmentColorClassName, isMultiColor, title, count, percent)
 
               else
                 td.chart-data

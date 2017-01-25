@@ -103,15 +103,15 @@ vertical-lines = 1px dotted border-gray
         cursor pointer
 
         .chart-header-text
-          overflow hidden
-          text-overflow ellipsis
+          ellipsis()
 
         li
-          line-height bar-height
-          height bar-height
-          margin-bottom bar-bottom
-          overflow hidden
-          text-overflow ellipsis
+          position relative
+          .label
+            ellipsis()
+            height bar-height
+            line-height bar-height
+            margin-bottom bar-bottom
 
       &.chart-data
         border none
@@ -203,10 +203,6 @@ vertical-lines = 1px dotted border-gray
 
     .hover-label
       width auto
-
-      .content
-        left 10px
-        top -100px
 
   .hover-label
     pointer-events none
