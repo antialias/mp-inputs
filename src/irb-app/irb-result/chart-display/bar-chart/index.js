@@ -57,19 +57,20 @@ document.registerElement(`bar-chart`, class extends Component {
         },
         onMouseEnterAndMove: throttle((ev, rowIdx, cellIdx) => {
           let hoverTooltip = this.state.hoverTooltip;
-          //start with a min-dimensions until the tooltip renders
+          // start with a min-dimensions until the tooltip renders
           const tooltipWidth = hoverTooltip.tooltipWidth || 150;
           const tooltipHeight = hoverTooltip.tooltipHeight || 70;
 
           const cursorSpace = 10;
           const {left, top, width} = this.parentChartContainer.getBoundingClientRect();
 
+          // determine x-position
           const distanceFromChartRight = (left + width) - (ev.pageX + tooltipWidth);
-          let leftPos = ev.offsetX + cursorSpace;
-          if (distanceFromChartRight < (tooltipWidth / 4)) {
-            leftPos -= tooltipWidth + (cursorSpace * 2);
-          }
+          const tooltipRightDistance = ev.offsetX + cursorSpace;
+          const tooltipLeftDistance = ev.offsetX - tooltipWidth + cursorSpace;
+          const leftPos = distanceFromChartRight > (tooltipWidth / 4) ? tooltipRightDistance : tooltipLeftDistance;
 
+          // determine y-position
           const tooltipAboveDistance = (ev.offsetY / 2) - cursorSpace;
           const tooltipBelowDistance = (ev.offsetY / 2) + (cursorSpace * 3) + tooltipHeight;
           const distanceFromChartTop = ev.clientY - tooltipAboveDistance - tooltipHeight - top;
@@ -86,7 +87,7 @@ document.registerElement(`bar-chart`, class extends Component {
               tooltipWidth: tooltipEl.offsetWidth,
               tooltipHeight: tooltipEl.offsetHeight,
             }),
-          })
+          });
         },
         sortChange: ev => ev.detail && this.dispatchEvent(new CustomEvent(`change`, {detail: ev.detail})),
       },
