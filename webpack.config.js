@@ -25,7 +25,7 @@ var webpackConfig = {
       },
       {
         test: /\.js$/,
-        exclude: /node_modules|\.jql\.js$/,
+        exclude: /node_modules|mixpanel-common|\.jql\.js$/,
         loader: babelLoader,
       },
       {
