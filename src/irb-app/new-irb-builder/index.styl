@@ -199,40 +199,9 @@
   // resource-type-control
   .resource-type-control
     border-bottom 1px solid grey-150
-    padding 12px
-
-    .resource-type-tabs
-      display flex
-
-      .tab
-        border 1px solid grey-200
-        background grey-100
-        color grey-700
-        font-size 11px
-        font-weight 600
-        flex 1 1
-        padding 8px
-        text-transform capitalize
-
-        &:first-child
-          border-radius 5px 0 0 5px
-
-        &:last-child
-          border-radius 0 5px 5px 0
-
-        &:not(:last-child)
-          border-right none
-
-        &:hover:not(.selected)
-          background-color mp-blue
-          border-color mp-blue
-          color white
-
-          & + .tab
-            border-left-color mp-blue
-
-        &.selected
-          background white
+    padding 10px 15px
+    mp-toggle
+      width 100%
 
   // screen-footer-button
   button.screen-footer

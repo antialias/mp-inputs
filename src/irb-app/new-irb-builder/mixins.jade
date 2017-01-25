@@ -84,16 +84,16 @@ mixin property-list(properties, options)
       else
         li.list-option.list-empty no properties available
 
-mixin resource-type-control(resourceTypes, options)
-  .resource-type-control
-    +tabs(resourceTypes.map(type => ({value: type, label: util.formatResourceType(type)})), options)
-
 mixin property-screen-body(options)
   if options.resourceTypes
-    +resource-type-control(options.resourceTypes, {
-      selected: options.selectedResourceType,
-      onclick: options.clickedResourceType,
-    })
+    .resource-type-control
+      mp-toggle(
+        attrs={square: true, small: true, selected: options.selectedResourceType}
+        on={select: ev => options.clickedResourceType(ev.detail.selected)}
+      )
+        each type in options.resourceTypes
+          mp-toggle-option(attrs={value: type})= util.formatResourceType(type)
+
   .screen-list-container(on={scroll: options.scrolledList})
     if options.recentProperties.length
       .builder-label Recently viewed
