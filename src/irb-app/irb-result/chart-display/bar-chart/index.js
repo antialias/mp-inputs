@@ -57,8 +57,8 @@ document.registerElement(`bar-chart`, class extends Component {
         },
         onMouseEnterAndMove: throttle((ev, rowIdx, cellIdx) => {
           let hoverTooltip = this.state.hoverTooltip;
-          // start with a min-dimensions until the tooltip renders
-          const tooltipWidth = hoverTooltip.tooltipWidth || 150;
+          // start with a average dimensions until the tooltip renders
+          const tooltipWidth = hoverTooltip.tooltipWidth || 200;
           const tooltipHeight = hoverTooltip.tooltipHeight || 70;
 
           const cursorSpace = 10;
@@ -66,9 +66,12 @@ document.registerElement(`bar-chart`, class extends Component {
 
           // determine x-position
           const distanceFromChartRight = (left + width) - (ev.pageX + tooltipWidth);
+          const distanceFromChartLeft = ev.pageX - left;
           const tooltipRightDistance = ev.offsetX + cursorSpace;
           const tooltipLeftDistance = ev.offsetX - tooltipWidth + cursorSpace;
-          const leftPos = distanceFromChartRight > (tooltipWidth / 4) ? tooltipRightDistance : tooltipLeftDistance;
+          const doesNotFitInsideChartLeft = (distanceFromChartLeft - tooltipWidth) < 0;
+          const fitsInChartRight = (distanceFromChartRight > (tooltipWidth / 4));
+          const leftPos = (fitsInChartRight || doesNotFitInsideChartLeft) ? tooltipRightDistance : tooltipLeftDistance;
 
           // determine y-position
           const tooltipAboveDistance = (ev.offsetY / 2) - cursorSpace;
