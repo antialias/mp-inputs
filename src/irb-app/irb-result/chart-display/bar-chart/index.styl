@@ -45,7 +45,6 @@ vertical-lines = 1px dotted border-gray
       &:after
         border-right vertical-lines
         content ''
-        cursor default
         display block
         height 100vh
         left 0
@@ -70,9 +69,9 @@ vertical-lines = 1px dotted border-gray
       border-right vertical-lines
       border-top none
       color grey-500
+      cursor default
       font-size 12px
-      padding 12px
-      padding-top 20px
+      padding 20px 0 12px 12px
       text-align right
       vertical-align top
 
@@ -95,9 +94,11 @@ vertical-lines = 1px dotted border-gray
         &:not(:last-child)
           margin-bottom 7px
 
+      li, .chart-header-text
+        padding-right 12px
+
       &.chart-header
         max-width 160px
-        cursor pointer
 
         .chart-header-text
           ellipsis()
@@ -148,7 +149,6 @@ vertical-lines = 1px dotted border-gray
 
           .bar-color
             background mp-blue
-            cursor pointer
             position relative
             height 100%
             transition width .3s
@@ -156,12 +156,13 @@ vertical-lines = 1px dotted border-gray
             z-index 0
 
           .label-wrapper
+            cursor default
             height bar-height
             overflow hidden
-            pointer-events none
             position absolute
             top 0
             width 100%
+            user-select none
 
             .bar-text-nudger
               float left
@@ -178,7 +179,6 @@ vertical-lines = 1px dotted border-gray
               z-index 1
 
             &.outside-label
-              cursor default
               position relative
 
               .outside-label-wrapper
@@ -202,7 +202,6 @@ vertical-lines = 1px dotted border-gray
       width auto
 
   .hover-label
-    pointer-events none
     position absolute
     transition left .1s, top .1s
     width 100%

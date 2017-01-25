@@ -55,32 +55,12 @@ document.registerElement(`bar-chart`, class extends Component {
           }
           return headers || this.state.headers;
         },
-        onMouseEnterAndMove: throttle((ev, rowIdx, cellIdx) => {
-          let hoverTooltip = this.state.hoverTooltip;
-          // start with min dimensions until the tooltip renders
-          const tooltipWidth = hoverTooltip.tooltipWidth || 200;
-          const tooltipHeight = hoverTooltip.tooltipHeight || 70;
-
-          const cursorSpace = 10;
-          const {left, top, width} = this.parentChartContainer.getBoundingClientRect();
-
-          // determine x-position
-          const distanceFromChartRight = (left + width) - (ev.pageX + tooltipWidth);
-          const distanceFromChartLeft = ev.pageX - left;
-          const tooltipRightDistance = ev.offsetX + cursorSpace;
-          const tooltipLeftDistance = ev.offsetX - tooltipWidth + cursorSpace;
-          const doesNotFitInsideChartLeft = (distanceFromChartLeft - tooltipWidth) < 0;
-          const fitsInChartRight = (distanceFromChartRight > (tooltipWidth / 4));
-          const leftPos = (fitsInChartRight || doesNotFitInsideChartLeft) ? tooltipRightDistance : tooltipLeftDistance;
-
-          // determine y-position
-          const tooltipAboveDistance = (ev.offsetY / 2) - cursorSpace;
-          const tooltipBelowDistance = (ev.offsetY / 2) + (cursorSpace * 3) + tooltipHeight;
-          const distanceFromChartTop = ev.clientY - tooltipAboveDistance - tooltipHeight - top;
-          const topPos = distanceFromChartTop > (tooltipHeight * 2) ? tooltipAboveDistance : tooltipBelowDistance;
-
-          hoverTooltip = util.extend(hoverTooltip, {rowIdx, cellIdx, leftPos, topPos});
-          this.update({hoverTooltip});
+        mousedOverSegment: throttle((ev, rowIdx, cellIdx) => {
+          if (ev.target.classList.contains(`show-tool-tip-on-hover`)) {
+            this.updateTooltipPos(ev, rowIdx, cellIdx);
+          } else {
+            this.update({hoverTooltip: util.extend(this.state.hoverTooltip, {showTooltip: false})});
+          }
         }, 50, {leading: true, trailing: false}),
         onMouseLeave: () => this.update({hoverTooltip: {}}),
         insertedTooltip: vnode => {
@@ -109,6 +89,41 @@ document.registerElement(`bar-chart`, class extends Component {
 
   attributeChangedCallback() {
     this.updateStateFromAttributes();
+  }
+
+  updateTooltipPos(ev, rowIdx, cellIdx) {
+    let hoverTooltip = this.state.hoverTooltip;
+    // start with min dimensions until the tooltip renders
+    const tooltipWidth = hoverTooltip.tooltipWidth || 200;
+    const tooltipHeight = hoverTooltip.tooltipHeight || 70;
+
+    const cursorSpace = 10;
+    const {left, top, width} = this.parentChartContainer.getBoundingClientRect();
+
+    // determine x-position
+    const distanceFromChartRight = (left + width) - (ev.pageX + tooltipWidth);
+    const distanceFromChartLeft = ev.pageX - left;
+    const tooltipRightDistance = ev.offsetX + cursorSpace;
+    const tooltipLeftDistance = ev.offsetX - tooltipWidth + cursorSpace;
+    const doesNotFitInsideChartLeft = (distanceFromChartLeft - tooltipWidth) < 0;
+    const fitsInChartRight = (distanceFromChartRight > (tooltipWidth / 4));
+    const leftPos = (fitsInChartRight || doesNotFitInsideChartLeft) ? tooltipRightDistance : tooltipLeftDistance;
+
+    // determine y-position
+    const tooltipAboveDistance = (ev.offsetY / 2) - cursorSpace;
+    const tooltipBelowDistance = (ev.offsetY / 2) + (cursorSpace * 3) + tooltipHeight;
+    const distanceFromChartTop = ev.clientY - tooltipAboveDistance - tooltipHeight - top;
+    const topPos = distanceFromChartTop > (tooltipHeight * 2) ? tooltipAboveDistance : tooltipBelowDistance;
+
+    hoverTooltip = util.extend(hoverTooltip, {
+      cellIdx,
+      leftPos,
+      rowIdx,
+      showTooltip: true,
+      topPos,
+    });
+
+    this.update({hoverTooltip});
   }
 
   updateHeaderWidths() {

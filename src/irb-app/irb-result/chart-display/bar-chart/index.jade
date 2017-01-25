@@ -24,22 +24,22 @@ mixin chart-bar(options={})
   - const widthStyle = {width: util.formatPercent(options.width)}
   li.chart-bar(
     style=isStacked ? widthStyle : {}
+    on=options.on
   )
     .bar-color(
       class=options.colorClass
-      on=options.on
       style=isStacked ? {} : widthStyle
     )
-      .label-wrapper
+      .label-wrapper.show-tool-tip-on-hover
         .bar-text-nudger
-        .label= options.label
+        .label.show-tool-tip-on-hover= options.label
     if options.outsideLabel && options.width < .5
-      .label-wrapper.outside-label
+      .label-wrapper.outside-label()
         .outside-label-wrapper(
           style=isStacked ? {} : widthStyle
         )
           .bar-text-nudger
-          .label(
+          .label.show-tool-tip-on-hover(
             class=options.colorClass
           )= options.label
     if block
@@ -78,16 +78,17 @@ mixin chart-bar(options={})
                       ul
                         each value, valueIndex in cell
                           - const title = $helpers.formatLabel(colHeader, value)
-                          li(
+                          li.cell-label-container.show-tool-tip-on-hover(
                             attrs={title}
                             on={
-                              mouseenter: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, title),
-                              mousemove: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, title),
+                              mouseenter: ev => $helpers.mousedOverSegment(ev, rowIndex, title),
+                              mousemove: ev => $helpers.mousedOverSegment(ev, rowIndex, title),
                               mouseleave: $helpers.onMouseLeave,
                             }
                           )
-                            .label= title
-                            if hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === title
+                            .label
+                              span.label-text.show-tool-tip-on-hover= title
+                            if hoverTooltip.showTooltip && hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === title
                               - const segmentColorClassName = `segment-color-${segmentColorMap[value]}`
                               - const count = row[lastCellIdx][valueIndex]
                               - const percent = count / segmentSum
@@ -121,11 +122,11 @@ mixin chart-bar(options={})
                         colorClass: {[isMultiColor ? segmentColorClassName : `not-multi-color`]: true},
                         label: isValueAbsolute ? util.abbreviateNumber(value) : percentValueString,
                         on:{
-                          mouseenter: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex),
-                          mousemove: ev => $helpers.onMouseEnterAndMove(ev, rowIndex, valueIndex),
+                          mouseenter: ev => $helpers.mousedOverSegment(ev, rowIndex, valueIndex),
+                          mousemove: ev => $helpers.mousedOverSegment(ev, rowIndex, valueIndex),
                           mouseleave: $helpers.onMouseLeave,
                         },
                         width: widthAsPercentage,
                       })
-                        if hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === valueIndex
+                        if hoverTooltip.showTooltip && hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === valueIndex
                           +tooltip(segmentColorClassName, isMultiColor, formattedSegmentName, value, percent)
