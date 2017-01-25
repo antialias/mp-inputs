@@ -4,7 +4,10 @@
 
 mixin tooltip(className, shouldHaveClass, title, count, percent)
   .hover-label(
-    style={left: `${hoverTooltip.leftPos}px`}
+    style={
+      left: `${hoverTooltip.leftPos}px`,
+      top: `${hoverTooltip.topPos}px`,
+    }
     hook={insert: vnode => $helpers.insertedTooltip(vnode)}
   )
     .content

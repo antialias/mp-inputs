@@ -57,24 +57,37 @@ document.registerElement(`bar-chart`, class extends Component {
         },
         onMouseEnterAndMove: throttle((ev, rowIdx, cellIdx) => {
           let hoverTooltip = this.state.hoverTooltip;
-          const tooltipWidth = hoverTooltip.tooltipWidth || 150; //start with a min-width until the tooltip renders
+          //start with a min-dimensions until the tooltip renders
+          const tooltipWidth = hoverTooltip.tooltipWidth || 150;
+          const tooltipHeight = hoverTooltip.tooltipHeight || 70;
 
-          const {left, width} = this.parentChartContainer.getBoundingClientRect();
-          const distanceFromChartEdge = (left + width) - (ev.pageX + tooltipWidth);
           const cursorSpace = 10;
+          const {left, top, width} = this.parentChartContainer.getBoundingClientRect();
+
+          const distanceFromChartRight = (left + width) - (ev.pageX + tooltipWidth);
           let leftPos = ev.offsetX + cursorSpace;
-          if (distanceFromChartEdge < (tooltipWidth / 4)) {
+          if (distanceFromChartRight < (tooltipWidth / 4)) {
             leftPos -= tooltipWidth + (cursorSpace * 2);
           }
-          hoverTooltip = util.extend(hoverTooltip, {rowIdx, cellIdx, leftPos});
+
+          const tooltipAboveDistance = (ev.offsetY / 2) - cursorSpace;
+          const tooltipBelowDistance = (ev.offsetY / 2) + (cursorSpace * 3) + tooltipHeight;
+          const distanceFromChartTop = ev.clientY - tooltipAboveDistance - tooltipHeight - top;
+          const topPos = distanceFromChartTop > (tooltipHeight * 2) ? tooltipAboveDistance : tooltipBelowDistance;
+
+          hoverTooltip = util.extend(hoverTooltip, {rowIdx, cellIdx, leftPos, topPos});
           this.update({hoverTooltip});
         }, 50, {leading: true, trailing: false}),
-        onMouseLeave: () => this.update({
-          hoverTooltip: {rowIdx: null, cellIdx: null, leftPos: null, tooltipWidth: null},
-        }),
-        insertedTooltip: vnode => this.update({
-          hoverTooltip: util.extend(this.state.hoverTooltip, {tooltipWidth: vnode.elm.childNodes[0].offsetWidth}),
-        }),
+        onMouseLeave: () => this.update({hoverTooltip: {}}),
+        insertedTooltip: vnode => {
+          const tooltipEl = vnode.elm.childNodes[0];
+          this.update({hoverTooltip:
+            util.extend(this.state.hoverTooltip, {
+              tooltipWidth: tooltipEl.offsetWidth,
+              tooltipHeight: tooltipEl.offsetHeight,
+            }),
+          })
+        },
         sortChange: ev => ev.detail && this.dispatchEvent(new CustomEvent(`change`, {detail: ev.detail})),
       },
     };
