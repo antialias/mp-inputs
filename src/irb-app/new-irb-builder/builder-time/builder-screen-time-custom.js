@@ -22,6 +22,10 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
         changedUnit: ev => this.updateStageClause({unit: ev.detail.selected}, {shouldCommit: true}),
         getDates: () => this.getDates(),
         changedDates: ev => {
+          if (ev.detail.selected) {
+            // TODO remove once mp-toggle no longer fires change events
+            return;
+          }
           const {from, to} = ev.detail;
           const oldRange = this.getDates();
           const daysApart = moment(to).diff(moment(from), `days`) + 1;

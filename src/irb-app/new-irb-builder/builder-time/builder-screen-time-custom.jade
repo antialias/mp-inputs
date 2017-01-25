@@ -14,8 +14,8 @@ include ../mixins.jade
     .unit-control
       .builder-label Time unit
       mp-toggle(
-        attrs={selected: $helpers.getStageClauseAttr('unit')}
-        on={change: $helpers.changedUnit}
+        attrs={square: true, selected: $helpers.getStageClauseAttr('unit')}
+        on={select: $helpers.changedUnit}
       )
         each unit in $helpers.UNITS
           mp-toggle-option(attrs={value: unit})= unit
