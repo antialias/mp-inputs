@@ -57,7 +57,7 @@ document.registerElement(`bar-chart`, class extends Component {
         },
         onMouseEnterAndMove: throttle((ev, rowIdx, cellIdx) => {
           let hoverTooltip = this.state.hoverTooltip;
-          // start with a average dimensions until the tooltip renders
+          // start with min dimensions until the tooltip renders
           const tooltipWidth = hoverTooltip.tooltipWidth || 200;
           const tooltipHeight = hoverTooltip.tooltipHeight || 70;
 
@@ -99,9 +99,9 @@ document.registerElement(`bar-chart`, class extends Component {
 
   attachedCallback() {
     super.attachedCallback(...arguments);
+    this.parentChartContainer = document.querySelector(`.main-chart`);
     // TODO: research why attributeChangedCallback is not called before component
     // is attached only in full webcomponents polyfill (and not lite version)
-    this.parentChartContainer = document.querySelector(`.main-chart`);
     this.updateStateFromAttributes();
   }
 

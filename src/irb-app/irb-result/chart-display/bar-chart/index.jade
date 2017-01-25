@@ -8,7 +8,7 @@ mixin tooltip(className, shouldHaveClass, title, count, percent)
       left: `${hoverTooltip.leftPos}px`,
       top: `${hoverTooltip.topPos}px`,
     }
-    hook={insert: vnode => $helpers.insertedTooltip(vnode)}
+    hook={insert: $helpers.insertedTooltip}
   )
     .content
       .title(
