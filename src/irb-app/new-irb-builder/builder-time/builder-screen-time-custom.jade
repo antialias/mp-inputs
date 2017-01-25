@@ -3,7 +3,7 @@ include ../mixins.jade
 - const {from, to} = $helpers.getDates();
 
 .builder-screen.time-custom
-  +screen-title('Choose a date range', {backButton: true})
+  +screen-title(`Choose a date range`, {backButton: true})
   .range-control
     irb-datepicker(
       attrs={range: true, 'double-calendar': true, preposition: `to`}
@@ -14,7 +14,7 @@ include ../mixins.jade
     .unit-control
       .builder-label Time unit
       mp-toggle(
-        attrs={square: true, selected: $helpers.getStageClauseAttr('unit')}
+        attrs={square: true, selected: $helpers.getStageClauseAttr(`unit`)}
         on={select: $helpers.changedUnit}
       )
         each unit in $helpers.UNITS
