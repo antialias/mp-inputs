@@ -10,6 +10,7 @@ import {
   capitalize,
   extend,
   MS_BY_UNIT,
+  parseDate,
   pick,
   renameEvent,
   renameProperty,
@@ -56,7 +57,7 @@ function filterToArbSelectorString(filter) {
   const type = filter.filterType;
   const operator = filter.filterOperator;
   let value = filter.filterValue;
-  const dateUnit = filter.dateUnit;
+  const dateUnit = filter.filterDateUnit;
 
   property = `(${toArbSelectorPropertyToken(filter.resourceType, property)})`;
 
@@ -91,20 +92,22 @@ function filterToArbSelectorString(filter) {
       }
       break;
     case `datetime`: {
-      const unitMs = MS_BY_UNIT[dateUnit];
+      const unitsAgo = units => new Date().getTime() - (units * MS_BY_UNIT[dateUnit]);
+      const startOfDay = date => parseDate(date, {startOfDay: true}).getTime();
+      const endOfDay = date => parseDate(date, {endOfDay: true}).getTime();
 
-      const between = (from, to) => {
-        from.setHours(0, 0, 0, 0);
-        to.setHours(23, 59, 59, 999);
-
-        return `((${property} >= datetime(${from.getTime()})) and (${property} <= datetime(${to.getTime()})))`;
-      };
+      const lessThan = timestamp => `(${property} < datetime(${timestamp}))`;
+      const moreThan = timestamp => `(${property} > datetime(${timestamp}))`;
+      const between = (from, to) =>
+        `((${property} >= datetime(${startOfDay(from)})) and (${property} <= datetime(${endOfDay(to)})))`;
 
       switch (operator) {
-        case `was less than`: return `(${property} < datetime(${new Date().getTime() - (value * unitMs)}))`;
-        case `was more than`: return `(${property} > datetime(${new Date().getTime() - (value * unitMs)}))`;
-        case `was on`: return between(new Date(value), new Date(value));
-        case `was between`: return between(new Date(value[0]), new Date(value[1]));
+        case `was less than` : return lessThan(unitsAgo(value));
+        case `was more than` : return moreThan(unitsAgo(value));
+        case `was before`    : return lessThan(startOfDay(value));
+        case `was after`     : return moreThan(endOfDay(value));
+        case `was on`        : return between(value, value);
+        case `was between`   : return between(...value);
       }
       break;
     }
@@ -260,6 +263,8 @@ export default class SegmentationQuery extends BaseQuery {
       .filter(filter => isFilterValid(filter))
       .map(filter => filterToArbSelectorString(filter))
       .join(` and `);
+
+    console.log('FILTERS', filterArbSelectors)
 
     const time = sections.time.clauses[0];
     const unit = time.unit;

@@ -30,9 +30,24 @@ export function formatDateDisplay(date) {
   return moment(date).format(`MMM D, YYYY`);
 }
 
-export function parseDate(dateString) {
-  const timestamp = Number(moment(dateString));
-  return isNaN(timestamp) ? null : new Date(timestamp);
+export function parseDate(date, {startOfDay=false, endOfDay=false}={}) {
+  const timestamp = Number(moment(date));
+
+  if (isNaN(timestamp)) {
+    return null;
+  }
+
+  date = new Date(timestamp);
+
+  if (startOfDay) {
+    date.setHours(0, 0, 0, 0);
+  }
+
+  if (endOfDay) {
+    date.setHours(23, 59, 59, 999);
+  }
+
+  return date;
 }
 
 export function relativeToAbsoluteDate(relativeDateInt, unit) {
