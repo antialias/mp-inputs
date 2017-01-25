@@ -99,7 +99,9 @@ document.registerElement(`bar-chart`, class extends Component {
 
   attachedCallback() {
     super.attachedCallback(...arguments);
-    this.parentChartContainer = document.querySelector(`.main-chart`);
+    for (let el = this.parentNode; el.parentNode && !this.parentChartContainer; el = el.parentNode) {
+      this.parentChartContainer = el.classList.contains(`main-chart`) && el;
+    }
     // TODO: research why attributeChangedCallback is not called before component
     // is attached only in full webcomponents polyfill (and not lite version)
     this.updateStateFromAttributes();
