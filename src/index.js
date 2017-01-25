@@ -1,10 +1,11 @@
 /* global API_LOCAL */
 
 // polyfills, must import first
-import 'babel-polyfill';
-import 'whatwg-fetch';
-import 'webcomponents.js/webcomponents';
-import '../standalone/highcharts.src';
+// TODO load only in standalone mode
+// import 'babel-polyfill';
+// import 'whatwg-fetch';
+// import 'webcomponents.js/webcomponents';
+// import '../standalone/highcharts.src';
 
 import Framesg from 'framesg';
 
@@ -67,4 +68,8 @@ const initIRB = () => new Promise(resolve => {
   }
 });
 
-initIRB().then(IRB => document.getElementById(`app`).appendChild(IRB));
+initIRB().then(IRB => {
+  const appContainer = document.getElementById(`mixpanel-application`);
+  appContainer.innerHTML = ``;
+  appContainer.appendChild(IRB);
+});
