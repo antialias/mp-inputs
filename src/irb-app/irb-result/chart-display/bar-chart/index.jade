@@ -106,7 +106,8 @@ mixin chart-bar(options={})
                       - const percent = value / segmentSum
                       - const percentValueString = util.formatPercent(percent)
                       - const widthAsPercentage = (isLogarithmic ? Math.log10(value) : value) / segmentMax
-                      - const segmentName = $helpers.formatLabel(headersToDisplay[cellIndex - 1], row[cellIndex - 1][valueIndex])
+                      - const segmentName = row[cellIndex - 1][valueIndex];
+                      - const formattedSegmentName = $helpers.formatLabel(headersToDisplay[cellIndex - 1], segmentName)
                       - const segmentColorClassName = `segment-color-${segmentColorMap[segmentName]}`
                       +chart-bar({
                         outsideLabel: !isStacked,
@@ -120,4 +121,4 @@ mixin chart-bar(options={})
                         width: widthAsPercentage,
                       })
                         if hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === valueIndex
-                          +tooltip(segmentColorClassName, isMultiColor, segmentName, value, percent)
+                          +tooltip(segmentColorClassName, isMultiColor, formattedSegmentName, value, percent)
