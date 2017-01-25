@@ -48,37 +48,3 @@ $checkbox-label-line-height = 18px
     font 500 12px font-helvetica-neue
     line-height $checkbox-label-line-height
     text-align left
-
-
-.irb-tabs
-  display flex
-
-  .irb-tab
-    background grey-100
-    border 1px solid grey-200
-    color grey-700
-    flex 1 1
-    font-size 11px
-    font-weight 600
-    padding 8px
-    text-transform capitalize
-
-    &:first-child
-      border-radius 5px 0 0 5px
-
-    &:last-child
-      border-radius 0 5px 5px 0
-
-    &:not(:last-child)
-      border-right none
-
-    &:hover:not(.selected)
-      background-color blue-700
-      border-color blue-700
-      color white
-
-      & + .irb-tab
-        border-left-color blue-700
-
-    &.irb-tab-selected
-      background white

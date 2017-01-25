@@ -13,13 +13,3 @@ mixin checkbox-select-all(allSelected, toggleFunc)
 mixin highlight-matches(matches)
   each substr, si in matches
     span.substr(class={'matches-search': !(si % 2)})= substr
-
-mixin tabs(list, options)
-  .irb-tabs
-    each item in list
-      - const value = item.value || item;
-      - const label = item.label || item;
-      button.irb-tab(
-        class={'irb-tab-selected': options.selected === value}
-        on={click: ev => options.onclick(value, ev)}
-      )= label
