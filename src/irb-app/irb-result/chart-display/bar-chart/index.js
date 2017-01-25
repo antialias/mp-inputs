@@ -56,12 +56,25 @@ document.registerElement(`bar-chart`, class extends Component {
           return headers || this.state.headers;
         },
         onMouseEnterAndMove: throttle((ev, rowIdx, cellIdx) => {
-          const hoverTooltip = util.extend(this.state.hoverTooltip, {rowIdx, cellIdx, mouseXPos: ev.offsetX});
+          let hoverTooltip = this.state.hoverTooltip;
+          const tooltipWidth = hoverTooltip.tooltipWidth || 150; //start with a min-width until the tooltip renders
+
+          const {left, width} = this.parentChartContainer.getBoundingClientRect();
+          const distanceFromChartEdge = (left + width) - (ev.pageX + tooltipWidth);
+          const cursorSpace = 10;
+          let leftPos = ev.offsetX + cursorSpace;
+          if (distanceFromChartEdge < (tooltipWidth / 4)) {
+            leftPos -= tooltipWidth + (cursorSpace * 2);
+          }
+          hoverTooltip = util.extend(hoverTooltip, {rowIdx, cellIdx, leftPos});
           this.update({hoverTooltip});
         }, 50, {leading: true, trailing: false}),
-        onMouseLeave: () => {
-          this.update({hoverTooltip: util.extend(this.state.hoverTooltip, {rowIdx: null, cellIdx: null, mouseXPos: null})});
-        },
+        onMouseLeave: () => this.update({
+          hoverTooltip: {rowIdx: null, cellIdx: null, leftPos: null, tooltipWidth: null},
+        }),
+        insertedTooltip: vnode => this.update({
+          hoverTooltip: util.extend(this.state.hoverTooltip, {tooltipWidth: vnode.elm.childNodes[0].offsetWidth}),
+        }),
         sortChange: ev => ev.detail && this.dispatchEvent(new CustomEvent(`change`, {detail: ev.detail})),
       },
     };
@@ -71,6 +84,7 @@ document.registerElement(`bar-chart`, class extends Component {
     super.attachedCallback(...arguments);
     // TODO: research why attributeChangedCallback is not called before component
     // is attached only in full webcomponents polyfill (and not lite version)
+    this.parentChartContainer = document.querySelector(`.main-chart`);
     this.updateStateFromAttributes();
   }
 

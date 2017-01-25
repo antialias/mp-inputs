@@ -3,7 +3,10 @@
 - const isValueAbsolute = displayOptions.value === 'absolute'
 
 mixin tooltip(className, shouldHaveClass, title, count, percent)
-  .hover-label(style={left: `${hoverTooltip.mouseXPos}px`})
+  .hover-label(
+    style={left: `${hoverTooltip.leftPos}px`}
+    hook={insert: vnode => $helpers.insertedTooltip(vnode)}
+  )
     .content
       .title(
         attrs={title}
