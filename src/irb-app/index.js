@@ -660,7 +660,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     let newState = {stageClauses};
 
     // query new property values if we're setting a new filter property
-    if (this.activeStageClause.TYPE === `filter` && clauseData.value) {
+    const activeStageClause = this.activeStageClause;
+    if (activeStageClause && activeStageClause.TYPE === `filter` && clauseData.value) {
       let topPropertyValues = null;
       switch (clauseData.resourceType) {
         case `people`:

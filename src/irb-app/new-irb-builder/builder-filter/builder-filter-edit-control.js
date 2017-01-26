@@ -28,11 +28,9 @@ document.registerElement(`builder-filter-edit-control`, class extends EditContro
     switch (operator) {
       case `equals`:
       case `does not equal`:
-        filterValue.forEach(value => {
-          propertyValue.push(value);
-          propertyValue.push(`or`);
-        });
-        propertyValue = propertyValue.slice(0, -1); // remove trailing "or"
+        propertyValue = filterValue.reduce((arr, val, idx) => (
+          arr.concat(idx ? [`or`, val] : [val])
+        ), []);
         break;
       case `is between`:
       case `was between`:

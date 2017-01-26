@@ -18,7 +18,7 @@ mixin filter-dropdown(name, title, icon)
 mixin filter-operator-dropdown
   +filter-dropdown(`operator`, $helpers.formatFilterOperator(clause.filterOperator))
     ul.filter-operators
-      each filterOperator in $helpers.filterOperators(clause.filterType)
+      each filterOperator in $helpers.FILTER_OPERATORS[clause.filterType]
         li.filter-menu-item(
           class={'filter-menu-item-selected': filterOperator === clause.filterOperator}
           on={click: () => $helpers.chooseFilterOperator(filterOperator)}

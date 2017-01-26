@@ -23,6 +23,23 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           icon: getIconForPropertyType(name),
         })),
 
+        FILTER_OPERATORS: Object.assign(...FilterClause.FILTER_TYPES.map(type => {
+          let operators = FilterClause.FILTER_OPERATORS[type];
+
+          if (type === `datetime`) {
+            operators = operators.filter(op => ![
+              `was less than`, `was more than`, `was before`, `was after`,
+            ].includes(op));
+
+            const timeRanges = TimeClause.RANGE_LIST
+              .filter(range => range !== TimeClause.RANGES.CUSTOM);
+
+            operators = [...timeRanges, ...operators];
+          }
+
+          return {[type]: operators};
+        })),
+
         // screen/type selection
         chooseFilterOperator: filterOperator => {
           this.helpers.updateMenu(`operator`, false);
@@ -38,18 +55,6 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           if (clause.filterType !== filterType) {
             this.resetProgressiveList();
             this.app.updateStageClause({filterType});
-          }
-        },
-        filterOperators: filterType => {
-          if (filterType === `datetime`) {
-            return [
-              ...TimeClause.RANGE_LIST
-                .filter(range => range !== TimeClause.RANGES.CUSTOM),
-              ...FilterClause.FILTER_OPERATORS[filterType]
-                .filter(op => ![`was less than`, `was more than`, `was before`, `was after`].includes(op)),
-            ];
-          } else {
-            return FilterClause.FILTER_OPERATORS[filterType];
           }
         },
         formatFilterOperator: filterOperator =>
