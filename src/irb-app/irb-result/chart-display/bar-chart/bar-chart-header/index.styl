@@ -23,11 +23,17 @@ irb-bar-chart-header
         ellipsis()
         flex 1 1
 
-      &:hover
-        color mp-blue
+    > .sort-icon
+      margin-right 10px
 
-    &:hover .sort-icon::before
-      opacity 1
+    &:hover, .axis-title:hover, &.active-sort-panel, &.active-sort-panel .axis-title
+      > .text
+        color mp-blue
+      > .sort-icon
+        svg-icon-style(mp-blue, speed: 0s)
+
+      .sort-icon::before
+        opacity 1
 
     .sort-holder
       bottom 5px
@@ -41,11 +47,16 @@ irb-bar-chart-header
       .sort-controls
         position relative
 
+      .sort-control-icons
+        height 100%
+        display flex
+
       .sort-controls, .sort-icon
         height 30px
 
       .sort-icon
         cursor pointer
+        width 36px
         &:not(:last-child)
           border-right 1px solid grey-100
 
@@ -57,7 +68,7 @@ irb-bar-chart-header
           background blue-300
 
         &.selected
-          svg-icon-style(grey-900, pos-top: 2px, pos-left: 7px)
+          svg-icon-style(grey-900)
           cursor default
 
   .bar-chart-header:first-child .sort-holder

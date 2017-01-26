@@ -19,19 +19,23 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor)
       attrs={open: activeSortPanel === colAccessor}
       on={change: ev => $helpers.menuChange(ev, colAccessor)}
     )
-      each sortBy in sortByOptions
-        each sortOrder in sortOrderOptions
-          - const isSelected = $helpers.isSortSelected(colAccessor, sortBy, sortOrder)
-          .sort-icon(
-            class={selected: isSelected}
-            on={click: () => isSelected ? null : $helpers.selectedHeaderSort(type, colAccessor, sortBy, sortOrder)}
-          )
-            svg-icon(attrs=({icon: `sort-${$helpers.SORT_ICONS[sortBy]}-${sortOrder}`}))
+      .sort-control-icons
+        each sortBy in sortByOptions
+          each sortOrder in sortOrderOptions
+            - const isSelected = $helpers.isSortSelected(colAccessor, sortBy, sortOrder)
+            .sort-icon(
+              class={selected: isSelected}
+              on={click: () => isSelected ? null : $helpers.selectedHeaderSort(type, colAccessor, sortBy, sortOrder)}
+            )
+              svg-icon(attrs=({icon: `sort-${$helpers.SORT_ICONS[sortBy]}-${sortOrder}`}))
 
 .chart-header-container
   if headersStyle
     each header, idx in headersStyle
-      .bar-chart-header.irb-learn-manipulate-data-disabled(style={width: `${header.width}px`})
+      .bar-chart-header.irb-learn-manipulate-data-disabled(
+        class={'active-sort-panel': activeSortPanel == idx}
+        style={width: `${header.width}px`}
+      )
         - const headerLabel = $helpers.renameHeaderLabel(header.name)
         .text.shrinkable-label(
           on={click: () => $helpers.clickedHeader(idx)}
@@ -39,7 +43,10 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor)
         )= headerLabel
         +sort-icon(idx)
         +sort-holder(`colSort`, [`label`, `value`], [`asc`, `desc`], idx)
-    .bar-chart-axis(style={width: axisWidthStyle})
+    .bar-chart-axis(
+      class={'active-sort-panel': activeSortPanel == `axis`}
+      style={width: axisWidthStyle}
+    )
       .axis-title
         .text.shrinkable-label(
           on={click: () => $helpers.clickedHeader(`axis`)}
