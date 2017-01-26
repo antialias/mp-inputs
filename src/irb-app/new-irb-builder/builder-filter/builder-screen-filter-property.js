@@ -52,6 +52,9 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
             return FilterClause.FILTER_OPERATORS[filterType];
           }
         },
+        formatFilterOperator: filterOperator =>
+          TimeClause.RANGE_LIST.includes(filterOperator) ? `was in the ${filterOperator}` : filterOperator,
+
         getActiveClause: () => this.app.hasStageClause() ? this.app.activeStageClause : {},
 
         // dropdowns

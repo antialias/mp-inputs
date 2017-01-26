@@ -16,14 +16,14 @@ mixin filter-dropdown(name, title, icon)
         block
 
 mixin filter-operator-dropdown
-  +filter-dropdown(`operator`, clause.filterOperator)
+  +filter-dropdown(`operator`, $helpers.formatFilterOperator(clause.filterOperator))
     ul.filter-operators
       each filterOperator in $helpers.filterOperators(clause.filterType)
         li.filter-menu-item(
           class={'filter-menu-item-selected': filterOperator === clause.filterOperator}
           on={click: () => $helpers.chooseFilterOperator(filterOperator)}
         )
-          = filterOperator
+          = $helpers.formatFilterOperator(filterOperator)
 
 mixin filter-string-input
   .filter-string-input-wrapper
