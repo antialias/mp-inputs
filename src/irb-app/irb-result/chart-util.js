@@ -204,14 +204,14 @@ function _headerRowSpan(obj) {
 }
 
 function nestedArrayToBarChartData(arr) {
-  if (!arr[0].children) {
+  if (!( arr[0] && arr[0].children)) {
 
     // leaf, entire list in one table cell
     return [[arr.map(n => n.label), arr.map(n => n.value)]];
 
   } else {
 
-    const penultimate = !arr[0].children[0].children;
+    const penultimate = !(arr[0].children[0] && arr[0].children[0].children);
     if (penultimate) {
 
       return arr.map(n => [{value: n.label, sum: n.value}, ...nestedArrayToBarChartData(n.children)[0]]);

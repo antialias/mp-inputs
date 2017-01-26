@@ -106,6 +106,7 @@ document.registerElement(`bar-chart`, class extends Component {
           });
         },
         sortChange: ev => ev.detail && this.dispatchEvent(new CustomEvent(`change`, {detail: ev.detail})),
+        renameLabel: header => header === `$event` ? `Event` : `All People`,
       },
     };
   }

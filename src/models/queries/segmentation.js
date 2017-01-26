@@ -488,19 +488,8 @@ export default class SegmentationQuery extends BaseQuery {
       }, {});
     }
 
-    const queriedEventNames = this.query.jqlQueries.reduce((acc, jqlQuery) => acc.concat(jqlQuery.eventNames()), []);
+    headers = [isPeopleOnlyQuery ? `$people` : `$event`].concat(headers);
 
-    // All Event is considered just a normal event in display.
-    // When segmenting on only one event, don't display the top level names and header.
-    if (Object.keys(series).length && queriedEventNames.length === 1 && this.query.segments.length > 0) {
-      series = series[queriedEventNames[0]];
-    }
-
-    // Add the special $event header when not doing groupBy or when there is more than one event
-    // name.
-    if (queriedEventNames.length > 1 || this.query.segments.length === 0) {
-      headers = [isPeopleOnlyQuery ? `$people` : `$event`].concat(headers);
-    }
     return new Result({series, headers});
   }
 

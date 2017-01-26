@@ -54,6 +54,7 @@ mixin chart-bar(options={})
             = $component.child('irb-bar-chart-header', {on: {change: $helpers.sortChange}})
     tbody.irb-learn-manipulate-data-disabled
       each row, rowIndex in rows
+        - const addTopLevelKey = rows.length == 1 && row.length == 2 && isStacked
         - const isMultiColor = row.length > 2 || isStacked
         tr
           each cell, cellIndex in row
@@ -64,15 +65,14 @@ mixin chart-bar(options={})
               if cellIndex < lastCellIdx
                 - const colHeader = headersToDisplay[cellIndex]
                 - const headerText = headersToDisplay[cellIndex] === '$event' ? 'Events' : util.renameProperty(headersToDisplay[cellIndex])
-
-                if !Array.isArray(cell) || !isStacked || rows.length <= 1
+                if !Array.isArray(cell) || !isStacked || addTopLevelKey
                   td.chart-header(
                     attrs={rowSpan: cell.rowSpan || 1}
                     style={'min-width': `${$helpers.getHeaderWidth(headerText)}px`}
                   )
                     if !Array.isArray(cell) || isStacked
-                      - const cellLabel = isStacked && rows.length == 1 ? showValueNames[0] : cell.value
-                      - const title = $helpers.formatLabel(colHeader, cellLabel)
+                      - cellValue = addTopLevelKey ? $helpers.renameLabel(headers[0]) : cell.value
+                      - const title = $helpers.formatLabel(colHeader, cellValue)
                       .chart-header-text(attrs={title})= title
                     else
                       ul
@@ -93,7 +93,6 @@ mixin chart-bar(options={})
                               - const count = row[lastCellIdx][valueIndex]
                               - const percent = count / segmentSum
                               +tooltip(segmentColorClassName, isMultiColor, title, count, percent)
-
               else
                 td.chart-data
                   .chart-grid
