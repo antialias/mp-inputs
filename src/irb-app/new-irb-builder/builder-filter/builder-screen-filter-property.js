@@ -2,7 +2,7 @@
 // (screen 2 of filter)
 
 import { BuilderScreenBase } from '../builder-pane/builder-screen-base';
-import { FilterClause } from '../../../models/clause';
+import { FilterClause, TimeClause } from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
 import {
   extend,
@@ -40,8 +40,18 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
             this.app.updateStageClause({filterType});
           }
         },
-        filterOperators: filterType => FilterClause.FILTER_OPERATORS[filterType]
-          .filter(op => ![`was less than`, `was more than`].includes(op)), // TODO epurcer - remove once we add relative date filtering to new builder
+        filterOperators: filterType => {
+          if (filterType === `datetime`) {
+            return [
+              ...TimeClause.RANGE_LIST
+                .filter(range => range !== TimeClause.RANGES.CUSTOM),
+              ...FilterClause.FILTER_OPERATORS[filterType]
+                .filter(op => ![`was less than`, `was more than`, `was before`, `was after`].includes(op)),
+            ];
+          } else {
+            return FilterClause.FILTER_OPERATORS[filterType];
+          }
+        },
         getActiveClause: () => this.app.hasStageClause() ? this.app.activeStageClause : {},
 
         // dropdowns
@@ -120,7 +130,18 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           this.resetProgressiveList();
           this.app.updateStageClause({filterValue});
         },
-        commitFilter: () => this.updateAndCommitStageClause(),
+        commitFilter: () => {
+          const clause = this.app.activeStageClause;
+          if (clause.filterType === `datetime` && TimeClause.RANGE_LIST.includes(clause.filterOperator)) {
+            const {unit, value} = TimeClause.RANGE_TO_VALUE_AND_UNIT[clause.filterOperator];
+            this.updateAndCommitStageClause({
+              filterDateUnit: unit,
+              filterValue: value,
+            });
+          } else {
+            this.updateAndCommitStageClause();
+          }
+        },
       }),
     };
   }

@@ -158,9 +158,11 @@ builder-screen-filter-property
       height 420px
 
       .filter-operator-dropdown
-        border-bottom 1px solid grey-150
         margin 10px 15px
-        padding-bottom 11px
+
+        &:not(:last-child)
+          border-bottom 1px solid grey-150
+          padding-bottom 11px
 
       .screen-list-container
         padding 0 15px

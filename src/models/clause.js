@@ -288,20 +288,15 @@ TimeClause.RANGES = TimeClause.prototype.RANGES = RANGES;
 TimeClause.RANGE_LIST = TimeClause.prototype.RANGE_LIST = RANGE_LIST;
 TimeClause.UNITS = TimeClause.prototype.UNITS = UNITS;
 TimeClause.UNIT_LIST = TimeClause.prototype.UNIT_LIST = UNIT_LIST;
+TimeClause.RANGE_TO_VALUE_AND_UNIT = TimeClause.prototype.RANGE_TO_VALUE_AND_UNIT = RANGE_TO_VALUE_AND_UNIT;
+TimeClause.UNIT_AND_VALUE_TO_RANGE = TimeClause.prototype.UNIT_AND_VALUE_TO_RANGE = UNIT_AND_VALUE_TO_RANGE;
 
 export class FilterClause extends EventsPropertiesClause {
   constructor(attrs={}) {
     super(...arguments);
 
     this.filterType = attrs.filterType || FilterClause.FILTER_TYPES[0];
-
-    const filterOperatorChoices = FilterClause.FILTER_OPERATORS[this.filterType];
-    if (filterOperatorChoices.indexOf(attrs.filterOperator) !== -1) {
-      this.filterOperator = attrs.filterOperator;
-    } else {
-      this.filterOperator = filterOperatorChoices[0];
-    }
-
+    this.filterOperator = attrs.filterOperator || FilterClause.FILTER_OPERATORS[this.filterType][0];
     this.filterValue = attrs.filterValue || null;
     this.filterSearch = attrs.filterSearch || null;
     this.filterDateUnit = attrs.filterDateUnit || TimeClause.UNIT_LIST[0];
@@ -330,9 +325,12 @@ export class FilterClause extends EventsPropertiesClause {
   }
 
   get valid() {
-    return super.valid &&
-      this.FILTER_TYPES.indexOf(this.filterType) !== -1 &&
-      this.FILTER_OPERATORS[this.filterType].indexOf(this.filterOperator) !== -1;
+    const isDatetime = this.filterType === `datetime`;
+    const isFilterTypeValid = this.FILTER_TYPES.includes(this.filterType);
+    const isFilterOperatorValid = this.FILTER_OPERATORS[this.filterType].includes(this.filterOperator);
+    const isFilterOperatorTimeRange = isDatetime && TimeClause.RANGE_LIST.includes(this.filterOperator);
+
+    return super.valid && isFilterTypeValid && (isFilterOperatorValid || isFilterOperatorTimeRange);
   }
 
   get filterOperatorIsSetOrNotSet() {

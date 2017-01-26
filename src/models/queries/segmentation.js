@@ -264,8 +264,6 @@ export default class SegmentationQuery extends BaseQuery {
       .map(filter => filterToArbSelectorString(filter))
       .join(` and `);
 
-    console.log('FILTERS', filterArbSelectors)
-
     const time = sections.time.clauses[0];
     const unit = time.unit;
 
