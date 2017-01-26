@@ -63,14 +63,12 @@ document.registerElement(`irb-bar-chart-header`, class extends Component {
           }
         },
         renameHeaderLabel: header => header === `$event` ? `Events` : renameProperty(header),
-        selectedHeaderSort: (type, colIdx, sortBy, sortOrder) => this.dispatchEvent(new CustomEvent(`change`, {
-          detail: {
-            colIdx,
-            sortBy,
-            sortOrder,
-            type,
-          },
-        })),
+        selectedHeaderSort: (type, colIdx, sortBy, sortOrder) => {
+          this.dispatchEvent(
+            new CustomEvent(`change`, { detail: {colIdx, sortBy, sortOrder, type}})
+          );
+          this.update({activeSortPanel: null});
+        },
       },
       template,
     };
