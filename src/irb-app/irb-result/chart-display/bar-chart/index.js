@@ -75,10 +75,12 @@ document.registerElement(`bar-chart`, class extends Component {
             const leftPos = (fitsInChartRight || doesNotFitInsideChartLeft) ? tooltipRightDistance : tooltipLeftDistance;
 
             // determine y-position
+            const bufferHeight = tooltipHeight * 3;
             const tooltipAboveDistance = (ev.offsetY / 2) - cursorSpace;
             const tooltipBelowDistance = (ev.offsetY / 2) + (cursorSpace * 3) + tooltipHeight;
-            const distanceFromChartTop = ev.clientY - tooltipAboveDistance - tooltipHeight - top;
-            const topPos = distanceFromChartTop > (tooltipHeight * 2) ? tooltipAboveDistance : tooltipBelowDistance;
+            const tooCloseToChartTop = ev.clientY - tooltipAboveDistance - tooltipHeight - top < bufferHeight;
+            const tooCloseToViewportTop = ev.clientY < bufferHeight;
+            const topPos = (tooCloseToChartTop || tooCloseToViewportTop) ? tooltipBelowDistance : tooltipAboveDistance;
 
             hoverTooltip = util.extend(hoverTooltip, {
               cellIdx,
