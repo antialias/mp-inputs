@@ -104,15 +104,14 @@ bar-chart, .bar-chart
       &.chart-header
         max-width 160px
 
-        .chart-header-text
+        .chart-header-text, .label
           ellipsis()
+          height bar-height
+          line-height bar-height
 
         li
           position relative
           .label
-            ellipsis()
-            height bar-height
-            line-height bar-height
             margin-bottom bar-bottom
 
       &.chart-data
