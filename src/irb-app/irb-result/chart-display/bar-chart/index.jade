@@ -26,13 +26,13 @@ mixin chart-bar(options={})
     style=isStacked ? widthStyle : {}
     on=options.on
   )
-    .bar-color(
+    .bar-color.show-tool-tip-on-hover(
       class=options.colorClass
       style=isStacked ? {} : widthStyle
     )
-      .label-wrapper.show-tool-tip-on-hover
+      .label-wrapper
         .bar-text-nudger
-        .label.show-tool-tip-on-hover= options.label
+        .label= options.label
     if options.outsideLabel && options.width < .5
       .label-wrapper.outside-label()
         .outside-label-wrapper(
