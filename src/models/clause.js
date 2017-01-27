@@ -296,10 +296,12 @@ export class FilterClause extends EventsPropertiesClause {
     super(...arguments);
 
     this.filterType = attrs.filterType || FilterClause.FILTER_TYPES[0];
-    this.filterOperator = attrs.filterOperator || FilterClause.FILTER_OPERATORS[this.filterType][0];
     this.filterValue = attrs.filterValue || null;
     this.filterSearch = attrs.filterSearch || null;
     this.filterDateUnit = attrs.filterDateUnit || TimeClause.UNIT_LIST[0];
+
+    const filterOperators = FilterClause.FILTER_OPERATORS[this.filterType];
+    this.filterOperator = filterOperators.includes(attrs.filterOperator) ? attrs.filterOperator : filterOperators[0];
 
     this.editing = attrs.editing || null;
   }
@@ -362,12 +364,13 @@ FilterClause.FILTER_OPERATORS = FilterClause.prototype.FILTER_OPERATORS = {
     `is greater than`,
   ],
   datetime: [
+    `was on`,
+    `was between`,
     `was less than`,
     `was more than`,
     `was before`,
     `was after`,
-    `was on`,
-    `was between`,
+    ...RANGE_LIST,
   ],
   boolean: [
     `is true`,

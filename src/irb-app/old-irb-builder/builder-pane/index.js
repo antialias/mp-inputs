@@ -67,7 +67,7 @@ document.registerElement(`operator-dropdown`, class extends Dropdown {
 
     if (clause) {
       return FilterClause.FILTER_OPERATORS[clause.filterType]
-        .filter(op => ![`was before`, `was after`].includes(op));
+        .filter(op => ![`was before`, `was after`, ...TimeClause.RANGE_LIST].includes(op));
     } else {
       return [];
     }

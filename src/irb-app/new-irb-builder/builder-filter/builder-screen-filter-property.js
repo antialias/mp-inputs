@@ -30,11 +30,6 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
             operators = operators.filter(op => ![
               `was less than`, `was more than`, `was before`, `was after`,
             ].includes(op));
-
-            const timeRanges = TimeClause.RANGE_LIST
-              .filter(range => range !== TimeClause.RANGES.CUSTOM);
-
-            operators = [...timeRanges, ...operators];
           }
 
           return {[type]: operators};
@@ -46,7 +41,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           const clause = this.app.getActiveStageClause();
           if (clause.filterOperator !== filterOperator) {
             this.resetProgressiveList();
-            this.app.updateStageClause({filterOperator});
+            this.app.updateStageClause({filterOperator, filterValue: null});
           }
         },
         chooseFilterType: filterType => {
