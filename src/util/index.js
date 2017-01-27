@@ -72,6 +72,8 @@ export function isSpecialEvent(mpEvent) {
 export function getIconForEvent(mpEvent) {
   if (isSpecialEvent(mpEvent)) {
     return `star-top-events`;
+  } else if (mpEvent.is_collect_everything_event) {
+    return `autotrack`;
   } else if (mpEvent.custom) {
     return `custom-events`;
   } else {
