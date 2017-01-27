@@ -370,7 +370,7 @@ FilterClause.FILTER_OPERATORS = FilterClause.prototype.FILTER_OPERATORS = {
     `was more than`,
     `was before`,
     `was after`,
-    ...RANGE_LIST,
+    `was in the`,
   ],
   boolean: [
     `is true`,

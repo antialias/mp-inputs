@@ -27,7 +27,8 @@ function isFilterValid(filter) {
 
   const isSetOrBoolean = [`is set`, `is not set`, `is true`, `is false`].includes(filter.filterOperator);
   const isBetween = [`is between`, `was between`].includes(filter.filterOperator);
-  const isDaysAgo = filter.filterType === `datetime` && [`was more than`, `was less than`].includes(filter.filterOperator);
+  const isRelativeDate = filter.filterType === `datetime` &&
+    [`was more than`, `was less than`, `was in`].includes(filter.filterOperator);
 
   // filter must have a value UNLESS it is set or boolean
   if (!isSetOrBoolean && !filter.filterValue) {
@@ -44,8 +45,8 @@ function isFilterValid(filter) {
     return false;
   }
 
-  // days ago filter must have a value and a unit
-  if (isDaysAgo && (!filter.filterValue || !filter.filterDateUnit)) {
+  // relative date filter must have a value and a unit
+  if (isRelativeDate && (!filter.filterValue || !filter.filterDateUnit)) {
     return false;
   }
 
@@ -102,6 +103,7 @@ function filterToArbSelectorString(filter) {
         `((${property} >= datetime(${startOfDay(from)})) and (${property} <= datetime(${endOfDay(to)})))`;
 
       switch (operator) {
+        case `was in the`:
         case `was less than` : return lessThan(unitsAgo(value));
         case `was more than` : return moreThan(unitsAgo(value));
         case `was before`    : return lessThan(startOfDay(value));

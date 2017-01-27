@@ -35,6 +35,9 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           return {[type]: operators};
         })),
 
+        TIME_RANGE_NAMES: TimeClause.RANGE_LIST.filter(range => range !== TimeClause.RANGES.CUSTOM),
+        TIME_RANGE_VALUES: TimeClause.RANGE_TO_VALUE_AND_UNIT,
+
         // screen/type selection
         chooseFilterOperator: filterOperator => {
           this.helpers.updateMenu(`operator`, false);
@@ -52,8 +55,6 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
             this.app.updateStageClause({filterType});
           }
         },
-        formatFilterOperator: filterOperator =>
-          TimeClause.RANGE_LIST.includes(filterOperator) ? `was in the ${filterOperator}` : filterOperator,
 
         getActiveClause: () => this.app.hasStageClause() ? this.app.activeStageClause : {},
 
@@ -129,21 +130,12 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           this.resetProgressiveList();
           this.app.updateStageClause({filterSearch});
         },
-        updateFilterValue: filterValue => {
+        updateFilterValue: (filterValue, filterDateUnit=null) => {
           this.resetProgressiveList();
-          this.app.updateStageClause({filterValue});
+          this.app.updateStageClause({filterValue, filterDateUnit});
         },
         commitFilter: () => {
-          const clause = this.app.activeStageClause;
-          if (clause.filterType === `datetime` && TimeClause.RANGE_LIST.includes(clause.filterOperator)) {
-            const {unit, value} = TimeClause.RANGE_TO_VALUE_AND_UNIT[clause.filterOperator];
-            this.updateAndCommitStageClause({
-              filterDateUnit: unit,
-              filterValue: value,
-            });
-          } else {
-            this.updateAndCommitStageClause();
-          }
+          this.updateAndCommitStageClause();
         },
       }),
     };

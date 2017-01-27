@@ -14,43 +14,43 @@ document.registerElement(`builder-filter-edit-control`, class extends EditContro
     const property = renameProperty(clause.value);
     const type = clause.filterType;
     let operator = clause.filterOperator;
-    let filterValue = Array.isArray(clause.filterValue) ? clause.filterValue : [clause.filterValue];
-    let propertyValue = [];
+    let value = Array.isArray(clause.filterValue) ? clause.filterValue : [clause.filterValue];
 
     if (type === `datetime`) {
-      filterValue = filterValue.map(value => value ? formatDateDisplay(parseDate(value)) : ``);
-
-      if (TimeClause.RANGE_LIST.includes(operator)) {
-        return [property, `was in the`, operator.toLowerCase()];
+      switch (operator) {
+        case `was on`:
+        case `was between`:
+          value = value.map(val => formatDateDisplay(parseDate(val)) || val);
+          break;
+        case `was in the`:
+          value = [TimeClause.UNIT_AND_VALUE_TO_RANGE[clause.filterDateUnit][clause.filterValue].toLowerCase()];
+          break;
       }
     }
 
     switch (operator) {
       case `equals`:
       case `does not equal`:
-        propertyValue = filterValue.reduce((arr, val, idx) => (
+        value = value.reduce((arr, val, idx) => (
           arr.concat(idx ? [`or`, val] : [val])
         ), []);
         break;
       case `is between`:
       case `was between`:
-        propertyValue = [filterValue[0], `and`, filterValue[1]];
+        value = [value[0], `and`, value[1]];
         break;
       case `is set`:
       case `is not set`:
-        propertyValue = [];
+        value = [];
         break;
       case `is true`:
       case `is false`:
-        propertyValue = [operator.split(` `).slice(1).join(` `)];
+        value = [operator.split(` `).slice(1).join(` `)];
         operator = operator.split(` `)[0];
-        break;
-      default:
-        propertyValue = filterValue;
         break;
     }
 
-    return [property, operator, ...propertyValue];
+    return [property, operator, ...value];
   }
 
   openPane() {

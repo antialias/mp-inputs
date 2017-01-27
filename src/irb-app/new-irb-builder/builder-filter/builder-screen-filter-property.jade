@@ -16,14 +16,13 @@ mixin filter-dropdown(name, title, icon)
         block
 
 mixin filter-operator-dropdown
-  +filter-dropdown(`operator`, $helpers.formatFilterOperator(clause.filterOperator))
+  +filter-dropdown(`operator`, clause.filterOperator)
     ul.filter-operators
       each filterOperator in $helpers.FILTER_OPERATORS[clause.filterType]
         li.filter-menu-item(
           class={'filter-menu-item-selected': filterOperator === clause.filterOperator}
           on={click: () => $helpers.chooseFilterOperator(filterOperator)}
-        )
-          = $helpers.formatFilterOperator(filterOperator)
+        )= filterOperator
 
 mixin filter-string-input
   .filter-string-input-wrapper
@@ -144,16 +143,26 @@ mixin filter-number-input(value, oninput, options)
 
       when `datetime`
         +filter-operator-dropdown
-        - const isBetween = clause.filterOperator === `was between`
-        - const isOn = clause.filterOperator === `was on`
-        if isBetween || isOn
-          - const [from, to] = Array.isArray(clause.filterValue) ? clause.filterValue : [null, null];
-          .filter-numdate
-            irb-datepicker(
-              attrs={range: isBetween, preposition: `and`}
-              props={value: isBetween ? {from, to} : clause.filterValue}
-              on={change: ev => $helpers.updateFilterValue(isBetween ? [ev.detail.from, ev.detail.to] : ev.detail)}
-            )
+        case clause.filterOperator
+          when `was on`
+          when `was between`
+            - const [from, to] = Array.isArray(clause.filterValue) ? clause.filterValue : [null, null];
+            - const isBetween = clause.filterOperator === `was between`
+            .filter-numdate
+              irb-datepicker(
+                attrs={range: isBetween, preposition: `and`}
+                props={value: isBetween ? {from, to} : clause.filterValue}
+                on={change: ev => $helpers.updateFilterValue(isBetween ? [ev.detail.from, ev.detail.to] : ev.detail)}
+              )
+          when `was in the`
+            ul.screen-options-list
+              each range in $helpers.TIME_RANGE_NAMES
+                - const {value, unit} = $helpers.TIME_RANGE_VALUES[range]
+                li.list-option(
+                  class={'list-option-selected': value === clause.filterValue && unit === clause.filterDateUnit}
+                  on={click: () => $helpers.updateFilterValue(value, unit)}
+                )
+                  .option-label= range
 
       when `boolean`
         .filter-radio-list.filter-boolean
