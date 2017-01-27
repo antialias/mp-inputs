@@ -19,15 +19,23 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor)
       attrs={open: activeSortPanel === colAccessor}
       on={change: ev => $helpers.menuChange(ev, colAccessor)}
     )
-      .sort-control-icons
-        each sortBy in sortByOptions
-          each sortOrder in sortOrderOptions
-            - const isSelected = $helpers.isSortSelected(colAccessor, sortBy, sortOrder)
-            .sort-icon(
-              class={selected: isSelected}
-              on={click: () => isSelected ? null : $helpers.selectedHeaderSort(type, colAccessor, sortBy, sortOrder)}
-            )
-              svg-icon(attrs=({icon: `sort-${$helpers.SORT_ICONS[sortBy]}-${sortOrder}`}))
+      .chart-controls-component.chart-control
+        .title sort
+        ul.control-list
+          each sortBy in sortByOptions
+            each sortOrder in sortOrderOptions
+              - const isSelected = $helpers.isSortSelected(colAccessor, sortBy, sortOrder)
+              li
+                button.button-option(
+                  class={selected: isSelected}
+                  on={click: () => isSelected ? null : $helpers.selectedHeaderSort(type, colAccessor, sortBy, sortOrder)}
+                )
+                  span.button-flex-wrapper
+                    -const sortByIconName = $helpers.SORT_ICONS[sortBy]
+                    .sort-icon
+                      svg-icon(attrs=({icon: `sort-${sortByIconName}-${sortOrder}`}))
+                    .sort-by-label= sortByIconName
+                    .sort-order-label= sortOrder
 
 .chart-header-container
   if headersStyle

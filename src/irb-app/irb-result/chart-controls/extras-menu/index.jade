@@ -12,7 +12,7 @@ ul.toggle-view.chart-controls-component
       .extras-menu-options.options(attrs={'slot-body': true})
         .analysis.section
           .title analysis
-          ul
+          ul.control-list
             each analysis in $helpers.analysisChoices()
               - const analysisIsSelected = analysis == report.displayOptions.analysis
               li
@@ -31,7 +31,7 @@ ul.toggle-view.chart-controls-component
                     = analysis
         .value.section
           .title(class={disabled: $helpers.isValueToggleDisabled()}) value
-          ul
+          ul.control-list
             each value in $helpers.valueChoices()
               - const valueIsSelected = value == report.displayOptions.value;
               li

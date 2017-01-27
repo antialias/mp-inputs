@@ -8,6 +8,7 @@ import './chart-display';
 import './mp-toast';
 
 import template from './index.jade';
+import './index.styl';
 
 const AVAILABLE_ANALYSES = {
   Bar: {
