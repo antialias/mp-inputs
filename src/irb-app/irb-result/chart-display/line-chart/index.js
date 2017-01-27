@@ -1,4 +1,4 @@
-/* global $ */
+/* global $, Highcharts */
 
 import moment from 'moment';
 import { Component } from 'panel';
@@ -150,15 +150,18 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       startOnTick: true,
     };
     const highchartsOptions = {
+
       chart: {
         marginTop: 0,
         marginRight: 0,
         marginBottom: null,
         marginLeft: null,
+        renderTo: this.$el[0],
         spacingBottom: 30,
         spacingLeft: 28,
         type: `line`,
       },
+
       colors: [
         commonCSS.segmentColor1,
         commonCSS.segmentColor2,
@@ -169,6 +172,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
         commonCSS.segmentColor7,
         commonCSS.segmentColor8,
       ],
+
       plotOptions: {
         line: {
           lineWidth: 3,
@@ -198,10 +202,12 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
           stacking: null,
         },
       },
+
       tooltip: {
         borderWidth: 0,
         formatter: this.tooltipFormatter(),
       },
+
       xAxis: util.extend(axisOptions, {
         endOnTick: false,
         labels: {
@@ -229,22 +235,89 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       highchartsOptions.yAxis.type = `logarithmic`;
       highchartsOptions.yAxis.min = LOGARITHMIC_CHART_ZERO_REMAPPING;
     }
-    return {
-      chartType: `line`,
-      highchartsOptions,
-      lineLimit: false,
-      MPstyling: false,
+
+    // create the series data!
+    //
+    // a whole pile of garbage courtesy of
+    // https://github.com/mixpanel/mixpanel-platform/blob/d171a3e/js/ui/chart.js#L449-L580
+
+    // I presume we can replace this with one of our existing IRB/mp-common utils
+    const _flat = function(obj, depth) {
+      if (typeof obj !== `object`) {
+        return obj;
+      } else {
+        if (depth <= 0) {
+          return Object.values(obj).reduce((sum, v) => sum + _flat(v, depth), 0);
+        } else {
+          depth--;
+          const ag = {};
+          for (let key of Object.keys(obj)) {
+            ag[key] = _flat(obj[key], depth);
+          }
+          return ag;
+        }
+      }
     };
+
+    const data = _flat(this._data, 2);
+
+    const seriesMap = {};
+    let allLabelsAreDates = true;
+    for (let segmentName of Object.keys(data)) {
+      const counts = data[segmentName];
+
+      let type = `line`;
+      if (highchartsOptions && highchartsOptions.chart && highchartsOptions.chart.type === `area`) {
+        type = `area`;
+      }
+      const series = {
+        name: segmentName,
+        type,
+        data: Object.keys(counts).map(label => {
+          const count = counts[label];
+          const labelAsDate = moment(label);
+          if (labelAsDate.isValid()) {
+            label = labelAsDate.valueOf();
+          } else {
+            allLabelsAreDates = false;
+          }
+          return [label, count];
+        }),
+      };
+      seriesMap[segmentName] = series;
+    }
+
+    if (allLabelsAreDates) {
+      highchartsOptions.xAxis.type = `datetime`;
+      for (let series of Object.values(seriesMap)) {
+        series.data = util.sorted(series.data, {transform: d => d[0]}); // sort by date
+      }
+    } else {
+      highchartsOptions.xAxis.type = `category`;
+    }
+
+    const sortedSegments = Object.keys(data)
+      .map(segment => {
+        // vals is a dictionary of timestamps to counts
+        const vals = data[segment];
+        const segmentTotal = Object.values(vals).reduce((sum, val) => sum + val, 0);
+        return [segment, segmentTotal];
+      })
+      .sort((a, b) => b[1] - a[1])
+      .map(pair => pair[0]);
+
+    highchartsOptions.series = sortedSegments.map((s, idx) => util.extend(seriesMap[s], {
+      color: highchartsOptions.colors[idx % highchartsOptions.colors.length],
+    }));
+
+    return highchartsOptions;
   }
 
   renderMPChart() {
     if (this.$el) {
       this.$el.remove();
     }
-
     this.$el = $(`<div>`).appendTo(this);
-    this.$el
-      .MPChart(this.createChartOptions())
-      .MPChart(`setData`, this._data);
+    this.highchart = new Highcharts.Chart(this.createChartOptions());
   }
 });
