@@ -1,6 +1,8 @@
 /* global MP */
 
-import queryMP from './api';
+// TODO ensure fetch polyfill in IRB standalone
+
+import { objToQueryString } from 'mixpanel-common/util';
 
 export default class BaseQuery {
   constructor() {
@@ -55,7 +57,21 @@ export default class BaseQuery {
   }
 
   executeQuery() {
-    return queryMP(this.buildUrl(), window.API_SECRET, this.buildParams(), this.buildOptions());
+    const url = `${MP.api.options.apiHost}/${this.buildUrl()}?${objToQueryString(this.buildParams())}`;
+    return fetch(url, Object.assign({
+      headers: {
+        Authorization: `Basic ${btoa(window.API_SECRET + `:`)}`,
+      },
+      method: `GET`,
+    }, this.buildOptions()))
+      .then(response => {
+        if (response.status < 400 || response.body) {
+          return response.json();
+        } else {
+          return {error: response.statusText};
+        }
+      })
+      .catch(e => console.error(`Error fetching ${url}`, e));
   }
 
   // expected args: results, query (optional)
