@@ -1,4 +1,7 @@
 /* global MP */
+
+import queryMP from './api';
+
 export default class BaseQuery {
   constructor() {
     this.query = null; // used to check for obsolete queries
@@ -52,11 +55,7 @@ export default class BaseQuery {
   }
 
   executeQuery() {
-    return new Promise((resolve, reject) => {
-      MP.api.query(this.buildUrl(), this.buildParams(), this.buildOptions())
-        .done(resolve)
-        .fail(reject);
-    });
+    return queryMP(this.buildUrl(), window.API_SECRET, this.buildParams(), this.buildOptions());
   }
 
   // expected args: results, query (optional)

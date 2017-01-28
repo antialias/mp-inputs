@@ -396,7 +396,7 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   buildOptions() {
-    return {type: `POST`};
+    return {method: `POST`};
   }
 
   preprocessNameConflicts() {
