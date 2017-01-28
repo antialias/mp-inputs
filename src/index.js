@@ -28,6 +28,11 @@ const initIRB = () => new Promise(resolve => {
   } else {
     const parentFrame = new Framesg(window.parent, `mp-app`, {
       startApp: parentData => {
+
+        // TODO SUPER TMP
+        // get the token from...other sources
+        window.API_SECRET = window.parent.mp.report.globals.api_secret;
+
         mixpanel.identify(parentData.user_id);
         mixpanel.register({
           'Email':      parentData.user_email,

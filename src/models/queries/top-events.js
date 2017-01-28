@@ -1,11 +1,13 @@
 import BaseQuery from './base';
 
-export default class TopEventsQuery extends BaseQuery {
-  MPApiQuery() {
-    return window.MP.api.topEvents({sort_fn: `desc`}); // eslint-disable-line camelcase
-  }
+import queryMP from './api';
 
-  processResults(results) {
-    return Object.values(results.values());
+export default class TopEventsQuery extends BaseQuery {
+  executeQuery() {
+    return queryMP(`events/names`, window.API_SECRET, {
+      sort_fn: `desc`, // eslint-disable-line camelcase
+      type: `general`,
+      limit: 100,
+    });
   }
 }

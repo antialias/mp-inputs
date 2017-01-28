@@ -51,15 +51,11 @@ export default class BaseQuery {
     return ``;
   }
 
-  MPApiQuery() {
-    return MP.api.query(this.buildUrl(), this.buildParams(), this.buildOptions());
-  }
-
   executeQuery() {
     return new Promise((resolve, reject) => {
-      this.MPApiQuery()
-        .done(results => resolve(results))
-        .fail(xhr => reject(xhr));
+      MP.api.query(this.buildUrl(), this.buildParams(), this.buildOptions())
+        .done(resolve)
+        .fail(reject);
     });
   }
 
