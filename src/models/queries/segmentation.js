@@ -239,11 +239,6 @@ class JQLQuery {
 }
 
 export default class SegmentationQuery extends BaseQuery {
-  constructor(customEvents) {
-    super(...arguments);
-    this.customEvents = customEvents;
-  }
-
   get valid() {
     // only valid if one or more queries is prepared
     return !!this.query.jqlQueries.length;

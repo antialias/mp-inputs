@@ -15,23 +15,24 @@ import './stylesheets/index.styl';
 
 const STANDALONE = window.parent === window;
 
-if (API_LOCAL && !STANDALONE) {
-  window.MP.api.options.apiHost = window.location.origin;
-}
-window.MP.api.MAX_SIMULTANEOUS_QUERIES = 50;
-
 const initIRB = () => new Promise(resolve => {
   const IRB = document.createElement(`irb-app`);
+  IRB.apiHost = `https://mixpanel.com`;
+
   if (STANDALONE) {
     IRB.standalone = true;
+
+    // TODO get API secret from URL hash
+
     resolve(IRB);
   } else {
     const parentFrame = new Framesg(window.parent, `mp-app`, {
       startApp: parentData => {
 
-        // TODO SUPER TMP
-        // get the token from...other sources
-        window.API_SECRET = window.parent.mp.report.globals.api_secret;
+        if (API_LOCAL) {
+          IRB.apiHost = window.location.origin;
+        }
+        IRB.apiSecret = window.parent.mp.report.globals.api_secret;
 
         mixpanel.identify(parentData.user_id);
         mixpanel.register({

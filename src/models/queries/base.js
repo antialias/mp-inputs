@@ -1,12 +1,22 @@
-/* global MP */
-
 // TODO ensure fetch polyfill in IRB standalone
 
 import { objToQueryString } from 'mixpanel-common/util';
 
 export default class BaseQuery {
-  constructor() {
+  constructor(apiAttrs, options={}) {
     this.query = null; // used to check for obsolete queries
+    this.apiHost = apiAttrs.apiHost;
+    this.apiSecret = apiAttrs.apiSecret;
+
+    if (!this.apiHost) {
+      throw new Error(`apiHost required for Query!`);
+    }
+    if (!this.apiSecret) {
+      throw new Error(`apiSecret required for Query!`);
+    }
+    for (let attr of Object.keys(options)) {
+      this[attr] = options[attr];
+    }
   }
 
   build(state, options) {
@@ -57,10 +67,10 @@ export default class BaseQuery {
   }
 
   executeQuery() {
-    const url = `${MP.api.options.apiHost}/${this.buildUrl()}?${objToQueryString(this.buildParams())}`;
+    const url = `${this.apiHost}/${this.buildUrl()}?${objToQueryString(this.buildParams())}`;
     return fetch(url, Object.assign({
       headers: {
-        Authorization: `Basic ${btoa(window.API_SECRET + `:`)}`,
+        Authorization: `Basic ${btoa(this.apiSecret + `:`)}`,
       },
       method: `GET`,
     }, this.buildOptions()))

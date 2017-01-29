@@ -177,14 +177,18 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
     this.queries = {};
     if (this.canMakeQueries()) {
+      const apiAttrs = {
+        apiHost: this.apiHost,
+        apiSecret: this.apiSecret,
+      };
       this.queries = {
-        topEvents: new TopEventsQuery(),
-        topEventProperties: new TopEventPropertiesQuery(),
-        topEventPropertyValues: new TopEventPropertyValuesQuery(),
-        topPeopleProperties: new TopPeoplePropertiesQuery(),
-        topPeoplePropertyValues: new TopPeoplePropertyValuesQuery(),
+        topEvents: new TopEventsQuery(apiAttrs),
+        topEventProperties: new TopEventPropertiesQuery(apiAttrs),
+        topEventPropertyValues: new TopEventPropertyValuesQuery(apiAttrs),
+        topPeopleProperties: new TopPeoplePropertiesQuery(apiAttrs),
+        topPeoplePropertyValues: new TopPeoplePropertyValuesQuery(apiAttrs),
         topPropertyValuesCache: new QueryCache(),
-        segmentation: new SegmentationQuery(this.customEvents),
+        segmentation: new SegmentationQuery(apiAttrs, {customEvents: this.customEvents}),
         segmentationCache: new QueryCache(),
       };
     }
