@@ -15,6 +15,25 @@ import './index.styl';
 
 const LOGARITHMIC_CHART_ZERO_REMAPPING = 0.6;
 
+/**
+ * https://github.com/mixpanel/mixpanel-platform/blob/d171a3ec/js/ui/chart.js#L38-L54
+ * this function is a hack because highcharts insists on showing a
+ * gridline for the 0th label on the y-axis, which conflicts with
+ * the x-axis
+ */
+function killLastGridline() {
+  const gridlines = $(`.highcharts-grid path`, this.container).show()
+    .map(function(gridline) {
+      const $gridline = $(gridline);
+      return [$gridline, $gridline.offset().top];
+    })
+    .sort((a, b) => a[1] - b[1]);
+  const line = gridlines[gridlines.length - 1];
+  if (line) {
+    line[0].hide();
+  }
+}
+
 document.registerElement(`line-chart`, class extends Component {
   get config() {
     return {
@@ -152,6 +171,11 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     const highchartsOptions = {
 
       chart: {
+        backgroundColor: `rgba(255,255,255,0)`,
+        borderRadius: 0,
+        events: {
+          redraw: killLastGridline,
+        },
         marginTop: 0,
         marginRight: 0,
         marginBottom: null,
@@ -159,7 +183,12 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
         renderTo: this.$el[0],
         spacingBottom: 30,
         spacingLeft: 28,
+        style: {
+          fontFamily: `"Helvetica Neue", helvetica, sans-serif`,
+          fontSize: `12px`,
+        },
         type: `line`,
+        zoomType: `x`,
       },
 
       colors: [
@@ -173,22 +202,50 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
         commonCSS.segmentColor8,
       ],
 
+      credits: {
+        enabled: false,
+      },
+      legend: {
+        enabled: false,
+      },
+      loading: {
+        labelStyle: {
+          color: `transparent`,
+        },
+      },
+      global: {
+        useUTC: false,
+      },
+
       plotOptions: {
         line: {
+          incompleteStyle: {
+            'stroke-dasharray': `3,5`,
+          },
           lineWidth: 3,
           marker: {
             hover: {
               enabled: true,
             },
+            lineColor: `#fff`,
+            lineWidth: 2,
+            radius: 5,
+            symbol: `circle`,
           },
+          shadow: false,
           states: {
             hover: {
               lineWidth: 4,
               lineWidthPlus: 0,
             },
           },
+          turboThreshold: 0,
         },
         series: {
+          animation: {
+            duration: 300,
+          },
+          cursor: `pointer`,
           fillOpacity: 1,
           marker: {
             enabled: null,
@@ -203,21 +260,52 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
         },
       },
 
+      title: {
+        text: null,
+      },
+
       tooltip: {
+        backgroundColor: `#fff`,
         borderWidth: 0,
         formatter: this.tooltipFormatter(),
+        shadow: false,
+        useHTML: true,
       },
 
       xAxis: util.extend(axisOptions, {
+        dateTimeLabelFormats: {
+          day: `%b %e`,
+        },
         endOnTick: false,
         labels: {
           formatter: this.xAxisFormatter(),
+          style: {
+            color: `#868ea3`,
+          },
+          y: 18,
         },
         minTickInterval: util.MS_BY_UNIT[this._displayOptions.timeUnit],
         startOnTick: false,
+        tickmarkPlacement: `on`,
+        tickPosition: `outside`,
         tickPositions: this.getTickPositions(),
       }),
       yAxis: util.extend(axisOptions, {
+        allowDecimals: true,
+        gridLineColor: `#e6e8eb`,
+        gridLineDashStyle: `shortDash`,
+        labels: {
+          x: -20,
+          style: {
+            fontWeight: `bold`,
+            color: `#868ea3`,
+          },
+        },
+        min: 0,
+        minPadding: 0,
+        title: {
+          text: null,
+        },
         showFirstLabel: true,
         showLastLabel: false,
       }),
