@@ -22,7 +22,7 @@ const initIRB = () => new Promise(resolve => {
   if (STANDALONE) {
     IRB.standalone = true;
 
-    // TODO get API secret from URL hash
+    // TODO get API key+secret from URL hash
 
     resolve(IRB);
   } else {
@@ -32,6 +32,7 @@ const initIRB = () => new Promise(resolve => {
         if (API_LOCAL) {
           IRB.apiHost = window.location.origin;
         }
+        IRB.apiKey = window.parent.mp.report.globals.api_key;
         IRB.apiSecret = window.parent.mp.report.globals.api_secret;
 
         mixpanel.identify(parentData.user_id);

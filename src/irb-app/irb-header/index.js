@@ -1,5 +1,6 @@
-import { Component } from 'panel';
+import md5 from 'md5';
 import { downloadData } from 'mixpanel-common/report/util';
+import { Component } from 'panel';
 
 import './mp-button-input';
 
@@ -44,14 +45,25 @@ document.registerElement(`irb-header`, class extends Component {
   }
 
   downloadJQLQuery(script, filename, scriptParams) {
-    const parameters = {
+    /* eslint-disable camelcase */
+    const params = {
+      api_key: this.app.apiKey,
       script: script.replace(/\r/g, ``).replace(/\n/g, `\r\n`),
-      download_file: `${filename}.csv`, // eslint-disable-line camelcase
+      download_file: `${filename}.csv`,
+      expire: Math.ceil(new Date().getTime() / 1000) + 60 * 60,
       params: scriptParams,
       format: `csv`,
     };
+    /* eslint-enable camelcase */
 
-    const query = window.MP.api.getQueryOptions(`/api/2.0/jql/`, parameters, {type: `POST`});
-    downloadData(query.endpoint, query.queryOptions.data);
+    // compute sig, because we can't send basic auth headers with
+    // POST-to-iframe download hack
+    let sigStr = Object.keys(params)
+      .sort()
+      .reduce((str, k) => str + `${k}=${params[k]}`, ``);
+    sigStr += this.app.apiSecret;
+    params.sig = md5(sigStr);
+
+    downloadData(`${this.app.apiHost}/api/2.0/jql/`, params);
   }
 });
