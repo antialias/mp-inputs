@@ -28,8 +28,6 @@
             else
               each labelPart in label
                 span.edit-label-part= labelPart
-        if $helpers.isRemovable()
-          button.remove(on={click: $helpers.removeClause})
     .drop-menu
       mp-drop-menu(attrs={open} on={change: $helpers.menuChange})
         .new-pane-content(attrs={'slot-body': true})

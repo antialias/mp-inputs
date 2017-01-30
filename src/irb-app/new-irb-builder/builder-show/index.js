@@ -25,6 +25,13 @@ document.registerElement(`query-builder-show`, class extends Component {
         showSourceForNumericProperties: () => (
           this.state.report.sections.show.clauseResourceTypes() !== ShowClause.RESOURCE_TYPE_PEOPLE
         ),
+        mouseEntered: (ev, idx) => {
+          const clauseContainer = ev.target;
+          const clauseWidth = clauseContainer.offsetWidth;
+          const headerWidth = clauseContainer.querySelector(`.header-label`).offsetWidth;
+          const buttonWidth = 12;
+          this.app.updateShowClauseButtonPosition(idx, headerWidth + buttonWidth > clauseWidth);
+        },
       },
     };
   }

@@ -9,9 +9,6 @@
     display flex
     height 36px
 
-    &.edit-control
-      min-width 90px
-
     button
       background transparent
       border-width 0
@@ -65,26 +62,6 @@
     button.add-button
       svg-icon svg
         transform rotate(45deg)
-
-  button.remove
-    background none
-    border none
-    color grey-300
-    font-weight 600
-    opacity 0
-    position absolute
-    right -5px
-    top -5px
-    transition opacity .1s
-
-    &::after
-      content '✕'
-
-    &:hover
-      color grey-700
-
-  &:hover button.remove
-    opacity 1
 
 show-edit-control .irb-control
   min-width 60px

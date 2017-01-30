@@ -22,6 +22,42 @@
     margin-bottom 18px
     margin-right 12px
 
+  .clause-container
+    position relative
+    
+    &:hover 
+      button.remove
+        opacity 1
+
+      button.reorder
+        opacity 1
+
+      .clause-header.group
+        max-width calc(100% - 15px)
+        
+    button.remove
+      background none
+      border none
+      color grey-300
+      font-size 14px
+      font-weight 600
+      opacity 0
+      padding 0
+      position absolute
+      right -5px
+      top 0
+      transition opacity .1s
+      svg-icon-style(grey-700, grey-500, size: 18px)
+
+      &.group
+        top 3px
+
+      &.outside
+        right -15px
+
+      &:hover
+        color grey-700
+
   .clause-body > div
     margin-right 10px
 
@@ -33,9 +69,13 @@
     color grey-700
     font-size 11px
     font-weight 900
+    height 18px
     line-height 12px
     margin-bottom 4px
     text-transform uppercase
+    
+    .header-label
+      ellipsis()
 
     button.reorder
       background none
@@ -43,13 +83,12 @@
       opacity 0
       padding 0
       transition opacity 0.2s
-      svg-icon-style(grey-500, grey-700, pos-top: 3px)
+      svg-icon-style(grey-700, grey-500, pos-top: 3px)
 
       &.reorder-left
         margin-left -16px // reorder button width
-
-    &:hover button.reorder
-      opacity 1
+      &.reorder-right
+        margin-left 7px
 
   .clause-language
     color grey-300

@@ -130,6 +130,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         },
       },
       activeMathMenuIndex: null,
+      showClauseButtonPosition: {},
       contextFilter: ``,
       isEditingExtrasMenu: false,
       isEditingNumericProperty: false,
@@ -761,6 +762,12 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       'clause type': sectionType,
       'clause index': clauseIndex,
     }));
+  }
+
+  updateShowClauseButtonPosition(key, buttonOutside) {
+    let showClauseButtonPosition = this.state.showClauseButtonPosition;
+    showClauseButtonPosition[key] = buttonOutside;
+    this.update({showClauseButtonPosition});
   }
 
   updateLegendState(newState) {

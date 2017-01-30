@@ -16,6 +16,7 @@ document.registerElement(`query-builder-group`, class extends Component {
       template,
       helpers: {
         moveClause: (clauseIndex, offset) => this.app.moveClause(`group`, clauseIndex, offset),
+        removeClause: index => this.app.removeClause(`group`, index),
       },
     };
   }

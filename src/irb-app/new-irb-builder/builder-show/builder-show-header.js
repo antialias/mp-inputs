@@ -9,6 +9,9 @@ document.registerElement(`query-builder-show-header`, class extends Component {
     return {
       template,
       helpers: {
+        isButtonOutside: () => {
+          return this.state.showClauseButtonPosition[this.clauseIndex];
+        },
         isStaticHeader: () => {
           // Static Header for "All People" with no numeric properties
           const associatedClause = this.getAssociatedClause();
@@ -41,6 +44,11 @@ document.registerElement(`query-builder-show-header`, class extends Component {
           this.app.isEditingClause(ShowClause.TYPE, this.clauseIndex) &&
           this.state.activeMathMenuIndex === null,
         isOpen: () => this.isPaneOpen(),
+        isRemovable: () => this.app.getClausesForType(`show`).length > 1,
+        removeClause: ev => {
+          ev.stopPropagation();
+          this.app.removeClause(`show`, this.clauseIndex);
+        },
       },
     };
   }

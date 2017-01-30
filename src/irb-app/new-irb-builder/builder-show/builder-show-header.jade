@@ -1,14 +1,21 @@
 include ../../mixins.jade
 
 .query-builder-show-header
-  .header-label(class={'header-disabled': $helpers.isEditingShowClause()})
-    if $helpers.isStaticHeader()
-      | Show Total
-    else
-      .header-word Show
-      .active-math-header(on={click: $helpers.headerClicked})
-        .header-word= $helpers.getCurrentMathChoice()
-        svg-icon.math-caret(attrs={icon: 'caret-down'})
+  .visible-header-content
+    .header-label(class={'header-disabled': $helpers.isEditingShowClause()})
+      if $helpers.isStaticHeader()
+        | Show Total
+      else
+        .header-word Show
+        .active-math-header(on={click: $helpers.headerClicked})
+          .header-word= $helpers.getCurrentMathChoice()
+          svg-icon.math-caret(attrs={icon: 'caret-down'})
+    if $helpers.isRemovable()
+      button.remove(
+        class={'outside': $helpers.isButtonOutside()}
+        on={click: ev => $helpers.removeClause(ev)}
+      )
+        svg-icon(attrs={icon: 'x'})
   .drop-menu
     mp-drop-menu(attrs={open: $helpers.isOpen()})
       .new-pane-content(attrs={'slot-body': true})= $component.child(`builder-pane`)

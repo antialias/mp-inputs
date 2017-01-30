@@ -1,28 +1,34 @@
 @import "../../../stylesheets/common"
 
+query-builder-show-header, .query-builder-show-header
+  width 100%
+
 .query-builder-show-header
   position relative
-  svg-icon-style(mp-blue, pos-top: 2px, size: 16px)
-
-  .header-label, .active-math-header
-    align-items flex-end
+  .visible-header-content
     display flex
+    justify-content space-between
+    svg-icon-style(mp-blue, pos-top: 2px, size: 16px)
 
-  .header-label
-    height 15px
+    .header-label, .active-math-header
+      align-items flex-end
+      display flex
 
-    .active-math-header
-      .header-word
-        color mp-blue
+    .header-label
+      height 15px
+
+      .active-math-header
         cursor pointer
-        font-weight 600
-        &::before
-          content space-character
-      .math-caret
-        cursor pointer
+        
+        .header-word
+          font-weight 600
+          &::before
+            content space-character
+          &:hover
+            color mp-blue
 
-    &.header-disabled
-      svg-icon-style(grey-500, pos-top: 2px, size: 16px)
-      .header-word, .math-caret
-        color grey-500
-        cursor initial
+      &.header-disabled
+        svg-icon-style(grey-500, pos-top: 2px, size: 16px)
+        .header-word, .math-caret
+          color grey-500
+          cursor initial
