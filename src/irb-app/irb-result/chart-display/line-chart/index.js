@@ -25,11 +25,12 @@ function killLastGridline() {
   const gridlines = $(`.highcharts-grid path`, this.container).show()
     .map(function(gridline) {
       const $gridline = $(gridline);
-      return [$gridline, $gridline.offset().top];
+      const offset = $gridline.offset();
+      return [$gridline, (offset && offset.top) || 0];
     })
     .sort((a, b) => a[1] - b[1]);
   const line = gridlines[gridlines.length - 1];
-  if (line) {
+  if (line && line[0] && line[0].hide) {
     line[0].hide();
   }
 }
