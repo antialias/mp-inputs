@@ -7,6 +7,7 @@ import 'webcomponents.js/webcomponents';
 import Framesg from 'framesg';
 
 import { mixpanel, rollbar } from './tracking';
+import { parseURLQueryParams } from './util';
 
 import 'mixpanel-common/components';
 import './irb-app';
@@ -22,7 +23,9 @@ const initIRB = () => new Promise(resolve => {
   if (STANDALONE) {
     IRB.standalone = true;
 
-    // TODO get API key+secret from URL hash
+    const queryParams = parseURLQueryParams();
+    IRB.apiKey = queryParams.api_key;
+    IRB.apiSecret = queryParams.api_secret;
 
     resolve(IRB);
   } else {

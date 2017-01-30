@@ -54,6 +54,15 @@ export function relativeToAbsoluteDate(relativeDateInt, unit) {
   return new Date(moment().subtract(relativeDateInt, `${unit}s`));
 }
 
+// TODO move to mixpanel-common
+export function parseURLQueryParams() {
+  return window.location.search.slice(1).split(`&`)
+    .reduce((params, pairStr) => {
+      const [k, v] = pairStr.split(`=`);
+      return Object.assign(params, {[k]: v});
+    }, {});
+}
+
 export function getTextWidth(text, font) {
   const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement(`canvas`));
   let context = canvas.getContext(`2d`);
