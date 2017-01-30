@@ -31,7 +31,7 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor)
                   on={click: () => isSelected ? null : $helpers.selectedHeaderSort(type, colAccessor, sortBy, sortOrder)}
                 )
                   span.button-flex-wrapper
-                    -const sortByIconName = $helpers.SORT_ICONS[sortBy]
+                    - const sortByIconName = $helpers.SORT_ICONS[sortBy]
                     .sort-icon
                       svg-icon(attrs=({icon: `sort-${sortByIconName}-${sortOrder}`}))
                     .sort-by-label= sortByIconName
