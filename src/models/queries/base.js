@@ -1,5 +1,3 @@
-// TODO ensure fetch polyfill in IRB standalone
-
 import { objToQueryString } from 'mixpanel-common/util';
 
 export default class BaseQuery {
