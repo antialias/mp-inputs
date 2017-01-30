@@ -426,7 +426,7 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   runJQLQueries() {
-    return this.buildJQLArgs().map(args => args.then(args => window.MP.api.query(...args)));
+    return this.buildJQLArgs().map(args => args.then(args => this.fetch(...args)));
   }
 
   executeQuery() {

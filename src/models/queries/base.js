@@ -67,13 +67,17 @@ export default class BaseQuery {
   }
 
   executeQuery() {
-    const url = `${this.apiHost}/${this.buildUrl()}?${objToQueryString(this.buildParams())}`;
+    return this.fetch(this.buildUrl(), this.buildParams(), this.buildOptions());
+  }
+
+  fetch(endpoint, params, queryOptions) {
+    const url = `${this.apiHost}/${endpoint}?${objToQueryString(params)}`;
     return fetch(url, Object.assign({
       headers: {
         Authorization: `Basic ${btoa(this.apiSecret + `:`)}`,
       },
       method: `GET`,
-    }, this.buildOptions()))
+    }, queryOptions))
       .then(response => {
         if (response.status < 400 || response.body) {
           return response.json();
