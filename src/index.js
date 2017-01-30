@@ -3,6 +3,7 @@
 // polyfills, must import first
 import 'babel-polyfill';
 import 'webcomponents.js/webcomponents';
+import '../standalone/highcharts.src';
 
 import Framesg from 'framesg';
 
