@@ -71,7 +71,7 @@ export class PaneContent extends Component {
       transform: ev => renameEvent(ev.name).toLowerCase(),
     });
     const specialEvents = [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS];
-    if (this.state.features.queryOnAllPeople && this.app.originStageClauseIsPeopleProperty()) {
+    if (this.app.originStageClauseIsPeopleProperty()) {
       specialEvents.push(ShowClause.ALL_PEOPLE);
     }
     return specialEvents.concat(topEvents);

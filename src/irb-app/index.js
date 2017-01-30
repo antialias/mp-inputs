@@ -45,7 +45,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         }
       ),
       routes: {
-        'nofeatures':                   this.routeHandlers.noFeatures,
         'report/:reportId':             this.routeHandlers.load,
         'report/:reportId/:reportName': this.routeHandlers.load,
         'reset':                        this.routeHandlers.reset,
@@ -74,14 +73,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           }
           return stateUpdate;
         }
-      },
-
-      noFeatures: (stateUpdate={}) => {
-        const features = extend(this.state.features, {
-          queryBuilderVersion: `old`,
-          queryOnAllPeople: false,
-        });
-        return extend(stateUpdate, {features});
       },
 
       index: (stateUpdate={}) => {
@@ -163,19 +154,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     this.customEvents = (this.parentData && this.parentData.custom_events) || [];
 
     let projectHasEvents = true;
-    let queryBuilderVersion = `old`;
-    let queryOnAllPeople = false;
-    if (this.standalone) {
-      queryBuilderVersion = `new`;
-      queryOnAllPeople = true;
-    }
 
     if (this.parentData) {
       // don't start persisting yet
-      if (this.parentData.whitelists) {
-        queryBuilderVersion = this.parentData.whitelists.includes(`irb-new-query-builder`) ? `new` : queryBuilderVersion;
-        queryOnAllPeople = this.parentData.whitelists.includes(`dev`) ? true : queryOnAllPeople;
-      }
       projectHasEvents = !!this.parentData.has_integrated_arb;
       Object.assign(this.state, {
         savedReports: this.parentData.bookmarks.reduce(
@@ -186,10 +167,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     }
 
     this.state.projectHasEvents = projectHasEvents;
-    this.state.features = {
-      queryBuilderVersion,
-      queryOnAllPeople,
-    };
 
     this.state.recentEvents = this._getRecentList(`events`);
     this.state.recentProperties = this._getRecentList(`properties`);
@@ -385,10 +362,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   stopBuildingQuery() {
-    if (this.state.features.queryBuilderVersion === `new`) {
-      this.resetBuilder();
-      this.stopEditingClause();
-    }
+    this.resetBuilder();
+    this.stopEditingClause();
   }
 
   resetBuilder() {
