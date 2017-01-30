@@ -1,5 +1,3 @@
-import './mp-api-polyfill';
-
 import os from 'os';
 import Mixpanel from 'mixpanel';
 import fetch from 'node-fetch';
@@ -29,7 +27,10 @@ const mixpanel = Mixpanel.init('2fd54f3085a7b7d70da94096fc415078');
 
 function buildIRBQuery(queryParams) {
   debugLog('Building query for params:', queryParams);
-  const irbQuery = new SegmentationQuery([]);
+  const irbQuery = new SegmentationQuery({
+    apiHost: API_BASE,
+    apiSecret: queryParams.apiSecret,
+  }, {customEvents: []});
   const state = {
     report: {
       displayOptions: {chartType: 'line'},
@@ -186,9 +187,6 @@ const rightPad = (s, len) => s + Array(len - s.length).fill(' ').join('');
         jql: [],
         seg: [],
       };
-
-      // inject apiSecret into global context
-      global.MP.apiSecret = query.apiSecret;
 
       // get timings in multiple passes
       for (let pass = 0; pass < PASSES; pass++) {
