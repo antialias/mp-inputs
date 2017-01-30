@@ -51,12 +51,9 @@ irb-bar-chart-header
       display flex
       justify-content center
 
-      .text
+      > .text
         text-align center
         margin-left 36px
-
-      .sort-icon
-        width 36px
 
     .max-value
       color mp-blue
@@ -103,7 +100,8 @@ irb-bar-chart-header
 
     .title
       margin 0
-      padding 20px 0 10px 15px
+      padding 20px
+      padding-bottom 10px
 
     ul.control-list
       padding-bottom 10px
@@ -121,6 +119,7 @@ irb-bar-chart-header
       border-right 0 none
       margin 0
       margin-right 5px
+      width 30px
 
     .sort-by-label::after
       content space-character
