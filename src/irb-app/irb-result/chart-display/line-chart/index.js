@@ -405,7 +405,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     if (this.$el) {
       this.$el.remove();
     }
-    this.$el = $(`<div>`).appendTo(this);
+    this.$el = $(`<div class="mp-highcharts-container">`).appendTo(this);
     this.highchart = new Highcharts.Chart(this.createChartOptions());
   }
 });
