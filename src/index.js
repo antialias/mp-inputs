@@ -37,8 +37,8 @@ const initIRB = () => new Promise(resolve => {
         if (API_LOCAL) {
           IRB.apiHost = window.location.origin;
         }
-        IRB.apiKey = window.parent.mp.report.globals.api_key;
-        IRB.apiSecret = window.parent.mp.report.globals.api_secret;
+        IRB.apiKey = parentData.api_key;
+        IRB.apiSecret = parentData.api_secret;
 
         mixpanel.identify(parentData.user_id);
         mixpanel.register({
