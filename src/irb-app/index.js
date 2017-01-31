@@ -510,14 +510,15 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   updateReport(attrs) {
-    let update = {report: Object.assign(this.state.report, attrs)};
+    this.update({report: Object.assign(this.state.report, attrs)});
 
     if (this.state.learnActive) {
-      update.learnTransitioning = true;
-      setTimeout(() => this.update({learnTransitioning: false}), 800);
+      util.transitionLearn(
+        this.state.learnModalStepIndex, this.state.report,
+        () => this.update({learnTransitioning: true}),
+        () => this.update({learnTransitioning: false})
+      );
     }
-
-    this.update(update);
   }
 
   resetQuery() {

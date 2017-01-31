@@ -5,7 +5,7 @@ include ./tooltip.jade
     - const step = util.getLearnStep(learnModalStepIndex, report);
     - const isModalStep = [`introduction`, `getting-started`, `conclusion`].includes(step.name);
 
-    if isModalStep
+    if isModalStep && !learnTransitioning
       mp-modal(attrs={open: true})
         .mp-modal-content
           .mp-modal-title

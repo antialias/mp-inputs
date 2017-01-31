@@ -22,10 +22,12 @@ const steps = [{
   name: `choose-event`,
   cls: `irb-learn-choose-event`,
   condition: index => index === 1,
+  delay: 800,
 }, {
   name: `compare-event`,
   cls: `irb-learn-compare-event`,
   condition: (index, report) => getShowClauseEvents(report).length === 1,
+  delay: 800,
 }, {
   name: `group-by`,
   cls: `irb-learn-group-by`,
@@ -34,12 +36,14 @@ const steps = [{
   name: `manipulate-data`,
   cls: `irb-learn-manipulate-data`,
   condition: (index, report) => getGroupClauseProperties(report).length === 1,
+  delay: 800,
 }, {
   name: `conclusion`,
   condition: (index, report) => (
     report.displayOptions.chartType !== `bar` ||
     report.displayOptions.value !== `absolute`
   ),
+  delay: 4000,
 }];
 
 export function getLearnStep(index, report) {
@@ -77,4 +81,12 @@ export function learnClasses({
   }
 
   return Object.assign(...classes.map(cls => ({[cls]: true})));
+}
+
+export function transitionLearn(index, report, start, end) {
+  const step = getLearnStep(index, report);
+  if (step.delay) {
+    start();
+    setTimeout(end, step.delay);
+  }
 }
