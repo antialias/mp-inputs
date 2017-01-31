@@ -139,16 +139,16 @@ export default class Legend {
     return this;
   }
 
-  _sortAndLimitSeries(series, defaultValue, showLimit, prevLegendData) {
+  _sortAndLimitSeries(series, defaultValue, showLimit, prevLegendData={}) {
     const sortedKeys = sorted(Object.keys(series), {
       order: `desc`,
       transform: item => series[item],
     });
+
     const defaultStates = sortedKeys.reduce((obj, key, idx) => {
-      if (prevLegendData) {
-        obj[key] = !!prevLegendData[key];
-      } else {
-        obj[key] = idx < showLimit ? defaultValue : false;
+      obj[key] = idx < showLimit ? defaultValue : false;
+      if (prevLegendData[key]) {
+        obj[key] = prevLegendData[key];
       }
       return obj;
     }, {});
