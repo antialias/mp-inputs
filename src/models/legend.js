@@ -147,7 +147,7 @@ export default class Legend {
 
     const defaultStates = sortedKeys.reduce((obj, key, idx) => {
       obj[key] = idx < showLimit ? defaultValue : false;
-      if (prevLegendData[key]) {
+      if (prevLegendData.hasOwnProperty(key)) {
         obj[key] = prevLegendData[key];
       }
       return obj;
