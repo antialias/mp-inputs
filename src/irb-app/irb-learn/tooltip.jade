@@ -1,32 +1,33 @@
 mixin irb-learn-tooltip(...stepNames)
   if learnActive
-    - const step = util.getLearnStep(learnModalStepIndex, report);
-
-    if stepNames.includes(step.name)
-      mp-tutorial-tooltip(attrs={
-        'placement': step.name === `manipulate-data` ? `center` : `right`,
-        'num-steps': 4,
-        'curr-step': step.index - 1,
-      })
-        .mp-tooltip-title
-          case step.name
-            when `choose-event`
-              | Let's start by choosing an event
-            when `compare-event`
-              | Next, let's compare it to another event
-            when `group-by`
-              | Now let's add a group by function
-            when `manipulate-data`
-              | Manipulate your data
-        .mp-tooltip-subtitle
-          case step.name
-            when `choose-event`
-              | The Show Menu lets you specify a dataset to measure, like an event for instance.
-            when `compare-event`
-              | The modifier button gives you different options based on the dataset that you select.
-            when `group-by`
-              | The Group By function in Inquiry lets you look at different segments of your datasets.
-            when `manipulate-data`
-              | Choose a different chart, analysis, and value types to really get a handle on your data.
-        .mp-tooltip-close(on={click: () => $component.app.helpers.finishLearn()})
-          svg-icon(attrs={icon: 'x'})
+    - const step = util.getLearnStep(learnModalStepIndex, report)
+    - const stepName = stepNames.includes(step.name) ? step.name : stepNames[stepNames.length - 1].name
+    - const transitioning = learnTransitioning && stepName !== `group-by`
+    mp-tutorial-tooltip(attrs={
+      hide: transitioning || !stepNames.includes(step.name),
+      'placement': stepName === `manipulate-data` ? `center` : `right`,
+      'num-steps': 4,
+      'curr-step': step.index - 1,
+    })
+      .mp-tooltip-title
+        case stepName
+          when `choose-event`
+            | Let's start by choosing an event
+          when `compare-event`
+            | Next, let's compare it to another event
+          when `group-by`
+            | Now let's add a group by function
+          when `manipulate-data`
+            | Manipulate your data
+      .mp-tooltip-subtitle
+        case stepName
+          when `choose-event`
+            | The Show Menu lets you specify a dataset to measure, like an event for instance.
+          when `compare-event`
+            | The modifier button gives you different options based on the dataset that you select.
+          when `group-by`
+            | The Group By function in Inquiry lets you look at different segments of your datasets.
+          when `manipulate-data`
+            | Choose a different chart, analysis, and value types to really get a handle on your data.
+      .mp-tooltip-close(on={click: () => $component.app.helpers.finishLearn()})
+        svg-icon(attrs={icon: 'x'})
