@@ -47,7 +47,6 @@ document.registerElement(`chart-legend`, class extends Component {
         legendDataToDisplay: () => {
           const legend = this.state.report.legend;
           const isFlattenedData = this.helpers.isFlattenedData();
-          const singleKeyTopLevel = Object.keys(this.state.result.series).length === 1;
           const data = isFlattenedData ? [legend.data[0]] : legend.data;
 
           const sortConfig = this.state.report.sorting.bar;
@@ -65,7 +64,7 @@ document.registerElement(`chart-legend`, class extends Component {
               const value = series.combinedResults[originalValue];
               if (isFlattenedData) {
                 let dataPath = legend.data[0].flattenedDataPaths[originalValue];
-                if (singleKeyTopLevel) {
+                if (Object.keys(this.state.result.series).length === 1) {
                   dataPath = dataPath.slice(1, dataPath.length);
                 }
                 label = dataPath.map((value, idx) => this.helpers.renameSeriesValue(dataPath.length - 1 - idx, value));
