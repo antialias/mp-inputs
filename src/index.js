@@ -17,7 +17,7 @@ import './irb-app';
 
 import './stylesheets/index.styl';
 
-const STANDALONE = window.parent === window;
+const STANDALONE = typeof mp === `undefined`;
 
 const initIRB = () => new Promise(resolve => {
   const IRB = document.createElement(`irb-app`);
@@ -32,39 +32,45 @@ const initIRB = () => new Promise(resolve => {
 
     resolve(IRB);
   } else {
-    const parentFrame = new Framesg(window.parent, `mp-app`, {
-      startApp: parentData => {
 
-        if (API_LOCAL) {
-          IRB.apiHost = window.location.origin;
-        }
-        IRB.apiKey = parentData.api_key;
-        IRB.apiSecret = parentData.api_secret;
+    IRB.apiKey = mp.report.globals.api_key;
+    IRB.apiSecret = mp.report.globals.api_secret;
+    resolve(IRB);
 
-        mixpanel.identify(parentData.user_id);
-        mixpanel.register({
-          'Email':      parentData.user_email,
-          'Project ID': parentData.project_id,
-          'User ID':    parentData.user_id,
-        });
-        mixpanel.track(`Viewed report`);
-        mixpanel.people.set({
-          '$email': parentData.user_email,
-          '$name': parentData.user_name,
-        });
-        rollbar.configure({
-          payload: {
-            person: {
-              id: parentData.user_id,
-              email: parentData.user_email,
-            },
-          },
-        });
+    // const parentFrame = new Framesg(window.parent, `mp-app`, {
+    //   startApp: parentData => {
 
-        IRB.setParentFrame(parentFrame, parentData);
-        resolve(IRB);
-      },
-    });
+    //     if (API_LOCAL) {
+    //       IRB.apiHost = window.location.origin;
+    //     }
+    //     IRB.apiKey = window.parent.mp.report.globals.api_key;
+    //     IRB.apiSecret = window.parent.mp.report.globals.api_secret;
+
+    //     mixpanel.identify(parentData.user_id);
+    //     mixpanel.register({
+    //       'Email':      parentData.user_email,
+    //       'Project ID': parentData.project_id,
+    //       'User ID':    parentData.user_id,
+    //     });
+    //     mixpanel.track(`Viewed report`);
+    //     mixpanel.people.set({
+    //       '$email': parentData.user_email,
+    //       '$name': parentData.user_name,
+    //     });
+    //     rollbar.configure({
+    //       payload: {
+    //         person: {
+    //           id: parentData.user_id,
+    //           email: parentData.user_email,
+    //         },
+    //       },
+    //     });
+
+    //     IRB.setParentFrame(parentFrame, parentData);
+    //     resolve(IRB);
+    //   },
+    // });
+
   }
 });
 
