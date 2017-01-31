@@ -157,7 +157,7 @@ export default class Legend {
 
   updateLegendData(result, defaultValue=true) {
     const segments = result.headers.slice();
-    let sumNestedResults = nestedObjectSum(result.series);
+    let sumNestedResults = result.series;
 
     const prevSeriesHeaders = (this.data || []).map(series => series.seriesName);
 
@@ -168,31 +168,22 @@ export default class Legend {
         prevSeriesLegend = this.data[prevSeriesHeaders.indexOf(seriesName)];
       }
 
+      sumNestedResults = nestedObjectSum(sumNestedResults);
+      dataSegment.combinedResults = combineNestedObjKeys(sumNestedResults);
+      const seriesResults = this._sortAndLimitSeries(dataSegment.combinedResults, defaultValue, 24, prevSeriesLegend.seriesData);
+      dataSegment.seriesData = seriesResults.defaultStates;
+
       if (!idx) {
+        // Flattened Data for Line Chart
         const resultsFlattened = flattenNestedObjectToPath(sumNestedResults);
-        const flatResults = this._sortAndLimitSeries(resultsFlattened.values, defaultValue, 20, prevSeriesLegend.flattenedData); // Line Chart
-        const combinedResults = combineNestedObjKeys(sumNestedResults);
-        const seriesResults = this._sortAndLimitSeries(combinedResults, defaultValue, 24, prevSeriesLegend.seriesData); // Bar Chart
+        const flatResults = this._sortAndLimitSeries(resultsFlattened.values, defaultValue, 20, prevSeriesLegend.flattenedData);
+
         Object.assign(dataSegment, {
-          combinedResults,
           flattenedData: flatResults.defaultStates,
           flattenedDataPaths: resultsFlattened.paths,
           flattenedDataSortedKeys: flatResults.sortedKeys,
-          seriesData: seriesResults.defaultStates,
           seriesDataSortedKeys: seriesResults.sortedKeys,
         });
-      } else {
-        sumNestedResults = nestedObjectSum(sumNestedResults);
-        dataSegment.combinedResults = combineNestedObjKeys(sumNestedResults);
-        dataSegment.seriesData = Object.keys(dataSegment.combinedResults)
-          .reduce((obj, key) => {
-            if (prevSeriesLegend.seriesData) {
-              obj[key] = !!prevSeriesLegend.seriesData[key];
-            } else {
-              obj[key] = defaultValue;
-            }
-            return obj;
-          }, {});
       }
       return dataSegment;
     });
