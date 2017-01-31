@@ -390,10 +390,6 @@ export default class SegmentationQuery extends BaseQuery {
     };
   }
 
-  buildOptions() {
-    return {method: `POST`};
-  }
-
   preprocessNameConflicts() {
     let jqlQueries = this.query.jqlQueries;
     for (let i = 0; i < jqlQueries.length - 1; i++) {

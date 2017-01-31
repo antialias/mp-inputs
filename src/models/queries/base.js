@@ -69,12 +69,13 @@ export default class BaseQuery {
   }
 
   fetch(endpoint, params, queryOptions) {
-    const url = `${this.apiHost}/${endpoint}?${objToQueryString(params)}`;
+    const url = `${this.apiHost}/${endpoint}`;
     return fetch(url, Object.assign({
       headers: {
         Authorization: `Basic ${btoa(this.apiSecret + `:`)}`,
       },
-      method: `GET`,
+      method: `POST`,
+      body: objToQueryString(params),
     }, queryOptions))
       .then(response => {
         if (response.status < 400 || response.body) {
