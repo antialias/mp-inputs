@@ -12,7 +12,7 @@ import {
   stringFilterMatches,
 } from '../../../util';
 
-const PROGRESSIVE_LIST_BUFFER_PX = 50;
+const PROGRESSIVE_LIST_BUFFER_PX = 250;
 const PROGRESSIVE_LIST_START_SIZE = 20;
 
 export class BuilderScreenBase extends Component {
