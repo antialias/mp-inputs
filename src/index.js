@@ -12,7 +12,7 @@ import Framesg from 'framesg';
 import { mixpanel, rollbar } from './tracking';
 import { parseURLQueryParams } from './util';
 
-import 'mixpanel-common/components';
+// import 'mixpanel-common/components';
 import './irb-app';
 
 import './stylesheets/index.styl';
