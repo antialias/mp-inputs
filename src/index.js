@@ -11,7 +11,13 @@ import Framesg from 'framesg';
 import { mixpanel, rollbar } from './tracking';
 import { parseURLQueryParams } from './util';
 
-import 'mixpanel-common/components';
+import 'mixpanel-common/components/button';
+import 'mixpanel-common/components/drop-menu';
+import 'mixpanel-common/components/modal';
+import 'mixpanel-common/components/svg-icon';
+import 'mixpanel-common/components/button-bar';
+import 'mixpanel-common/components/spinner';
+import 'mixpanel-common/components/toggle';
 import './irb-app';
 
 import './stylesheets/index.styl';
