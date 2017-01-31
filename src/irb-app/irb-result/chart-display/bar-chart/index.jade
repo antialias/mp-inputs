@@ -17,7 +17,7 @@ mixin tooltip(className, shouldHaveClass, title, count, percent)
       )= title
       .results
         .absolute
-          .count= mp.utility.commaize(count)
+          .count= util.commaizeNumber(count)
         .percent= util.formatPercent(percent)
 
 mixin chart-bar(options={})
