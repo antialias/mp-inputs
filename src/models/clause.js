@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import { extend } from 'mixpanel-common/util';
+import { extend, pick } from 'mixpanel-common/util';
 import { debug } from 'mixpanel-common/report/util';
 
 const TYPE_FORMAT_NAME = {
@@ -11,10 +11,6 @@ const TYPE_FORMAT_NAME = {
 };
 
 export class Clause {
-  constructor(attrs={}) {
-    this.paneIndex = attrs.paneIndex || 0;
-  }
-
   static create(sectionType, attrs) {
     switch (sectionType) {
       case `show`: return new ShowClause(attrs);
@@ -25,9 +21,7 @@ export class Clause {
   }
 
   get attrs() {
-    return {
-      paneIndex: this.paneIndex,
-    };
+    return {};
   }
 
   extend(attrs) {
@@ -42,8 +36,12 @@ export class Clause {
     return this.attrs;
   }
 
+  toUrlData() {
+    return this.attrs;
+  }
+
   get valid() {
-    return typeof this.paneIndex === `number` && this.paneIndex >= 0;
+    return true;
   }
 
   validate(newClause) {
@@ -86,6 +84,10 @@ export class EventsPropertiesClause extends Clause {
       typeof this.search === `string`
     );
   }
+
+  toUrlData() {
+    return pick(this.attrs, [`value`, `resourceType`]);
+  }
 }
 
 export class ShowClause extends EventsPropertiesClause {
@@ -103,6 +105,20 @@ export class ShowClause extends EventsPropertiesClause {
 
   get valid() {
     return super.valid && this.MATH_TYPES.indexOf(this.math) !== -1;
+  }
+
+  toUrlData() {
+    const conditionalAttrs = {math: this.math};
+    const valueWhitelist = [`name`, `resourceType`];
+    if (this.value && this.value.custom) {
+      valueWhitelist.push(`custom`);
+    }
+    conditionalAttrs[`value`] = pick((this.value || {}), valueWhitelist);
+    if (this.property) {
+      conditionalAttrs[`property`] = this.property;
+    }
+
+    return extend(super.toUrlData(), conditionalAttrs);
   }
 }
 ShowClause.TYPE = ShowClause.prototype.TYPE = `show`;
@@ -158,6 +174,14 @@ export class GroupClause extends EventsPropertiesClause {
       propertyType: this.propertyType,
       typeCast: this.typeCast,
     });
+  }
+
+  toUrlData() {
+    const conditionalAttrs = {propertyType: this.propertyType};
+    if (this.typeCast) {
+      conditionalAttrs[`typeCast`] = this.typeCast;
+    }
+    return extend(super.toUrlData(), conditionalAttrs);
   }
 }
 GroupClause.TYPE = GroupClause.prototype.TYPE = `group`;
@@ -324,6 +348,16 @@ export class FilterClause extends EventsPropertiesClause {
       filterDateUnit,
       editing,
     });
+  }
+
+  toUrlData() {
+    const filterAttrs = pick(this.attrs, [
+      `filterType`,
+      `filterOperator`,
+      `filterValue`,
+      `filterDateUnit`,
+    ]);
+    return extend(super.toUrlData(), filterAttrs);
   }
 
   get valid() {

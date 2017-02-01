@@ -29,6 +29,7 @@
   "dependencies": {
     "babel-polyfill": "6.7.4",
     "framesg": "0.1.2",
+    "jsurl": "0.1.5",
     "lodash": "4.15.0",
     "md5": "2.2.1",
     "mixpanel-common": "0.44.2",

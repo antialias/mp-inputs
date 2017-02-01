@@ -68,6 +68,19 @@ export default class Report {
     return bm;
   }
 
+  // live state URL
+  toUrlData() {
+    const serialized = {
+      displayOptions: this.displayOptions,
+      sections: this.sections.toUrlData(),
+      title: this.title,
+    };
+    if (this.id) {
+      serialized.id = this.id;
+    }
+    return serialized;
+  }
+
   _listOfSectionValues(section) {
     const reportSection = this.sections[section];
     return reportSection && reportSection.clauses.map(clause => clause.TYPE === `show` ? clause.value.name : clause.value);
@@ -98,5 +111,12 @@ export default class Report {
       trackingData[`report id`] = this.id;
     }
     return trackingData;
+  }
+
+  get valid() {
+    return (
+      this.sections instanceof BuilderSections && this.sections.valid &&
+      this.displayOptions && [`chartType`, `plotStyle`, `analysis`, `value`].every(v => this.displayOptions.hasOwnProperty(v))
+    );
   }
 }

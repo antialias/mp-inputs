@@ -41,6 +41,15 @@ export default class BuilderSections {
     return mapValues(this.attrs, section => section.serialize());
   }
 
+  toUrlData() {
+    return Object.keys(this.attrs).reduce((obj, clause) => {
+      if (this.attrs[clause].hasClauses()) {
+        obj[clause] = this.attrs[clause].toUrlData();
+      }
+      return obj;
+    }, {});
+  }
+
   get valid() {
     return (
       this.show instanceof ShowSection && this.show.valid &&

@@ -52,6 +52,10 @@ export class Section {
     return this.clauses.map(c => c.serialize());
   }
 
+  toUrlData() {
+    return this.clauses.map(c => c.toUrlData());
+  }
+
   validate(newSection) {
     const valid = newSection.valid;
 
@@ -60,6 +64,10 @@ export class Section {
     }
 
     return valid ? newSection : this;
+  }
+
+  hasClauses() {
+    return !!this.clauses.length;
   }
 
   appendClause(newClause) {

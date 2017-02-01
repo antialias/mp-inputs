@@ -1,3 +1,4 @@
+import JSURL from 'jsurl';
 import kebabCase from 'lodash/kebabCase';
 // import throttle from 'lodash/throttle';
 import MPApp from 'mixpanel-common/report/mp-app';
@@ -51,6 +52,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         'report/:reportId/:reportName': this.routeHandlers.load,
         'reset':                        this.routeHandlers.reset,
         'learn':                        this.routeHandlers.learn,
+        ':jsurl':                       this.routeHandlers.jsurl,
         '':                             this.routeHandlers.index,
       },
       helpers: {
@@ -68,7 +70,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           return this.navigate(``);
         } else {
           if (!stateUpdate.report) {
-            stateUpdate = extend(stateUpdate, this.loadReport(report));
+            stateUpdate = extend(stateUpdate, this.loadReport(report, {trackLoading: true}));
           }
           return stateUpdate;
         }
@@ -89,6 +91,17 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
       learn: (stateUpdate={}) => {
         return extend(stateUpdate, this.resetQuery(), {learnActive: true});
+      },
+
+      jsurl: (stateUpdate={}, jsurl) => {
+        const parsedURL = jsurl && JSURL.tryParse(jsurl);
+        if (parsedURL) {
+          const report = Report.deserialize(extend(this.defaultReportState, parsedURL));
+          if (report && report.valid) {
+            return extend(stateUpdate, this.loadReport(report));
+          }
+        }
+        this.navigate(``);
       },
     });
   }
@@ -116,25 +129,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   // The following states should be reset.
   get resettableState() {
     return {
-      report: new Report({
-        displayOptions: {
-          chartType: `bar`,
-          plotStyle: `standard`,
-          analysis: `linear`,
-          value: `absolute`,
-        },
-        sections: new BuilderSections({
-          show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
-          time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
-        }),
-        legend: new Legend({
-          data: [],
-          search: null,
-        }),
-        sorting: this.sortConfigFor(null),
-        title: `Untitled report`,
-      }),
-
+      report: this.defaultReportState,
       builderPane: this.defaultBuilderState,
       chartToggle: {
         editingType: null,
@@ -169,6 +164,27 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       topPeopleProperties: [],
       topPropertyValues: [],
     };
+  }
+
+  get defaultReportState() {
+    return new Report({
+      displayOptions: {
+        chartType: `bar`,
+        plotStyle: `standard`,
+        analysis: `linear`,
+        value: `absolute`,
+      },
+      sections: new BuilderSections({
+        show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
+        time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
+      }),
+      legend: new Legend({
+        data: [],
+        search: null,
+      }),
+      sorting: this.sortConfigFor(null),
+      title: `Untitled report`,
+    });
   }
 
   /**
@@ -355,11 +371,13 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       .then(() => this.trackEvent(`Delete Report`, reportTrackingData));
   }
 
-  loadReport(report) {
+  loadReport(report, {trackLoading=false}={}) {
     const stateUpdate = extend(this.resettableState, report ? {report} : {});
     this.update(stateUpdate);
     this.resetTopQueries();
-    this.trackEvent(`Load Report`, report ? report.toTrackingData() : {});
+    if (trackLoading) {
+      this.trackEvent(`Load Report`, report ? report.toTrackingData() : {});
+    }
     return stateUpdate;
   }
 
@@ -463,8 +481,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   originStageClauseIsPeopleProperty() {
     return this.hasStageClause()
-      && this.state.stageClauses[0].value
-      && this.state.stageClauses[0].value.resourceType === `people`;
+      && this.state.stageClauses[0]
+      && this.state.stageClauses[0].resourceType === `people`;
   }
 
   isAddingClause(sectionType) {
@@ -553,10 +571,13 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   updateReport(attrs) {
-    this.update({report: Object.assign(this.state.report, attrs)});
-
+    const report = Object.assign(this.state.report, attrs);
     if (this.state.learnActive) {
+      this.update({report});
       this.transitionLearn();
+    } else {
+      const $fragment = JSURL.stringify(report.toUrlData());
+      this.update({report, $fragment});
     }
   }
 
@@ -722,7 +743,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
     if (newClauses.length) {
       newClauses.filter(clause => clause.valid).forEach(clause => {
-        const newClause = clause.extend({paneIndex: 0});
+        const newClause = clause.extend();
         let newSection = null;
         const isEditingClause = clause === newClauses[0] && typeof this.state.stageClauseIndex === `number`;
         if (newClause.TYPE === ShowClause.TYPE && newClause.resourceType === Clause.RESOURCE_TYPE_PEOPLE) {
@@ -925,11 +946,14 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
             queryEventProperties[`latency ms`] = Math.round(window.performance.now() - queryStartTime);
           }
 
-          this.update({result, newCachedData: false, resultLoading: false});
-          // TODO: Handle searching better by only updating legend data on different queries
-          this.updateReport({
-            sorting: this.sortConfigFor(result, this.state.report.sorting),
-            legend: this.state.report.legend.updateLegendData(result),
+          this.update({
+            result,
+            newCachedData: false,
+            resultLoading: false,
+            report: Object.assign(this.state.report, {
+              sorting: this.sortConfigFor(result, this.state.report.sorting),
+              legend: this.state.report.legend.updateLegendData(result),
+            }),
           });
         })
         .catch(err => {
