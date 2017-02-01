@@ -8,7 +8,7 @@ include ../irb-learn/tooltip.jade
 )
   .result-controls= $component.child('chart-controls')
   .result-display= $component.child('chart-display')
-  mp-toast(
+  irb-toast(
     attrs={
       'message': 'You have new data.',
       'select-text': 'Refresh',

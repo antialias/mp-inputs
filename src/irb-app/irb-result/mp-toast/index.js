@@ -4,7 +4,7 @@ import template from './index.jade';
 
 import './index.styl';
 
-document.registerElement(`mp-toast`, class extends Component {
+document.registerElement(`irb-toast`, class extends Component {
   attributeChangedCallback() {
     if (this.getAttribute(`showToast`) === `true`) {
       this.update({showToast: true});
