@@ -16,7 +16,7 @@ document.registerElement(`builder-filter-edit-control`, class extends EditContro
     let operator = clause.filterOperator;
     let value = Array.isArray(clause.filterValue) ? clause.filterValue : [clause.filterValue];
     // Workaround for <https://mixpanel.atlassian.net/browse/CA-1990>.
-    value = value.map(val => val === 0 ? '0' : val);
+    value = value.map(val => val === 0 ? `0` : val);
 
     if (type === `datetime`) {
       switch (operator) {
