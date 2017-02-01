@@ -175,48 +175,6 @@ describe('nestedObjectCumulative', function() {
   });
 });
 
-describe('nestedObjectRolling', function() {
-  it('supports rolling average on the leaf nodes without enought data for a window', function() {
-    const arr = nestedObjectRolling(timeseriesResultObj, 7);
-    expect(arr).to.eql({
-      US: {
-        '2016-06-01': 8,
-        '2016-06-02': 5,
-        '2016-06-03': 4,
-        '2016-06-04': 5,
-        '2016-06-05': 6.8,
-      },
-      Canada: {
-        '2016-06-01': 6,
-        '2016-06-02': 4.5,
-        '2016-06-03': 4,
-        '2016-06-04': 6,
-        '2016-06-05': 6,
-      },
-    });
-  });
-
-  it('supports rolling average on the leaf nodes with more data than a window', function() {
-    const arr = nestedObjectRolling(timeseriesResultObj, 3);
-    expect(arr).to.eql({
-      US: {
-        '2016-06-01': 8,
-        '2016-06-02': 5,
-        '2016-06-03': 4,
-        '2016-06-04': 4,
-        '2016-06-05': 8,
-      },
-      Canada: {
-        '2016-06-01': 6,
-        '2016-06-02': 4.5,
-        '2016-06-03': 4,
-        '2016-06-04': 6,
-        '2016-06-05': 7,
-      },
-    });
-  });
-});
-
 describe('uniqueObjKeysAtDepth', function() {
   it('produces unique keys for lowest depth', function() {
     const arr = uniqueObjKeysAtDepth(d4Obj, 1);

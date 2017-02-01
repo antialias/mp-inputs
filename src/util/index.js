@@ -230,57 +230,6 @@ export function nestedObjectCumulative(obj) {
   }
 }
 
-/**
- * Do a rolling average of the leaf values of a nested object, in the order of their keys (which are
- * dates)
- * @example
- * nestedObjectRolling({
- *   US: {'2016-06-01': 8, '2016-06-02': 2, '2016-06-03': 2, '2016-06-04': 8, '2016-06-05': 4},
- *   UK: {'2016-05-02': 6, '2016-05-02': 3, '2016-05-03': 3, '2016-05-04': 12, '2016-05-05': 6},
- * }, 7);
- * // {
- * //   US: {'2016-06-01': 8, '2016-06-02': 5, '2016-06-03': 4, '2016-06-04': 5, '2016-06-05': 6.8},
- * //   UK: {'2016-05-02': 6, '2016-05-02': 4.5, '2016-05-03': 4, '2016-05-04': 6, '2016-05-05': 6},
- * // }
- * nestedObjectRolling({
- *   US: {'2016-06-01': 8, '2016-06-02': 2, '2016-06-03': 2, '2016-06-04': 8, '2016-06-05': 4},
- *   UK: {'2016-05-02': 6, '2016-05-02': 3, '2016-05-03': 3, '2016-05-04': 12, '2016-05-05': 6},
- * }, 3);
- * // {
- * //   US: {'2016-06-01': 8, '2016-06-02': 5, '2016-06-03': 4, '2016-06-04': 4, '2016-06-05': 8},
- * //   UK: {'2016-05-02': 6, '2016-05-02': 4.5, '2016-05-03': 4, '2016-05-04': 6, '2016-05-05': 7},
- * // }
- */
-export function nestedObjectRolling(obj, windowSize) {
-  if (Object.values(obj).every(value => typeof value === `number`)) {
-    let found = false;
-    const window = [];
-    let sum = 0;
-    const newObj = {};
-    Object.keys(obj).sort().forEach(key => {
-      var amount = obj[key];
-      if (!found && amount) {
-        found = true;
-      }
-
-      if (found) {
-        if (window.length === windowSize) {
-          sum -= window[0];
-          window.shift();
-        }
-        window.push(amount);
-        sum += amount;
-        amount = sum / window.length;
-      }
-
-      newObj[key] = amount;
-    });
-    return newObj;
-  } else {
-    return mapObjectKeys(obj, value => nestedObjectRolling(value, windowSize));
-  }
-}
-
 function _callbackIntoObject(obj, callback, {minDepth=0, depthFirst=false}={}) {
   const depth = nestedObjectDepth(obj);
   const shouldContinue = depth >= minDepth;
