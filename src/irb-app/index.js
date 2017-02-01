@@ -194,10 +194,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     this.state.recentEvents = this._getRecentList(`events`);
     this.state.recentProperties = this._getRecentList(`properties`);
 
-    if (this.parentFrame) {
-      this.parentFrame.addHandler(`deleteBookmark`, this.deleteReport.bind(this));
-    }
-
     this.queries = {};
     if (this.canMakeQueries()) {
       const apiAttrs = {
