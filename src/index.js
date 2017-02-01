@@ -38,35 +38,28 @@ const initIRB = () => new Promise(resolve => {
       IRB.apiHost = window.location.origin;
     }
     IRB.setMPContext(mpContext);
+
+    mixpanel.identify(mpContext.userID);
+    mixpanel.register({
+      'Email':      mpContext.userEmail,
+      'Project ID': mpContext.projectID,
+      'User ID':    mpContext.userID,
+    });
+    mixpanel.track(`Viewed report`);
+    mixpanel.people.set({
+      '$email': mpContext.userEmail,
+      '$name': mpContext.userName,
+    });
+    rollbar.configure({
+      payload: {
+        person: {
+          id: mpContext.userID,
+          email: mpContext.userEmail,
+        },
+      },
+    });
+
     resolve(IRB);
-
-    // const parentFrame = new Framesg(window.parent, `mp-app`, {
-    //   startApp: parentData => {
-
-    //     mixpanel.identify(parentData.user_id);
-    //     mixpanel.register({
-    //       'Email':      parentData.user_email,
-    //       'Project ID': parentData.project_id,
-    //       'User ID':    parentData.user_id,
-    //     });
-    //     mixpanel.track(`Viewed report`);
-    //     mixpanel.people.set({
-    //       '$email': parentData.user_email,
-    //       '$name': parentData.user_name,
-    //     });
-    //     rollbar.configure({
-    //       payload: {
-    //         person: {
-    //           id: parentData.user_id,
-    //           email: parentData.user_email,
-    //         },
-    //       },
-    //     });
-
-    //     IRB.setParentFrame(parentFrame, parentData);
-    //     resolve(IRB);
-    //   },
-    // });
 
   }
 });
