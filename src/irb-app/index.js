@@ -1,5 +1,5 @@
 import kebabCase from 'lodash/kebabCase';
-import throttle from 'lodash/throttle';
+// import throttle from 'lodash/throttle';
 import MPApp from 'mixpanel-common/report/mp-app';
 import { extend } from 'mixpanel-common/util';
 import * as util from '../util';
@@ -218,31 +218,34 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       this.navigate(`report/${this.state.report.id}`);
     }
 
-    window.requestAnimationFrame(() => {
-      const stickyClassName = `sticky-chart-headers`;
-      window.addEventListener(`scroll`, throttle(() => {
-        const chart = this.querySelector(`.chart`);
-        const isBarChart = this.state.report.displayOptions.chartType === `bar`;
-        if (isBarChart && chart && chart.getBoundingClientRect().top <= 0) {
-          this.parentNode.classList.add(stickyClassName);
-          const legend = this.querySelector(`.legend`);
-          if (legend) {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-            const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-            const distFromBottom = scrollHeight - (scrollTop + window.innerHeight);
-            const appBottomMargin = 20; // padding on .irb-main-panel
-            const spacingForBottom = Math.max(appBottomMargin - distFromBottom, 0);
-            if (spacingForBottom) {
-              legend.style.height = `calc(100vh - ${spacingForBottom}px)`;
-            } else {
-              legend.style.height = ``;
-            }
-          }
-        } else {
-          this.parentNode.classList.remove(stickyClassName);
-        }
-      }, 10));
-    });
+    // TODO revise how sticky headers and sticky legend will work
+    // in a post-iframe universe
+    //
+    // window.requestAnimationFrame(() => {
+    //   const stickyClassName = `sticky-chart-headers`;
+    //   window.addEventListener(`scroll`, throttle(() => {
+    //     const chart = this.querySelector(`.chart`);
+    //     const isBarChart = this.state.report.displayOptions.chartType === `bar`;
+    //     if (isBarChart && chart && chart.getBoundingClientRect().top <= 0) {
+    //       this.parentNode.classList.add(stickyClassName);
+    //       const legend = this.querySelector(`.legend`);
+    //       if (legend) {
+    //         const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    //         const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+    //         const distFromBottom = scrollHeight - (scrollTop + window.innerHeight);
+    //         const appBottomMargin = 20; // padding on .irb-main-panel
+    //         const spacingForBottom = Math.max(appBottomMargin - distFromBottom, 0);
+    //         if (spacingForBottom) {
+    //           legend.style.height = `calc(100vh - ${spacingForBottom}px)`;
+    //         } else {
+    //           legend.style.height = ``;
+    //         }
+    //       }
+    //     } else {
+    //       this.parentNode.classList.remove(stickyClassName);
+    //     }
+    //   }, 10));
+    // });
   }
 
   navigateToSetup() {
