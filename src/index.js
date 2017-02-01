@@ -7,8 +7,7 @@
 // import 'webcomponents.js/webcomponents';
 // import '../standalone/highcharts.src';
 
-import Framesg from 'framesg';
-
+import { STANDALONE, getMPData } from './mp-context';
 import { mixpanel, rollbar } from './tracking';
 import { parseURLQueryParams } from './util';
 
@@ -17,7 +16,6 @@ import './irb-app';
 
 import './stylesheets/index.styl';
 
-const STANDALONE = typeof mp === `undefined`;
 
 const initIRB = () => new Promise(resolve => {
   const IRB = document.createElement(`irb-app`);
@@ -33,16 +31,20 @@ const initIRB = () => new Promise(resolve => {
     resolve(IRB);
   } else {
 
-    IRB.apiKey = mp.report.globals.api_key;
-    IRB.apiSecret = mp.report.globals.api_secret;
+    const mpData = getMPData();
+    IRB.apiKey = mpData.apiKey;
+    IRB.apiSecret = mpData.apiSecret;
+    if (API_LOCAL) {
+      IRB.apiHost = window.location.origin;
+    }
+
+
+
     resolve(IRB);
 
     // const parentFrame = new Framesg(window.parent, `mp-app`, {
     //   startApp: parentData => {
 
-    //     if (API_LOCAL) {
-    //       IRB.apiHost = window.location.origin;
-    //     }
     //     IRB.apiKey = window.parent.mp.report.globals.api_key;
     //     IRB.apiSecret = window.parent.mp.report.globals.api_secret;
 
