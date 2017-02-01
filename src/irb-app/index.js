@@ -38,7 +38,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         {
           // The following states should persist through reset.
           features: {},
-          savedReports: [],
+          savedReports: {},
           recentEvents: [],
           recentProperties: [],
           util,
