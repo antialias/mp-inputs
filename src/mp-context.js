@@ -22,6 +22,7 @@ export default class MPContext {
       this.hasPermissions = mp.report.globals.project_featureflags.includes(`permissions`);
       this.permissions = mp.report.globals.permissions;
       this.projectID = mp.report.globals.project_id;
+      this.setupURL = mp.report.globals.setup_mixpanel_url;
       this.userEmail = mp.report.globals.user_email;
       this.userID = mp.report.globals.user_id;
       this.userName = mp.report.globals.user_name;

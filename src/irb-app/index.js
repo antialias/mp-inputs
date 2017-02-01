@@ -251,7 +251,11 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   navigateToSetup() {
     this.trackEvent(`No Data - Click Install Mixpanel`)
-      .then(() => this.parentFrame && this.parentFrame.send(`navigateToSetup`));
+      .then(() => {
+        if (this.mpContext.setupURL) {
+          window.location.pathname = this.mpContext.setupURL;
+        }
+      });
   }
 
   // Serialization helpers
