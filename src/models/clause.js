@@ -296,7 +296,7 @@ export class FilterClause extends EventsPropertiesClause {
     super(...arguments);
 
     this.filterType = attrs.filterType || FilterClause.FILTER_TYPES[0];
-    this.filterValue = attrs.filterValue || null;
+    this.filterValue = (attrs.filterValue === 0 || attrs.filterValue) ? attrs.filterValue : null;
     this.filterSearch = attrs.filterSearch || null;
     this.filterDateUnit = attrs.filterDateUnit || TimeClause.UNIT_LIST[0];
 
