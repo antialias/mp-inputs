@@ -168,24 +168,29 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     };
   }
 
-  attachedCallback() {
-    this.customEvents = (this.parentData && this.parentData.custom_events) || [];
+  /**
+   * initialize app with data/settings from mixpanel.com if available
+   */
+  setMPContext(mpContext) {
+    this.mpContext = mpContext;
 
-    let projectHasEvents = true;
+    this.standalone = this.mpContext.standalone;
+    this.customEvents = this.mpContext.customEvents || [];
+    this.projectHasEvents = true;
 
-    if (this.parentData) {
-      // don't start persisting yet
-      projectHasEvents = !!this.parentData.has_integrated_arb;
+    if (!this.standalone) {
+      this.projectHasEvents = !!this.mpContext.hasIntegratedArb;
       Object.assign(this.state, {
-        savedReports: this.parentData.bookmarks.reduce(
+        savedReports: this.mpContext.bookmarks.reduce(
           (reports, bm) => extend(reports, {[bm.id]: Report.fromBookmarkData(bm)}),
           {}
         ),
       });
     }
+  }
 
-    this.state.projectHasEvents = projectHasEvents;
-
+  attachedCallback() {
+    this.state.projectHasEvents = this.projectHasEvents;
     this.state.recentEvents = this._getRecentList(`events`);
     this.state.recentProperties = this._getRecentList(`properties`);
 

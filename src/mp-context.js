@@ -6,11 +6,26 @@
 // to interact with MP context/APIs that's efficient when
 // it can be but still works when app runs standalone
 
-export const STANDALONE = typeof mp === `undefined`;
+export default class MPContext {
+  constructor() {
+    this.standalone = typeof mp === `undefined`;
 
-export function getMPData() {
-  return {
-    apiKey: mp.report.globals.api_key,
-    apiSecret: mp.report.globals.api_secret,
-  };
+    if (!this.standalone) {
+      this.accessToken = mp.report.globals.access_token;
+      this.apiKey = mp.report.globals.api_key;
+      this.apiSecret = mp.report.globals.api_secret;
+      this.bookmarks = mp.report.globals.bookmarks;
+      this.customEvents = mp.report.globals.custom_events;
+      this.featureGates = mp.report.globals.feature_gates;
+      this.flags = mp.report.globals.flags;
+      this.hasIntegratedArb = mp.report.globals.has_integrated_arb;
+      this.hasPermissions = mp.report.globals.project_featureflags.includes(`permissions`);
+      this.permissions = mp.report.globals.permissions;
+      this.projectID = mp.report.globals.project_id;
+      this.userEmail = mp.report.globals.user_email;
+      this.userID = mp.report.globals.user_id;
+      this.userName = mp.report.globals.user_name;
+      this.whitelists = mp.report.globals.whitelists;
+    }
+  }
 }

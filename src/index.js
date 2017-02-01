@@ -7,7 +7,7 @@
 // import 'webcomponents.js/webcomponents';
 // import '../standalone/highcharts.src';
 
-import { STANDALONE, getMPData } from './mp-context';
+import MPContext from './mp-context';
 import { mixpanel, rollbar } from './tracking';
 import { parseURLQueryParams } from './util';
 
@@ -21,32 +21,27 @@ const initIRB = () => new Promise(resolve => {
   const IRB = document.createElement(`irb-app`);
   IRB.apiHost = `https://mixpanel.com`;
 
-  if (STANDALONE) {
-    IRB.standalone = true;
+  const mpContext = new MPContext();
+  if (mpContext.standalone) {
 
     const queryParams = parseURLQueryParams();
     IRB.apiKey = queryParams.api_key;
     IRB.apiSecret = queryParams.api_secret;
-
+    IRB.setMPContext(mpContext);
     resolve(IRB);
+
   } else {
 
-    const mpData = getMPData();
-    IRB.apiKey = mpData.apiKey;
-    IRB.apiSecret = mpData.apiSecret;
+    IRB.apiKey = mpContext.apiKey;
+    IRB.apiSecret = mpContext.apiSecret;
     if (API_LOCAL) {
       IRB.apiHost = window.location.origin;
     }
-
-
-
+    IRB.setMPContext(mpContext);
     resolve(IRB);
 
     // const parentFrame = new Framesg(window.parent, `mp-app`, {
     //   startApp: parentData => {
-
-    //     IRB.apiKey = window.parent.mp.report.globals.api_key;
-    //     IRB.apiSecret = window.parent.mp.report.globals.api_secret;
 
     //     mixpanel.identify(parentData.user_id);
     //     mixpanel.register({
