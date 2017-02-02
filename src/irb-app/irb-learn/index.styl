@@ -94,7 +94,7 @@
       opacity 0.5
       pointer-events none
 
-  // Learn emphasis animation
+  // Learn emphasis animations
 
   @keyframes wiggle
     10%, 90%
@@ -109,9 +109,10 @@
     40%, 60%
       transform translate3d(4px, 0, 0)
 
-  .irb-learn-transitioning
-    &.irb-learn-emphasize > :not(mp-tutorial-tooltip), .irb-learn-emphasize
-      animation wiggle 0.82s cubic-bezier(.36,.07,.19,.97) 200ms both
-      transform translate3d(0, 0, 0)
-      backface-visibility hidden
-      perspective 1000px
+  .irb-learn-transitioning .irb-learn-emphasize,
+  .irb-learn-transitioning.irb-learn-emphasize > :not(mp-tutorial-tooltip),
+  mp-tutorial-tooltip.irb-learn-reminding
+    animation wiggle 0.82s cubic-bezier(.36,.07,.19,.97) 200ms both
+    transform translate3d(0, 0, 0)
+    backface-visibility hidden
+    perspective 1000px

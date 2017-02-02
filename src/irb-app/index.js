@@ -93,12 +93,13 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   transitionLearn() {
     if (this.state.learnActive) {
-      util.transitionLearn(
-        this.state.report, this.state.learnModalStepIndex,
-        () => this.update({learnTransitioningOut: true}),
-        () => this.update({learnTransitioningOut: false, learnTransitioningIn: true}),
-        () => this.update({learnTransitioningIn: false})
-      );
+      util.transitionLearn(this.state.report, this.state.learnModalStepIndex, {
+        start: () => this.update({learnTransitioningOut: true}),
+        middle: () => this.update({learnTransitioningOut: false, learnTransitioningIn: true}),
+        end: () => this.update({learnTransitioningIn: false}),
+        startReminder: () => this.update({learnReminding: true}),
+        endReminder: () => this.update({learnReminding: false}),
+      });
     }
   }
 

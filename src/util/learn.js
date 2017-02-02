@@ -1,6 +1,8 @@
 import { ShowClause, GroupClause } from '../models/clause';
 import { extend } from '.';
 
+const LEARN_REMINDER_DELAY_MS = 5000;
+
 function getShowClauseEvents(report) {
   return report.sections[ShowClause.TYPE].clauses
     .map(clause => clause.value.name)
@@ -99,7 +101,13 @@ export function learnClasses({
   return Object.assign(...classes.map(cls => ({[cls]: true})));
 }
 
-export function transitionLearn(report, index, start, middle, end) {
+export function transitionLearn(report, index, {
+  start=() => {},
+  middle=() => {},
+  end=() => {},
+  startReminder=() => {},
+  endReminder=() => {},
+}={}) {
   const step = getLearnStep(report, index);
   const outMs = step.transitionOutMs || 0;
   const inMs = step.transitionInMs || 0;
@@ -107,4 +115,7 @@ export function transitionLearn(report, index, start, middle, end) {
   setTimeout(start, 0);
   setTimeout(middle, outMs);
   setTimeout(end, outMs + inMs);
+
+  setTimeout(startReminder, LEARN_REMINDER_DELAY_MS);
+  setTimeout(endReminder, LEARN_REMINDER_DELAY_MS + 1000);
 }
