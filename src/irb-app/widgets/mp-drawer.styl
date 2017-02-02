@@ -1,0 +1,54 @@
+mp-fast = 250
+
+.mp-drawer
+  height 0
+  overflow hidden
+  position absolute
+  right 0
+  top 0
+  width 0
+  z-index 100
+
+  .mp-drawer-content
+    background-color #fff
+    min-height 100%
+    overflow hidden
+    padding 0
+    position absolute
+    right 0
+    top 0
+
+  .mp-drawer-bg
+    background-color #fff
+    height 100%
+    position fixed
+    right 0
+
+  .mp-drawer-bg, .mp-drawer-content
+    transform translateX(100%)
+    transition transform (mp-fast)ms
+
+  .mp-drawer-overlay
+    opacity 0
+
+  &.mp-drawer-in
+    height 100%
+    overflow initial
+    width 100%
+
+    .mp-drawer-overlay
+      background-color #3c4c63
+      height 100%
+      opacity 0.8
+      position fixed
+      width 100%
+      transition opacity (mp-fast)ms
+
+    .mp-drawer-bg, .mp-drawer-content
+      transform translateX(0%)
+
+  &.mp-drawer-out
+    .mp-drawer-overlay
+      opacity 0
+    .mp-drawer-bg, .mp-drawer-content
+      transform translateX(100%)

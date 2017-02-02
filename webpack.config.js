@@ -34,8 +34,15 @@ var webpackConfig = {
       },
       {
         test: /\.styl$/,
-        exclude: /node_modules|mixpanel-common/,
+        exclude: /node_modules|mixpanel-common|mp-drawer/,
         loader: ExtractTextPlugin.extract('style-loader', 'css-loader!autoprefixer-loader!stylus-loader'),
+      },
+
+      // TODO remove once this is in mixpanel-common
+      {
+        test: /\.styl$/,
+        include: /mp-drawer/,
+        loader: 'css-loader!autoprefixer-loader!stylus-loader',
       },
     ],
   },

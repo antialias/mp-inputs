@@ -1,0 +1,10 @@
+.mp-drawer-stage
+  if !$component.isAttributeEnabled(`hide`)
+    .mp-drawer(class={
+      delayed: {'mp-drawer-in': true},
+      remove: {'mp-drawer-out': true, delayRemove},
+    })
+      .mp-drawer-overlay(on={click: $helpers.close})
+      .mp-drawer-bg
+      .mp-drawer-content
+        content

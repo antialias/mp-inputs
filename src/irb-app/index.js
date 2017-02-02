@@ -23,6 +23,7 @@ import './irb-result';
 import './new-irb-builder';
 import './old-irb-builder';
 import './irb-learn';
+import './widgets/mp-drawer';
 
 import template from './index.jade';
 import './index.styl';
@@ -52,6 +53,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         '':                             this.routeHandlers.index,
       },
       helpers: {
+        closeReportList: () => this.update({reportsDrawerOpen: false}),
         finishLearn: () => this.finishLearn(),
       },
     };
@@ -153,6 +155,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       isEditingNumericProperty: false,
       isEditingTypecast: false,
       newCachedData: false,
+      reportsDrawerOpen: false,
       resourceTypeFilter: `all`,
       result: new Result({
         headers: [],
@@ -309,16 +312,19 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   openReportList() {
-    if (this.parentFrame) {
-      this.parentFrame.send(`chooseBookmark`)
-        .then(bookmarkId => {
-          if (bookmarkId) {
-            this.navigate(this.urlForBookmarkId(bookmarkId));
-            this.trackEvent(`Report list - select report`, {'report id': bookmarkId});
-          }
-        });
-      this.trackEvent(`Report list - open`);
-    }
+    this.update({reportsDrawerOpen: true});
+    this.trackEvent(`Report list - open`);
+
+    // if (this.parentFrame) {
+    //   this.parentFrame.send(`chooseBookmark`)
+    //     .then(bookmarkId => {
+    //       if (bookmarkId) {
+    //         this.navigate(this.urlForBookmarkId(bookmarkId));
+    //         this.trackEvent(`Report list - select report`, {'report id': bookmarkId});
+    //       }
+    //     });
+    //   this.trackEvent(`Report list - open`);
+    // }
   }
 
   deleteReport(reportId) {
