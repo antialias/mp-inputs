@@ -53,8 +53,10 @@ mixin chart-bar(options={})
           .irb-bar-chart-header
             = $component.child('irb-bar-chart-header', {on: {change: $helpers.sortChange}})
     tbody.irb-learn-manipulate-data-disabled
+      - const singleRowData = rows.length == 1
       each row, rowIndex in rows
-        - const addTopLevelKey = rows.length == 1 && row.length == 2 && isStacked
+        - rowIsKeyValuePair = row.length == 2
+        - const addTopLevelKey = singleRowData && rowIsKeyValuePair && isStacked
         - const isMultiColor = row.length > 2 || isStacked
         tr
           each cell, cellIndex in row
