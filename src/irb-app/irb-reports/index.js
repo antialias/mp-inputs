@@ -35,6 +35,10 @@ document.registerElement(`irb-reports`, class extends Component {
           }
           this.updateDrawer({sortField, sortOrder});
         },
+        clickReport: report => {
+          this.helpers.close();
+          this.app.chooseReport(report);
+        },
         close: () => {
           this.updateDrawer({nameFilter: ``});
           this.update({reportsDrawerOpen: false});
@@ -99,13 +103,6 @@ document.registerElement(`irb-reports`, class extends Component {
 //       },
 
 //       helpers: {
-//         clickBookmark: bookmark => {
-//           this.dispatchEvent(new CustomEvent('change', {detail: {
-//             action: 'choose',
-//             bookmarkId: bookmark.id,
-//           }}));
-//           this.close();
-//         },
 //         clickDelete: bookmark => {
 //           this.dispatchEvent(new CustomEvent('change', {detail: {
 //             action: 'delete',

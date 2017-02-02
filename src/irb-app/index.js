@@ -321,26 +321,20 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   // Report management
 
-  urlForBookmarkId(bookmarkId) {
-    let title = this.state.savedReports[bookmarkId] && this.state.savedReports[bookmarkId].title;
+  urlForReportId(reportID) {
+    let title = this.state.savedReports[reportID] && this.state.savedReports[reportID].title;
     title = title ? kebabCase(title) : ``;
-    return `report/${bookmarkId}/${title}`;
+    return `report/${reportID}/${title}`;
   }
 
   openReportList() {
     this.update({reportsDrawerOpen: true});
     this.trackEvent(`Report list - open`);
+  }
 
-    // if (this.parentFrame) {
-    //   this.parentFrame.send(`chooseBookmark`)
-    //     .then(bookmarkId => {
-    //       if (bookmarkId) {
-    //         this.navigate(this.urlForBookmarkId(bookmarkId));
-    //         this.trackEvent(`Report list - select report`, {'report id': bookmarkId});
-    //       }
-    //     });
-    //   this.trackEvent(`Report list - open`);
-    // }
+  chooseReport(report) {
+    this.navigate(this.urlForReportId(report.id));
+    this.trackEvent(`Report list - select report`, {'report id': report.id});
   }
 
   deleteReport(reportId) {
@@ -372,7 +366,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         .then(bookmark => {
           const report = Report.fromBookmarkData(bookmark);
           this.update({savedReports: extend(this.state.savedReports, {[report.id]: report})});
-          this.navigate(this.urlForBookmarkId(report.id), {report});
+          this.navigate(this.urlForReportId(report.id), {report});
           this.trackEvent(`Save Report`, extend(reportTrackingData, {
             'new report': !this.state.savedReports.hasOwnProperty(report.id),
             'report title': report.title,
