@@ -34,10 +34,10 @@ document.registerElement(`irb-reports`, class extends Component {
         reportsForDisplay: () => {
           const drawer = this.state.reportsDrawer;
           let reports = Object.values(this.state.savedReports);
-          // if (drawer.userFilter === `yours`) {
-          //   const userId = String(mp.report.globals.user_id);
-          //   reports = reports.filter(bm => String(bm.user_id) === userId);
-          // }
+          if (drawer.userFilter === `yours`) {
+            const userID = String(this.app.userID);
+            reports = reports.filter(bm => String(bm.userID) === userID);
+          }
           if (drawer.nameFilter) {
             const searchStr = drawer.nameFilter.toLowerCase();
             reports = reports.filter(r => r.title.toLowerCase().startsWith(searchStr));
