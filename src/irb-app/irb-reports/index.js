@@ -27,7 +27,10 @@ document.registerElement(`irb-reports`, class extends Component {
       helpers: {
         changeNameFilter: ev => this.updateDrawer({nameFilter: ev.target.value}),
         changeUserFilter: ev => this.updateDrawer({userFilter: ev.detail.selected}),
-        close: () => this.update({reportsDrawerOpen: false}),
+        close: () => {
+          this.updateDrawer({nameFilter: ``});
+          this.update({reportsDrawerOpen: false});
+        },
         modifiedStr: () => `blah`,
         reportsForDisplay: () => {
           const drawer = this.state.reportsDrawer;
