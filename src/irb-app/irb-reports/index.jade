@@ -1,5 +1,5 @@
 mixin header-col(text, field)
-  - const fieldSelected = sortField === field
+  - const fieldSelected = reportsDrawer.sortField === field
   .report-col(
     class={
       [`reportlist-field-${field}`]: true,
@@ -10,7 +10,7 @@ mixin header-col(text, field)
     .reportlist-col-title= text
     .reportlist-sort-arrows(class={
       'reportlist-sort-selected': fieldSelected,
-      [`reportlist-sort-${sortOrder}`]: true,
+      [`reportlist-sort-${reportsDrawer.sortOrder}`]: true,
     })
       .caret.caret-up
         svg-icon(attrs={icon: `caret-up`})
