@@ -7,14 +7,11 @@
   [learnClass]: !!learnClass,
 })
   if learnActive
-    = $component.child('irb-learn')
+    = $component.child(`irb-learn`)
   .irb-main-panel.top-panel
-    = $component.child('irb-header')
+    = $component.child(`irb-header`)
     = $component.child(`new-irb-builder`)
   .irb-main-panel.bottom-panel
-    = $component.child('irb-result')
-  mp-drawer(
-    attrs={hide: !reportsDrawerOpen}
-    on={close: $helpers.closeReportList}
-  )
-    | REPORTS DRAWER
+    = $component.child(`irb-result`)
+
+  = $component.child(`irb-reports`)

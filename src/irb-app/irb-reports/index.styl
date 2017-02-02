@@ -1,0 +1,242 @@
+@import "../../stylesheets/common"
+
+hmargin = 30px
+mp-black = #2c3642
+
+.drawer-close-wrapper
+  cursor pointer
+  display inline-block
+  position absolute
+  right 20px
+  top 20px
+  svg-icon-style(grey-300, blue-300, size: 30px)
+
+.no-reports
+  position relative
+  text-align center
+  width 690px
+  .no-reports-img
+    background-image url('~assets/images/empty-state.svg')
+    background-repeat no-repeat
+    height 151px
+    margin 185px auto 10px auto
+    width 213px
+  h1
+    color grey-900
+    font-size 18px
+    margin-top 13px
+    margin-bottom 5px
+  p
+    color grey-500
+    font-size 16px
+    font-weight 500
+    margin-top 0
+
+.search
+  align-items center
+  border-bottom 1px solid grey-100
+  display flex
+  font-size 16px
+  margin 70px hmargin 0 hmargin
+  padding-bottom 5px
+  position relative
+  .search-icon
+    svg-icon-style(grey-300, size: 23px)
+
+  input, input[type="text"]
+    box-shadow none
+    border 0 none
+    color grey-700
+    font-family 'Helvetica Neue', Helvetica, Arial, sans-serif
+    font-size 16px
+    font-weight normal
+    line-height 38px
+    outline none
+    padding 0
+    padding-left 10px
+    width 548px
+
+    &:focus
+      outline none
+
+
+mp-toggle.user-filter
+  display inline-block
+  margin 34px hmargin
+  width 614px
+
+.reports
+  background-color #f9fafc
+  height 100%
+  width 690px
+
+  .report-row
+    align-items center
+    border-bottom 1px solid grey-150
+    display flex
+    font-size 14px
+    height 50px
+    position relative
+
+    &.header-row
+      background-color #fff
+      color grey-700
+      height auto
+      font-size 11px
+      font-weight bold
+      padding-bottom 5px
+      padding-left 72px
+      text-transform uppercase
+
+      .report-col
+        align-items center
+        cursor pointer
+        display flex
+        &.field-selected
+          color grey-900
+        &:not(.field-selected):hover .sort-arrows::before
+          background-color grey-700
+        &:hover sort-arrows
+          opacity 1
+
+        .col-title
+          line-height 1
+
+        .sort-arrows
+          svg-icon-style(grey-300, size: 17px)
+          align-items center
+          display flex
+          flex-direction column
+          margin-left 4px
+          opacity 0
+          right 0
+          top 0
+          &.sort-selected
+            opacity 1
+
+          .caret:nth-child(2)
+            margin-top -10px
+
+          &.sort-asc .caret-up, &.sort-desc .caret-down
+            svg-icon-style(grey-900, size: 17px)
+
+    &.body-row
+      color grey-700
+      padding-left 36px
+      &:hover
+        background-color #fff
+        .name
+          color grey-900
+        .delete-icon
+          display inline-block
+
+      svg-icon
+        margin-right 14px
+      &.icon-bar
+        svg-icon-style(mp-seafoam)
+      &.icon-line
+        svg-icon-style(blue-300)
+      &.icon-table
+        svg-icon-style(mp-orange)
+
+      .name
+        cursor pointer
+        overflow hidden
+        text-overflow ellipsis
+        white-space nowrap
+
+      .modified
+        font-size 13px
+      .user
+        .user-icon
+          margin-left 12px
+
+          // TODO mixpanel-common
+          border-radius 50%
+          color #fff
+          cursor default
+          display inline-block
+          font-family 'Helvetica Neue', Helvetica, Arial, sans-serif
+          font-size 11px
+          font-weight 600
+          height 26px
+          line-height 26px
+          text-align center
+          width 26px
+          background-color #1e7171
+          &.color-A
+            background-color #33bcbd
+          &.color-B
+            background-color #2da9aa
+          &.color-C
+            background-color #289697
+          &.color-D
+            background-color #238384
+          &.color-E
+            background-color #64ade8
+          &.color-F
+            background-color #5a9bd1
+          &.color-G
+            background-color #508bba
+          &.color-H
+            background-color #4679a2
+          &.color-I
+            background-color #3c688b
+          &.color-J
+            background-color #a28ccb
+          &.color-K
+            background-color #917db6
+          &.color-L
+            background-color #826fa2
+          &.color-M
+            background-color #71618d
+          &.color-N
+            background-color #61547a
+          &.color-O
+            background-color #d97b7f
+          &.color-P
+            background-color #c36e72
+          &.color-Q
+            background-color #ad6366
+          &.color-R
+            background-color #985559
+          &.color-S
+            background-color #e8bc65
+          &.color-T
+            background-color #d0a95b
+          &.color-U
+            background-color #b99651
+          &.color-V
+            background-color #a28347
+          &.color-W
+            background-color #f6893b
+          &.color-X
+            background-color #dd7b35
+          &.color-Y
+            background-color #c46e30
+          &.color-Z
+            // use default
+
+    .report-col
+      &.name
+        width 350px
+      &.user
+        width 114px
+      &.delete
+        display flex
+        height 20px
+        justify-content flex-end
+        width 50px
+
+    .delete-icon
+      // background-image url(../assets/trash_icon_v2.png)
+      background-repeat no-repeat
+      cursor pointer
+      display none
+      height 16px
+      overflow hidden
+      position absolute
+      top 16px
+      width 15px
+      &:hover
+        background-position -15px 0

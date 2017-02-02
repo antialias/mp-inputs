@@ -23,7 +23,7 @@ import './irb-result';
 import './new-irb-builder';
 import './old-irb-builder';
 import './irb-learn';
-import './widgets/mp-drawer';
+import './irb-reports';
 
 import template from './index.jade';
 import './index.styl';
@@ -53,7 +53,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         '':                             this.routeHandlers.index,
       },
       helpers: {
-        closeReportList: () => this.update({reportsDrawerOpen: false}),
         finishLearn: () => this.finishLearn(),
       },
     };

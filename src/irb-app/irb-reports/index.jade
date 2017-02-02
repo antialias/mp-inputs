@@ -1,0 +1,14 @@
+mp-drawer(
+  attrs={hide: !reportsDrawerOpen}
+  on={close: $helpers.close}
+)
+  if !Object.keys(savedReports).length
+    .no-reports
+      .no-reports-img
+      h1 Saved reports
+      p You haven't saved any reports yet.
+  else
+    | REPOROEROOROTTS
+
+  .drawer-close-wrapper
+    svg-icon(attrs={icon: 'x'} on={click: $helpers.close})
