@@ -64,7 +64,7 @@ mp-drawer(
             on={click: () => $helpers.clickReport(report)}
           )= report.title
           .report-col.reportlist-field-user
-            .user-icon(class=`color-${initials[0]}`)
+            .user-icon(class={[`color-${initials[0]}`]: true})
               = initials
               mp-tooltip= report.user
           .report-col.reportlist-field-modified= report.modifiedStr
