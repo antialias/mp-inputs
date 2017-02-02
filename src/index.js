@@ -1,5 +1,3 @@
-/* global API_LOCAL */
-
 // polyfills, must import first
 // TODO load only in standalone mode
 // import 'babel-polyfill';
@@ -19,9 +17,10 @@ import './stylesheets/index.styl';
 
 const initIRB = () => new Promise(resolve => {
   const IRB = document.createElement(`irb-app`);
-  IRB.apiHost = `https://mixpanel.com`;
 
   const mpContext = new MPContext();
+  IRB.apiHost = mpContext.apiHost;
+
   if (mpContext.standalone) {
 
     const queryParams = parseURLQueryParams();
@@ -34,9 +33,6 @@ const initIRB = () => new Promise(resolve => {
 
     IRB.apiKey = mpContext.apiKey;
     IRB.apiSecret = mpContext.apiSecret;
-    if (API_LOCAL) {
-      IRB.apiHost = window.location.origin;
-    }
     IRB.setMPContext(mpContext);
 
     mixpanel.identify(mpContext.userID);

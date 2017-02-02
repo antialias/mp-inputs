@@ -360,24 +360,20 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   saveReport() {
-    if (this.parentFrame) {
-      const reportTrackingData = this.state.report.toTrackingData();
-      return this.parentFrame.send(`saveBookmark`, this.state.report.toBookmarkData())
-        .then(bookmark => {
-          const report = Report.fromBookmarkData(bookmark);
-          this.update({savedReports: extend(this.state.savedReports, {[report.id]: report})});
-          this.navigate(this.urlForReportId(report.id), {report});
-          this.trackEvent(`Save Report`, extend(reportTrackingData, {
-            'new report': !this.state.savedReports.hasOwnProperty(report.id),
-            'report title': report.title,
-          }));
-        })
-        .catch(err => {
-          console.error(`Error saving: ${err}`);
-        });
-    } else {
-      console.warn(`Cannot save report without parent app`);
-    }
+    const reportTrackingData = this.state.report.toTrackingData();
+    return this.mpContext.saveBookmark(this.state.report.toBookmarkData())
+      .then(bookmark => {
+        const report = Report.fromBookmarkData(bookmark);
+        this.update({savedReports: extend(this.state.savedReports, {[report.id]: report})});
+        this.navigate(this.urlForReportId(report.id), {report});
+        this.trackEvent(`Save Report`, extend(reportTrackingData, {
+          'new report': !this.state.savedReports.hasOwnProperty(report.id),
+          'report title': report.title,
+        }));
+      })
+      .catch(err => {
+        console.error(`Error saving: ${err}`);
+      });
   }
 
   // New query builder helpers
