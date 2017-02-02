@@ -1,11 +1,14 @@
 include ../irb-learn/tooltip.jade
 
 - const open = $helpers.isPaneOpen()
+- const learnStep = util.getLearnStep(report)
 
 .builder-container.contextual-menu(
   class=util.learnClasses({
     disabledSteps: [`choose-event`],
     tooltipContainer: true,
+    transitioning: learnTransitioningIn && [`compare-event`, `group-by`].includes(learnStep.name),
+    emphasize: true,
   })
 )
   .irb-new-control.new-query-builder(class={'pane-open': open})

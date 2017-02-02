@@ -1,6 +1,14 @@
 include ../../irb-learn/tooltip.jade
 
-.builder-section.builder-show.irb-learn-tooltip-container
+- const learnStep = util.getLearnStep(report, learnModalStepIndex)
+
+.builder-section.builder-show(
+  class=util.learnClasses({
+    tooltipContainer: true,
+    transitioning: learnTransitioningIn && learnStep.name === `choose-event`,
+    emphasize: true,
+  })
+)
   each clause, clauseIdx in report.sections.show.clauses
     - const attrs = {'clause-index': clauseIdx}
     if clauseIdx

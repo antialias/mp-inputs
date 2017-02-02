@@ -1,9 +1,12 @@
 include ../irb-learn/tooltip.jade
 
+- const learnStep = util.getLearnStep(report)
+
 .irb-result(
   class=util.learnClasses({
     disabledSteps: [`choose-event`, `compare-event`, `group-by`],
     tooltipContainer: true,
+    transitioning: learnTransitioningIn && learnStep.name === 'manipulate-data',
   })
 )
   .result-controls= $component.child('chart-controls')

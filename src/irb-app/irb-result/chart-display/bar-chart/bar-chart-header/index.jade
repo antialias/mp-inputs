@@ -55,12 +55,12 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor)
       class={'active-sort-panel': activeSortPanel == `axis`}
       style={width: axisWidthStyle}
     )
-      .axis-title
+      .axis-title.irb-learn-emphasize
         .text.shrinkable-label(
           on={click: () => $helpers.clickedHeader(`axis`)}
           attrs={title: chartLabel}
         )= chartLabel
         +sort-icon(`axis`)
         +sort-holder(`axisSort`, [`value`], [`asc`, `desc`], `axis`)
-      .max-value
+      .max-value.irb-learn-emphasize
         .text(on={click: $helpers.clickedMaxValue})= $helpers.getMaxValueLabel()

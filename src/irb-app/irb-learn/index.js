@@ -11,11 +11,12 @@ document.registerElement(`irb-learn`, class extends Component {
       helpers: {
         clickedModalButton: step => {
           if (step === `conclusion`) {
-            this.app.helpers.finishLearn();
+            this.app.finishLearn();
           } else {
             this.update({
               learnModalStepIndex: (this.state.learnModalStepIndex || 0) + 1,
             });
+            this.app.transitionLearn();
           }
         },
       },

@@ -2,10 +2,10 @@ include ./tooltip.jade
 
 .irb-learn
   if learnActive
-    - const step = util.getLearnStep(learnModalStepIndex, report);
+    - const step = util.getLearnStep(report, learnModalStepIndex);
     - const isModalStep = [`introduction`, `getting-started`, `conclusion`].includes(step.name);
 
-    if isModalStep && !learnTransitioning
+    if isModalStep && !learnTransitioningOut
       mp-modal(attrs={open: true})
         .mp-modal-content
           .mp-modal-title

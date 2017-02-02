@@ -52,10 +52,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         '':                             this.routeHandlers.index,
       },
       helpers: {
-        finishLearn: () => {
-          this.update({learnActive: false, learnModalStepIndex: null});
-          this.navigate(``);
-        },
+        finishLearn: () => this.finishLearn(),
       },
     };
   }
@@ -92,6 +89,22 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         return extend(stateUpdate, this.resetQuery(), {learnActive: true});
       },
     });
+  }
+
+  transitionLearn() {
+    if (this.state.learnActive) {
+      util.transitionLearn(
+        this.state.report, this.state.learnModalStepIndex,
+        () => this.update({learnTransitioningOut: true}),
+        () => this.update({learnTransitioningOut: false, learnTransitioningIn: true}),
+        () => this.update({learnTransitioningIn: false})
+      );
+    }
+  }
+
+  finishLearn() {
+    this.update({learnActive: false, learnModalStepIndex: null});
+    this.navigate(``);
   }
 
   // The following states should be reset.
@@ -511,14 +524,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   updateReport(attrs) {
     this.update({report: Object.assign(this.state.report, attrs)});
-
-    if (this.state.learnActive) {
-      util.transitionLearn(
-        this.state.learnModalStepIndex, this.state.report,
-        () => this.update({learnTransitioning: true}),
-        () => this.update({learnTransitioning: false})
-      );
-    }
+    this.transitionLearn();
   }
 
   resetQuery() {
