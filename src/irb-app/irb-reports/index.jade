@@ -69,7 +69,7 @@ mp-drawer(
               mp-tooltip= report.user
           .report-col.reportlist-field-modified= report.modifiedStr
           .report-col.delete
-            .delete-icon(on={click: () => $helpers.clickDelete(report)})
+            svg-icon(attrs={icon: `trashcan`} on={click: () => $helpers.clickDelete(report)})
 
   .drawer-close-wrapper
     svg-icon(attrs={icon: 'x'} on={click: $helpers.close})

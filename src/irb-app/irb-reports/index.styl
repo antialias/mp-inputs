@@ -127,8 +127,8 @@ mp-toggle.user-filter
         background-color #fff
         .reportlist-field-name
           color grey-900
-        .delete-icon
-          display inline-block
+        .delete
+          display flex
 
       svg-icon
         margin-right 14px
@@ -223,21 +223,13 @@ mp-toggle.user-filter
         width 350px
       &.reportlist-field-user
         width 114px
+      &.reportlist-field-modified
+        width 110px
       &.delete
-        display flex
+        display none
         height 20px
         justify-content flex-end
-        width 50px
-
-    .delete-icon
-      // background-image url(../assets/trash_icon_v2.png)
-      background-repeat no-repeat
-      cursor pointer
-      display none
-      height 16px
-      overflow hidden
-      position absolute
-      top 16px
-      width 15px
-      &:hover
-        background-position -15px 0
+        svg-icon-style(grey-300, mp-red)
+        svg-icon
+          cursor pointer
+          margin 0
