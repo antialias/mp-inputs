@@ -10,14 +10,20 @@
       on={click: $helpers.refresh}
     )
       svg-icon(attrs={icon: `refresh`})
+      mp-tooltip
+        .tooltip-text="Refresh"
     button.download(
       attrs={title: `Download CSV`}
       class={enabled: !resultLoading}
       on={click: $helpers.clickExportCSV}
     )
       svg-icon(attrs={icon: `export`})
+      mp-tooltip
+        .tooltip-text="Download CSV"
     button.report-list-button(
       attrs={title: `Saved reports`}
       on={click: $helpers.clickReportList}
     )
       svg-icon(attrs={icon: `saved-reports`})
+      mp-tooltip
+        .tooltip-text="Save Report"
