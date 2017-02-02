@@ -1,6 +1,7 @@
 import kebabCase from 'lodash/kebabCase';
 // import throttle from 'lodash/throttle';
 import MPApp from 'mixpanel-common/report/mp-app';
+import Persistence from 'mixpanel-common/report/persistence';
 import { extend } from 'mixpanel-common/util';
 import * as util from '../util';
 
@@ -262,6 +263,21 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   // Serialization helpers
+
+  // TODO update mixpanel-common to allow configurable persistence namespace
+  get persistence() {
+    if (!this._persistence) {
+      let namespaceVars = [this.persistenceKey];
+      if (this.mpContext.projectID) {
+        namespaceVars = namespaceVars.concat([
+          this.mpContext.projectID,
+          this.mpContext.userID,
+        ]);
+      }
+      this._persistence = new Persistence(namespaceVars.join(`:`));
+    }
+    return this._persistence;
+  }
 
   get persistenceKey() {
     return `irb-de8ae95`;
