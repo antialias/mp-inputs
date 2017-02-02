@@ -21,8 +21,16 @@ document.registerElement(`mp-drawer`, class extends Component {
   }
 
   attachedCallback() {
-    document.body.style.position = `relative`;
-    document.body.appendChild(this);
+    if (this.initialized) {
+      return;
+    }
+
+    if (!this.elementMoved) {
+      this.elementMoved = true;
+      document.body.style.position = `relative`;
+      document.body.appendChild(this);
+    }
+
     super.attachedCallback(...arguments);
   }
 });

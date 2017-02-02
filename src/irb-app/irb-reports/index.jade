@@ -1,3 +1,22 @@
+mixin header-col(text, field)
+  - const fieldSelected = sortField === field
+  .report-col(
+    class={
+      [`reportlist-field-${field}`]: true,
+      'reportlist-field-selected': fieldSelected,
+    }
+    on={click: () => $helpers.clickHeader(field)}
+  )
+    .reportlist-col-title= text
+    .reportlist-sort-arrows(class={
+      'reportlist-sort-selected': fieldSelected,
+      [`reportlist-sort-${sortOrder}`]: true,
+    })
+      .caret.caret-up
+        svg-icon(attrs={icon: `caret-up`})
+      .caret.caret-down
+        svg-icon(attrs={icon: `caret-down`})
+
 mp-drawer(
   attrs={hide: !reportsDrawerOpen}
   on={close: $helpers.close}
@@ -8,7 +27,49 @@ mp-drawer(
       h1 Saved reports
       p You haven't saved any reports yet.
   else
-    | REPOROEROOROTTS
+    .reportlist-search
+      .reportlist-search-icon
+        svg-icon(attrs={icon: `search`})
+      input(
+        props={
+          type: `text`,
+          placeholder: `Search reports`,
+          value: reportsDrawer.nameFilter,
+        }
+        on={
+          blur: $helpers.changeNameFilter,
+          change: $helpers.changeNameFilter,
+          focusout: $helpers.changeNameFilter,
+          input: $helpers.changeNameFilter,
+          keypress: $helpers.changeNameFilter,
+        }
+      )
+    mp-toggle.user-filter(
+      on={select: $helpers.changeUserFilter}
+      attrs={selected: reportsDrawer.userFilter}
+    )
+      mp-toggle-option(attrs={value: `all`}) All
+      mp-toggle-option(attrs={value: `yours`}) Your reports
+    .reports
+      .report-row.header-row
+        +header-col(`Report`, `name`)
+        +header-col(`Creator`, `user`)
+        +header-col(`Last modified`, `modified`)
+      each report in $helpers.reportsForDisplay()
+        - const initials = report.user.split(' ').map(s => s[0]).join('').toUpperCase()
+        - const icon = report.displayOptions.chartType
+        .report-row.body-row(class={[`icon-${icon}`]: !!icon})
+          svg-icon(attrs={icon: icon, empty: !icon})
+          .report-col.reportlist-field-name(
+            on={click: () => $helpers.clickReport(report)}
+          )= report.title
+          .report-col.reportlist-field-user
+            .user-icon(class=`color-${initials[0]}`)
+              = initials
+              mp-tooltip= report.user
+          .report-col.reportlist-field-modified= $helpers.modifiedStr(report)
+          .report-col.delete
+            .delete-icon(on={click: () => $helpers.clickDelete(report)})
 
   .drawer-close-wrapper
     svg-icon(attrs={icon: 'x'} on={click: $helpers.close})

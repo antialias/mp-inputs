@@ -1,4 +1,7 @@
+import moment from 'moment';
 import { Component } from 'panel';
+
+import { extend } from '../../util';
 
 import '../widgets/mp-drawer';
 
@@ -22,12 +25,41 @@ document.registerElement(`irb-reports`, class extends Component {
       },
 
       helpers: {
+        changeNameFilter: ev => this.updateDrawer({nameFilter: ev.target.value}),
+        changeUserFilter: ev => this.updateDrawer({userFilter: ev.detail.selected}),
         close: () => this.update({reportsDrawerOpen: false}),
+        modifiedStr: () => `blah`,
         reportsForDisplay: () => {
-          return Object.keys(this.state.savedReports);
+          const drawer = this.state.reportsDrawer;
+          let reports = Object.values(this.state.savedReports);
+          // if (drawer.userFilter === `yours`) {
+          //   const userId = String(mp.report.globals.user_id);
+          //   reports = reports.filter(bm => String(bm.user_id) === userId);
+          // }
+          if (drawer.nameFilter) {
+            const searchStr = drawer.nameFilter.toLowerCase();
+            reports = reports.filter(r => r.title.toLowerCase().startsWith(searchStr));
+          }
+          return reports.sort((a, b) => {
+            a = a[drawer.sortField];
+            b = b[drawer.sortField];
+            if (drawer.sortField === `modified`) {
+              a = moment.utc(a);
+              b = moment.utc(b);
+            } else if (typeof a === `string`) {
+              a = a.toLowerCase();
+              b = b.toLowerCase();
+            }
+            let cmp = a > b ? 1 : a < b ? -1 : 0;
+            return drawer.sortOrder === `desc` ? -cmp : cmp;
+          });
         },
       },
     };
+  }
+
+  updateDrawer(attrs) {
+    this.update({reportsDrawer: extend(this.state.reportsDrawer, attrs)});
   }
 });
 
@@ -57,32 +89,6 @@ document.registerElement(`irb-reports`, class extends Component {
 //       },
 
 //       helpers: {
-//         bookmarksForDisplay: () => {
-//           let bookmarks = this.state.bookmarks;
-//           if (this.state.userFilter === 'yours') {
-//             const userId = String(mp.report.globals.user_id);
-//             bookmarks = bookmarks.filter(bm => String(bm.user_id) === userId);
-//           }
-//           if (this.state.nameFilter) {
-//             const searchStr = this.state.nameFilter.toLowerCase();
-//             bookmarks = bookmarks.filter(bm => bm.name.toLowerCase().startsWith(searchStr));
-//           }
-//           return bookmarks.sort((a, b) => {
-//             a = a[this.state.sortField];
-//             b = b[this.state.sortField];
-//             if (this.state.sortField === 'modified') {
-//               a = moment.utc(a);
-//               b = moment.utc(b);
-//             } else if (typeof a === 'string') {
-//               a = a.toLowerCase();
-//               b = b.toLowerCase();
-//             }
-//             let cmp = a > b ? 1 : a < b ? -1 : 0;
-//             return this.state.sortOrder === 'desc' ? -cmp : cmp;
-//           });
-//         },
-//         changeNameFilter: ev => this.update({nameFilter: ev.target.value}),
-//         changeUserFilter: ev => this.update({userFilter: ev.detail.selected}),
 //         clickBookmark: bookmark => {
 //           this.dispatchEvent(new CustomEvent('change', {detail: {
 //             action: 'choose',
@@ -104,7 +110,6 @@ document.registerElement(`irb-reports`, class extends Component {
 //           }
 //           this.update({sortField, sortOrder});
 //         },
-//         close: () => this.close(),
 //         drawerChange: ev => {
 //           if (ev.detail) {
 //             this.setAttribute('open', ev.detail.open);
@@ -121,8 +126,3 @@ document.registerElement(`irb-reports`, class extends Component {
 //     this.drawer.close();
 //     this.update({nameFilter: ''});
 //   }
-
-//   get drawer() {
-//     return this.el.querySelector('mp-drawer');
-//   }
-// });

@@ -32,7 +32,7 @@ mp-black = #2c3642
     font-weight 500
     margin-top 0
 
-.search
+.reportlist-search
   align-items center
   border-bottom 1px solid grey-100
   display flex
@@ -40,7 +40,7 @@ mp-black = #2c3642
   margin 70px hmargin 0 hmargin
   padding-bottom 5px
   position relative
-  .search-icon
+  .reportlist-search-icon
     svg-icon-style(grey-300, size: 23px)
 
   input, input[type="text"]
@@ -92,17 +92,17 @@ mp-toggle.user-filter
         align-items center
         cursor pointer
         display flex
-        &.field-selected
+        &.reportlist-field-selected
           color grey-900
-        &:not(.field-selected):hover .sort-arrows::before
+        &:not(.reportlist-field-selected):hover .reportlist-sort-arrows::before
           background-color grey-700
-        &:hover sort-arrows
+        &:hover reportlist-sort-arrows
           opacity 1
 
-        .col-title
+        .reportlist-col-title
           line-height 1
 
-        .sort-arrows
+        .reportlist-sort-arrows
           svg-icon-style(grey-300, size: 17px)
           align-items center
           display flex
@@ -111,13 +111,13 @@ mp-toggle.user-filter
           opacity 0
           right 0
           top 0
-          &.sort-selected
+          &.reportlist-sort-selected
             opacity 1
 
           .caret:nth-child(2)
             margin-top -10px
 
-          &.sort-asc .caret-up, &.sort-desc .caret-down
+          &.reportlist-sort-asc .caret-up, &.reportlist-sort-desc .caret-down
             svg-icon-style(grey-900, size: 17px)
 
     &.body-row
@@ -125,7 +125,7 @@ mp-toggle.user-filter
       padding-left 36px
       &:hover
         background-color #fff
-        .name
+        .reportlist-field-name
           color grey-900
         .delete-icon
           display inline-block
@@ -139,15 +139,16 @@ mp-toggle.user-filter
       &.icon-table
         svg-icon-style(mp-orange)
 
-      .name
+      .reportlist-field-name
         cursor pointer
         overflow hidden
         text-overflow ellipsis
         white-space nowrap
 
-      .modified
+      .reportlist-field-modified
         font-size 13px
-      .user
+
+      .reportlist-field-user
         .user-icon
           margin-left 12px
 
@@ -218,9 +219,9 @@ mp-toggle.user-filter
             // use default
 
     .report-col
-      &.name
+      &.reportlist-field-name
         width 350px
-      &.user
+      &.reportlist-field-user
         width 114px
       &.delete
         display flex
