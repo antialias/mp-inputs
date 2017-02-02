@@ -67,7 +67,7 @@ mp-drawer(
             .user-icon(class=`color-${initials[0]}`)
               = initials
               mp-tooltip= report.user
-          .report-col.reportlist-field-modified= $helpers.modifiedStr(report)
+          .report-col.reportlist-field-modified= report.modifiedStr
           .report-col.delete
             .delete-icon(on={click: () => $helpers.clickDelete(report)})
 

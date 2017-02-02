@@ -4,14 +4,20 @@ import BuilderSections from './builder-sections';
 import Legend from './legend';
 import { extend, pick } from '../util';
 
+const BOOKMARK_ATTRS = [
+  `id`,
+  `modified`,
+  `user`,
+  `user_id`,
+];
+
 // saveable / loadable report metadata
 export default class Report {
   constructor(attrs) {
     Object.assign(this, pick(attrs, [
       // metadata
-      `id`,
+      ...BOOKMARK_ATTRS,
       `title`,
-      `user`,
 
       // visualization params
       `displayOptions`,
@@ -19,6 +25,7 @@ export default class Report {
       `legend`,
       `sorting`,
     ]));
+    this.userID = this.user_id;
 
     if (attrs.modified) {
       this.modified = moment.utc(attrs.modified).local();
@@ -50,7 +57,7 @@ export default class Report {
 
   // MP bookmarks
   static fromBookmarkData(bookmark) {
-    return Report.deserialize(extend(pick(bookmark, [`id`, `user`]), JSON.parse(bookmark.params)));
+    return Report.deserialize(extend(pick(bookmark, BOOKMARK_ATTRS), JSON.parse(bookmark.params)));
   }
 
   toBookmarkData() {

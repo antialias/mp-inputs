@@ -31,7 +31,6 @@ document.registerElement(`irb-reports`, class extends Component {
           this.updateDrawer({nameFilter: ``});
           this.update({reportsDrawerOpen: false});
         },
-        modifiedStr: () => `blah`,
         reportsForDisplay: () => {
           const drawer = this.state.reportsDrawer;
           let reports = Object.values(this.state.savedReports);
