@@ -27,6 +27,14 @@ document.registerElement(`irb-reports`, class extends Component {
       helpers: {
         changeNameFilter: ev => this.updateDrawer({nameFilter: ev.target.value}),
         changeUserFilter: ev => this.updateDrawer({userFilter: ev.detail.selected}),
+        clickHeader: field => {
+          const sortField = field;
+          let sortOrder = this.state.reportsDrawer.sortOrder;
+          if (field === this.state.reportsDrawer.sortField) {
+            sortOrder = sortOrder === `asc` ? `desc` : `asc`;
+          }
+          this.updateDrawer({sortField, sortOrder});
+        },
         close: () => {
           this.updateDrawer({nameFilter: ``});
           this.update({reportsDrawerOpen: false});
@@ -103,14 +111,6 @@ document.registerElement(`irb-reports`, class extends Component {
 //             action: 'delete',
 //             bookmarkId: bookmark.id,
 //           }}));
-//         },
-//         clickHeader: field => {
-//           const sortField = field;
-//           let sortOrder = this.state.sortOrder;
-//           if (field === this.state.sortField) {
-//             sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
-//           }
-//           this.update({sortField, sortOrder});
 //         },
 //         drawerChange: ev => {
 //           if (ev.detail) {
