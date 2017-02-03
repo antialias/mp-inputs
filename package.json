@@ -31,7 +31,7 @@
     "framesg": "0.1.2",
     "lodash": "4.15.0",
     "md5": "2.2.1",
-    "mixpanel-common": "0.43.4",
+    "mixpanel-common": "0.44.2",
     "moment": "2.13.0",
     "panel": "0.10.0-rc6",
     "pikaday": "1.5.1",
