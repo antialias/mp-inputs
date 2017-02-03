@@ -5,6 +5,14 @@
   display flex
   svg-icon-style(mp-blue, blue-100)
 
+  > svg-icon
+      height: 18px;
+      min-height: 18px;
+      min-width: 18px;
+      margin 1px -2px 0 0px
+      transform scale(.95)
+      width: 18px;
+
   &:after
     content space-character + "|" + space-character
     color grey-300
@@ -12,5 +20,5 @@
 
   typecast-pane
     bottom -5px
-    left -15px
+    left -17px
     position absolute
