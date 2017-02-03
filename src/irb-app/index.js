@@ -97,13 +97,18 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         start: () => this.update({learnTransitioningOut: true}),
         middle: () => this.update({learnTransitioningOut: false, learnTransitioningIn: true}),
         end: () => this.update({learnTransitioningIn: false}),
-        startReminder: () => this.update({learnReminding: true}),
+        startReminder: () => {
+          if (!this.hasStageClause()) {
+            this.update({learnReminding: true});
+          }
+        },
         endReminder: () => this.update({learnReminding: false}),
       });
     }
   }
 
   finishLearn() {
+    util.finishLearn();
     this.update({learnActive: false, learnModalStepIndex: null});
     this.navigate(``);
   }

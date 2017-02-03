@@ -2,11 +2,13 @@ mixin irb-learn-tooltip(...stepNames)
   if learnActive
     - const step = util.getLearnStep(report, learnModalStepIndex)
     - const stepName = stepNames.includes(step.name) ? step.name : stepNames[stepNames.length - 1].name
+    - const isManipulateDataStep = stepName === `manipulate-data`;
+
     mp-tutorial-tooltip(
-      class={'irb-learn-reminding': learnReminding}
+      class={'irb-learn-reminding': learnReminding && !isManipulateDataStep}
       attrs={
         hide: learnTransitioningOut || !stepNames.includes(step.name),
-        'placement': stepName === `manipulate-data` ? `center` : `right`,
+        'placement': isManipulateDataStep ? `center` : `right`,
         'num-steps': 4,
         'curr-step': step.index - 1,
       }

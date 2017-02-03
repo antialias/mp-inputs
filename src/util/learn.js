@@ -1,8 +1,6 @@
 import { ShowClause, GroupClause } from '../models/clause';
 import { extend } from '.';
 
-const LEARN_REMINDER_DELAY_MS = 5000;
-
 function getShowClauseEvents(report) {
   return report.sections[ShowClause.TYPE].clauses
     .map(clause => clause.value.name)
@@ -47,7 +45,9 @@ const steps = [{
   name: `conclusion`,
   condition: (index, report) => (
     report.displayOptions.chartType !== `bar` ||
-    report.displayOptions.value !== `absolute`
+    report.displayOptions.plotStyle !== `standard` ||
+    report.displayOptions.value !== `absolute` ||
+    report.displayOptions.analysis !== `linear`
   ),
   transitionOutMs: 4000,
   transitionInMs: 800,
@@ -66,6 +66,7 @@ export function learnClasses({
   disabledExceptChildren=[],
   tooltipContainer=false,
   transitioning=false,
+  reminding=false,
   emphasize=false,
 }={}) {
   const childClasses = disabledExceptChildren.map(child => ({
@@ -94,12 +95,20 @@ export function learnClasses({
     classes.push(`irb-learn-transitioning`);
   }
 
+  if (reminding) {
+    classes.push(`irb-learn-reminding`);
+  }
+
   if (emphasize) {
     classes.push(`irb-learn-emphasize`);
   }
 
   return Object.assign(...classes.map(cls => ({[cls]: true})));
 }
+
+const LEARN_REMINDER_INTERVAL_MS = 5000;
+let remindStartInterval = null;
+let remindEndInterval = null;
 
 export function transitionLearn(report, index, {
   start=() => {},
@@ -116,6 +125,16 @@ export function transitionLearn(report, index, {
   setTimeout(middle, outMs);
   setTimeout(end, outMs + inMs);
 
-  setTimeout(startReminder, LEARN_REMINDER_DELAY_MS);
-  setTimeout(endReminder, LEARN_REMINDER_DELAY_MS + 1000);
+  clearInterval(remindStartInterval);
+  clearInterval(remindEndInterval);
+
+  remindStartInterval = setInterval(startReminder, LEARN_REMINDER_INTERVAL_MS);
+  setTimeout(() => {
+    remindEndInterval = setInterval(endReminder, LEARN_REMINDER_INTERVAL_MS);
+  }, LEARN_REMINDER_INTERVAL_MS / 2);
+}
+
+export function finishLearn() {
+  clearInterval(remindStartInterval);
+  clearInterval(remindEndInterval);
 }
