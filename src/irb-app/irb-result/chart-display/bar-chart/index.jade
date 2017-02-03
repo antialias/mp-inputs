@@ -52,7 +52,7 @@ mixin chart-bar(options={})
         th(props={colSpan: 0})
           .irb-bar-chart-header
             = $component.child('irb-bar-chart-header', {on: {change: $helpers.sortChange}})
-    tbody.irb-learn-manipulate-data-disabled
+    tbody
       - const singleRowData = rows.length == 1
       each row, rowIndex in rows
         - rowIsKeyValuePair = row.length == 2

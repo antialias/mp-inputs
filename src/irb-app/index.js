@@ -97,7 +97,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       middle: () => this.update({learnTransitioningOut: false, learnTransitioningIn: true}),
       end: () => this.update({learnTransitioningIn: false}),
       startReminder: () => {
-        if (!this.hasStageClause()) {
+        if (!this.hasStageClause() && !this.state.builderPane.isContextualMenuOpen) {
           this.update({learnReminding: true});
         }
       },
