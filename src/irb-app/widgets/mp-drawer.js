@@ -31,6 +31,8 @@ document.registerElement(`mp-drawer`, class extends Component {
       document.body.appendChild(this);
     }
 
-    super.attachedCallback(...arguments);
+    if (!this.initialized) {
+      super.attachedCallback(...arguments);
+    }
   }
 });

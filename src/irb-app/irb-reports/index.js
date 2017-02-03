@@ -9,6 +9,39 @@ import template from './index.jade';
 
 import './index.styl';
 
+// TODO these are some updates which need to make their way into
+// mixpanel-common and panel soon
+// -------------------------------------------------------------------------------
+const MPToggle = window[`mp-common-registered-components`][`mp-toggle`];
+document.registerElement(`irb-mp-toggle`, class extends MPToggle {
+  attachedCallback() {
+    if (this.initialized) {
+      return;
+    }
+    super.attachedCallback(...arguments);
+  }
+});
+const MPConfDel = window[`mp-common-registered-components`][`mp-confirm-delete`];
+document.registerElement(`irb-mp-confirm-delete`, class extends MPConfDel {
+  attachedCallback() {
+    if (this.initialized) {
+      return;
+    }
+
+    if (!this.elementMoved) {
+      this.elementMoved = true;
+      document.body.style.position = `relative`;
+      document.body.appendChild(this);
+    }
+
+    if (!this.initialized) {
+      super.attachedCallback(...arguments);
+    }
+  }
+});
+// -------------------------------------------------------------------------------
+
+
 document.registerElement(`irb-reports`, class extends Component {
   get config() {
     return {
@@ -27,6 +60,7 @@ document.registerElement(`irb-reports`, class extends Component {
       helpers: {
         changeNameFilter: ev => this.updateDrawer({nameFilter: ev.target.value}),
         changeUserFilter: ev => this.updateDrawer({userFilter: ev.detail.selected}),
+        clickDelete: report => this.updateDrawer({confirmDelete: report}),
         clickHeader: field => {
           const sortField = field;
           let sortOrder = this.state.reportsDrawer.sortOrder;
@@ -42,6 +76,15 @@ document.registerElement(`irb-reports`, class extends Component {
         close: () => {
           this.updateDrawer({nameFilter: ``});
           this.update({reportsDrawerOpen: false});
+        },
+        deleteReport: report => {
+          this.app.deleteReport(report);
+          this.updateDrawer({confirmDelete: null});
+        },
+        handleConfirmChange: visibility => {
+          if (visibility !== `open`) {
+            this.updateDrawer({confirmDelete: null});
+          }
         },
         reportsForDisplay: () => {
           const drawer = this.state.reportsDrawer;

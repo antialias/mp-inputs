@@ -37,8 +37,15 @@ export default class MPContext {
       this.accessToken = mp.report.globals.access_token;
       this.apiKey = mp.report.globals.api_key;
       this.apiSecret = mp.report.globals.api_secret;
-      this.bmURL = `report/${this.projectID}/bookmarks/${this.appName}`;
+      this.bmURL = `${this.apiHost}/report/${this.projectID}/bookmarks/${this.appName}`;
     }
+  }
+
+  deleteBookmark(id) {
+    return fetch(`${this.bmURL}/delete/${id}`, {
+      credentials: `same-origin`,
+      method: `DELETE`,
+    });
   }
 
   saveBookmark(data) {
@@ -47,7 +54,7 @@ export default class MPContext {
     }
 
     const endpoint = `id` in data ? `update/${data.id}` : `create/`;
-    return fetch(`${this.apiHost}/${this.bmURL}/${endpoint}`, {
+    return fetch(`${this.bmURL}/${endpoint}`, {
       body: objToQueryString({
         name: data.name,
         params: JSON.stringify(data),

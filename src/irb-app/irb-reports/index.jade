@@ -17,59 +17,75 @@ mixin header-col(text, field)
       .caret.caret-down
         svg-icon(attrs={icon: `caret-down`})
 
-mp-drawer(
-  attrs={hide: !reportsDrawerOpen}
-  on={close: $helpers.close}
-)
-  if !Object.keys(savedReports).length
-    .no-reports
-      .no-reports-img
-      h1 Saved reports
-      p You haven't saved any reports yet.
-  else
-    .reportlist-search
-      .reportlist-search-icon
-        svg-icon(attrs={icon: `search`})
-      input(
-        props={
-          type: `text`,
-          placeholder: `Search reports`,
-          value: reportsDrawer.nameFilter,
-        }
-        on={
-          blur: $helpers.changeNameFilter,
-          change: $helpers.changeNameFilter,
-          focusout: $helpers.changeNameFilter,
-          input: $helpers.changeNameFilter,
-          keypress: $helpers.changeNameFilter,
-        }
+.reports-list-wrapper
+  mp-drawer(
+    attrs={hide: !reportsDrawerOpen}
+    on={close: $helpers.close}
+  )
+    if !Object.keys(savedReports).length
+      .no-reports
+        .no-reports-img
+        h1 Saved reports
+        p You haven't saved any reports yet.
+    else
+      .reportlist-search
+        .reportlist-search-icon
+          svg-icon(attrs={icon: `search`})
+        input(
+          props={
+            type: `text`,
+            placeholder: `Search reports`,
+            value: reportsDrawer.nameFilter,
+          }
+          on={
+            blur: $helpers.changeNameFilter,
+            change: $helpers.changeNameFilter,
+            focusout: $helpers.changeNameFilter,
+            input: $helpers.changeNameFilter,
+            keypress: $helpers.changeNameFilter,
+          }
+        )
+      irb-mp-toggle.user-filter(
+        on={select: $helpers.changeUserFilter}
+        attrs={selected: reportsDrawer.userFilter}
       )
-    mp-toggle.user-filter(
-      on={select: $helpers.changeUserFilter}
-      attrs={selected: reportsDrawer.userFilter}
-    )
-      mp-toggle-option(attrs={value: `all`}) All
-      mp-toggle-option(attrs={value: `yours`}) Your reports
-    .reports
-      .report-row.header-row
-        +header-col(`Report`, `name`)
-        +header-col(`Creator`, `user`)
-        +header-col(`Last modified`, `modified`)
-      each report in $helpers.reportsForDisplay()
-        - const initials = report.user.split(' ').map(s => s[0]).join('').toUpperCase()
-        - const icon = report.displayOptions.chartType
-        .report-row.body-row(class={[`icon-${icon}`]: !!icon})
-          svg-icon(attrs={icon: icon, empty: !icon})
-          .report-col.reportlist-field-name(
-            on={click: () => $helpers.clickReport(report)}
-          )= report.title
-          .report-col.reportlist-field-user
-            .user-icon(class={[`color-${initials[0]}`]: true})
-              = initials
-              mp-tooltip= report.user
-          .report-col.reportlist-field-modified= report.modifiedStr
-          .report-col.delete
-            svg-icon(attrs={icon: `trashcan`} on={click: () => $helpers.clickDelete(report)})
+        mp-toggle-option(attrs={value: `all`}) All
+        mp-toggle-option(attrs={value: `yours`}) Your reports
+      .reports
+        .report-row.header-row
+          +header-col(`Report`, `name`)
+          +header-col(`Creator`, `user`)
+          +header-col(`Last modified`, `modified`)
+        each report in $helpers.reportsForDisplay()
+          - const initials = report.user.split(' ').map(s => s[0]).join('').toUpperCase()
+          - const icon = report.displayOptions.chartType
+          .report-row.body-row(class={[`icon-${icon}`]: !!icon})
+            svg-icon(attrs={icon: icon, empty: !icon})
+            .report-col.reportlist-field-name(
+              on={click: () => $helpers.clickReport(report)}
+            )= report.title
+            .report-col.reportlist-field-user
+              .user-icon(class={[`color-${initials[0]}`]: true})
+                = initials
+                mp-tooltip= report.user
+            .report-col.reportlist-field-modified= report.modifiedStr
+            .report-col.delete
+              svg-icon(attrs={icon: `trashcan`} on={click: () => $helpers.clickDelete(report)})
 
-  .drawer-close-wrapper
-    svg-icon(attrs={icon: 'x'} on={click: $helpers.close})
+    .drawer-close-wrapper
+      svg-icon(attrs={icon: 'x'} on={click: $helpers.close})
+
+  - const toDelete = reportsDrawer.confirmDelete
+  irb-mp-confirm-delete(
+    attrs={open: !!toDelete, closeable: true}
+    on={
+      change: ev => $helpers.handleConfirmChange(ev.detail.state),
+      submit: ev => ev.detail.action === `confirm` && $helpers.deleteReport(toDelete),
+    }
+  )
+    if toDelete
+      div
+        .mp-confirm-delete-title Delete Report
+        .mp-confirm-delete-description
+          | Are you sure you want to delete "#{toDelete.title}"?
+          |  This action is permanent and cannot be undone.

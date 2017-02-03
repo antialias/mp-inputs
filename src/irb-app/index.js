@@ -337,18 +337,22 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     this.trackEvent(`Report list - select report`, {'report id': report.id});
   }
 
-  deleteReport(reportId) {
-    const report = this.state.savedReports[reportId];
-    const trackingData = report ? report.toTrackingData() : {};
-
-    delete this.state.savedReports[reportId];
-    if (this.state.report.id === reportId) {
-      this.navigate(``);
-    } else {
-      this.update();
-    }
-
-    this.trackEvent(`Delete Report`, trackingData);
+  deleteReport(report) {
+    const reportTrackingData = report.toTrackingData();
+    this.mpContext.deleteBookmark(report.id)
+      .then(() => {
+        delete this.state.savedReports[report.id];
+        if (this.state.report.id === report.id) {
+          this.navigate(``);
+        } else {
+          this.update();
+        }
+      })
+      .catch(err => {
+        console.error(`Error deleting: ${err}`);
+        reportTrackingData.error = err;
+      })
+      .then(() => this.trackEvent(`Delete Report`, reportTrackingData));
   }
 
   loadReport(report) {
@@ -366,14 +370,16 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         const report = Report.fromBookmarkData(bookmark);
         this.update({savedReports: extend(this.state.savedReports, {[report.id]: report})});
         this.navigate(this.urlForReportId(report.id), {report});
-        this.trackEvent(`Save Report`, extend(reportTrackingData, {
+        Object.assign(reportTrackingData, {
           'new report': !this.state.savedReports.hasOwnProperty(report.id),
           'report title': report.title,
-        }));
+        });
       })
       .catch(err => {
         console.error(`Error saving: ${err}`);
-      });
+        reportTrackingData.error = err;
+      })
+      .then(() => this.trackEvent(`Save Report`, reportTrackingData));
   }
 
   // New query builder helpers
