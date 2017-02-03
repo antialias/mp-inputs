@@ -92,19 +92,17 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   transitionLearn() {
-    if (this.state.learnActive) {
-      util.transitionLearn(this.state.report, this.state.learnModalStepIndex, {
-        start: () => this.update({learnTransitioningOut: true}),
-        middle: () => this.update({learnTransitioningOut: false, learnTransitioningIn: true}),
-        end: () => this.update({learnTransitioningIn: false}),
-        startReminder: () => {
-          if (!this.hasStageClause()) {
-            this.update({learnReminding: true});
-          }
-        },
-        endReminder: () => this.update({learnReminding: false}),
-      });
-    }
+    util.transitionLearn(this.state.report, this.state.learnModalStepIndex, {
+      start: () => this.update({learnTransitioningOut: true}),
+      middle: () => this.update({learnTransitioningOut: false, learnTransitioningIn: true}),
+      end: () => this.update({learnTransitioningIn: false}),
+      startReminder: () => {
+        if (!this.hasStageClause()) {
+          this.update({learnReminding: true});
+        }
+      },
+      endReminder: () => this.update({learnReminding: false}),
+    });
   }
 
   finishLearn() {
@@ -530,7 +528,10 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   updateReport(attrs) {
     this.update({report: Object.assign(this.state.report, attrs)});
-    this.transitionLearn();
+
+    if (this.state.learnActive) {
+      this.transitionLearn();
+    }
   }
 
   resetQuery() {
