@@ -21,6 +21,18 @@ document.registerElement(`irb-mp-toggle`, class extends MPToggle {
     super.attachedCallback(...arguments);
   }
 });
+const MPTooltip = window[`mp-common-registered-components`][`mp-tooltip`];
+document.registerElement(`irb-mp-tooltip`, class extends MPTooltip {
+  attachedCallback() {
+    if (!this.initialized) {
+      super.attachedCallback(...arguments);
+    } else {
+      this.host = this.parentNode;
+      this.host.addEventListener(`mouseenter`, this.show);
+      this.host.addEventListener(`mouseleave`, this.hide);
+    }
+  }
+});
 const MPConfDel = window[`mp-common-registered-components`][`mp-confirm-delete`];
 document.registerElement(`irb-mp-confirm-delete`, class extends MPConfDel {
   attachedCallback() {

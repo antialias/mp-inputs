@@ -67,7 +67,7 @@ mixin header-col(text, field)
             .report-col.reportlist-field-user
               .user-icon(class={[`color-${initials[0]}`]: true})
                 = initials
-                mp-tooltip= report.user
+                irb-mp-tooltip= report.user
             .report-col.reportlist-field-modified= report.modifiedStr
             .report-col.delete
               svg-icon(attrs={icon: `trashcan`} on={click: () => $helpers.clickDelete(report)})
