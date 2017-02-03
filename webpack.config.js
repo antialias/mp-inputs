@@ -7,7 +7,10 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var babelLoader = 'babel?presets[]=es2015';
 var webpackConfig = {
-  entry: './src/index.js',
+  entry: {
+    app: './src/index.js',
+    standalone: './standalone/index.js',
+  },
   module: {
     devtool: 'sourcemap',
     preLoaders: [
@@ -25,7 +28,7 @@ var webpackConfig = {
       },
       {
         test: /\.js$/,
-        exclude: /node_modules|standalone|mixpanel-common|\.jql\.js$/,
+        exclude: /node_modules|highcharts|mixpanel-common|\.jql\.js$/,
         loader: babelLoader,
       },
       {
@@ -70,7 +73,7 @@ if (process.env.NODE_ENV === 'development') {
   webpackConfig = Object.assign({}, webpackConfig, {
     debug: true,
     output: {
-      filename: 'build-development/bundle.js',
+      filename: 'build-development/[name].bundle.js',
       pathinfo: true,
     },
     plugins: webpackConfig.plugins.concat([
@@ -90,7 +93,7 @@ if (process.env.NODE_ENV === 'development') {
 } else if (process.env.NODE_ENV === 'production') {
   webpackConfig = Object.assign({}, webpackConfig, {
     output: {
-      filename: 'build-production/bundle.[hash].min.js',
+      filename: 'build-production/[name].bundle.[hash].min.js',
     },
     plugins: webpackConfig.plugins.concat([
       new webpack.DefinePlugin({

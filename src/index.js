@@ -1,15 +1,7 @@
-// polyfills, must import first
-// TODO load only in standalone mode
-// import 'babel-polyfill';
-// import 'whatwg-fetch';
-// import 'webcomponents.js/webcomponents';
-// import '../standalone/highcharts.src';
-
 import MPContext from './mp-context';
 import { mixpanel, rollbar } from './tracking';
 import { parseURLQueryParams } from './util';
 
-// import 'mixpanel-common/components';
 import './irb-app';
 
 import './stylesheets/index.styl';
