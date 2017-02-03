@@ -10,21 +10,8 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
         RESOURCE_TYPES: Clause.RESOURCE_TYPES,
         clickedResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
         getSelectedResourceType: () => this.getSelectedResourceType(),
-        getProperties: () => {
-          const isLoading = this.isLoading();
-          const properties = sorted(this.buildProgressiveList(), {
-            transform: prop => (renameProperty(prop.name) || String(prop.name)).toLowerCase(),
-          });
-
-          if (this.prevIsLoading !== isLoading ||
-              this.numProperties !== properties.length
-          ) {
-            this.prevIsLoading = isLoading;
-            this.numProperties = properties.length;
-          }
-
-          return properties;
-        },
+        getProperties: () => this.getProperties(),
+        getPropertySections: () => this.getPropertySections(),
         getRecentProperties: () => {
           const resourceType = this.getSelectedResourceType();
           return this.state.recentProperties
@@ -33,6 +20,60 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
         },
       }),
     };
+  }
+
+  filterToResourceType(type) {
+    return function(property) {
+      return type === ShowClause.RESOURCE_TYPE_ALL || property.resourceType === type;
+    };
+  }
+
+  getProperties(resourceType=ShowClause.RESOURCE_TYPE_ALL) {
+    const isLoading = this.isLoading();
+    const properties = sorted(this.buildProgressiveList().filter(this.filterToResourceType(resourceType)), {
+      transform: prop => (renameProperty(prop.name) || String(prop.name)).toLowerCase(),
+    });
+
+    if (this.prevIsLoading !== isLoading ||
+        this.numProperties !== properties.length
+    ) {
+      this.prevIsLoading = isLoading;
+      this.numProperties = properties.length;
+    }
+
+    return properties;
+  }
+
+  getEventPropertyCount() {
+    if (!this.eventPropertyCount) {
+      this.eventPropertyCount = this.getEventProperties().length;
+    }
+    const matchingItems = this.matchingItems(this.buildList(ShowClause.RESOURCE_TYPE_EVENTS), renameProperty).length;
+    return Math.min(this.eventPropertyCount, matchingItems);
+  }
+
+  getPropertySections() {
+    const resourceType = this.getSelectedResourceType();
+    const eventPropertiesLoaded = this.numProperties >= this.getEventPropertyCount();
+    const isPeopleQuery = this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE;
+    const showPeople =  eventPropertiesLoaded || isPeopleQuery || ShowClause.RESOURCE_TYPE_PEOPLE === resourceType;
+    
+    let sections = [];
+
+    if ([ShowClause.RESOURCE_TYPE_EVENTS, ShowClause.RESOURCE_TYPE_ALL].includes(resourceType) && !isPeopleQuery) {
+      sections.push({
+        label: `Event Properties`,
+        list: this.getProperties(ShowClause.RESOURCE_TYPE_EVENTS),
+      });
+    }
+    if (showPeople && ([ShowClause.RESOURCE_TYPE_PEOPLE, ShowClause.RESOURCE_TYPE_ALL].includes(resourceType) || isPeopleQuery)) {
+      sections.push({
+        label: `People Properties`,
+        list: this.getProperties(ShowClause.RESOURCE_TYPE_PEOPLE),
+      });
+    }
+
+    return sections;
   }
 
   getSelectedResourceType() {

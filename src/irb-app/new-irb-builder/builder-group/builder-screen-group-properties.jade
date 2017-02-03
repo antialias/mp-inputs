@@ -2,7 +2,6 @@ include ../mixins.jade
 
 - const isEventsOnlyQuery = $helpers.isEventsOnlyQuery()
 - const resourceType = $helpers.getSelectedResourceType()
-- const properties = $helpers.getProperties()
 - const recentProperties = $helpers.getRecentProperties()
 
 .builder-screen.properties(hook={postpatch: $helpers.updateRenderedSize})
@@ -11,7 +10,7 @@ include ../mixins.jade
     resourceTypes: isEventsOnlyQuery && $helpers.RESOURCE_TYPES,
     selectedResourceType: $helpers.getSelectedResourceType(),
     clickedResourceType: $helpers.clickedResourceType,
-    properties: $helpers.getProperties(),
+    propertySections: $helpers.getPropertySections(),
     recentProperties: $helpers.getRecentProperties(),
     clickedProperty: $helpers.clickedProperty,
     scrolledList: $helpers.scrolledList,
