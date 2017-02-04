@@ -101,7 +101,7 @@ if (process.env.NODE_ENV === 'development') {
         DEBUG_LOG: JSON.stringify(false),
         MIXPANEL_TOKEN: JSON.stringify('2fd54f3085a7b7d70da94096fc415078'),
       }),
-      new ExtractTextPlugin('build-production/bundle.[hash].min.css'),
+      new ExtractTextPlugin('build-production/bundle.[contenthash].min.css'),
       new HtmlWebpackPlugin({
         template: 'index.template.html',
         filename: 'index.html',
