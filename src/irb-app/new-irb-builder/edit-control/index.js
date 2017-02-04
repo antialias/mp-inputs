@@ -35,6 +35,7 @@ export class EditControl extends Component {
           return Array.isArray(label) ? label[0] : label;
         },
         getSelectionAttrs: () => this.getSelectionAttrs(),
+        getSection: () => this.section,
         isPaneOpen: () => this.isPaneOpen(),
         isRemovable: () => this.isRemovable(),
         removeClause: () => this.remove(),
