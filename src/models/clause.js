@@ -194,7 +194,7 @@ const RANGES = {
   HOURS: `Last 96 hours`,
   WEEK: `Last week`,
   MONTH: `Last 30 days`,
-  QUARTER: `Last quarter`,
+  QUARTER: `Last 4 quarters`,
   YEAR: `Last 12 months`,
   CUSTOM: `Choose a date range ...`,
 };
@@ -213,10 +213,10 @@ const UNIT_LIST = [
   UNITS.HOUR, UNITS.DAY, UNITS.WEEK, UNITS.MONTH, UNITS.QUARTER, UNITS.YEAR,
 ];
 const RANGE_TO_VALUE_AND_UNIT = {
-  [RANGES.HOURS]:   {value: 96, unit: UNITS.HOUR },
-  [RANGES.WEEK]:    {value: 7,  unit: UNITS.DAY  },
-  [RANGES.MONTH]:   {value: 30, unit: UNITS.DAY  },
-  [RANGES.QUARTER]: {value: 12, unit: UNITS.WEEK },
+  [RANGES.HOURS]:   {value: 96, unit: UNITS.HOUR},
+  [RANGES.WEEK]:    {value: 7,  unit: UNITS.DAY},
+  [RANGES.MONTH]:   {value: 30, unit: UNITS.DAY},
+  [RANGES.QUARTER]: {value: 4,  unit: UNITS.QUARTER},
   [RANGES.YEAR]:    {value: 12, unit: UNITS.MONTH},
 };
 const UNIT_AND_VALUE_TO_RANGE = {
@@ -227,8 +227,8 @@ const UNIT_AND_VALUE_TO_RANGE = {
     7: RANGES.WEEK,
     30: RANGES.MONTH,
   },
-  week: {
-    12: RANGES.QUARTER,
+  quarter: {
+    4: RANGES.QUARTER,
   },
   month: {
     12: RANGES.YEAR,
