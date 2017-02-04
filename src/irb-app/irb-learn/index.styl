@@ -9,7 +9,7 @@
       width 520px
 
       .mp-modal-content
-        padding 190px 70px 30px
+        padding 190px 20px 30px
         text-align center
 
         .mp-modal-title
@@ -18,9 +18,9 @@
           line-height 1.13em
 
         .mp-modal-subtitle
-          color var(--mp-grey)
+          color grey-500
           font-size 12px
-          font-weight 500
+          font-weight 600
           line-height 1.5em
 
   // Learn tooltips
@@ -43,25 +43,31 @@
     .mp-tooltip-subtitle
       color rgba(255,255,255,0.64)
       font-size 14px
-      font-weight 500
       line-height 1.7em
 
+  &.irb-learn-manipulate-data mp-tutorial-tooltip
+    z-index 1
+
+  // Close buttons
+
   .mp-modal-close, .mp-tooltip-close
-    svg-icon-style(grey-200)
+    svg-icon-style(grey-300)
     cursor pointer
     position absolute
     right 24px
     top 24px
+    transition color 100ms
+
+    &:hover
+      svg-icon-style(grey-200)
 
   .mp-tooltip-close
-    opacity 0.3
+    svg-icon-style(blue-100)
     right 10px
     top 10px
-    &:hover
-      opacity 0.6
 
-  &.irb-learn-manipulate-data mp-tutorial-tooltip
-    z-index 1
+    &:hover
+      svg-icon-style(white)
 
   // Learn disabled UI
 

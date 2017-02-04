@@ -11,15 +11,26 @@ include ./tooltip.jade
           .mp-modal-title
             case step.name
               when `introduction`
-                | Introducing Inquiry
+                | Introducing Insights
               when `conclusion`
-                | You've built your first Inquiry query
+                | Congratulations, your first Insights query is done!
           .mp-modal-subtitle
             case step.name
               when `introduction`
-                | Insights makes exploring your data easier than ever. It allows you to formulate complex queries intuitively to help you understand how your customers use your product.
+                | Built to make exploring your data easier than ever,
+                br
+                | Insights allows you to create complex queries that help
+                br
+                | you understand how your customers use your product.
               when `conclusion`
-                | You can save it, export it, add it to your dashboard, and even filter your results. Click the button below to start exploring Inquiry's powers on your own.
+                | You’ve only scratched the surface on the power of Insights.
+                br
+                | Learn more about all of the additional ways you can analyze
+                br
+                | and visualize your data using Insights
+                =" "
+                a(href='docs-url-here') here
+                | .
           .mp-modal-close(on={click: $component.app.helpers.finishLearn})
             svg-icon(attrs={icon: 'x'})
         mp-button-bar.mp-button-bar-primary(
@@ -29,4 +40,4 @@ include ./tooltip.jade
             when `introduction`
               | Let's get started
             when `conclusion`
-              | Explore Inquiry on your own
+              | Continue exploring your data
