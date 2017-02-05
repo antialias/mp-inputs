@@ -1,3 +1,4 @@
+var AssetsPlugin = require('assets-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var path = require('path');
@@ -93,7 +94,7 @@ if (process.env.NODE_ENV === 'development') {
 } else if (process.env.NODE_ENV === 'production') {
   webpackConfig = Object.assign({}, webpackConfig, {
     output: {
-      filename: 'build-production/[name].bundle.[hash].min.js',
+      filename: 'build-production/[chunkhash]-[name].bundle.min.js',
     },
     plugins: webpackConfig.plugins.concat([
       new webpack.DefinePlugin({
@@ -101,7 +102,7 @@ if (process.env.NODE_ENV === 'development') {
         DEBUG_LOG: JSON.stringify(false),
         MIXPANEL_TOKEN: JSON.stringify('2fd54f3085a7b7d70da94096fc415078'),
       }),
-      new ExtractTextPlugin('build-production/bundle.[contenthash].min.css'),
+      new ExtractTextPlugin('build-production/[contenthash]-[name].bundle.min.css'),
       new HtmlWebpackPlugin({
         template: 'index.template.html',
         filename: 'index.html',
@@ -112,6 +113,7 @@ if (process.env.NODE_ENV === 'development') {
           'main', // JQL queries need to define 'main()'
         ]},
       }),
+      new AssetsPlugin({filename: 'build-production/assets.json'}),
     ]),
     eslint: {
       failOnWarning: false,
