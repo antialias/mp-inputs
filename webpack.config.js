@@ -6,7 +6,9 @@ var webpack = require('webpack');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-var babelLoader = 'babel?presets[]=es2015';
+var BABEL_LOADER = 'babel?presets[]=es2015';
+var BUILD_DIR = 'build-' + process.env.NODE_ENV;
+
 var webpackConfig = {
   entry: {
     app: './src/index.js',
@@ -25,12 +27,12 @@ var webpackConfig = {
       {
         test: /\.jade$/,
         exclude: /node_modules|mixpanel-common/,
-        loaders: [babelLoader, 'virtual-jade'],
+        loaders: [BABEL_LOADER, 'virtual-jade'],
       },
       {
         test: /\.js$/,
         exclude: /node_modules|highcharts|mixpanel-common|\.jql\.js$/,
-        loader: babelLoader,
+        loader: BABEL_LOADER,
       },
       {
         test: /\.(png|svg)$/,
@@ -55,6 +57,10 @@ var webpackConfig = {
       APP_ENV: JSON.stringify(process.env.NODE_ENV),
       ROLLBAR_TOKEN: JSON.stringify('f1363513be0a42d1951b4f4e153996ec'),
     }),
+    new AssetsPlugin({
+      filename: path.join(BUILD_DIR, 'assets.json'),
+      fullPath: false,
+    }),
   ],
   resolve: {
     alias: {
@@ -74,7 +80,8 @@ if (process.env.NODE_ENV === 'development') {
   webpackConfig = Object.assign({}, webpackConfig, {
     debug: true,
     output: {
-      filename: 'build-development/[name].bundle.js',
+      path: BUILD_DIR,
+      filename: '[name].bundle.js',
       pathinfo: true,
     },
     plugins: webpackConfig.plugins.concat([
@@ -83,19 +90,19 @@ if (process.env.NODE_ENV === 'development') {
         DEBUG_LOG: JSON.stringify(true),
         MIXPANEL_TOKEN: JSON.stringify('9c4e9a6caf9f429a7e3821141fc769b7'), // Project 132990 Mixpanel Dev
       }),
-      new ExtractTextPlugin('build-development/[name].bundle.css'),
+      new ExtractTextPlugin('[name].bundle.css'),
       new HtmlWebpackPlugin({
         template: 'index.template.html',
-        filename: 'index-dev.html',
+        filename: '../index-dev.html',
       }),
-      new AssetsPlugin({filename: 'build-development/assets.json'}),
     ]),
   });
 
 } else if (process.env.NODE_ENV === 'production') {
   webpackConfig = Object.assign({}, webpackConfig, {
     output: {
-      filename: 'build-production/[chunkhash]-[name].bundle.min.js',
+      path: BUILD_DIR,
+      filename: '[chunkhash]-[name].bundle.min.js',
     },
     plugins: webpackConfig.plugins.concat([
       new webpack.DefinePlugin({
@@ -103,10 +110,10 @@ if (process.env.NODE_ENV === 'development') {
         DEBUG_LOG: JSON.stringify(false),
         MIXPANEL_TOKEN: JSON.stringify('2fd54f3085a7b7d70da94096fc415078'),
       }),
-      new ExtractTextPlugin('build-production/[contenthash]-[name].bundle.min.css'),
+      new ExtractTextPlugin('[contenthash]-[name].bundle.min.css'),
       new HtmlWebpackPlugin({
         template: 'index.template.html',
-        filename: 'index.html',
+        filename: '../index.html',
       }),
       new webpack.optimize.UglifyJsPlugin({
         compress: {warnings: false},
@@ -114,7 +121,6 @@ if (process.env.NODE_ENV === 'development') {
           'main', // JQL queries need to define 'main()'
         ]},
       }),
-      new AssetsPlugin({filename: 'build-production/assets.json'}),
     ]),
     eslint: {
       failOnWarning: false,
