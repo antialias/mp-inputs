@@ -6,7 +6,7 @@ include ../mixins.jade
   +screen-title(`Choose a date range`, {backButton: true})
   .range-control
     irb-datepicker(
-      attrs={range: true, 'double-calendar': true, preposition: `to`}
+      attrs={range: true, 'double-calendar': true, 'hide-text-inputs': true}
       props={value: {from, to}}
       on={change: $helpers.changedDates}
     )

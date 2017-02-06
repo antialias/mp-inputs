@@ -24,6 +24,7 @@ class DatePicker extends Component {
         isRange: () => this.isRange,
         isDoubleCalendar: () => this.isDoubleCalendar,
         getPreposition: () => this.preposition,
+        hideTextInputs: () => this.hideTextInputs,
         changedDates: ev => {
           const now = moment();
 
@@ -88,6 +89,10 @@ class DatePicker extends Component {
 
   get isDoubleCalendar() {
     return this.isAttributeEnabled(`double-calendar`);
+  }
+
+  get hideTextInputs() {
+    return this.getAttribute(`hide-text-inputs`);
   }
 
   get preposition() {

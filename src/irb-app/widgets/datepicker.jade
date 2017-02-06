@@ -2,23 +2,24 @@
 - const isDoubleCalendar = $helpers.isDoubleCalendar();
 
 .datepicker
-  .inputs
-    if isRange
-      date-input(props={value: from} on={
-        focus: $helpers.focusedFrom,
-        blur: $helpers.blurredFrom,
-        change: $helpers.changedFrom,
-      })
-      .preposition= $helpers.getPreposition() || `to`
-      date-input(props={value: to} on={
-        focus: $helpers.focusedTo,
-        blur: $helpers.blurredTo,
-        change: $helpers.changedTo,
-      })
-    else
-      date-input(props={value: date} on={
-        change: $helpers.changedDates,
-      })
+  if !$helpers.hideTextInputs()
+    .inputs
+      if isRange
+        date-input(props={value: from} on={
+          focus: $helpers.focusedFrom,
+          blur: $helpers.blurredFrom,
+          change: $helpers.changedFrom,
+        })
+        .preposition= $helpers.getPreposition() || `to`
+        date-input(props={value: to} on={
+          focus: $helpers.focusedTo,
+          blur: $helpers.blurredTo,
+          change: $helpers.changedTo,
+        })
+      else
+        date-input(props={value: date} on={
+          change: $helpers.changedDates,
+        })
   .calendar
     irb-calendar(
       attrs={

@@ -12,10 +12,7 @@ irb-calendar[double-calendar="true"] .pika-mixpanel
   .pika-lendar
     width 246px
 
-    &:first-child table
-      border-right 1px solid grey-200
-
-    &:last-child table
+    &:not(:first-child) table
       border-left 1px solid grey-200
 
     table.pika-table
@@ -84,15 +81,13 @@ irb-calendar .pika-mixpanel
         left -2px
 
   table.pika-table
-    border-collapse separate
-    border-spacing 0 4px
-
     th
       color grey-700
       padding-bottom 8px
 
     th, td
       position relative
+      width 32px
 
       &:first-child
         padding-left 40px
@@ -103,11 +98,11 @@ irb-calendar .pika-mixpanel
     /* --- button styles --- */
 
     .pika-button
-      width 30px
+      width 24px
       background-color transparent
       color grey-700
       font-weight bold
-      height 30px
+      height 24px
       position relative
       text-align center
 
@@ -115,7 +110,7 @@ irb-calendar .pika-mixpanel
       .pika-button
         background-color grey-100
         border-radius 15px
-        width 30px
+        width 24px
 
       &.is-inrange .pika-button
         background-color blue-900
@@ -128,7 +123,7 @@ irb-calendar .pika-mixpanel
         border-radius 15px
         color white
         text-shadow 0.5px 0.9px 0 rgba(0, 0, 0, 0.26)
-        width 30px
+        width 24px
 
     td.is-inrange .pika-button
       color white
