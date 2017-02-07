@@ -429,7 +429,7 @@ export default class SegmentationQuery extends BaseQuery {
     return Promise.all(this.runJQLQueries()).then(resultSets => {
       return resultSets.reduce((acc, results, index) => {
         // resolve name conflicts
-        const outputName = this.query.jqlQueries[index].outputName
+        const outputName = this.query.jqlQueries[index].outputName;
         results.forEach(result => {
           const displayName = this.query.jqlQueries[index].displayNames[result.key[0]];
           if (displayName) {
