@@ -232,7 +232,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       };
     }
 
-
     super.attachedCallback(...arguments);
 
     if (this.state.report.id) {
@@ -572,12 +571,12 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   updateReport(attrs) {
     const report = Object.assign(this.state.report, attrs);
+    this.update({report});
     if (this.state.learnActive) {
-      this.update({report});
       this.transitionLearn();
     } else {
-      const $fragment = JSURL.stringify(report.toUrlData());
-      this.update({report, $fragment});
+      const fragment = JSURL.stringify(report.toUrlData());
+      history.replaceState(null, null, `#${fragment}`);
     }
   }
 
