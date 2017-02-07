@@ -85,6 +85,10 @@ export class Section {
   removeClause(index) {
     return this.validate(Section.create(this.TYPE, {clauses: removeByIndex(this.clauses, index)}));
   }
+
+  removeAllClauses() {
+    return this.validate(Section.create(this.TYPE, {clauses: []}));
+  }
 }
 
 export class ShowSection extends Section {

@@ -831,6 +831,10 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     }));
   }
 
+  removeAllClauses(sectionType) {
+    this.updateSection(this.state.report.sections[sectionType].removeAllClauses());
+  }
+
   updateShowClauseButtonPosition(key, buttonOutside) {
     let showClauseButtonPosition = this.state.showClauseButtonPosition;
     showClauseButtonPosition[key] = buttonOutside;

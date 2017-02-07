@@ -1,5 +1,5 @@
 import { BuilderScreenBase } from './builder-screen-base';
-import { Clause } from '../../../models/clause';
+import { Clause, GroupClause, FilterClause } from '../../../models/clause';
 
 import { extend } from '../../../util';
 
@@ -22,6 +22,11 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
 
         clickedSource: source => {
           const {resourceType} = source;
+          const stagedClauseResourceType = this.app.getActiveStageClause().resourceType;
+          if (stagedClauseResourceType !== resourceType) {
+            this.app.removeAllClauses(GroupClause.TYPE);
+            this.app.removeAllClauses(FilterClause.TYPE);
+          }
           this.updateStageClause({resourceType, value: {}});
           this.nextScreen(`builder-screen-${resourceType}`);
         },
