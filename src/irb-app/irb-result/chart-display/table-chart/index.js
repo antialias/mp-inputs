@@ -6,7 +6,6 @@ import WebComponent from 'webcomponent';
 import * as util from '../../../../util';
 import {
   nestedObjectToTableData,
-  transpose,
 } from '../../chart-util';
 
 import template from './index.jade';
@@ -99,14 +98,6 @@ document.registerElement(`table-chart`, class extends Component {
       columnRows = rowData.map(row => [row.value]);
     }
 
-    // add table zebra-striping
-    transpose(rows).forEach(column => {
-      let odd = false;
-      column.filter(Boolean).forEach(cell => {
-        cell.odd = odd = !odd;
-      });
-    });
-
     const singleValueColumnSum = columnHeaders.length === 1 ? util.sum(Object.values(series)) : null;
 
     this.update({
@@ -124,14 +115,10 @@ document.registerElement(`table-chart`, class extends Component {
       return false;
     }
 
-    if (headers.length > 1) {
-      headers = headers.slice(0, -1);
-    }
-
     if (sortConfig.sortBy === `value`) {
       return !!sortConfig.sortColumn;
     } else {
-      return sortConfig.colSortAttrs.length === headers.length;
+      return sortConfig.colSortAttrs.length === Math.max(1, headers.length - 1);
     }
   }
 });
