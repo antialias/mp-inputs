@@ -3,24 +3,21 @@ import { extend, pick } from '../../util';
 
 import main from './extrema.jql.js';
 
-export function extremaResultToBuckets(result) {
+export function extremaResultToBuckets(result, {numBuckets=10}={}) {
   const extremaDelta = result.max - result.min;
-  if (extremaDelta < 50) {
+  if (extremaDelta < numBuckets) {
     return {};
   }
 
-  const numBuckets = 10;
   let bucketSize = extremaDelta / numBuckets;
   const buckets = [];
   const bucketRanges = {};
-  for (let i = 0; i < numBuckets + 2; i++) {
-    const bucket = Math.floor(result.min + bucketSize * i);
-    buckets.push(bucket);
-    if (i) {
-      bucketRanges[buckets[i-1]] = [buckets[i-1], bucket];
-    }
+  for (let i = 0; i < numBuckets; i++) {
+    const bucketBottom = Math.floor(result.min + bucketSize * i);
+    const bucketTop = (i === numBuckets - 1) ? result.max : Math.floor(bucketBottom + bucketSize);
+    buckets.push(bucketBottom);
+    bucketRanges[bucketBottom] = [bucketBottom, bucketTop];
   }
-  bucketRanges[buckets[buckets.length - 1]] = [buckets[buckets.length - 1], Math.floor(result.min + bucketSize * buckets.length)];
   return {buckets, bucketRanges};
 }
 
