@@ -1,7 +1,6 @@
 // IRB-specific utils
 import cloneDeep from 'lodash/cloneDeep';
 import { nestedObjectDepth, objectFromPairs } from 'mixpanel-common/util';
-import moment from 'moment';
 
 import { ShowClause } from '../models/clause';
 
@@ -10,54 +9,23 @@ export * from 'mixpanel-common/util';
 export * from 'mixpanel-common/util/string';
 
 export {
+  MS_IN_HOUR,
+  MS_IN_DAY,
+  MS_BY_UNIT,
+  formatDateDisplay,
+  formatDateISO,
+  normalizeDates,
+  parseDate,
+  relativeToAbsoluteDate,
+  unitForDateRange,
+} from './time';
+
+export {
   getLearnStep,
   learnClasses,
   transitionLearn,
   finishLearn,
 } from './learn';
-
-const MS_IN_HOUR = 60 * 60 * 1000;
-const MS_IN_DAY = MS_IN_HOUR * 24;
-export const MS_BY_UNIT = {
-  hour: MS_IN_HOUR,
-  day: MS_IN_DAY,
-  week: MS_IN_DAY * 7,
-  month: MS_IN_DAY * 30,
-  quarter: MS_IN_DAY * 90,
-  year: MS_IN_DAY * 365,
-};
-
-export function formatDateISO(date) {
-  return moment(date).format().slice(0, 10);
-}
-
-export function formatDateDisplay(date) {
-  return moment(date).format(`MMM D, YYYY`);
-}
-
-export function parseDate(date, {startOfDay=false, endOfDay=false}={}) {
-  const timestamp = Number(moment(date));
-
-  if (isNaN(timestamp)) {
-    return null;
-  }
-
-  date = new Date(timestamp);
-
-  if (startOfDay) {
-    date.setHours(0, 0, 0, 0);
-  }
-
-  if (endOfDay) {
-    date.setHours(23, 59, 59, 999);
-  }
-
-  return date;
-}
-
-export function relativeToAbsoluteDate(relativeDateInt, unit) {
-  return new Date(moment().subtract(relativeDateInt, `${unit}s`));
-}
 
 // TODO move to mixpanel-common
 export function parseURLQueryParams() {

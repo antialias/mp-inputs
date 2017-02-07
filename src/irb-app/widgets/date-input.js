@@ -17,6 +17,7 @@ class DateInput extends Component {
       },
       helpers: {
         formatDateDisplay,
+        focus: vnode => requestAnimationFrame(() => vnode.elm.focus()),
         focusedInput: () => this.emitFocus(),
         blurredInput: () => {
           this.inputEl.value = ``;

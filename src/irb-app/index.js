@@ -518,7 +518,29 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   getClauseValuesForType(type) {
-    return this.app.getClausesForType(type).map(clause => clause.value);
+    return this.getClausesForType(type).map(clause => clause.value);
+  }
+
+  getTimeClauseValue(clause) {
+    clause = clause || this.getClausesForType(TimeClause.TYPE)[0];
+    const {value, unit} = clause;
+    let from = null;
+    let to = null;
+
+    if (Number.isInteger(value)) {
+      from = util.formatDateISO(util.relativeToAbsoluteDate(value, unit));
+      to = util.formatDateISO(util.relativeToAbsoluteDate(0, unit));
+    } else if (Array.isArray(value)) {
+      [from, to] = value;
+      if (Number.isInteger(from)) {
+        from = util.formatDateISO(util.relativeToAbsoluteDate(from, unit));
+      }
+      if (Number.isInteger(to)) {
+        to = util.formatDateISO(util.relativeToAbsoluteDate(to, unit));
+      }
+    }
+
+    return {from, to, unit};
   }
 
   // State modifiers

@@ -1,7 +1,6 @@
 import { Component } from 'panel';
-import moment from 'moment';
 
-import { formatDateISO } from '../../util';
+import { formatDateISO, normalizeDates } from '../../util';
 
 import template from './datepicker.jade';
 import './datepicker.styl';
@@ -26,36 +25,15 @@ class DatePicker extends Component {
         getPreposition: () => this.preposition,
         hideTextInputs: () => this.hideTextInputs,
         changedDates: ev => {
-          const now = moment();
-
           if (this.isRange) {
             let {from=this.state.from, to=this.state.to} = ev.detail;
-
-            if (from && moment(from) > now) {
-              from = formatDateISO(now);
-            }
-
-            if (to && moment(to) > now) {
-              to = formatDateISO(now);
-            }
-
-            if (from && to) {
-              if (moment(from) > moment(to)) {
-                [from, to] = [to, from];
-              }
-            }
-
+            [from, to] = normalizeDates(from, to);
             this.update({from, to, date: null});
           } else {
-            let date = ev.detail || this.state.date;
-
-            if (date && moment(date) > now) {
-              date = formatDateISO(now);
-            }
-
+            let {date=this.state.date} = ev.detail;
+            [date] = normalizeDates(date);
             this.update({date, from: null, to: null});
           }
-
           this.emitChange();
         },
         changedFrom: ev => this.helpers.changedDates({detail: {from: ev.detail}}),

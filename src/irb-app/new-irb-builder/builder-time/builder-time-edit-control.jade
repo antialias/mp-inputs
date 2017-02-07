@@ -1,0 +1,67 @@
+- const open = $helpers.isPaneOpen()
+
+.control-container
+  .irb-new-control.new-query-builder(class={'pane-open': open})
+    .control-buttons.edit-control.control-button-text
+      if open
+        if $helpers.isPresetRange()
+          resize-input.control-label(
+            attrs={
+              placeholder: $helpers.getLabel(),
+            }
+            props={
+              autoFocus: true,
+              type: `text`,
+              value: contextFilter,
+            }
+            on={
+              click: $helpers.clickedInput,
+              input: $helpers.changedSearch,
+            }
+          )
+        else
+          - const {from, to} = $helpers.getDates()
+          date-input.control-label(
+            attrs={
+              autofocus: $helpers.focusFrom(),
+            }
+            props={
+              type: `text`,
+              value: from,
+            }
+            on={
+              click: $helpers.clickedInput,
+              change: $helpers.changedFrom,
+            }
+          )
+          .clause-language.preposition to
+          date-input.control-label(
+            attrs={
+              autofocus: $helpers.focusTo(),
+            }
+            props={
+              type: `text`,
+              value: to,
+            }
+            on={
+              click: $helpers.clickedInput,
+              change: $helpers.changedTo,
+            }
+          )
+      else if $helpers.isPresetRange()
+        .control-label
+          .control-label-text(on={click: $helpers.clickedLabel})= $helpers.getLabel()
+      else
+        - const {from, to} = $helpers.getDates()
+        .control-label
+          .control-label-text(on={click: $helpers.clickedFromLabel})
+
+            = util.formatDateDisplay(from)
+        .clause-language.preposition to
+        .control-label
+          .control-label-text(on={click: $helpers.clickedToLabel})
+            = util.formatDateDisplay(to)
+    .drop-menu
+      mp-drop-menu(attrs={open} on={change: $helpers.menuChange})
+        .new-pane-content(attrs={'slot-body': true})
+          = $component.child(`builder-pane`, {attrs: $helpers.getSelectionAttrs()})

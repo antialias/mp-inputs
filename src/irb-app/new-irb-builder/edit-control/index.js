@@ -16,12 +16,19 @@ export class EditControl extends Component {
 
   get config() {
     return {
+      template,
       helpers: extend(super.config.helpers, {
         clickedInput: ev => ev.stopPropagation(), // don't close menu!
         clickedLabel: () => {
           this.openPane();
           this.app.stopEditingClause();
           this.app.startEditingClause(this.section, this.clauseIndex);
+        },
+        clickedFromLabel: () => {
+          this.helpers.clickedLabel();
+        },
+        clickedToLabel: () => {
+          this.helpers.clickedLabel();
         },
         labelPrefixComponent: () => this.labelPrefixComponent(),
         menuChange: ev => ev.detail && ev.detail.state === `closed` && this.isPaneOpen() && this.app.stopBuildingQuery(),
@@ -40,7 +47,6 @@ export class EditControl extends Component {
         isRemovable: () => this.isRemovable(),
         removeClause: () => this.remove(),
       }),
-      template,
     };
   }
 

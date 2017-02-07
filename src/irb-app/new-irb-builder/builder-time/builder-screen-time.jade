@@ -7,8 +7,9 @@ include ../mixins.jade
     each range in $helpers.RANGE_LIST
       if range.includes(contextFilter)
         - const isSelected = range === selected
+        - const isCustom = range === $helpers.RANGES.CUSTOM
         li.list-option(
-          class={'list-option-selected': isSelected}
-          on={click: isSelected ? null : () => $helpers.clickedRange(range)}
+          class={'list-option-selected': isSelected, 'list-option-time-custom': isCustom}
+          on={click: !isSelected || isCustom ? () => $helpers.clickedRange(range) : null}
         )
           +screen-option(range, {noIcon: true})
