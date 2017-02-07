@@ -101,7 +101,7 @@ mixin property-screen-body(options)
     if options.propertySections
       each section in options.propertySections
         .builder-divider
-        .builder-label=section.label
+        .builder-label= section.label
         +property-list(section.list, options)
     else
       .builder-divider
