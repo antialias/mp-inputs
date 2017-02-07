@@ -253,7 +253,7 @@ export default class SegmentationQuery extends BaseQuery {
     );
 
     // data global to all JQL queries.
-    const segments = sections.group.clauses.map(clause => pick(clause, [`value`, `resourceType`, `typeCast`]));
+    const segments = sections.group.clauses.map(clause => pick(clause, [`value`, `propertyType`, `resourceType`, `typeCast`]));
 
     const filterArbSelectors = sections.filter.clauses
       .map(clause => clause.attrs)
@@ -286,7 +286,8 @@ export default class SegmentationQuery extends BaseQuery {
     // other cases, return (resolve) right away.
     this.resetBucketRanges();
     return Promise.all(this.query.segments.map((segment, idx) => new Promise(resolve => {
-      if (segment.filterType === `number` && segment.resourceType !== `people`) {
+      const segmentType = segment.typeCast || segment.propertyType;
+      if (segmentType === `number` && segment.resourceType !== `people`) {
         let eventName;
         if (jqlQuery.custom) {
           eventName = jqlQuery.outputName;
@@ -302,7 +303,10 @@ export default class SegmentationQuery extends BaseQuery {
           return resolve(segment);
         }
         const action = segment.resourceType === `people` ? `user` : `properties`;
-        let extremaQuery = new ExtremaQuery();
+        let extremaQuery = new ExtremaQuery({
+          apiHost: this.apiHost,
+          apiSecret: this.apiSecret,
+        });
         let state = {
           /* eslint-disable camelcase */
           from: new Date(this.query.from),
