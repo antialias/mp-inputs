@@ -9,7 +9,7 @@ function main() {
   };
 
   if (params.isPeopleProperty) {
-    query = join(Events(queryParams), People(), {selectors: params.selectors, type: `left`});
+    query = People();
   } else {
     queryParams.event_selectors = params.events;
     query = Events(queryParams);
