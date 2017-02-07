@@ -14,6 +14,7 @@ class BaseTopPropertiesQuery extends BaseQuery {
       const { count, type } = results[name];
       return {count, type, name, resourceType: this.resourceType};
     }).filter(prop => PROPERTY_TYPES.includes(prop.type));
+    // TODO: cassie investigate if we should be filtering these out or handling them better later
 
     return sorted(properties, {
       transform: prop => renameProperty(prop.name).toLowerCase(),
