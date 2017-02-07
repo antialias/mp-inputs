@@ -11,6 +11,7 @@ include ../mixins.jade
   )
     +property-list(properties, {
       clickedProperty: $helpers.clickedProperty,
+      listEmptyMessage: `no non-numeric properties available`,
       selected: $component.getAttribute(`selected`),
       source: $component.getAttribute(`source`),
       loading,
