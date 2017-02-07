@@ -1,6 +1,7 @@
 include ../mixins.jade
 
-- const loading = $helpers.isLoading();
+- const loading = $helpers.isLoading()
+- const properties = $helpers.getProperties()
 
 .builder-screen.properties
   +screen-title(`Properties of ${$helpers.getEventName()}`, {backButton: $helpers.screenIdx() > 1})
@@ -8,13 +9,13 @@ include ../mixins.jade
     hook={postpatch: $helpers.updateRenderedSize}
     on={scroll: $helpers.scrolledList}
   )
-    +property-list($helpers.getProperties(), {
+    +property-list(properties, {
       clickedProperty: $helpers.clickedProperty,
       selected: $component.getAttribute(`selected`),
       source: $component.getAttribute(`source`),
       loading,
     })
-  if !loading
+  if !loading && properties.length
     +screen-footer-button(($component.isShowingNonNumericProperties() ? `Hide` : `View all`) + ` non-numeric properties`, {
       onclick: $helpers.toggleNonNumericProperties,
     })
