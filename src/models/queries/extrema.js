@@ -37,7 +37,7 @@ export default class ExtremaJQLQuery extends BaseQuery {
     params = extend(params, pick(this.query, [`events`, `property`, `isPeopleProperty`]));
     params.from = this.query.from.toISOString().split(`T`)[0];
     params.to = this.query.to.toISOString().split(`T`)[0];
-    params.propertyPath = `${params.isPeopleProperty ? `user.` : ``}properties.${params.property}`;
+    params.propertyPath = `properties.${params.property}`;
     return {
       script: String(main),
       params: JSON.stringify(params),
