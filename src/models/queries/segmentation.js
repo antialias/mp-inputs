@@ -176,7 +176,7 @@ class JQLQuery {
       }
     } else {
       // people query
-      this.outputName = showClause.value.name;
+      this.outputName = showClause.property && showClause.property.name || showClause.value.name;
       if (!this.property) {
         this.type = ShowClause.MATH_TYPE_TOTAL;
       }
