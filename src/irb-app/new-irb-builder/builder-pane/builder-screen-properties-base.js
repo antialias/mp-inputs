@@ -39,6 +39,9 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     ) {
       this.prevIsLoading = isLoading;
       this.numProperties = properties.length;
+      if (resourceType === ShowClause.RESOURCE_TYPE_EVENTS) {
+        this.numEventProperties = properties.length;
+      }
     }
 
     return properties;
@@ -54,7 +57,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
 
   getPropertySections() {
     const resourceType = this.getSelectedResourceType();
-    const eventPropertiesLoaded = this.numProperties >= this.getEventPropertyCount();
+    const eventPropertiesLoaded = this.numEventProperties >= this.getEventPropertyCount();
     const isPeopleQuery = this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE;
     const showPeople =  eventPropertiesLoaded || isPeopleQuery || ShowClause.RESOURCE_TYPE_PEOPLE === resourceType;
     
