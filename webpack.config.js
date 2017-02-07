@@ -122,10 +122,6 @@ if (process.env.NODE_ENV === 'development') {
         ]},
       }),
     ]),
-    eslint: {
-      failOnWarning: false,
-      failOnError: true,
-    },
   });
 }
 
