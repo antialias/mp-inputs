@@ -137,12 +137,6 @@ function main() {
     query = query.groupByUser(groups, countReducer)
       .groupBy([mixpanel.slice('key', 1)], getReducerFunc(params.type));
   }
-  if (params.outputName) {
-    query = query.map(function(group) {
-      group.key.unshift(params.outputName);
-      return group;
-    });
-  }
   return params.groupLimits ? query.internalLimitHierarchically(params.groupLimits) : query;
 }
 
