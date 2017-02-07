@@ -2,7 +2,7 @@ import { extend, sorted } from 'mixpanel-common/util';
 import { renameProperty } from 'mixpanel-common/report/util';
 
 import BaseQuery from './base';
-import { PROPERTY_TYPES } from '../clause.js'
+import { PROPERTY_TYPES } from '../clause.js';
 
 class BaseTopPropertiesQuery extends BaseQuery {
   buildParams() {
