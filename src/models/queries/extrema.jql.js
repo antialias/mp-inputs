@@ -1,30 +1,20 @@
-/* global Events, join, mixpanel, module, People, params*/
+/* global Events, mixpanel, module, People, params*/
 /* eslint camelcase:0 */
 
 function main() {
   var query;
-  var queryParams = {
-    from_date: params.from,
-    to_date:   params.to,
-  };
 
   if (params.isPeopleProperty) {
     query = People();
   } else {
-    queryParams.event_selectors = params.events;
-    query = Events(queryParams);
+    query = Events({
+      event_selectors: params.events,
+      from_date: params.from,
+      to_date:   params.to,
+    });
   }
 
-  var reducerMethod;
-  switch(params.task) {
-    case `max`:
-      reducerMethod = mixpanel.reducer.max;
-      break;
-    case `min`:
-      reducerMethod = mixpanel.reducer.min;
-      break;
-  }
-
+  var reducerMethod = mixpanel.reducer[params.task];
   var reducer = reducerMethod(mixpanel.to_number(params.propertyPath));
 
   return query.reduce(reducer);

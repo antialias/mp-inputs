@@ -1,5 +1,5 @@
 import BaseQuery from './base';
-import { pick } from '../../util';
+import { extend, pick } from '../../util';
 
 import main from './extrema.jql.js';
 
@@ -33,28 +33,15 @@ export default class ExtremaJQLQuery extends BaseQuery {
     return {type: `POST`};
   }
 
-  buildParams() {
-    const params = pick(this.query, [`events`, `property`, `isPeopleProperty`]);
+  buildParams({params={}}={}) {
+    params = extend(params, pick(this.query, [`events`, `property`, `isPeopleProperty`]));
     params.from = this.query.from.toISOString().split(`T`)[0];
     params.to = this.query.to.toISOString().split(`T`)[0];
-    params.task = this.task;
     params.propertyPath = `${params.isPeopleProperty ? `user.` : ``}properties.${params.property}`;
     return {
       script: String(main),
       params: JSON.stringify(params),
     };
-  }
-
-  setTask(task) {
-    this.task = task;
-    return this;
-  }
-
-  buildJQLArgs() {
-    // prepare args for each JQL Query.
-    return this.query.jqlQueries.map(jqlQuery =>
-      this.buildJQLParams(jqlQuery).then(jqlParams =>
-        [this.buildUrl(), this.buildParams(jqlParams), this.buildOptions()]));
   }
 
   buildUrl() {
@@ -64,11 +51,8 @@ export default class ExtremaJQLQuery extends BaseQuery {
   runJQLQueries() {
     return [`min`, `max`].map(task => (
       new Promise(resolve => {
-        this.setTask(task)
-          .fetch(this.buildUrl(), this.buildParams(), this.buildOptions())
-          .then(results => {
-            resolve({[task]: results});
-          });
+        this.fetch(this.buildUrl(), this.buildParams({params: {task}}), this.buildOptions())
+          .then(results => resolve({[task]: results}));
       })
     ));
   }
