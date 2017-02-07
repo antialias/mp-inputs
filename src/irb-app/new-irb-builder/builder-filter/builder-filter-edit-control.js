@@ -4,6 +4,8 @@ import { renameProperty, parseDate, formatDateDisplay } from '../../../util';
 
 import './builder-filter-edit-control.styl';
 
+const MAX_LABEL_ENTRIES = 3;
+
 document.registerElement(`builder-filter-edit-control`, class extends EditControl {
   get section() {
     return FilterClause.TYPE;
@@ -14,7 +16,17 @@ document.registerElement(`builder-filter-edit-control`, class extends EditContro
     const property = renameProperty(clause.value);
     const type = clause.filterType;
     let operator = clause.filterOperator;
-    let value = Array.isArray(clause.filterValue) ? clause.filterValue : [clause.filterValue];
+
+    let value = clause.filterValue;
+    if (Array.isArray(value)) {
+      if (value.length > MAX_LABEL_ENTRIES) {
+        value = value
+          .slice(0, MAX_LABEL_ENTRIES - 1)
+          .concat(`${value.length - MAX_LABEL_ENTRIES + 1} others`);
+      }
+    } else {
+      value = [value];
+    }
     // Workaround for <https://mixpanel.atlassian.net/browse/CA-1990>.
     value = value.map(val => val === 0 ? `0` : val);
 
