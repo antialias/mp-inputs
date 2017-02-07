@@ -151,7 +151,7 @@ ShowClause.MATH_TYPES = ShowClause.prototype.MATH_TYPES = [
   ShowClause.MATH_TYPE_MAX,
 ];
 
-const PROPERTY_TYPES = [
+export const PROPERTY_TYPES = [
   `string`, `number`, `datetime`, `boolean`, `list`,
 ];
 export class GroupClause extends EventsPropertiesClause {

@@ -2,6 +2,7 @@ import { extend, sorted } from 'mixpanel-common/util';
 import { renameProperty } from 'mixpanel-common/report/util';
 
 import BaseQuery from './base';
+import { PROPERTY_TYPES } from '../clause.js'
 
 class BaseTopPropertiesQuery extends BaseQuery {
   buildParams() {
@@ -12,7 +13,7 @@ class BaseTopPropertiesQuery extends BaseQuery {
     const properties = Object.keys(results).map(name => {
       const { count, type } = results[name];
       return {count, type, name, resourceType: this.resourceType};
-    });
+    }).filter(prop => PROPERTY_TYPES.includes(prop.type));
 
     return sorted(properties, {
       transform: prop => renameProperty(prop.name).toLowerCase(),
