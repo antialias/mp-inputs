@@ -70,15 +70,11 @@ export default class Report {
 
   // live state URL
   toUrlData() {
-    const serialized = {
+    return {
       displayOptions: this.displayOptions,
       sections: this.sections.toUrlData(),
       title: this.title,
     };
-    if (this.id) {
-      serialized.id = this.id;
-    }
-    return serialized;
   }
 
   _listOfSectionValues(section) {
