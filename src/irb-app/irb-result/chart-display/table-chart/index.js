@@ -142,6 +142,10 @@ document.registerElement(`table-manager`, class extends WebComponent {
         this.$rightFixedHeader.css(`transform`, `translateX(-${scrollX}px)`); //
       }
     };
+
+    this.sizeHandler = () => {
+      this.$right.width(this.$container.width() - this.$left.children(`table`).width());
+    };
   }
 
   attributeChangedCallback() {
@@ -151,6 +155,7 @@ document.registerElement(`table-manager`, class extends WebComponent {
   }
 
   detachedCallback() {
+    $(window).off(`resize`, this.sizeHandler);
     this.$left.off(`scroll`, this.scrollHandler);
     this.$right.off(`scroll`, this.scrollHandler);
   }
@@ -163,7 +168,8 @@ document.registerElement(`table-manager`, class extends WebComponent {
     this.$leftFixedHeader = this.$left.siblings(`.fixed-header`);
     this.$rightFixedHeader = this.$right.siblings(`.fixed-header`);
 
-    this.$right.width(this.$container.width() - this.$left.children(`table`).width());
+    this.sizeHandler();
+    $(window).on(`resize`, this.sizeHandler);
     this.$right.on(`scroll`, this.scrollHandler);
     this.$left.on(`scroll`, this.scrollHandler);
 
