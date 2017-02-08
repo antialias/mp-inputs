@@ -57,21 +57,9 @@ document.registerElement(`chart-display`, class extends Component {
         getLegendStyle: () => {
           const style = {};
           const stickyHeader = this.state.stickyHeader;
-          // OLD LOGIC FOR HEIGHT
-          // if (legend) {
-          //   // fix legend height
-          //   const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-          //   const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-          //   const distFromBottom = scrollHeight - (scrollTop + window.innerHeight);
-          //   const appBottomMargin = 20; // padding on .irb-main-panel
-          //   const spacingForBottom = Math.max(appBottomMargin - distFromBottom, 0);
-          //   if (spacingForBottom) {
-          //     legend.style.height = `calc(100vh - ${spacingForBottom}px)`;
-          //   } else {
-          //     legend.style.height = ``;
-
           if (stickyHeader.isSticky) {
             style.left = `${stickyHeader.chartWidth + stickyHeader.chartOffsetLeft}px`;
+            style.height = `calc(100vh - ${stickyHeader.chartBottomToPageBottom}px)`;
           }
           return style;
         },
@@ -170,22 +158,25 @@ document.registerElement(`chart-display`, class extends Component {
           }
         },
         barChartInserted: vdom => {
+          const getDistToBottomFrom = el => (
+            Math.abs(Math.max(0, window.innerHeight - el.top - el.height))
+          );
+
           this._updateChartBoundaries = throttle(() => {
             const chartBounds = vdom.elm.getBoundingClientRect();
             this.app.updateStickyHeader({
+              chartBottomToPageBottom: getDistToBottomFrom(chartBounds),
               chartWidth: chartBounds.width,
               chartOffsetLeft: chartBounds.left,
             })
           }, 10);
+
           this._checkForStickyHeader = throttle(() => {
             const chartBounds = vdom.elm.getBoundingClientRect();
-            const shouldBeSticky = chartBounds.top <= 0;
-            const isCurrentlySticky = this.state.stickyHeader.isSticky;
-            if (shouldBeSticky && !isCurrentlySticky) {
-              this.app.updateStickyHeader({isSticky: true});
-            } else if (!shouldBeSticky && isCurrentlySticky) {
-              this.app.updateStickyHeader({isSticky: false});
-            }
+            this.app.updateStickyHeader({
+              chartBottomToPageBottom: getDistToBottomFrom(chartBounds),
+              isSticky: chartBounds.top <= 0,
+            });
           }, 10);
 
           window.requestAnimationFrame(() => {
