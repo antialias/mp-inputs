@@ -14,6 +14,15 @@ document.registerElement(`extras-menu`, class extends Component {
       template,
       helpers: {
         analysisChoices: () => ANALYSIS_LIST,
+        getButtonStyle: () => {
+          const style = {};
+          const stickyHeader = this.state.stickyHeader;
+          if (stickyHeader.isSticky) {
+            const extrasWidth = 30;
+            style.left = `${stickyHeader.chartWidth + stickyHeader.chartOffsetLeft - extrasWidth}px`;
+          }
+          return style;
+        },
         valueChoices: () => VALUE_LIST,
         isAnalysisDisabled: analysis => !this.IRBResult.isAnalysisEnabled(analysis),
         isValueToggleDisabled: () => !this.IRBResult.isValueToggleEnabled(),

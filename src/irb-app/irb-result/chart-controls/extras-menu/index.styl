@@ -30,8 +30,13 @@ button.extras-menu
     width 138px
 
 .extras-menu-container
-  z-index 2
+  z-index 3
 
   .toggle-view > li
     position absolute
     right 0
+
+.sticky-chart-headers .extras-menu-container
+  .toggle-view > li
+    position fixed
+    top 0

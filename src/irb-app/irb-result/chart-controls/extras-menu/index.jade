@@ -1,5 +1,8 @@
 ul.toggle-view.chart-controls-component
-  li(class={selected: isEditingExtrasMenu})
+  li(
+    class={selected: isEditingExtrasMenu}
+    style=$helpers.getButtonStyle()
+  )
     button.extras-menu.irb-learn-emphasize(
       class={selected: isEditingExtrasMenu}
       on={click: $helpers.onClickExtrasMenu}
