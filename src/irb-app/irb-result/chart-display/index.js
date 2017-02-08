@@ -173,10 +173,17 @@ document.registerElement(`chart-display`, class extends Component {
 
           this._checkForStickyHeader = throttle(() => {
             const chartBounds = vdom.elm.getBoundingClientRect();
-            this.app.updateStickyHeader({
+            const stickyHeader = {
               chartBottomToPageBottom: getDistToBottomFrom(chartBounds),
               isSticky: chartBounds.top <= 0,
-            });
+            };
+
+            if (stickyHeader.isSticky !== this.state.stickyHeader.isSticky ||
+              stickyHeader.chartBottomToPageBottom !== this.state.stickyHeader.chartBottomToPageBottom
+            ) {
+              // scroll event happens alot. only update if there are changes.
+              this.app.updateStickyHeader(stickyHeader);
+            }
           }, 10);
 
           window.requestAnimationFrame(() => {
