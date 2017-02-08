@@ -6,7 +6,7 @@ import { extend } from '../../../util';
 import template from './builder-screen-sources.jade';
 
 const SOURCES = [
-  {name: `Event`, resourceType: `events`},
+  {name: `Events`, resourceType: `events`},
   {name: `People`, resourceType: `people`},
 ];
 
