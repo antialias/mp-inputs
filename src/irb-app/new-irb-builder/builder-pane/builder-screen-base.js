@@ -39,10 +39,17 @@ export class BuilderScreenBase extends Component {
           this.app.update({contextFilter: ``});
           this.nextScreen(`builder-screen-numeric-properties`);
         },
-        clickedProperty: (ev, property) => this.updateAndCommitStageClause({
-          property,
-          value: ShowClause.ALL_PEOPLE,
-        }),
+        clickedProperty: (ev, property) => {
+          let clauseAttrs = {
+            property,
+            value: ShowClause.ALL_PEOPLE,
+          };
+          if (property.name === ShowClause.ALL_PEOPLE.name) {
+            clauseAttrs.resourceType = Clause.RESOURCE_TYPE_PEOPLE;
+            clauseAttrs.property = null;
+          }
+          this.updateAndCommitStageClause(clauseAttrs);
+        },
 
         clickedBackButton: () => this.previousScreen(),
         closePane: () => this.app.stopEditingClause(),
@@ -119,7 +126,10 @@ export class BuilderScreenBase extends Component {
     let properties = isPeople ? this.state.topPeopleProperties : this.state.topEventProperties;
     properties = properties === BaseQuery.LOADING ? [] : properties;
 
-    return this.matchingItems(properties, renameProperty);
+    return [
+      ...this.matchingItems([ShowClause.ALL_PEOPLE], renameProperty),
+      ...this.matchingItems(properties, renameProperty),
+    ];
   }
 
   previousScreen() {

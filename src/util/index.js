@@ -74,7 +74,13 @@ export function getIconForPropertyType(propType) {
   return PROPERTY_TYPE_ICON_MAP[propType];
 }
 export function getIconForProperty(property) {
-  return getIconForPropertyType(property && property.type);
+  if (!property) {
+    return null;
+  } else if (property.name === ShowClause.ALL_PEOPLE.name) {
+    return `profile`;
+  } else {
+    return getIconForPropertyType(property.type);
+  }
 }
 
 // TODO(chi): move to mixpanel-common
