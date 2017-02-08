@@ -28,7 +28,7 @@ let QUERIES = [
     },
   },
   {
-    name: 'unique 1 quarter',
+    name: 'unique 1 year',
     project: 3,
     queries: [
       {
@@ -37,7 +37,7 @@ let QUERIES = [
       },
     ],
     time: {
-      range: TimeClause.RANGES.QUARTER,
+      range: TimeClause.RANGES.YEAR,
     },
   },
   {
