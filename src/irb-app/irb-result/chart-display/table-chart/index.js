@@ -145,6 +145,25 @@ document.registerElement(`table-manager`, class extends WebComponent {
 
     this.sizeHandler = () => {
       this.$right.width(this.$container.width() - this.$left.children(`table`).width());
+
+      const $leftHeaders = this.$left.find(`th`);
+      const $leftFixedHeaders = this.$leftFixedHeader.children();
+
+      const isFirefox = navigator.userAgent.toLowerCase().indexOf(`firefox`) > -1;
+
+      $leftHeaders.each((i, el) => {
+        const adjust = isFirefox ? 2 : 1;
+        const width = $(el).width() - (i === $leftHeaders.length - 1 ? adjust : 0) + (1 - adjust);
+        $leftFixedHeaders.eq(i).width(width);
+      });
+
+      const $rightHeaders = this.$right.find(`th`);
+      const $rightFixedHeaders = this.$rightFixedHeader.children();
+
+      $rightHeaders.each((i, el) => {
+        const adjust = isFirefox ? 2 : 0;
+        $rightFixedHeaders.eq(i).width($(el).width() - adjust);
+      });
     };
   }
 
@@ -172,25 +191,6 @@ document.registerElement(`table-manager`, class extends WebComponent {
     $(window).on(`resize`, this.sizeHandler);
     this.$right.on(`scroll`, this.scrollHandler);
     this.$left.on(`scroll`, this.scrollHandler);
-
-    const $leftHeaders = this.$left.find(`th`);
-    const $leftFixedHeaders = this.$leftFixedHeader.children();
-
-    const isFirefox = navigator.userAgent.toLowerCase().indexOf(`firefox`) > -1;
-
-    $leftHeaders.each((i, el) => {
-      const adjust = isFirefox ? 2 : 1;
-      const width = $(el).width() - (i === $leftHeaders.length - 1 ? adjust : 0) + (1 - adjust);
-      $leftFixedHeaders.eq(i).width(width);
-    });
-
-    const $rightHeaders = this.$right.find(`th`);
-    const $rightFixedHeaders = this.$rightFixedHeader.children();
-
-    $rightHeaders.each((i, el) => {
-      const adjust = isFirefox ? 2 : 0;
-      $rightFixedHeaders.eq(i).width($(el).width() - adjust);
-    });
   }
 
   get data() {
