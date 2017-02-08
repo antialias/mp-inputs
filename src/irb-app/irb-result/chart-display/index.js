@@ -168,7 +168,7 @@ document.registerElement(`chart-display`, class extends Component {
               chartBottomToPageBottom: getDistToBottomFrom(chartBounds),
               chartWidth: chartBounds.width,
               chartOffsetLeft: chartBounds.left,
-            })
+            });
           }, 10);
 
           this._checkForStickyHeader = throttle(() => {

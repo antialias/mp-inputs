@@ -123,8 +123,7 @@ document.registerElement(`bar-chart`, class extends Component {
 
   attributeChangedCallback(attrName, oldValue, newValue) {
     if (attrName === `sticky-header`) {
-      this.update({stickyHeader: JSON.parse(newValue)})
-      console.log(this.state)
+      this.update({stickyHeader: JSON.parse(newValue)});
     } else {
       this.updateStateFromAttributes();
     }
