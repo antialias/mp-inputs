@@ -3,6 +3,7 @@
 .chart(class={
   [`${report.displayOptions.chartType}-chart-type`]: true,
   'has-legend': hasLegend,
+  'sticky-chart-headers': stickyHeader.isSticky,
 })
   .main-chart
     if resultLoading && projectHasEvents
@@ -35,10 +36,15 @@
               'display-options': $helpers.getDisplayOptions(),
               'function-label': $helpers.getFunctionLabel(),
               'sorting': report.sorting.bar,
+              'sticky-header': stickyHeader,
               'legend-change-id': report.legend.changeID,
             })
             on={
               change: $helpers.barChartChange,
+            }
+            hook={
+              insert: $helpers.barChartInserted,
+              destroy: $helpers.barChartDestroyed,
             }
           )
         when 'line'
@@ -64,4 +70,6 @@
             }
           )
   if hasLegend
-    .legend.irb-learn-manipulate-data-disabled= $component.child('chart-legend')
+    .legend.irb-learn-manipulate-data-disabled(
+      style=$helpers.getLegendStyle()
+    )= $component.child('chart-legend')

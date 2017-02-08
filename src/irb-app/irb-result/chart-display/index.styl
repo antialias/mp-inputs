@@ -73,11 +73,11 @@ min-bar-chart-height = 600px
         .label
           color lighten(grey-900, 48%)
 
+
   .main-chart
-    flex 1 1
     overflow hidden
     position relative
-    width "calc(100% - %s)" % legend-width
+    width 100%
 
     .chart-header-container
       background-color header-gray
@@ -85,6 +85,10 @@ min-bar-chart-height = 600px
       font-size 12px
       height 40px
       line-height 40px
+
+  .has-legend
+    .main-chart
+      width "calc(100% - %s)" % legend-width
 
   .chart-loader
     .chart-header-container
@@ -146,23 +150,14 @@ min-bar-chart-height = 600px
         position fixed
         top 0
 
-    thead
-      position fixed
-      top 0
-      z-index 2
-
-    tbody
-      margin-top 40px
-
   .has-legend
     .main-chart
-      flex 0 0 auto
+      width 100%
 
   .legend
     height 100vh
     min-height min-bar-chart-height
     position fixed
-    right irb-panel-margin
     top 0
     width legend-width
 

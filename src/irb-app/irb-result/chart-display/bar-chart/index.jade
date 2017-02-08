@@ -45,9 +45,11 @@ mixin chart-bar(options={})
     if block
       block
 
-.bar-chart
+.bar-chart(class={'sticky-chart-headers': stickyHeader.isSticky})
   table
-    thead
+    thead(style={
+      width: stickyHeader.isSticky ? `${stickyHeader.chartWidth}px` : ``,
+    })
       tr
         th(props={colSpan: 0})
           .irb-bar-chart-header

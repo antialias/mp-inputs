@@ -121,8 +121,13 @@ document.registerElement(`bar-chart`, class extends Component {
     this.updateStateFromAttributes();
   }
 
-  attributeChangedCallback() {
-    this.updateStateFromAttributes();
+  attributeChangedCallback(attrName, oldValue, newValue) {
+    if (attrName === `sticky-header`) {
+      this.update({stickyHeader: JSON.parse(newValue)})
+      console.log(this.state)
+    } else {
+      this.updateStateFromAttributes();
+    }
   }
 
   updateHeaderWidths() {
@@ -147,6 +152,7 @@ document.registerElement(`bar-chart`, class extends Component {
     const displayOptions = this.getJSONAttribute(`display-options`) || {};
     const functionLabel = this.getJSONAttribute(`function-label`) || ``;
     let sortConfig = this.getJSONAttribute(`sorting`);
+    let stickyHeader = this.getJSONAttribute(`sticky-header`);
 
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
@@ -183,6 +189,7 @@ document.registerElement(`bar-chart`, class extends Component {
       rows,
       segmentColorMap,
       sortConfig,
+      stickyHeader,
     });
 
     this.updateHeaderWidths();

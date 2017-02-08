@@ -1,5 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
+import throttle from 'lodash/throttle';
 import { Component } from 'panel';
 import { capitalize } from 'mixpanel-common/util';
 
@@ -52,6 +53,27 @@ document.registerElement(`chart-display`, class extends Component {
           }
 
           return capitalize(chartLabel.join(` `));
+        },
+        getLegendStyle: () => {
+          const style = {};
+          const stickyHeader = this.state.stickyHeader;
+          // OLD LOGIC FOR HEIGHT
+          // if (legend) {
+          //   // fix legend height
+          //   const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+          //   const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+          //   const distFromBottom = scrollHeight - (scrollTop + window.innerHeight);
+          //   const appBottomMargin = 20; // padding on .irb-main-panel
+          //   const spacingForBottom = Math.max(appBottomMargin - distFromBottom, 0);
+          //   if (spacingForBottom) {
+          //     legend.style.height = `calc(100vh - ${spacingForBottom}px)`;
+          //   } else {
+          //     legend.style.height = ``;
+
+          if (stickyHeader.isSticky) {
+            style.left = `${stickyHeader.chartWidth + stickyHeader.chartOffsetLeft}px`;
+          }
+          return style;
         },
         getDisplayOptions: () => extend(
           pick(this.state.report.displayOptions, [`analysis`, `plotStyle`, `value`]),
@@ -147,6 +169,37 @@ document.registerElement(`chart-display`, class extends Component {
             }
           }
         },
+        barChartInserted: vdom => {
+          this._updateChartBoundaries = throttle(() => {
+            const chartBounds = vdom.elm.getBoundingClientRect();
+            this.app.updateStickyHeader({
+              chartWidth: chartBounds.width,
+              chartOffsetLeft: chartBounds.left,
+            })
+          }, 10);
+          this._checkForStickyHeader = throttle(() => {
+            const chartBounds = vdom.elm.getBoundingClientRect();
+            const shouldBeSticky = chartBounds.top <= 0;
+            const isCurrentlySticky = this.state.stickyHeader.isSticky;
+            if (shouldBeSticky && !isCurrentlySticky) {
+              this.app.updateStickyHeader({isSticky: true});
+            } else if (!shouldBeSticky && isCurrentlySticky) {
+              this.app.updateStickyHeader({isSticky: false});
+            }
+          }, 10);
+
+          window.requestAnimationFrame(() => {
+            this._updateChartBoundaries();
+            this._checkForStickyHeader();
+          });
+          window.addEventListener(`resize`, this._updateChartBoundaries);
+          window.addEventListener(`scroll`, this._checkForStickyHeader);
+        },
+        barChartDestroyed: () => {
+          this.update({stickyHeader: {}});
+          window.removeEventListener(`resize`, this._updateChartBoundaries);
+          window.removeEventListener(`scroll`, this._checkForStickyHeader);
+        },
         tableChange: ev => {
           const reportTrackingData = this.state.report.toTrackingData();
           const {headerType, colIdx, colName} = ev.detail;
@@ -216,6 +269,7 @@ document.registerElement(`chart-display`, class extends Component {
         resultID: state.result.id,
         resultLoading: state.resultLoading,
         showLegend: this.helpers.showLegend(state),
+        stickyHeader: state.stickyHeader,
         sortConfig: cloneDeep(state.report.sorting),
         windowSize: ROLLING_WINDOWS_BY_UNIT[state.report.sections.time.clauses[0].unit],
       };

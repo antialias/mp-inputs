@@ -57,7 +57,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       },
       helpers: {
         finishLearn: () => this.finishLearn(),
-        insertedBottomPanel: vdom => !this._stickyHeaderInited && this.initStickyHeaders(vdom),
       },
     };
   }
@@ -159,6 +158,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       }),
       resultLoading: true,
       stageClauses: [],
+      stickyHeader: {},
       topEvents: [],
       topEventProperties: [],
       topEventPropertiesByEvent: {},
@@ -248,79 +248,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         }
       });
   }
-
-  initStickyHeaders(vdom) {
-    this._stickyHeaderInited = true;
-    const stickyClassName = `sticky-chart-headers`;
-    const irbAppClassList = this.parentNode.classList;
-
-    // el helpers
-    const getChart = () => vdom.elm.querySelector(`.chart`);
-    const getTableHeader = chart => chart.querySelector('thead');
-    const getLegend = chart => chart.querySelector(`.legend`);
-    const getExtrasMenu = chart => chart.querySelector('.toggle-view li')
-
-
-    const setElPositions = (chart, tableHeader, legend) => {
-      tableHeader.style.width = `calc(${chart.offsetWidth}px - ${legend ? legend.offsetWidth : 0}px)`;
-      const distanceToRightOfHeader = chart.getBoundingClientRect().left + tableHeader.offsetWidth;
-      const extrasMenu = getExtrasMenu(chart);
-      // fix on scroll behaviour
-      extrasMenu.style.left = `${distanceToRightOfHeader - extrasMenu.offsetWidth}px`;
-      if (legend) {
-        legend.style.left = `${distanceToRightOfHeader}px`;
-      }
-    };
-
-    let sizeHandler = null;
-
-    window.addEventListener(`scroll`, throttle(() => {
-      const chart = getChart();
-      const isBarChart = this.state.report.displayOptions.chartType === `bar`;
-      if (isBarChart && chart) {
-        if (chart.getBoundingClientRect().top <= 0) {
-          if (!irbAppClassList.contains(stickyClassName)) {
-            const tableHeader = getTableHeader(chart);
-            if (tableHeader) {
-              const legend = getLegend(chart);
-              setElPositions(chart, tableHeader, legend);
-              irbAppClassList.add(stickyClassName);
-              sizeHandler = throttle(() => setElPositions(chart, tableHeader, legend), 10);
-              window.addEventListener('resize', sizeHandler);
-
-              if (legend) {
-                // fix legend height
-                const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-                const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-                const distFromBottom = scrollHeight - (scrollTop + window.innerHeight);
-                const appBottomMargin = 20; // padding on .irb-main-panel
-                const spacingForBottom = Math.max(appBottomMargin - distFromBottom, 0);
-                if (spacingForBottom) {
-                  legend.style.height = `calc(100vh - ${spacingForBottom}px)`;
-                } else {
-                  legend.style.height = ``;
-                }
-              }
-            }
-          }
-        } else {
-          if (irbAppClassList.contains(stickyClassName)) {
-            const tableHeader = getTableHeader(chart);
-            if (tableHeader) {
-              tableHeader.style.width = ``;
-              const extrasMenu = getExtrasMenu(chart);
-              const legend = getLegend(chart);
-              extrasMenu.style.left = ``;
-              legend.style.left = ``;
-            }
-            irbAppClassList.remove(stickyClassName);
-            window.removeEventListener('resize', sizeHandler);
-          }
-        }
-      }
-    }, 10));
-  }
-
   // Serialization helpers
 
   // TODO update mixpanel-common to allow configurable persistence namespace
@@ -644,6 +571,10 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       const fragment = JSURL.stringify(report.toUrlData());
       history.replaceState(null, null, `#${fragment}`);
     }
+  }
+
+  updateStickyHeader(attrs) {
+    this.update({stickyHeader: extend(this.state.stickyHeader, attrs)});
   }
 
   resetQuery() {
