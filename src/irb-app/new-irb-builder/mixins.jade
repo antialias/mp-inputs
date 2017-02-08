@@ -3,10 +3,10 @@ include ../mixins.jade
 //- apply context filter to one or more resource types in
 //- a single pane
 mixin filtered-options-lists(lists)
-  - let totalResults = 0
+  - let hasResults = false
   each listOptions in lists
     if listOptions.list.length
-      - totalResults += listOptions.list.length
+      - hasResults += true
       .builder-label= listOptions.label
       case listOptions.resourceType
         when `event`
@@ -19,7 +19,7 @@ mixin filtered-options-lists(lists)
             clickedProperty: $helpers.clickedProperty,
             hideLoader: true,
           })
-  if !totalResults
+  if !hasResults
     li.list-option.list-empty Your search returned no results
 
 mixin generic-options-list-item(label, options)
