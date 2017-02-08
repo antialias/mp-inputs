@@ -258,10 +258,19 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     const getChart = () => vdom.elm.querySelector(`.chart`);
     const getTableHeader = chart => chart.querySelector('thead');
     const getLegend = chart => chart.querySelector(`.legend`);
-    const setHeaderWidth = (chart, tableHeader, legend) => {
-      tableHeader.style.width = `calc(${chart.offsetWidth}px - ${legend ? legend.offsetWidth : 0}px)`;
-    };
+    const getExtrasMenu = chart => chart.querySelector('.toggle-view li')
 
+
+    const setElPositions = (chart, tableHeader, legend) => {
+      tableHeader.style.width = `calc(${chart.offsetWidth}px - ${legend ? legend.offsetWidth : 0}px)`;
+      const distanceToRightOfHeader = chart.getBoundingClientRect().left + tableHeader.offsetWidth;
+      const extrasMenu = getExtrasMenu(chart);
+      // fix on scroll behaviour
+      extrasMenu.style.left = `${distanceToRightOfHeader - extrasMenu.offsetWidth}px`;
+      if (legend) {
+        legend.style.left = `${distanceToRightOfHeader}px`;
+      }
+    };
 
     let sizeHandler = null;
 
@@ -274,12 +283,13 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
             const tableHeader = getTableHeader(chart);
             if (tableHeader) {
               const legend = getLegend(chart);
-              setHeaderWidth(chart, tableHeader, legend);
+              setElPositions(chart, tableHeader, legend);
               irbAppClassList.add(stickyClassName);
-              sizeHandler = throttle(() => setHeaderWidth(chart, tableHeader, legend), 10);
+              sizeHandler = throttle(() => setElPositions(chart, tableHeader, legend), 10);
               window.addEventListener('resize', sizeHandler);
 
               if (legend) {
+                // fix legend height
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
                 const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
                 const distFromBottom = scrollHeight - (scrollTop + window.innerHeight);
@@ -297,7 +307,11 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           if (irbAppClassList.contains(stickyClassName)) {
             const tableHeader = getTableHeader(chart);
             if (tableHeader) {
-              tableHeader.style.width = null;
+              tableHeader.style.width = ``;
+              const extrasMenu = getExtrasMenu(chart);
+              const legend = getLegend(chart);
+              extrasMenu.style.left = ``;
+              legend.style.left = ``;
             }
             irbAppClassList.remove(stickyClassName);
             window.removeEventListener('resize', sizeHandler);
