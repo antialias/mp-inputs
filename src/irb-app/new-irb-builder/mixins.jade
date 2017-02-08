@@ -82,7 +82,7 @@ mixin property-list(properties, options)
       if options.loading
         +pane-loader
       else
-        li.list-option.list-empty= (options.listEmptyMessage || 'no properties available')
+        li.list-option.list-empty= options.listEmptyMessage || `no properties available`
 
 mixin property-screen-body(options)
   if options.resourceTypes
