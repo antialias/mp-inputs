@@ -3,8 +3,10 @@ include ../mixins.jade
 //- apply context filter to one or more resource types in
 //- a single pane
 mixin filtered-options-lists(lists)
+  - let totalResults = 0
   each listOptions in lists
     if listOptions.list.length
+      - totalResults += listOptions.list.length
       .builder-label= listOptions.label
       case listOptions.resourceType
         when `event`
@@ -17,6 +19,8 @@ mixin filtered-options-lists(lists)
             clickedProperty: $helpers.clickedProperty,
             hideLoader: true,
           })
+  if !totalResults
+    li.list-option.list-empty Your search returned no results
 
 mixin generic-options-list-item(label, options)
   li.list-option.generic-list(
@@ -82,7 +86,7 @@ mixin property-list(properties, options)
       if options.loading
         +pane-loader
       else
-        li.list-option.list-empty= options.listEmptyMessage || `no properties available`
+        li.list-option.list-empty= options.listEmptyMessage || `No properties available`
 
 mixin property-screen-body(options)
   if options.resourceTypes
