@@ -1,6 +1,5 @@
 import JSURL from 'jsurl';
 import kebabCase from 'lodash/kebabCase';
-import throttle from 'lodash/throttle';
 import MPApp from 'mixpanel-common/report/mp-app';
 import Persistence from 'mixpanel-common/report/persistence';
 import { extend } from 'mixpanel-common/util';
@@ -248,6 +247,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         }
       });
   }
+
   // Serialization helpers
 
   // TODO update mixpanel-common to allow configurable persistence namespace
