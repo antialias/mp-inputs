@@ -46,6 +46,16 @@ class DatePicker extends Component {
     };
   }
 
+  attributeChangedCallback(name, oldValue, newValue) {
+    super.attributeChangedCallback(...arguments);
+    if (name === `from-focused`) {
+      this.update({fromFocused: newValue});
+    }
+    if (name === `to-focused`) {
+      this.update({toFocused: newValue});
+    }
+  }
+
   get value() {
     const from = this.state.from ? formatDateISO(this.state.from) : null;
     const to = this.state.to ? formatDateISO(this.state.to) : null;

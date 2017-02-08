@@ -23,7 +23,7 @@
           - const {from, to} = $helpers.getDates()
           date-input.control-label(
             attrs={
-              autofocus: $helpers.focusFrom(),
+              autofocus: builderPane.fromFocused,
             }
             props={
               type: `text`,
@@ -32,12 +32,14 @@
             on={
               click: $helpers.clickedInput,
               change: $helpers.changedFrom,
+              focus: $helpers.focusedFrom,
+              blur: $helpers.blurredFrom,
             }
           )
           .clause-language.preposition to
           date-input.control-label(
             attrs={
-              autofocus: $helpers.focusTo(),
+              autofocus: builderPane.toFocused,
             }
             props={
               type: `text`,
@@ -46,6 +48,8 @@
             on={
               click: $helpers.clickedInput,
               change: $helpers.changedTo,
+              focus: $helpers.focusedTo,
+              blur: $helpers.blurredTo,
             }
           )
       else if $helpers.isPresetRange()

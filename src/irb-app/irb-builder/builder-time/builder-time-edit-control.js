@@ -21,15 +21,17 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
           return this.getClause().range && (!screen || !showingCustomRangeControls);
         },
         clickedFromLabel: () => {
-          this.app.updateBuilder({focusInput: `from`});
+          this.app.updateBuilder({fromFocused: true});
           this.helpers.clickedLabel();
         },
         clickedToLabel: () => {
-          this.app.updateBuilder({focusInput: `to`});
+          this.app.updateBuilder({toFocused: true});
           this.helpers.clickedLabel();
         },
-        focusFrom: () => this.state.builderPane.focusInput === `from`,
-        focusTo: () => this.state.builderPane.focusInput === `to`,
+        focusedFrom: () => this.app.updateBuilder({fromFocused: true}),
+        focusedTo: () => this.app.updateBuilder({toFocused: true}),
+        blurredFrom: () => this.app.updateBuilder({fromFocused: false}),
+        blurredTo: () => this.app.updateBuilder({toFocused: false}),
         changedFrom: ev => this.setDates({from: ev.detail}),
         changedTo: ev => this.setDates({to: ev.detail}),
       }),
