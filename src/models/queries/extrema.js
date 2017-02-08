@@ -1,5 +1,5 @@
 import BaseQuery from './base';
-import { extend, pick } from '../../util';
+import { extend, formatDateISO, pick } from '../../util';
 
 import main from './extrema.jql.js';
 
@@ -32,8 +32,8 @@ export default class ExtremaJQLQuery extends BaseQuery {
 
   buildParams({params={}}={}) {
     params = extend(params, pick(this.query, [`events`, `property`, `isPeopleProperty`]));
-    params.from = this.query.from.toISOString().split(`T`)[0];
-    params.to = this.query.to.toISOString().split(`T`)[0];
+    params.from = formatDateISO(this.query.from);
+    params.to = formatDateISO(this.query.to);
     params.propertyPath = `properties.${params.property}`;
     return {
       script: String(main),
