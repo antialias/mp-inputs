@@ -11,7 +11,7 @@
   .irb-main-panel.top-panel
     = $component.child(`irb-header`)
     = $component.child(`new-irb-builder`)
-  .irb-main-panel.bottom-panel
+  .irb-main-panel.bottom-panel(hook={insert: $helpers.insertedBottomPanel})
     = $component.child(`irb-result`)
 
   = $component.child(`irb-reports`)
