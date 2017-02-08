@@ -1,5 +1,10 @@
 import { Component } from 'panel';
 import throttle from 'lodash/throttle';
+import {
+  defaultOrdering,
+  lexicalCompose,
+  mapArguments,
+} from 'mixpanel-common/util/function';
 
 import { Clause, ShowClause } from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
@@ -8,7 +13,6 @@ import {
   renameEvent,
   renameProperty,
   replaceByIndex,
-  sorted,
   stringFilterMatches,
 } from '../../../util';
 
@@ -87,7 +91,14 @@ export class BuilderScreenBase extends Component {
         .map(item => extend(item, {
           matches: stringFilterMatches(renameFunc(item.name), this.state.contextFilter),
         }))
-        .filter(item => !!item.matches);
+        .filter(item => !!item.matches)
+        .sort(lexicalCompose(
+          // prioritize beginning match
+          mapArguments(defaultOrdering, item => -item.matches[0].length),
+
+          // second: a-z
+          mapArguments(defaultOrdering, item => renameFunc(item.name).toLowerCase())
+        ));
     }
     return items;
   }
@@ -99,9 +110,7 @@ export class BuilderScreenBase extends Component {
         ShowClause.TOP_EVENTS,
         ShowClause.ALL_EVENTS,
       ], renameEvent),
-      ...sorted(this.matchingItems(mpEvents, renameEvent), {
-        transform: mpEvent => renameEvent(mpEvent.name).toLowerCase(),
-      }),
+      ...this.matchingItems(mpEvents, renameEvent),
     ];
   }
 
@@ -110,9 +119,7 @@ export class BuilderScreenBase extends Component {
     let properties = isPeople ? this.state.topPeopleProperties : this.state.topEventProperties;
     properties = properties === BaseQuery.LOADING ? [] : properties;
 
-    return sorted(this.matchingItems(properties, renameProperty), {
-      transform: prop => renameProperty(prop.name).toLowerCase(),
-    });
+    return this.matchingItems(properties, renameProperty);
   }
 
   previousScreen() {
