@@ -150,7 +150,6 @@ min-bar-chart-height = 600px
     thead
       position fixed
       top 0
-      width "calc(100vw - (%s * 2))" % (irb-panel-margin)
       z-index 2
 
     tbody
@@ -159,9 +158,6 @@ min-bar-chart-height = 600px
   .has-legend
     .main-chart
       flex 0 0 auto
-
-    thead
-      width "calc(100vw - %s - (%s * 2))" % (legend-width irb-panel-margin)
 
     .extras-menu-container
       .toggle-view > li

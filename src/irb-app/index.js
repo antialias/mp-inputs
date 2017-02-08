@@ -252,26 +252,57 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   initStickyHeaders(vdom) {
     this._stickyHeaderInited = true;
     const stickyClassName = `sticky-chart-headers`;
+    const irbAppClassList = this.parentNode.classList;
+
+    // el helpers
+    const getChart = () => vdom.elm.querySelector(`.chart`);
+    const getTableHeader = chart => chart.querySelector('thead');
+    const getLegend = chart => chart.querySelector(`.legend`);
+    const setHeaderWidth = (chart, tableHeader, legend) => {
+      tableHeader.style.width = `calc(${chart.offsetWidth}px - ${legend ? legend.offsetWidth : 0}px)`;
+    };
+
+
+    let sizeHandler = null;
+
     window.addEventListener(`scroll`, throttle(() => {
-      const chart = vdom.elm.querySelector(`.chart`);
+      const chart = getChart();
       const isBarChart = this.state.report.displayOptions.chartType === `bar`;
-      if (isBarChart && chart && chart.getBoundingClientRect().top <= 0) {
-        this.parentNode.classList.add(stickyClassName);
-        const legend = this.querySelector(`.legend`);
-        if (legend) {
-          const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
-          const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-          const distFromBottom = scrollHeight - (scrollTop + window.innerHeight);
-          const appBottomMargin = 20; // padding on .irb-main-panel
-          const spacingForBottom = Math.max(appBottomMargin - distFromBottom, 0);
-          if (spacingForBottom) {
-            legend.style.height = `calc(100vh - ${spacingForBottom}px)`;
-          } else {
-            legend.style.height = ``;
+      if (isBarChart && chart) {
+        if (chart.getBoundingClientRect().top <= 0) {
+          if (!irbAppClassList.contains(stickyClassName)) {
+            const tableHeader = getTableHeader(chart);
+            if (tableHeader) {
+              const legend = getLegend(chart);
+              setHeaderWidth(chart, tableHeader, legend);
+              irbAppClassList.add(stickyClassName);
+              sizeHandler = throttle(() => setHeaderWidth(chart, tableHeader, legend), 10);
+              window.addEventListener('resize', sizeHandler);
+
+              if (legend) {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                const scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
+                const distFromBottom = scrollHeight - (scrollTop + window.innerHeight);
+                const appBottomMargin = 20; // padding on .irb-main-panel
+                const spacingForBottom = Math.max(appBottomMargin - distFromBottom, 0);
+                if (spacingForBottom) {
+                  legend.style.height = `calc(100vh - ${spacingForBottom}px)`;
+                } else {
+                  legend.style.height = ``;
+                }
+              }
+            }
+          }
+        } else {
+          if (irbAppClassList.contains(stickyClassName)) {
+            const tableHeader = getTableHeader(chart);
+            if (tableHeader) {
+              tableHeader.style.width = null;
+            }
+            irbAppClassList.remove(stickyClassName);
+            window.removeEventListener('resize', sizeHandler);
           }
         }
-      } else {
-        this.parentNode.classList.remove(stickyClassName);
       }
     }, 10));
   }
