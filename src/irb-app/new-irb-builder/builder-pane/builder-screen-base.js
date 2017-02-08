@@ -40,7 +40,7 @@ export class BuilderScreenBase extends Component {
           this.nextScreen(`builder-screen-numeric-properties`);
         },
         clickedProperty: (ev, property) => {
-          let clauseAttrs = {
+          const clauseAttrs = {
             property,
             value: ShowClause.ALL_PEOPLE,
           };
