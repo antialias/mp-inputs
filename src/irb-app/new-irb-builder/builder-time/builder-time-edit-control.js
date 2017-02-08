@@ -17,9 +17,8 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
         getDates: () => this.app.getTimeClauseValue(),
         isPresetRange: () => {
           const screen = this.app.getBuilderCurrentScreen();
-          return this.getClause().range && (
-            !screen || screen.componentName === `builder-screen-time`
-          );
+          const showingCustomRangeControls = screen && screen.componentName === `builder-screen-time-custom`;
+          return this.getClause().range && (!screen || !showingCustomRangeControls);
         },
         clickedFromLabel: () => {
           this.app.updateBuilder({focusInput: `from`});

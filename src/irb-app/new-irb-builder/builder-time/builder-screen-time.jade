@@ -9,7 +9,12 @@ include ../mixins.jade
         - const isSelected = range === selected
         - const isCustom = range === $helpers.RANGES.CUSTOM
         li.list-option(
-          class={'list-option-selected': isSelected, 'list-option-time-custom': isCustom}
-          on={click: !isSelected || isCustom ? () => $helpers.clickedRange(range) : null}
+          class={
+            'list-option-selected': isSelected,
+            'list-option-time-custom': isCustom,
+          }
+          on={
+            click: !isSelected || isCustom ? () => $helpers.clickedRange(range) : null,
+          }
         )
           +screen-option(range, {noIcon: true})

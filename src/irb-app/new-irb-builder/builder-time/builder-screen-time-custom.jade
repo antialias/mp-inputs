@@ -6,16 +6,29 @@ include ../mixins.jade
   +screen-title(`Choose a date range`, {backButton: true})
   .range-control
     irb-datepicker(
-      attrs={range: true, 'double-calendar': true, 'hide-text-inputs': true}
-      props={value: {from, to}}
-      on={change: $helpers.changedDates}
+      attrs={
+        range: true,
+        'double-calendar': true,
+        'hide-text-inputs': true,
+      }
+      props={
+        value: {from, to},
+      }
+      on={
+        change: $helpers.changedDates,
+      }
     )
   if report.displayOptions.chartType === `line`
     .unit-control
       .builder-label Time unit
       mp-toggle(
-        attrs={square: true, selected: $helpers.getStageClauseAttr(`unit`)}
-        on={select: $helpers.changedUnit}
+        attrs={
+          square: true,
+          selected: $helpers.getStageClauseAttr(`unit`),
+        }
+        on={
+          select: $helpers.changedUnit,
+        }
       )
         each unit in $helpers.UNITS
           mp-toggle-option(attrs={value: unit})= unit

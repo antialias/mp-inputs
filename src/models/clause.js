@@ -216,7 +216,7 @@ const RANGE_TO_VALUE_AND_UNIT = {
   [RANGES.HOURS]:   {value: 96, unit: UNITS.HOUR},
   [RANGES.WEEK]:    {value: 7,  unit: UNITS.DAY},
   [RANGES.MONTH]:   {value: 30, unit: UNITS.DAY},
-  [RANGES.QUARTER]: {value: 4,  unit: UNITS.MONTH}, // TODO: change unit to RANGES.QUARTER when we can support unit=quarter on backend
+  [RANGES.QUARTER]: {value: 4,  unit: UNITS.QUARTER},
   [RANGES.YEAR]:    {value: 12, unit: UNITS.MONTH},
 };
 const UNIT_AND_VALUE_TO_RANGE = {
@@ -228,7 +228,7 @@ const UNIT_AND_VALUE_TO_RANGE = {
     30: RANGES.MONTH,
   },
   quarter: {
-    4: RANGES.MONTH, // TODO: change unit to RANGES.QUARTER when we can support unit=quarter on backend
+    4: RANGES.QUARTER,
   },
   month: {
     12: RANGES.YEAR,

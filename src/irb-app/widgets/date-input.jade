@@ -9,7 +9,7 @@
       blur: $helpers.blurredInput,
       change: $helpers.changedInput,
     }
-    hook=$component.getAttribute('autofocus') ? {
-      insert: $helpers.focus,
-    } : {}
+    hook={
+      insert: $component.getAttribute('autofocus') ? $helpers.focus : null,
+    }
   )
