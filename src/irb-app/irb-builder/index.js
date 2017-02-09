@@ -13,7 +13,7 @@ import './builder-show';
 import './builder-time';
 import './typecast-pane';
 
-document.registerElement(`new-irb-builder`, class extends Component {
+document.registerElement(`irb-builder`, class extends Component {
   get config() {
     return {
       template,

@@ -20,8 +20,8 @@ import Report from '../models/report';
 import Result from '../models/result';
 
 import './irb-header';
+import './irb-builder';
 import './irb-result';
-import './new-irb-builder';
 import './irb-learn';
 import './irb-reports';
 
