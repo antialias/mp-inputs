@@ -160,6 +160,7 @@ export class GroupClause extends EventsPropertiesClause {
     this.filterType = attrs.filterType || GroupClause.FILTER_TYPES[0];
     this.propertyType = attrs.propertyType || GroupClause.PROPERTY_TYPES[0];
     this.typeCast = attrs.typeCast || null;
+    this.unit = attrs.unit || null;
   }
 
   get valid() {
@@ -173,11 +174,15 @@ export class GroupClause extends EventsPropertiesClause {
       filterType: this.filterType,
       propertyType: this.propertyType,
       typeCast: this.typeCast,
+      unit: this.unit,
     });
   }
 
   toUrlData() {
-    const conditionalAttrs = {propertyType: this.propertyType};
+    const conditionalAttrs = {
+      propertyType: this.propertyType,
+      unit: this.unit,
+    };
     if (this.typeCast) {
       conditionalAttrs[`typeCast`] = this.typeCast;
     }

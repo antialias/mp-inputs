@@ -14,7 +14,7 @@ document.registerElement(`builder-screen-group-datetime-options`, class extends 
         },
         clickedUnit: unit => this.updateAndCommitStageClause({unit}),
         getStagedProperty: () => {
-          const clause = this.app.getActiveStageClause()
+          const clause = this.app.getActiveStageClause();
           return clause && renameProperty(clause.value);
         },
       }),

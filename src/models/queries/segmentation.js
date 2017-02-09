@@ -260,7 +260,7 @@ export default class SegmentationQuery extends BaseQuery {
     );
 
     // data global to all JQL queries.
-    const segments = sections.group.clauses.map(clause => pick(clause, [`value`, `propertyType`, `resourceType`, `typeCast`]));
+    const segments = sections.group.clauses.map(clause => pick(clause, [`value`, `propertyType`, `resourceType`, `typeCast`, `unit`]));
 
     const filterArbSelectors = sections.filter.clauses
       .map(clause => clause.attrs)
@@ -376,6 +376,7 @@ export default class SegmentationQuery extends BaseQuery {
         resourceTypeNeeded = `all`;
       }
       scriptParams.resourceTypeNeeded = resourceTypeNeeded;
+      console.log(scriptParams)
       return scriptParams;
     });
   }

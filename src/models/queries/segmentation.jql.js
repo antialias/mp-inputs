@@ -48,11 +48,47 @@ function main() {
     return paths.concat('properties', propertyName);
   };
 
+  var dateBuckets = {
+    all: [],
+    hour: mixpanel.hourly_time_buckets,
+    day: mixpanel.daily_time_buckets,
+    week: mixpanel.weekly_time_buckets,
+    month: mixpanel.monthly_time_buckets,
+    quarter: mixpanel.quarterly_time_buckets,
+  };
+
+  var getDateBucketing = function(accessor, unit, convertToDate) {
+    var bucket = dateBuckets[unit];
+    if (convertToDate) {
+      // offset property values being js Dates
+      if (Array.isArray(bucket)) {
+        bucket = bucket.map(time => time / 1000);
+      } else {
+        bucket = {
+          bucket_size: bucket.bucket_size / 1000,
+          offset: bucket.offset ? bucket.offset / 1000 : 0,
+        };
+      }
+    }
+    return mixpanel.numeric_bucket(accessor, bucket);
+  };
+
   if (params.groups) {
     groups = groups.concat(params.groups.map(function(group) {
       var jqlGroup = getPropertyPaths(group.value, group.resourceType).join('.');
       if (group.buckets) {
         jqlGroup = mixpanel.numeric_bucket(mixpanel.to_number(jqlGroup), group.buckets);
+      } else if (group.unit) {
+        var bucket = dateBuckets[group.unit];
+        if (Array.isArray(bucket)) {
+          bucket = bucket.map(time => time / 1000);
+        } else {
+          bucket = {
+            bucket_size: bucket.bucket_size / 1000,
+            offset: bucket.offset ? bucket.offset / 1000 : 0,
+          };
+        }
+        jqlGroup = mixpanel.numeric_bucket(mixpanel.to_number(jqlGroup), bucket);
       } else if (group.typeCast) {
         switch (group.typeCast) {
           case 'number':
@@ -70,38 +106,13 @@ function main() {
     }));
   }
 
-  var dateBuckets = {
-    all: [],
-    hour: mixpanel.hourly_time_buckets,
-    day: mixpanel.daily_time_buckets,
-    week: mixpanel.weekly_time_buckets,
-    month: mixpanel.monthly_time_buckets,
-    quarter: mixpanel.quarterly_time_buckets,
-  };
-
-  var getDateBucketing = function(accessor, unit, isProperty) {
-    var bucket = dateBuckets[unit];
-    if (isProperty) {
-      // offset property values being js Dates
-      if (Array.isArray(bucket)) {
-        bucket = bucket.map(time => time / 1000);
-      } else {
-        bucket = {
-          bucket_size: bucket.bucket_size / 1000,
-          offset: bucket.offset ? bucket.offset / 1000 : 0,
-        };
-      }
-    }
-    return mixpanel.numeric_bucket(accessor, bucket);
-  };
-
   if (usesEventData) {
     groups.push(
-      getDateBucketing(usesPeopleData ? 'event.time' : 'time', params.dates.unit)
+      mixpanel.numeric_bucket(usesPeopleData ? 'event.time' : 'time', dateBuckets[params.dates.unit])
     );
   } else if (params.peopleTimeSeriesOnProperty) {
     groups.push(
-      getDateBucketing(mixpanel.to_number(params.peopleTimeSeriesOnProperty), `day`, true) // temp const date
+      getDateBucketing(params.peopleTimeSeriesOnProperty, `day`, true) // temp const date
     );
   }
 
