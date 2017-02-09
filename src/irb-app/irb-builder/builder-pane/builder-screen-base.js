@@ -16,6 +16,8 @@ import {
   stringFilterMatches,
 } from '../../../util';
 
+const IDENTITY_FUNC = x => x;
+
 const PROGRESSIVE_LIST_BUFFER_PX = 250;
 const PROGRESSIVE_LIST_START_SIZE = 20;
 
@@ -92,7 +94,7 @@ export class BuilderScreenBase extends Component {
    * filter item list against contextFilter, and add match
    * data to every matching item (for highlighting)
    */
-  matchingItems(items, renameFunc) {
+  matchingItems(items, renameFunc=IDENTITY_FUNC) {
     if (this.state.contextFilter) {
       items = items
         .map(item => extend(item, {
