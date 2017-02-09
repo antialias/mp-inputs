@@ -1,5 +1,7 @@
 @import "../../stylesheets/common"
 
+header-button-transition-duration = 150ms
+
 .irb-builder
   font-size 16px
   font-weight 500
@@ -33,6 +35,8 @@
 
       button.reorder
         opacity 1
+        // only transition on hover to avoid position jumping
+        transition opacity header-button-transition-duration
 
       .clause-header.group
         max-width calc(100% - 15px)
@@ -55,7 +59,7 @@
       position absolute
       right -5px
       top 0
-      transition opacity .1s
+      transition opacity header-button-transition-duration
       svg-icon-style(grey-700, grey-500, size: 18px)
 
       &.group
