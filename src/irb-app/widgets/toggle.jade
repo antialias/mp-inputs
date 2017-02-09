@@ -1,8 +1,0 @@
-- const selected = $helpers.getSelected();
-ul.toggle-widget
-  each choice in $helpers.getChoices()
-    li(class={
-      [$helpers.formatChoiceClass(choice)]: true,
-      selected: choice === selected,
-    })
-      button(on={click: () => $helpers.onChoiceClick(choice)})= $helpers.formatChoice(choice)
