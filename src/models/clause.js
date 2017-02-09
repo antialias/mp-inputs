@@ -5,7 +5,7 @@ import { debug } from 'mixpanel-common/report/util';
 
 const TYPE_FORMAT_NAME = {
   'show': `Compare`,
-  'group': `Group By`,
+  'group': `Group by`,
   'filter': `Filter`,
   'time': `Time`,
 };

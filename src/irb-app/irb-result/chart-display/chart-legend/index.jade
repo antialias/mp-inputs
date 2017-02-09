@@ -6,7 +6,7 @@ include ../../../mixins.jade
     if resultLoading
       .search
         svg-icon(attrs={icon: 'search'})
-        input(attrs={type: 'text', placeholder: 'search'})
+        input(attrs={type: 'text', placeholder: 'Search'})
       .body-loader
         - const numOfLoaderLines = 6
         each _ in Array(numOfLoaderLines).fill()

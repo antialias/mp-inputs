@@ -73,13 +73,13 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
 
     if ([ShowClause.RESOURCE_TYPE_EVENTS, ShowClause.RESOURCE_TYPE_ALL].includes(resourceType) && !isPeopleQuery) {
       sections.push({
-        label: `Event Properties`,
+        label: `Event properties`,
         list: this.getProperties(ShowClause.RESOURCE_TYPE_EVENTS),
       });
     }
     if (showPeople && ([ShowClause.RESOURCE_TYPE_PEOPLE, ShowClause.RESOURCE_TYPE_ALL].includes(resourceType) || isPeopleQuery)) {
       sections.push({
-        label: `People Properties`,
+        label: `People properties`,
         list: this.getProperties(ShowClause.RESOURCE_TYPE_PEOPLE),
       });
     }

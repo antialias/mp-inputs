@@ -6,7 +6,7 @@ include ../../mixins.jade
   .visible-header-content
     .header-label(class={'header-disabled': $helpers.isEditingShowClause()})
       if $helpers.isStaticHeader()
-        | Show Total
+        | Show total
       else
         .header-word Show
         .active-math-header(on={click: $helpers.headerClicked})
