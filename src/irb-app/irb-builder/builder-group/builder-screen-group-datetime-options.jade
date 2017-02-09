@@ -1,0 +1,21 @@
+include ../mixins.jade
+
+//- ADD SEARCH MATCHING AND SELECTED
+- const selected = false // $component.getAttribute(`selected`)
+
+.builder-screen.datetime-options
+  +screen-title(`Bucket ${$helpers.getStagedProperty()} by unit`, {backButton: true})
+  ul.screen-options-list(hook={postpatch: $helpers.updateRenderedSize})
+    - const units = $helpers.availableUnits()
+    if units.length
+      each unit in units
+        //- - const isSelected = range.name === selected
+        //- class={'list-option-selected': isSelected,}
+        li.list-option(
+          on={
+            click: !isSelected ? () => $helpers.clickedUnit(unit) : null,
+          }
+        )
+          +screen-option(unit, {noIcon: true, matches: unit.matches})
+    else
+      li.list-option.list-empty Your search returned no results

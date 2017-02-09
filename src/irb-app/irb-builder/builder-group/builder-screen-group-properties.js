@@ -12,12 +12,18 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
       helpers: extend(super.config.helpers, {
         clickedProperty: (ev, property) => {
           this.app.updateRecentProperties(property);
-          this.updateAndCommitStageClause({
+          const newClause = {
             propertyType: property.type,
             resourceType: property.resourceType,
             typeCast: null,
             value: property.name,
-          });
+          };
+          if (property.type === `datetime`) {
+            this.updateStageClause(newClause);
+            this.nextScreen(`builder-screen-group-datetime-options`);
+          } else {
+            this.updateAndCommitStageClause(newClause);
+          }
         },
         isEventsOnlyQuery: () => (
           this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_EVENTS
