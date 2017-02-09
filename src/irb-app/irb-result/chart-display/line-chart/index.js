@@ -51,15 +51,19 @@ document.registerElement(`line-chart`, class extends Component {
     super.attachedCallback(...arguments);
     // TODO: research why attributeChangedCallback is not called before component
     // is attached only in full webcomponents polyfill (and not lite version)
-    this.updateStateFromAttributes();
+    this.updateChartState();
   }
 
   attributeChangedCallback() {
-    this.updateStateFromAttributes();
+    this.updateChartState();
   }
 
-  updateStateFromAttributes() {
-    let { headers, series } = JSON.parse(this.getAttribute(`data`)) || {};
+  updateChartState() {
+    if (!this.chartData || !this.initialized) {
+      return;
+    }
+
+    let {headers, series} = this.chartData;
     const chartLabel = JSON.parse(this.getAttribute(`chart-label`));
 
     if (headers && series) {
@@ -83,18 +87,26 @@ document.registerElement(`line-chart`, class extends Component {
     }
     return parts.join(` / `);
   }
+
+  get chartData() {
+    return this._chartData;
+  }
+
+  set chartData(data) {
+    this._chartData = data;
+    this.updateChartState();
+  }
 });
 
 document.registerElement(`mp-line-chart`, class extends WebComponent {
   attachedCallback() {
-    this.renderMPChart();
+    this.initialized = true;
+    this.renderChart();
   }
 
   attributeChangedCallback() {
-    this._data = JSON.parse(this.getAttribute(`data`) || `{}`);
     this._displayOptions = JSON.parse(this.getAttribute(`display-options`) || `{}`);
-
-    this.renderMPChart();
+    this.renderChart();
   }
 
   epochToTimeUnitFunction(options={}) {
@@ -122,8 +134,8 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
      // TODO (Jordan): Pass in buckets from query. Handle short date ranges.
     if ([`week`, `quarter`].includes(this._displayOptions.timeUnit)) {
       const uniqueDates = new Set();
-      Object.keys(this._data).forEach(segment => {
-        Object.keys(this._data[segment]).forEach(date => uniqueDates.add(moment.utc(date).unix() * 1000));
+      Object.keys(this.chartData).forEach(segment => {
+        Object.keys(this.chartData[segment]).forEach(date => uniqueDates.add(moment.utc(date).unix() * 1000));
       });
       let ticks = [...uniqueDates].sort();
       const MAX_TICKS = 20;
@@ -348,7 +360,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       }
     };
 
-    const data = _flat(this._data, 2);
+    const data = _flat(this.chartData, 2);
 
     const seriesMap = {};
     let allLabelsAreDates = true;
@@ -402,11 +414,24 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     return highchartsOptions;
   }
 
-  renderMPChart() {
+  renderChart() {
+    if (!this.chartData || !this.initialized) {
+      return;
+    }
+
     if (this.$el) {
       this.$el.remove();
     }
     this.$el = $(`<div class="mp-highcharts-container">`).appendTo(this);
     this.highchart = new Highcharts.Chart(this.createChartOptions());
+  }
+
+  get chartData() {
+    return this._chartData;
+  }
+
+  set chartData(data) {
+    this._chartData = data;
+    this.renderChart();
   }
 });

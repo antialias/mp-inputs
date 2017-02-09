@@ -52,9 +52,11 @@
         when 'line'
           .extras-menu-container.chart-control= $component.child('extras-menu')
           line-chart(
+            props={
+              chartData: processedResult,
+            }
             attrs=$helpers.stringifyObjValues({
               'chart-label': $helpers.getChartLabel(),
-              'data': processedResult,
               'display-options': $helpers.getDisplayOptions(),
             })
           )

@@ -1,7 +1,7 @@
 .line-chart-container
   .chart-header-container= chartLabel
   .line-chart
-    mp-line-chart(attrs={
-      'data': JSON.stringify(data),
-      'display-options': JSON.stringify(displayOptions),
-    })
+    mp-line-chart(
+      props={chartData: data}
+      attrs={'display-options': JSON.stringify(displayOptions)}
+    )
