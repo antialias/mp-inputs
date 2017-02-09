@@ -109,8 +109,6 @@ mixin property-screen-body(options)
           .builder-label= section.label
           +property-list(section.list, options)
       if !hasResults
-        .builder-divider
-        .builder-label all properties
         li.list-option.list-empty Your search returned no results
     else
       .builder-divider
