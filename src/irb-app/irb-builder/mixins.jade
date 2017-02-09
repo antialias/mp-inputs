@@ -103,11 +103,11 @@ mixin property-screen-body(options)
       - let hasResults = false
       each section, idx in options.propertySections
         if section.list.length
-          - hasResults = true
-          if idx
+          if hasResults === true
             .builder-divider
           .builder-label= section.label
           +property-list(section.list, options)
+          - hasResults = true
       if !hasResults
         li.list-option.list-empty Your search returned no results
     else
