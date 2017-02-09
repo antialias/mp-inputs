@@ -57,38 +57,22 @@ function main() {
     quarter: mixpanel.quarterly_time_buckets,
   };
 
-  var getDateBucketing = function(accessor, unit, convertToDate) {
-    var bucket = dateBuckets[unit];
-    if (convertToDate) {
-      // offset property values being js Dates
-      if (Array.isArray(bucket)) {
-        bucket = bucket.map(time => time / 1000);
-      } else {
-        bucket = {
-          bucket_size: bucket.bucket_size / 1000,
-          offset: bucket.offset ? bucket.offset / 1000 : 0,
-        };
-      }
-    }
-    return mixpanel.numeric_bucket(accessor, bucket);
-  };
-
   if (params.groups) {
     groups = groups.concat(params.groups.map(function(group) {
       var jqlGroup = getPropertyPaths(group.value, group.resourceType).join('.');
       if (group.buckets) {
         jqlGroup = mixpanel.numeric_bucket(mixpanel.to_number(jqlGroup), group.buckets);
       } else if (group.unit) {
-        var bucket = dateBuckets[group.unit];
-        if (Array.isArray(bucket)) {
-          bucket = bucket.map(time => time / 1000);
+        var groupDateBucket = dateBuckets[group.unit];
+        if (Array.isArray(groupDateBucket)) {
+          groupDateBucket = groupDateBucket.map(time => time / 1000);
         } else {
-          bucket = {
-            bucket_size: bucket.bucket_size / 1000,
-            offset: bucket.offset ? bucket.offset / 1000 : 0,
+          groupDateBucket = {
+            bucket_size: groupDateBucket.bucket_size / 1000,
+            offset: groupDateBucket.offset ? groupDateBucket.offset / 1000 : 0,
           };
         }
-        jqlGroup = mixpanel.numeric_bucket(mixpanel.to_number(jqlGroup), bucket);
+        jqlGroup = mixpanel.numeric_bucket(mixpanel.to_number(jqlGroup), groupDateBucket);
       } else if (group.typeCast) {
         switch (group.typeCast) {
           case 'number':
@@ -109,10 +93,6 @@ function main() {
   if (usesEventData) {
     groups.push(
       mixpanel.numeric_bucket(usesPeopleData ? 'event.time' : 'time', dateBuckets[params.dates.unit])
-    );
-  } else if (params.peopleTimeSeriesOnProperty) {
-    groups.push(
-      getDateBucketing(params.peopleTimeSeriesOnProperty, `day`, true) // temp const date
     );
   }
 
