@@ -118,7 +118,7 @@ document.registerElement(`bar-chart`, class extends Component {
     }
     // TODO: research why attributeChangedCallback is not called before component
     // is attached only in full webcomponents polyfill (and not lite version)
-    this.updateStateFromAttributes();
+    this.updateChartState();
   }
 
   attributeChangedCallback(attrName, oldValue, newValue) {
@@ -126,7 +126,7 @@ document.registerElement(`bar-chart`, class extends Component {
       // TODO: dont use serialized JSON (talk to Ted)
       this.update({stickyHeader: JSON.parse(newValue)});
     } else {
-      this.updateStateFromAttributes();
+      this.updateChartState();
     }
   }
 
@@ -144,8 +144,12 @@ document.registerElement(`bar-chart`, class extends Component {
     });
   }
 
-  updateStateFromAttributes() {
-    let {headers, series} = this.getJSONAttribute(`data`);
+  updateChartState() {
+    if (!this.chartData || !this.initialized) {
+      return;
+    }
+
+    let {headers, series} = this.chartData;
     const segmentColorMap = this.getJSONAttribute(`segment-color-map`) || {};
     let chartLabel = this.getJSONAttribute(`chart-label`) || ``;
     const legendChangeID = this.getJSONAttribute(`legend-change-id`);
@@ -200,5 +204,14 @@ document.registerElement(`bar-chart`, class extends Component {
       sortConfig.sortBy === `value` ||
       sortConfig.colSortAttrs.length === headers.length
     );
+  }
+
+  get chartData() {
+    return this._chartData;
+  }
+
+  set chartData(data) {
+    this._chartData = data;
+    this.updateChartState();
   }
 });

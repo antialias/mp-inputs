@@ -29,8 +29,10 @@
         when 'bar'
           .extras-menu-container.chart-control= $component.child('extras-menu')
           bar-chart(
+            props={
+              chartData: processedResult,
+            }
             attrs=$helpers.stringifyObjValues({
-              'data': processedResult,
               'segment-color-map': report.legend.colorMap,
               'chart-label': $helpers.getChartLabel(),
               'display-options': $helpers.getDisplayOptions(),
