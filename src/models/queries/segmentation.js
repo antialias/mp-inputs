@@ -357,7 +357,6 @@ export default class SegmentationQuery extends BaseQuery {
         }
         if (groups && groups.length && groups[groups.length - 1].propertyType === `datetime`) {
           scriptParams.peopleTimeSeriesOnProperty = `properties.${scriptParams.groups.pop().value}`;
-          console.log(scriptParams.peopleTimeSeriesOnProperty);
         }
       }
 
@@ -442,56 +441,66 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   processResults(results) {
-    let headers = this.query.segments.map(segment => segment.value);
+    const querySegments = this.query.segments;
+    let headers = querySegments.map(segment => segment.value);
     let series = {};
+    let peopleTimeSeries = null;
 
     // create an object of zero values for all possible dates
     let baseDateResults = {};
     const isPeopleOnlyQuery = this.query.jqlQueries.every(query => query.resourceType === `people`);
+    const needsPeopleTimeSeries = isPeopleOnlyQuery && querySegments.length && querySegments[querySegments.length - 1].propertyType === `datetime`;
 
     const dateKeyCache = {};
     const getDateKey = epoch => {
+      epoch = isPeopleOnlyQuery ? (epoch * 1000) : epoch;
       if (!dateKeyCache[epoch]) {
         dateKeyCache[epoch] = moment.utc(epoch).format();
       }
       return dateKeyCache[epoch];
     };
 
-    if (!isPeopleOnlyQuery) {
+    if (!needsPeopleTimeSeries) {
       results.forEach(r => baseDateResults[getDateKey(r.key[r.key.length - 1])] = 0);
     }
+
     if (results) {
-      series = results.reduce((seriesObj, item) => {
-        // transform item.key array into nested obj,
-        // with item.value at the deepest level
-        if (isPeopleOnlyQuery) {
-          item.key.push(`value`);
-        }
-
-        let obj = seriesObj;
-        for (let si = 0; si < item.key.length - 1; si++) {
-          let key = item.key[si];
-          if (si && this.isBucketedAtSegmentIdx(si - 1)) {
-            key = this.formattedKeyForBucketedSegment(si - 1, key);
+      const createSeriesReducerFunc = (notTimeSeries) => {
+        return (seriesObj, item) => {
+          // transform item.key array into nested obj,
+          // with item.value at the deepest level
+          if (notTimeSeries) {
+            item = extend(item, {key: item.key.concat(`value`)});
           }
-          // If it is the second to last key it must be the object holding the date values.
-          // If it does not yet exist fill this with the zeroed-out base dates.
-          if (si === item.key.length - 2 && !obj[key]) {
-            obj[key] = extend(baseDateResults);
-          } else {
-            obj[key] = obj[key] || {};
-          }
-          obj = obj[key];
-        }
 
-        obj[getDateKey(item.key[item.key.length - 1])] = item.value;
-        return seriesObj;
-      }, {});
+          let obj = seriesObj;
+          for (let si = 0; si < item.key.length - 1; si++) {
+            let key = item.key[si];
+            if (si && this.isBucketedAtSegmentIdx(si - 1)) {
+              key = this.formattedKeyForBucketedSegment(si - 1, key);
+            }
+            // If it is the second to last key it must be the object holding the date values.
+            // If it does not yet exist fill this with the zeroed-out base dates.
+            if (si === item.key.length - 2 && !obj[key]) {
+              obj[key] = notTimeSeries ? {} : extend(baseDateResults);
+            } else {
+              obj[key] = obj[key] || {};
+            }
+            obj = obj[key];
+          }
+
+          obj[getDateKey(item.key[item.key.length - 1])] = item.value;
+          return seriesObj;
+        };
+      }
+
+      series = results.reduce(createSeriesReducerFunc(isPeopleOnlyQuery), {});
+      peopleTimeSeries = needsPeopleTimeSeries ? results.reduce(createSeriesReducerFunc(), {}) : null;
     }
 
     headers = [isPeopleOnlyQuery ? `$people` : `$event`].concat(headers);
 
-    return new Result({series, headers});
+    return new Result({series, headers, peopleTimeSeries});
   }
 
   allEventsInAllQueries() {

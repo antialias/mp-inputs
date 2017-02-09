@@ -4,7 +4,8 @@ let resultID = 0;
 
 export default class Result {
   constructor(attrs) {
-    Object.assign(this, pick(attrs, [`headers`, `series`]));
+    console.log(attrs)
+    Object.assign(this, pick(attrs, [`headers`, `series`, `peopleTimeSeries`]));
     this.id = resultID++;
   }
 
