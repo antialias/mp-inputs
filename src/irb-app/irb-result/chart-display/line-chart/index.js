@@ -319,7 +319,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
         title: {
           text: null,
         },
-        showFirstLabel: true,
+        showFirstLabel: false,
         showLastLabel: false,
       }),
     };
