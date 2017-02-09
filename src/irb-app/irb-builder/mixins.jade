@@ -99,15 +99,13 @@ mixin property-screen-body(options)
           mp-toggle-option(attrs={value: type})= util.formatResourceType(type)
 
   .screen-list-container(on={scroll: options.scrolledList})
-    if options.recentProperties.length
-      .builder-label Recently viewed
-      +property-list(options.recentProperties, options)
     if options.propertySections
       - let hasResults = false
-      each section in options.propertySections
+      each section, idx in options.propertySections
         if section.list.length
           - hasResults = true
-          .builder-divider
+          if idx
+            .builder-divider
           .builder-label= section.label
           +property-list(section.list, options)
       if !hasResults
