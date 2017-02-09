@@ -82,6 +82,10 @@ mixin property-list(properties, options)
           })
           if options.caret
             +small-caret-icon()
+          else if isSelected && options.secondaryPillForSelected
+            +secondary-action-pill(options.secondaryPillForSelected, {
+              onclick: ev => options.clickedSecondaryPill(ev, property),
+            })
     else
       if options.loading
         +pane-loader
