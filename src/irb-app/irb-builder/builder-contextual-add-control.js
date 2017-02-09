@@ -16,6 +16,9 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
       template,
       helpers: {
         clickedAdd: () => {
+          if (!this.canAddClauses()) {
+            return;
+          }
           if (!this.isPaneOpen()) {
             this.openPane();
           } else {
@@ -24,7 +27,7 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
         },
         clickedInput: ev => ev.stopPropagation(), // don't close menu!
         menuChange: ev => ev.detail && ev.detail.state === `closed` && this.isPaneOpen() && this.app.stopBuildingQuery(),
-
+        shouldUpsell: () => (!this.canAddClauses()),
         getPreposition: () => ({
           [ShowClause.TYPE]: `and`,
           [GroupClause.TYPE]: `by`,
@@ -37,6 +40,12 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
         }, 200, {leading: true, maxWait: 200}),
       },
     };
+  }
+
+  canAddClauses() {
+    const sections = this.state.report.sections;
+    const allClauseLength = sections.group.clauses.length + sections.show.clauses.length - 1;
+    return allClauseLength < this.app.getFeatureGateValue(`max_segmentation_filters`);
   }
 
   isPaneOpen() {

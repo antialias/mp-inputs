@@ -9,17 +9,22 @@ include ../mixins.jade
       each range in ranges
         - const isSelected = range.name === selected
         - const isCustom = range.name === $helpers.RANGES.CUSTOM
+        - const showUpsell = range.upsell
         li.list-option(
           class={
             'list-option-selected': isSelected,
             'list-option-time-custom': isCustom,
+            'list-option-upsell': showUpsell
           }
           on={
-            click: !isSelected || isCustom ? () => $helpers.clickedRange(range) : null,
+            click: (!isSelected || isCustom) && !range.upsell ? () => $helpers.clickedRange(range) : null,
           }
         )
           +screen-option(range.name, {noIcon: true, matches: range.matches})
           if isCustom
             +small-caret-icon()
+          if showUpsell
+            .upsell-icon
+              svg-icon(attrs={icon: 'lighting-bolt'})
     else
       li.list-option.list-empty Your search returned no results

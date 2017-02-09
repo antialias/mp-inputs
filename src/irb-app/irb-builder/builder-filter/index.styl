@@ -56,7 +56,29 @@ query-builder-filter
     margin 2px 8px 0 0
 
 builder-filter-add-control
-  .irb-new-control.new-query-builder
+  .irb-new-control.new-query-builder .add-filter-control
+    display flex
+
+    // TODO extract/consolidate search input styles
+    .builder-search-input
+      border none
+      font-size 14px
+      padding 0
+      width 0
+      transition width 0.25s
+      &.search-active
+        border-bottom 1px solid mp-blue
+        margin-right 10px
+        width 200px
+        &:hover
+          border-bottom 1px solid mp-blue
+
+    .upsell-icon
+      position absolute
+      right -10px
+      top -5px
+      svg-icon-style(mp-purple)
+
     .add-filter-button
       background none
       border 1px solid grey-150
@@ -95,6 +117,10 @@ builder-filter-add-control
           width 200px
           &:hover
             border-bottom 1px solid mp-blue
+
+      &.filter-button-disabled
+        color grey-700
+        svg-icon-style(grey-700)
 
 builder-filter-edit-control
   .irb-control button.modify

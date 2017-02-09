@@ -15,6 +15,9 @@ document.registerElement(`builder-filter-add-control`, class extends Component {
       template,
       helpers: {
         clickedAdd: () => {
+          if (!this.canAddFilterClause()) {
+            return;
+          }
           if (!this.isPaneOpen()) {
             this.openPane();
           } else {
@@ -25,8 +28,14 @@ document.registerElement(`builder-filter-add-control`, class extends Component {
         insertedInput: vnode => vnode.elm.focus(),
         isPaneOpen: () => this.isPaneOpen(),
         changedSearch: ev => this.update({contextFilter: ev.target.value}),
+        shouldUpsell: () => (!this.canAddFilterClause()),
       },
     };
+  }
+
+  canAddFilterClause() {
+    const filterClauseLength = this.state.report.sections.filter.clauses.length;
+    return filterClauseLength < this.app.getFeatureGateValue(`max_irb_filters`);
   }
 
   isPaneOpen() {

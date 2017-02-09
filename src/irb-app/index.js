@@ -199,6 +199,11 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   /**
    * initialize app with data/settings from mixpanel.com if available
    */
+
+  getFeatureGateValue(gate) {
+    return this.mpContext.featureGates[gate];
+  }
+
   setMPContext(mpContext) {
     this.mpContext = mpContext;
 
@@ -333,6 +338,10 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   chooseReport(report) {
     this.navigate(this.urlForReportId(report.id));
     this.trackEvent(`Report list - select report`, {'report id': report.id});
+  }
+
+  bookmarkCountUrl() {
+    return this.mpContext.bookmarkCountUrl;
   }
 
   deleteReport(report) {

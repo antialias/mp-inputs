@@ -1,12 +1,24 @@
 include ../mixins.jade
 
 - const {from, to} = $helpers.getDates();
+- const maxDataHistoryDays = $helpers.getMaxDataHistoryDays();
 
 .builder-screen.time-custom
-  +screen-title(`Choose a date range`, {backButton: true})
+  if $helpers.dateLimited()
+    .screen-title
+      .upsell-header
+        svg-icon(attrs={icon: 'lighting-bolt'})
+        .upsell-text Analyze your historical data beyond #{maxDataHistoryDays} days.
+        a.upsell-text.upgrade-link(attrs={href: '/pricing', target: '_blank'}) Upgrade  your plan.
+      .title-button.back-button(on={click: $helpers.clickedBackButton})
+        svg-icon(attrs={icon: 'caret-left'})
+
+  else
+    +screen-title(`Choose a date range`, {backButton: true})
   .range-control
     irb-datepicker(
       attrs={
+        'max-data-history': maxDataHistoryDays,
         range: true,
         'double-calendar': true,
         'hide-text-inputs': true,

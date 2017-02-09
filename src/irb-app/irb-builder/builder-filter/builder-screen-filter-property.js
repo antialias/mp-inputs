@@ -57,7 +57,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
         },
 
         getActiveClause: () => this.app.hasStageClause() ? this.app.activeStageClause : {},
-
+        getMaxDataHistoryDays: () => this.app.getFeatureGateValue(`max-data-history-days`),
         // dropdowns
         isMenuOpen: menu => {
           const currentScreen = this.app.getBuilderCurrentScreen();

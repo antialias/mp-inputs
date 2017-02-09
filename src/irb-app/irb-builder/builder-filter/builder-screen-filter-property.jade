@@ -153,7 +153,11 @@ mixin filter-number-input(value, oninput, options)
             - const isBetween = clause.filterOperator === `was between`
             .filter-numdate
               irb-datepicker(
-                attrs={range: isBetween, preposition: `and`}
+                attrs={
+                  'max-data-history': $helpers.getMaxDataHistoryDays(),
+                  range: isBetween, 
+                  preposition: `and`,
+                }
                 props={value: isBetween ? {from, to} : clause.filterValue}
                 on={change: ev => $helpers.updateFilterValue(isBetween ? [ev.detail.from, ev.detail.to] : ev.detail)}
               )

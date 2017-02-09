@@ -4,6 +4,27 @@
   max-height initial
   padding-bottom 20px
   width auto
+  
+  .upsell-header
+    border 1px solid grey-150
+    border-radius 11px
+    display flex
+    margin-left 90px
+    width 355px
+    svg-icon-style(mp-purple)
+    
+    .upsell-text
+      color grey-700
+      font 500 11px font-helvetica-neue
+      line-height 22px
+      &.upgrade-link
+        color mp-purple
+        margin-left 2px
+        text-decoration none
+        &:hover
+          color mp-purple
+          opacity .7
+
 
   .range-control, .unit-control
     padding 20px

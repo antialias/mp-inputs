@@ -24,6 +24,7 @@ class DatePicker extends Component {
         isDoubleCalendar: () => this.isDoubleCalendar,
         getPreposition: () => this.preposition,
         hideTextInputs: () => this.hideTextInputs,
+        maxDataHistory: () => this.maxDataHistory,
         changedDates: ev => {
           if (this.isRange) {
             let {from=this.state.from, to=this.state.to} = ev.detail;
@@ -85,6 +86,10 @@ class DatePicker extends Component {
 
   get hideTextInputs() {
     return this.getAttribute(`hide-text-inputs`);
+  }
+
+  get maxDataHistory() {
+    return this.getAttribute(`max-data-history`);
   }
 
   get preposition() {

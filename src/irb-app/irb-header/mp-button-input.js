@@ -9,10 +9,11 @@ document.registerElement(`mp-button-input`, class extends Component {
   get config() {
     return {
       defaultState: {
-        enabled: true,
         active: false,
+        enabled: true,
         inputValue: ``,
         inputWidth: MIN_INPUT_WIDTH,
+        saveReportUpsell: false,
       },
       helpers: {
         blur: () => {
@@ -33,12 +34,32 @@ document.registerElement(`mp-button-input`, class extends Component {
         },
 
         clickSave: ev => {
-          ev.stopPropagation();
-          if (this.state.active) {
-            this.dispatchChange({save: true});
-            this.inputEl.blur();
-          } else {
-            this.inputEl.focus();
+          let that = this;
+          fetch(this.bookmarkUrl, {
+            credentials: `same-origin`,
+            method: `GET`,
+          })
+          .then(res => res.json())
+          .then(res => {
+            if (res.error) {
+              throw new Error(res.error);
+            }
+            if (res.bookmark_count < this.bookmarkLimit) {
+              ev.stopPropagation();
+              if (that.state.active) {
+                that.dispatchChange({save: true});
+                that.inputEl.blur();
+              } else {
+                that.inputEl.focus();
+              }
+            } else {
+              that.update({saveReportUpsell: true});
+            }
+          });
+        },
+        closeUpsell: e => {
+          if (e.detail.state === `closed`) {
+            this.update({saveReportUpsell: false, enabled: true});
           }
         },
       },
@@ -76,6 +97,14 @@ document.registerElement(`mp-button-input`, class extends Component {
     this.dispatchEvent(new CustomEvent(`change`, {
       detail: Object.assign({value: this.value}, options),
     }));
+  }
+
+  get bookmarkUrl() {
+    return this.getAttribute(`bookmark-url`);
+  }
+
+  get bookmarkLimit() {
+    return this.getAttribute(`bookmark-limit`);
   }
 
   get inputEl() {

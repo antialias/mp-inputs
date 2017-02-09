@@ -99,6 +99,7 @@ irb-calendar .pika-mixpanel
 
     .pika-button
       background-color transparent
+      box-shadow none
       color grey-700
       font-weight bold
       height 24px
@@ -129,8 +130,13 @@ irb-calendar .pika-mixpanel
     td.is-inrange .pika-button
       color white
 
-    td.is-disabled .pika-button
-      opacity 0.5
+    td.is-disabled:not(.is-outside-current-month) 
+      .pika-button
+        opacity 0.5
+      &:not(.has-event)
+        .pika-button
+          color mp-purple
+          opacity 1
 
     td.is-outside-current-month .pika-button
       color transparent

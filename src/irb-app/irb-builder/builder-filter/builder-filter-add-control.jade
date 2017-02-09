@@ -1,5 +1,5 @@
 - const open = $helpers.isPaneOpen()
-
+- const shouldUpsell = $helpers.shouldUpsell()
 .control-container
   .irb-new-control.new-query-builder(class={'pane-open': open})
     .control-buttons.add-filter-control
@@ -24,9 +24,12 @@
           }
         )
       button.add-filter-button(on={click: $helpers.clickedAdd})
-        span.button-flex-wrapper
+        span.button-flex-wrapper(class={'filter-button-disabled': shouldUpsell})
           svg-icon(attrs={icon: 'plus'})
           span.add-filter-label Filter
+      if shouldUpsell
+        .upsell-icon
+          svg-icon(attrs={icon: 'lighting-bolt'})
   .drop-menu
     mp-drop-menu(attrs={open})
       .new-pane-content(attrs={'slot-body': true})

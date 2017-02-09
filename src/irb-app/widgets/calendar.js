@@ -10,6 +10,7 @@ import {
 import './calendar.styl';
 
 const INCOMPLETE_RANGE_CLASS = `incomplete-range`;
+const MS_PER_DAY = 86400000;
 
 class Calendar extends WebComponent {
   createdCallback() {
@@ -41,8 +42,10 @@ class Calendar extends WebComponent {
     this.picker = new Pikaday({
       bound: false,
       container: document.getElementsByClassName(`calendar-hook`)[0],
+      events: this.getFutureDates(),
       mainCalendar: `right`,
       maxDate: new Date(),
+      minDate: this.getMinDate(),
       numberOfMonths: this.isDoubleCalendar ? 2 : 1,
       i18n: extend(Pikaday.prototype.config().i18n, {
         weekdaysShort: [`SU`, `MO`, `TU`, `WE`, `TH`, `FR`, `SA`],
@@ -59,6 +62,29 @@ class Calendar extends WebComponent {
 
     this.appendChild(this.picker.el);
     this.updatePicker();
+  }
+
+  getMinDate() {
+
+    const historyLength = this.maxHistory;
+    const today = new Date().setHours(0, 0, 0, 0);
+    return new Date(today - (historyLength * MS_PER_DAY));
+  }
+
+  getFutureDates() {
+    let futureDates = [];
+    const today = new Date();
+    let date = today.getDate();
+    const thisMonth = today.getMonth();
+    const thisYear = today.getFullYear();
+    let newDate = new Date(thisYear, thisMonth, date);
+    while (newDate.getMonth() === thisMonth) {
+      futureDates.push(newDate.toDateString());
+      date++;
+      newDate = new Date(thisYear, thisMonth, date);
+    }
+    return futureDates;
+
   }
 
   updatePicker() {
@@ -133,6 +159,10 @@ class Calendar extends WebComponent {
 
   emitResize() {
     this.dispatchEvent(new CustomEvent(`resize`));
+  }
+
+  get maxHistory() {
+    return this.getAttribute(`max-days`);
   }
 
   get isRange() {
