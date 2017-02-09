@@ -22,7 +22,6 @@ import Result from '../models/result';
 import './irb-header';
 import './irb-result';
 import './new-irb-builder';
-import './old-irb-builder';
 import './irb-learn';
 import './irb-reports';
 

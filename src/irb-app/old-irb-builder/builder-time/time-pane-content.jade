@@ -1,7 +1,0 @@
-.pane-content.time-pane-content
-  ul.column.toggle.ranges
-    each range in $component.constants.rangeChoices
-      li(
-        class={selected: $helpers.isRangeSelected(range)}
-        on={click: () => $helpers.selectTimeRange(range)}
-      )= range
