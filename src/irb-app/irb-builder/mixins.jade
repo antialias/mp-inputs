@@ -103,10 +103,17 @@ mixin property-screen-body(options)
       .builder-label Recently viewed
       +property-list(options.recentProperties, options)
     if options.propertySections
+      - let hasResults = false
       each section in options.propertySections
+        if section.list.length
+          - hasResults = true
+          .builder-divider
+          .builder-label= section.label
+          +property-list(section.list, options)
+      if !hasResults
         .builder-divider
-        .builder-label= section.label
-        +property-list(section.list, options)
+        .builder-label all properties
+        li.list-option.list-empty No properties available
     else
       .builder-divider
       .builder-label #{util.formatResourceType(options.selectedResourceType)} properties
