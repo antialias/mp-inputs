@@ -85,6 +85,13 @@ function main() {
     );
   }
 
+  if (params.peopleTimeSeriesOnProperty) {
+    // bucketing hourly (analytics/backend/arb/custom/js/builtins.js)
+    groups.push(
+      mixpanel.numeric_bucket(mixpanel.to_number(params.peopleTimeSeriesOnProperty), {bucket_size: 3600})
+    );
+  }
+
   groups = [mixpanel.multiple_keys(groups)];
 
   var getReducerFunc = function(type, propertyPaths) {

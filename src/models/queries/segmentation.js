@@ -355,6 +355,10 @@ export default class SegmentationQuery extends BaseQuery {
         if (this.query.filterArbSelectors) {
           scriptParams.selectors = [{selector: this.query.filterArbSelectors}];
         }
+        if (groups && groups.length && groups[groups.length - 1].propertyType === `datetime`) {
+          scriptParams.peopleTimeSeriesOnProperty = `properties.${scriptParams.groups.pop().value}`;
+          console.log(scriptParams.peopleTimeSeriesOnProperty);
+        }
       }
 
       if (groups.length) {
