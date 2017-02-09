@@ -134,6 +134,23 @@ export class BuilderScreenBase extends Component {
     ];
   }
 
+  // find input associated with this dropdown and focus it
+  focusInput() {
+    requestAnimationFrame(() => {
+      let el;
+      for (
+        el = this.parentNode;
+        el && el.classList && !el.classList.contains(`pane-open`);
+        el = el.parentNode
+      )
+        ;
+      const input = el && el.querySelector(`resize-input,input.control-label`);
+      if (input) {
+        input.focus();
+      }
+    });
+  }
+
   previousScreen() {
     const screens = this.state.builderPane.screens.slice(0, -1);
     this.app.updateBuilder({
@@ -141,6 +158,7 @@ export class BuilderScreenBase extends Component {
       offsetStyle: this.createPaneOffsetStyle(screens),
       sizeStyle: this.createPaneSizeStyle(screens),
     }, {screens});
+    this.focusInput();
   }
 
   nextScreen(componentName) {
@@ -149,6 +167,7 @@ export class BuilderScreenBase extends Component {
         inTransition: true,
         screens: this.state.builderPane.screens.concat({componentName}),
       });
+      this.focusInput();
     }
   }
 

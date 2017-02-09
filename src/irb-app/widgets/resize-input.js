@@ -60,6 +60,13 @@ document.registerElement(`resize-input`, class extends Component {
     }
   }
 
+  focus() {
+    const input = this.querySelector(`input`);
+    if (input) {
+      input.focus();
+    }
+  }
+
   getTextWidth(text) {
     if (!this.sizer) {
       this.sizer = document.createElement(`div`);
