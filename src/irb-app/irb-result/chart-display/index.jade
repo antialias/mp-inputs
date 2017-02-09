@@ -64,8 +64,10 @@
           - const functionLabel = $helpers.getFunctionLabel();
           - const resourceDescription = $helpers.getChartLabel() + (functionLabel ? ` ${functionLabel}` : '');
           table-chart(
+            props={
+              chartData: util.extend(processedResult, {resourceDescription}),
+            }
             attrs=$helpers.stringifyObjValues({
-              'data': util.extend(processedResult, {resourceDescription: resourceDescription}),
               'display-options': $helpers.getDisplayOptions(),
               'sorting': report.sorting.table,
             })

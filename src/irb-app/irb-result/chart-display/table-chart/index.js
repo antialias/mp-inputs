@@ -61,15 +61,19 @@ document.registerElement(`table-chart`, class extends Component {
     super.attachedCallback(...arguments);
     // TODO: research why attributeChangedCallback is not called before component
     // is attached only in full webcomponents polyfill (and not lite version)
-    this.updateStateFromAttributes();
+    this.updateChartState();
   }
 
   attributeChangedCallback() {
-    this.updateStateFromAttributes();
+    this.updateChartState();
   }
 
-  updateStateFromAttributes() {
-    let {headers, series, resourceDescription} = this.getJSONAttribute(`data`);
+  updateChartState() {
+    if (!this.chartData || !this.initialized) {
+      return;
+    }
+
+    let {headers, series, resourceDescription} = this.chartData;
     const displayOptions = this.getJSONAttribute(`display-options`);
     const sortConfig = this.getJSONAttribute(`sorting`);
     if (!this.validSortConfig(headers, sortConfig)) {
@@ -120,6 +124,15 @@ document.registerElement(`table-chart`, class extends Component {
     } else {
       return sortConfig.colSortAttrs.length === Math.max(1, headers.length - 1);
     }
+  }
+
+  get chartData() {
+    return this._chartData;
+  }
+
+  set chartData(data) {
+    this._chartData = data;
+    this.updateChartState();
   }
 });
 
