@@ -58,20 +58,23 @@ document.registerElement(`line-chart`, class extends Component {
     this.updateChartState();
   }
 
+<<<<<<< HEAD
   updateChartState() {
     if (!this.chartData || !this.initialized) {
       return;
     }
 
-    let {headers, series} = this.chartData;
+    let { headers, series, peopleTimeSeries } = this.chartData;
     const chartLabel = JSON.parse(this.getAttribute(`chart-label`));
 
-    if (headers && series) {
+    const data = peopleTimeSeries || series;
+
+    if (headers && data) {
       this.update({
         // transform nested object into single-level object:
         // {'a': {'b': {'c': 5}}} => {'a / b / c': 5}
         chartLabel,
-        data: util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
+        data: util.objectFromPairs(nestedObjectPaths(data, 1).map(path =>
           [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
         )),
         displayOptions: JSON.parse(this.getAttribute(`display-options`)),

@@ -465,7 +465,7 @@ export default class SegmentationQuery extends BaseQuery {
     }
 
     if (results) {
-      const createSeriesReducerFunc = (notTimeSeries) => {
+      const createSeriesReducerFunc = notTimeSeries => {
         return (seriesObj, item) => {
           // transform item.key array into nested obj,
           // with item.value at the deepest level
@@ -492,7 +492,7 @@ export default class SegmentationQuery extends BaseQuery {
           obj[getDateKey(item.key[item.key.length - 1])] = item.value;
           return seriesObj;
         };
-      }
+      };
 
       series = results.reduce(createSeriesReducerFunc(isPeopleOnlyQuery), {});
       peopleTimeSeries = needsPeopleTimeSeries ? results.reduce(createSeriesReducerFunc(), {}) : null;

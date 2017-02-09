@@ -175,7 +175,8 @@ export default class Legend {
 
       if (!idx) {
         // Flattened Data for Line Chart
-        const resultsFlattened = flattenNestedObjectToPath(sumNestedResults);
+        const sumNestedLineResults = nestedObjectSum(result.dataForLineChart());
+        const resultsFlattened = flattenNestedObjectToPath(sumNestedLineResults);
         const flatResults = this._sortAndLimitSeries(resultsFlattened.values, defaultValue, 20, prevSeriesLegend.flattenedData);
 
         Object.assign(dataSegment, {
