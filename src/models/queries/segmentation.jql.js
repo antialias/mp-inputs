@@ -70,25 +70,38 @@ function main() {
     }));
   }
 
-  if (usesEventData) {
-    // TODO (jordan): handle resetting dates when building params
-    var dateBuckets = {
-      all: [],
-      hour: mixpanel.hourly_time_buckets,
-      day: mixpanel.daily_time_buckets,
-      week: mixpanel.weekly_time_buckets,
-      month: mixpanel.monthly_time_buckets,
-      quarter: mixpanel.quarterly_time_buckets,
-    };
-    groups.push(
-      mixpanel.numeric_bucket(usesPeopleData ? 'event.time' : 'time', dateBuckets[params.dates.unit])
-    );
-  }
+  var dateBuckets = {
+    all: [],
+    hour: mixpanel.hourly_time_buckets,
+    day: mixpanel.daily_time_buckets,
+    week: mixpanel.weekly_time_buckets,
+    month: mixpanel.monthly_time_buckets,
+    quarter: mixpanel.quarterly_time_buckets,
+  };
 
-  if (params.peopleTimeSeriesOnProperty) {
-    // bucketing hourly (analytics/backend/arb/custom/js/builtins.js)
+  var getDateBucketing = function(accessor, unit, isProperty) {
+    var bucket = dateBuckets[unit];
+    if (isProperty) {
+      // offset property values being js Dates
+      if (Array.isArray(bucket)) {
+        bucket = bucket.map(time => time / 1000);
+      } else {
+        bucket = {
+          bucket_size: bucket.bucket_size / 1000,
+          offset: bucket.offset ? bucket.offset / 1000 : 0,
+        };
+      }
+    }
+    return mixpanel.numeric_bucket(accessor, bucket);
+  };
+
+  if (usesEventData) {
     groups.push(
-      mixpanel.numeric_bucket(mixpanel.to_number(params.peopleTimeSeriesOnProperty), {bucket_size: 3600})
+      getDateBucketing(usesPeopleData ? 'event.time' : 'time', params.dates.unit)
+    );
+  } else if (params.peopleTimeSeriesOnProperty) {
+    groups.push(
+      getDateBucketing(mixpanel.to_number(params.peopleTimeSeriesOnProperty), `day`, true) // temp const date
     );
   }
 
