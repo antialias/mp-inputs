@@ -297,6 +297,8 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
           },
           y: 18,
         },
+        maxPadding: 0.017,
+        minPadding: 0.017,
         minTickInterval: util.MS_BY_UNIT[this._displayOptions.timeUnit],
         startOnTick: false,
         tickmarkPlacement: `on`,
