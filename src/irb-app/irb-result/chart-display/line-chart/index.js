@@ -415,7 +415,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   }
 
   renderChart() {
-    if (!this.chartData || !this.initialized) {
+    if (!this.chartData || !this.initialized || !this._displayOptions) {
       return;
     }
 

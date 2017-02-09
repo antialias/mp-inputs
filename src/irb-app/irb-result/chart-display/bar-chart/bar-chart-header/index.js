@@ -73,4 +73,8 @@ document.registerElement(`irb-bar-chart-header`, class extends Component {
       template,
     };
   }
+
+  shouldUpdate(state) {
+    return !!(this.state.sortConfig || state.sortConfig);
+  }
 });
