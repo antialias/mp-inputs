@@ -7,6 +7,8 @@ import {
 import { EditControl } from '../edit-control';
 import { TimeClause } from '../../../models/clause';
 
+import '../../widgets/resize-date-input';
+
 import template from './builder-time-edit-control.jade';
 
 document.registerElement(`builder-time-edit-control`, class extends EditControl {

@@ -13,7 +13,7 @@ const SIZER_PROPS = [
   `whiteSpace`,
 ];
 
-document.registerElement(`resize-input`, class extends Component {
+export default class ResizeInput extends Component {
   get config() {
     return {
       template,
@@ -21,7 +21,7 @@ document.registerElement(`resize-input`, class extends Component {
       defaultState: {
         autofocus: true,
         inputValue: ``,
-        inputWidth: GLOBAL_MIN_WIDTH,
+        inputWidth: this.defaulMinWidth,
       },
       helpers: {
         inserted: vnode => requestAnimationFrame(() => vnode.elm.focus()),
@@ -32,13 +32,13 @@ document.registerElement(`resize-input`, class extends Component {
 
   createdCallback() {
     super.createdCallback(...arguments);
-    this.minimumWidth = GLOBAL_MIN_WIDTH;
+    this.minimumWidth = this.defaultMinWidth;
   }
 
   attachedCallback() {
     super.attachedCallback(...arguments);
     this.removeSizer();
-    this.setMinimumWidth(this.getTextWidth(this.getAttribute(`placeholder`)));
+    this.setMinimumWidth(this.getTextWidth(this.placeholder));
     this.resize();
   }
 
@@ -101,7 +101,7 @@ document.registerElement(`resize-input`, class extends Component {
 
   setMinimumWidth(newMin) {
     if (newMin !== this.minimumWidth) {
-      this.minimumWidth = Math.max(newMin, GLOBAL_MIN_WIDTH);
+      this.minimumWidth = Math.max(newMin, this.defaultMinWidth);
       this.resize();
     }
   }
@@ -110,8 +110,19 @@ document.registerElement(`resize-input`, class extends Component {
     return this.state.inputValue;
   }
 
+  get placeholder() {
+    return this.getAttribute(`placeholder`);
+  }
+
+  get defaultMinWidth() {
+    const minWidth = Number(this.getAttribute(`min-width`));
+    return Number.isInteger(minWidth) ? minWidth : GLOBAL_MIN_WIDTH;
+  }
+
   set value(inputValue) {
     this.update({inputValue});
     this.resize();
   }
-});
+}
+
+document.registerElement(`resize-input`, ResizeInput);

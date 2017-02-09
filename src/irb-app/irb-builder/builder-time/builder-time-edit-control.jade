@@ -21,9 +21,10 @@
           )
         else
           - const {from, to} = $helpers.getDates()
-          date-input.control-label(
+          resize-date-input.control-label(
             attrs={
               autofocus: builderPane.fromFocused,
+              'min-width': 80,
             }
             props={
               type: `text`,
@@ -37,9 +38,10 @@
             }
           )
           .clause-language.preposition to
-          date-input.control-label(
+          resize-date-input.control-label(
             attrs={
               autofocus: builderPane.toFocused,
+              'min-width': 80,
             }
             props={
               type: `text`,

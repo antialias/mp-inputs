@@ -1,23 +1,24 @@
 import { Component } from 'panel';
 
 import {
+  extend,
   formatDateDisplay,
   formatDateISO,
   parseDate,
 } from '../../util';
 
-import template from './date-input.jade';
+import ResizeInput from './resize-input';
 
-export default class DateInput extends Component {
+import template from './resize-date-input.jade';
+
+export default class ResizeDateInput extends ResizeInput {
   get config() {
-    return {
+    const config = super.config;
+    return extend(config, {
       template,
-      defaultState: {
-        inputValue: null,
-      },
-      helpers: {
+      helpers: extend(config.helpers, {
+        // TODO: remove duplication of helpers between this and DateInput
         formatDateDisplay,
-        focus: vnode => requestAnimationFrame(() => vnode.elm.focus()),
         focusedInput: () => this.emitFocus(),
         blurredInput: () => {
           this.inputEl.value = ``;
@@ -29,8 +30,8 @@ export default class DateInput extends Component {
           this.update({inputValue});
           this.emitChange();
         },
-      },
-    };
+      }),
+    });
   }
 
   emitFocus() {
@@ -50,13 +51,9 @@ export default class DateInput extends Component {
     return this.querySelector(`input`);
   }
 
-  get value() {
-    return this.state.inputValue;
-  }
-
-  set value(inputValue) {
-    this.update({inputValue});
+  get placeholder() {
+    return this.inputEl.getAttribute(`placeholder`);
   }
 }
 
-document.registerElement(`date-input`, DateInput);
+document.registerElement(`resize-date-input`, ResizeDateInput);
