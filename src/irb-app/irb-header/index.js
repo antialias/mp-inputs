@@ -19,6 +19,8 @@ document.registerElement(`irb-header`, class extends Component {
           }
         },
 
+        titleInputDisabled: () => !this.app.hasWritePermissions || !this.state.projectHasEvents,
+
         updateTitle: ev => {
           if (ev.detail) {
             this.app.updateReport({title: ev.detail.value});
