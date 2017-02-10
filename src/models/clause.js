@@ -180,10 +180,11 @@ export class GroupClause extends EventsPropertiesClause {
   }
 
   get valid() {
+    const validIfDatetime = this.isDatetimeProperty ? UNIT_LIST.includes(this.unit) : true;
     return super.valid &&
       this.FILTER_TYPES.indexOf(this.filterType) !== -1 &&
       this.PROPERTY_TYPES.includes(this.propertyType) &&
-      UNIT_LIST.includes(this.unit);
+      validIfDatetime;
   }
 
   get attrs() {
