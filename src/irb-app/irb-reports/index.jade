@@ -31,6 +31,8 @@ mixin header-col(text, field)
       .reportlist-search
         .reportlist-search-icon
           svg-icon(attrs={icon: `search`})
+        if reportsDrawerOpen
+          .input-focuser(hook={insert: $helpers.focusSearchInput})
         input(
           props={
             type: `text`,

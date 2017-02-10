@@ -93,6 +93,9 @@ document.registerElement(`irb-reports`, class extends Component {
           this.app.deleteReport(report);
           this.updateDrawer({confirmDelete: null});
         },
+        focusSearchInput: vnode => requestAnimationFrame(
+          () => vnode.elm.parentNode.querySelector(`input`).focus()
+        ),
         handleConfirmChange: visibility => {
           if (visibility !== `open`) {
             this.updateDrawer({confirmDelete: null});
