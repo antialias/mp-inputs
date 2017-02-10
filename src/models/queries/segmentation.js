@@ -23,6 +23,7 @@ export function toArbSelectorPropertyToken(resourceType, property) {
 }
 
 function isFilterValid(filter) {
+  debugger;
   if (!filter.value) {
     return false;
   }
@@ -41,8 +42,8 @@ function isFilterValid(filter) {
   if (isBetween && (
     !filter.filterValue ||
     filter.filterValue.length !== 2 ||
-    !filter.filterValue[0] ||
-    !filter.filterValue[1]
+    typeof filter.filterValue[0] === `undefined` ||
+    typeof filter.filterValue[1]  === `undefined`
   )) {
     return false;
   }
@@ -261,12 +262,13 @@ export default class SegmentationQuery extends BaseQuery {
 
     // data global to all JQL queries.
     const segments = sections.group.clauses.map(clause => pick(clause, [`value`, `propertyType`, `resourceType`, `typeCast`, `unit`]));
-
     const filterArbSelectors = sections.filter.clauses
       .map(clause => clause.attrs)
       .filter(filter => isFilterValid(filter))
       .map(filter => filterToArbSelectorString(filter))
       .join(` and `);
+
+    console.log(filterArbSelectors)
 
     // TODO (jordan): handle resetting dates when building params
     const time = sections.time.clauses[0];
@@ -502,7 +504,7 @@ export default class SegmentationQuery extends BaseQuery {
   }
 
   allEventsInAllQueries() {
-    return this.query.jqlQueries.reduce((total, query) => total.concat(query.events), []);
+    return this.query.jqlQueries.reduce((total, query) => (query.events ? total.concat(query.events) : total), []);
   }
 
   // bucketed segment helpers
