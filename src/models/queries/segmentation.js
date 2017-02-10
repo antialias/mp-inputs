@@ -13,6 +13,7 @@ import {
   extend,
   filterToArbSelectorString,
   isFilterValid,
+  MOMENT_TIME_FORMATTING,
   MS_BY_UNIT,
   pick,
   renameEvent,
@@ -351,11 +352,24 @@ export default class SegmentationQuery extends BaseQuery {
       return dateKeyCache[epoch];
     };
 
+    const formattedDateCache = {};
+    const getFormattedDate = (epoch, unit) => {
+      epoch = epoch * 1000;
+      if (!formattedDateCache[epoch]) {
+        formattedDateCache[epoch] = moment.utc(epoch).format(MOMENT_TIME_FORMATTING[unit]);
+      }
+      return formattedDateCache[epoch];
+    };
+
     if (!needsPeopleTimeSeries) {
       results.forEach(r => baseDateResults[getDateKey(r.key[r.key.length - 1])] = 0);
     }
 
     if (results) {
+      const isSegDatetimeMap = querySegments
+        .map(seg => seg.propertyType === `datetime` && seg.unit)
+        .reduce((obj, val, idx) => Object.assign(obj, {[idx]: val}), {});
+
       const createSeriesReducerFunc = notTimeSeries => {
         return (seriesObj, item) => {
           // transform item.key array into nested obj,
@@ -367,9 +381,15 @@ export default class SegmentationQuery extends BaseQuery {
           let obj = seriesObj;
           for (let si = 0; si < item.key.length - 1; si++) {
             let key = item.key[si];
-            if (si && this.isBucketedAtSegmentIdx(si - 1)) {
-              key = this.formattedKeyForBucketedSegment(si - 1, key);
+
+            // conditional key formatting
+            const segIdx = si - 1;
+            if (si && this.isBucketedAtSegmentIdx(segIdx)) {
+              key = this.formattedKeyForBucketedSegment(segIdx, key);
+            } else if (Number.isInteger(key) && isSegDatetimeMap[segIdx]) {
+              key = getFormattedDate(key, isSegDatetimeMap[segIdx]);
             }
+
             // If it is the second to last key it must be the object holding the date values.
             // If it does not yet exist fill this with the zeroed-out base dates.
             if (si === item.key.length - 2 && !obj[key]) {

@@ -113,16 +113,8 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   }
 
   epochToTimeUnitFunction(options={}) {
-    const timeFormatting = {
-      'hour': `MMM D[,] ha`,
-      'day': `MMM D`,
-      'week': `MMM D`,
-      'month': `MMM YYYY`,
-      'quarter': `[Q]Q YYYY`,
-      'year': `YYYY`,
-    };
     const timeUnit = this._displayOptions.timeUnit;
-    const timeFormatter = timeFormatting[timeUnit];
+    const timeFormatter = util.MOMENT_TIME_FORMATTING[timeUnit];
     return epoch => {
       const epochMoment = moment.utc(Number(epoch));
       if (timeUnit === `week` && options.displayRangeIfWeek) {

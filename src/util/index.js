@@ -20,6 +20,7 @@ export {
 } from './learn';
 
 export {
+  MOMENT_TIME_FORMATTING,
   MS_IN_HOUR,
   MS_IN_DAY,
   MS_BY_UNIT,

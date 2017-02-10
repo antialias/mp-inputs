@@ -18,6 +18,15 @@ export const MS_BY_UNIT = {
   year: MS_IN_DAY * 365,
 };
 
+export const MOMENT_TIME_FORMATTING = {
+  'hour': `MMM D[,] ha`,
+  'day': `ddd MMM Do YYYY`,
+  'week': `MMM D`,
+  'month': `MMM YYYY`,
+  'quarter': `[Q]Q YYYY`,
+  'year': `YYYY`,
+};
+
 export function formatDateISO(date) {
   return moment(date).format().slice(0, 10);
 }
