@@ -9,7 +9,7 @@ mp-black = #2c3642
   position absolute
   right 20px
   top 20px
-  svg-icon-style(grey-300, blue-300, size: 30px)
+  svg-icon-style(grey-300, grey-200, size: 30px)
 
 .no-reports
   position relative
@@ -58,6 +58,7 @@ mp-black = #2c3642
 
     &:focus
       outline none
+      border-bottom blue-300
 
 
 .user-filter
@@ -121,13 +122,17 @@ mp-black = #2c3642
 
     &.body-row
       color grey-700
+      cursor pointer
       padding-left 36px
+      background-color #fff
       &:hover
-        background-color #fff
+        background-color grey-50
         .reportlist-field-name
-          color grey-900
+          color blue-300
         .delete
           display flex
+        .reportlist-field-modified
+          color blue-300
 
       svg-icon
         margin-right 14px
@@ -139,7 +144,6 @@ mp-black = #2c3642
         svg-icon-style(mp-orange)
 
       .reportlist-field-name
-        cursor pointer
         overflow hidden
         text-overflow ellipsis
         white-space nowrap
