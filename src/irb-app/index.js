@@ -99,7 +99,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
             return extend(stateUpdate, this.loadReport(report));
           }
         }
-        this.navigate(``);
+        this.navigate(``, extend(stateUpdate, this.resetQuery()));
       },
     });
   }

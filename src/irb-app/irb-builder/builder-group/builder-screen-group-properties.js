@@ -20,6 +20,7 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
           };
           if (property.type === `datetime`) {
             this.updateStageClause(newClause);
+            this.update({contextFilter: ``});
             this.nextScreen(`builder-screen-group-datetime-options`);
           } else {
             this.updateAndCommitStageClause(newClause);

@@ -158,7 +158,7 @@ export class GroupClause extends EventsPropertiesClause {
   constructor(attrs={}) {
     super(...arguments);
     this.filterType = attrs.filterType || GroupClause.FILTER_TYPES[0];
-    this.propertyType = attrs.propertyType || GroupClause.PROPERTY_TYPES[0];
+    this.propertyType = attrs.propertyType || null;
     this.typeCast = attrs.typeCast || null;
     this.unit = attrs.unit || null;
   }
@@ -181,10 +181,12 @@ export class GroupClause extends EventsPropertiesClause {
   toUrlData() {
     const conditionalAttrs = {
       propertyType: this.propertyType,
-      unit: this.unit,
     };
+    if (this.propertyType === `datetime`) {
+      conditionalAttrs.unit = this.unit || `day`;
+    }
     if (this.typeCast) {
-      conditionalAttrs[`typeCast`] = this.typeCast;
+      conditionalAttrs.typeCast = this.typeCast;
     }
     return extend(super.toUrlData(), conditionalAttrs);
   }
