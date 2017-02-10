@@ -55,7 +55,7 @@ mixin header-col(text, field)
         mp-toggle-option(attrs={value: `yours`}) Your reports
       .reports
         .report-row.header-row
-          +header-col(`Report`, `name`)
+          +header-col(`Report`, `title`)
           +header-col(`Creator`, `user`)
           +header-col(`Last modified`, `modified`)
         each report in $helpers.reportsForDisplay()
@@ -63,7 +63,7 @@ mixin header-col(text, field)
           - const icon = report.displayOptions.chartType
           .report-row.body-row(class={[`icon-${icon}`]: !!icon})
             svg-icon(attrs={icon: icon, empty: !icon})
-            .report-col.reportlist-field-name(
+            .report-col.reportlist-field-title(
               on={click: () => $helpers.clickReport(report)}
             )= report.title
             .report-col.reportlist-field-user
