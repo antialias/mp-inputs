@@ -16,7 +16,7 @@
             }
             on={
               click: $helpers.clickedInput,
-              input: $helpers.changedSearch,
+              input: $helpers.updatedInput,
             }
           )
         else
@@ -25,6 +25,7 @@
             attrs={
               autofocus: builderPane.fromFocused,
               'min-width': 80,
+              'initial-input-value': builderPane.fromFocused ? contextFilter : ``,
             }
             props={
               type: `text`,
@@ -32,6 +33,7 @@
             }
             on={
               click: $helpers.clickedInput,
+              input: $helpers.updatedFrom,
               change: $helpers.changedFrom,
               focus: $helpers.focusedFrom,
               blur: $helpers.blurredFrom,
@@ -42,6 +44,7 @@
             attrs={
               autofocus: builderPane.toFocused,
               'min-width': 80,
+              'initial-input-value': builderPane.toFocused ? contextFilter : ``,
             }
             props={
               type: `text`,
@@ -49,6 +52,7 @@
             }
             on={
               click: $helpers.clickedInput,
+              input: $helpers.updatedTo,
               change: $helpers.changedTo,
               focus: $helpers.focusedTo,
               blur: $helpers.blurredTo,

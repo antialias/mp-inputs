@@ -2,6 +2,7 @@ import {
   extend,
   normalizeDates,
   unitForDateRange,
+  stringFilterMatches,
 } from '../../../util';
 
 import { EditControl } from '../edit-control';
@@ -22,6 +23,12 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
           const showingCustomRangeControls = screen && screen.componentName === `builder-screen-time-custom`;
           return this.getClause().range && (!screen || !showingCustomRangeControls);
         },
+        updatedInput: ev => {
+          this.helpers.changedSearch(ev);
+          this.updateScreen(ev.target.value, {fromFocused: true});
+        },
+        updatedFrom: ev => this.updateScreen(ev.target.value, {fromFocused: true}),
+        updatedTo: ev => this.updateScreen(ev.target.value, {toFocused: true}),
         clickedFromLabel: () => {
           this.app.updateBuilder({fromFocused: true});
           this.helpers.clickedLabel();
@@ -81,5 +88,23 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
 
   openPane() {
     this.app.startBuilderOnScreen(`builder-screen-time`);
+  }
+
+  // based on the value of the input, decide whether to show the preset or custom range screen
+  updateScreen(value, focused) {
+    const presetRangeScreen = `builder-screen-time`;
+    const customRangeScreen = `builder-screen-time-custom`;
+    const currentScreen = this.app.getBuilderCurrentScreen();
+    if (
+      currentScreen &&
+      currentScreen.componentName === presetRangeScreen &&
+      value.length >= 3 &&
+      TimeClause.RANGE_LIST.every(range => !stringFilterMatches(range, value))
+    ) {
+      this.app.updateBuilder(extend(focused, {
+        screens: this.state.builderPane.screens.concat({componentName: customRangeScreen}),
+        inTransition: true,
+      }));
+    }
   }
 });

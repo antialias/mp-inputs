@@ -1,5 +1,3 @@
-import { Component } from 'panel';
-
 import {
   extend,
   formatDateDisplay,
@@ -32,6 +30,11 @@ export default class ResizeDateInput extends ResizeInput {
         },
       }),
     });
+  }
+
+  attachedCallback() {
+    super.attachedCallback(...arguments);
+    this.inputEl.value = this.getAttribute(`initial-input-value`) || ``;
   }
 
   emitFocus() {
