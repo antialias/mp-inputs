@@ -192,14 +192,13 @@ GroupClause.PROPERTY_TYPECASTS = GroupClause.prototype.PROPERTY_TYPECASTS = [`st
 // Time constants
 const RANGES = {
   HOURS: `Last 96 hours`,
-  WEEK: `Last week`,
   MONTH: `Last 30 days`,
   QUARTER: `Last 4 quarters`,
   YEAR: `Last 12 months`,
   CUSTOM: `Choose a date range ...`,
 };
 const RANGE_LIST = [
-  RANGES.HOURS, RANGES.WEEK, RANGES.MONTH, RANGES.QUARTER, RANGES.YEAR, RANGES.CUSTOM,
+  RANGES.HOURS, RANGES.MONTH, RANGES.QUARTER, RANGES.YEAR, RANGES.CUSTOM,
 ];
 const UNITS = {
   HOUR: `hour`,
@@ -214,7 +213,6 @@ const UNIT_LIST = [
 ];
 const RANGE_TO_VALUE_AND_UNIT = {
   [RANGES.HOURS]:   {value: 96, unit: UNITS.HOUR},
-  [RANGES.WEEK]:    {value: 7,  unit: UNITS.DAY},
   [RANGES.MONTH]:   {value: 30, unit: UNITS.DAY},
   [RANGES.QUARTER]: {value: 4,  unit: UNITS.QUARTER},
   [RANGES.YEAR]:    {value: 12, unit: UNITS.MONTH},
@@ -224,7 +222,6 @@ const UNIT_AND_VALUE_TO_RANGE = {
     96: RANGES.HOURS,
   },
   day: {
-    7: RANGES.WEEK,
     30: RANGES.MONTH,
   },
   quarter: {
