@@ -72,7 +72,10 @@ document.registerElement(`irb-reports`, class extends Component {
       helpers: {
         changeNameFilter: ev => this.updateDrawer({nameFilter: ev.target.value}),
         changeUserFilter: ev => this.updateDrawer({userFilter: ev.detail.selected}),
-        clickDelete: report => this.updateDrawer({confirmDelete: report}),
+        clickDelete: (ev, report) => {
+          ev.stopPropagation();
+          this.updateDrawer({confirmDelete: report});
+        },
         clickHeader: field => {
           const sortField = field;
           let sortOrder = this.state.reportsDrawer.sortOrder;

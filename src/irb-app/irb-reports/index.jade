@@ -61,11 +61,12 @@ mixin header-col(text, field)
         each report in $helpers.reportsForDisplay()
           - const initials = report.user.split(' ').map(s => s[0]).join('').toUpperCase()
           - const icon = report.displayOptions.chartType
-          .report-row.body-row(class={[`icon-${icon}`]: !!icon})
+          .report-row.body-row(
+            class={[`icon-${icon}`]: !!icon}
+            on={click: () => $helpers.clickReport(report)}
+          )
             svg-icon(attrs={icon: icon, empty: !icon})
-            .report-col.reportlist-field-title(
-              on={click: () => $helpers.clickReport(report)}
-            )= report.title
+            .report-col.reportlist-field-title= report.title
             .report-col.reportlist-field-user
               .user-icon(class={[`color-${initials[0]}`]: true})
                 = initials
@@ -73,7 +74,7 @@ mixin header-col(text, field)
             .report-col.reportlist-field-modified= report.modifiedStr
             .report-col.delete
               if $helpers.hasWritePermissions()
-                svg-icon(attrs={icon: `trashcan`} on={click: () => $helpers.clickDelete(report)})
+                svg-icon(attrs={icon: `trashcan`} on={click: ev => $helpers.clickDelete(ev, report)})
 
     .drawer-close-wrapper
       svg-icon(attrs={icon: 'x'} on={click: $helpers.close})
