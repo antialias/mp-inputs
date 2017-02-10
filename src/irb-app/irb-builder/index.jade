@@ -8,8 +8,9 @@
         .section-container= $component.child('query-builder-time')
     .builder-separator
     .filters= $component.child('query-builder-filter')
-    .reset-query.irb-learn-disabled(on={click: $helpers.reset} attrs={title: 'Reset query'})
+    .reset-query.irb-learn-disabled(on={click: $helpers.reset})
       svg-icon(attrs={icon: 'x'})
+      irb-mp-tooltip(attrs={placement: `left`}) Reset
   else
     .builder-error-caption.error-title We haven't recieved any events from you yet
     .builder-error-caption You'll need to install Mixpanel's library on your site and start tracking your user's actions.
