@@ -1,4 +1,5 @@
 import { EditControl } from '../edit-control';
+
 import { FilterClause, TimeClause } from '../../../models/clause';
 import { renameProperty, parseDate, formatDateDisplay } from '../../../util';
 
@@ -37,7 +38,8 @@ document.registerElement(`builder-filter-edit-control`, class extends EditContro
           value = value.map(val => formatDateDisplay(parseDate(val)) || val);
           break;
         case `was in the`:
-          value = [TimeClause.UNIT_AND_VALUE_TO_RANGE[clause.filterDateUnit][clause.filterValue].toLowerCase()];
+          value = TimeClause.UNIT_AND_VALUE_TO_RANGE[clause.filterDateUnit][clause.filterValue];
+          value = value ? [value.toLowerCase()] : [];
           break;
       }
     }
