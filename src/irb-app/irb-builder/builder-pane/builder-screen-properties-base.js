@@ -24,7 +24,6 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
 
   getMatchingRecentProperties() {
     const resourceType = this.getSelectedResourceType();
-    // todo cassie: find matching props before slicing down to 3
     const recentProperties = this.state.recentProperties
       .filter(property => resourceType === Clause.RESOURCE_TYPE_ALL || property.resourceType === resourceType)
       .slice(0, 3);
