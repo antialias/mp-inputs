@@ -13,6 +13,13 @@ export {
 } from './chart';
 
 export {
+  getLearnStep,
+  learnClasses,
+  transitionLearn,
+  finishLearn,
+} from './learn';
+
+export {
   MS_IN_HOUR,
   MS_IN_DAY,
   MS_BY_UNIT,
@@ -25,11 +32,10 @@ export {
 } from './time';
 
 export {
-  getLearnStep,
-  learnClasses,
-  transitionLearn,
-  finishLearn,
-} from './learn';
+  filterToArbSelectorString,
+  isFilterValid,
+  toArbSelectorPropertyToken,
+} from './queries';
 
 // TODO move to mixpanel-common
 export function parseURLQueryParams() {
