@@ -26,6 +26,7 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
           }
         },
         clickedSecondaryPill: () => this.nextScreen(`builder-screen-group-datetime-options`),
+        hasSecondaryPill: (property, isSelected) => (isSelected && property.type === `datetime`),
         isEventsOnlyQuery: () => (
           this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_EVENTS
         ),
