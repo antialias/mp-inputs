@@ -19,6 +19,7 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
             value: property.name,
           };
           if (property.type === `datetime`) {
+            newClause.editing = true;
             this.updateStageClause(newClause);
             this.update({contextFilter: ``});
             this.nextScreen(`builder-screen-group-datetime-options`);

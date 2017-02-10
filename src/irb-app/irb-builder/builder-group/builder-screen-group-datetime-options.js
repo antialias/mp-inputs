@@ -12,7 +12,7 @@ document.registerElement(`builder-screen-group-datetime-options`, class extends 
       template,
       helpers: extend(super.config.helpers, {
         availableUnits: () => this.matchingItems(UNIT_LIST),
-        clickedUnit: unit => this.updateAndCommitStageClause({unit: unit.toLowerCase()}),
+        clickedUnit: unit => this.updateAndCommitStageClause({unit: unit.toLowerCase(), editing: false}),
         getGroupClause: () => (this.app.getActiveStageClause() || {}),
       }),
     };

@@ -174,7 +174,8 @@ export class GroupClause extends EventsPropertiesClause {
     this.propertyType = attrs.propertyType || null;
     this.typeCast = attrs.typeCast || null;
     this.unit = attrs.unit || null;
-    if (this.isDatetimeProperty && !this.unit) {
+    this.editing = attrs.editing || null;
+    if (this.isDatetimeProperty && !this.editing && !this.unit) {
       this.unit = UNITS.DAY;
     }
   }

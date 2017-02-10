@@ -47,6 +47,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
             value: property.name,
           };
           if (property.type === `datetime`) {
+            newClause.editing = true;
             this.updateStageClause(newClause);
             this.update({contextFilter: ``});
             this.nextScreen(`builder-screen-group-datetime-options`);
