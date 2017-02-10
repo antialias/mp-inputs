@@ -47,9 +47,7 @@ mixin chart-bar(options={})
 
 .bar-chart(class={'sticky-chart-headers': stickyHeader.isSticky})
   table
-    thead(style={
-      width: stickyHeader.isSticky ? `${stickyHeader.chartWidth}px` : ``,
-    })
+    thead(style=$helpers.getHeaderStyle())
       tr
         th(props={colSpan: 0})
           .irb-bar-chart-header

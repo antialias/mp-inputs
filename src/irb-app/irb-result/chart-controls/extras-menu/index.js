@@ -20,7 +20,7 @@ document.registerElement(`extras-menu`, class extends Component {
           if (stickyHeader.isSticky) {
             // TODO: load from json to protect width
             const extrasWidth = 30;
-            style.left = `${stickyHeader.chartWidth + stickyHeader.chartOffsetLeft - extrasWidth}px`;
+            style.left = `${stickyHeader.chartWidth + stickyHeader.chartOffsetLeft - extrasWidth - stickyHeader.windowScrollLeft}px`;
           }
           return style;
         },

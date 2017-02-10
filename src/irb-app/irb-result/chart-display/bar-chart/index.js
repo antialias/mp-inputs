@@ -45,6 +45,15 @@ document.registerElement(`bar-chart`, class extends Component {
           return util.renamePropertyValue(value);
         },
         getHeaderWidth: text => util.getTextWidth(text, `bold 14px Helvetica`) + SORT_ICON_WIDTH,
+        getHeaderStyle: () => {
+          const style = {};
+          const stickyHeader = this.state.stickyHeader;
+          if (stickyHeader && stickyHeader.isSticky) {
+            style.width = `${stickyHeader.chartWidth}px`;
+            style.left = `${stickyHeader.chartOffsetLeft - stickyHeader.windowScrollLeft}px`;
+          }
+          return style;
+        },
         headersToDisplay: () => {
           let headers = null;
           if (this.state.displayOptions.plotStyle === `stacked`) {

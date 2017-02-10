@@ -58,7 +58,7 @@ document.registerElement(`chart-display`, class extends Component {
           const style = {};
           const stickyHeader = this.state.stickyHeader;
           if (stickyHeader.isSticky) {
-            style.left = `${stickyHeader.chartWidth + stickyHeader.chartOffsetLeft}px`;
+            style.left = `${stickyHeader.chartWidth + stickyHeader.chartOffsetLeft - stickyHeader.windowScrollLeft}px`;
             style.height = `calc(100vh - ${stickyHeader.chartBottomToPageBottom}px)`;
           }
           return style;
@@ -168,6 +168,7 @@ document.registerElement(`chart-display`, class extends Component {
               chartBottomToPageBottom: getDistToBottomFrom(chartBounds),
               chartWidth: chartBounds.width,
               chartOffsetLeft: chartBounds.left,
+              windowScrollLeft: window.scrollX,
             });
           }, 10);
 
@@ -176,10 +177,12 @@ document.registerElement(`chart-display`, class extends Component {
             const stickyHeader = {
               chartBottomToPageBottom: getDistToBottomFrom(chartBounds),
               isSticky: chartBounds.top <= 0,
+              windowScrollLeft: window.scrollX,
             };
 
             if (stickyHeader.isSticky !== this.state.stickyHeader.isSticky ||
-              stickyHeader.chartBottomToPageBottom !== this.state.stickyHeader.chartBottomToPageBottom
+              stickyHeader.chartBottomToPageBottom !== this.state.stickyHeader.chartBottomToPageBottom ||
+              stickyHeader.windowScrollLeft !== this.state.stickyHeader.windowScrollLeft
             ) {
               // scroll event happens alot. only update if there are changes.
               this.app.updateStickyHeader(stickyHeader);

@@ -38,8 +38,8 @@
               'display-options': $helpers.getDisplayOptions(),
               'function-label': $helpers.getFunctionLabel(),
               'sorting': report.sorting.bar,
-              'sticky-header': util.pick(stickyHeader, [`isSticky`,`chartWidth`]),
               'legend-change-id': report.legend.changeID,
+              'sticky-header': util.pick(stickyHeader, [`isSticky`,`chartWidth`, `windowScrollLeft`, `chartOffsetLeft`]),
             })
             on={
               change: $helpers.barChartChange,
