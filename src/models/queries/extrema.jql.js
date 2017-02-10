@@ -5,10 +5,10 @@ function main() {
   var query;
 
   if (params.isPeopleProperty) {
-    query = People();
+    query = People({user_selectors: params.selectors});
   } else {
     query = Events({
-      event_selectors: params.events,
+      event_selectors: params.selectors,
       from_date: params.from,
       to_date:   params.to,
     });

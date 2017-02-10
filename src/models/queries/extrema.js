@@ -31,10 +31,11 @@ export default class ExtremaJQLQuery extends BaseQuery {
   }
 
   buildParams({params={}}={}) {
-    params = extend(params, pick(this.query, [`events`, `property`, `isPeopleProperty`]));
+    params = extend(params, pick(this.query, [`selectors`, `property`, `isPeopleProperty`]));
     params.from = formatDateISO(this.query.from);
     params.to = formatDateISO(this.query.to);
     params.propertyPath = `properties.${params.property}`;
+
     return {
       script: String(main),
       params: JSON.stringify(params),

@@ -181,25 +181,30 @@ export default class SegmentationQuery extends BaseQuery {
     return Promise.all(this.query.segments.map((segment, idx) => new Promise(resolve => {
       const segmentType = segment.typeCast || segment.propertyType;
       if (segmentType === `number`) {
-        if (this.query.filterArbSelectors) {
-          eventsToQuery = eventsToQuery.map(event => {
-            const selector = event.selector ? `(${event.selector} and ${this.query.filterArbSelectors})` : this.query.filterArbSelectors;
-            return extend(event, {selector});
-          });
-        }
-
-        const state = {
+        const params = {
           from: new Date(this.query.from),
           to: new Date(this.query.to),
-          events: eventsToQuery,
           isPeopleProperty: segment.resourceType === `people`,
           property: segment.value,
+          selectors: eventsToQuery,
         };
+
+        if (this.query.filterArbSelectors) {
+          if (eventsToQuery.length) {
+            params.selectors = eventsToQuery.map(event => {
+              const selector = event.selector ? `(${event.selector} and ${this.query.filterArbSelectors})` : this.query.filterArbSelectors;
+              return extend(event, {selector});
+            });
+          } else {
+            params.selectors = [{selector: this.query.filterArbSelectors}];
+          }
+        }
+
         const extremaQuery = new ExtremaJQLQuery({
           apiHost: this.apiHost,
           apiSecret: this.apiSecret,
         });
-        const builtExtremaQuery = extremaQuery.build(state);
+        const builtExtremaQuery = extremaQuery.build(params);
         const cachedExtremaQuery = this.extremaCache.get(builtExtremaQuery.query);
         builtExtremaQuery.run(cachedExtremaQuery).then(result => {
           this.extremaCache.set(builtExtremaQuery.query, result, 120);
