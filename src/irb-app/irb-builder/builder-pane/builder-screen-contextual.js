@@ -41,11 +41,18 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
         getContextLists: () => this.buildProgressiveList(),
         clickedProperty: (ev, property) => {
           this.app.startAddingClause(`group`);
-          this.updateAndCommitStageClause({
+          const newClause = {
             propertyType: property.type,
             resourceType: property.resourceType,
             value: property.name,
-          });
+          };
+          if (property.type === `datetime`) {
+            this.updateStageClause(newClause);
+            this.update({contextFilter: ``});
+            this.nextScreen(`builder-screen-group-datetime-options`);
+          } else {
+            this.updateAndCommitStageClause(newClause);
+          }
         },
         clickedEvent: value => {
           this.app.startAddingClause(`show`);
