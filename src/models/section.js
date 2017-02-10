@@ -107,6 +107,10 @@ export class ShowSection extends Section {
     uniqueShowTypes = Array.from(uniqueShowTypes);
     return uniqueShowTypes.length === 1 ? uniqueShowTypes[0] : uniqueShowTypes;
   }
+
+  isPeopleOnlyQuery() {
+    return this.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE;
+  }
 }
 ShowSection.TYPE = ShowSection.prototype.TYPE = `show`;
 
@@ -114,6 +118,10 @@ export class GroupSection extends Section {
   get valid() {
     return super.valid &&
       this.clauses.every(clause => clause instanceof GroupClause);
+  }
+
+  isPeopleTimeSeries() {
+    return this.clauses.length && this.clauses[this.clauses.length - 1].propertyType === `datetime`;
   }
 }
 GroupSection.TYPE = GroupSection.prototype.TYPE = `group`;

@@ -373,7 +373,6 @@ export default class SegmentationQuery extends BaseQuery {
         resourceTypeNeeded = `all`;
       }
       scriptParams.resourceTypeNeeded = resourceTypeNeeded;
-      console.log(scriptParams)
       return scriptParams;
     });
   }

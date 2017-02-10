@@ -744,11 +744,12 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         const newClause = clause.extend();
         let newSection = null;
         const isEditingClause = clause === newClauses[0] && typeof this.state.stageClauseIndex === `number`;
-        if (newClause.TYPE === ShowClause.TYPE && newClause.resourceType === Clause.RESOURCE_TYPE_PEOPLE) {
-          if (reportAttrs.displayOptions.chartType === `line`) {
-            reportAttrs.displayOptions.chartType = `bar`;
-          }
+
+        const isPeopleShowClause = newClause.TYPE === ShowClause.TYPE && newClause.resourceType === Clause.RESOURCE_TYPE_PEOPLE;
+        if (isPeopleShowClause && reportAttrs.displayOptions.chartType === `line`) {
+          reportAttrs.displayOptions.chartType = `bar`;
         }
+
         if (isEditingClause) {
           newSection = reportAttrs.sections[newClause.TYPE].replaceClause(this.state.stageClauseIndex, newClause);
         } else {
@@ -778,6 +779,11 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           extend(reportTrackingData, clauseProperties)
         );
       });
+
+      const isPeopleTimeSeries = reportAttrs.sections.show.isPeopleOnlyQuery() && reportAttrs.sections.group.isPeopleTimeSeries();
+      if (!isPeopleTimeSeries && reportAttrs.displayOptions.chartType === `line`) {
+        reportAttrs.displayOptions.chartType = `bar`;
+      }
 
       this.updateReport(reportAttrs);
       this.query();
