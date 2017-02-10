@@ -10,7 +10,7 @@ include ../mixins.jade
       .clause-language.preposition= clauseIdx ? 'and' : 'by'
     .clause-container
       .clause-header.group(
-        class={'hasRightCaret': reorderRight}
+        class={hasRightCaret: reorderRight}
       )
         if clauseIdx
           button.reorder.reorder-left(on={click: () => $helpers.moveClause(clauseIdx, -1)})
