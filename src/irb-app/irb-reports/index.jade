@@ -70,7 +70,8 @@ mixin header-col(text, field)
                 irb-mp-tooltip= report.user
             .report-col.reportlist-field-modified= report.modifiedStr
             .report-col.delete
-              svg-icon(attrs={icon: `trashcan`} on={click: () => $helpers.clickDelete(report)})
+              if $helpers.hasWritePermissions()
+                svg-icon(attrs={icon: `trashcan`} on={click: () => $helpers.clickDelete(report)})
 
     .drawer-close-wrapper
       svg-icon(attrs={icon: 'x'} on={click: $helpers.close})

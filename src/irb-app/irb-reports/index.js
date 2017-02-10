@@ -98,6 +98,7 @@ document.registerElement(`irb-reports`, class extends Component {
             this.updateDrawer({confirmDelete: null});
           }
         },
+        hasWritePermissions: () => this.app.hasWritePermissions,
         reportsForDisplay: () => {
           const drawer = this.state.reportsDrawer;
           let reports = Object.values(this.state.savedReports);
