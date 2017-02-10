@@ -1,6 +1,6 @@
 .irb-header.irb-learn-disabled
   mp-button-input(
-    attrs={buttonText: `Save`, disabled: $helpers.titleInputDisabled()}
+    attrs={buttonText: `Save`, disabled: !$helpers.titleInputEnabled()}
     props={value: report.title}
     on={change: $helpers.updateTitle}
   )
