@@ -58,7 +58,6 @@ document.registerElement(`line-chart`, class extends Component {
     this.updateChartState();
   }
 
-<<<<<<< HEAD
   updateChartState() {
     if (!this.chartData || !this.initialized) {
       return;
