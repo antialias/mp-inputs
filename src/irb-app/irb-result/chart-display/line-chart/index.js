@@ -193,7 +193,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
         marginRight: 0,
         marginBottom: null,
         marginLeft: null,
-        renderTo: this.$el[0],
+        renderTo: this.el,
         spacingBottom: 30,
         spacingLeft: 28,
         style: {
@@ -419,10 +419,14 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       return;
     }
 
-    if (this.$el) {
-      this.$el.remove();
+    if (this.el) {
+      this.removeChild(this.el);
     }
-    this.$el = $(`<div class="mp-highcharts-container">`).appendTo(this);
+
+    this.el = document.createElement(`div`);
+    this.el.className = `mp-highcharts-container`;
+    this.appendChild(this.el);
+
     this.highchart = new Highcharts.Chart(this.createChartOptions());
   }
 
