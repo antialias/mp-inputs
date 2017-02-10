@@ -42,6 +42,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
         clickedProperty: (ev, property) => {
           this.app.startAddingClause(`group`);
           this.updateAndCommitStageClause({
+            propertyType: property.type,
             resourceType: property.resourceType,
             value: property.name,
           });

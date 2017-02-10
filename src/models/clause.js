@@ -10,6 +10,19 @@ const TYPE_FORMAT_NAME = {
   'time': `Time`,
 };
 
+const UNITS = {
+  HOUR: `hour`,
+  DAY: `day`,
+  WEEK: `week`,
+  MONTH: `month`,
+  QUARTER: `quarter`,
+  YEAR: `year`,
+};
+
+const UNIT_LIST = [
+  UNITS.HOUR, UNITS.DAY, UNITS.WEEK, UNITS.MONTH, UNITS.QUARTER, UNITS.YEAR,
+];
+
 export class Clause {
   static create(sectionType, attrs) {
     switch (sectionType) {
@@ -161,12 +174,16 @@ export class GroupClause extends EventsPropertiesClause {
     this.propertyType = attrs.propertyType || null;
     this.typeCast = attrs.typeCast || null;
     this.unit = attrs.unit || null;
+    if (this.isDatetimeProperty && !this.unit) {
+      this.unit = UNITS.DAY;
+    }
   }
 
   get valid() {
     return super.valid &&
       this.FILTER_TYPES.indexOf(this.filterType) !== -1 &&
-      this.PROPERTY_TYPES.includes(this.propertyType);
+      this.PROPERTY_TYPES.includes(this.propertyType) &&
+      UNIT_LIST.includes(this.unit);
   }
 
   get attrs() {
@@ -182,13 +199,17 @@ export class GroupClause extends EventsPropertiesClause {
     const conditionalAttrs = {
       propertyType: this.propertyType,
     };
-    if (this.propertyType === `datetime`) {
-      conditionalAttrs.unit = this.unit || `day`;
+    if (this.isDatetimeProperty) {
+      conditionalAttrs.unit = this.unit || UNITS.DAY;
     }
     if (this.typeCast) {
       conditionalAttrs.typeCast = this.typeCast;
     }
     return extend(super.toUrlData(), conditionalAttrs);
+  }
+
+  get isDatetimeProperty() {
+    return this.propertyType === `datetime`;
   }
 }
 GroupClause.TYPE = GroupClause.prototype.TYPE = `group`;
@@ -206,17 +227,6 @@ const RANGES = {
 };
 const RANGE_LIST = [
   RANGES.HOURS, RANGES.MONTH, RANGES.QUARTER, RANGES.YEAR, RANGES.CUSTOM,
-];
-const UNITS = {
-  HOUR: `hour`,
-  DAY: `day`,
-  WEEK: `week`,
-  MONTH: `month`,
-  QUARTER: `quarter`,
-  YEAR: `year`,
-};
-const UNIT_LIST = [
-  UNITS.HOUR, UNITS.DAY, UNITS.WEEK, UNITS.MONTH, UNITS.QUARTER, UNITS.YEAR,
 ];
 const RANGE_TO_VALUE_AND_UNIT = {
   [RANGES.HOURS]:   {value: 96, unit: UNITS.HOUR},
