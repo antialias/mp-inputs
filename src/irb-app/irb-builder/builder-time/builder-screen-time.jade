@@ -19,5 +19,7 @@ include ../mixins.jade
           }
         )
           +screen-option(range.name, {noIcon: true, matches: range.matches})
+          if isCustom
+            +small-caret-icon()
     else
       li.list-option.list-empty Your search returned no results
