@@ -23,6 +23,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   }
 
   getMatchingRecentProperties() {
+    // todo cassie match then filter
     const resourceType = this.getSelectedResourceType();
     const recentProperties = this.state.recentProperties
       .filter(property => resourceType === Clause.RESOURCE_TYPE_ALL || property.resourceType === resourceType)
