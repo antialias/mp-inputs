@@ -194,6 +194,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
     this.standalone = this.mpContext.standalone;
     this.customEvents = this.mpContext.customEvents || [];
+    this.hasWritePermissions = this.mpContext.hasWritePermissions;
     this.projectHasEvents = true;
     this.userID = this.mpContext.userID;
 
