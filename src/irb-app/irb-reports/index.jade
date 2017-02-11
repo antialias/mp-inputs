@@ -1,3 +1,5 @@
+include ../mixins.jade
+
 mixin header-col(text, field)
   - const fieldSelected = reportsDrawer.sortField === field
   .report-col(
@@ -66,7 +68,11 @@ mixin header-col(text, field)
             on={click: () => $helpers.clickReport(report)}
           )
             svg-icon(attrs={icon: icon, empty: !icon})
-            .report-col.reportlist-field-title= report.title
+            .report-col.reportlist-field-title
+              if report.matches
+                +highlight-matches(report.matches)
+              else
+                = report.title
             .report-col.reportlist-field-user
               .user-icon(class={[`color-${initials[0]}`]: true})
                 = initials
