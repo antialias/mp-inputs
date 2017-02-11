@@ -343,22 +343,24 @@ export default class SegmentationQuery extends BaseQuery {
     const isPeopleOnlyQuery = this.query.jqlQueries.every(query => query.resourceType === `people`);
     const needsPeopleTimeSeries = isPeopleOnlyQuery && querySegments.length && querySegments[querySegments.length - 1].propertyType === `datetime`;
 
+
+    //  epoch dates of properties come back in seconds. 10^3 is needed to bring it to ms for moment.
     const dateKeyCache = {};
     const getDateKey = epoch => {
-      epoch = isPeopleOnlyQuery ? (epoch * 1000) : epoch;
-      if (!dateKeyCache[epoch]) {
-        dateKeyCache[epoch] = moment.utc(epoch).format();
+      const epochInMS = isPeopleOnlyQuery ? (epoch * 1000) : epoch;
+      if (!dateKeyCache[epochInMS]) {
+        dateKeyCache[epochInMS] = moment.utc(epochInMS).format();
       }
-      return dateKeyCache[epoch];
+      return dateKeyCache[epochInMS];
     };
 
     const formattedDateCache = {};
     const getFormattedDate = (epoch, unit) => {
-      epoch = epoch * 1000;
-      if (!formattedDateCache[epoch]) {
-        formattedDateCache[epoch] = epochToFormattedDate(epoch, unit);
+      const epochInMS = epoch * 1000;
+      if (!formattedDateCache[epochInMS]) {
+        formattedDateCache[epochInMS] = epochToFormattedDate(epochInMS, unit);
       }
-      return formattedDateCache[epoch];
+      return formattedDateCache[epochInMS];
     };
 
     if (!needsPeopleTimeSeries) {
