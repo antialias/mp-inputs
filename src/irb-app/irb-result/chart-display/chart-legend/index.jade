@@ -21,7 +21,7 @@ include ../../../mixins.jade
       .search(class={active: isSearchActive})
         svg-icon(attrs={icon: 'search'})
         focus-input(
-          attrs={placeholder: 'search'}
+          attrs={placeholder: 'Search'}
           props={focusDelay: 200}
           on={input: $helpers.changedSearch}
         )
