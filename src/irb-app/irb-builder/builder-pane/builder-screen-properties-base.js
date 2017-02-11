@@ -11,6 +11,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
         clickedResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
         getSelectedResourceType: () => this.getSelectedResourceType(),
         getProperties: () => this.getProperties(),
+        getRecentProperties: match => this.getRecentProperties(match),
         getPropertySections: () => this.getPropertySections(),
       }),
     };
@@ -22,13 +23,13 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     };
   }
 
-  getMatchingRecentProperties() {
+  getRecentProperties(match=false) {
     // todo cassie match then filter
     const resourceType = this.getSelectedResourceType();
     const recentProperties = this.state.recentProperties
       .filter(property => resourceType === Clause.RESOURCE_TYPE_ALL || property.resourceType === resourceType)
       .slice(0, 3);
-    return this.matchingItems(recentProperties, renameProperty);
+    return match ? this.matchingItems(recentProperties, renameProperty) : recentProperties;
   }
 
   getProperties(resourceType=ShowClause.RESOURCE_TYPE_ALL) {
@@ -68,7 +69,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
 
     sections.push({
       label: `Recent Properties`,
-      list: this.getMatchingRecentProperties(),
+      list: this.getRecentProperties(true),
     });
 
     if ([ShowClause.RESOURCE_TYPE_EVENTS, ShowClause.RESOURCE_TYPE_ALL].includes(resourceType) && !isPeopleQuery) {

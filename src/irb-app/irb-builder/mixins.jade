@@ -111,7 +111,10 @@ mixin property-screen-body(options)
       if !hasResults
         li.list-option.list-empty Your search returned no results
     else
-      .builder-divider
+      if options.recentProperties.length
+        .builder-label Recent properties
+        +property-list(options.recentProperties, options)
+        .builder-divider
       .builder-label #{util.formatResourceType(options.selectedResourceType)} properties
       +property-list(options.properties, options)
 
