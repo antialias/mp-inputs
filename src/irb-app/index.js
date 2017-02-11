@@ -8,7 +8,7 @@ import * as util from '../util';
 import { mixpanel, rollbar } from '../tracking';
 
 import BuilderSections from '../models/builder-sections';
-import { ShowSection, TimeSection } from '../models/section';
+import { FilterSection, GroupSection, ShowSection, TimeSection } from '../models/section';
 import { Clause, ShowClause, TimeClause } from '../models/clause';
 import Legend from '../models/legend';
 import TopEventsQuery from '../models/queries/top-events';
@@ -739,7 +739,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     const newClauses = this.state.stageClauses;
     const reportAttrs = extend(this.state.report);
 
+
     if (newClauses.length) {
+      let shouldClearAllGroupsAndFilters = false;
       newClauses.filter(clause => clause.valid).forEach(clause => {
         const newClause = clause.extend();
         let newSection = null;
@@ -752,6 +754,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
         if (isEditingClause) {
           newSection = reportAttrs.sections[newClause.TYPE].replaceClause(this.state.stageClauseIndex, newClause);
+          if (newClause.TYPE === ShowClause.TYPE && this.state.stageClauseIndex === 0) {
+            shouldClearAllGroupsAndFilters = newClause.resourceType !== reportAttrs.sections.show.clauses[0].resourceType;
+          }
         } else {
           if (clause === newClauses[1] && newClause.TYPE === ShowClause.TYPE && newClauses[0].TYPE === ShowClause.TYPE) {
             // operator on property + event
@@ -783,6 +788,11 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       const isPeopleAndNotTimeSeries = reportAttrs.sections.show.isPeopleOnlyQuery() && !reportAttrs.sections.group.isPeopleTimeSeries();
       if (isPeopleAndNotTimeSeries && reportAttrs.displayOptions.chartType === `line`) {
         reportAttrs.displayOptions.chartType = `bar`;
+      }
+
+      if (shouldClearAllGroupsAndFilters) {
+        reportAttrs.sections = reportAttrs.sections.replaceSection(new GroupSection());
+        reportAttrs.sections = reportAttrs.sections.replaceSection(new FilterSection());
       }
 
       this.updateReport(reportAttrs);
@@ -834,10 +844,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       'clause type': sectionType,
       'clause index': clauseIndex,
     }));
-  }
-
-  removeAllClauses(sectionType) {
-    this.updateSection(this.state.report.sections[sectionType].removeAllClauses());
   }
 
   updateShowClauseButtonPosition(key, buttonOutside) {
