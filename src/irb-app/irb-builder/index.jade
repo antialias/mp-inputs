@@ -6,6 +6,7 @@
       .section-container= $component.child('query-builder-contextual-add')
       if $helpers.shouldShowTimeBuilder()
         .section-container= $component.child('query-builder-time')
+    .builder-separator
     .filters= $component.child('query-builder-filter')
     .reset-query.irb-learn-disabled(on={click: $helpers.reset} attrs={title: 'Reset query'})
       svg-icon(attrs={icon: 'x'})

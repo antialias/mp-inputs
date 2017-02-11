@@ -3,12 +3,19 @@
 builder-filter-edit-control
   .control-container .irb-new-control.new-query-builder
     .edit-control
+      border-bottom 1px dotted grey-700
+      height 24px
       margin-right 6px
+      padding 6px 0 2px
+      &:hover
+        border-bottom 1px solid mp-blue
+      input
+        font-size 13px
 
       .control-label
         border-bottom none
         color grey-700
-        font-size 14px
+        font-size 13px
 
         .edit-label-part
           margin-right 4px
@@ -16,6 +23,13 @@ builder-filter-edit-control
             color grey-700
           &:nth-child(even)
             color grey-500
+
+        &:hover
+          .edit-label-part
+            &:nth-child(odd)
+              color mp-blue
+            &:nth-child(even)
+              color mp-blue
 
       input.control-label
         border-bottom 1px solid mp-blue

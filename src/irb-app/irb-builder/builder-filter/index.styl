@@ -18,6 +18,8 @@ query-builder-filter
 
   .clause.filter
     display inline-flex
+    &:nth-last-child(2)
+      margin-right 8px
 
   .clause-language
     display inline-flex
@@ -43,15 +45,20 @@ builder-filter-add-control
 
     .add-filter-button
       background none
-      border 2px solid grey-150
-      border-radius 5px
+      border 1px solid grey-150
+      border-radius 3px
+      box-shadow 0 1px 1px rgba(76,96,113,.08)
       color grey-900
-      font-size 13px
+      font-size 12px
+      font-weight 500
       padding 0
+      &:hover
+        box-shadow 0 1px 3px rgba(76,96,113,.16)
+        color blue-300
     .button-flex-wrapper
       align-items center
       display flex
-      padding 5px 10px 5px 4px
+      padding 4px 11px 4px 4px
       svg-icon-style(grey-700, blue-300)
 
 builder-filter-edit-control
