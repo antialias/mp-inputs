@@ -780,8 +780,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         );
       });
 
-      const isPeopleTimeSeries = reportAttrs.sections.show.isPeopleOnlyQuery() && reportAttrs.sections.group.isPeopleTimeSeries();
-      if (!isPeopleTimeSeries && reportAttrs.displayOptions.chartType === `line`) {
+      const isPeopleAndNotTimeSeries = reportAttrs.sections.show.isPeopleOnlyQuery() && !reportAttrs.sections.group.isPeopleTimeSeries();
+      if (isPeopleAndNotTimeSeries && reportAttrs.displayOptions.chartType === `line`) {
         reportAttrs.displayOptions.chartType = `bar`;
       }
 
