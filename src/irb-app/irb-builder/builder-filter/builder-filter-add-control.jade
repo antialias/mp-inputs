@@ -29,4 +29,5 @@
           span.add-filter-label Filter
   .drop-menu
     mp-drop-menu(attrs={open})
-      .new-pane-content(attrs={'slot-body': true})= $component.child(`builder-pane`)
+      .new-pane-content(attrs={'slot-body': true})
+        = $component.child(`builder-pane`, {attrs: {open}})

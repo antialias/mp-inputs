@@ -1,5 +1,7 @@
 include ../../mixins.jade
 
+- const open = $helpers.isOpen()
+
 .query-builder-show-header
   .visible-header-content
     .header-label(class={'header-disabled': $helpers.isEditingShowClause()})
@@ -17,5 +19,6 @@ include ../../mixins.jade
       )
         svg-icon(attrs={icon: 'x'})
   .drop-menu
-    mp-drop-menu(attrs={open: $helpers.isOpen()})
-      .new-pane-content(attrs={'slot-body': true})= $component.child(`builder-pane`)
+    mp-drop-menu(attrs={open})
+      .new-pane-content(attrs={'slot-body': true})
+        = $component.child(`builder-pane`, {attrs: {open}})
