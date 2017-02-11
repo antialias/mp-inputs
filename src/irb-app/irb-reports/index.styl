@@ -34,31 +34,34 @@ mp-black = #2c3642
 
 .reportlist-search
   align-items center
-  border-bottom 1px solid grey-100
   display flex
   font-size 16px
-  margin 70px hmargin 0 hmargin
+  margin 75px hmargin 0 hmargin
   padding-bottom 5px
   position relative
   .reportlist-search-icon
     svg-icon-style(grey-300, size: 23px)
+    svg-icon
+      position absolute
+      top 2px
 
   input, input[type="text"]
     box-shadow none
     border 0 none
+    border-bottom 1px solid grey-100
+    border-radius 0
     color grey-700
     font-family 'Helvetica Neue', Helvetica, Arial, sans-serif
     font-size 16px
     font-weight normal
     line-height 38px
     outline none
-    padding 0
-    padding-left 10px
-    width 548px
+    padding 0 0 10px 33px
+    width 100%
 
     &:focus
       outline none
-      border-bottom blue-300
+      border-bottom 1px solid blue-300
 
 
 .user-filter
