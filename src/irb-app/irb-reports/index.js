@@ -1,7 +1,13 @@
+import {
+  defaultOrdering,
+  leqToNumericOrdering,
+  lexicalCompose,
+  mapArguments,
+} from 'mixpanel-common/util/function';
 import moment from 'moment';
 import { Component } from 'panel';
 
-import { extend } from '../../util';
+import { extend, stringFilterMatches } from '../../util';
 
 import '../widgets/mp-drawer';
 
@@ -53,6 +59,10 @@ document.registerElement(`irb-mp-confirm-delete`, class extends MPConfDel {
 });
 // -------------------------------------------------------------------------------
 
+const LEQ_ORDER = {
+  asc: leqToNumericOrdering((a, b) => a <= b),
+  desc: leqToNumericOrdering((a, b) => b <= a),
+};
 
 document.registerElement(`irb-reports`, class extends Component {
   get config() {
@@ -64,7 +74,7 @@ document.registerElement(`irb-reports`, class extends Component {
           nameFilter: ``,
           userFilter: `all`,
 
-          sortField: `name`,
+          sortField: `title`,
           sortOrder: `asc`,
         },
       },
@@ -113,22 +123,30 @@ document.registerElement(`irb-reports`, class extends Component {
             reports = reports.filter(bm => String(bm.userID) === userID);
           }
           if (drawer.nameFilter) {
-            const searchStr = drawer.nameFilter.toLowerCase();
-            reports = reports.filter(r => r.title.toLowerCase().startsWith(searchStr));
+            reports = reports
+              .map(report => extend(report, {
+                matches: stringFilterMatches(report.title, drawer.nameFilter),
+              }))
+              .filter(report => !!report.matches);
           }
-          return reports.sort((a, b) => {
-            a = a[drawer.sortField];
-            b = b[drawer.sortField];
-            if (drawer.sortField === `modified`) {
-              a = moment.utc(a);
-              b = moment.utc(b);
-            } else if (typeof a === `string`) {
-              a = a.toLowerCase();
-              b = b.toLowerCase();
-            }
-            let cmp = a > b ? 1 : a < b ? -1 : 0;
-            return drawer.sortOrder === `desc` ? -cmp : cmp;
-          });
+          const orderFunc = LEQ_ORDER[drawer.sortOrder || `asc`];
+          return reports.sort(lexicalCompose(
+            // prioritize beginning match
+            mapArguments(defaultOrdering, report =>
+              report.matches ? -report.matches[0].length : 0
+            ),
+
+            // second: order by selected field
+            mapArguments(orderFunc, report => {
+              let val = report[drawer.sortField];
+              if (drawer.sortField === `modified`) {
+                val = moment.utc(val);
+              } else if (typeof val === `string`) {
+                val = val.toLowerCase();
+              }
+              return val;
+            })
+          ));
         },
       },
     };
