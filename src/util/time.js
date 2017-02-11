@@ -27,6 +27,16 @@ export const MOMENT_TIME_FORMATTING = {
   'year': `YYYY`,
 };
 
+export function epochToFormattedDate(epoch, unit, {displayRangeIfWeek=true}={}) {
+  const timeFormat = MOMENT_TIME_FORMATTING[unit];
+  const epochMoment = moment.utc(Number(epoch));
+  if (displayRangeIfWeek && unit === `week`) {
+    return `${epochMoment.format(timeFormat)} - ${epochMoment.add(6, `days`).format(timeFormat)}`;
+  } else {
+    return epochMoment.format(timeFormat);
+  }
+}
+
 export function formatDateISO(date) {
   return moment(date).format().slice(0, 10);
 }

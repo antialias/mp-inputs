@@ -20,6 +20,7 @@ export {
 } from './learn';
 
 export {
+  epochToFormattedDate,
   MOMENT_TIME_FORMATTING,
   MS_IN_HOUR,
   MS_IN_DAY,

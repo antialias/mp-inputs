@@ -112,17 +112,9 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     this.renderChart();
   }
 
-  epochToTimeUnitFunction(options={}) {
+  epochToTimeUnitFunction({displayRangeIfWeek=true}={}) {
     const timeUnit = this._displayOptions.timeUnit;
-    const timeFormatter = util.MOMENT_TIME_FORMATTING[timeUnit];
-    return epoch => {
-      const epochMoment = moment.utc(Number(epoch));
-      if (timeUnit === `week` && options.displayRangeIfWeek) {
-        return `${epochMoment.format(timeFormatter)} - ${epochMoment.add(6, `days`).format(timeFormatter)}`;
-      } else {
-        return epochMoment.format(timeFormatter);
-      }
-    };
+    return epoch => util.epochToFormattedDate(epoch, timeUnit, {displayRangeIfWeek});
   }
 
   getTickPositions() {
@@ -144,7 +136,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   }
 
   tooltipFormatter() {
-    var timeFormatter = this.epochToTimeUnitFunction({displayRangeIfWeek: true});
+    var timeFormatter = this.epochToTimeUnitFunction();
     return function() {
       return `
         <div class="title" style="background-color: ${this.series.color};">${this.series.name}</div>
@@ -160,7 +152,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   }
 
   xAxisFormatter() {
-    var timeFormatter = this.epochToTimeUnitFunction();
+    var timeFormatter = this.epochToTimeUnitFunction({displayRangeIfWeek: false});
     return function() {
       return timeFormatter(this.value);
     };

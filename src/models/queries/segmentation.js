@@ -10,10 +10,10 @@ import QueryCache from './query-cache';
 import {
   abbreviateNumber,
   capitalize,
+  epochToFormattedDate,
   extend,
   filterToArbSelectorString,
   isFilterValid,
-  MOMENT_TIME_FORMATTING,
   MS_BY_UNIT,
   pick,
   renameEvent,
@@ -356,7 +356,7 @@ export default class SegmentationQuery extends BaseQuery {
     const getFormattedDate = (epoch, unit) => {
       epoch = epoch * 1000;
       if (!formattedDateCache[epoch]) {
-        formattedDateCache[epoch] = moment.utc(epoch).format(MOMENT_TIME_FORMATTING[unit]);
+        formattedDateCache[epoch] = epochToFormattedDate(epoch, unit);
       }
       return formattedDateCache[epoch];
     };
@@ -386,7 +386,7 @@ export default class SegmentationQuery extends BaseQuery {
             const segIdx = si - 1;
             if (si && this.isBucketedAtSegmentIdx(segIdx)) {
               key = this.formattedKeyForBucketedSegment(segIdx, key);
-            } else if (Number.isInteger(key) && isSegDatetimeMap[segIdx]) {
+            } else if (si && Number.isInteger(key) && isSegDatetimeMap[segIdx]) {
               key = getFormattedDate(key, isSegDatetimeMap[segIdx]);
             }
 
