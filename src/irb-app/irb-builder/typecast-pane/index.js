@@ -11,7 +11,7 @@ const TYPE_FORMAT_MAP = {
   datetime: `date`,
   list: `list`,
   number: `number`,
-  string: `text`,
+  string: `string`,
 };
 
 document.registerElement(`typecast-pane`, class extends Component {
