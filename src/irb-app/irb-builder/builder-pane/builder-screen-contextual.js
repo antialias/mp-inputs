@@ -30,11 +30,16 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
               this.nextScreen(`builder-screen-${resourceType}`);
               break;
             }
-            case GroupClause.TYPE:
+            case GroupClause.TYPE: {
               this.app.stopEditingClause();
               this.app.startAddingClause(clauseType);
               this.nextScreen(`builder-screen-group-properties`);
+              const isPeopleOnlyQuery = this.state.report.sections.show.isPeopleOnlyQuery();
+              this.app.updateBuilderCurrentScreen({
+                resourceType: isPeopleOnlyQuery ? ShowClause.RESOURCE_TYPE_PEOPLE : ShowClause.RESOURCE_TYPE_ALL,
+              });
               break;
+            }
           }
         },
         getContextOptions: () => CONTEXT_OPTIONS[this.state.report.sections.show.clauseResourceTypes()] || [],
