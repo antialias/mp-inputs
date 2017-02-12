@@ -2,6 +2,8 @@ import { BuilderScreenBase } from '../builder-pane/builder-screen-base';
 import { TimeClause } from '../../../models/clause';
 import {
   extend,
+  formatDateISO,
+  relativeToAbsoluteDate,
   unitForDateRange,
 } from '../../../util';
 
@@ -20,7 +22,20 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
       template,
       helpers: extend(super.config.helpers, {
         UNITS,
-        changedUnit: ev => this.updateStageClause({unit: ev.detail.selected}, {shouldCommit: true}),
+        changedUnit: ev => {
+          let update = {unit: ev.detail.selected};
+          let {unit, value} = this.app.activeStageClause || {};
+          const unitPresets = TimeClause.UNIT_AND_VALUE_TO_RANGE[unit];
+          const presetRange = unitPresets && unitPresets[value];
+
+          if (presetRange) { // need to convert to absolute date values to allow new unit
+            const from = formatDateISO(relativeToAbsoluteDate(value, unit));
+            const to = formatDateISO(new Date());
+            update = extend(update, {value: [from, to]});
+          }
+
+          this.updateStageClause(update, {shouldCommit: true});
+        },
         getDates: () => this.app.getTimeClauseValue(this.app.activeStageClause),
         changedDates: ev => {
           if (ev.detail.selected) {
