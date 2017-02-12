@@ -39,7 +39,6 @@ function main() {
   if (!params.outputName && params.selectors && params.selectors.length) {
     groups.push(usesPeopleData ? 'event.name' : 'name');
   }
-
   var getPropertyPaths = function(propertyName, propertyResourceType) {
     var paths = [];
     if (params.resourceTypeNeeded === 'all') {
@@ -55,6 +54,7 @@ function main() {
     week: mixpanel.weekly_time_buckets,
     month: mixpanel.monthly_time_buckets,
     quarter: mixpanel.quarterly_time_buckets,
+    year: mixpanel.annual_time_buckets,
   };
 
   if (params.groups) {

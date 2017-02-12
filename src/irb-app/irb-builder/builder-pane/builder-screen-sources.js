@@ -1,5 +1,5 @@
 import { BuilderScreenBase } from './builder-screen-base';
-import { Clause, GroupClause, FilterClause } from '../../../models/clause';
+import { Clause } from '../../../models/clause';
 
 import { extend } from '../../../util';
 
