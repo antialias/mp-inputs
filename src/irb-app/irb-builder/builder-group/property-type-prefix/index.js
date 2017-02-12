@@ -21,7 +21,8 @@ document.registerElement(`property-type-prefix`, class extends Component {
             this.app.stopBuildingQuery();
             this.app.updateBuilder({isEditingTypecast: false});
           } else {
-            this.app.stopBuildingQuery();
+            this.app.resetBuilder();
+            this.app.stopEditingClause();
             this.app.startEditingClause(GroupClause.TYPE, this.clauseIndex);
             this.app.updateBuilder({isEditingTypecast: true});
           }
