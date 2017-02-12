@@ -389,7 +389,8 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   startBuilderOnScreen(componentName) {
     const hasExistingScreens = !!this.state.builderPane.screens.length;
     const screens = [{componentName}];
-    this.stopBuildingQuery();
+    this.resetBuilder();
+    this.stopEditingClause();
     if (hasExistingScreens) {
       this.updateBuilder({inTransition: true}, {screens});
     } else {
@@ -398,8 +399,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   stopBuildingQuery() {
-    this.resetBuilder();
     this.stopEditingClause();
+    // time for menu to close
+    setTimeout(() => this.resetBuilder(), 250);
   }
 
   resetBuilder() {
