@@ -27,11 +27,10 @@ class DatePicker extends Component {
         changedDates: ev => {
           if (this.isRange) {
             let {from=this.state.from, to=this.state.to} = ev.detail;
-            [from, to] = normalizeDates(from, to);
+            [from=null, to=null] = normalizeDates(from, to);
             this.update({from, to, date: null});
           } else {
-            let {date=this.state.date} = ev.detail;
-            [date] = normalizeDates(date);
+            let [date=null] = normalizeDates(ev.detail || this.state.date);
             this.update({date, from: null, to: null});
           }
           this.emitChange();

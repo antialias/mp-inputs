@@ -29,9 +29,9 @@ class Calendar extends WebComponent {
   }
 
   set value(val) {
-    this.from = val && val.from ? parseDate(val.from) : null;
-    this.to = val && val.to ? parseDate(val.to) : null;
-    this.date = val && !val.from && !val.to ? parseDate(val) : null;
+    this.from = parseDate(val && val.from);
+    this.to = parseDate(val && val.to);
+    this.date = parseDate(val);
     this.updatePicker();
   }
 
@@ -121,9 +121,9 @@ class Calendar extends WebComponent {
   }
 
   emitChange() {
-    const from = this.from ? formatDateISO(this.from) : null;
-    const to = this.to ? formatDateISO(this.to) : null;
-    const date = this.date ? formatDateISO(this.date) : null;
+    const from = formatDateISO(this.from);
+    const to = formatDateISO(this.to);
+    const date = formatDateISO(this.date);
     const detail = this.isRange ? {from, to} : date;
 
     if (detail) {

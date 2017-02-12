@@ -38,23 +38,29 @@ export function epochToFormattedDate(epoch, unit, {displayRangeIfWeek=true}={}) 
 }
 
 export function formatDateISO(date) {
-  return moment(date).format().slice(0, 10);
+  date = moment(date);
+  return date.isValid() ? date.format().slice(0, 10) : null;
 }
 
 export function formatDateDisplay(date) {
-  return moment(date).format(`MMM D, YYYY`);
+  date = moment(date);
+  return date.isValid() ? date.format(`MMM D, YYYY`) : ``;
 }
 
 const MIN_VALID_YEAR = 2002;
 
-export function parseDate(date, {startOfDay=false, endOfDay=false}={}) {
-  const timestamp = Number(moment(date));
-
-  if (isNaN(timestamp)) {
+export function parseDate(dateString, {startOfDay=false, endOfDay=false}={}) {
+  if (typeof dateString !== `string`) {
     return null;
   }
 
-  date = new Date(timestamp);
+  const timestamp = Number(moment(dateString.replace(/[^\w\s-/.]/g, ``)));
+
+  if (!Number.isInteger(timestamp)) {
+    return null;
+  }
+
+  const date = new Date(timestamp);
 
   if (startOfDay) {
     date.setHours(0, 0, 0, 0);
