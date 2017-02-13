@@ -9,6 +9,10 @@ export * from 'mixpanel-common/util';
 export * from 'mixpanel-common/util/string';
 
 export {
+  isIncompleteInterval,
+} from './chart';
+
+export {
   MS_IN_HOUR,
   MS_IN_DAY,
   MS_BY_UNIT,

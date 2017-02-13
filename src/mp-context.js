@@ -28,6 +28,7 @@ export default class MPContext {
       this.userEmail = mp.report.globals.user_email;
       this.userID = mp.report.globals.user_id;
       this.userName = mp.report.globals.user_name;
+      this.utcOffset = mp.report.globals.utc_offset;
       this.whitelists = mp.report.globals.whitelists;
 
       // API access
@@ -38,6 +39,8 @@ export default class MPContext {
       this.apiKey = mp.report.globals.api_key;
       this.apiSecret = mp.report.globals.api_secret;
       this.bmURL = `${this.apiHost}/report/${this.projectID}/bookmarks/${this.appName}`;
+    } else {
+      this.utcOffset = -480;
     }
   }
 

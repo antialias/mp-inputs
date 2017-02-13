@@ -75,6 +75,7 @@ document.registerElement(`line-chart`, class extends Component {
           [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
         )),
         displayOptions: JSON.parse(this.getAttribute(`display-options`)),
+        utcOffset: this.utcOffset,
       });
     }
   }
@@ -411,6 +412,10 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
 
     highchartsOptions.series = sortedSegments.map((s, idx) => util.extend(seriesMap[s], {
       color: highchartsOptions.colors[idx % highchartsOptions.colors.length],
+      isIncompletePath: util.isIncompleteInterval(seriesMap[s].data, {
+        unit: this._displayOptions.timeUnit,
+        utcOffset: this.utcOffset,
+      }),
     }));
 
     return highchartsOptions;
@@ -438,6 +443,15 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
 
   set chartData(data) {
     this._chartData = data;
+    this.renderChart();
+  }
+
+  get utcOffset() {
+    return this._utcOffset;
+  }
+
+  set utcOffset(offset) {
+    this._utcOffset = offset;
     this.renderChart();
   }
 });

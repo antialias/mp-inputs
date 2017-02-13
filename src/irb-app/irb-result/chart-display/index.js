@@ -88,6 +88,7 @@ document.registerElement(`chart-display`, class extends Component {
           return renameProperty(clause.value.name);
         }),
         getUniqueShowMathTypes: () => new Set(this.state.report.sections.show.clauses.map(clause => clause.math)),
+        getUtcOffset: () => this.app.mpContext.utcOffset,
         stringifyObjValues: obj => mapObjectKeys(obj, JSON.stringify),
         showLegend: () => {
           const chartName = this.IRBResult.selectedChartName().toLowerCase(); // TODO

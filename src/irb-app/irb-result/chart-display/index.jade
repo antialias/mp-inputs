@@ -54,6 +54,7 @@
           line-chart(
             props={
               chartData: processedResult,
+              utcOffset: $helpers.getUtcOffset(),
             }
             attrs=$helpers.stringifyObjValues({
               'chart-label': $helpers.getChartLabel(),
