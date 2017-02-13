@@ -3,9 +3,9 @@
 .builder-filter-container
   .builder-section.filter-conjuction-container
     if numOfFilterClauses > 1
-      .filter-conjuction-button
+      .filter-conjuction-toggle(on={click: $helpers.clickedConjuctionToggle})
         | That matches
-        span.filter-conjuction-word  all
+        span.filter-conjuction-word= report.sections.filter.conjunction
         |  of the following:
   .builder-section.builder-filter.irb-learn-disabled
     if !numOfFilterClauses

@@ -29,7 +29,7 @@ query-builder-filter
       width 100%
       z-index 0
 
-    .filter-conjuction-button
+    .filter-conjuction-toggle
       background-color white
       border solid 1px grey-100
       border-radius 15px
@@ -47,6 +47,9 @@ query-builder-filter
 
     .filter-conjuction-word
       color mp-blue
+
+      &:before
+        content space-character
 
   .builder-section.builder-filter
     display flex

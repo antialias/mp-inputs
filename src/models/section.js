@@ -81,23 +81,23 @@ export class Section {
   }
 
   appendClause(newClause) {
-    return this.validate(Section.create(this.TYPE, {clauses: insertAtIndex(this.clauses, this.clauses.length, newClause)}));
+    return this.validate(Section.create(this.TYPE, extend(this, {clauses: insertAtIndex(this.clauses, this.clauses.length, newClause)})));
   }
 
   insertClause(index, newClause) {
-    return this.validate(Section.create(this.TYPE, {clauses: insertAtIndex(this.clauses, index, newClause)}));
+    return this.validate(Section.create(this.TYPE, extend(this, {clauses: insertAtIndex(this.clauses, index, newClause)})));
   }
 
   replaceClause(index, newClause) {
-    return this.validate(Section.create(this.TYPE, {clauses: replaceByIndex(this.clauses, index, newClause)}));
+    return this.validate(Section.create(this.TYPE, extend(this, {clauses: replaceByIndex(this.clauses, index, newClause)})));
   }
 
   removeClause(index) {
-    return this.validate(Section.create(this.TYPE, {clauses: removeByIndex(this.clauses, index)}));
+    return this.validate(Section.create(this.TYPE, extend(this, {clauses: removeByIndex(this.clauses, index)})));
   }
 
   removeAllClauses() {
-    return this.validate(Section.create(this.TYPE, {clauses: []}));
+    return this.validate(Section.create(this.TYPE, extend(this, {clauses: []})));
   }
 }
 
@@ -144,6 +144,11 @@ export class FilterSection extends Section {
     } else {
       this.conjunction = FilterSection.CONJUNCTION_ALL;
     }
+    if (this.clauses && this.clauses.length < 2) {
+      // reset to all when only one clause
+      this.conjunction = FilterSection.CONJUNCTION_ALL;
+    }
+
   }
 
   get valid() {
