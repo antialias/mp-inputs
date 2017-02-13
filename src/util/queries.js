@@ -84,17 +84,17 @@ export function filterToArbSelectorString(filter) {
       const startOfDay = date => parseDate(date, {startOfDay: true}).getTime();
       const endOfDay = date => parseDate(date, {endOfDay: true}).getTime();
 
-      const lessThan = timestamp => `(${property} < datetime(${timestamp}))`;
-      const moreThan = timestamp => `(${property} > datetime(${timestamp}))`;
+      const lessRecentlyThan = timestamp => `(${property} < datetime(${timestamp}))`;
+      const moreRecentlyThan = timestamp => `(${property} > datetime(${timestamp}))`;
       const between = (from, to) =>
         `((${property} >= datetime(${startOfDay(from)})) and (${property} <= datetime(${endOfDay(to)})))`;
 
       switch (operator) {
         case `was in the`:
-        case `was more than` : return moreThan(unitsAgo(value));
-        case `was less than` : return lessThan(unitsAgo(value));
-        case `was before`    : return lessThan(startOfDay(value));
-        case `was after`     : return moreThan(endOfDay(value));
+        case `was more than` : return moreRecentlyThan(unitsAgo(value));
+        case `was less than` : return lessRecentlyThan(unitsAgo(value));
+        case `was before`    : return lessRecentlyThan(startOfDay(value));
+        case `was after`     : return moreRecentlyThan(endOfDay(value));
         case `was on`        : return between(value, value);
         case `was between`   : return between(...value);
       }
