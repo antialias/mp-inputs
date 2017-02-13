@@ -53,17 +53,6 @@ const VALUE_TOGGLE_AVAILABLE = {
 document.registerElement(`irb-result`, class extends Component {
   get config() {
     return {
-      helpers: {
-        toastClosed: () => this.update({newCachedData: false}),
-        toastSelected: () => {
-          const reportTrackingData = this.state.report.toTrackingData();
-          this.app.query();
-          this.app.trackEvent(
-            `Refresh Report`,
-            extend(reportTrackingData, {toast: true})
-          );
-        },
-      },
       template,
     };
   }

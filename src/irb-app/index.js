@@ -55,6 +55,15 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       },
       helpers: {
         finishLearn: () => this.finishLearn(),
+        toastClosed: () => this.update({newCachedData: false}),
+        toastSelected: () => {
+          const reportTrackingData = this.state.report.toTrackingData();
+          this.query();
+          this.trackEvent(
+            `Refresh Report`,
+            extend(reportTrackingData, {toast: true})
+          );
+        },
       },
     };
   }
