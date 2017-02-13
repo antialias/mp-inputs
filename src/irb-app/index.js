@@ -566,6 +566,12 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   updateReport(attrs) {
     const report = Object.assign(this.state.report, attrs);
+
+    const isPeopleAndNotTimeSeries = report.sections.show.isPeopleOnlyQuery() && !report.sections.group.isPeopleTimeSeries();
+    if (isPeopleAndNotTimeSeries && report.displayOptions.chartType === `line`) {
+      report.displayOptions.chartType = `bar`;
+    }
+
     this.update({report});
     if (this.state.learnActive) {
       this.transitionLearn();
@@ -783,11 +789,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
           extend(reportTrackingData, clauseProperties)
         );
       });
-
-      const isPeopleAndNotTimeSeries = reportAttrs.sections.show.isPeopleOnlyQuery() && !reportAttrs.sections.group.isPeopleTimeSeries();
-      if (isPeopleAndNotTimeSeries && reportAttrs.displayOptions.chartType === `line`) {
-        reportAttrs.displayOptions.chartType = `bar`;
-      }
 
       if (shouldClearAllGroupsAndFilters) {
         reportAttrs.sections = reportAttrs.sections.replaceSection(new GroupSection());
