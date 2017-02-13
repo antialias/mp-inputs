@@ -12,6 +12,42 @@ control-font()
   text-transform uppercase
 
 query-builder-filter
+  .filter-conjuction-container
+    display flex
+    justify-content center
+    height 25px
+    margin-bottom 10px
+    position relative
+    width 100%
+
+    &:before
+      border-top solid 1px grey-100
+      content ''
+      display block
+      position absolute
+      top 50%
+      width 100%
+      z-index 0
+
+    .filter-conjuction-button
+      background-color white
+      border solid 1px grey-100
+      border-radius 15px
+      color grey-500
+      cursor pointer
+      font-weight 700
+      font-size 11px
+      padding 5px 10px
+      text-transform uppercase
+      z-index 1
+
+      &:hover .filter-conjuction-word
+        color blue-100
+
+
+    .filter-conjuction-word
+      color mp-blue
+
   .builder-section.builder-filter
     display flex
     flex-wrap wrap

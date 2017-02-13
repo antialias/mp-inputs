@@ -1,14 +1,23 @@
-.builder-section.builder-filter.irb-learn-disabled
-  if !report.sections.filter.clauses.length
-    .clause.filter
-      .control-container= $component.child('builder-filter-add-control')
-  else
-    each clause, clauseIndex in report.sections.filter.clauses
-      if clauseIndex
-        .clause-language.preposition and
+- numOfFilterClauses = report.sections.filter.clauses.length
+
+.builder-filter-container
+  .builder-section.filter-conjuction-container
+    if numOfFilterClauses > 1
+      .filter-conjuction-button
+        | That matches
+        span.filter-conjuction-word  all
+        |  of the following:
+  .builder-section.builder-filter.irb-learn-disabled
+    if !numOfFilterClauses
       .clause.filter
-        .control-container= $component.child('builder-filter-edit-control', {attrs: {'clause-index': clauseIndex}})
-        if clauseIndex == report.sections.filter.clauses.length - 1
-          if $helpers.isAddingClause()
-            .clause-language.preposition and
-    .control-container= $component.child('builder-filter-add-control')
+        .control-container= $component.child('builder-filter-add-control')
+    else
+      each clause, clauseIndex in report.sections.filter.clauses
+        if clauseIndex
+          .clause-language.preposition and
+        .clause.filter
+          .control-container= $component.child('builder-filter-edit-control', {attrs: {'clause-index': clauseIndex}})
+          if clauseIndex == report.sections.filter.clauses.length - 1
+            if $helpers.isAddingClause()
+              .clause-language.preposition and
+      .control-container= $component.child('builder-filter-add-control')
