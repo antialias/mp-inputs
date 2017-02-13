@@ -54,7 +54,11 @@ export function parseDate(dateString, {startOfDay=false, endOfDay=false}={}) {
     return null;
   }
 
-  const timestamp = Number(moment(dateString.replace(/[^\w\s-/.]/g, ``)));
+  // strip out all chars other than alphanumerics and "./-"
+  // this allows strings like '"2017-02-02"' to be parsed correctly
+  dateString = dateString.replace(/[^\w\s-/.]/g, ``);
+
+  const timestamp = Number(moment(dateString));
 
   if (!Number.isInteger(timestamp)) {
     return null;
