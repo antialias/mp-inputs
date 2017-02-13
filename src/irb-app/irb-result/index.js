@@ -5,7 +5,6 @@ import { extend } from '../../util';
 
 import './chart-controls';
 import './chart-display';
-import './mp-toast';
 
 import template from './index.jade';
 import './index.styl';
