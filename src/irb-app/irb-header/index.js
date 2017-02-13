@@ -1,5 +1,3 @@
-import md5 from 'md5';
-import { downloadData } from 'mixpanel-common/report/util';
 import { Component } from 'panel';
 
 import './mp-button-input';
@@ -32,12 +30,7 @@ document.registerElement(`irb-header`, class extends Component {
 
         clickExportCSV: () => {
           if (!this.state.resultLoading && this.state.projectHasEvents) {
-            this.app.queries.segmentation
-              .build(this.state)
-              .buildJQLArgs()
-              .map(queryArgs => queryArgs.then(queryArgs => {
-                this.downloadJQLQuery(queryArgs[1].script, this.state.report.title, queryArgs[1].params);
-              }));
+            this.downloadData(this.state.report.title, `Date,Chrome,Firefox`); // DUMMY DATA
           }
         },
         clickReportList: () => this.app.openReportList(),
@@ -46,26 +39,21 @@ document.registerElement(`irb-header`, class extends Component {
     };
   }
 
-  downloadJQLQuery(script, filename, scriptParams) {
-    /* eslint-disable camelcase */
-    const params = {
-      api_key: this.app.apiKey,
-      script: script.replace(/\r/g, ``).replace(/\n/g, `\r\n`),
-      download_file: `${filename}.csv`,
-      expire: Math.ceil(new Date().getTime() / 1000) + 60 * 60,
-      params: scriptParams,
-      format: `csv`,
-    };
-    /* eslint-enable camelcase */
+  downloadData(filename, dataStr) {
+    // prepare blob
+    const blob = new Blob([dataStr], {type: `octet/stream`});
+    const blobURL = URL.createObjectURL(blob);
 
-    // compute sig, because we can't send basic auth headers with
-    // POST-to-iframe download hack
-    let sigStr = Object.keys(params)
-      .sort()
-      .reduce((str, k) => str + `${k}=${params[k]}`, ``);
-    sigStr += this.app.apiSecret;
-    params.sig = md5(sigStr);
+    // launch named download via hidden link
+    const link = document.createElement(`a`);
+    link.style.display = `none`;
+    link.href = blobURL;
+    link.download = `${filename}.csv`;
+    document.body.appendChild(link);
+    link.click();
 
-    downloadData(`${this.app.apiHost}/api/2.0/jql/`, params);
+    // clean up
+    URL.revokeObjectURL(blobURL);
+    link.remove();
   }
 });
