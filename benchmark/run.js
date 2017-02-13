@@ -5,10 +5,11 @@ import fetch from 'node-fetch';
 import BuilderSections from '../src/models/builder-sections';
 import { ShowClause, TimeClause, GroupClause } from '../src/models/clause';
 import { ShowSection, TimeSection, GroupSection } from '../src/models/section';
-import { MS_BY_UNIT, toArbSelectorPropertyToken } from '../src/models/queries/segmentation';
+import { MS_BY_UNIT } from '../src/models/queries/segmentation';
 import SegmentationQuery from '../src/models/queries/segmentation';
 
 import { API_BASE, authHeader, urlencodeParams } from './util';
+import { toArbSelectorPropertyToken } from '../src/util';
 import QUERIES from './queries';
 
 const DEBUG = (process.env.DEBUG || '').toLowerCase() === 'true';
