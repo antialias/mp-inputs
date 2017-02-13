@@ -38,7 +38,6 @@ export class BuilderScreenBase extends Component {
           ev.stopPropagation();
           this.updateStageClause({value, property: null}, {shouldCommit: true});
           this.app.updateBuilder({isContextualMenuOpen: false});
-          this.app.update({contextFilter: ``});
           this.nextScreen(`builder-screen-numeric-properties`);
         },
         clickedProperty: (ev, property) => {
@@ -163,6 +162,7 @@ export class BuilderScreenBase extends Component {
 
   nextScreen(componentName) {
     if (!this.state.builderPane.inTransition) {
+      this.app.update({contextFilter: ``});
       this.app.updateBuilder({
         inTransition: true,
         screens: this.state.builderPane.screens.concat({componentName}),

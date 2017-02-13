@@ -10,8 +10,8 @@ import './builder-screen-time-custom.styl';
 
 import '../../widgets/datepicker';
 
-const UNITS = TimeClause.UNIT_LIST.filter(
-  choice => choice !== TimeClause.UNITS.YEAR
+const UNITS = TimeClause.TIME_UNIT_LIST.filter(
+  choice => choice !== TimeClause.TIME_UNITS.YEAR
 );
 
 document.registerElement(`builder-screen-time-custom`, class extends BuilderScreenBase {

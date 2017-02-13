@@ -21,14 +21,13 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
           if (property.type === `datetime`) {
             newClause.editing = true;
             this.updateStageClause(newClause);
-            this.update({contextFilter: ``});
             this.nextScreen(`builder-screen-group-datetime-options`);
           } else {
             this.updateAndCommitStageClause(newClause);
           }
         },
         clickedSecondaryPill: () => this.nextScreen(`builder-screen-group-datetime-options`),
-        hasSecondaryPill: (property, isSelected) => (isSelected && property.type === `datetime`),
+        hasSecondaryPill: (property, isSelected) => isSelected && property.type === `datetime`,
         isEventsOnlyQuery: () => (
           this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_EVENTS
         ),

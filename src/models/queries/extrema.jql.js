@@ -1,4 +1,4 @@
-/* global Events, mixpanel, module, People, params, join*/
+/* global Events, join, mixpanel, module, params, People*/
 /* eslint camelcase:0, quotes:0 */
 
 function main() {

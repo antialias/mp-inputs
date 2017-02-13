@@ -13,9 +13,10 @@ include ../mixins.jade
         li.list-option(
           class={'list-option-selected': isSelected}
           on={
-            click: !isSelected ? () => $helpers.clickedUnit(unit.name) : null,
+            click: !isSelected ? () => $helpers.clickedUnit(unit) : null,
           }
         )
           +screen-option(unit.name, {noIcon: true, matches: unit.matches})
     else
+      //- TODO: pull this out into a mixin for all other no results
       li.list-option.list-empty Your search returned no results

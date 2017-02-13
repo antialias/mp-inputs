@@ -63,7 +63,7 @@ document.registerElement(`line-chart`, class extends Component {
       return;
     }
 
-    let { headers, series, peopleTimeSeries } = this.chartData;
+    let {headers, series, peopleTimeSeries} = this.chartData;
     const chartLabel = JSON.parse(this.getAttribute(`chart-label`));
 
     const data = peopleTimeSeries || series;
@@ -113,8 +113,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   }
 
   epochToTimeUnitFunction({displayRangeIfWeek=true}={}) {
-    const timeUnit = this._displayOptions.timeUnit;
-    return epoch => util.epochToFormattedDate(epoch, timeUnit, {displayRangeIfWeek});
+    return epoch => util.epochToFormattedDate(epoch, this._displayOptions.timeUnit, {displayRangeIfWeek});
   }
 
   getTickPositions() {

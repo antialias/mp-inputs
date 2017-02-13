@@ -342,7 +342,6 @@ export default class SegmentationQuery extends BaseQuery {
     const isPeopleOnlyQuery = this.query.jqlQueries.every(query => query.resourceType === `people`);
     const needsPeopleTimeSeries = isPeopleOnlyQuery && querySegments.length && querySegments[querySegments.length - 1].propertyType === `datetime`;
 
-
     //  epoch dates of properties come back in seconds. 10^3 is needed to bring it to ms for moment.
     const dateKeyCache = {};
     const getDateKey = epoch => {
@@ -368,14 +367,14 @@ export default class SegmentationQuery extends BaseQuery {
 
     if (results) {
       const isSegDatetimeMap = querySegments
-        .map(seg => seg.propertyType === `datetime` && seg.unit)
+        .map(seg => seg.propertyType === `datetime` ? seg.unit : false)
         .reduce((obj, val, idx) => Object.assign(obj, {[idx]: val}), {});
 
-      const createSeriesReducerFunc = notTimeSeries => {
+      const createSeriesReducerFunc = ({isTimeSeries=true}={}) => {
         return (seriesObj, item) => {
           // transform item.key array into nested obj,
           // with item.value at the deepest level
-          if (notTimeSeries) {
+          if (!isTimeSeries) {
             item = extend(item, {key: item.key.concat(`value`)});
           }
 
@@ -394,7 +393,7 @@ export default class SegmentationQuery extends BaseQuery {
             // If it is the second to last key it must be the object holding the date values.
             // If it does not yet exist fill this with the zeroed-out base dates.
             if (si === item.key.length - 2 && !obj[key]) {
-              obj[key] = notTimeSeries ? {} : extend(baseDateResults);
+              obj[key] = isTimeSeries ? extend(baseDateResults) : {};
             } else {
               obj[key] = obj[key] || {};
             }
@@ -406,7 +405,7 @@ export default class SegmentationQuery extends BaseQuery {
         };
       };
 
-      series = results.reduce(createSeriesReducerFunc(isPeopleOnlyQuery), {});
+      series = results.reduce(createSeriesReducerFunc({isTimeSeries: !isPeopleOnlyQuery}), {});
       peopleTimeSeries = needsPeopleTimeSeries ? results.reduce(createSeriesReducerFunc(), {}) : null;
     }
 

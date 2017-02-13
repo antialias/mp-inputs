@@ -739,7 +739,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     const newClauses = this.state.stageClauses;
     const reportAttrs = extend(this.state.report);
 
-
     if (newClauses.length) {
       let shouldClearAllGroupsAndFilters = false;
       newClauses.filter(clause => clause.valid).forEach(clause => {

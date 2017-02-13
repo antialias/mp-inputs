@@ -39,8 +39,9 @@ export default class ExtremaJQLQuery extends BaseQuery {
     if (this.query.isPeopleProperty) {
       params.queryResourceType = Clause.RESOURCE_TYPE_PEOPLE;
     } else {
-      const hasEventSelectors = params.selectors.some(sel => sel.selector && sel.selector.includes(`user[`));
-      if (hasEventSelectors) {
+      const hasPeopleSelectors = params.selectors.some(sel => sel.selector && sel.selector.includes(`user[`));
+      if (hasPeopleSelectors) {
+        // is a query on an event property but we need people data
         params.queryResourceType = Clause.RESOURCE_TYPE_ALL;
         params.propertyPath = `event.${params.propertyPath}`;
       } else {

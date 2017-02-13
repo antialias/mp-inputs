@@ -10,7 +10,7 @@ const TYPE_FORMAT_NAME = {
   'time': `Time`,
 };
 
-const UNITS = {
+const TIME_UNITS = {
   HOUR: `hour`,
   DAY: `day`,
   WEEK: `week`,
@@ -19,8 +19,8 @@ const UNITS = {
   YEAR: `year`,
 };
 
-const UNIT_LIST = [
-  UNITS.HOUR, UNITS.DAY, UNITS.WEEK, UNITS.MONTH, UNITS.QUARTER, UNITS.YEAR,
+const TIME_UNIT_LIST = [
+  TIME_UNITS.HOUR, TIME_UNITS.DAY, TIME_UNITS.WEEK, TIME_UNITS.MONTH, TIME_UNITS.QUARTER, TIME_UNITS.YEAR,
 ];
 
 export class Clause {
@@ -176,12 +176,12 @@ export class GroupClause extends EventsPropertiesClause {
     this.unit = attrs.unit || null;
     this.editing = attrs.editing || null;
     if (this.isDatetimeProperty && !this.editing && !this.unit) {
-      this.unit = UNITS.DAY;
+      this.unit = TIME_UNITS.DAY;
     }
   }
 
   get valid() {
-    const validIfDatetime = this.isDatetimeProperty ? UNIT_LIST.includes(this.unit) : true;
+    const validIfDatetime = this.isDatetimeProperty ? TIME_UNIT_LIST.includes(this.unit) : true;
     return super.valid &&
       this.FILTER_TYPES.indexOf(this.filterType) !== -1 &&
       this.PROPERTY_TYPES.includes(this.propertyType) &&
@@ -198,11 +198,9 @@ export class GroupClause extends EventsPropertiesClause {
   }
 
   toUrlData() {
-    const conditionalAttrs = {
-      propertyType: this.propertyType,
-    };
+    const conditionalAttrs = {propertyType: this.propertyType};
     if (this.isDatetimeProperty) {
-      conditionalAttrs.unit = this.unit || UNITS.DAY;
+      conditionalAttrs.unit = this.unit || TIME_UNITS.DAY;
     }
     if (this.typeCast) {
       conditionalAttrs.typeCast = this.typeCast;
@@ -231,10 +229,10 @@ const RANGE_LIST = [
   RANGES.HOURS, RANGES.MONTH, RANGES.QUARTER, RANGES.YEAR, RANGES.CUSTOM,
 ];
 const RANGE_TO_VALUE_AND_UNIT = {
-  [RANGES.HOURS]:   {value: 96, unit: UNITS.HOUR},
-  [RANGES.MONTH]:   {value: 30, unit: UNITS.DAY},
-  [RANGES.QUARTER]: {value: 4,  unit: UNITS.QUARTER},
-  [RANGES.YEAR]:    {value: 12, unit: UNITS.MONTH},
+  [RANGES.HOURS]:   {value: 96, unit: TIME_UNITS.HOUR},
+  [RANGES.MONTH]:   {value: 30, unit: TIME_UNITS.DAY},
+  [RANGES.QUARTER]: {value: 4,  unit: TIME_UNITS.QUARTER},
+  [RANGES.YEAR]:    {value: 12, unit: TIME_UNITS.MONTH},
 };
 const UNIT_AND_VALUE_TO_RANGE = {
   hour: {
@@ -273,7 +271,7 @@ export class TimeClause extends Clause {
 
   get valid() {
     /* conditions:
-     * - unit must be one of TimeClause.UNIT_LIST
+     * - unit must be one of TimeClause.TIME_UNIT_LIST
      * - value must exist
      * - value must be either a single entry OR an array of entries
      * - entries in value must be numbers OR Dates
@@ -281,7 +279,7 @@ export class TimeClause extends Clause {
      * - Dates in value must occur before now
      */
     return (
-      this.UNIT_LIST.indexOf(this.unit) !== -1 &&
+      this.TIME_UNIT_LIST.indexOf(this.unit) !== -1 &&
       this.value &&
       (
         (typeof this.value === `number` && this.value > 0) ||
@@ -326,8 +324,8 @@ export class TimeClause extends Clause {
 TimeClause.TYPE = TimeClause.prototype.TYPE = `time`;
 TimeClause.RANGES = TimeClause.prototype.RANGES = RANGES;
 TimeClause.RANGE_LIST = TimeClause.prototype.RANGE_LIST = RANGE_LIST;
-TimeClause.UNITS = TimeClause.prototype.UNITS = UNITS;
-TimeClause.UNIT_LIST = TimeClause.prototype.UNIT_LIST = UNIT_LIST;
+TimeClause.TIME_UNITS = TimeClause.prototype.TIME_UNITS = TIME_UNITS;
+TimeClause.TIME_UNIT_LIST = TimeClause.prototype.TIME_UNIT_LIST = TIME_UNIT_LIST;
 TimeClause.RANGE_TO_VALUE_AND_UNIT = TimeClause.prototype.RANGE_TO_VALUE_AND_UNIT = RANGE_TO_VALUE_AND_UNIT;
 TimeClause.UNIT_AND_VALUE_TO_RANGE = TimeClause.prototype.UNIT_AND_VALUE_TO_RANGE = UNIT_AND_VALUE_TO_RANGE;
 
@@ -338,7 +336,7 @@ export class FilterClause extends EventsPropertiesClause {
     this.filterType = attrs.filterType || FilterClause.FILTER_TYPES[0];
     this.filterValue = (attrs.filterValue === 0 || attrs.filterValue) ? attrs.filterValue : null;
     this.filterSearch = attrs.filterSearch || null;
-    this.filterDateUnit = attrs.filterDateUnit || TimeClause.UNIT_LIST[0];
+    this.filterDateUnit = attrs.filterDateUnit || TimeClause.TIME_UNIT_LIST[0];
 
     const filterOperators = FilterClause.FILTER_OPERATORS[this.filterType];
     this.filterOperator = filterOperators.includes(attrs.filterOperator) ? attrs.filterOperator : filterOperators[0];

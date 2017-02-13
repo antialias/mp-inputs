@@ -5,8 +5,8 @@ import { renameProperty } from '../../../util';
 import { EditControl } from '../edit-control';
 import { GroupClause, ShowClause } from '../../../models/clause';
 
-import './builder-screen-group-properties';
 import './builder-screen-group-datetime-options';
+import './builder-screen-group-properties';
 import './property-type-prefix';
 
 import template from './index.jade';
