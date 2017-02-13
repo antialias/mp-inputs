@@ -236,16 +236,21 @@ export default class SegmentationQuery extends BaseQuery {
           to:   (new Date(this.query.to)).toISOString().split(`T`)[0],
           unit: jqlQuery.unit,
         };
-        scriptParams.selectors = jqlQuery.events.map(selector => {
-          if (selector.selector) {
-            if (this.query.filterArbSelectors) {
-              selector.selector += ` and ${this.query.filterArbSelectors}`;
+        if (jqlQuery.events.length) {
+          scriptParams.selectors = jqlQuery.events.map(selector => {
+            if (selector.selector) {
+              if (this.query.filterArbSelectors) {
+                selector.selector += ` and ${this.query.filterArbSelectors}`;
+              }
+            } else {
+              selector.selector = this.query.filterArbSelectors;
             }
-          } else {
-            selector.selector = this.query.filterArbSelectors;
-          }
-          return selector;
-        });
+            return selector;
+          });
+        } else if (this.query.filterArbSelectors) {
+          // include arbselectors for $all_events
+          scriptParams.selectors = [{selector: this.query.filterArbSelectors}];
+        }
       } else {
         if (this.query.filterArbSelectors) {
           scriptParams.selectors = [{selector: this.query.filterArbSelectors}];
