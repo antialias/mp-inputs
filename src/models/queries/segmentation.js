@@ -256,7 +256,6 @@ export default class SegmentationQuery extends BaseQuery {
         scriptParams.groupLimits = [-1].concat(groups.map(() => 100));
       }
 
-      // As we need more helper data this should be moved down a level in the params
       const hasPeopleFilters = groups.concat([scriptParams.property])
         .some(param => param && param.resourceType === `people`);
       const hasUserSelectors = scriptParams.selectors && scriptParams.selectors

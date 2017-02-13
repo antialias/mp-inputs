@@ -1,11 +1,12 @@
 import BaseQuery from './base';
+import { Clause } from '../clause';
 import { extend, formatDateISO, pick } from '../../util';
 
 import main from './extrema.jql.js';
 
 export function extremaResultToBuckets(result, {numBuckets=10}={}) {
   const extremaDelta = result.max - result.min;
-  if (extremaDelta < numBuckets) {
+  if (extremaDelta < numBuckets || Number.isNaN(extremaDelta)) {
     return {};
   }
 
@@ -31,11 +32,21 @@ export default class ExtremaJQLQuery extends BaseQuery {
   }
 
   buildParams({params={}}={}) {
-    params = extend(params, pick(this.query, [`selectors`, `property`, `isPeopleProperty`]));
+    params = extend(params, pick(this.query, [`selectors`, `property`]));
     params.from = formatDateISO(this.query.from);
     params.to = formatDateISO(this.query.to);
     params.propertyPath = `properties.${params.property}`;
-
+    if (this.query.isPeopleProperty) {
+      params.queryResourceType = Clause.RESOURCE_TYPE_PEOPLE;
+    } else {
+      const hasEventSelectors = params.selectors.some(sel => sel.selector && sel.selector.includes(`user[`));
+      if (hasEventSelectors) {
+        params.queryResourceType = Clause.RESOURCE_TYPE_ALL;
+        params.propertyPath = `event.${params.propertyPath}`;
+      } else {
+        params.queryResourceType = Clause.RESOURCE_TYPE_EVENTS;
+      }
+    }
     return {
       script: String(main),
       params: JSON.stringify(params),
