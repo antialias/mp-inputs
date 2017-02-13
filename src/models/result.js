@@ -26,16 +26,12 @@ export default class Result {
       // compute transformation
       switch (options.analysis) {
         case `cumulative`:
-          newSeries = nestedObjectCumulative(this.series);
-          if (newpeopleTimeSeries) {
-            newpeopleTimeSeries = nestedObjectCumulative(this.series);
-          }
+          newSeries = nestedObjectCumulative(newSeries);
+          newpeopleTimeSeries = newpeopleTimeSeries && nestedObjectCumulative(newpeopleTimeSeries);
           break;
         case `rolling`:
-          newSeries = nestedObjectRolling(this.series, options.windowSize);
-          if (newpeopleTimeSeries) {
-            newpeopleTimeSeries = nestedObjectCumulative(this.series, options.windowSize);
-          }
+          newSeries = nestedObjectRolling(newSeries, options.windowSize);
+          newpeopleTimeSeries = newpeopleTimeSeries && nestedObjectRolling(newpeopleTimeSeries, options.windowSize);
           break;
       }
     }
