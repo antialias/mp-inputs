@@ -2,6 +2,7 @@ import moment from 'moment';
 
 import BaseQuery from './base';
 import { ShowClause } from '../clause';
+import { FilterSection } from '../section';
 import ExtremaJQLQuery from './extrema';
 import Result from '../result';
 import main from './segmentation.jql.js';
@@ -151,11 +152,12 @@ export default class SegmentationQuery extends BaseQuery {
 
     // data global to all JQL queries.
     const segments = sections.group.clauses.map(clause => pick(clause, [`value`, `propertyType`, `resourceType`, `typeCast`, `unit`]));
+    const conjunction = sections.filter.conjunction === FilterSection.CONJUNCTION_ANY ? `or` : `and`;
     const filterArbSelectors = sections.filter.clauses
       .map(clause => clause.attrs)
       .filter(filter => isFilterValid(filter))
       .map(filter => filterToArbSelectorString(filter))
-      .join(` and `);
+      .join(` ${conjunction} `);
 
     // TODO (jordan): handle resetting dates when building params
     const time = sections.time.clauses[0];
