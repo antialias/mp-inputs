@@ -91,8 +91,8 @@ export function filterToArbSelectorString(filter) {
 
       switch (operator) {
         case `was in the`:
-        case `was less than` : return lessThan(unitsAgo(value));
         case `was more than` : return moreThan(unitsAgo(value));
+        case `was less than` : return lessThan(unitsAgo(value));
         case `was before`    : return lessThan(startOfDay(value));
         case `was after`     : return moreThan(endOfDay(value));
         case `was on`        : return between(value, value);
