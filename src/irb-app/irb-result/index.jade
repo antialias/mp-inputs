@@ -13,16 +13,5 @@ include ../irb-learn/tooltip.jade
 )
   .result-controls= $component.child('chart-controls')
   .result-display= $component.child('chart-display')
-  irb-toast(
-    attrs={
-      'message': 'You have new data.',
-      'select-text': 'Refresh',
-      'showToast': newCachedData,
-    }
-    on={
-      close: $helpers.toastClosed,
-      select: $helpers.toastSelected,
-    }
-  )
 
   +irb-learn-tooltip(`manipulate-data`)

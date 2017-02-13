@@ -14,4 +14,16 @@
   .irb-main-panel.bottom-panel
     = $component.child(`irb-result`)
 
+  .refresh-toast-stage
+    mp-toast(
+      attrs={
+        cta: `Refresh`,
+        hide: !newCachedData
+      }
+      on={
+        action: $helpers.toastSelected,
+        close: $helpers.toastClosed,
+      }
+    ) You have new data.
+
   = $component.child(`irb-reports`)
