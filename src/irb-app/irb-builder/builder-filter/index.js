@@ -22,6 +22,18 @@ document.registerElement(`query-builder-filter`, class extends Component {
           filter.conjunction = filter.conjunction === FilterSection.CONJUNCTION_ALL ? FilterSection.CONJUNCTION_ANY : FilterSection.CONJUNCTION_ALL;
           this.app.updateSection(this.state.report.sections.filter);
         },
+        getQueryDelimiter: () => {
+          const conjunction = this.state.report.sections.filter.conjunction;
+          let delimiter = `,`;
+          if (this.state.report.sections.filter.clauses.length < 3) {
+            if (conjunction === FilterSection.CONJUNCTION_ALL) {
+              delimiter = `and`;
+            } else if (conjunction === FilterSection.CONJUNCTION_ANY) {
+              delimiter = `or`;
+            }
+          }
+          return delimiter;
+        },
         isAddingClause: () => this.app.isAddingClause(FilterClause.TYPE),
       },
     };

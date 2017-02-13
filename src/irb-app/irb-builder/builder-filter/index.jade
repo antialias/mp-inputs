@@ -14,7 +14,7 @@
     else
       each clause, clauseIndex in report.sections.filter.clauses
         if clauseIndex
-          .clause-language.preposition and
+          .clause-language.preposition= $helpers.getQueryDelimiter()
         .clause.filter
           .control-container= $component.child('builder-filter-edit-control', {attrs: {'clause-index': clauseIndex}})
           if clauseIndex == report.sections.filter.clauses.length - 1
