@@ -3,12 +3,13 @@ import expect from 'expect.js';
 import { d2ResultsObj } from './fixtures';
 
 import Legend from '../src/models/legend';
+import Result from '../src/models/result';
 
 describe('Legend', function() {
   context('with default values', function() {
     beforeEach(function() {
       this.legend = new Legend({});
-      this.legend.updateLegendData(d2ResultsObj);
+      this.legend.updateLegendData(new Result(d2ResultsObj));
     });
 
     it('only expands the first series', function() {
