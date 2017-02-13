@@ -20,9 +20,8 @@ include ../../../mixins.jade
       - const isMultiColor = !(report.displayOptions.chartType === 'bar' && report.displayOptions.plotStyle === 'standard' && legendDataToDisplay.length === 1)
       .search(class={active: isSearchActive})
         svg-icon(attrs={icon: 'search'})
-        focus-input(
+        input(
           attrs={placeholder: 'Search'}
-          props={focusDelay: 200}
           on={input: $helpers.changedSearch}
         )
       sticky-scroll(
