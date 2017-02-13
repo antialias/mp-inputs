@@ -17,7 +17,7 @@ document.registerElement(`query-builder-filter`, class extends Component {
     return {
       template,
       helpers: {
-        clickedConjuctionToggle: () => {
+        clickedConjunctionToggle: () => {
           const filter = this.state.report.sections.filter;
           filter.conjunction = filter.conjunction === FilterSection.CONJUNCTION_ALL ? FilterSection.CONJUNCTION_ANY : FilterSection.CONJUNCTION_ALL;
           this.app.updateSection(this.state.report.sections.filter);

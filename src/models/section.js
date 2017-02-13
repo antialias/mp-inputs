@@ -40,7 +40,6 @@ export class Section {
   }
 
   static deserialize(sectionType, clauseAttrs) {
-    // debugger;
     let section = {clauses: []};
     if (Array.isArray(clauseAttrs)) {
       section = Section.create(sectionType, {
