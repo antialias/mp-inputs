@@ -9,12 +9,14 @@ import {
   TimeSection,
 } from './section';
 
+import { Clause } from './clause';
+
 export default class BuilderSections {
   constructor(attrs={}) {
     this.show = attrs.show || new ShowSection();
     this.group = attrs.group || new GroupSection();
     this.filter = attrs.filter || new FilterSection();
-    this.time = attrs.time || new TimeSection();
+    this.time = attrs.time || new TimeSection(Clause.create(`time`));
   }
 
   static deserialize(attrs) {
