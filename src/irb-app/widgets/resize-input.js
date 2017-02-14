@@ -95,7 +95,7 @@ export default class ResizeInput extends Component {
   }
 
   resize() {
-    const newWidth = Math.max(this.minimumWidth, this.getTextWidth(this.state.inputValue));
+    const newWidth = Math.ceil(Math.max(this.minimumWidth, this.getTextWidth(this.state.inputValue)));
     this.update({inputWidth: newWidth});
   }
 

@@ -25,7 +25,7 @@
           opacity 1
 
     .control-label, .control-label input
-      border-bottom 1px dotted mp-blue
+      background-color transparent
       border-radius 0
       color mp-blue
       font-family font-helvetica-neue
@@ -35,12 +35,14 @@
       padding-left 0
       padding-right 0
 
+    .control-label
+      dotted-border-bottom(mp-blue)
+
       &:hover
         border-bottom-style solid
 
     .control-label input
       border none
-      border-bottom 1px dotted mp-blue
       border-radius 0
       align-items center
       display flex
@@ -57,7 +59,7 @@
       color blue-300
 
   &.pane-open
-    .control-label, .control-label input
+    .control-label
       border-bottom-style solid
 
     .add-control
