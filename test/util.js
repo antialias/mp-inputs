@@ -332,4 +332,63 @@ describe(`resultToCSVArray`, function() {
       [`2017-01-16`, `Click run`, 2837,     316,       397     ],
     ]);
   });
+
+  it(`translates a deeply nested result`, function() {
+    const result = {
+      headers:[
+        '$event',
+        '$browser',
+        '$os',
+      ],
+      series: {
+        'Click run': {
+          'Chrome': {
+            'Mac OS X': {
+              '2017-01-14T00:00:00Z': 393,
+              '2017-01-15T00:00:00Z': 619,
+              '2017-01-16T00:00:00Z': 2837,
+            },
+            'Linux': {
+              '2017-01-14T00:00:00Z': 53,
+              '2017-01-15T00:00:00Z': 234,
+              '2017-01-16T00:00:00Z': 2313,
+            },
+          },
+          'Firefox': {
+            'Mac OS X': {
+              '2017-01-14T00:00:00Z': 15,
+              '2017-01-15T00:00:00Z': 6,
+              '2017-01-16T00:00:00Z': 316,
+            },
+            'Linux': {
+              '2017-01-14T00:00:00Z': 43,
+              '2017-01-15T00:00:00Z': 233,
+              '2017-01-16T00:00:00Z': 123,
+            },
+          },
+          'Safari': {
+            'Mac OS X': {
+              '2017-01-14T00:00:00Z': 0,
+              '2017-01-15T00:00:00Z': 26,
+              '2017-01-16T00:00:00Z': 397,
+            },
+          },
+        },
+      },
+    };
+    const csvArray = resultToCSVArray(result);
+
+    expect(csvArray).to.eql([
+      [`Date`,       `Event`,     `Browser`, `Linux`, `Mac OS X`],
+      [`2017-01-14`, `Click run`, `Chrome`,  53,      393       ],
+      [`2017-01-14`, `Click run`, `Firefox`, 43,      15        ],
+      [`2017-01-14`, `Click run`, `Safari`,  0,       0         ],
+      [`2017-01-15`, `Click run`, `Chrome`,  234,     619       ],
+      [`2017-01-15`, `Click run`, `Firefox`, 233,     6         ],
+      [`2017-01-15`, `Click run`, `Safari`,  0,       26        ],
+      [`2017-01-16`, `Click run`, `Chrome`,  2313,    2837      ],
+      [`2017-01-16`, `Click run`, `Firefox`, 123,     316       ],
+      [`2017-01-16`, `Click run`, `Safari`,  0,       397       ],
+    ]);
+  });
 });
