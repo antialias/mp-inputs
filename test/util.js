@@ -246,40 +246,39 @@ describe('reachableNodesOfKey', function() {
 
 
 describe(`resultToCSVArray`, function() {
-  const result = {
-    headers:[
-      '$event',
-      '$browser',
-    ],
-    series: {
-      'Click run': {
-        'Chrome': {
-          '2017-01-14T00:00:00Z': 393,
-          '2017-01-15T00:00:00Z': 619,
-          '2017-01-16T00:00:00Z': 2837,
-        },
-        'Firefox': {
-          '2017-01-14T00:00:00Z': 15,
-          '2017-01-15T00:00:00Z': 6,
-          '2017-01-16T00:00:00Z': 316,
-        },
-        'Safari': {
-          '2017-01-14T00:00:00Z': 0,
-          '2017-01-15T00:00:00Z': 26,
-          '2017-01-16T00:00:00Z': 397,
+  it(`translates a nested result`, function() {
+    const result = {
+      headers:[
+        '$event',
+        '$browser',
+      ],
+      series: {
+        'Click run': {
+          'Chrome': {
+            '2017-01-14T00:00:00Z': 393,
+            '2017-01-15T00:00:00Z': 619,
+            '2017-01-16T00:00:00Z': 2837,
+          },
+          'Firefox': {
+            '2017-01-14T00:00:00Z': 15,
+            '2017-01-15T00:00:00Z': 6,
+            '2017-01-16T00:00:00Z': 316,
+          },
+          'Safari': {
+            '2017-01-14T00:00:00Z': 0,
+            '2017-01-15T00:00:00Z': 26,
+            '2017-01-16T00:00:00Z': 397,
+          },
         },
       },
-    },
-  };
-  const csvArray = resultToCSVArray(result);
+    };
+    const csvArray = resultToCSVArray(result);
 
-  it(`begins with headers`, function() {
-    expect(csvArray[0]).to.eql([`Date`, `Event`, `Chrome`, `Firefox`, `Safari`]);
-  });
-
-  it(`orders rows by date`, function() {
-    expect(csvArray[1]).to.eql([`2017-01-14`, `Click run`, 393,  15,  0  ]);
-    expect(csvArray[2]).to.eql([`2017-01-15`, `Click run`, 619,  6,   26 ]);
-    expect(csvArray[3]).to.eql([`2017-01-16`, `Click run`, 2837, 316, 397]);
+    expect(csvArray).to.eql([
+      [`Date`,       `Event`,     `Chrome`, `Firefox`, `Safari`],
+      [`2017-01-14`, `Click run`, 393,      15,        0       ],
+      [`2017-01-15`, `Click run`, 619,      6,         26      ],
+      [`2017-01-16`, `Click run`, 2837,     316,       397     ],
+    ]);
   });
 });
