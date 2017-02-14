@@ -20,7 +20,7 @@ document.registerElement(`query-builder-filter`, class extends Component {
         clickedDeterminerToggle: () => {
           const filter = this.state.report.sections.filter;
           filter.determiner = filter.determiner === FilterSection.DETERMINER_ALL ? FilterSection.DETERMINER_ANY : FilterSection.DETERMINER_ALL;
-          this.app.updateSection(this.state.report.sections.filter);
+          this.app.updateSection(filter);
         },
         getQueryDelimiter: () => {
           const determiner = this.state.report.sections.filter.determiner;
