@@ -4,12 +4,18 @@ mixin irb-learn-tooltip(...stepNames)
     - const stepName = stepNames.includes(step.name) ? step.name : stepNames[stepNames.length - 1].name
 
     mp-tutorial-tooltip(
-      class={'irb-learn-reminding': learnReminding}
+      class={
+        'irb-learn-reminding': learnReminding,
+      }
       attrs={
         hide: learnTransitioningOut || !stepNames.includes(step.name),
         'placement': `right`,
         'num-steps': 4,
         'curr-step': step.index - 1,
+        'closeable': true,
+      }
+      on={
+        close: () => $component.app.helpers.finishLearn(),
       }
     )
       .mp-tooltip-title
@@ -32,5 +38,3 @@ mixin irb-learn-tooltip(...stepNames)
             | Grouping your events allows you to see how different types of customers use your product.
           when `manipulate-data`
             | Change your chart type or adjust how you want to compare event counts to surface insights faster.
-      .mp-tooltip-close(on={click: () => $component.app.helpers.finishLearn()})
-        svg-icon(attrs={icon: 'x'})
