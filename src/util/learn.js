@@ -49,7 +49,7 @@ const steps = [{
     report.displayOptions.value !== `absolute` ||
     report.displayOptions.analysis !== `linear`
   ),
-  transitionOutMs: 4000,
+  transitionOutMs: 2000,
   transitionInMs: 800,
 }];
 
