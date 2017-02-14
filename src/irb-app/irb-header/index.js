@@ -1,5 +1,7 @@
 import { Component } from 'panel';
 
+import { dataToCSV } from '../../util';
+
 import './mp-button-input';
 
 import template from './index.jade';
@@ -30,7 +32,7 @@ document.registerElement(`irb-header`, class extends Component {
 
         clickExportCSV: () => {
           if (!this.state.resultLoading && this.state.projectHasEvents) {
-            this.downloadData(this.state.report.title, `Date,Chrome,Firefox`); // DUMMY DATA
+            this.downloadData(this.state.report.title, dataToCSV(this.state.result.series));
           }
         },
         clickReportList: () => this.app.openReportList(),

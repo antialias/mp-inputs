@@ -327,3 +327,16 @@ export function reachableNodesOfKey({series={}, keysToMatch=[], depth=1}={}) {
 
   return REACHABLE_NODES;
 }
+
+export function seriesDataToCSVArray(data) {
+  return [
+    [`Date`, `Chrome`, `Firefox`, `Safari`],
+    [`2017-01-15`, 6, 619, 0],
+  ];
+}
+
+export function dataToCSV(data) {
+  return seriesDataToCSVArray(data)
+    .map(row => row.join(`,`))
+    .join(`\n`);
+}
