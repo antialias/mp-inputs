@@ -360,8 +360,8 @@ function rowsForLeafKey(leafKey, data, depth, row=[formatCSVDate(leafKey)]) {
 
 export function resultToCSVArray(data) {
   const depth = nestedObjectDepth(data.series);
-  const dateKeys = nestedObjectKeys(data.series);
-  const leafKeys = nestedObjectKeys(data.series, 2);
+  const dateKeys = nestedObjectKeys(data.series).sort();
+  const leafKeys = nestedObjectKeys(data.series, 2).sort();
 
   // prep headers
   const dataHeaders = data.headers
