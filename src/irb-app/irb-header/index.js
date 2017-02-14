@@ -1,6 +1,6 @@
 import { Component } from 'panel';
 
-import { dataToCSV } from '../../util';
+import { dataToCSV } from '../../util/csv';
 
 import './mp-button-input';
 
