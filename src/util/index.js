@@ -1,9 +1,6 @@
 // IRB-specific utils
 import cloneDeep from 'lodash/cloneDeep';
-import {
-  nestedObjectDepth,
-  objectFromPairs,
-} from 'mixpanel-common/util';
+import { nestedObjectDepth, objectFromPairs } from 'mixpanel-common/util';
 
 import { ShowClause } from '../models/clause';
 

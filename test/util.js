@@ -14,7 +14,6 @@ import {
   nestedObjectCumulative,
   nestedObjectRolling,
   reachableNodesOfKey,
-  resultToCSVArray,
   uniqueObjKeysAtDepth,
 } from '../src/util';
 
