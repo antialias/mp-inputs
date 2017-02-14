@@ -9,6 +9,12 @@ import './index.styl';
 
 document.registerElement(`query-builder-time`, class extends Component {
   get config() {
-    return {template};
+    return {
+      template,
+      helpers: {
+        showUpsellModal: () => this.state.report.upsellModals.timeClause,
+        closeUpsellModal: ev => this.app.closeUpsellModal(ev, `timeClause`),
+      },
+    };
   }
 });

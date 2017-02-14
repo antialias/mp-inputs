@@ -17,6 +17,7 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
       helpers: {
         clickedAdd: () => {
           if (!this.app.canAddBuilderClause()) {
+            this.app.openUpsellModal(`builderClause`);
             this.app.stopBuildingQuery();
             return;
           }
@@ -28,7 +29,7 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
         },
         clickedInput: ev => ev.stopPropagation(), // don't close menu!
         menuChange: ev => ev.detail && ev.detail.state === `closed` && this.isPaneOpen() && this.app.stopBuildingQuery(),
-        shouldUpsell: () => (!this.app.canAddBuilderClause()),
+        showUpsellIcon: () => (!this.app.canAddBuilderClause()),
         getPreposition: () => ({
           [ShowClause.TYPE]: `and`,
           [GroupClause.TYPE]: `by`,
@@ -39,6 +40,8 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
           this.update({contextFilter: ev.target.value});
           this.app.updateBuilderCurrentScreen({progressiveListSize: null});
         }, 200, {leading: true, maxWait: 200}),
+        showUpsellModal: () => this.state.report.upsellModals.builderClause,
+        closeUpsellModal: ev => this.app.closeUpsellModal(ev, `builderClause`),
       },
     };
   }

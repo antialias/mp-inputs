@@ -52,16 +52,12 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
         resizedCalendar: () => this.updateRenderedSize({
           cancelDuringTransition: true,
         }),
-        getMaxDataHistoryDays: () => this.maxDataHistoryDays(),
+        getMaxDataHistoryDays: () => this.app.maxDataHistoryDays(),
         dateLimited: () => {
           return this.maxDataHistoryDays() !== this.app.getFeatureGateValue(`unlimited`);
         },
       }),
     };
-  }
-
-  maxDataHistoryDays() {
-    return this.app.getFeatureGateValue(`max_data_history_days`);
   }
 
   setDates(from, to, unit) {

@@ -1,9 +1,6 @@
 .irb-header.irb-learn-disabled
   mp-button-input(
-    attrs={
-      buttonText: `Save`, 
-      disabled: !$helpers.titleInputEnabled()
-    }
+    attrs={buttonText: `Save`, disabled: !$helpers.titleInputEnabled()}
     props={value: report.title}
     on={change: $helpers.updateTitle}
   )
@@ -28,3 +25,11 @@
     )
       svg-icon(attrs={icon: `saved-reports`})
       mp-tooltip(attrs={placement: `bottom`}) Saved reports
+    .upsell-wrapper
+      mp-upsell-popup(
+        attrs={
+          feature: `bookmark-maximum`,
+          open: $helpers.showUpsell(),
+        }
+        on={change: $helpers.closeUpsell}
+      )

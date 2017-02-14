@@ -177,6 +177,12 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   get defaultReportState() {
     return new Report({
+      upsellModals: {
+        builderClause: false,
+        timeClause: false,
+        filterClause: false,
+        saveReport: false,
+      },
       displayOptions: {
         chartType: `bar`,
         plotStyle: `standard`,
@@ -211,6 +217,24 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     const sections = this.state.report.sections;
     const allClauseLength = sections.group.clauses.length + sections.show.clauses.length - 1;
     return allClauseLength < this.getFeatureGateValue(`max_segmentation_filters`);
+  }
+
+  maxDataHistoryDays() {
+    return this.getFeatureGateValue(`max_data_history_days`);
+  }
+
+  openUpsellModal(type) {
+    let upsellModals = this.state.report.upsellModals;
+    upsellModals[type] = true;
+    this.updateReport({upsellModals});
+  }
+
+  closeUpsellModal(ev, type) {
+    if (ev.detail.state === `closed`) {
+      let upsellModals = this.state.report.upsellModals;
+      upsellModals[type] = false;
+      this.updateReport({upsellModals});
+    }
   }
 
   setMPContext(mpContext) {
@@ -391,6 +415,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       })
       .catch(err => {
         console.error(`Error saving: ${err}`);
+        if(err.toString().includes(`At saved report limit`) !== -1) {
+          this.openUpsellModal(`saveReport`);
+        }
         reportTrackingData.error = err;
       })
       .then(() => {

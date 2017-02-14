@@ -7,3 +7,12 @@
         .header-label Time
       .clause-body
         .control-container= $component.child('builder-time-edit-control', {attrs: {'clause-index': 0}})
+    if $helpers.showUpsellModal()
+      .upsell-wrapper
+        mp-upsell-popup(
+          attrs={
+            feature: `date-range`,
+            open: $helpers.showUpsellModal(),
+          }
+          on={change: $helpers.closeUpsellModal}
+        )

@@ -17,7 +17,7 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
       helpers: extend(super.config.helpers, {
         RANGES: TimeClause.RANGES,
         availableRanges: () =>  {
-          const dataHistoryMS = this.app.getFeatureGateValue(`max_data_history_days`) * MS_BY_UNIT[`day`];
+          const dataHistoryMS = this.app.maxDataHistoryDays() * MS_BY_UNIT[`day`];
           
           const featureGatedOptions = RANGE_ITEMS.map(range => {
             if (range.name === RANGES.CUSTOM) {
@@ -32,6 +32,11 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
           return this.matchingItems(featureGatedOptions);
         },
         clickedRange: range => {
+          if (range.upsell) {
+            this.app.openUpsellModal(`timeClause`);
+            this.updateAndCommitStageClause({range: range.name});
+            return;
+          }
           if (range.name === TimeClause.RANGES.CUSTOM) {
             this.nextScreen(`builder-screen-time-custom`);
           } else {

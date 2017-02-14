@@ -45,6 +45,8 @@ document.registerElement(`irb-header`, class extends Component {
           }
         },
         clickReportList: () => this.app.openReportList(),
+        showUpsell: () => this.state.report.upsellModals.saveReport,
+        closeUpsell: ev => this.app.closeUpsellModal(ev, `saveReport`),
       },
       template,
     };

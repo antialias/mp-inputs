@@ -65,8 +65,7 @@ class Calendar extends WebComponent {
   }
 
   getMinDate() {
-
-    const historyLength = this.maxHistory;
+    const historyLength = this.historyLengthInDays;
     const today = new Date().setHours(0, 0, 0, 0);
     return new Date(today - (historyLength * MS_PER_DAY));
   }
@@ -84,7 +83,6 @@ class Calendar extends WebComponent {
       newDate = new Date(thisYear, thisMonth, date);
     }
     return futureDates;
-
   }
 
   updatePicker() {
@@ -161,7 +159,7 @@ class Calendar extends WebComponent {
     this.dispatchEvent(new CustomEvent(`resize`));
   }
 
-  get maxHistory() {
+  get historyLengthInDays() {
     return this.getAttribute(`max-days`);
   }
 
