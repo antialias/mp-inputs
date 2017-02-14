@@ -1,7 +1,7 @@
 import { EditControl } from '../edit-control';
 
 import { FilterClause, TimeClause } from '../../../models/clause';
-import { renameProperty, parseDate, formatDateDisplay } from '../../../util';
+import { capitalize, renameProperty, parseDate, formatDateDisplay } from '../../../util';
 
 import './builder-filter-edit-control.styl';
 
@@ -61,7 +61,7 @@ document.registerElement(`builder-filter-edit-control`, class extends EditContro
         break;
       case `is true`:
       case `is false`:
-        value = [operator.split(` `).slice(1).join(` `)];
+        value = [capitalize(operator.split(` `).slice(1).join(` `))];
         operator = operator.split(` `)[0];
         break;
     }
