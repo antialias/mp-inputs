@@ -138,14 +138,14 @@ GroupSection.TYPE = GroupSection.prototype.TYPE = `group`;
 export class FilterSection extends Section {
   constructor(attrs={}) {
     super(...arguments);
-    if (attrs && attrs.conjunction && FilterSection.CONJUNCTION_TYPES.includes(attrs.conjunction)) {
-      this.conjunction = attrs.conjunction;
+    if (attrs && attrs.determiner && FilterSection.DETERMINER_TYPES.includes(attrs.determiner)) {
+      this.determiner = attrs.determiner;
     } else {
-      this.conjunction = FilterSection.CONJUNCTION_ALL;
+      this.determiner = FilterSection.DETERMINER_ALL;
     }
     if (this.clauses && this.clauses.length < 2) {
       // reset to all when only one clause
-      this.conjunction = FilterSection.CONJUNCTION_ALL;
+      this.determiner = FilterSection.DETERMINER_ALL;
     }
 
   }
@@ -153,21 +153,21 @@ export class FilterSection extends Section {
   get valid() {
     return super.valid &&
       this.clauses.every(clause => clause instanceof FilterClause) &&
-      FilterSection.CONJUNCTION_TYPES.includes(this.conjunction);
+      FilterSection.DETERMINER_TYPES.includes(this.determiner);
   }
 
   toUrlData() {
     const clauses = super.toUrlData();
-    return clauses.length ? {clauses, conjunction: this.conjunction} : {};
+    return clauses.length ? {clauses, determiner: this.determiner} : {};
   }
 }
 
 FilterSection.TYPE = FilterSection.prototype.TYPE = `filter`;
-FilterSection.CONJUNCTION_ALL = FilterSection.prototype.CONJUNCTION_ALL = `all`;
-FilterSection.CONJUNCTION_ANY = FilterSection.prototype.CONJUNCTION_ANY = `any`;
-FilterSection.CONJUNCTION_TYPES = FilterSection.prototype.CONJUNCTION_TYPES = [
-  FilterSection.CONJUNCTION_ALL,
-  FilterSection.CONJUNCTION_ANY,
+FilterSection.DETERMINER_ALL = FilterSection.prototype.DETERMINER_ALL = `all`;
+FilterSection.DETERMINER_ANY = FilterSection.prototype.DETERMINER_ANY = `any`;
+FilterSection.DETERMINER_TYPES = FilterSection.prototype.DETERMINER_TYPES = [
+  FilterSection.DETERMINER_ALL,
+  FilterSection.DETERMINER_ANY,
 ];
 
 export class TimeSection extends Section {

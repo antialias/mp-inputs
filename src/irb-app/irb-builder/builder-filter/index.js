@@ -17,18 +17,18 @@ document.registerElement(`query-builder-filter`, class extends Component {
     return {
       template,
       helpers: {
-        clickedConjunctionToggle: () => {
+        clickedDeterminerToggle: () => {
           const filter = this.state.report.sections.filter;
-          filter.conjunction = filter.conjunction === FilterSection.CONJUNCTION_ALL ? FilterSection.CONJUNCTION_ANY : FilterSection.CONJUNCTION_ALL;
+          filter.determiner = filter.determiner === FilterSection.DETERMINER_ALL ? FilterSection.DETERMINER_ANY : FilterSection.DETERMINER_ALL;
           this.app.updateSection(this.state.report.sections.filter);
         },
         getQueryDelimiter: () => {
-          const conjunction = this.state.report.sections.filter.conjunction;
+          const determiner = this.state.report.sections.filter.determiner;
           let delimiter = `,`;
           if (this.state.report.sections.filter.clauses.length < 3) {
-            if (conjunction === FilterSection.CONJUNCTION_ALL) {
+            if (determiner === FilterSection.DETERMINER_ALL) {
               delimiter = `and`;
-            } else if (conjunction === FilterSection.CONJUNCTION_ANY) {
+            } else if (determiner === FilterSection.DETERMINER_ANY) {
               delimiter = `or`;
             }
           }

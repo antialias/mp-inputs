@@ -1,11 +1,11 @@
 - numOfFilterClauses = report.sections.filter.clauses.length
 
 .builder-filter-container
-  .builder-section.filter-conjuction-container
+  .builder-section.filter-determiner-container
     if numOfFilterClauses > 1
-      .filter-conjuction-toggle(on={click: $helpers.clickedConjunctionToggle})
+      .filter-determiner-toggle(on={click: $helpers.clickedDeterminerToggle})
         | That matches
-        span.filter-conjuction-word= report.sections.filter.conjunction
+        span.filter-determiner-word= report.sections.filter.determiner
         |  of the following:
   .builder-section.builder-filter.irb-learn-disabled
     if !numOfFilterClauses
