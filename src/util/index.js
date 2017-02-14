@@ -347,15 +347,15 @@ function formatCSVDate(dateStr) {
 
 function rowsForLeafKey(leafKey, data, depth, row=[formatCSVDate(leafKey)]) {
   const keys = Object.keys(data).sort();
+  let allRows;
   if (depth > 1) {
-    const rows = [];
-    for (const key of keys) {
-      rows.push(rowsForLeafKey(leafKey, data[key], depth - 1, row.concat(key)));
-    }
-    return rows;
+    allRows = keys.reduce((rows, key) =>
+      rows.concat(rowsForLeafKey(leafKey, data[key], depth - 1, row.concat(key))), []
+    );
   } else {
-    return row.concat(keys.map(key => data[key][leafKey]));
+    allRows = [row.concat(keys.map(key => data[key][leafKey]))];
   }
+  return allRows;
 }
 
 export function resultToCSVArray(data) {
