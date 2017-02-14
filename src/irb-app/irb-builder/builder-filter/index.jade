@@ -1,23 +1,23 @@
-- numOfFilterClauses = report.sections.filter.clauses.length
+- filterClauses = report.sections.filter.clauses
 
 .builder-filter-container
   .builder-section.filter-determiner-container
-    if numOfFilterClauses > 1
+    if filterClauses.length > 1
       .filter-determiner-toggle(on={click: $helpers.clickedDeterminerToggle})
         | That matches
         span.filter-determiner-word= report.sections.filter.determiner
         |  of the following:
   .builder-section.builder-filter.irb-learn-disabled
-    if !numOfFilterClauses
+    if !filterClauses.length
       .clause.filter
         .control-container= $component.child('builder-filter-add-control')
     else
-      each clause, clauseIndex in report.sections.filter.clauses
+      each clause, clauseIndex in filterClauses
         if clauseIndex
           .clause-language.preposition= $helpers.getQueryDelimiter()
         .clause.filter
           .control-container= $component.child('builder-filter-edit-control', {attrs: {'clause-index': clauseIndex}})
-          if clauseIndex == report.sections.filter.clauses.length - 1
+          if clauseIndex == filterClauses.length - 1
             if $helpers.isAddingClause()
               .clause-language.preposition and
       .control-container= $component.child('builder-filter-add-control')
