@@ -26,6 +26,8 @@ mixin filter-operator-dropdown
 
 mixin filter-string-input
   .filter-string-input-wrapper
+    //- TODO: handle focus properly. Sadly setTimeout is an easy working solution.
+    //- There is a racecondition with visible inputs in the filter screen that we need to solve for.
     input.filter-string-input(
       props={
         type: `text`,
@@ -35,12 +37,13 @@ mixin filter-string-input
         input: ev => $helpers.updateFilterValue(ev.target.value),
       }
       hook={
-        insert: vnode => vnode.elm.focus(),
+        insert: vnode => setTimeout(() => vnode.elm.focus(), 250),
       }
     )
 
 mixin filter-number-input(value, oninput, options)
   .filter-number-input-wrapper
+    //- TODO: handle focus properly. See filter-string-input above.
     input.filter-numdate-input(
       props={
         type: `text`,
@@ -49,7 +52,7 @@ mixin filter-number-input(value, oninput, options)
       on={
         input: oninput,
       }
-      hook=options.autofocus ? {insert: vnode => vnode.elm.focus()} : {}
+      hook=options.autofocus ? {insert: vnode => setTimeout(() => vnode.elm.focus(), 250)} : {}
       key=options.key
     )
 
