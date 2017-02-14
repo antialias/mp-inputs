@@ -31,8 +31,8 @@
     mp-tutorial-tooltip
       z-index 99 // allow drop-menus to overlap tooltips
 
-      &[hide="false"] + *
-        z-index 100 // make sure tooltips don't overlap adjacent controls
+    &:not(.irb-learn-transitioning) mp-tutorial-tooltip:not(.irb-learn-reminding)[hide="false"] + *
+      z-index 100 // make sure tooltips don't overlap adjacent controls
 
     .mp-tooltip-title
       color grey-50
