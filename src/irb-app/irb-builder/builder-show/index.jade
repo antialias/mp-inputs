@@ -18,7 +18,7 @@ include ../../irb-learn/tooltip.jade
       on={mouseenter: ev => $helpers.mouseEntered(ev, clauseIdx)}
     )
       .clause-header.irb-learn-disabled= $component.child('query-builder-show-header', {attrs})
-      .clause-body.irb-learn-emphasize
+      .clause-body
         if clause.property && $helpers.showSourceForNumericProperties()
           .control-container= $component.child('builder-numeric-property-edit-control', {attrs})
           .clause-language.preposition on
