@@ -246,6 +246,29 @@ describe('reachableNodesOfKey', function() {
 
 
 describe(`resultToCSVArray`, function() {
+  it(`translates a simple result`, function() {
+    const result = {
+      headers:[
+        '$event',
+      ],
+      series: {
+        'Click run': {
+          '2017-01-14T00:00:00Z': 393,
+          '2017-01-15T00:00:00Z': 619,
+          '2017-01-16T00:00:00Z': 2837,
+        },
+      },
+    };
+    const csvArray = resultToCSVArray(result);
+
+    expect(csvArray).to.eql([
+      [`Date`,       `Click run`],
+      [`2017-01-14`, 393        ],
+      [`2017-01-15`, 619        ],
+      [`2017-01-16`, 2837       ],
+    ]);
+  });
+
   it(`translates a nested result`, function() {
     const result = {
       headers:[
