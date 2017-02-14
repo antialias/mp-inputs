@@ -1,6 +1,19 @@
 // IRB-specific utils
 import cloneDeep from 'lodash/cloneDeep';
-import { nestedObjectDepth, objectFromPairs } from 'mixpanel-common/util';
+import {
+  nestedObjectDepth,
+  nestedObjectKeys,
+  objectFromPairs,
+} from 'mixpanel-common/util';
+import {
+  renameProperty,
+  renamePropertyValue,
+} from 'mixpanel-common/report/util';
+import moment from 'moment';
+
+import {
+  parseDate,
+} from './time';
 
 import { ShowClause } from '../models/clause';
 
@@ -280,7 +293,7 @@ export function flattenNestedObjectToPath(obj, options={}, parentKeys=[], result
 }
 
 /**
-  * Find all reachable notes in an object from a starting key at a depth
+  * Find all reachable nodes in an object from a starting key at a depth
   * @param {Object} options
   * @param {Object} options.series - The object searched
   * @param {Object[]} options.keysToMatch - A list of keys that are considered descendents
@@ -328,15 +341,55 @@ export function reachableNodesOfKey({series={}, keysToMatch=[], depth=1}={}) {
   return REACHABLE_NODES;
 }
 
-export function seriesDataToCSVArray(data) {
+function formatCSVDate(dateStr) {
+  return moment(parseDate(dateStr)).format(`YYYY-MM-DD`);
+}
+
+function rowsForLeafKey(leafKey, data, depth, row=[formatCSVDate(leafKey)]) {
+  const keys = Object.keys(data).sort();
+  if (depth > 1) {
+    const rows = [];
+    for (const key of keys) {
+      rows.push(rowsForLeafKey(leafKey, data[key], depth - 1, row.concat(key)));
+    }
+    return rows;
+  } else {
+    return row.concat(keys.map(key => data[key][leafKey]));
+  }
+}
+
+export function resultToCSVArray(data) {
+  const depth = nestedObjectDepth(data.series);
+  const dateKeys = nestedObjectKeys(data.series);
+  const leafKeys = nestedObjectKeys(data.series, 2);
+
+  // prep headers
+  const dataHeaders = data.headers
+    .slice(0, data.headers.length - 1)
+    .map(header =>
+      header === `$event` ? `Event` : renameProperty(header)
+    );
+  const leafHeaders = leafKeys
+    .map(header => renamePropertyValue(header));
+  const csvHeaders = [
+    `Date`,
+    ...dataHeaders,
+    ...leafHeaders,
+  ];
+
+  // rows
+  const csvRows = dateKeys.reduce((rows, dateStr) =>
+    rows.concat(rowsForLeafKey(dateStr, data.series, depth - 1)), []
+  );
+
   return [
-    [`Date`, `Chrome`, `Firefox`, `Safari`],
-    [`2017-01-15`, 6, 619, 0],
+    csvHeaders,
+    ...csvRows,
   ];
 }
 
 export function dataToCSV(data) {
-  return seriesDataToCSVArray(data)
+  return resultToCSVArray(data)
     .map(row => row.join(`,`))
     .join(`\n`);
 }
