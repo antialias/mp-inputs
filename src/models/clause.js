@@ -398,18 +398,18 @@ export class FilterClause extends EventsPropertiesClause {
 FilterClause.TYPE = FilterClause.prototype.TYPE = `filter`;
 FilterClause.FILTER_OPERATORS = FilterClause.prototype.FILTER_OPERATORS = {
   string: [
-    `equals`,
-    `does not equal`,
     `contains`,
     `does not contain`,
+    `equals`,
+    `does not equal`,
     `is set`,
     `is not set`,
   ],
   number: [
     `is between`,
-    `is equal to`,
-    `is less than`,
     `is greater than`,
+    `is less than`,
+    `is equal to`,
   ],
   datetime: [
     `was on`,
