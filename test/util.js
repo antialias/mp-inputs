@@ -269,6 +269,34 @@ describe(`resultToCSVArray`, function() {
     ]);
   });
 
+  it(`translates a multi-event result`, function() {
+    const result = {
+      headers:[
+        '$event',
+      ],
+      series: {
+        'Click run': {
+          '2017-01-14T00:00:00Z': 393,
+          '2017-01-15T00:00:00Z': 619,
+          '2017-01-16T00:00:00Z': 2837,
+        },
+        'Hit homerun': {
+          '2017-01-15T00:00:00Z': 15,
+          '2017-01-16T00:00:00Z': 32,
+          '2017-01-14T00:00:00Z': 636,
+        },
+      },
+    };
+    const csvArray = resultToCSVArray(result);
+
+    expect(csvArray).to.eql([
+      [`Date`,       `Click run`, `Hit homerun`],
+      [`2017-01-14`, 393,         636          ],
+      [`2017-01-15`, 619,         15           ],
+      [`2017-01-16`, 2837,        32           ],
+    ]);
+  });
+
   it(`translates a nested result`, function() {
     const result = {
       headers:[
