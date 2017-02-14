@@ -46,6 +46,7 @@ mixin event-list(events, options)
       - const renamedMpEvent = util.renameEvent(mpEvent.name)
       - const isSelected = eventsSource && mpEvent.name === selected
       li.list-option(
+        attrs={title: mpEvent.name}
         class={
           'list-option-selected': isSelected,
           'irb-learn-disabled': util.isSpecialEvent(mpEvent),
