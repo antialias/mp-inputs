@@ -32,7 +32,8 @@ document.registerElement(`irb-header`, class extends Component {
 
         clickExportCSV: () => {
           if (!this.state.resultLoading && this.state.projectHasEvents) {
-            this.downloadData(this.state.report.title, dataToCSV(this.state.result));
+            const report = this.state.report;
+            this.downloadData(report.title, dataToCSV(this.state.result, report.timeUnit()));
           }
         },
         clickReportList: () => this.app.openReportList(),

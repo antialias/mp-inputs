@@ -55,6 +55,16 @@ export default class Report {
     return serialized;
   }
 
+  timeUnit() {
+    let unit = null;
+    try {
+      unit = this.sections.time.clauses[0].unit;
+    } catch(e) {
+      // ignore
+    }
+    return unit || `day`;
+  }
+
   // MP bookmarks
   static fromBookmarkData(bookmark) {
     return Report.deserialize(extend(pick(bookmark, BOOKMARK_ATTRS), JSON.parse(bookmark.params)));

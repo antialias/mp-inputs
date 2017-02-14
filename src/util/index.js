@@ -341,11 +341,19 @@ export function reachableNodesOfKey({series={}, keysToMatch=[], depth=1}={}) {
   return REACHABLE_NODES;
 }
 
-function formatCSVDate(dateStr) {
-  return moment(parseDate(dateStr)).format(`YYYY-MM-DD`);
+const CSV_TIME_FORMAT = {
+  hour:    `YYYY-MM-DD HH:mm:ss`,
+  day:     `YYYY-MM-DD`,
+  week:    `YYYY-MM-DD`,
+  month:   `YYYY-MM`,
+  quarter: `YYYY [Q]Q`,
+  year:    `YYYY`,
+};
+function formatCSVDate(dateStr, timeUnit) {
+  return moment(parseDate(dateStr)).format(CSV_TIME_FORMAT[timeUnit]);
 }
 
-function rowsForLeafKey(leafKey, data, keysAtDepth, depth, row=[formatCSVDate(leafKey)]) {
+function rowsForLeafKey(leafKey, data, keysAtDepth, depth, row) {
   const keys = keysAtDepth[depth];
   let allRows;
   if (depth > 1) {
@@ -361,7 +369,7 @@ function rowsForLeafKey(leafKey, data, keysAtDepth, depth, row=[formatCSVDate(le
   return allRows;
 }
 
-export function resultToCSVArray(data) {
+export function resultToCSVArray(data, timeUnit=`day`) {
   const depth = nestedObjectDepth(data.series);
   const keysAtDepth = Array(depth).fill().map((__, level) =>
     nestedObjectKeys(data.series, level + 1).sort()
@@ -385,7 +393,9 @@ export function resultToCSVArray(data) {
 
   // rows
   const csvRows = dateKeys.reduce((rows, dateStr) =>
-    rows.concat(rowsForLeafKey(dateStr, data.series, keysAtDepth, depth - 1)), []
+    rows.concat(rowsForLeafKey(
+      dateStr, data.series, keysAtDepth, depth - 1, [formatCSVDate(dateStr, timeUnit)]
+    )), []
   );
 
   return [
@@ -394,8 +404,8 @@ export function resultToCSVArray(data) {
   ];
 }
 
-export function dataToCSV(data) {
-  return resultToCSVArray(data)
+export function dataToCSV(data, timeUnit=`day`) {
+  return resultToCSVArray(data, timeUnit)
     .map(row => row.join(`,`))
     .join(`\n`);
 }

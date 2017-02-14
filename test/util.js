@@ -269,6 +269,29 @@ describe(`resultToCSVArray`, function() {
     ]);
   });
 
+  it(`accepts different time buckets`, function() {
+    const result = {
+      headers:[
+        '$event',
+      ],
+      series: {
+        'Click run': {
+          '2017-01-14T00:00:00Z': 393,
+          '2017-01-14T01:00:00Z': 619,
+          '2017-01-14T02:00:00Z': 2837,
+        },
+      },
+    };
+    const csvArray = resultToCSVArray(result, `hour`);
+
+    expect(csvArray).to.eql([
+      [`Date`,                `Click run`],
+      [`2017-01-14 00:00:00`, 393        ],
+      [`2017-01-14 01:00:00`, 619        ],
+      [`2017-01-14 02:00:00`, 2837       ],
+    ]);
+  });
+
   it(`translates a multi-event result`, function() {
     const result = {
       headers:[
