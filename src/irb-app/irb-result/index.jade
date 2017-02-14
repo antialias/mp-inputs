@@ -1,5 +1,3 @@
-include ../irb-learn/tooltip.jade
-
 - const learnStep = util.getLearnStep(report)
 - const isManipulateDataStep = learnStep.name === `manipulate-data`
 
@@ -8,10 +6,7 @@ include ../irb-learn/tooltip.jade
     disabledSteps: [`choose-event`, `compare-event`, `group-by`],
     tooltipContainer: true,
     transitioning: learnTransitioningIn && isManipulateDataStep,
-    reminding: learnReminding && isManipulateDataStep,
   })
 )
   .result-controls= $component.child('chart-controls')
   .result-display= $component.child('chart-display')
-
-  +irb-learn-tooltip(`manipulate-data`)

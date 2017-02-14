@@ -1,14 +1,17 @@
+include ../../../irb-learn/tooltip.jade
+
 ul.chart-toggle.chart-controls-component(class={
   'editing-charttype': chartToggle.editingType !== null,
   'enabled': projectHasEvents,
 })
+  +irb-learn-tooltip(`manipulate-data`)
   each chartType in $helpers.chartTypes()
     - const isEditingCurrentStyle = chartToggle.editingType === chartType
     - const selectedPlotStyle = $helpers.selectedPlotStyle(chartType)
     - const styleChoicesForChartType = $helpers.styleChoicesForChartType(chartType)
     - const hasDropDown = styleChoicesForChartType.length > 1
     - const isActiveChartType = chartType === report.displayOptions.chartType;
-    li.chart-type(
+    li.chart-type.irb-learn-emphasize(
       class={
         [chartType]: true,
         disabled: $helpers.isChartTypeDisabled(chartType),

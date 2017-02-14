@@ -37,10 +37,10 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor)
                     .sort-by-label= sortByIconName
                     .sort-order-label= sortOrder
 
-.chart-header-container
+.chart-header-container.irb-learn-manipulate-data-disabled
   if headersStyle
     each header, idx in headersStyle
-      .bar-chart-header.irb-learn-manipulate-data-disabled(
+      .bar-chart-header(
         class={'active-sort-panel': activeSortPanel == idx}
         style={width: `${header.width}px`}
       )
@@ -55,12 +55,12 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor)
       class={'active-sort-panel': activeSortPanel == `axis`}
       style={width: axisWidthStyle}
     )
-      .axis-title.irb-learn-emphasize
+      .axis-title
         .text.shrinkable-label(
           on={click: () => $helpers.clickedHeader(`axis`)}
           attrs={title: chartLabel}
         )= chartLabel
         +sort-icon(`axis`)
         +sort-holder(`axisSort`, [`value`], [`asc`, `desc`], `axis`)
-      .max-value.irb-learn-emphasize
+      .max-value
         .text(on={click: $helpers.clickedMaxValue})= $helpers.getMaxValueLabel()

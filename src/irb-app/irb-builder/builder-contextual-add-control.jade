@@ -8,11 +8,11 @@ include ../irb-learn/tooltip.jade
     disabledSteps: [`choose-event`],
     tooltipContainer: true,
     transitioning: learnTransitioningIn && [`compare-event`, `group-by`].includes(learnStep.name),
-    emphasize: true,
   })
 )
+  +irb-learn-tooltip(`compare-event`, `group-by`)
   .irb-new-control.new-query-builder(class={'pane-open': open})
-    .control-buttons.add-control
+    .control-buttons.add-control.irb-learn-emphasize
       button.add-button(on={click: $helpers.clickedAdd})
         svg-icon(attrs={icon: 'plus-large'})
       if open
@@ -40,5 +40,3 @@ include ../irb-learn/tooltip.jade
       mp-drop-menu(attrs={open} on={change: $helpers.menuChange})
         .new-pane-content(attrs={'slot-body': true})
           = $component.child(`builder-pane`, {attrs: {open}})
-
-  +irb-learn-tooltip(`compare-event`, `group-by`)

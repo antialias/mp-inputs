@@ -583,7 +583,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     this.update({report});
     const nextLearnStep = util.getLearnStep(this.state.report);
 
-    if (this.state.learnActive && prevLearnStep.name !== nextNextStep.name) {
+    if (this.state.learnActive && prevLearnStep.name !== nextLearnStep.name) {
       this.transitionLearn();
     } else {
       const fragment = JSURL.stringify(report.toUrlData());

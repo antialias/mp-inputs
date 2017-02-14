@@ -31,8 +31,8 @@
     mp-tutorial-tooltip
       z-index 99 // allow drop-menus to overlap tooltips
 
-      &[placement="center"]
-        top 70px
+      &[hide="false"] + *
+        z-index 100 // make sure tooltips don't overlap adjacent controls
 
     .mp-tooltip-title
       color grey-50
@@ -44,9 +44,6 @@
       color rgba(255,255,255,0.64)
       font-size 14px
       line-height 1.7em
-
-  &.irb-learn-manipulate-data mp-tutorial-tooltip
-    z-index 1
 
   // Close buttons
 
