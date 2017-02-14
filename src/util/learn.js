@@ -22,25 +22,25 @@ const steps = [{
   name: `choose-event`,
   cls: `irb-learn-choose-event`,
   condition: index => index === 1,
-  transitionOutMs: 800,
-  transitionInMs: 800,
+  transitionOutMs: 1200,
+  transitionInMs: 1200,
 }, {
   name: `compare-event`,
   cls: `irb-learn-compare-event`,
   condition: (index, report) => getShowClauseEvents(report).length === 1,
-  transitionOutMs: 800,
-  transitionInMs: 800,
+  transitionOutMs: 1200,
+  transitionInMs: 1200,
 }, {
   name: `group-by`,
   cls: `irb-learn-group-by`,
   condition: (index, report) => getShowClauseEvents(report).length === 2,
-  transitionInMs: 800,
+  transitionInMs: 1200,
 }, {
   name: `manipulate-data`,
   cls: `irb-learn-manipulate-data`,
   condition: (index, report) => getGroupClauseProperties(report).length === 1,
-  transitionOutMs: 800,
-  transitionInMs: 800,
+  transitionOutMs: 1200,
+  transitionInMs: 1200,
 }, {
   name: `conclusion`,
   condition: (index, report) => (
