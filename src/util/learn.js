@@ -22,7 +22,7 @@ const steps = [{
   name: `choose-event`,
   cls: `irb-learn-choose-event`,
   condition: index => index === 1,
-  transitionOutMs: 1200,
+  transitionOutMs: 0,
   transitionInMs: 1200,
 }, {
   name: `compare-event`,
@@ -50,7 +50,6 @@ const steps = [{
     report.displayOptions.analysis !== `linear`
   ),
   transitionOutMs: 2000,
-  transitionInMs: 800,
 }];
 
 export function getLearnStep(report, index) {
