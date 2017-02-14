@@ -1,6 +1,6 @@
 mixin checkbox-item(label, value, selected, toggleFunc)
   li.checkbox-item(on={click: () => toggleFunc(value)})
-    .checkbox-select-icon
+    .checkbox-select-icon(class={'colored': selected})
       svg-icon(attrs={icon: 'check-checkbox', empty: !selected})
     .checkbox-label= label
 

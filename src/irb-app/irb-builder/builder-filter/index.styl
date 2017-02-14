@@ -121,13 +121,19 @@ builder-screen-filter-property
     max-height 550px
 
     li.filter-menu-item
+      border-radius 3px
+      color grey-700
       cursor pointer
-      font-weight normal
-      padding 5px 10px
+      font-size 12px
+      font-weight 500
+      line-height 30px
+      padding 0 10px
+      text-transform none
       &.filter-menu-item-selected
-        color #000
+        color grey-900
+        font-weight 900
       &:hover
-        background-color grey-50
+        background-color grey-100
         color mp-blue
 
     button.filter-menu-button
@@ -146,14 +152,15 @@ builder-screen-filter-property
         color mp-blue
 
       .filter-prop-name
+        font-family font-helvetica-neue
         margin-left 5px
 
     .filter-menu
-      bottom 0
       left 50%
       position absolute
       text-align left
       text-transform none
+      top: 36px
       transform translateX(-50%)
       width $type-menu-width
       z-index 10
@@ -162,10 +169,14 @@ builder-screen-filter-property
       position relative
 
       .filter-menu-button
-        border 1px solid grey-500
-        border-radius 3px
+        border 1px solid grey-200
+        border-radius 5px
+        padding 6px 8px
         width 100%
+        &:hover
+          border-color mp-blue
         .filter-prop-name
+          font-size 10px
           margin-right auto
         svg-icon[empty]
           display none
@@ -176,8 +187,6 @@ builder-screen-filter-property
           padding 10px
           text-transform uppercase
           width 270px
-          li
-            font-size 12px
 
     .screen-title
       justify-content center
@@ -211,7 +220,7 @@ builder-screen-filter-property
         padding-bottom 11px
 
       .screen-list-container
-        padding 0 15px
+        padding 0 10px
 
       .filter-radio-list
         align-items center
@@ -267,10 +276,45 @@ builder-screen-filter-property
         width 46px
         control-font()
 
+      .checkbox-item
+        border-radius 3px
+        line-height 30px
+        padding 6px
+        box-sizing border-box
+        &:hover
+          background-color grey-100
+          color mp-blue
+          .checkbox-label
+            color mp-blue
+
+        .checkbox-label
+          color grey-700
+
+        .checkbox-select-icon
+          background-color white
+          &.colored
+            background-color mp-blue
+            border-color mp-blue
+          svg-icon[empty="false"]
+            svg, path
+              color white
+              fill white
+
     button.screen-footer
       background-color mp-blue
       border-radius 0 0 5px 5px
+      border-top 1px solid blue-700
       color white
+      font-family font-helvetica-neue
+      font-size 14px
+      font-weight 900
+      height 48px
+      &:hover
+        background-color blue-100
+      &:active
+        background-color mp-blue
+        box-shadow 0 1px 1px 0 rgba(0,0,0,0), inset 0 2px 2px 0 rgba(0,0,0,0.2)
+        color rgba(255,255,255,.6)
 
 .radio-button
   align-items center
