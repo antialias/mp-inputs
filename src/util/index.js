@@ -345,23 +345,29 @@ function formatCSVDate(dateStr) {
   return moment(parseDate(dateStr)).format(`YYYY-MM-DD`);
 }
 
-function rowsForLeafKey(leafKey, data, depth, row=[formatCSVDate(leafKey)]) {
-  const keys = Object.keys(data).sort();
+function rowsForLeafKey(leafKey, data, keysAtDepth, depth, row=[formatCSVDate(leafKey)]) {
+  const keys = keysAtDepth[depth];
   let allRows;
   if (depth > 1) {
     allRows = keys.reduce((rows, key) =>
-      rows.concat(rowsForLeafKey(leafKey, data[key], depth - 1, row.concat(key))), []
+      rows.concat(rowsForLeafKey(leafKey, data[key] || {}, keysAtDepth, depth - 1, row.concat(key))), []
     );
   } else {
-    allRows = [row.concat(keys.map(key => data[key][leafKey]))];
+    allRows = [row.concat(keys.map(key => {
+      const dataForKey = data[key] || {};
+      return dataForKey[leafKey] || 0;
+    }))];
   }
   return allRows;
 }
 
 export function resultToCSVArray(data) {
   const depth = nestedObjectDepth(data.series);
-  const dateKeys = nestedObjectKeys(data.series).sort();
-  const leafKeys = nestedObjectKeys(data.series, 2).sort();
+  const keysAtDepth = Array(depth).fill().map((__, level) =>
+    nestedObjectKeys(data.series, level + 1).sort()
+  );
+  const dateKeys = keysAtDepth[0];
+  const leafKeys = keysAtDepth[1];
 
   // prep headers
   const dataHeaders = data.headers
@@ -379,7 +385,7 @@ export function resultToCSVArray(data) {
 
   // rows
   const csvRows = dateKeys.reduce((rows, dateStr) =>
-    rows.concat(rowsForLeafKey(dateStr, data.series, depth - 1)), []
+    rows.concat(rowsForLeafKey(dateStr, data.series, keysAtDepth, depth - 1)), []
   );
 
   return [
