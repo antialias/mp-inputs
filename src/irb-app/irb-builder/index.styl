@@ -124,18 +124,19 @@ header-button-transition-duration = 150ms
           visibility hidden
 
       button.add-button
-        background-color grey-50
+        background-color white
         border 1px solid grey-150
         border-radius 50%
         box-shadow 0 1px 1px 0 rgba(76, 96, 113, 0.08)
         height 28px
         margin-left 2px
         order 2
-        padding 0
+        padding 2px 0 0 0
         width 28px
         svg-icon-style(grey-700, size: 16px)
 
         &:hover
+          box-shadow 0 1px 3px rgba(76,96,113,0.16)
           svg-icon-style(mp-blue, size: 16px)
 
     .pane-open
