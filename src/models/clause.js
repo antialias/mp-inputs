@@ -223,7 +223,7 @@ const RANGES = {
   MONTH: `Last 30 days`,
   QUARTER: `Last 4 quarters`,
   YEAR: `Last 12 months`,
-  CUSTOM: `Choose a date range ...`,
+  CUSTOM: `Choose a date range...`,
 };
 const RANGE_LIST = [
   RANGES.HOURS, RANGES.MONTH, RANGES.QUARTER, RANGES.YEAR, RANGES.CUSTOM,
