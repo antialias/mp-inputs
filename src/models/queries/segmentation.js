@@ -152,7 +152,7 @@ export default class SegmentationQuery extends BaseQuery {
 
     // data global to all JQL queries.
     const segments = sections.group.clauses.map(clause => pick(clause, [`value`, `propertyType`, `resourceType`, `typeCast`, `unit`]));
-    const conjunction = sections.filter.DETERMINER === FilterSection.DETERMINER_ANY ? `or` : `and`;
+    const conjunction = sections.filter.determiner === FilterSection.DETERMINER_ANY ? `or` : `and`;
     const filterArbSelectors = sections.filter.clauses
       .map(clause => clause.attrs)
       .filter(filter => isFilterValid(filter))
