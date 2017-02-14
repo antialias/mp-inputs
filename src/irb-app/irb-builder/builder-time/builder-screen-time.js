@@ -17,16 +17,19 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
       helpers: extend(super.config.helpers, {
         RANGES: TimeClause.RANGES,
         availableRanges: () =>  {
-          return RANGE_ITEMS.map(RANGE => {
-            if (RANGE.name === RANGES.CUSTOM) {
-              RANGE.upsell = false;
+          const dataHistoryMS = this.app.getFeatureGateValue(`max_data_history_days`) * MS_BY_UNIT[`day`];
+          
+          const featureGatedOptions = RANGE_ITEMS.map(range => {
+            if (range.name === RANGES.CUSTOM) {
+              range.upsell = false;
             } else {
-              const optionMS = RANGE_INFO[RANGE.name].value * MS_BY_UNIT[RANGE_INFO[RANGE.name].unit];
-              const dataHistoryMS = this.app.getFeatureGateValue(`max_data_history_days`) * MS_BY_UNIT[`day`];
-              RANGE.upsell = optionMS >= dataHistoryMS;
+              const optionMS = RANGE_INFO[range.name].value * MS_BY_UNIT[RANGE_INFO[range.name].unit];
+              range.upsell = optionMS >= dataHistoryMS;
             }
-            return RANGE;
+            return range;
           });
+
+          return this.matchingItems(featureGatedOptions);
         },
         clickedRange: range => {
           if (range.name === TimeClause.RANGES.CUSTOM) {

@@ -26,11 +26,3 @@
     )= $component.getAttribute(`buttonText`)
   else
     .disabled-input(style={width: `${inputWidth}px`})= inputValue
-  .upsell-container
-    mp-upsell-popup(
-      attrs={
-        feature: `bookmark-maximum`,
-        open: saveReportUpsell,
-      }
-      on={change: $helpers.closeUpsell}
-    )

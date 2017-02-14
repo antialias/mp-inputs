@@ -61,11 +61,40 @@ export default class MPContext {
     }
 
     const endpoint = `id` in data ? `update/${data.id}` : `create/`;
-    return this.post(`${this.bmURL}/${endpoint}`, {
-      name: data.name,
-      params: JSON.stringify(data),
-      icon: data.icon,
+    const reportLimit = this.featureGates.max_saved_reports;
+
+    return fetch(this.bookmarkCountUrl, {
+      credentials: `same-origin`,
+      method: `GET`,
     })
+      .then(res => res.json())
+      .then(res => {
+        if (res.error) {
+          throw new Error(res.error);
+        }
+        return res.bookmark_count;
+      })
+      .then(count => {
+        if (count >= reportLimit) {
+          throw new Error(`At saved report limit`);
+        } else {
+          return count;
+        }
+      })
+      .then(() => {
+        return this.post(`${this.bmURL}/${endpoint}`, {
+          body: objToQueryString({
+            name: data.name,
+            params: JSON.stringify(data),
+            icon: data.icon,
+          }),
+          credentials: `same-origin`,
+          headers: {
+            'Content-Type': `application/x-www-form-urlencoded; charset=utf-8`,
+          },
+          method: `POST`,
+        });
+      })
       .then(res => res.json())
       .then(res => {
         if (res.error) {

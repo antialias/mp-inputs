@@ -196,12 +196,21 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     });
   }
 
-  /**
-   * initialize app with data/settings from mixpanel.com if available
-   */
+  /* feature gate fcns */
 
-  getFeatureGateValue(gate) {
-    return this.mpContext.featureGates[gate];
+  getFeatureGateValue(feature) {
+    return this.mpContext.featureGates[feature];
+  }
+
+  canAddFilterClause() {
+    const filterClauseLength = this.state.report.sections.filter.clauses.length;
+    return filterClauseLength < this.getFeatureGateValue(`max_irb_filters`);
+  }
+
+  canAddBuilderClause() {
+    const sections = this.state.report.sections;
+    const allClauseLength = sections.group.clauses.length + sections.show.clauses.length - 1;
+    return allClauseLength < this.getFeatureGateValue(`max_segmentation_filters`);
   }
 
   setMPContext(mpContext) {
@@ -338,10 +347,6 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   chooseReport(report) {
     this.navigate(this.urlForReportId(report.id));
     this.trackEvent(`Report list - select report`, {'report id': report.id});
-  }
-
-  bookmarkCountUrl() {
-    return this.mpContext.bookmarkCountUrl;
   }
 
   deleteReport(report) {

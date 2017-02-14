@@ -5,13 +5,11 @@ include ../mixins.jade
 
 .builder-screen.time-custom
   if $helpers.dateLimited()
-    .screen-title
-      .upsell-header
-        svg-icon(attrs={icon: 'lighting-bolt'})
-        .upsell-text Analyze your historical data beyond #{maxDataHistoryDays} days.
-        a.upsell-text.upgrade-link(attrs={href: '/pricing', target: '_blank'}) Upgrade  your plan.
-      .title-button.back-button(on={click: $helpers.clickedBackButton})
-        svg-icon(attrs={icon: 'caret-left'})
+    +screen-title(`Analyze your historical data beyond ${maxDataHistoryDays} days.`, {
+      backButton: true,
+      upsell: true,
+      upsellLinkText: `Upgrade your plan.`,
+    })
 
   else
     +screen-title(`Choose a date range`, {backButton: true})

@@ -11,9 +11,6 @@ document.registerElement(`irb-header`, class extends Component {
   get config() {
     return {
       helpers: {
-        bookmarkLimit: () => this.app.getFeatureGateValue(`max_saved_reports`),
-        bookmarkUrl: () => this.app.bookmarkCountUrl(),
-
         refresh: () => {
           if (this.state.projectHasEvents) {
             const reportTrackingData = this.state.report.toTrackingData();

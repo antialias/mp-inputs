@@ -316,6 +316,24 @@ header-button-transition-duration = 150ms
     height 48px
     position relative
 
+    .upsell-header
+      border 1px solid grey-150
+      border-radius 11px
+      display flex
+      margin-left 90px
+      width 355px
+      svg-icon-style(mp-purple)
+
+      .upsell-text
+        color grey-700
+        font 500 11px font-helvetica-neue
+        line-height 22px
+        &.upgrade-link
+          color mp-purple
+          margin-left 2px
+          text-decoration none
+          &:hover
+            opacity .7
 
     .title-button
       cursor pointer

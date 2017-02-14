@@ -141,8 +141,14 @@ mixin screen-option(label, options)
 mixin screen-title(title, options)
   - options = options || {}
   .screen-title
-    if title
-      .title-label(attrs={title})= title
+    if options.upsell
+      .upsell-header
+        svg-icon(attrs={icon: 'lighting-bolt'})
+        .upsell-text= title
+        a.upsell-text.upgrade-link(attrs={href: '/pricing', target: '_blank'})= options.upsellLinkText
+    else
+      if title
+        .title-label(attrs={title})= title
     block
     if options.backButton && builderPane.screens.length > 1
       .title-button.back-button(on={click: $helpers.clickedBackButton})

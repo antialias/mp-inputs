@@ -10,7 +10,7 @@ import {
 import './calendar.styl';
 
 const INCOMPLETE_RANGE_CLASS = `incomplete-range`;
-const MS_PER_DAY = 86400000;
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 class Calendar extends WebComponent {
   createdCallback() {
