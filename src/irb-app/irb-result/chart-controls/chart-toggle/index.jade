@@ -1,61 +1,62 @@
 include ../../../irb-learn/tooltip.jade
 
-ul.chart-toggle.chart-controls-component(class={
-  'editing-charttype': chartToggle.editingType !== null,
-  'enabled': projectHasEvents,
-})
+.chart-toggle-container.irb-learn-tooltip-container
   +irb-learn-tooltip(`manipulate-data`)
-  each chartType in $helpers.chartTypes()
-    - const isEditingCurrentStyle = chartToggle.editingType === chartType
-    - const selectedPlotStyle = $helpers.selectedPlotStyle(chartType)
-    - const styleChoicesForChartType = $helpers.styleChoicesForChartType(chartType)
-    - const hasDropDown = styleChoicesForChartType.length > 1
-    - const isActiveChartType = chartType === report.displayOptions.chartType;
-    li.chart-type.irb-learn-emphasize(
-      class={
-        [chartType]: true,
-        disabled: $helpers.isChartTypeDisabled(chartType),
-        editing: isEditingCurrentStyle,
-        'has-dropdown': hasDropDown,
-        selected: isActiveChartType,
-      }
-    )
-      .toggle-button
-        button.label(
-          class={
-            [chartType]: true,
-            [selectedPlotStyle]: true,
-            selected: isActiveChartType,
-          }
-          on={
-            click: () => $helpers.onStyleClick(chartType, selectedPlotStyle),
-          }
-        )
-          span.button-flex-wrapper
-            svg-icon(attrs={icon: chartType})
-            = $helpers.formattedChartName(chartType, selectedPlotStyle)
-      if hasDropDown
-        button.dropdown(on={click: () => $helpers.onDropdownClick(chartType)})
-          span.button-flex-wrapper
-            svg-icon(attrs={icon: 'caret-down'})
-      mp-drop-menu(
-        attrs={open: isEditingCurrentStyle}
-        on={change: ev => $helpers.menuChange(ev, chartType)}
+  ul.chart-toggle.chart-controls-component.irb-learn-emphasize(class={
+    'editing-charttype': chartToggle.editingType !== null,
+    'enabled': projectHasEvents,
+  })
+    each chartType in $helpers.chartTypes()
+      - const isEditingCurrentStyle = chartToggle.editingType === chartType
+      - const selectedPlotStyle = $helpers.selectedPlotStyle(chartType)
+      - const styleChoicesForChartType = $helpers.styleChoicesForChartType(chartType)
+      - const hasDropDown = styleChoicesForChartType.length > 1
+      - const isActiveChartType = chartType === report.displayOptions.chartType;
+      li.chart-type(
+        class={
+          [chartType]: true,
+          disabled: $helpers.isChartTypeDisabled(chartType),
+          editing: isEditingCurrentStyle,
+          'has-dropdown': hasDropDown,
+          selected: isActiveChartType,
+        }
       )
-        .chart-style.options(attrs={'slot-body': true})
-          each plotStyle in styleChoicesForChartType
-            - const isSelectedStyleOption = isActiveChartType && selectedPlotStyle === plotStyle
-            button.button-option(
-              class={
-                [chartType]: true,
-                [plotStyle]: true,
-                selected: isSelectedStyleOption,
-              }
-              on={
-               click: () => isSelectedStyleOption ? null : $helpers.onStyleClick(chartType, plotStyle),
-              }
-            )
-              span.button-flex-wrapper
-                - const iconPlotStyle = plotStyle === `standard` ? `` : `-${plotStyle}`;
-                svg-icon(attrs={icon: chartType + iconPlotStyle})
-                = $helpers.formattedChartName(chartType, plotStyle)
+        .toggle-button
+          button.label(
+            class={
+              [chartType]: true,
+              [selectedPlotStyle]: true,
+              selected: isActiveChartType,
+            }
+            on={
+              click: () => $helpers.onStyleClick(chartType, selectedPlotStyle),
+            }
+          )
+            span.button-flex-wrapper
+              svg-icon(attrs={icon: chartType})
+              = $helpers.formattedChartName(chartType, selectedPlotStyle)
+        if hasDropDown
+          button.dropdown(on={click: () => $helpers.onDropdownClick(chartType)})
+            span.button-flex-wrapper
+              svg-icon(attrs={icon: 'caret-down'})
+        mp-drop-menu(
+          attrs={open: isEditingCurrentStyle}
+          on={change: ev => $helpers.menuChange(ev, chartType)}
+        )
+          .chart-style.options(attrs={'slot-body': true})
+            each plotStyle in styleChoicesForChartType
+              - const isSelectedStyleOption = isActiveChartType && selectedPlotStyle === plotStyle
+              button.button-option(
+                class={
+                  [chartType]: true,
+                  [plotStyle]: true,
+                  selected: isSelectedStyleOption,
+                }
+                on={
+                 click: () => isSelectedStyleOption ? null : $helpers.onStyleClick(chartType, plotStyle),
+                }
+              )
+                span.button-flex-wrapper
+                  - const iconPlotStyle = plotStyle === `standard` ? `` : `-${plotStyle}`;
+                  svg-icon(attrs={icon: chartType + iconPlotStyle})
+                  = $helpers.formattedChartName(chartType, plotStyle)
