@@ -18,15 +18,15 @@ import './index.styl';
 // TODO these are some updates which need to make their way into
 // mixpanel-common and panel soon
 // -------------------------------------------------------------------------------
-const MPToggle = window[`mp-common-registered-components`][`mp-toggle`];
-document.registerElement(`irb-mp-toggle`, class extends MPToggle {
-  attachedCallback() {
-    if (this.initialized) {
-      return;
-    }
-    super.attachedCallback(...arguments);
-  }
-});
+// const MPToggle = window[`mp-common-registered-components`][`mp-toggle`];
+// document.registerElement(`irb-mp-toggle`, class extends MPToggle {
+//   attachedCallback() {
+//     if (this.initialized) {
+//       return;
+//     }
+//     super.attachedCallback(...arguments);
+//   }
+// });
 const MPTooltip = window[`mp-common-registered-components`][`mp-tooltip`];
 document.registerElement(`irb-mp-tooltip`, class extends MPTooltip {
   attachedCallback() {
