@@ -218,7 +218,7 @@ GroupClause.FILTER_TYPES = GroupClause.prototype.FILTER_TYPES = PROPERTY_TYPES;
 GroupClause.PROPERTY_TYPES = GroupClause.prototype.PROPERTY_TYPES = PROPERTY_TYPES;
 GroupClause.PROPERTY_TYPECASTS = GroupClause.prototype.PROPERTY_TYPECASTS = [`string`, `number`, `boolean`];
 GroupClause.EVENT_DATE = GroupClause.prototype.EVENT_DATE = {
-  name: `$event_date`,
+  name: `$date`,
   type: `datetime`,
   resourceType: `events`,
 };
