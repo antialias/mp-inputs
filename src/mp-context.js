@@ -11,7 +11,7 @@ import { objToQueryString } from 'mixpanel-common/util';
 export default class MPContext {
   constructor() {
     this.standalone = typeof mp === `undefined`;
-    this.apiHost = `https://mixpanel.com`;
+    this.apiHost = `https://mixpanel.com/`;
 
     if (!this.standalone) {
       // global garbage
@@ -63,6 +63,7 @@ export default class MPContext {
     const endpoint = `id` in data ? `update/${data.id}` : `create/`;
     const reportLimit = this.featureGates.max_saved_reports;
 
+    // TODO: cassie: fix API on analytics end so we don't have to chain calls
     return fetch(this.bookmarkCountUrl, {
       credentials: `same-origin`,
       method: `GET`,

@@ -200,12 +200,16 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   /* feature gate fcns */
 
   getFeatureGateValue(feature) {
-    return this.mpContext.featureGates ? this.mpContext.featureGates[feature] : Infinity;
+    const gates = this.mpContext.featureGates;
+    if (gates && gates[feature] !== undefined) {
+      return gates[feature];
+    }
+    return feature === `can_export_csv` ? true :  9223372036854776000; //python max int, aka featureGates.unlimited
   }
 
   canAddFilterClause() {
     const filterClauseLength = this.state.report.sections.filter.clauses.length;
-    return filterClauseLength < this.getFeatureGateValue(`max_irb_filters`);
+    return filterClauseLength < this.getFeatureGateValue(`max_insights_filters`);
   }
 
   canAddBuilderClause() {
@@ -222,8 +226,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     this.update({upsellModal: type});
   }
 
-  maybeCloseUpsellModal(ev) {
-    if (ev.detail && ev.detail.state === `closed`) {
+  maybeCloseUpsellModal(ev, type) {
+    const maybeCloseFeature = ev.target.attributes[`feature`].value;
+    if (maybeCloseFeature === type && ev.detail && ev.detail.state === `closed`) {
       this.update({upsellModal: null});
     }
   }

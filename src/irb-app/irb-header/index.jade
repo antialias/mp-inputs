@@ -18,6 +18,14 @@
     )
       svg-icon(attrs={icon: `export`})
       mp-tooltip(attrs={placement: `bottom`}) Download CSV
+    .upsell-wrapper.csv-export
+      mp-upsell-popup(
+        attrs={
+          feature: `export-csv`,
+          open: $helpers.showExportCSVUpsell(),
+        }
+        on={change: $helpers.closeUpsell}
+      )
     button.report-list-button(
       attrs={title: `Saved reports`}
       class={saved, 'save-failed': saveFailed}
@@ -25,11 +33,11 @@
     )
       svg-icon(attrs={icon: `saved-reports`})
       mp-tooltip(attrs={placement: `bottom`}) Saved reports
-    .upsell-wrapper
+    .upsell-wrapper.save-report
       mp-upsell-popup(
         attrs={
           feature: `bookmark-maximum`,
-          open: $helpers.showUpsell(),
+          open: $helpers.showSaveReportUpsell(),
         }
         on={change: $helpers.closeUpsell}
       )

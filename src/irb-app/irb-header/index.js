@@ -37,15 +37,20 @@ document.registerElement(`irb-header`, class extends Component {
         },
 
         clickExportCSV: () => {
-          if (!this.state.resultLoading && this.state.projectHasEvents) {
-            const report = this.state.report;
-            this.downloadData(report.title, dataToCSV(this.state.result, {
-              timeUnit: report.timeUnit(),
-            }));
+          if (this.app.getFeatureGateValue(`can_export_csv`)) {
+            if (!this.state.resultLoading && this.state.projectHasEvents) {
+              const report = this.state.report;
+              this.downloadData(report.title, dataToCSV(this.state.result, {
+                timeUnit: report.timeUnit(),
+              }));
+            }
+          } else {
+            this.app.openUpsellModal(`exportCSV`);
           }
         },
         clickReportList: () => this.app.openReportList(),
-        showUpsell: () => this.state.upsellModal === `saveReport`,
+        showSaveReportUpsell: () => this.state.upsellModal === `saveReport`,
+        showExportCSVUpsell: () => this.state.upsellModal === `exportCSV`,
         closeUpsell: ev => this.app.maybeCloseUpsellModal(ev, `saveReport`),
       },
       template,
