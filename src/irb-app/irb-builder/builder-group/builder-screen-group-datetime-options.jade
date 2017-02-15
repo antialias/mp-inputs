@@ -4,7 +4,8 @@ include ../mixins.jade
 - const selectedUnit = clause.unit
 
 .builder-screen.datetime-options
-  +screen-title(`Bucket ${util.renameProperty(clause.value)} by unit`, {backButton: true})
+  - const title = `${util.renameProperty(clause.value)}'s time unit`
+  +screen-title(title, {backButton: true})
   ul.screen-options-list(hook={postpatch: $helpers.updateRenderedSize})
     - const units = $helpers.availableUnits()
     if units.length
