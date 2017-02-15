@@ -57,17 +57,10 @@ export default class MPContext {
     }
 
     const endpoint = `id` in data ? `update/${data.id}` : `create/`;
-    return fetch(`${this.bmURL}/${endpoint}`, {
-      body: objToQueryString({
-        name: data.name,
-        params: JSON.stringify(data),
-        icon: data.icon,
-      }),
-      credentials: `same-origin`,
-      headers: {
-        'Content-Type': `application/x-www-form-urlencoded; charset=utf-8`,
-      },
-      method: `POST`,
+    return this.post(`${this.bmURL}/${endpoint}`, {
+      name: data.name,
+      params: JSON.stringify(data),
+      icon: data.icon,
     })
       .then(res => res.json())
       .then(res => {
@@ -76,5 +69,23 @@ export default class MPContext {
         }
         return res.bookmark;
       });
+  }
+
+  setFlag(flag) {
+    if (!this.flags[flag]) {
+      this.flags[flag] = mp.report.globals.flags[flag] = 1;
+      this.post(`${this.apiHost}/set_flag/`, {flag});
+    }
+  }
+
+  post(url, data) {
+    return fetch(url, {
+      body: objToQueryString(data),
+      credentials: `same-origin`,
+      headers: {
+        'Content-Type': `application/x-www-form-urlencoded; charset=utf-8`,
+      },
+      method: `POST`,
+    });
   }
 }

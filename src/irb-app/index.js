@@ -114,6 +114,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   transitionLearn() {
+    this.mpContext.setFlag(`VIEWED_INSIGHTS_INTRO`);
     util.transitionLearn(this.state.report, this.state.learnModalStepIndex, {
       start: () => this.update({learnTransitioningOut: true}),
       middle: () => this.update({learnTransitioningOut: false, learnTransitioningIn: true}),
@@ -201,6 +202,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   setMPContext(mpContext) {
     this.mpContext = mpContext;
 
+    this.shouldViewOnboarding = !this.mpContext.flags.VIEWED_INSIGHTS_INTRO;
     this.standalone = this.mpContext.standalone;
     this.customEvents = this.mpContext.customEvents || [];
     this.hasWritePermissions = !this.mpContext.hasPermissions || this.mpContext.permissions.includes(`write_insights`);
@@ -243,7 +245,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
     super.attachedCallback(...arguments);
 
-    if (this.state.report.id) {
+    if (this.shouldViewOnboarding) {
+      this.navigate(`learn`);
+    } else if (this.state.report.id) {
       this.navigate(`report/${this.state.report.id}`);
     }
   }
