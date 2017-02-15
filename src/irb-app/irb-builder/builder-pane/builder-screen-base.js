@@ -126,7 +126,7 @@ export class BuilderScreenBase extends Component {
     const isPeople = propType === Clause.RESOURCE_TYPE_PEOPLE;
     let properties = isPeople ? this.state.topPeopleProperties : this.state.topEventProperties;
     properties = properties === BaseQuery.LOADING ? [] : properties;
-    // FIX: ShowClause.ALL_PEOPLE should  only be show for show clause
+    // TODO: ShowClause.ALL_PEOPLE should  only be show for show clause
     let specialProps = [ShowClause.ALL_PEOPLE];
     if (!isPeople) {
       specialProps = specialProps.concat(GroupClause.EVENT_DATE);

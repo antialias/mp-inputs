@@ -209,7 +209,7 @@ export class GroupClause extends EventsPropertiesClause {
   }
 
   get isDatetimeProperty() {
-    const realType = this.typeCast ? this.typeCast : this.propertyType;
+    const realType = this.typeCast || this.propertyType;
     return realType === `datetime`;
   }
 }

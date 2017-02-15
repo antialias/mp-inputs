@@ -153,12 +153,7 @@ export default class SegmentationQuery extends BaseQuery {
     // data global to all JQL queries.
     const segments = sections.group.clauses
       .map(clause => pick(clause, [`value`, `propertyType`, `resourceType`, `typeCast`, `unit`]))
-      .map(clause => {
-        if (clause.value === GroupClause.EVENT_DATE.name) {
-          clause.isEventDate = true;
-        }
-        return clause;
-      });
+      .map(clause => clause.value === GroupClause.EVENT_DATE.name ? extend(clause, {isEventDate: true}) : clause);
 
 
     const conjunction = sections.filter.determiner === FilterSection.DETERMINER_ANY ? `or` : `and`;
@@ -369,8 +364,8 @@ export default class SegmentationQuery extends BaseQuery {
     };
 
     const formattedDateCache = {};
-    const getFormattedDate = (epoch, {unit=`day`, timeOffsetMult=1000}={}) => {
-      const epochInMS = epoch * timeOffsetMult;
+    const getFormattedDate = (epoch, {unit=`day`, convertEpochMultiplier=1000}={}) => {
+      const epochInMS = epoch * convertEpochMultiplier;
       formattedDateCache[unit] = formattedDateCache[unit] || {};
       if (!formattedDateCache[unit][epochInMS]) {
         formattedDateCache[unit][epochInMS] = epochToFormattedDate(epochInMS, unit);
@@ -383,17 +378,11 @@ export default class SegmentationQuery extends BaseQuery {
     }
 
     if (results) {
-      const isSegDatetimeMap = querySegments
-        .map(seg => {
-          if (seg.propertyType === `datetime`) {
-            return {
-              unit: seg.unit,
-              timeOffsetMult: seg.isEventDate ? 1 : 1000,
-            };
-          }
-          return false;
-        })
-        .reduce((obj, val, idx) => Object.assign(obj, {[idx]: val}), {});
+      const isSegDatetime = idx => querySegments[idx].propertyType === `datetime`;
+      const unitsForDatetimeSet = idx => ({
+        unit: querySegments[idx].unit,
+        convertEpochMultiplier: querySegments[idx].isEventDate ? 1 : 1000,
+      });
 
       const createSeriesReducerFunc = ({isTimeSeries=true}={}) => {
         return (seriesObj, item) => {
@@ -409,9 +398,8 @@ export default class SegmentationQuery extends BaseQuery {
 
             // conditional key formatting
             const segIdx = si - 1;
-            const segDatetime = si && Number.isInteger(key) && isSegDatetimeMap[segIdx];
-            if (segDatetime) {
-              key = getFormattedDate(key, segDatetime);
+            if (si && Number.isInteger(key) && isSegDatetime(segIdx)) {
+              key = getFormattedDate(key, unitsForDatetimeSet(segIdx));
             } else if (si && this.isBucketedAtSegmentIdx(segIdx)) {
               key = this.formattedKeyForBucketedSegment(segIdx, key);
             }
