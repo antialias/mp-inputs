@@ -39,7 +39,7 @@ function rowsForLeafKey(leafKey, data, keysAtDepth, depth, row) {
   return allRows;
 }
 
-export function resultToCSVArray(data, timeUnit=`day`) {
+export function resultToCSVArray(data, {timeUnit=`day`, timeseries=true}={}) {
   const depth = nestedObjectDepth(data.series);
   const keysAtDepth = Array(depth).fill().map((__, level) =>
     nestedObjectKeys(data.series, level + 1).sort()
@@ -74,8 +74,8 @@ export function resultToCSVArray(data, timeUnit=`day`) {
   ];
 }
 
-export function dataToCSV(data, timeUnit=`day`) {
-  return resultToCSVArray(data, timeUnit)
+export function dataToCSV(data, options) {
+  return resultToCSVArray(data, options)
     .map(row => row.join(`,`))
     .join(`\n`);
 }

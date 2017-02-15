@@ -40,7 +40,7 @@ describe(`resultToCSVArray`, function() {
         },
       },
     };
-    const csvArray = resultToCSVArray(result, `hour`);
+    const csvArray = resultToCSVArray(result, {timeUnit: `hour`});
 
     expect(csvArray).to.eql([
       [`Date`,                `Click run`],
