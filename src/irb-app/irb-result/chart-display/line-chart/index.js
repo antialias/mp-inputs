@@ -137,6 +137,14 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   tooltipFormatter() {
     var timeFormatter = this.epochToTimeUnitFunction();
     return function() {
+      const isIncomplete = util.isIncompleteInterval([this], {unit, utcOffset});
+      const index = this.series.data.indexOf(this.point);
+      let delta = null;
+      // TODO: revisit design for stacked chart, which already shows proportional percentage
+      if (index > 0 && !this.percentage) {
+        const last = this.series.data[index - 1];
+        delta = last.y > 0 ? (this.y - last.y) / last.y : null;
+      }
       return `
         <div class="title" style="background-color: ${this.series.color};">${this.series.name}</div>
         <div class="results">
@@ -145,6 +153,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
             <span class="count">${this.y}</span>
           </div>
           ${this.percentage ? `<div class="percent">${util.formatPercent(this.percentage * .01)}</div>` : ``}
+          ${delta !== null ? `<div class="delta ${delta < 0 ? `delta-neg` : (delta > 0 ? `delta-pos` : ``)}">${util.formatPercent(delta)}</div>` : ``}
         </div>
       `;
     };
