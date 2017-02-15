@@ -37,7 +37,11 @@ mixin secondary-action-pill(label, options)
 
 mixin event-list(events, options)
   ul.screen-options-list(
-    class={'show-loader': !options.hideLoader}
+    class=util.extend({
+      'show-loader': !options.hideLoader,
+    }, util.learnClasses({
+      disabledSteps: [`group-by`],
+    }))
     on={scroll: $helpers.scrolledList}
   )
     - const selected = options.selected
@@ -64,7 +68,11 @@ mixin event-list(events, options)
 
 mixin property-list(properties, options)
   ul.screen-options-list(
-    class={'show-loader': !options.hideLoader}
+    class=util.extend({
+      'show-loader': !options.hideLoader,
+    }, util.learnClasses({
+      disabledSteps: [`choose-event`, `compare-event`],
+    }))
     on={scroll: options.scrolledList}
   )
     - const selected = options.selected
