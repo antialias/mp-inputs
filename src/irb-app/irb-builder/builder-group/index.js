@@ -49,6 +49,7 @@ document.registerElement(`builder-group-edit-control`, class extends EditControl
       attrs: {
         'clause-index': this.clauseIndex,
         'property-type': clause.typeCast || clause.propertyType,
+        'disabled-for-reserved-prop': [GroupClause.EVENT_DATE.name].includes(clause.value),
       },
     };
   }

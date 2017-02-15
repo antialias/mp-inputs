@@ -16,20 +16,32 @@ document.registerElement(`property-type-prefix`, class extends Component {
           'section': GroupClause.TYPE,
         }),
         clickedIcon: ev => {
-          ev.stopPropagation();
-          if (this.state.builderPane.isEditingTypecast) {
-            this.app.stopBuildingQuery();
-            this.app.updateBuilder({isEditingTypecast: false});
-          } else {
-            this.app.resetBuilder();
-            this.app.stopEditingClause();
-            this.app.startEditingClause(GroupClause.TYPE, this.clauseIndex);
-            this.app.updateBuilder({isEditingTypecast: true});
+          if (!this.isReservedPropertyType()) {
+            ev.stopPropagation();
+            if (this.state.builderPane.isEditingTypecast) {
+              this.app.stopBuildingQuery();
+              this.app.updateBuilder({isEditingTypecast: false});
+            } else {
+              this.app.resetBuilder();
+              this.app.stopEditingClause();
+              this.app.startEditingClause(GroupClause.TYPE, this.clauseIndex);
+              this.app.updateBuilder({isEditingTypecast: true});
+            }
           }
         },
-        typeIcon: () => getIconForPropertyType(this.getAttribute(`property-type`)),
+        typeIcon: () => {
+          if (this.isReservedPropertyType()) {
+            return `star-top-events`;
+          } else {
+            return getIconForPropertyType(this.getAttribute(`property-type`));
+          }
+        },
       },
     };
+  }
+
+  isReservedPropertyType() {
+    return this.isAttributeEnabled(`disabled-for-reserved-prop`);
   }
 
   get clauseIndex() {
