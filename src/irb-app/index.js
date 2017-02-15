@@ -202,7 +202,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   setMPContext(mpContext) {
     this.mpContext = mpContext;
 
-    this.shouldViewOnboarding = !this.mpContext.flags.VIEWED_INSIGHTS_INTRO;
+    this.shouldViewOnboarding = this.mpContext.flags && !this.mpContext.flags.VIEWED_INSIGHTS_INTRO;
     this.standalone = this.mpContext.standalone;
     this.customEvents = this.mpContext.customEvents || [];
     this.hasWritePermissions = !this.mpContext.hasPermissions || this.mpContext.permissions.includes(`write_insights`);
