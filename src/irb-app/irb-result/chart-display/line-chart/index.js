@@ -150,7 +150,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
         <div class="results">
           <div class="absolute">
             <span class="date">${timeFormatter(this.key)}: </span>
-            <span class="count">${this.y}</span>
+            <span class="count">${util.commaizeNumber(this.y)}</span>
           </div>
           ${this.percentage ? `<div class="percent">${util.formatPercent(this.percentage * .01)}</div>` : ``}
           ${delta !== null ? `<div class="delta ${delta < 0 ? `delta-neg` : (delta > 0 ? `delta-pos` : ``)}">${util.formatPercent(delta)}</div>` : ``}
