@@ -15,7 +15,6 @@ var webpackConfig = {
     standalone: './standalone/index.js',
   },
   module: {
-    devtool: 'sourcemap',
     preLoaders: [
       {
         test: /\.js$/,
@@ -79,6 +78,7 @@ var webpackConfig = {
 if (process.env.NODE_ENV === 'development') {
   webpackConfig = Object.assign({}, webpackConfig, {
     debug: true,
+    devtool: 'source-map',
     output: {
       path: BUILD_DIR,
       filename: '[name].bundle.js',

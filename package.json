@@ -8,7 +8,7 @@
     "build": "webpack",
     "lint": "eslint src",
     "production-build": "rm -rf build-production && NODE_ENV=production webpack",
-    "serve": "webpack-dev-server --inline",
+    "serve": "webpack-dev-server --inline --colors",
     "start": "npm run watch",
     "test": "mocha --require babel-core/register --require babel-polyfill",
     "watch": "webpack --progress --colors --watch"
@@ -63,7 +63,7 @@
     "node-fetch": "1.5.3",
     "style-loader": "0.13.0",
     "stylus": "0.53.0",
-    "stylus-loader": "1.6.1",
+    "stylus-loader": "2.4.0",
     "url-loader": "0.5.7",
     "virtual-jade": "0.8.1",
     "virtual-jade-loader": "0.5.0",
