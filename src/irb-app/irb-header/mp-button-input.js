@@ -15,12 +15,14 @@ document.registerElement(`mp-button-input`, class extends Component {
         inputWidth: MIN_INPUT_WIDTH,
       },
       helpers: {
-        blur: () => this.update({active: false}),
+        blur: () => {
+          this.update({active: false});
+          this.dispatchChange();
+        },
         focus: () => this.update({active: true}),
         inputChange: () => {
           this.update({inputValue: this.value});
           this._resizeInput();
-          this.dispatchChange();
         },
 
         buttonMousedown: ev => {
