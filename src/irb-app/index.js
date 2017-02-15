@@ -376,7 +376,12 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
         console.error(`Error saving: ${err}`);
         reportTrackingData.error = err;
       })
-      .then(() => this.trackEvent(`Save Report`, reportTrackingData));
+      .then(() => {
+        this.trackEvent(`Save Report`, reportTrackingData);
+        if (reportTrackingData.error) {
+          return Promise.reject(reportTrackingData.error);
+        }
+      });
   }
 
   // New query builder helpers

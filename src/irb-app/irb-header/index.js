@@ -25,7 +25,13 @@ document.registerElement(`irb-header`, class extends Component {
           if (ev.detail) {
             this.app.updateReport({title: ev.detail.value});
             if (ev.detail.save) {
-              this.app.saveReport();
+              this.resetSaveFeedback();
+              clearTimeout(this.saveFeedbackTimeout);
+              this.app.saveReport()
+                .then(() => this.update({saved: true}))
+                .catch(() => this.update({saveFailed: true}))
+                // TODO extract and share this duration, also used in add-to-dash
+                .then(() => this.saveFeedbackTimeout = setTimeout(() => this.resetSaveFeedback(), 3300));
             }
           }
         },
@@ -42,6 +48,10 @@ document.registerElement(`irb-header`, class extends Component {
       },
       template,
     };
+  }
+
+  resetSaveFeedback() {
+    this.update({saved: false, saveFailed: false});
   }
 
   downloadData(filename, dataStr) {

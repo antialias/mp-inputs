@@ -20,6 +20,7 @@
       mp-tooltip Download CSV
     button.report-list-button(
       attrs={title: `Saved reports`}
+      class={saved, 'save-failed': saveFailed}
       on={click: $helpers.clickReportList}
     )
       svg-icon(attrs={icon: `saved-reports`})
