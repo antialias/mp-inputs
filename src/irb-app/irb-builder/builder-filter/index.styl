@@ -105,6 +105,9 @@ builder-filter-edit-control
   .irb-control button.modify
     font-size 13px
 
+  .builder-pane
+    height 466px
+
 builder-screen-filter-properties-list
   .builder-screen.properties .list-option
     .caret-icon
@@ -114,7 +117,7 @@ builder-screen-filter-properties-list
       .caret-icon
         opacity 1
 
-$type-menu-width = 150px
+$type-menu-width = 135px
 
 builder-screen-filter-property
   .builder-screen.filter-property
@@ -132,6 +135,8 @@ builder-screen-filter-property
       &.filter-menu-item-selected
         color grey-900
         font-weight 900
+        svg-icon svg, svg-icon path
+          fill grey-900
       &:hover
         background-color grey-100
         color mp-blue
@@ -160,7 +165,7 @@ builder-screen-filter-property
       position absolute
       text-align left
       text-transform none
-      top: 36px
+      top: 42px
       transform translateX(-50%)
       width $type-menu-width
       z-index 10
@@ -197,22 +202,23 @@ builder-screen-filter-property
 
       .filter-type-dropdown
         .filter-types
+          box-sizing border-box
           padding 10px
           width $type-menu-width
           li
             align-items center
             display flex
-            font-size 14px
+            font-size 12px
             text-transform capitalize
             transition color 0.2s
             svg-icon-style(grey-700, mp-blue)
             svg-icon
-              margin-right 10px
+              margin-right 8px
 
     .filter-chooser
       display flex
       flex-direction column
-      height 420px
+      height 358px
 
       .filter-operator-dropdown
         margin 10px 15px
@@ -225,7 +231,7 @@ builder-screen-filter-property
       .filter-radio-list
         align-items center
         display flex
-        margin 23px 10px
+        margin 23px 10px 10px
         &.filter-boolean
           margin 23px 70px
         &.filter-list
@@ -237,6 +243,7 @@ builder-screen-filter-property
 
       .filter-string-input-wrapper
         box-sizing border-box
+        margin-bottom 10px
         padding 0 15px
         width 100%
         .filter-string-input
@@ -253,6 +260,20 @@ builder-screen-filter-property
           input
             padding-left 37px
 
+      .filter-string-contains-choices
+        padding 5px
+        li
+          border-radius 3px
+          color grey-700
+          cursor pointer
+          font-size 12px
+          font-weight 500
+          line-height 30px
+          padding 0 10px
+          &:hover
+            background-color grey-100
+            color mp-blue
+
       .filter-numdate
         box-sizing border-box
         display flex
@@ -263,8 +284,14 @@ builder-screen-filter-property
           align-items center
           justify-content space-between
 
+          .filter-numdate-input
+            width 112px
+
         .filter-numdate-input
-          width 112px
+          width 290px
+
+        .inputs
+          padding-bottom 12px
 
       span.filter-conjunction
         align-items center

@@ -25,9 +25,10 @@ mixin filter-operator-dropdown
         )= filterOperator
 
 mixin filter-string-input
-  .filter-string-input-wrapper
+  .filter-string-input-wrapper.filter-string-search
     //- TODO: handle focus properly. Sadly setTimeout is an easy working solution.
     //- There is a racecondition with visible inputs in the filter screen that we need to solve for.
+    svg-icon(attrs={icon: `search`})
     input.filter-string-input(
       props={
         type: `text`,
