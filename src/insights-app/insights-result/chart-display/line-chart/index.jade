@@ -3,5 +3,8 @@
   .line-chart
     mp-line-chart(
       props={chartData: data, utcOffset}
-      attrs={'display-options': JSON.stringify(displayOptions)}
+      attrs={
+        'display-options': JSON.stringify(displayOptions),
+        'seg-filters': JSON.stringify(segFilters),
+      }
     )

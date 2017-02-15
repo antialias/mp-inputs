@@ -108,30 +108,19 @@ document.registerElement(`chart-display`, class extends Component {
 
           return shouldShow;
         },
-        processResult: result => {
-          const isPeopleTimeSeries = !!result.peopleTimeSeries;
+        processResult: (result, {flattenedData=false}={}) => {
           result = result.transformed({
             analysis: this.state.report.displayOptions.analysis,
             windowSize: ROLLING_WINDOWS_BY_UNIT[this.state.report.sections.time.clauses[0].unit],
           });
-          const isFlattenedData = this.state.report.displayOptions.chartType === `line`;
-          if (this.helpers.showLegend()) {
+          const processed = pick(result, [`series`, `headers`]);
+          if (flattenedData) {
+            processed.series = result.peopleTimeSeries || result.series;
+          } else if (this.helpers.showLegend()) {
             const legend = this.state.report.legend;
-            let series = result.peopleTimeSeries || result.series;
-            series = filterObject(series, (value, depth, parentKeys) => {
-              if (isFlattenedData) {
-                return depth === 2 ? legend.data[0].flattenedData[parentKeys.concat(value).join(` `)] : true;
-              } else {
-                return depth > 1 ? legend.data[depth - 2].seriesData[value] : true;
-              }
-            });
-            if (isPeopleTimeSeries) {
-              result.peopleTimeSeries = series;
-            } else {
-              result.series = series;
-            }
+            processed.series = filterObject(result.series, (value, depth) => depth > 1 ? legend.data[depth - 2].seriesData[value] : true);
           }
-          return result;
+          return processed;
         },
         barChartChange: ev => {
           if (ev.detail) {

@@ -24,13 +24,12 @@
           .chart-error-data-image
           .chart-error-no-data-text We don't have any data for your project.
     else
-      - const processedResult = $helpers.processResult(result);
       case report.displayOptions.chartType
         when 'bar'
           .extras-menu-container.chart-control= $component.child('extras-menu')
           bar-chart(
             props={
-              chartData: processedResult,
+              chartData: $helpers.processResult(result),
             }
             attrs=$helpers.stringifyObjValues({
               'segment-color-map': report.legend.colorMap,
@@ -53,12 +52,14 @@
           .extras-menu-container.chart-control= $component.child('extras-menu')
           line-chart(
             props={
-              chartData: processedResult,
+              chartData: $helpers.processResult(result, {flattenedData: true}),
+              //- segFilters: report.legend.getFlattenedFilters(),
               utcOffset: $helpers.getUtcOffset(),
             }
             attrs=$helpers.stringifyObjValues({
               'chart-label': $helpers.getChartLabel(),
               'display-options': $helpers.getDisplayOptions(),
+              'seg-filters': report.legend.getFlattenedFilters(),
             })
           )
         when 'table'
@@ -66,7 +67,7 @@
           - const resourceDescription = $helpers.getChartLabel() + (functionLabel ? ` ${functionLabel}` : '');
           table-chart(
             props={
-              chartData: util.extend(processedResult, {resourceDescription}),
+              chartData: util.extend($helpers.processResult(result), {resourceDescription}),
             }
             attrs=$helpers.stringifyObjValues({
               'display-options': $helpers.getDisplayOptions(),

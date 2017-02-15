@@ -1,5 +1,4 @@
 /* global $, Highcharts */
-
 import moment from 'moment';
 import { Component } from 'panel';
 import WebComponent from 'webcomponent';
@@ -54,8 +53,12 @@ document.registerElement(`line-chart`, class extends Component {
     this.updateChartState();
   }
 
-  attributeChangedCallback() {
-    this.updateChartState();
+  attributeChangedCallback(attrName, _, newVal) {
+    if (attrName === `seg-filters`) {
+      this.update({segFilters: JSON.parse(newVal)});
+    } else {
+      this.updateChartState();
+    }
   }
 
   updateChartState() {
@@ -63,17 +66,15 @@ document.registerElement(`line-chart`, class extends Component {
       return;
     }
 
-    let {headers, series, peopleTimeSeries} = this.chartData;
+    let {headers, series} = this.chartData;
     const chartLabel = JSON.parse(this.getAttribute(`chart-label`));
 
-    const data = peopleTimeSeries || series;
-
-    if (headers && data) {
+    if (headers && series) {
       this.update({
         // transform nested object into single-level object:
         // {'a': {'b': {'c': 5}}} => {'a / b / c': 5}
         chartLabel,
-        data: util.objectFromPairs(nestedObjectPaths(data, 1).map(path =>
+        data: util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
           [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
         )),
         displayOptions: JSON.parse(this.getAttribute(`display-options`)),
@@ -96,8 +97,18 @@ document.registerElement(`line-chart`, class extends Component {
   }
 
   set chartData(data) {
+    // if (!isEqual(data, this._chartData)) {
     this._chartData = data;
     this.updateChartState();
+    // }
+  }
+
+  get segFilters() {
+    return this._segFilters;
+  }
+
+  set segFilters(filters) {
+    this._segFilters = filters;
   }
 });
 
@@ -107,9 +118,17 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     this.renderChart();
   }
 
-  attributeChangedCallback() {
-    this._displayOptions = JSON.parse(this.getAttribute(`display-options`) || `{}`);
-    this.renderChart();
+  attributeChangedCallback(attrName, _, newVal) {
+    if (attrName === `seg-filters`) {
+      this._segFilters = this._segFilters || {};
+      const newSegFilters = JSON.parse(newVal);
+      const segChangesByKeys = Object.keys(newSegFilters).filter(key => this._segFilters[key] !== newSegFilters[key]);
+      this._segFilters = newSegFilters;
+      this.updateShowHideSegments(segChangesByKeys);
+    } else {
+      this._displayOptions = JSON.parse(this.getAttribute(`display-options`) || `{}`);
+      this.renderChart();
+    }
   }
 
   timestampToTimeUnitFunction({displayRangeIfWeek=true}={}) {
@@ -347,30 +366,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       highchartsOptions.yAxis.min = LOGARITHMIC_CHART_ZERO_REMAPPING;
     }
 
-    // create the series data!
-    //
-    // a whole pile of garbage courtesy of
-    // https://github.com/mixpanel/mixpanel-platform/blob/d171a3e/js/ui/chart.js#L449-L580
-
-    // I presume we can replace this with one of our existing Insights/mp-common utils
-    const _flat = function(obj, depth) {
-      if (typeof obj !== `object`) {
-        return obj;
-      } else {
-        if (depth <= 0) {
-          return Object.values(obj).reduce((sum, v) => sum + _flat(v, depth), 0);
-        } else {
-          depth--;
-          const ag = {};
-          for (let key of Object.keys(obj)) {
-            ag[key] = _flat(obj[key], depth);
-          }
-          return ag;
-        }
-      }
-    };
-
-    const data = _flat(this.chartData, 2);
+    const data = this.chartData;
 
     const seriesMap = {};
     let allLabelsAreDates = true;
@@ -421,7 +417,11 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       .sort((a, b) => b[1] - a[1])
       .map(pair => pair[0]);
 
+    this.highchartSegmentIdxMap = sortedSegments
+      .reduce((obj, seg, idx) => Object.assign(obj, {[seg]: idx}), {});
+
     highchartsOptions.series = sortedSegments.map((s, idx) => util.extend(seriesMap[s], {
+      visible: this.isSegmentShowing(seriesMap[s].name),
       color: highchartsOptions.colors[idx % highchartsOptions.colors.length],
       isIncompletePath: util.isIncompleteInterval(seriesMap[s].data, {
         unit: this._displayOptions.timeUnit,
@@ -437,15 +437,42 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       return;
     }
 
-    if (this.el) {
-      this.removeChild(this.el);
+    if (!this.el) {
+      this.el = document.createElement(`div`);
+      this.el.className = `mp-highcharts-container`;
+      this.appendChild(this.el);
+      this.highchart = new Highcharts.Chart(this.createChartOptions());
+    }
+    this.createChartOptions().series.forEach((series, idx) => {
+      const oldSeries = this.highchart.series[idx];
+      if (!oldSeries) {
+        this.highchart.addSeries(series);
+      }
+    });
+
+  }
+
+  isSegmentShowing(segmentName) {
+    const segIdx = this.highchartSegmentIdxMap[segmentName];
+    return (Number.isInteger(segIdx) &&
+      this._segFilters.hasOwnProperty(segmentName) &&
+      this._segFilters[segmentName]);
+  }
+
+  updateShowHideSegments(keys) {
+    if (!this.initialized || !this.highchart || !this._segFilters || !this.highchartSegmentIdxMap) {
+      return;
     }
 
-    this.el = document.createElement(`div`);
-    this.el.className = `mp-highcharts-container`;
-    this.appendChild(this.el);
+    (keys || Object.keys(this._segFilters)).forEach(segmentName => {
+      const segIdx = this.highchartSegmentIdxMap[segmentName];
+      if (this.isSegmentShowing(segmentName)) {
+        this.highchart.series[segIdx].show();
+      } else {
+        this.highchart.series[segIdx].hide();
+      }
+    });
 
-    this.highchart = new Highcharts.Chart(this.createChartOptions());
   }
 
   get chartData() {

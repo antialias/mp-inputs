@@ -57,6 +57,11 @@ export default class Legend {
     return this;
   }
 
+  getFlattenedFilters() {
+    return this.data[0].flattenedData;
+  }
+
+
   getSeriesDisplayAtIndex(seriesIdx) {
     return this.seriesShowing[seriesIdx] || null;
   }
@@ -176,7 +181,7 @@ export default class Legend {
       if (!idx) {
         // Flattened Data for Line Chart
         const sumNestedLineResults = nestedObjectSum(result.dataForLineChart());
-        const resultsFlattened = flattenNestedObjectToPath(sumNestedLineResults);
+        const resultsFlattened = flattenNestedObjectToPath(sumNestedLineResults, {transformKeyName: keys => keys.join(` / `)});
         const flatResults = this._sortAndLimitSeries(resultsFlattened.values, defaultValue, 20, prevSeriesLegend.flattenedData);
 
         Object.assign(dataSegment, {
