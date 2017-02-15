@@ -208,7 +208,8 @@ builder-screen-filter-property
     .filter-chooser
       display flex
       flex-direction column
-      height 358px
+      max-height 358px
+      min-height 150px
 
       .filter-operator-dropdown
         margin 10px 15px
@@ -280,6 +281,7 @@ builder-screen-filter-property
         box-sizing border-box
         display flex
         padding 0 15px
+        padding-bottom 15px
         width 100%
 
         &.filter-numdate-between

@@ -58,7 +58,6 @@ mixin filter-number-input(value, oninput, options)
     )
 
 - const clause = $helpers.getActiveClause()
-
 .builder-screen.filter-property
   +screen-title(``, {backButton: true})
     +filter-dropdown(`type`, util.renameProperty(clause.value), util.getIconForPropertyType(clause.filterType))
@@ -71,7 +70,7 @@ mixin filter-number-input(value, oninput, options)
             svg-icon(attrs={icon: filterType.icon})
             = filterType.name
 
-  .filter-chooser
+  .filter-chooser(hook={postpatch: $helpers.updateRenderedSize})
     case clause.filterType
 
       when `string`
