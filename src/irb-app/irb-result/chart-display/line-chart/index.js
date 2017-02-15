@@ -135,7 +135,10 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   }
 
   tooltipFormatter() {
-    var timeFormatter = this.epochToTimeUnitFunction();
+    const timeFormatter = this.epochToTimeUnitFunction();
+    const unit = this._displayOptions.timeUnit;
+    const utcOffset = this.utcOffset;
+
     return function() {
       const isIncomplete = util.isIncompleteInterval([this], {unit, utcOffset});
       const index = this.series.data.indexOf(this.point);
@@ -155,6 +158,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
           ${this.percentage ? `<div class="percent">${util.formatPercent(this.percentage * .01)}</div>` : ``}
           ${delta !== null ? `<div class="delta ${delta < 0 ? `delta-neg` : (delta > 0 ? `delta-pos` : ``)}">${util.formatPercent(delta)}</div>` : ``}
         </div>
+        ${isIncomplete ? `<div class="footer">Incomplete ${unit}</div>` : ``}
       `;
     };
   }
