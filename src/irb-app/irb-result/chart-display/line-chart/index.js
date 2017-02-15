@@ -149,7 +149,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
         delta = last.y > 0 ? (this.y - last.y) / last.y : null;
       }
       return `
-        <div class="title" style="background-color: ${this.series.color};">${this.series.name}</div>
+        <div class="title" style="background-color: ${this.series.color};">${util.truncateMiddle(this.series.name, 45)}</div>
         <div class="results">
           <div class="absolute">
             <span class="date">${timeFormatter(this.key)}: </span>
