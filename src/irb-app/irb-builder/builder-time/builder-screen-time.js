@@ -34,7 +34,6 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
         clickedRange: range => {
           if (range.upsell) {
             this.app.openUpsellModal(`timeClause`);
-            this.updateAndCommitStageClause({range: range.name});
             return;
           }
           if (range.name === TimeClause.RANGES.CUSTOM) {

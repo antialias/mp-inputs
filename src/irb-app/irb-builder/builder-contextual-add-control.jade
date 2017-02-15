@@ -1,7 +1,7 @@
 include ../irb-learn/tooltip.jade
 
 - const open = $helpers.isPaneOpen()
-- const showUpsellIcon = $helpers.showUpsellIcon()
+- const showUpsellIcon = $helpers.shouldShowUpsellIcon()
 - const learnStep = util.getLearnStep(report)
 
 .builder-container.contextual-menu(
@@ -22,12 +22,12 @@ include ../irb-learn/tooltip.jade
       if showUpsellIcon
         .upsell-icon
           svg-icon(attrs={icon: 'lighting-bolt'})
-      if $helpers.showUpsellModal()
+      if $helpers.shouldShowUpsellModal()
         .upsell-wrapper
           mp-upsell-popup(
             attrs={
               feature: `filter-levels`,
-              open: $helpers.showUpsellModal(),
+              open: $helpers.shouldShowUpsellModal(),
             }
             on={change: $helpers.closeUpsellModal}
           )

@@ -29,7 +29,7 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
         },
         clickedInput: ev => ev.stopPropagation(), // don't close menu!
         menuChange: ev => ev.detail && ev.detail.state === `closed` && this.isPaneOpen() && this.app.stopBuildingQuery(),
-        showUpsellIcon: () => (!this.app.canAddBuilderClause()),
+        shouldShowUpsellIcon: () => (!this.app.canAddBuilderClause()),
         getPreposition: () => ({
           [ShowClause.TYPE]: `and`,
           [GroupClause.TYPE]: `by`,
@@ -40,8 +40,8 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
           this.update({contextFilter: ev.target.value});
           this.app.updateBuilderCurrentScreen({progressiveListSize: null});
         }, 200, {leading: true, maxWait: 200}),
-        showUpsellModal: () => this.state.report.upsellModals.builderClause,
-        closeUpsellModal: ev => this.app.closeUpsellModal(ev, `builderClause`),
+        shouldShowUpsellModal: () => (this.state.upsellModal === `builderClause`),
+        closeUpsellModal: ev => this.app.maybeCloseUpsellModal(ev, `builderClause`),
       },
     };
   }

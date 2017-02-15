@@ -172,17 +172,12 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       topEventPropertiesByEvent: {},
       topPeopleProperties: [],
       topPropertyValues: [],
+      upsellModal: null,
     };
   }
 
   get defaultReportState() {
     return new Report({
-      upsellModals: {
-        builderClause: false,
-        timeClause: false,
-        filterClause: false,
-        saveReport: false,
-      },
       displayOptions: {
         chartType: `bar`,
         plotStyle: `standard`,
@@ -205,7 +200,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   /* feature gate fcns */
 
   getFeatureGateValue(feature) {
-    return this.mpContext.featureGates[feature];
+    return this.mpContext.featureGates ? this.mpContext.featureGates[feature] : Infinity;
   }
 
   canAddFilterClause() {
@@ -224,18 +219,18 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   openUpsellModal(type) {
-    let upsellModals = this.state.report.upsellModals;
-    upsellModals[type] = true;
-    this.updateReport({upsellModals});
+    this.update({upsellModal: type});
   }
 
-  closeUpsellModal(ev, type) {
-    if (ev.detail.state === `closed`) {
-      let upsellModals = this.state.report.upsellModals;
-      upsellModals[type] = false;
-      this.updateReport({upsellModals});
+  maybeCloseUpsellModal(ev) {
+    if (ev.detail && ev.detail.state === `closed`) {
+      this.update({upsellModal: null});
     }
   }
+
+  /**
+   * initialize app with data/settings from mixpanel.com if available
+   */
 
   setMPContext(mpContext) {
     this.mpContext = mpContext;
@@ -415,7 +410,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       })
       .catch(err => {
         console.error(`Error saving: ${err}`);
-        if(err.toString().includes(`At saved report limit`) !== -1) {
+        if(err.toString().includes(`At saved report limit`)) {
           this.openUpsellModal(`saveReport`);
         }
         reportTrackingData.error = err;

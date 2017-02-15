@@ -30,9 +30,9 @@ document.registerElement(`builder-filter-add-control`, class extends Component {
         insertedInput: vnode => vnode.elm.focus(),
         isPaneOpen: () => this.isPaneOpen(),
         changedSearch: ev => this.update({contextFilter: ev.target.value}),
-        showUpsellIcon: () => (!this.app.canAddFilterClause()),
-        showUpsellModal: () => this.state.report.upsellModals.filterClause,
-        closeUpsellModal: ev => this.app.closeUpsellModal(ev, `filterClause`),
+        shouldShowUpsellIcon: () => (!this.app.canAddFilterClause()),
+        shouldShowUpsellModal: () => this.state.upsellModal === `filterClause`,
+        closeUpsellModal: ev => this.app.maybeCloseUpsellModal(ev, `filterClause`),
       },
     };
   }

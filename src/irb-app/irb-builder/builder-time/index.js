@@ -12,8 +12,8 @@ document.registerElement(`query-builder-time`, class extends Component {
     return {
       template,
       helpers: {
-        showUpsellModal: () => this.state.report.upsellModals.timeClause,
-        closeUpsellModal: ev => this.app.closeUpsellModal(ev, `timeClause`),
+        showUpsellModal: () => this.state.upsellModal === `timeClause`,
+        closeUpsellModal: ev => this.app.maybeCloseUpsellModal(ev, `timeClause`),
       },
     };
   }

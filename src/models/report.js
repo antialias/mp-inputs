@@ -24,7 +24,6 @@ export default class Report {
       `sections`,
       `legend`,
       `sorting`,
-      `upsellModals`,
     ]));
     this.userID = this.user_id;
 
