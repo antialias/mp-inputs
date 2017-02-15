@@ -34,6 +34,9 @@ export default class MPContext {
       // API access
       if (API_LOCAL) {
         this.apiHost = window.location.origin;
+      } else if (window.location.origin.match(/^https:\/\/stage.*\.mixpanel\.com$/)) {
+        // TMP hack so staging talks local
+        this.apiHost = window.location.origin;
       }
       this.accessToken = mp.report.globals.access_token;
       this.apiKey = mp.report.globals.api_key;
