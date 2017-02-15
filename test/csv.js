@@ -172,4 +172,82 @@ describe(`resultToCSVArray`, function() {
       [`2017-01-16`, `Click run`, `Safari`,  0,       397       ],
     ]);
   });
+
+  it(`handles simple non-timeseries data`, function() {
+    const result = {
+      headers:[
+        '$people',
+      ],
+      series: {
+        '$all_people': {
+          'Invalid date': 807923,
+        },
+      },
+    };
+    const csvArray = resultToCSVArray(result, {timeseries: false});
+
+    expect(csvArray).to.eql([
+      [`All People`],
+      [807923      ],
+    ]);
+  });
+
+  it(`handles grouped non-timeseries data`, function() {
+    const result = {
+      headers:[
+        '$people',
+        '$country_code',
+      ],
+      series: {
+        'CSV exports': {
+          'US': {
+            'Invalid date': 505453,
+          },
+          'IN': {
+            'Invalid date': 80435,
+          },
+        },
+      },
+    };
+    const csvArray = resultToCSVArray(result, {timeseries: false});
+
+    expect(csvArray).to.eql([
+      [`People`,      `India`, `United States`],
+      [`CSV exports`, 80435,   505453         ],
+    ]);
+  });
+
+  it(`handles multi-prop grouped non-timeseries data`, function() {
+    const result = {
+      headers:[
+        '$people',
+        '$country_code',
+      ],
+      series: {
+        'CSV exports': {
+          'US': {
+            'Invalid date': 505453,
+          },
+          'IN': {
+            'Invalid date': 80435,
+          },
+        },
+        'Current tally': {
+          'US': {
+            'Invalid date': 15,
+          },
+          'IN': {
+            'Invalid date': 3,
+          },
+        },
+      },
+    };
+    const csvArray = resultToCSVArray(result, {timeseries: false});
+
+    expect(csvArray).to.eql([
+      [`People`,        `India`, `United States`],
+      [`CSV exports`,   80435,   505453         ],
+      [`Current tally`, 3,       15             ],
+    ]);
+  });
 });
