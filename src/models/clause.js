@@ -227,16 +227,18 @@ GroupClause.EVENT_DATE = GroupClause.prototype.EVENT_DATE = {
 const RANGES = {
   HOURS: `Last 96 hours`,
   MONTH: `Last 30 days`,
+  WEEKS: `Last 24 weeks`,
   QUARTER: `Last 4 quarters`,
   YEAR: `Last 12 months`,
   CUSTOM: `Choose a date range...`,
 };
 const RANGE_LIST = [
-  RANGES.HOURS, RANGES.MONTH, RANGES.QUARTER, RANGES.YEAR, RANGES.CUSTOM,
+  RANGES.HOURS, RANGES.MONTH, RANGES.WEEKS, RANGES.QUARTER, RANGES.YEAR, RANGES.CUSTOM,
 ];
 const RANGE_TO_VALUE_AND_UNIT = {
   [RANGES.HOURS]:   {value: 96, unit: TIME_UNITS.HOUR},
   [RANGES.MONTH]:   {value: 30, unit: TIME_UNITS.DAY},
+  [RANGES.WEEKS]:   {value: 24, unit: TIME_UNITS.WEEK},
   [RANGES.QUARTER]: {value: 4,  unit: TIME_UNITS.QUARTER},
   [RANGES.YEAR]:    {value: 12, unit: TIME_UNITS.MONTH},
 };
@@ -246,6 +248,9 @@ const UNIT_AND_VALUE_TO_RANGE = {
   },
   day: {
     30: RANGES.MONTH,
+  },
+  week: {
+    24: RANGES.WEEKS,
   },
   quarter: {
     4: RANGES.QUARTER,
