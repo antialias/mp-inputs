@@ -10,18 +10,18 @@
       on={click: $helpers.refresh}
     )
       svg-icon(attrs={icon: `refresh`})
-      mp-tooltip Refresh
+      mp-tooltip(attrs={placement: `left`}) Refresh
     button.download(
       attrs={title: `Download CSV`}
       class={enabled: !resultLoading}
       on={click: $helpers.clickExportCSV}
     )
       svg-icon(attrs={icon: `export`})
-      mp-tooltip Download CSV
+      mp-tooltip(attrs={placement: `left`}) Download CSV
     button.report-list-button(
       attrs={title: `Saved reports`}
       class={saved, 'save-failed': saveFailed}
       on={click: $helpers.clickReportList}
     )
       svg-icon(attrs={icon: `saved-reports`})
-      mp-tooltip Saved reports
+      mp-tooltip(attrs={placement: `left`}) Saved reports
