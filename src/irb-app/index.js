@@ -304,8 +304,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   _updateRecentList(type, value) {
     // remove any match data from view object
-    value = extend(value);
-    delete value.matches;
+    value = util.pick(value, [`name`, `type`, `resourceType`]);
 
     const stateKey = type === `events` ? `recentEvents` : `recentProperties`;
     this.update({[stateKey]: [
