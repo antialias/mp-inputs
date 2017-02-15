@@ -248,7 +248,7 @@ describe(`resultToCSVArray`, function() {
     const csvArray = resultToCSVArray(result, {timeseries: false});
 
     expect(csvArray).to.eql([
-      [`People`,      `Country Code`,  `Chrome`, `Firefox`],
+      [`People`,      `Country`,       `Chrome`, `Firefox`],
       [`CSV exports`, `India`,         80435,    123      ],
       [`CSV exports`, `United States`, 505453,   2323     ],
     ]);

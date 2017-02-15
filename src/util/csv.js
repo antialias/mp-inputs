@@ -24,9 +24,12 @@ function formatCSVDate(dateStr, timeUnit) {
 }
 
 const SPECIAL_NAMES = {
-  $all_people: `All People`, // eslint-disable-line camelcase
-  $event: `Event`,
-  $people: `People`,
+  /* eslint-disable camelcase */
+  $all_people:   `All People`,
+  $country_code: `Country`,
+  $event:        `Event`,
+  $people:       `People`,
+  /* eslint-enable camelcase */
 };
 function renameKey(key) {
   return SPECIAL_NAMES[key] || renamePropertyValue(renameProperty(key));
