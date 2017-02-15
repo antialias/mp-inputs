@@ -13,7 +13,7 @@ include ./tooltip.jade
               when `introduction`
                 | Introducing Insights
               when `conclusion`
-                | Congratulations, your first Insights query is done!
+                | Congratulations, you’ve built your first Insights query!
           .mp-modal-subtitle
             case step.name
               when `introduction`
@@ -23,13 +23,15 @@ include ./tooltip.jade
                 br
                 | you understand how your customers use your product.
               when `conclusion`
-                | You’ve only scratched the surface on the power of Insights.
+                | You’ve only scratched the surface; go ahead and explore
                 br
-                | Learn more about all of the additional ways you can analyze
+                | the full power of Insights. If you have other questions
                 br
-                | and visualize your data using Insights
+                | about all of the additional ways you can analyze and
+                br
+                | visualize your data using Insights,
                 =" "
-                a(href='docs-url-here') here
+                a(href='docs-url-here') click here
                 | .
           .mp-modal-close(on={click: $component.app.helpers.finishLearn})
             svg-icon(attrs={icon: 'x'})

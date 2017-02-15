@@ -21,20 +21,20 @@ mixin irb-learn-tooltip(...stepNames)
       .mp-tooltip-title
         case stepName
           when `choose-event`
-            | Let's start by choosing an event to show
+            | Start by choosing an event to show
           when `compare-event`
-            | Next, let's compare it to a different event
+            | Now compare that to a different event
           when `group-by`
-            | Now, let's add a group by function
+            | Next, group your events by a property
           when `manipulate-data`
-            | Lastly, let’s adjust your data visualization
+            | Lastly, choose the best-suited visualization
       .mp-tooltip-subtitle
         case stepName
           when `choose-event`
-            | By choosing an event you’ll see how many times your customers completed the action in the chart below.
+            | Choosing an event shows you how many times your customers completed that action in the chart below.
           when `compare-event`
-            | Display multiple events to compare how often your customers complete these actions in your product.
+            | Compare multiple events to see if your customers are performing certain events more than others.
           when `group-by`
-            | Grouping your events allows you to see how different types of customers use your product.
+            | Break your events down into groups to answer deeper questions about how your customers use your product.
           when `manipulate-data`
-            | Change your chart type or adjust how you want to compare event counts to surface insights faster.
+            | A line chart works well for displaying your data over time, while a bar chart is better at showing quantity.
