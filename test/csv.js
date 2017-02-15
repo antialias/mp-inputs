@@ -184,7 +184,7 @@ describe(`resultToCSVArray`, function() {
         },
       },
     };
-    const csvArray = resultToCSVArray(result, {timeseries: false});
+    const csvArray = resultToCSVArray(result);
 
     expect(csvArray).to.eql([
       [`All People`],
@@ -209,7 +209,7 @@ describe(`resultToCSVArray`, function() {
         },
       },
     };
-    const csvArray = resultToCSVArray(result, {timeseries: false});
+    const csvArray = resultToCSVArray(result);
 
     expect(csvArray).to.eql([
       [`People`,      `India`, `United States`],
@@ -245,7 +245,7 @@ describe(`resultToCSVArray`, function() {
         },
       },
     };
-    const csvArray = resultToCSVArray(result, {timeseries: false});
+    const csvArray = resultToCSVArray(result);
 
     expect(csvArray).to.eql([
       [`People`,      `Country`,       `Chrome`, `Firefox`],
@@ -279,7 +279,7 @@ describe(`resultToCSVArray`, function() {
         },
       },
     };
-    const csvArray = resultToCSVArray(result, {timeseries: false});
+    const csvArray = resultToCSVArray(result);
 
     expect(csvArray).to.eql([
       [`People`,        `India`, `United States`],

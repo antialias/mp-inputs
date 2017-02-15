@@ -51,7 +51,7 @@ function rowsForLeafKey(leafKey, data, keysAtDepth, depth, row) {
   return allRows;
 }
 
-export function resultToCSVArray(data, {timeUnit=`day`, timeseries=true}={}) {
+export function resultToCSVArray(data, {timeUnit=`day`}={}) {
   const depth = nestedObjectDepth(data.series);
   const keysAtDepth = Array(depth).fill().map((__, level) =>
     nestedObjectKeys(data.series, level + 1).sort()
@@ -80,7 +80,7 @@ export function resultToCSVArray(data, {timeUnit=`day`, timeseries=true}={}) {
     csvHeaders,
     ...csvRows,
   ];
-  if (!timeseries) {
+  if (csvRows.every(row => row[0] === `Invalid date`)) {
     // cut off date column
     csvArray = csvArray.map(row => row.slice(1));
   }
