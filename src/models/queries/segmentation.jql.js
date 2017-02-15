@@ -63,16 +63,22 @@ function main() {
       if (group.buckets) {
         jqlGroup = mixpanel.numeric_bucket(mixpanel.to_number(jqlGroup), group.buckets);
       } else if (group.unit) {
+        var groupAccessor;
         var groupDateBucket = dateBuckets[group.unit];
-        if (Array.isArray(groupDateBucket)) {
-          groupDateBucket = groupDateBucket.map(time => time / 1000);
+        if (group.isEventDate) {
+          groupAccessor = usesPeopleData ? 'event.time' : 'time';
         } else {
-          groupDateBucket = {
-            bucket_size: groupDateBucket.bucket_size / 1000,
-            offset: groupDateBucket.offset ? groupDateBucket.offset / 1000 : 0,
-          };
+          groupAccessor = mixpanel.to_number(jqlGroup);
+          if (Array.isArray(groupDateBucket)) {
+            groupDateBucket = groupDateBucket.map(time => time / 1000);
+          } else {
+            groupDateBucket = {
+              bucket_size: groupDateBucket.bucket_size / 1000,
+              offset: groupDateBucket.offset ? groupDateBucket.offset / 1000 : 0,
+            };
+          }
         }
-        jqlGroup = mixpanel.numeric_bucket(mixpanel.to_number(jqlGroup), groupDateBucket);
+        jqlGroup = mixpanel.numeric_bucket(groupAccessor, groupDateBucket);
       } else if (group.typeCast) {
         switch (group.typeCast) {
           case 'number':
