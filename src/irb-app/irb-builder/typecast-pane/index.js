@@ -29,7 +29,7 @@ document.registerElement(`typecast-pane`, class extends Component {
         clickedType: (ev, item) => {
           ev.stopPropagation();
           const typeCast = this.getClausePropertyType() === item.type ? null : item.type;
-          this.app.updateStageClause({typeCast});
+          this.app.updateStageClause({typeCast, unit: null});
           this.app.commitStageClause();
           this.app.updateBuilder({isEditingTypecast: false});
         },

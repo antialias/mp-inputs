@@ -209,7 +209,8 @@ export class GroupClause extends EventsPropertiesClause {
   }
 
   get isDatetimeProperty() {
-    return this.propertyType === `datetime`;
+    const realType = this.typeCast ? this.typeCast : this.propertyType;
+    return realType === `datetime`;
   }
 }
 GroupClause.TYPE = GroupClause.prototype.TYPE = `group`;
