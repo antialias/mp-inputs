@@ -30,6 +30,12 @@ mixin header-col(text, field)
         h1 Saved reports
         p You haven't saved any reports yet.
     else
+      irb-mp-toggle.user-filter(
+        on={select: $helpers.changeUserFilter}
+        attrs={selected: reportsDrawer.userFilter}
+      )
+        mp-toggle-option(attrs={value: `all`}) All
+        mp-toggle-option(attrs={value: `yours`}) Your reports
       .reportlist-search
         .reportlist-search-icon
           svg-icon(attrs={icon: `search`})
@@ -49,12 +55,6 @@ mixin header-col(text, field)
             keypress: $helpers.changeNameFilter,
           }
         )
-      irb-mp-toggle.user-filter(
-        on={select: $helpers.changeUserFilter}
-        attrs={selected: reportsDrawer.userFilter}
-      )
-        mp-toggle-option(attrs={value: `all`}) All
-        mp-toggle-option(attrs={value: `yours`}) Your reports
       .reports
         .report-row.header-row
           +header-col(`Report`, `title`)
