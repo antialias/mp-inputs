@@ -52,16 +52,25 @@ function rowsForLeafKey(leafKey, data, keysAtDepth, depth, row) {
 }
 
 export function resultToCSVArray(data, {timeUnit=`day`}={}) {
-  const depth = nestedObjectDepth(data.series);
+  let headers, series;
+  if (data.peopleTimeSeries) {
+    headers = data.headers.slice(1);
+    series = data.peopleTimeSeries;
+  } else {
+    headers = data.headers.slice(0, data.headers.length - 1);
+    series = data.series;
+  }
+
+  const depth = nestedObjectDepth(series);
   const keysAtDepth = Array(depth).fill().map((__, level) =>
-    nestedObjectKeys(data.series, level + 1).sort()
+    nestedObjectKeys(series, level + 1).sort()
   );
   const dateKeys = keysAtDepth[0];
   const leafKeys = keysAtDepth[1];
 
   // headers
-  const dataHeaders = data.headers.slice(0, data.headers.length - 1).map(renameKey);
-  const leafHeaders = leafKeys.map(renameKey);
+  const dataHeaders = headers.map(renameKey);
+  const leafHeaders = data.peopleTimeSeries ? [] : leafKeys.map(renameKey);
   const csvHeaders = [
     `Date`,
     ...dataHeaders,
@@ -71,7 +80,7 @@ export function resultToCSVArray(data, {timeUnit=`day`}={}) {
   // rows
   const csvRows = dateKeys.reduce((rows, dateStr) =>
     rows.concat(rowsForLeafKey(
-      dateStr, data.series, keysAtDepth, depth - 1, [formatCSVDate(dateStr, timeUnit)]
+      dateStr, series, keysAtDepth, depth - 1, [formatCSVDate(dateStr, timeUnit)]
     )), []
   );
 

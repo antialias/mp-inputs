@@ -173,6 +173,30 @@ describe(`resultToCSVArray`, function() {
     ]);
   });
 
+  it(`handles people timeseries data`, function() {
+    const result = {
+      headers:[
+        '$people',
+        '$created',
+      ],
+      peopleTimeSeries: {
+        '$all_people': {
+          '2017-01-15T00:00:00Z': 26,
+          '2017-01-14T00:00:00Z': 10,
+          '2017-01-16T00:00:00Z': 36,
+        },
+      },
+    };
+    const csvArray = resultToCSVArray(result, {timeUnit: `day`});
+
+    expect(csvArray).to.eql([
+      [`Date`,       `Created`],
+      [`2017-01-14`, 10       ],
+      [`2017-01-15`, 26       ],
+      [`2017-01-16`, 36       ],
+    ]);
+  });
+
   it(`handles simple non-timeseries data`, function() {
     const result = {
       headers:[

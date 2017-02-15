@@ -59,6 +59,11 @@ export default class Report {
     let unit = null;
     try {
       unit = this.sections.time.clauses[0].unit;
+      for (const groupClause of this.section.group.clauses) {
+        if (groupClause.resourceType === `people` && groupClause.unit) {
+          unit = groupClause.unit;
+        }
+      }
     } catch(e) {
       // ignore
     }
