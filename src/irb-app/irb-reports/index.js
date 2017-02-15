@@ -81,7 +81,7 @@ document.registerElement(`irb-reports`, class extends Component {
 
       helpers: {
         changeNameFilter: ev => this.updateDrawer({nameFilter: ev.target.value}),
-        changeUserFilter: ev => this.updateDrawer({userFilter: ev.detail.selected}),
+        changeUserFilter: userFilter => this.updateDrawer({userFilter}),
         clickDelete: (ev, report) => {
           ev.stopPropagation();
           this.updateDrawer({confirmDelete: report});

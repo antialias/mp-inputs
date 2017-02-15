@@ -33,9 +33,33 @@ mp-black = #2c3642
     margin-top 0
 
 .user-filter
-  display inline-block
+  display inline-flex
   margin 34px hmargin 0 hmargin
   width 630px
+  .user-filter-border-spacer
+    border-bottom 1px solid grey-150
+    display inline-block
+    &.border-spacer-left
+      width 34px
+    &.border-spacer-right
+      width 100%
+  .user-filter-option
+    border-bottom 1px solid grey-150
+    color grey-700
+    display inline-block
+    font-size 11px
+    font-weight bold
+    padding 14px
+    text-transform uppercase
+    white-space nowrap
+    transition border-bottom-color 200ms
+    &.user-filter-selected
+      border-bottom-color blue-300
+      color grey-900
+    &:not(.user-filter-selected)
+      cursor pointer
+      &:hover
+        color blue-300
 
 .reportlist-search
   align-items center

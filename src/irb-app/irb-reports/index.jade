@@ -19,6 +19,12 @@ mixin header-col(text, field)
       .caret.caret-down
         svg-icon(attrs={icon: `triangle-down`})
 
+mixin user-filter-option(label, value)
+  .user-filter-option(
+    class={'user-filter-selected': value === reportsDrawer.userFilter}
+    on={click: () => $helpers.changeUserFilter(value)}
+  )= label
+
 .reports-list-wrapper
   mp-drawer(
     attrs={hide: !reportsDrawerOpen}
@@ -30,12 +36,13 @@ mixin header-col(text, field)
         h1 Saved reports
         p You haven't saved any reports yet.
     else
-      irb-mp-toggle.user-filter(
-        on={select: $helpers.changeUserFilter}
-        attrs={selected: reportsDrawer.userFilter}
-      )
-        mp-toggle-option(attrs={value: `all`}) All
-        mp-toggle-option(attrs={value: `yours`}) Your reports
+      .user-filter
+        .user-filter-border-spacer.border-spacer-left
+        +user-filter-option(`All`,          `all`  )
+        .user-filter-border-spacer.border-spacer-left
+        +user-filter-option(`Your reports`, `yours`)
+        .user-filter-border-spacer.border-spacer-right
+
       .reportlist-search
         .reportlist-search-icon
           svg-icon(attrs={icon: `search`})
