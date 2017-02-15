@@ -20,7 +20,7 @@ export const MS_BY_UNIT = {
 
 export const MOMENT_TIME_FORMATTING = {
   'hour': `MMM D[,] ha`,
-  'day': `ddd MMM Do YYYY`,
+  'day': `ddd, MMM Do`,
   'week': `MMM D`,
   'month': `MMM YYYY`,
   'quarter': `[Q]Q YYYY`,
