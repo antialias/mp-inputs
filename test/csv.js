@@ -192,7 +192,7 @@ describe(`resultToCSVArray`, function() {
     ]);
   });
 
-  it(`handles grouped non-timeseries data`, function() {
+  it(`handles nested non-timeseries data`, function() {
     const result = {
       headers:[
         '$people',
@@ -217,7 +217,44 @@ describe(`resultToCSVArray`, function() {
     ]);
   });
 
-  it(`handles multi-prop grouped non-timeseries data`, function() {
+  it(`handles deeply nested non-timeseries data`, function() {
+    const result = {
+      headers:[
+        '$people',
+        '$country_code',
+        '$browser',
+      ],
+      series: {
+        'CSV exports': {
+          'US': {
+            'Chrome': {
+              'Invalid date': 505453,
+            },
+            'Firefox': {
+              'Invalid date': 2323,
+            },
+          },
+          'IN': {
+            'Chrome': {
+              'Invalid date': 80435,
+            },
+            'Firefox': {
+              'Invalid date': 123,
+            },
+          },
+        },
+      },
+    };
+    const csvArray = resultToCSVArray(result, {timeseries: false});
+
+    expect(csvArray).to.eql([
+      [`People`,      `Country Code`,  `Chrome`, `Firefox`],
+      [`CSV exports`, `India`,         80435,    123      ],
+      [`CSV exports`, `United States`, 505453,   2323     ],
+    ]);
+  });
+
+  it(`handles multi-prop nested non-timeseries data`, function() {
     const result = {
       headers:[
         '$people',

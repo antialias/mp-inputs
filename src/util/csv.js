@@ -23,12 +23,21 @@ function formatCSVDate(dateStr, timeUnit) {
   return moment(parseDate(dateStr)).format(CSV_TIME_FORMAT[timeUnit]);
 }
 
+const SPECIAL_NAMES = {
+  $all_people: `All People`, // eslint-disable-line camelcase
+  $event: `Event`,
+  $people: `People`,
+};
+function renameKey(key) {
+  return SPECIAL_NAMES[key] || renamePropertyValue(renameProperty(key));
+}
+
 function rowsForLeafKey(leafKey, data, keysAtDepth, depth, row) {
   const keys = keysAtDepth[depth];
   let allRows;
   if (depth > 1) {
     allRows = keys.reduce((rows, key) =>
-      rows.concat(rowsForLeafKey(leafKey, data[key] || {}, keysAtDepth, depth - 1, row.concat(key))), []
+      rows.concat(rowsForLeafKey(leafKey, data[key] || {}, keysAtDepth, depth - 1, row.concat(renameKey(key)))), []
     );
   } else {
     allRows = [row.concat(keys.map(key => {
@@ -39,11 +48,6 @@ function rowsForLeafKey(leafKey, data, keysAtDepth, depth, row) {
   return allRows;
 }
 
-const SPECIAL_NAMES = {
-  $all_people: `All People`, // eslint-disable-line camelcase
-  $event: `Event`,
-  $people: `People`,
-};
 export function resultToCSVArray(data, {timeUnit=`day`, timeseries=true}={}) {
   const depth = nestedObjectDepth(data.series);
   const keysAtDepth = Array(depth).fill().map((__, level) =>
@@ -53,11 +57,8 @@ export function resultToCSVArray(data, {timeUnit=`day`, timeseries=true}={}) {
   const leafKeys = keysAtDepth[1];
 
   // headers
-  const dataHeaders = data.headers
-    .slice(0, data.headers.length - 1)
-    .map(header => SPECIAL_NAMES[header] || renameProperty(header));
-  const leafHeaders = leafKeys
-    .map(header => SPECIAL_NAMES[header] || renamePropertyValue(header));
+  const dataHeaders = data.headers.slice(0, data.headers.length - 1).map(renameKey);
+  const leafHeaders = leafKeys.map(renameKey);
   const csvHeaders = [
     `Date`,
     ...dataHeaders,
