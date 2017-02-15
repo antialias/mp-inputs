@@ -49,6 +49,9 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
             this.setDates(from, to, unit);
           }
         },
+        resizedCalendar: () => this.updateRenderedSize({
+          cancelDuringTransition: true,
+        }),
       }),
     };
   }

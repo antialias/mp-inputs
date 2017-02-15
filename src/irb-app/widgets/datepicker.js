@@ -41,6 +41,7 @@ class DatePicker extends Component {
         blurredFrom: () => this.update({fromFocused: false}),
         focusedTo: () => this.update({toFocused: true}),
         blurredTo: () => this.update({toFocused: false}),
+        resizedCalendar: () => this.emitResize(),
       },
     };
   }
@@ -68,6 +69,10 @@ class DatePicker extends Component {
 
   emitChange() {
     this.dispatchEvent(new CustomEvent(`change`, {detail: this.value}));
+  }
+
+  emitResize() {
+    this.dispatchEvent(new CustomEvent(`resize`));
   }
 
   get isRange() {

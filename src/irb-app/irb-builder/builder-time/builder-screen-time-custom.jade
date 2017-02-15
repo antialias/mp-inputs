@@ -18,6 +18,7 @@ include ../mixins.jade
       }
       on={
         change: $helpers.changedDates,
+        resize: $helpers.resizedCalendar,
       }
     )
   if report.displayOptions.chartType === `line`
