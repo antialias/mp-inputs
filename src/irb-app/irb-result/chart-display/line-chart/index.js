@@ -84,9 +84,9 @@ document.registerElement(`line-chart`, class extends Component {
 
   formatHeader(parts, headers) {
     if (headers[0] === `$events`) {
-      parts = [util.renameEvent(parts[0]), ...parts.slice(0, -1).map(util.renameProperty)];
+      parts = [util.renameEvent(parts[0]), ...parts.slice(0, -1).map(util.renamePropertyValue)];
     } else {
-      parts = parts.map(util.renameProperty);
+      parts = parts.map(util.renamePropertyValue);
     }
     return parts.join(` / `);
   }
