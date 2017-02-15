@@ -2,7 +2,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 import { nestedObjectDepth, objectFromPairs } from 'mixpanel-common/util';
 
-import { ShowClause } from '../models/clause';
+import { GroupClause, ShowClause } from '../models/clause';
 
 export * from 'mixpanel-common/report/util';
 export * from 'mixpanel-common/util';
@@ -90,6 +90,8 @@ export function getIconForProperty(property) {
     return null;
   } else if (property.name === ShowClause.ALL_PEOPLE.name) {
     return `profile`;
+  } else if (property.name === GroupClause.EVENT_DATE.name) {
+    return `star-top-events`;
   } else {
     return getIconForPropertyType(property.type);
   }

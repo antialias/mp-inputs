@@ -1,5 +1,5 @@
 import { BuilderScreenBase } from './builder-screen-base';
-import { Clause, ShowClause } from '../../../models/clause';
+import { Clause, GroupClause, ShowClause } from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
 import { extend, sorted, renameProperty, unique } from '../../../util';
 
@@ -63,7 +63,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     const eventPropertiesLoaded = this.numEventProperties >= this.getEventPropertyCount();
     const isPeopleQuery = this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE;
     const showPeople =  eventPropertiesLoaded || isPeopleQuery || ShowClause.RESOURCE_TYPE_PEOPLE === resourceType;
-    
+
     let sections = [];
 
     sections.push({
@@ -136,7 +136,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     }
 
     if ([Clause.RESOURCE_TYPE_ALL, Clause.RESOURCE_TYPE_EVENTS].includes(resourceType)) {
-      properties = properties.concat(this.getEventProperties());
+      properties = properties.concat(GroupClause.EVENT_DATE, this.getEventProperties());
     }
 
     if ([Clause.RESOURCE_TYPE_ALL, Clause.RESOURCE_TYPE_PEOPLE].includes(resourceType)) {

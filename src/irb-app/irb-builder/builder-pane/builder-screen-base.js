@@ -6,7 +6,7 @@ import {
   mapArguments,
 } from 'mixpanel-common/util/function';
 
-import { Clause, ShowClause } from '../../../models/clause';
+import { Clause, GroupClause, ShowClause } from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
 import {
   extend,
@@ -126,9 +126,14 @@ export class BuilderScreenBase extends Component {
     const isPeople = propType === Clause.RESOURCE_TYPE_PEOPLE;
     let properties = isPeople ? this.state.topPeopleProperties : this.state.topEventProperties;
     properties = properties === BaseQuery.LOADING ? [] : properties;
+    // FIX: ShowClause.ALL_PEOPLE should  only be show for show clause
+    let specialProps = [ShowClause.ALL_PEOPLE];
+    if (!isPeople) {
+      specialProps = specialProps.concat(GroupClause.EVENT_DATE);
+    }
 
     return [
-      ...this.matchingItems([ShowClause.ALL_PEOPLE], renameProperty),
+      ...this.matchingItems(specialProps, renameProperty),
       ...this.matchingItems(properties, renameProperty),
     ];
   }
