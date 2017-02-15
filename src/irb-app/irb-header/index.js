@@ -2,7 +2,7 @@ import { Component } from 'panel';
 
 import { dataToCSV } from '../../util/csv';
 
-import './mp-button-input';
+import './irb-title-input';
 
 import template from './index.jade';
 import './index.styl';

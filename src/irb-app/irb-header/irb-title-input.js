@@ -1,11 +1,11 @@
 import { Component } from 'panel';
 
-import template from './mp-button-input.jade';
-import './mp-button-input.styl';
+import template from './irb-title-input.jade';
+import './irb-title-input.styl';
 
 const MIN_INPUT_WIDTH = `170`;
 
-document.registerElement(`mp-button-input`, class extends Component {
+document.registerElement(`irb-title-input`, class extends Component {
   get config() {
     return {
       defaultState: {
