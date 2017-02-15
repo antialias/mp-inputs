@@ -14,32 +14,21 @@ control-font()
 query-builder-filter
   .filter-determiner-container
     display flex
-    justify-content center
-    height 25px
-    margin 5px 0 15px
+    height 0
+    margin 0 0 20px
     position relative
     width 100%
-
     &:before
-      border-top solid 1px grey-100
-      content ''
+      content ""
       display block
-      left 0
-      position absolute
-      top 50%
+      margin-bottom 7px
       width 100%
-      z-index 0
 
     .filter-determiner-toggle
-      background-color white
-      border solid 1px grey-100
-      border-radius 15px
-      box-shadow 0 1px 3px rgba(76,96,113,0.16)
-      color grey-500
+      color grey-700
       cursor pointer
       font-size 11px
       font-weight 700
-      padding 5px 10px
       text-transform uppercase
       z-index 1
 
@@ -135,8 +124,7 @@ builder-screen-filter-property
       &.filter-menu-item-selected
         color grey-900
         font-weight 900
-        svg-icon svg, svg-icon path
-          fill grey-900
+
       &:hover
         background-color grey-100
         color mp-blue
@@ -205,7 +193,7 @@ builder-screen-filter-property
           box-sizing border-box
           padding 10px
           width $type-menu-width
-          li
+          .filter-menu-item
             align-items center
             display flex
             font-size 12px
@@ -214,6 +202,8 @@ builder-screen-filter-property
             svg-icon-style(grey-700, mp-blue)
             svg-icon
               margin-right 8px
+          .filter-menu-item-selected
+            svg-icon-style(grey-900)
 
     .filter-chooser
       display flex
@@ -252,13 +242,11 @@ builder-screen-filter-property
           margin-bottom 12px
           margin-top 2px
           position relative
-          svg-icon-style(grey-500)
           svg-icon
-            left 23px
             position absolute
-            top 7px
+          svg-icon-style(grey-500, pos-left: 7px, pos-top: 5px)
           input
-            padding-left 37px
+            padding-left 32px
 
       .filter-string-contains-choices
         padding 5px
@@ -322,10 +310,9 @@ builder-screen-filter-property
           &.colored
             background-color mp-blue
             border-color mp-blue
-          svg-icon[empty="false"]
-            svg, path
-              color white
-              fill white
+            svg-icon-style(white, pos-left: -3px, pos-top: -3px)
+
+
 
     button.screen-footer
       background-color mp-blue

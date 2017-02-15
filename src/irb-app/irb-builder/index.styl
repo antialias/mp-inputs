@@ -239,7 +239,7 @@ header-button-transition-duration = 150ms
       color mp-blue
 
       .option-icon
-        svg-icon-style(mp-blue)
+        svg-icon-style(mp-blue, pos-top: 1px)
 
       .option-secondary-action
         display flex
@@ -248,6 +248,9 @@ header-button-transition-duration = 150ms
       font 500 12px font-helvetica-neue
       justify-content center
       pointer-events none
+
+    .option-icon
+        svg-icon-style(pos-top: 1px)
 
   // resource-type-control
   .resource-type-control
