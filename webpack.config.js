@@ -78,7 +78,7 @@ var webpackConfig = {
 if (process.env.NODE_ENV === 'development') {
   webpackConfig = Object.assign({}, webpackConfig, {
     debug: true,
-    devtool: 'source-map',
+    devtool: !!process.env.NO_SOURCE_MAP ? null : 'source-map',
     output: {
       path: BUILD_DIR,
       filename: '[name].bundle.js',
