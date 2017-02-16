@@ -25,7 +25,11 @@ export default class ResizeInput extends Component {
         inputWidth: this.defaulMinWidth,
       },
       helpers: {
-        inserted: vnode => requestAnimationFrame(() => vnode.elm.focus()),
+        inserted: vnode => requestAnimationFrame(() => {
+          if (this.isAttributeEnabled(`autofocus`)) {
+            vnode.elm.focus();
+          }
+        }),
         updatedInput: ev => this.value = ev.target.value,
       },
     };

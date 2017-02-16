@@ -5,9 +5,11 @@
     .control-buttons.edit-control.control-button-text.irb-learn-emphasize
       if open
         resize-input.control-label(
-          attrs={placeholder: $helpers.getLabelText()}
+          attrs={
+            autofocus: true,
+            placeholder: $helpers.getLabelText()
+          }
           props={
-            autoFocus: true,
             type: `text`,
             value: contextFilter,
           }

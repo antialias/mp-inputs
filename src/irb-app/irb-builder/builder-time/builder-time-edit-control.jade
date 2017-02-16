@@ -7,10 +7,10 @@
         if $helpers.isPresetRange()
           resize-input.control-label(
             attrs={
+              autofocus: true,
               placeholder: $helpers.getLabel(),
             }
             props={
-              autoFocus: true,
               type: `text`,
               value: contextFilter,
             }
