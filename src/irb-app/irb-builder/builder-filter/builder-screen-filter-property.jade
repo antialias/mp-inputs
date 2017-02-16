@@ -118,7 +118,9 @@ mixin filter-number-input(value, oninput, options)
               .screen-list-container(on={scroll: $helpers.scrolledList})
                 ul.filter-string-contains-choices
                   each value in $helpers.getContainsMatches()
-                    li.string-contains-match= util.renamePropertyValue(value)
+                    - const formattedValue = util.renamePropertyValue(value)
+                    li.string-contains-match(on={click: () => $helpers.clickedContainsMatch(formattedValue)})
+                      = formattedValue
 
       when `number`
         +filter-operator-dropdown

@@ -80,6 +80,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
             return values.size === selected.length && selected.every(val => values.has(val));
           }
         },
+        clickedContainsMatch: filterValue => this.updateStageClause({filterValue}),
         getContainsMatches: () =>
           this.helpers.getValueMatches(
             this.app.activeStageClause.filterValue,
