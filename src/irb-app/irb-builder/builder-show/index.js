@@ -6,7 +6,7 @@ import {
 } from '../../../util';
 
 import { EditControl } from '../edit-control';
-import { ShowClause } from '../../../models/clause';
+import { Clause, ShowClause } from '../../../models/clause';
 
 import './builder-screen-people';
 import './builder-screen-event-operator';
@@ -74,8 +74,12 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
   }
 
   openPane() {
+    const resourceScreenMap = {
+      [Clause.RESOURCE_TYPE_ALL]: Clause.RESOURCE_TYPE_EVENTS,
+    };
     const showClauses = this.app.getClausesForType(this.section);
-    const startingScreen = showClauses.length > 1 ? showClauses[0].resourceType : `sources`;
+    const screenForResourceType = resourceScreenMap[showClauses[0].resourceType] || showClauses[0].resourceType;
+    const startingScreen = showClauses.length > 1 ? screenForResourceType : `sources`;
     this.app.startBuilderOnScreen(`builder-screen-${startingScreen}`);
     this.app.update({isEditingNumericProperty: false});
   }
