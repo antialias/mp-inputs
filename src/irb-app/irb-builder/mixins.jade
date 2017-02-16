@@ -86,7 +86,7 @@ mixin property-list(properties, options)
             'list-option-selected': isSelected,
             [property.type]: true,
           }
-          on={click: isSelected ? null : ev => options.clickedProperty(ev, property)}
+          on={click: (isSelected && property.type !== `datetime`)  ? null : ev => options.clickedProperty(ev, property)}
         )
           +screen-option(label, {
             icon: property.icon || util.getIconForProperty(property),
