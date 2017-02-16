@@ -62,8 +62,10 @@ include ../../../mixins.jade
                       click: () => $helpers.toggleShowSeriesValue(seriesIdx, value.originalValue),
                     }
                   )
+                    //- TODO: when fixing line chart rendering bring back color to line chart legend
+                    - const shouldHaveColor = !isFlattenedData && seriesIdx === 0 && isMultiColor
                     .checkbox-select-icon.series-icon(class={
-                      color: seriesIdx === 0 && isMultiColor,
+                      color: shouldHaveColor,
                       [`segment-color-${report.legend.getColorForSeries(value.originalValue, isFlattenedData)}`]: showing && seriesIdx === 0,
                     })
                       svg-icon(attrs={icon: 'check-checkbox', empty: !showing})
