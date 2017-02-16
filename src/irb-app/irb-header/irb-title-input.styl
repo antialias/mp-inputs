@@ -1,7 +1,7 @@
 @import "../../stylesheets/common"
 
 border-curve = 4px
-button-height = 36px
+button-height = 40px
 
 irb-title-input
   height button-height
@@ -18,7 +18,7 @@ irb-title-input
     font-weight normal
     height button-height
     outline none
-    padding 0 20px
+    padding 0 13px
 
   .title-input-disabled
     line-height button-height
@@ -29,18 +29,21 @@ irb-title-input
     display inline-flex
 
     button
-      opacity 0
+      border-radius 3px
+      cursor text
+      font-size 12px
+      font-weight bold
+      margin 5px
+      margin-left 0
+      padding 7px 16px
+      &.title-save-new
+        border 1px solid grey-200
+        box-shadow 0 1px 0 0 grey-100
+        color grey-700
       &.title-save
         background-image linear-gradient(to top, blue-300, blue-100), linear-gradient(blue-300, blue-300)
-        border 1px solid blue-700
-        border-radius 0 border-curve border-curve 0
+        border 1px solid blue-500
         color #fff
-        cursor text
-        font-size 14px
-        font-weight bold
-        height button-height
-        transition opacity 0.3s
-        width 72px
 
     &:hover
       background-color #fff
