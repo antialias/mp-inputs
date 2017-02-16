@@ -113,7 +113,8 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   }
 
   epochToTimeUnitFunction({displayRangeIfWeek=true}={}) {
-    return epoch => util.epochToFormattedDate(epoch, this._displayOptions.timeUnit, {displayRangeIfWeek});
+    const customFormatting = {'day': `MMM D`}
+    return epoch => util.epochToFormattedDate(epoch, this._displayOptions.timeUnit, {displayRangeIfWeek, customFormatting});
   }
 
   getTickPositions() {
