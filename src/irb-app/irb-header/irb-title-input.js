@@ -34,6 +34,7 @@ document.registerElement(`irb-title-input`, class extends Component {
           if (this.helpers.isSaveDisabled()) {
             return;
           }
+
           if (this.state.active) {
             this.dispatchChange({save: true, saveAsNew});
             this.inputEl.blur();
@@ -42,9 +43,15 @@ document.registerElement(`irb-title-input`, class extends Component {
           }
         },
 
-        clickSaveNew: ev => this.helpers.clickSave(ev, true),
+        clickSaveNew: ev => {
+          ev.stopPropagation();
+          if (!this.helpers.isSaveNewDisabled()) {
+            this.helpers.clickSave(ev, true);
+          }
+        },
 
-        isSaveDisabled: () => !this.state.isDirty || !this.state.inputValue,
+        isSaveDisabled: () => !this.state.inputValue,
+        isSaveNewDisabled: () => !this.state.isDirty || !this.state.inputValue,
       },
       template,
     };
