@@ -82,19 +82,18 @@ mixin property-list(properties, options)
         - const label = util.renameProperty(property.name) || property.name
         - const isSelected = property.resourceType === source && property.name === selected
         li.list-option(
-          class={'list-option-selected': isSelected}
+          class={
+            'list-option-selected': isSelected,
+            [property.type]: true,
+          }
           on={click: isSelected ? null : ev => options.clickedProperty(ev, property)}
         )
           +screen-option(label, {
             icon: property.icon || util.getIconForProperty(property),
             matches: property.matches,
           })
-          if options.caret
+          if options.caret || (options.conditionalCaret && options.conditionalCaret(property, isSelected))
             +small-caret-icon()
-          else if options.hasSecondaryPill && options.hasSecondaryPill(property, isSelected)
-            +secondary-action-pill(options.secondaryPillLabel, {
-              onclick: ev => options.clickedSecondaryPill(ev, property),
-            })
     else
       if options.loading
         +pane-loader

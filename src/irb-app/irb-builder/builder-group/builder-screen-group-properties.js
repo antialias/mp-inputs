@@ -26,8 +26,7 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
             this.updateAndCommitStageClause(newClause);
           }
         },
-        clickedSecondaryPill: () => this.nextScreen(`builder-screen-group-datetime-options`),
-        hasSecondaryPill: (property, isSelected) => isSelected && property.type === `datetime`,
+        conditionalCaret: (property, isSelected) => isSelected && property.type === `datetime`,
         isEventsOnlyQuery: () => (
           this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_EVENTS
         ),
