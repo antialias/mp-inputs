@@ -3,8 +3,6 @@ import { Component } from 'panel';
 import template from './irb-title-input.jade';
 import './irb-title-input.styl';
 
-const MIN_INPUT_WIDTH = `170`;
-
 document.registerElement(`irb-title-input`, class extends Component {
   get config() {
     return {
@@ -12,7 +10,6 @@ document.registerElement(`irb-title-input`, class extends Component {
         enabled: true,
         active: false,
         inputValue: ``,
-        inputWidth: MIN_INPUT_WIDTH,
         isDirty: false,
       },
       helpers: {
@@ -23,7 +20,6 @@ document.registerElement(`irb-title-input`, class extends Component {
         focus: () => this.update({active: true, isDirty: false}),
         inputChange: () => {
           this.update({inputValue: this.value, isDirty: true});
-          this._resizeInput();
         },
 
         buttonMousedown: ev => {
@@ -48,7 +44,7 @@ document.registerElement(`irb-title-input`, class extends Component {
 
         clickSaveNew: ev => this.helpers.clickSave(ev, true),
 
-        isSaveDisabled: () => !this.state.isDirty,
+        isSaveDisabled: () => !this.state.isDirty || !this.state.inputValue,
       },
       template,
     };
@@ -58,22 +54,10 @@ document.registerElement(`irb-title-input`, class extends Component {
     super.attachedCallback(...arguments);
     this.closeOnEscape = e => e.keyCode === 27 && this.inputEl.blur();
     document.body.addEventListener(`keydown`, this.closeOnEscape);
-    this._resizeInput();
   }
 
   detachedCallback() {
     document.body.removeEventListener(`keydown`, this.closeOnEscape);
-  }
-
-  _resizeInput() {
-    // make the search input width dynamic
-    const span = document.createElement(`span`);
-    span.className = `mp-name-input-dummy`;
-    span.innerText = this.state.inputValue;
-    this.el.appendChild(span);
-    const buffer = 12;
-    this.update({inputWidth: Math.max(span.offsetWidth + buffer, MIN_INPUT_WIDTH)});
-    this.el.removeChild(span);
   }
 
   attributeChangedCallback() {
