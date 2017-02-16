@@ -7,7 +7,7 @@ include ./tooltip.jade
 
     if isModalStep && !learnTransitioningOut
       mp-modal(attrs={open: true})
-        .mp-modal-content
+        .mp-modal-content(class={[step.name]: true})
           .mp-modal-title
             case step.name
               when `introduction`
