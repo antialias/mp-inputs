@@ -1,3 +1,5 @@
+- const isSaveDisabled = $helpers.isSaveDisabled()
+
 .irb-title-input
   if enabled
     .title-input-enabled(class={'input-focused': active})
@@ -19,12 +21,14 @@
       if active
         if $component.isAttributeEnabled(`show-save-new`)
           button.title-save-new(
+            class={'title-button-disabled': isSaveDisabled}
             on={
               click: $helpers.clickSaveNew,
               mousedown: $helpers.buttonMousedown,
             }
           ) Save new
         button.title-save(
+          class={'title-button-disabled': isSaveDisabled}
           on={
             click: $helpers.clickSave,
             mousedown: $helpers.buttonMousedown,

@@ -13,15 +13,16 @@ document.registerElement(`irb-title-input`, class extends Component {
         active: false,
         inputValue: ``,
         inputWidth: MIN_INPUT_WIDTH,
+        isDirty: false,
       },
       helpers: {
         blur: () => {
           this.update({active: false});
           this.dispatchChange();
         },
-        focus: () => this.update({active: true}),
+        focus: () => this.update({active: true, isDirty: false}),
         inputChange: () => {
-          this.update({inputValue: this.value});
+          this.update({inputValue: this.value, isDirty: true});
           this._resizeInput();
         },
 
@@ -34,6 +35,9 @@ document.registerElement(`irb-title-input`, class extends Component {
 
         clickSave: (ev, saveAsNew=false) => {
           ev.stopPropagation();
+          if (this.helpers.isSaveDisabled()) {
+            return;
+          }
           if (this.state.active) {
             this.dispatchChange({save: true, saveAsNew});
             this.inputEl.blur();
@@ -43,6 +47,8 @@ document.registerElement(`irb-title-input`, class extends Component {
         },
 
         clickSaveNew: ev => this.helpers.clickSave(ev, true),
+
+        isSaveDisabled: () => !this.state.isDirty,
       },
       template,
     };

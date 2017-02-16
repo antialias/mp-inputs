@@ -36,14 +36,20 @@ irb-title-input
       margin 5px
       margin-left 0
       padding 7px 16px
+      &.title-button-disabled
+        cursor initial
       &.title-save-new
         border 1px solid grey-200
         box-shadow 0 1px 0 0 grey-100
         color grey-700
+        &.title-button-disabled
+          color grey-500
       &.title-save
         background-image linear-gradient(to top, blue-300, blue-100), linear-gradient(blue-300, blue-300)
         border 1px solid blue-500
         color #fff
+        &.title-button-disabled
+          color grey-200
 
     &:hover
       background-color #fff
