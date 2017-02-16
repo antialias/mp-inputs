@@ -42,9 +42,8 @@ label-line-height = 18px
     position relative
 
   .search
-    border-bottom 1px solid #dde8ef
     position relative
-    svg-icon-style(grey-500, pos-left: 12px, pos-top: 7px)
+    svg-icon-style(grey-500, pos-left: 14px, pos-top: 14px)
     svg-icon
       position absolute
 
@@ -53,20 +52,24 @@ label-line-height = 18px
 
     input
       background-color #fff
-      border 0
+      border 1px solid grey-200
+      border-radius 4px
+      box-shadow inset-shadow
       box-sizing border-box
       color grey-900
       font 500 13px font-helvetica-neue
-      margin 0
+      margin 10px
       padding 0
-      padding-left legend-left-padding + 24px
-      height 36px
-      width 100%
+      padding-left legend-left-padding + 15px
+      height 30px
+      width 153px
       &::placeholder
         color #a9b7c4
 
       &:focus
         outline-width 0
+        border-color blue-700
+        transition border-color 200ms
 
   .body-loader
     height 400px

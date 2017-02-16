@@ -52,26 +52,11 @@ query-builder-filter
 
   .clause-language
     display inline-flex
-    margin-right 8px
+    font-size 14px
+    margin 2px 8px 0 0
 
 builder-filter-add-control
-  .irb-new-control.new-query-builder .add-filter-control
-    display flex
-
-    // TODO extract/consolidate search input styles
-    .builder-search-input
-      border none
-      font-size 14px
-      padding 0
-      width 0
-      transition width 0.25s
-      &.search-active
-        border-bottom 1px solid mp-blue
-        margin-right 10px
-        width 200px
-        &:hover
-          border-bottom 1px solid mp-blue
-
+  .irb-new-control.new-query-builder
     .add-filter-button
       background none
       border 1px solid grey-150
@@ -87,8 +72,29 @@ builder-filter-add-control
     .button-flex-wrapper
       align-items center
       display flex
-      padding 4px 11px 4px 4px
-      svg-icon-style(grey-700, blue-300)
+      padding 3px 11px 5px 4px
+      svg-icon-style(grey-700, blue-300, pos-top: 1px)
+
+    &.pane-open
+      .button-flex-wrapper svg-icon
+        transform rotateZ(45deg)
+
+    .add-filter-control
+      display flex
+
+      // TODO extract/consolidate search input styles
+      .builder-search-input
+        border none
+        font-size 14px
+        padding 0
+        width 0
+        transition width 0.25s
+        &.search-active
+          border-bottom 1px solid mp-blue
+          margin-right 10px
+          width 200px
+          &:hover
+            border-bottom 1px solid mp-blue
 
 builder-filter-edit-control
   .irb-control button.modify
@@ -164,12 +170,12 @@ builder-screen-filter-property
       .filter-menu-button
         border 1px solid grey-200
         border-radius 5px
-        padding 6px 8px
+        padding 5px 8px 7px
         width 100%
         &:hover
           border-color mp-blue
         .filter-prop-name
-          font-size 10px
+          font-size 11px
           margin-right auto
         svg-icon[empty]
           display none
@@ -238,6 +244,10 @@ builder-screen-filter-property
         padding 0 15px
         width 100%
         .filter-string-input
+          box-shadow inset-shadow
+          color grey-900
+          font 500 13px font-helvetica-neue
+          padding 10px 0 10px 32px
           width 100%
         &.filter-string-search
           margin-bottom 12px
@@ -245,7 +255,7 @@ builder-screen-filter-property
           position relative
           svg-icon
             position absolute
-          svg-icon-style(grey-500, pos-left: 7px, pos-top: 5px)
+          svg-icon-style(grey-500, pos-left: 7px, pos-top: 7px)
           input
             padding-left 32px
 
@@ -280,6 +290,7 @@ builder-screen-filter-property
       .filter-numdate
         box-sizing border-box
         display flex
+        margin 2px 0 0 0
         padding 0 15px
         padding-bottom 15px
         width 100%
@@ -292,10 +303,12 @@ builder-screen-filter-property
             width 112px
 
         .filter-numdate-input
+          box-shadow inset-shadow
+          padding 11px 8px
           width 290px
 
         .inputs
-          padding-bottom 12px
+          padding-bottom 11px
 
       span.filter-conjunction
         align-items center
