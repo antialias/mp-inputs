@@ -16,17 +16,18 @@
           focus: $helpers.focus,
         }
       )
-      button.title-save-new(
-        on={
-          click: $helpers.clickSaveNew,
-          mousedown: $helpers.buttonSaveNewMousedown,
-        }
-      ) Save new
-      button.title-save(
-        on={
-          click: $helpers.clickSave,
-          mousedown: $helpers.buttonSaveMousedown,
-        }
-      ) Save
+      if active
+        button.title-save-new(
+          on={
+            click: $helpers.clickSaveNew,
+            mousedown: $helpers.buttonSaveNewMousedown,
+          }
+        ) Save new
+        button.title-save(
+          on={
+            click: $helpers.clickSave,
+            mousedown: $helpers.buttonSaveMousedown,
+          }
+        ) Save
   else
     .title-input-disabled= inputValue

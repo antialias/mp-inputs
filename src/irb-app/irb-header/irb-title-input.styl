@@ -1,6 +1,6 @@
 @import "../../stylesheets/common"
 
-border-curve = 3px
+border-curve = 4px
 button-height = 36px
 
 active-input()
@@ -53,15 +53,13 @@ irb-title-input
         transition opacity 0.3s
         width 72px
 
+    &:hover
+      background-color #fff
+      border-color grey-200
+
     &.input-focused
       background-color #fff
       border-color blue-300
-
-      input[type=text]
-        border-radius border-curve 0 0 border-curve
-        border-right none
-        padding-right 10px
-
       button
         cursor pointer
         opacity 1
