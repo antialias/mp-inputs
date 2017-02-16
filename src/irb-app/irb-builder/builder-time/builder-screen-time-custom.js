@@ -60,7 +60,7 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
           }
           else {
             const years = Math.floor(days/365);
-            return years.toString() + ` years`;
+            return years.toString() + ` year` + (years > 1 ? `s` : ``);
           }
         },
         dateLimited: () => {

@@ -34,7 +34,7 @@
     "mixpanel-common": "0.46.7",
     "moment": "2.13.0",
     "panel": "0.10.0-rc6",
-    "pikaday": "1.5.1",
+    "pikaday": "git://github.com/dbushell/Pikaday.git#a1704adef06e985a448cd8ab313dee5a5787a228",
     "webcomponent": "0.1.2",
     "webcomponents.js": "0.7.22"
   },
