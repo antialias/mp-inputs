@@ -3,33 +3,22 @@
 border-curve = 4px
 button-height = 36px
 
-active-input()
-  background-color #fff
-  border 1px solid border-gray
-  outline none
-
 irb-title-input
   height button-height
   position relative
 
   .irb-title-input
     display flex
-    // &:hover input
-    //   active-input()
 
   input[type=text], .title-input-disabled, span.mp-name-input-dummy
     background-color inherit
     border none
-    color grey-500
-    font-size 20px
+    color grey-700
+    font-size 16px
     font-weight normal
     height button-height
     outline none
     padding 0 20px
-
-  // input[type=text]
-  //   &:focus, &:hover
-  //     active-input()
 
   .title-input-disabled
     line-height button-height
@@ -56,6 +45,7 @@ irb-title-input
     &:hover
       background-color #fff
       border-color grey-200
+      box-shadow inset 0 1px 2px 0 rgba(0, 0, 0, 0.09)
 
     &.input-focused
       background-color #fff
