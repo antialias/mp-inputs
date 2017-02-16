@@ -25,14 +25,14 @@ mixin filter-operator-dropdown
         )= filterOperator
 
 mixin filter-string-input
-  .filter-string-input-wrapper.filter-string-search
+  .filter-string-input-wrapper
     //- TODO: handle focus properly. Sadly setTimeout is an easy working solution.
     //- There is a racecondition with visible inputs in the filter screen that we need to solve for.
-    svg-icon(attrs={icon: `search`})
     input.filter-string-input(
       props={
         type: `text`,
         value: clause.filterValue,
+        placeholder: ``
       }
       on={
         input: ev => $helpers.updateFilterValue(ev.target.value),
@@ -157,7 +157,7 @@ mixin filter-number-input(value, oninput, options)
               irb-datepicker(
                 attrs={
                   'max-data-history': $helpers.getMaxDataHistoryDays(),
-                  range: isBetween, 
+                  range: isBetween,
                   preposition: `and`,
                 }
                 props={value: isBetween ? {from, to} : clause.filterValue}
