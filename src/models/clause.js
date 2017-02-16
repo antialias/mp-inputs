@@ -29,7 +29,7 @@ export class Clause {
       case `show`: return new ShowClause(attrs);
       case `group`: return new GroupClause(attrs);
       case `filter`: return new FilterClause(attrs);
-      case `time`: return new TimeClause(extend({range: TimeClause.RANGES.HOURS}, attrs));
+      case `time`: return new TimeClause(attrs);
     }
   }
 
