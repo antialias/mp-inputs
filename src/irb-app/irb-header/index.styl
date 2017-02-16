@@ -34,6 +34,7 @@
       margin-left 5px
       width 30px
 
+
       &.refresh-query,
       &.report-list-button,
       &.download
@@ -45,9 +46,17 @@
         svg-icon-style(mp-red)
 
       &.download
+        position relative
         cursor default
         &.enabled
           cursor pointer
+
+        .upsell-icon
+          position absolute
+          right 0
+          top 0
+          svg-icon-style(mp-purple, size: 16px, right: 0, top: 0)
+
   .upsell-wrapper
     position absolute
     right 345px

@@ -51,6 +51,7 @@ document.registerElement(`irb-header`, class extends Component {
         clickReportList: () => this.app.openReportList(),
         showSaveReportUpsell: () => this.state.upsellModal === `saveReport`,
         showExportCSVUpsell: () => this.state.upsellModal === `exportCSV`,
+        showExportCSVIcon: () => this.app.getFeatureGateValue(`can_export_csv`) === false,
         closeUpsell: ev => this.app.maybeCloseUpsellModal(ev, `saveReport`),
       },
       template,

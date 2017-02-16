@@ -17,6 +17,9 @@
       on={click: $helpers.clickExportCSV}
     )
       svg-icon(attrs={icon: `export`})
+      if $helpers.showExportCSVIcon()
+        .upsell-icon
+          svg-icon(attrs={icon: `lighting-bolt`})
       mp-tooltip(attrs={placement: `bottom`}) Download CSV
     .upsell-wrapper.csv-export
       mp-upsell-popup(
