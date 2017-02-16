@@ -9,10 +9,17 @@ document.registerElement(`builder-screen-event-operator`, class extends BuilderS
     return {
       template,
       helpers: extend(super.config.helpers, {
-        MATH_TYPES: ShowClause.MATH_TYPES,
         mathTypeClicked: clauseData => {
           this.app.updateClause(`show`, this.state.activeMathMenuIndex, clauseData);
           this.app.stopEditingClause();
+        },
+        getMathTypes: () => {
+          const clauses = this.app.getClausesForType(ShowClause.TYPE);
+          const clauseIndex = this.state.activeMathMenuIndex;
+          const numericPropSelected = clauses[clauseIndex] && clauses[clauseIndex].property;
+
+          // Filter out unique mathType if the show clause has a numeric property selected
+          return ShowClause.MATH_TYPES.filter(mathType => numericPropSelected ? mathType !== `unique` : true);
         },
       }),
     };
