@@ -114,9 +114,12 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     });
   }
 
-  transitionLearn() {
+  viewedIntro() {
     this.mpContext.setFlag(`VIEWED_INSIGHTS_INTRO`);
+  }
 
+  transitionLearn() {
+    this.viewedIntro();
     util.transitionLearn(this.state.report, this.state.learnModalStepIndex, {
       start: () => this.update({learnTransitioningOut: true}),
       middle: () => this.update({learnTransitioningOut: false, learnTransitioningIn: true}),
@@ -135,6 +138,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   finishLearn({track=true}={}) {
+    this.viewedIntro();
     if (track) {
       const step = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
       this.trackEvent(`[Onboarding] Exit`, {'Location': step.trackName});
