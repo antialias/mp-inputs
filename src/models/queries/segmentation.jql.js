@@ -70,7 +70,7 @@ function main() {
         } else {
           groupAccessor = mixpanel.to_number(jqlGroup);
           if (Array.isArray(groupDateBucket)) {
-            groupDateBucket = groupDateBucket.map(time => time / 1000);
+            groupDateBucket = groupDateBucket.map(function(time) { return time / 1000; });
           } else {
             groupDateBucket = {
               bucket_size: groupDateBucket.bucket_size / 1000,
