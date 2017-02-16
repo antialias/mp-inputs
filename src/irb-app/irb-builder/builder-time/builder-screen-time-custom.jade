@@ -2,10 +2,11 @@ include ../mixins.jade
 
 - const {from, to} = $helpers.getDates();
 - const maxDataHistoryDays = $helpers.getMaxDataHistoryDays();
+- const maxDataHistoryString = $helpers.getMaxDataHistoryString();
 
 .builder-screen.time-custom
   if $helpers.dateLimited()
-    +screen-title(`Analyze your historical data beyond ${maxDataHistoryDays} days.`, {
+    +screen-title(`Analyze your historical data beyond ${maxDataHistoryString}.`, {
       backButton: true,
       upsell: true,
       upsellLinkText: `Upgrade your plan.`,

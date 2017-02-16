@@ -53,8 +53,18 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
           cancelDuringTransition: true,
         }),
         getMaxDataHistoryDays: () => this.app.maxDataHistoryDays(),
+        getMaxDataHistoryString: () => {
+          const days = this.app.maxDataHistoryDays();
+          if (days < 365) {
+            return days.toString() + ` days`;
+          }
+          else {
+            const years = Math.floor(days/365);
+            return years.toString() + ` years`;
+          }
+        },
         dateLimited: () => {
-          return this.maxDataHistoryDays() !== this.app.getFeatureGateValue(`unlimited`);
+          return this.app.maxDataHistoryDays() !== this.app.getFeatureGateValue(`unlimited`);
         },
       }),
     };
