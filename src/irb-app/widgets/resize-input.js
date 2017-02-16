@@ -20,7 +20,6 @@ export default class ResizeInput extends Component {
       template,
       updateSync: true,
       defaultState: {
-        autofocus: true,
         inputValue: ``,
         inputWidth: this.defaulMinWidth,
       },
@@ -30,6 +29,8 @@ export default class ResizeInput extends Component {
             vnode.elm.focus();
           }
         }),
+        blurredInput: () => this.dispatchEvent(new CustomEvent(`blur`)),
+        focusedInput: () => this.dispatchEvent(new CustomEvent(`focus`)),
         updatedInput: ev => this.value = ev.target.value,
       },
     };

@@ -12,6 +12,8 @@
       width: `${inputWidth}px`,
     }
     on={
+      blur: $helpers.blurredInput,
+      focus: $helpers.focusedInput,
       input: $helpers.updatedInput,
     }
     hook={
