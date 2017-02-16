@@ -842,8 +842,13 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
         if (isEditingClause) {
           newSection = reportAttrs.sections[newClause.TYPE].replaceClause(this.state.stageClauseIndex, newClause);
-          if (newClause.TYPE === ShowClause.TYPE && this.state.stageClauseIndex === 0) {
-            shouldClearAllGroupsAndFilters = newClause.resourceType !== reportAttrs.sections.show.clauses[0].resourceType;
+          if (newClause.TYPE === ShowClause.TYPE) {
+            if (this.state.stageClauseIndex === 0) {
+              shouldClearAllGroupsAndFilters = newClause.resourceType !== reportAttrs.sections.show.clauses[0].resourceType;
+            }
+            if (newClause.property && newClause.math === ShowClause.MATH_TYPE_UNIQUE) {
+              newClause.math = ShowClause.MATH_TYPE_TOTAL;
+            }
           }
         } else {
           if (clause === newClauses[1] && newClause.TYPE === ShowClause.TYPE && newClauses[0].TYPE === ShowClause.TYPE) {
