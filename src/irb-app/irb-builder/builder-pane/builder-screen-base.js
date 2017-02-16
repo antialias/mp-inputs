@@ -36,8 +36,8 @@ export class BuilderScreenBase extends Component {
         },
         clickedEventProperties: (ev, value) => {
           ev.stopPropagation();
-          this.updateStageClause({value, property: null}, {shouldCommit: true});
-          this.app.updateBuilder({isContextualMenuOpen: false});
+          const isInContextualMenu = !!this.state.builderPane.isContextualMenuOpen;
+          this.updateStageClause({value, property: null}, {shouldCommit: !isInContextualMenu});
           this.nextScreen(`builder-screen-numeric-properties`);
         },
         clickedProperty: (ev, property) => {

@@ -11,7 +11,10 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
       template,
       helpers: extend(super.config.helpers, {
         getEventName: () => this.getEventName(),
-        clickedProperty: (ev, property) => this.updateAndCommitStageClause({property}),
+        clickedProperty: (ev, property) => {
+          this.updateAndCommitStageClause({property});
+          this.app.updateBuilder({isContextualMenuOpen: false});
+        },
       }),
     };
   }
