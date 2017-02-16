@@ -11,6 +11,8 @@ document.registerElement(`irb-header`, class extends Component {
   get config() {
     return {
       helpers: {
+        isExistingReport: () => !this.state.report.isNew(),
+
         refresh: () => {
           if (this.state.projectHasEvents) {
             const reportTrackingData = this.state.report.toTrackingData();

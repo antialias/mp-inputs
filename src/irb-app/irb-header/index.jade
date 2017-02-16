@@ -1,6 +1,9 @@
 .irb-header.irb-learn-disabled
   irb-title-input(
-    attrs={buttonText: `Save`, disabled: !$helpers.titleInputEnabled()}
+    attrs={
+      'disabled': !$helpers.titleInputEnabled(),
+      'show-save-new': $helpers.isExistingReport(),
+    }
     props={value: report.title}
     on={change: $helpers.updateTitle}
   )

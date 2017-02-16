@@ -55,6 +55,10 @@ export default class Report {
     return serialized;
   }
 
+  isNew() {
+    return !this.id;
+  }
+
   timeUnit() {
     let unit = null;
     try {
@@ -77,7 +81,7 @@ export default class Report {
 
   toBookmarkData() {
     let bm = extend({name: this.title, icon: this.displayOptions.chartType}, this.serialize());
-    if (this.id) {
+    if (!this.isNew()) {
       bm.id = this.id;
     }
     return bm;
