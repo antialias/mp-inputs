@@ -4,6 +4,7 @@ import template from './resize-input.jade';
 
 const GLOBAL_MIN_WIDTH = 90;
 const SIZER_PROPS = [
+  `border`,
   `fontFamily`,
   `fontSize`,
   `fontWeight`,
@@ -72,6 +73,7 @@ export default class ResizeInput extends Component {
       this.sizer = document.createElement(`div`);
 
       const tmpInput = document.createElement(`input`);
+      tmpInput.type = `text`;
       this.appendChild(tmpInput);
       const inputStyle = getComputedStyle(tmpInput);
       for (let prop of SIZER_PROPS) {
