@@ -84,16 +84,9 @@ export default class MPContext {
       })
       .then(() => {
         return this.post(`${this.bmURL}/${endpoint}`, {
-          body: objToQueryString({
-            name: data.name,
-            params: JSON.stringify(data),
-            icon: data.icon,
-          }),
-          credentials: `same-origin`,
-          headers: {
-            'Content-Type': `application/x-www-form-urlencoded; charset=utf-8`,
-          },
-          method: `POST`,
+          name: data.name,
+          params: JSON.stringify(data),
+          icon: data.icon,
         });
       })
       .then(res => res.json())
