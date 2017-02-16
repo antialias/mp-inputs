@@ -47,7 +47,17 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       }
     }
 
-    return properties;
+    let specialProps = [];
+    const isEventProperties = [Clause.RESOURCE_TYPE_ALL, Clause.RESOURCE_TYPE_EVENTS].includes(resourceType);
+    const isForGroupClause = this.app.getActiveStageClause() && this.app.getActiveStageClause().TYPE === GroupClause.TYPE;
+    if (isForGroupClause && isEventProperties) {
+      specialProps = specialProps.concat(GroupClause.EVENT_DATE);
+    }
+
+    return [
+      ...this.matchingItems(specialProps, renameProperty),
+      ...properties,
+    ];
   }
 
   getEventPropertyCount() {
@@ -136,7 +146,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     }
 
     if ([Clause.RESOURCE_TYPE_ALL, Clause.RESOURCE_TYPE_EVENTS].includes(resourceType)) {
-      properties = properties.concat(GroupClause.EVENT_DATE, this.getEventProperties());
+      properties = properties.concat(this.getEventProperties());
     }
 
     if ([Clause.RESOURCE_TYPE_ALL, Clause.RESOURCE_TYPE_PEOPLE].includes(resourceType)) {
