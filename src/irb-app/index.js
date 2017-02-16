@@ -392,7 +392,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   loadReport(report, {trackLoading=false}={}) {
-    const stateUpdate = extend(this.resettableState, report ? {report} : {});
+    const stateUpdate = extend(this.resettableState, report ? {report: report.clone()} : {});
     this.update(stateUpdate);
     this.resetTopQueries();
     if (trackLoading) {

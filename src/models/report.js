@@ -33,6 +33,10 @@ export default class Report {
     }
   }
 
+  clone() {
+    return Report.deserialize(this.serialize());
+  }
+
   static deserialize(data) {
     return new Report(extend(data, {
       sections: BuilderSections.deserialize(data.sections),
