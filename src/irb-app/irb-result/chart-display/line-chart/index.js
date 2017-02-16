@@ -171,6 +171,12 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     };
   }
 
+  yAxisFormatter() {
+    return function() {
+      return this.value < 10000 ? util.commaizeNumber(this.value) : util.abbreviateNumber(this.value);
+    };
+  }
+
   createChartOptions() {
     const displayOptions = this._displayOptions || {};
     const axisOptions = {
@@ -310,11 +316,12 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
         gridLineColor: `#e6e8eb`,
         gridLineDashStyle: `shortDash`,
         labels: {
-          x: -20,
+          formatter: this.yAxisFormatter(),
           style: {
             fontWeight: `bold`,
             color: `#868ea3`,
           },
+          x: -20,
         },
         min: 0,
         minPadding: 0,
