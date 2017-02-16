@@ -29,7 +29,7 @@ document.registerElement(`irb-header`, class extends Component {
             if (ev.detail.save) {
               this.resetSaveFeedback();
               clearTimeout(this.saveFeedbackTimeout);
-              this.app.saveReport()
+              this.app.saveReport(ev.detail.saveAsNew)
                 .then(() => this.update({saved: true}))
                 .catch(() => this.update({saveFailed: true}))
                 // TODO extract and share this duration, also used in add-to-dash

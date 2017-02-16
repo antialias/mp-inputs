@@ -401,7 +401,10 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     return stateUpdate;
   }
 
-  saveReport() {
+  saveReport(saveAsNew=false) {
+    if (saveAsNew) {
+      this.state.report.id = null;
+    }
     const reportTrackingData = this.state.report.toTrackingData();
     return this.mpContext.saveBookmark(this.state.report.toBookmarkData())
       .then(bookmark => {

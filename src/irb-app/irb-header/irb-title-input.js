@@ -32,15 +32,17 @@ document.registerElement(`irb-title-input`, class extends Component {
           }
         },
 
-        clickSave: ev => {
+        clickSave: (ev, saveAsNew=false) => {
           ev.stopPropagation();
           if (this.state.active) {
-            this.dispatchChange({save: true});
+            this.dispatchChange({save: true, saveAsNew});
             this.inputEl.blur();
           } else {
             this.inputEl.focus();
           }
         },
+
+        clickSaveNew: ev => this.helpers.clickSave(ev, true),
       },
       template,
     };
