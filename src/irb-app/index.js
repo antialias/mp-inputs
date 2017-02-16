@@ -542,6 +542,14 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   trackEvent(eventName, properties) {
+    if (this.state.learnActive) {
+      const step = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
+      properties = extend(properties, {
+        'Onboarding': true,
+        'Onboarding Location': step.trackName,
+      });
+    }
+
     try {
       return new Promise(resolve => {
         mixpanel.track(eventName, properties, resolve);
@@ -635,14 +643,14 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   updateReport(attrs) {
-    const prevLearnStep = util.getLearnStep(this.state.report);
+    const prevLearnStep = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
     const report = Object.assign(this.state.report, attrs);
     const isPeopleAndNotTimeSeries = report.sections.show.isPeopleOnlyQuery() && !report.sections.group.isPeopleTimeSeries();
     if (isPeopleAndNotTimeSeries && report.displayOptions.chartType === `line`) {
       report.displayOptions.chartType = `bar`;
     }
     this.update({report});
-    const nextLearnStep = util.getLearnStep(this.state.report);
+    const nextLearnStep = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
 
     if (this.state.learnActive && prevLearnStep.name !== nextLearnStep.name) {
       this.transitionLearn();
