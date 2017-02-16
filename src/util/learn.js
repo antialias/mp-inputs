@@ -17,32 +17,38 @@ function getGroupClauseProperties(report) {
 
 const steps = [{
   name: `introduction`,
+  trackName: `Intro`,
   condition: () => true,
 }, {
   name: `choose-event`,
+  trackName: `Show`,
   cls: `irb-learn-choose-event`,
   condition: index => index === 1,
   transitionOutMs: 0,
   transitionInMs: 1200,
 }, {
   name: `compare-event`,
+  trackName: `Compare`,
   cls: `irb-learn-compare-event`,
   condition: (index, report) => getShowClauseEvents(report).length === 1,
   transitionOutMs: 1200,
   transitionInMs: 1200,
 }, {
   name: `group-by`,
+  trackName: `Group`,
   cls: `irb-learn-group-by`,
   condition: (index, report) => getShowClauseEvents(report).length === 2,
   transitionInMs: 1200,
 }, {
   name: `manipulate-data`,
+  trackName: `Chart`,
   cls: `irb-learn-manipulate-data`,
   condition: (index, report) => getGroupClauseProperties(report).length === 1,
   transitionOutMs: 1200,
   transitionInMs: 1200,
 }, {
   name: `conclusion`,
+  trackName: `Close`,
   condition: (index, report) => (
     report.displayOptions.chartType !== `bar` ||
     report.displayOptions.plotStyle !== `standard` ||

@@ -13,25 +13,31 @@ include ./tooltip.jade
               when `introduction`
                 | Introducing Insights
               when `conclusion`
-                | Congratulations, you’ve built your first Insights query!
+                | Congratulations, you’ve built your first Insights report!
           .mp-modal-subtitle
             case step.name
               when `introduction`
                 | Built to make exploring your data easier than ever,
                 br
-                | Insights allows you to create complex queries that help
+                | Insights allows you to ask complex questions that help
                 br
                 | you understand how your customers use your product.
               when `conclusion`
-                | You’ve only scratched the surface. Go ahead and explore
+                | You’ve only scratched the surface of the full power of
                 br
-                | the full power of Insights. If you have other questions
+                | Insights. If you have other questions about all of the
                 br
-                | about all of the additional ways you can analyze and
-                br
-                | visualize your data using Insights,
+                | new ways you can analyze your data,
                 =" "
-                a(href='docs-url-here') click here
+                a(
+                  attrs={
+                    href: `/help/questions/articles/where-can-i-find-more-information-on-insights`,
+                    target: `_blank`,
+                  }
+                  on={
+                    click: $helpers.clickedHelp,
+                  }
+                ) click here
                 | .
           .mp-modal-close(on={click: $component.app.helpers.finishLearn})
             svg-icon(attrs={icon: 'x'})

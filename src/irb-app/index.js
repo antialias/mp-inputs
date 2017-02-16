@@ -97,6 +97,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       },
 
       learn: (stateUpdate={}) => {
+        this.trackEvent(`[Onboarding] View Intro`);
         return extend(stateUpdate, this.resetQuery(), {learnActive: true});
       },
 
@@ -115,6 +116,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
   transitionLearn() {
     this.mpContext.setFlag(`VIEWED_INSIGHTS_INTRO`);
+
     util.transitionLearn(this.state.report, this.state.learnModalStepIndex, {
       start: () => this.update({learnTransitioningOut: true}),
       middle: () => this.update({learnTransitioningOut: false, learnTransitioningIn: true}),
@@ -126,10 +128,17 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
       },
       endReminder: () => this.update({learnReminding: false}),
     });
+
+    const step = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
+    const tooltip = step.trackName === `Close` ? `` : ` Tooltip`;
+    this.trackEvent(`[Onboarding] View ${step.trackName}${tooltip}`);
   }
 
-  finishLearn() {
-    util.finishLearn();
+  finishLearn({track=true}={}) {
+    if (track) {
+      const step = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
+      this.trackEvent(`[Onboarding] Exit`, {'Location': step.trackName});
+    }
     this.update({learnActive: false, learnModalStepIndex: null});
     this.navigate(``);
   }
