@@ -1,22 +1,40 @@
 @import "../../stylesheets/common"
 
+// Learn modals
+
+body irb-mp-modal.irb-learn
+  width 520px
+
+  .mp-modal-content
+    background no-repeat center 42px/32% white
+    padding 190px 20px 30px
+    text-align center
+
+    &.introduction
+      background-image url("~assets/learn/introduction-modal.svg")
+
+    &.conclusion
+      background-image url("~assets/learn/conclusion-modal.svg")
+
+  .mp-modal-close
+    svg-icon-style(grey-300)
+    cursor pointer
+    position absolute
+    right 24px
+    top 24px
+    transition color 100ms
+
+    &:hover
+      svg-icon-style(grey-200)
+
+  // TODO these styles shouldn't be necessary once we don't need to extend mp-button-bar
+  //      to irb-mp-button-bar; they're normally applied via mp-button-bar host-context
+  irb-mp-button-bar
+    margin-bottom -2px
+    margin-left -1px
+    width calc(100% + 2px)
+
 .irb-app.irb-learn-active
-
-  // Learn modals
-
-  .irb-learn mp-modal
-    width 520px
-
-    .mp-modal-content
-      background no-repeat center 42px/32% white
-      padding 190px 20px 30px
-      text-align center
-
-      &.introduction
-        background-image url("~assets/learn/introduction-modal.svg")
-
-      &.conclusion
-        background-image url("~assets/learn/conclusion-modal.svg")
 
   // Learn tooltips
 
@@ -40,26 +58,6 @@
       font-size 14px
       line-height 1.7em
 
-  // Close buttons
-
-  .mp-modal-close, .mp-tooltip-close
-    svg-icon-style(grey-300)
-    cursor pointer
-    position absolute
-    right 24px
-    top 24px
-    transition color 100ms
-
-    &:hover
-      svg-icon-style(grey-200)
-
-  .mp-tooltip-close
-    svg-icon-style(blue-100)
-    right 10px
-    top 10px
-
-    &:hover
-      svg-icon-style(white)
 
   // Learn disabled UI
 

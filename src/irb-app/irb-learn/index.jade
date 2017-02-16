@@ -6,7 +6,7 @@ include ./tooltip.jade
     - const isModalStep = [`introduction`, `getting-started`, `conclusion`].includes(step.name);
 
     if isModalStep && !learnTransitioningOut
-      mp-modal(attrs={open: true})
+      irb-mp-modal.irb-learn(attrs={open: true})
         .mp-modal-content(class={[step.name]: true})
           .mp-modal-title
             case step.name
@@ -41,7 +41,7 @@ include ./tooltip.jade
                 | .
           .mp-modal-close(on={click: $component.app.helpers.finishLearn})
             svg-icon(attrs={icon: 'x'})
-        mp-button-bar.mp-button-bar-primary(
+        irb-mp-button-bar.mp-button-bar-primary(
           on={click: () => $helpers.clickedModalButton(step.name)}
         )
           case step.name
