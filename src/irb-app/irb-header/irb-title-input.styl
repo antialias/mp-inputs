@@ -14,13 +14,12 @@ irb-title-input
 
   .irb-title-input
     display flex
-    &:hover input
-      active-input()
+    // &:hover input
+    //   active-input()
 
-  .disabled-input, input[type=text], span.mp-name-input-dummy
+  input[type=text], .title-input-disabled, span.mp-name-input-dummy
     background-color inherit
-    border 1px solid transparent
-    border-radius border-curve
+    border none
     color grey-500
     font-size 20px
     font-weight normal
@@ -28,30 +27,41 @@ irb-title-input
     outline none
     padding 0 20px
 
-  .disabled-input
+  // input[type=text]
+  //   &:focus, &:hover
+  //     active-input()
+
+  .title-input-disabled
     line-height button-height
 
-  input[type=text]
-    &:focus, &:hover
-      active-input()
-    &.active
-      border-radius border-curve 0 0 border-curve
-      border-right none
-      padding-right 10px
-      transition width .1s
+  .title-input-enabled
+    border 1px solid transparent
+    border-radius border-curve
+    display inline-flex
 
-  button.input-button
-    background-image linear-gradient(to top, blue-300, blue-100), linear-gradient(blue-300, blue-300)
-    border 1px solid blue-700
-    border-radius 0 border-curve border-curve 0
-    color #fff
-    cursor text
-    font-size 14px
-    font-weight bold
-    height button-height
-    opacity 0
-    transition opacity 0.3s
-    width 72px
-    &.active
-      cursor pointer
-      opacity 1
+    button
+      opacity 0
+      &.title-save
+        background-image linear-gradient(to top, blue-300, blue-100), linear-gradient(blue-300, blue-300)
+        border 1px solid blue-700
+        border-radius 0 border-curve border-curve 0
+        color #fff
+        cursor text
+        font-size 14px
+        font-weight bold
+        height button-height
+        transition opacity 0.3s
+        width 72px
+
+    &.input-focused
+      background-color #fff
+      border-color blue-300
+
+      input[type=text]
+        border-radius border-curve 0 0 border-curve
+        border-right none
+        padding-right 10px
+
+      button
+        cursor pointer
+        opacity 1

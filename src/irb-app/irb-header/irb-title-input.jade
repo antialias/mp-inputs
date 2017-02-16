@@ -1,28 +1,32 @@
 .irb-title-input
   if enabled
-    input(
-      class={active}
-      props={
-        maxLength: 80,
-        placeholder: `Untitled report`,
-        type: `text`,
-        value: inputValue,
-      }
-      style={
-        width: `${inputWidth}px`
-      }
-      on={
-        input: $helpers.inputChange,
-        blur: $helpers.blur,
-        focus: $helpers.focus,
-      }
-    )
-    button.input-button(
-      class={active}
-      on={
-        click: $helpers.clickSave,
-        mousedown: $helpers.buttonMousedown,
-      }
-    )= $component.getAttribute(`buttonText`)
+    .title-input-enabled(class={'input-focused': active})
+      resize-input.title-input(
+        attrs={
+          placeholder: `Untitled report`,
+        }
+        props={
+          maxLength: 80,
+          type: `text`,
+          value: inputValue,
+        }
+        on={
+          input: $helpers.inputChange,
+          blur: $helpers.blur,
+          focus: $helpers.focus,
+        }
+      )
+      button.title-save-new(
+        on={
+          click: $helpers.clickSaveNew,
+          mousedown: $helpers.buttonSaveNewMousedown,
+        }
+      ) Save new
+      button.title-save(
+        on={
+          click: $helpers.clickSave,
+          mousedown: $helpers.buttonSaveMousedown,
+        }
+      ) Save
   else
-    .disabled-input(style={width: `${inputWidth}px`})= inputValue
+    .title-input-disabled= inputValue
