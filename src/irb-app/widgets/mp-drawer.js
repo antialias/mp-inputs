@@ -37,7 +37,7 @@ document.registerElement(`mp-drawer`, class extends Component {
   }
 
   attributeChangedCallback() {
-    super.attributeChangedCallback(arguments);
+    super.attributeChangedCallback(...arguments);
 
     document.querySelectorAll(`body, html`)
       .forEach(el => {
