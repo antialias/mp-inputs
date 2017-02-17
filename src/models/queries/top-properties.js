@@ -4,6 +4,10 @@ import { renameProperty } from 'mixpanel-common/report/util';
 import BaseQuery from './base';
 import { PROPERTY_TYPES } from '../clause.js';
 
+const BLACKLISTED_PROPERTIES = [
+  `$transactions`, // transactions a special obj property used only for the Revenue report
+];
+
 class BaseTopPropertiesQuery extends BaseQuery {
   buildParams() {
     return {limit: 1500};
@@ -13,7 +17,10 @@ class BaseTopPropertiesQuery extends BaseQuery {
     const properties = Object.keys(results).map(name => {
       const { count, type } = results[name];
       return {count, type, name, resourceType: this.resourceType};
-    }).filter(prop => PROPERTY_TYPES.includes(prop.type));
+    }).filter(prop => (
+        PROPERTY_TYPES.includes(prop.type) &&
+        !BLACKLISTED_PROPERTIES.includes(prop.name)
+      ));
     // TODO: cassie investigate if we should be filtering these out or handling them better later
 
     return sorted(properties, {
