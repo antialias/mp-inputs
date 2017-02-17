@@ -9,7 +9,7 @@ export default class TopEventsQuery extends BaseQuery {
     return {
       sort_fn: `desc`, // eslint-disable-line camelcase
       type: `general`,
-      limit: 255,
+      limit: 1500,
     };
   }
 }
