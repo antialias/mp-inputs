@@ -30,67 +30,69 @@ mixin user-filter-option(label, value)
     attrs={hide: !reportsDrawerOpen}
     on={close: $helpers.close}
   )
-    if !Object.keys(savedReports).length
-      .no-reports
-        .no-reports-img
-        h1 Saved reports
-        p You haven't saved any reports yet.
-    else
-      .user-filter
-        .user-filter-border-spacer.border-spacer-left
-        +user-filter-option(`All`,          `all`  )
-        .user-filter-border-spacer.border-spacer-left
-        +user-filter-option(`Your reports`, `yours`)
-        .user-filter-border-spacer.border-spacer-right
+    .reports-drawer-container
+      if !Object.keys(savedReports).length
+        .no-reports
+          .no-reports-img
+          h1 Saved reports
+          p You haven't saved any reports yet.
+      else
+        .user-filter
+          .user-filter-border-spacer.border-spacer-left
+          +user-filter-option(`All`,          `all`  )
+          .user-filter-border-spacer.border-spacer-left
+          +user-filter-option(`Your reports`, `yours`)
+          .user-filter-border-spacer.border-spacer-right
 
-      .reportlist-search
-        .reportlist-search-icon
-          svg-icon(attrs={icon: `search`})
-        if reportsDrawerOpen
-          .input-focuser(hook={insert: $helpers.focusSearchInput})
-        input(
-          props={
-            type: `text`,
-            placeholder: `Search reports`,
-            value: reportsDrawer.nameFilter,
-          }
-          on={
-            blur: $helpers.changeNameFilter,
-            change: $helpers.changeNameFilter,
-            focusout: $helpers.changeNameFilter,
-            input: $helpers.changeNameFilter,
-            keypress: $helpers.changeNameFilter,
-          }
-        )
-      .reports
-        .report-row.header-row
-          +header-col(`Report`, `title`)
-          +header-col(`Creator`, `user`)
-          +header-col(`Last modified`, `modified`)
-        each report in $helpers.reportsForDisplay()
-          - const initials = report.user.split(' ').map(s => s[0]).join('').toUpperCase()
-          - const icon = report.displayOptions.chartType
-          .report-row.body-row(
-            class={[`icon-${icon}`]: !!icon}
-            on={click: () => $helpers.clickReport(report)}
+        .reportlist-search
+          .reportlist-search-icon
+            svg-icon(attrs={icon: `search`})
+          if reportsDrawerOpen
+            .input-focuser(hook={insert: $helpers.focusSearchInput})
+          input(
+            props={
+              type: `text`,
+              placeholder: `Search reports`,
+              value: reportsDrawer.nameFilter,
+            }
+            on={
+              blur: $helpers.changeNameFilter,
+              change: $helpers.changeNameFilter,
+              focusout: $helpers.changeNameFilter,
+              input: $helpers.changeNameFilter,
+              keypress: $helpers.changeNameFilter,
+            }
           )
-            svg-icon(attrs={icon: icon, empty: !icon})
-            .report-col.reportlist-field-title
-              if report.matches
-                +highlight-matches(report.matches)
-              else
-                = report.title
-            .report-col.reportlist-field-user
-              .user-icon(class={[`color-${initials[0]}`]: true})
-                = initials
-                irb-mp-tooltip= report.user
-            .report-col.reportlist-field-modified= report.modifiedStr
-            .report-col.delete
-              if $helpers.hasWritePermissions()
-                svg-icon(attrs={icon: `trashcan`} on={click: ev => $helpers.clickDelete(ev, report)})
+        .reports
+          .report-row.header-row
+            +header-col(`Report`, `title`)
+            +header-col(`Creator`, `user`)
+            +header-col(`Last modified`, `modified`)
+          .report-results
+            each report in $helpers.reportsForDisplay()
+              - const initials = report.user.split(' ').map(s => s[0]).join('').toUpperCase()
+              - const icon = report.displayOptions.chartType
+              .report-row.body-row(
+                class={[`icon-${icon}`]: !!icon}
+                on={click: () => $helpers.clickReport(report)}
+              )
+                svg-icon(attrs={icon: icon, empty: !icon})
+                .report-col.reportlist-field-title
+                  if report.matches
+                    +highlight-matches(report.matches)
+                  else
+                    = report.title
+                .report-col.reportlist-field-user
+                  .user-icon(class={[`color-${initials[0]}`]: true})
+                    = initials
+                    irb-mp-tooltip= report.user
+                .report-col.reportlist-field-modified= report.modifiedStr
+                .report-col.delete
+                  if $helpers.hasWritePermissions()
+                    svg-icon(attrs={icon: `trashcan`} on={click: ev => $helpers.clickDelete(ev, report)})
 
-    .drawer-close-wrapper
-      svg-icon(attrs={icon: 'x'} on={click: $helpers.close})
+      .drawer-close-wrapper
+        svg-icon(attrs={icon: 'x'} on={click: $helpers.close})
 
   - const toDelete = reportsDrawer.confirmDelete
   irb-mp-confirm-delete(

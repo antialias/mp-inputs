@@ -11,6 +11,30 @@ mp-black = #2c3642
   top 20px
   svg-icon-style(grey-300, grey-200, size: 30px)
 
+// styling for full height
+.reports-drawer-container
+  display flex
+  max-height 100vh
+  flex-direction column
+
+  .user-filter,
+  .reportlist-search,
+  .no-reports
+    flex none
+
+  .reports
+    display flex
+    flex 1 1
+    flex-direction column
+
+    .header-row
+      flex none
+
+    .report-results
+      flex 1 1
+      overflow auto
+
+
 .no-reports
   position relative
   text-align center
