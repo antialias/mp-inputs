@@ -35,4 +35,13 @@ document.registerElement(`mp-drawer`, class extends Component {
       super.attachedCallback(...arguments);
     }
   }
+
+  attributeChangedCallback() {
+    super.attributeChangedCallback(arguments);
+
+    document.querySelectorAll(`body, html`)
+      .forEach(el => {
+        el.style.overflow = this.isAttributeEnabled(`hide`) ? `` : `hidden`;
+      });
+  }
 });
