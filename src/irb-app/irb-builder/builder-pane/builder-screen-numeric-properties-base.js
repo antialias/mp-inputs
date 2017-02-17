@@ -13,8 +13,7 @@ export class BuilderScreenNumericPropertiesBase extends BuilderScreenPropertiesB
   }
 
   isShowingNonNumericProperties() {
-    const screen = this.app.getBuilderCurrentScreen();
-    return screen && !!screen.showingNonNumericProperties;
+    return !!this.app.getBuilderCurrentScreenAttr(`showingNonNumericProperties`);
   }
 
   filterNonNumericProperties(properties) {

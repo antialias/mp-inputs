@@ -507,6 +507,11 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     return screens[screens.length - 1];
   }
 
+  getBuilderCurrentScreenAttr(attr) {
+    const screen = this.getBuilderCurrentScreen();
+    return screen && screen[attr];
+  }
+
   // State helpers
 
   hasStageClause(state=this.state) {

@@ -59,10 +59,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
         getActiveClause: () => this.app.hasStageClause() ? this.app.activeStageClause : {},
         getMaxDataHistoryDays: () => this.app.maxDataHistoryDays(),
         // dropdowns
-        isMenuOpen: menu => {
-          const currentScreen = this.app.getBuilderCurrentScreen();
-          return !!currentScreen && !!currentScreen[`${menu}MenuOpen`];
-        },
+        isMenuOpen: menu => !!this.app.getBuilderCurrentScreenAttr(`${menu}MenuOpen`),
         menuChange: (ev, menu) => // check for close
           ev.detail && ev.detail.state === `closed` && this.helpers.updateMenu(menu, false),
         toggleMenu: menu => this.helpers.updateMenu(menu, !this.helpers.isMenuOpen(menu)),

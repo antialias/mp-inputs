@@ -1,4 +1,6 @@
-.builder-section.builder-time.irb-learn-disabled
+.builder-section.builder-time.irb-learn-disabled(class={
+  'align-custom-pane-right': $helpers.alignCustomPaneRight(),
+})
   if report.sections.time.clauses.length
     .clause-container
       .clause-language.preposition in the
@@ -6,7 +8,7 @@
       .clause-header
         .header-label Time
       .clause-body
-        .control-container= $component.child('builder-time-edit-control', {attrs: {'clause-index': 0}})
+        .control-container= $component.child(`builder-time-edit-control`, {attrs: {'clause-index': 0}})
     if $helpers.showUpsellModal()
       .upsell-wrapper
         mp-upsell-popup(

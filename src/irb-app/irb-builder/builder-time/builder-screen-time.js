@@ -9,6 +9,7 @@ import './builder-screen-time.styl';
 const RANGE_ITEMS = TimeClause.RANGE_LIST.map(name => ({name}));
 const RANGE_INFO = TimeClause.RANGE_TO_VALUE_AND_UNIT;
 const RANGES = TimeClause.RANGES;
+const TIME_CUSTOM_SCREEN_WIDTH = 534;
 
 document.registerElement(`builder-screen-time`, class extends BuilderScreenBase {
   get config() {
@@ -18,7 +19,6 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
         RANGES: TimeClause.RANGES,
         availableRanges: () =>  {
           const dataHistoryMS = this.app.maxDataHistoryDays() * MS_BY_UNIT[`day`];
-          
           const featureGatedOptions = RANGE_ITEMS.map(range => {
             if (range.name === RANGES.CUSTOM) {
               range.upsell = false;
@@ -37,7 +37,9 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
             return;
           }
           if (range.name === TimeClause.RANGES.CUSTOM) {
-            this.nextScreen(`builder-screen-time-custom`);
+            const position = this.getBoundingClientRect();
+            const willCrossViewportEdge = window.innerWidth - position.left < TIME_CUSTOM_SCREEN_WIDTH;
+            this.nextScreen(`builder-screen-time-custom`, {alignTimeCustomPaneRight: willCrossViewportEdge});
           } else {
             this.updateAndCommitStageClause({range: range.name});
           }

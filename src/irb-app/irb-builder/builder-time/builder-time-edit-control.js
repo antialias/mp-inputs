@@ -19,8 +19,8 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
       helpers: extend(super.config.helpers, {
         getDates: () => this.app.getTimeClauseValue(),
         isPresetRange: () => {
-          const screen = this.app.getBuilderCurrentScreen();
-          const showingCustomRangeControls = screen && screen.componentName === `builder-screen-time-custom`;
+          const currentScreen = this.app.getBuilderCurrentScreenAttr(`componentName`);
+          const showingCustomRangeControls = currentScreen === `builder-screen-time-custom`;
           return this.getClause().range && (!screen || !showingCustomRangeControls);
         },
         updatedInput: ev => {
@@ -94,11 +94,9 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
   updateScreen(value, focused) {
     const presetRangeScreen = `builder-screen-time`;
     const customRangeScreen = `builder-screen-time-custom`;
-    const currentScreen = this.app.getBuilderCurrentScreen();
+    const currentScreen = this.app.getBuilderCurrentScreenAttr(`componentName`);
     if (
-      currentScreen &&
-      currentScreen.componentName === presetRangeScreen &&
-      value.length >= 3 &&
+      currentScreen === presetRangeScreen && value.length >= 3 &&
       TimeClause.RANGE_LIST.every(range => !stringFilterMatches(range, value))
     ) {
       this.app.updateBuilder(extend(focused, {

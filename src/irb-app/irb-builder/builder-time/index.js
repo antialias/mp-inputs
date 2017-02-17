@@ -14,6 +14,7 @@ document.registerElement(`query-builder-time`, class extends Component {
       helpers: {
         showUpsellModal: () => this.state.upsellModal === `timeClause`,
         closeUpsellModal: ev => this.app.maybeCloseUpsellModal(ev, `timeClause`),
+        alignCustomPaneRight: () => !!this.app.getBuilderCurrentScreenAttr(`alignTimeCustomPaneRight`),
       },
     };
   }

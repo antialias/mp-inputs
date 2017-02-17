@@ -98,8 +98,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   }
 
   getSelectedResourceType() {
-    const screen = this.app.getBuilderCurrentScreen();
-    return (screen && screen.resourceType) || Clause.RESOURCE_TYPE_ALL;
+    return this.app.getBuilderCurrentScreenAttr(`resourceType`) || Clause.RESOURCE_TYPE_ALL;
   }
 
   getRelevantBuilderEvents() {
