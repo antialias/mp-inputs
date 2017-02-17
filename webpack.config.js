@@ -1,4 +1,5 @@
 var AssetsPlugin = require('assets-webpack-plugin');
+var DashboardPlugin = require('webpack-dashboard/plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var path = require('path');
@@ -85,6 +86,7 @@ if (process.env.NODE_ENV === 'development') {
       pathinfo: true,
     },
     plugins: webpackConfig.plugins.concat([
+      new DashboardPlugin(),
       new webpack.DefinePlugin({
         API_LOCAL: JSON.stringify(true),
         DEBUG_LOG: JSON.stringify(true),
