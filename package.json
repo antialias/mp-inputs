@@ -6,6 +6,7 @@
   "scripts": {
     "benchmark": "babel-node --presets es2015 --plugins syntax-async-functions,transform-regenerator benchmark/run",
     "build": "webpack",
+    "dev-server": "webpack-dev-server --inline --colors",
     "lint": "eslint src",
     "production-build": "rm -rf build-production && NODE_ENV=production webpack",
     "standalone": "webpack-dashboard -- webpack-dev-server --inline --colors",
