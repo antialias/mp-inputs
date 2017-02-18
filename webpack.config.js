@@ -7,6 +7,9 @@ var webpack = require('webpack');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
+var isDevServer = process.argv.some(s => s.match(/webpack-dev-server$/));
+var DASHBOARD_PLUGIN = isDevServer ? [new DashboardPlugin()] : [];
+
 var BABEL_LOADER = 'babel?presets[]=es2015';
 var BUILD_DIR = 'build-' + process.env.NODE_ENV;
 
@@ -85,19 +88,20 @@ if (process.env.NODE_ENV === 'development') {
       filename: '[name].bundle.js',
       pathinfo: true,
     },
-    plugins: webpackConfig.plugins.concat([
-      new DashboardPlugin(),
-      new webpack.DefinePlugin({
-        API_LOCAL: JSON.stringify(true),
-        DEBUG_LOG: JSON.stringify(true),
-        MIXPANEL_TOKEN: JSON.stringify('9c4e9a6caf9f429a7e3821141fc769b7'), // Project 132990 Mixpanel Dev
-      }),
-      new ExtractTextPlugin('[name].bundle.css'),
-      new HtmlWebpackPlugin({
-        template: 'index.template.html',
-        filename: '../index-dev.html',
-      }),
-    ]),
+    plugins: webpackConfig.plugins.concat(
+      DASHBOARD_PLUGIN,
+      [
+        new webpack.DefinePlugin({
+          API_LOCAL: JSON.stringify(true),
+          DEBUG_LOG: JSON.stringify(true),
+          MIXPANEL_TOKEN: JSON.stringify('9c4e9a6caf9f429a7e3821141fc769b7'), // Project 132990 Mixpanel Dev
+        }),
+        new ExtractTextPlugin('[name].bundle.css'),
+        new HtmlWebpackPlugin({
+          template: 'index.template.html',
+          filename: '../index-dev.html',
+        }),
+      ]),
   });
 
 } else if (process.env.NODE_ENV === 'production') {
