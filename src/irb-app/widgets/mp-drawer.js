@@ -39,7 +39,7 @@ document.registerElement(`mp-drawer`, class extends Component {
   attributeChangedCallback() {
     super.attributeChangedCallback(...arguments);
 
-    document.querySelectorAll(`body, html`)
+    Array.from(document.querySelectorAll(`body, html`))
       .forEach(el => {
         el.style.overflow = this.isAttributeEnabled(`hide`) ? `` : `hidden`;
       });
