@@ -1,5 +1,5 @@
-Interactive Report Builder
-==========================
+Insights
+========
 
 Install Node packages:
 ```
@@ -13,8 +13,7 @@ npm start
 
 Run locally using Webpack dev server (will auto-refresh on file changes):
 ```
-./setup-local-irb.sh  # run once, will checkout local platform lib into irb/../libs
-npm run serve
+npm run standalone
 ```
 then navigate to [http://localhost:8080/index-dev.html?api_key=PROJECT_API_KEY&api_secret=PROJECT_API_SECRET](http://localhost:8080/index-dev.html?api_key=PROJECT_API_KEY&api_secret=PROJECT_API_SECRET)
 
@@ -27,4 +26,4 @@ fab stage_and_deploy_platform_app:irb,branch=<your branch>
 ## Benchmarks
 Run: `npm run benchmark`
 
-API secrets must be defined in the (gitignored) file `benchmark/project-secrets.js`. Query definitions are in `benchmark/queries.js`. Results are output to console and tracked to Mixpanel Project 983955 (IRB).
+API secrets must be defined in `/etc/secrets/irb/project-secrets.json`. Query definitions are in `benchmark/queries.js`. Results are output to console and tracked to Mixpanel Project 983955 (IRB).
