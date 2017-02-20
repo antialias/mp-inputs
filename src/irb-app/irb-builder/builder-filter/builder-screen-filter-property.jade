@@ -70,7 +70,10 @@ mixin filter-number-input(value, oninput, options)
             svg-icon(attrs={icon: filterType.icon})
             = filterType.name
 
-  .filter-chooser(hook={postpatch: $helpers.updateRenderedSize})
+  .filter-chooser(
+    class={[`filter-type-${clause.filterType}`]: true}
+    hook={postpatch: $helpers.updateRenderedSize}
+  )
     case clause.filterType
 
       when `string`
