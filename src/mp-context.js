@@ -11,7 +11,7 @@ import { objToQueryString } from 'mixpanel-common/util';
 export default class MPContext {
   constructor() {
     this.standalone = typeof mp === `undefined`;
-    this.apiHost = `https://mixpanel.com/`;
+    this.apiHost = `https://mixpanel.com`;
 
     if (!this.standalone) {
       // global garbage
