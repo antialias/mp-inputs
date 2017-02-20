@@ -415,11 +415,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   saveReport(saveAsNew=false) {
-    if (saveAsNew) {
-      this.state.report.id = null;
-    }
     const reportTrackingData = this.state.report.toTrackingData();
-    return this.mpContext.saveBookmark(this.state.report.toBookmarkData())
+    const bookmarkData = this.state.report.toBookmarkData({saveAsNew})
+    return this.mpContext.saveBookmark(bookmarkData)
       .then(bookmark => {
         const report = Report.fromBookmarkData(bookmark);
         this.update({savedReports: extend(this.state.savedReports, {[report.id]: report})});

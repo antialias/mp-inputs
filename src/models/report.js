@@ -83,10 +83,13 @@ export default class Report {
     return Report.deserialize(extend(pick(bookmark, BOOKMARK_ATTRS), JSON.parse(bookmark.params)));
   }
 
-  toBookmarkData() {
+  toBookmarkData({saveAsNew=false}={}) {
     let bm = extend({name: this.title, icon: this.displayOptions.chartType}, this.serialize());
     if (!this.isNew()) {
       bm.id = this.id;
+    }
+    if (saveAsNew) {
+      delete bm.id;
     }
     return bm;
   }
