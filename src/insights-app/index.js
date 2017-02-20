@@ -448,6 +448,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   get defaultBuilderState() {
     return {
+      activeListItem: null,
+      selectedListItem: null,
+      visibleListItems: [],
       inTransition: false,
       isContextualMenuOpen: false,
       isEditingTypecast: false,

@@ -8,10 +8,12 @@ include ../mixins.jade
     if ranges.length
       each range in ranges
         - const isSelected = range.name === selected
+        - const isActive = range.name === builderPane.activeListItem.name
         - const isCustom = range.name === $helpers.RANGES.CUSTOM
         - const showUpsellIcon = range.upsell
         li.list-option(
           class={
+            'list-option-active': isActive,
             'list-option-selected': isSelected,
             'list-option-time-custom': isCustom,
             'list-option-upsell': showUpsellIcon

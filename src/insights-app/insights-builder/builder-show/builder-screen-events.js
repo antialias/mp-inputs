@@ -17,6 +17,22 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
     };
   }
 
+  attachedCallback() {
+    super.attachedCallback(...arguments);
+    const eventList = this.buildList();
+    this.app.updateBuilder({
+      activeListItem: eventList.length ? eventList[0] : null,
+      visibleListItems: eventList,
+    });
+  }
+
+  detachedCallback() {
+    this.app.updateBuilder({
+      activeListItem: null,
+      visibleListItems: [],
+    });
+  }
+
   buildList() {
     return this.allMatchingEvents();
   }

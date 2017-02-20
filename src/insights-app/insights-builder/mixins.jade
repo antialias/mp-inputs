@@ -52,6 +52,7 @@ mixin event-list(events, options)
       li.list-option(
         attrs={title: mpEvent.name}
         class={
+          'list-option-active': $helpers.isActiveItem(mpEvent),
           'list-option-selected': isSelected,
           'insights-learn-disabled': util.isSpecialEvent(mpEvent),
         }
@@ -83,6 +84,7 @@ mixin property-list(properties, options)
         - const isSelected = property.resourceType === source && property.name === selected
         li.list-option(
           class={
+            'list-option-active': $helpers.isActiveItem(property),
             'list-option-selected': isSelected,
             [property.type]: true,
           }

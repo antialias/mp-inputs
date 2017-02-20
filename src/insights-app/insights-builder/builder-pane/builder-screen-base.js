@@ -30,6 +30,13 @@ export class BuilderScreenBase extends Component {
   get config() {
     return {
       helpers: {
+        isActiveItem: item => {
+          const activeItem = this.state.builderPane.activeListItem;
+          if (activeItem === null) {
+            return false;
+          }
+          return item.name === activeItem.name && item.resourceType === activeItem.resourceType;
+        },
         clickedEvent: value => {
           this.app.updateRecentEvents(value);
           this.updateAndCommitStageClause({value, property: null});

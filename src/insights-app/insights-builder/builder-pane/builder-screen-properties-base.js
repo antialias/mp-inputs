@@ -16,6 +16,23 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     };
   }
 
+
+  attachedCallback() {
+    super.attachedCallback(...arguments);
+    const propertyList = this.getProperties();
+    this.app.updateBuilder({
+      activeListItem: propertyList.length ? propertyList[0] : null,
+      visibleListItems: propertyList,
+    });
+  }
+
+  detachedCallback() {
+    this.app.updateBuilder({
+      activeListItem: null,
+      visibleListItems: [],
+    });
+  }
+
   filterToResourceType(type) {
     return function(property) {
       return type === ShowClause.RESOURCE_TYPE_ALL || property.resourceType === type;
