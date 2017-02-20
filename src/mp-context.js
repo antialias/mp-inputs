@@ -60,7 +60,7 @@ export default class MPContext {
       return Promise.reject(`Cannot save report in standalone mode yet. Will OAuth it soon.`);
     }
 
-    const endpoint = data.id && Number.isInteger(data.id) ? `update/${data.id}` : `create/`;
+    const endpoint = data.id ? `update/${data.id}` : `create/`;
     const reportLimit = this.featureGates.max_saved_reports;
 
     // TODO: cassie: fix API on analytics end so we don't have to chain calls
