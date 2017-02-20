@@ -1,6 +1,6 @@
 import expect from 'expect.js';
 
-import { resultToCSVArray } from '../src/util/csv';
+import { resultToCSVArray } from '../../src/util/csv';
 
 
 describe(`resultToCSVArray`, function() {

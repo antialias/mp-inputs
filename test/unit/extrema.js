@@ -1,6 +1,6 @@
 import expect from 'expect.js';
 
-import { extremaResultToBuckets } from '../src/models/queries/extrema.js';
+import { extremaResultToBuckets } from '../../src/models/queries/extrema.js';
 
 describe('extremaResultToBuckets', function() {
     it('does not return buckets when differential is low', function() {

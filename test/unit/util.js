@@ -15,7 +15,7 @@ import {
   nestedObjectRolling,
   reachableNodesOfKey,
   uniqueObjKeysAtDepth,
-} from '../src/util';
+} from '../../src/util';
 
 describe('filterObject', function() {
   it('filters one value at lowest depth', function() {

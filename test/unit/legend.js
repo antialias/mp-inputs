@@ -2,8 +2,8 @@ import expect from 'expect.js';
 
 import { d2ResultsObj } from './fixtures';
 
-import Legend from '../src/models/legend';
-import Result from '../src/models/result';
+import Legend from '../../src/models/legend';
+import Result from '../../src/models/result';
 
 describe('Legend', function() {
   context('with default values', function() {
