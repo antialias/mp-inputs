@@ -1,9 +1,11 @@
+var fs = require('fs');
+var path = require('path');
+var webpack = require('webpack');
+
 var AssetsPlugin = require('assets-webpack-plugin');
 var DashboardPlugin = require('webpack-dashboard/plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var path = require('path');
-var webpack = require('webpack');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -11,7 +13,11 @@ var isDevServer = process.argv.some(s => s.match(/webpack-dev-server$/));
 var DASHBOARD_PLUGIN = isDevServer ? [new DashboardPlugin()] : [];
 
 var BABEL_LOADER = 'babel?presets[]=es2015';
+
 var BUILD_DIR = 'build-' + process.env.NODE_ENV;
+if (!fs.existsSync(BUILD_DIR)) {
+  fs.mkdirSync(BUILD_DIR);
+}
 
 var webpackConfig = {
   entry: {
