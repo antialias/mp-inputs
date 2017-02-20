@@ -28,28 +28,8 @@ document.registerElement(`irb-title-input`, class extends Component {
             ev.preventDefault();
           }
         },
-
-        clickSave: (ev, saveAsNew=false) => {
-          ev.stopPropagation();
-          if (this.helpers.isSaveDisabled()) {
-            return;
-          }
-
-          if (this.state.active) {
-            this.dispatchChange({save: true, saveAsNew});
-            this.inputEl.blur();
-          } else {
-            this.inputEl.focus();
-          }
-        },
-
-        clickSaveNew: ev => {
-          ev.stopPropagation();
-          if (!this.helpers.isSaveNewDisabled()) {
-            this.helpers.clickSave(ev, true);
-          }
-        },
-
+        clickSave: ev => !this.helpers.isSaveDisabled() && this.saveReport(ev),
+        clickSaveNew: ev => !this.helpers.isSaveNewDisabled() && this.saveReport(ev, {saveAsNew: true}),
         isSaveDisabled: () => !this.state.inputValue,
         isSaveNewDisabled: () => !this.state.isDirty || !this.state.inputValue,
       },
@@ -75,6 +55,16 @@ document.registerElement(`irb-title-input`, class extends Component {
     this.dispatchEvent(new CustomEvent(`change`, {
       detail: Object.assign({value: this.value}, options),
     }));
+  }
+
+  saveReport(ev, {saveAsNew=false}={}) {
+    ev.stopPropagation();
+    if (this.state.active) {
+      this.dispatchChange({save: true, saveAsNew});
+      this.inputEl.blur();
+    } else {
+      this.inputEl.focus();
+    }
   }
 
   get inputEl() {

@@ -21,14 +21,14 @@
           button.title-save-new(
             class={'title-button-disabled': $helpers.isSaveNewDisabled()}
             on={
-              click: ev => $helpers.clickSaveNew(ev),
+              click: $helpers.clickSaveNew,
               mousedown: $helpers.buttonMousedown,
             }
           ) Save new
         button.title-save(
           class={'title-button-disabled': $helpers.isSaveDisabled()}
           on={
-            click: ev => $helpers.clickSave(ev),
+            click: $helpers.clickSave,
             mousedown: $helpers.buttonMousedown,
           }
         ) Save
