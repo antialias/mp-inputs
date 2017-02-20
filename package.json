@@ -11,7 +11,9 @@
     "production-build": "rm -rf build-production && NODE_ENV=production webpack",
     "standalone": "webpack-dashboard -- webpack-dev-server --inline --colors",
     "start": "npm run watch",
-    "test": "mocha --require babel-core/register --require babel-polyfill test/unit",
+    "test": "npm run test-unit",
+    "test-browser-local": "wct --plugin local test/browser/index.html",
+    "test-unit": "mocha --require babel-core/register --require babel-polyfill test/unit",
     "watch": "webpack --progress --colors --watch"
   },
   "repository": {
