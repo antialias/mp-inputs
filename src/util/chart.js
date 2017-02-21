@@ -9,7 +9,8 @@
 
 // For future reference, IMO the right way to handle this is for
 // isIncomplete to take a "to" date and a unit, and determine whether that
-// "to" date is at the end of a unit boundary.
+// "to" date is at the end of a unit boundary. There's also now a duplicate
+// copy in mp-common, which is where these changes should happen.
 
 // For avoiding a customized Highcharts, we could remove the last data
 // point from an incomplete segment, and create a new segment with just the
