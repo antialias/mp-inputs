@@ -4,7 +4,7 @@ var webpack = require('webpack');
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-var BABEL_LOADER = 'babel?presets[]=es2015';
+var BABEL_LOADER = 'babel?presets[]=es2015?plugins[]=';
 var BUILD_DIR = 'build';
 if (!fs.existsSync(BUILD_DIR)) {
   fs.mkdirSync(BUILD_DIR);
@@ -22,12 +22,19 @@ var webpackConfig = {
       {
         test: /\.jade$/,
         exclude: /node_modules|mixpanel-common/,
-        loaders: [BABEL_LOADER, 'virtual-jade'],
+        loaders: ['babel?presets[]=es2015', 'virtual-jade'],
       },
       {
         test: /\.js$/,
         exclude: /node_modules|highcharts|mixpanel-common|\.jql\.js$/,
-        loader: BABEL_LOADER,
+        loader: 'babel',
+        query: {
+          plugins: [
+            'syntax-async-functions',
+            'transform-regenerator',
+          ],
+          presets: ['es2015'],
+        },
       },
       {
         test: /\.(png|svg)$/,
