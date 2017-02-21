@@ -91,7 +91,7 @@ document.registerElement(`chart-display`, class extends Component {
         getUtcOffset: () => this.app.mpContext.utcOffset,
         stringifyObjValues: obj => mapObjectKeys(obj, JSON.stringify),
         showLegend: () => {
-          const chartName = this.InsightsResult.selectedChartName().toLowerCase(); // TODO
+          const chartName = this.insightsResult.selectedChartName().toLowerCase(); // TODO
           const showClauses = this.state.report.sections.show.clauses;
           const groupClauses = this.state.report.sections.group.clauses;
           let shouldShow = false;
@@ -263,9 +263,9 @@ document.registerElement(`chart-display`, class extends Component {
     this.app.trackEvent(`Chart Options - Sort`, extend(reportProperties, eventProperties));
   }
 
-  get InsightsResult() {
-    this._InsightsResult = this._InsightsResult || this.findPanelParentByTagName(`insights-result`);
-    return this._InsightsResult;
+  get insightsResult() {
+    this._insightsResult = this._insightsResult || this.findPanelParentByTagName(`insights-result`);
+    return this._insightsResult;
   }
 
   /* PERFORMANCE OPTIMIZATION --------------------------------------------------------- */
