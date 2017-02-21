@@ -6,6 +6,7 @@
   "scripts": {
     "benchmark": "babel-node --presets es2015 --plugins syntax-async-functions,transform-regenerator benchmark/run",
     "build": "webpack",
+    "build-test": "webpack --config test/browser/webpack.config.js",
     "dev-server": "webpack-dev-server --inline --colors",
     "lint": "eslint src",
     "production-build": "rm -rf build-production && NODE_ENV=production webpack",
@@ -13,6 +14,8 @@
     "start": "npm run watch",
     "test": "npm run test-unit",
     "test-browser-local": "wct --plugin local test/browser/index.html",
+    "test": "npm run test-unit && npm run build-test && npm run test-browser-sauce",
+    "test-p": "wct --plugin local --persistent test/browser/index.html",
     "test-unit": "mocha --require babel-core/register --require babel-polyfill test/unit",
     "watch": "webpack --progress --colors --watch"
   },
