@@ -1,4 +1,6 @@
-import { isEqual, nestedObjectCumulative, nestedObjectRolling, pick } from '../util';
+import isEqual from 'lodash/isEqual';
+
+import { nestedObjectCumulative, nestedObjectRolling, pick } from '../util';
 
 let resultID = 0;
 

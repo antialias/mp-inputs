@@ -1,4 +1,5 @@
 import JSURL from 'jsurl';
+import isEqual from 'lodash/isEqual';
 import kebabCase from 'lodash/kebabCase';
 import MPApp from 'mixpanel-common/report/mp-app';
 import Persistence from 'mixpanel-common/report/persistence';
@@ -363,7 +364,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
 
     const stateKey = type === `events` ? `recentEvents` : `recentProperties`;
     this.update({[stateKey]: [
-      value, ...this.state[stateKey].filter(oldValue => !util.isEqual(value, oldValue)),
+      value, ...this.state[stateKey].filter(oldValue => !isEqual(value, oldValue)),
     ].slice(0, 10)});
     this.persistence.set(this._getRecentPersistenceKey(type), JSON.stringify(this.state[stateKey]));
   }
@@ -665,7 +666,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     const prevLearnStep = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
     if (this.state.learnActive && prevLearnStep.name !== nextLearnStep.name) {
       this.transitionLearn();
-    } else if (!util.isEqual(oldUrlData, newUrlData)) {
+    } else if (!isEqual(oldUrlData, newUrlData)) {
       history.replaceState(null, null, `#${JSURL.stringify(newUrlData)}`);
     }
   }
