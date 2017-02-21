@@ -35,7 +35,7 @@ export class BuilderScreenBase extends Component {
           if (activeItem === null || item === null) {
             return false;
           }
-          return item.name === activeItem.name &&
+          return item.name === activeItem.name && 
                  item.resourceType === activeItem.resourceType &&
                  item.section === activeItem.section;
         },
@@ -174,12 +174,12 @@ export class BuilderScreenBase extends Component {
     this.focusInput();
   }
 
-  nextScreen(componentName, screenAttrs={}) {
+  nextScreen(componentName) {
     if (!this.state.builderPane.inTransition) {
       this.app.update({contextFilter: ``});
       this.app.updateBuilder({
         inTransition: true,
-        screens: this.state.builderPane.screens.concat(extend({componentName}, screenAttrs)),
+        screens: this.state.builderPane.screens.concat({componentName}),
       });
       this.focusInput();
     }
@@ -237,7 +237,8 @@ export class BuilderScreenBase extends Component {
   }
 
   get progressiveListSize() {
-    return this.app.getBuilderCurrentScreenAttr(`progressiveListSize`) || PROGRESSIVE_LIST_START_SIZE;
+    const screen = this.app.getBuilderCurrentScreen();
+    return (screen && screen.progressiveListSize) || PROGRESSIVE_LIST_START_SIZE;
   }
 
   increaseProgressiveListSize() {

@@ -18,7 +18,7 @@ document.registerElement(`typecast-pane`, class extends Component {
   get config() {
     return {
       helpers: {
-        isActiveItem: item => {
+        isActiveItem: () => {
           return false;
         },
         availableTypes: () => this.availableTypes(),

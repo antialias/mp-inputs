@@ -251,7 +251,7 @@ header-button-transition-duration = 150ms
     &:last-child
       margin-bottom 10px
 
-    &:hover
+    &:hover, &.list-option-active
       background-color grey-100
       color mp-blue
 
@@ -300,17 +300,6 @@ header-button-transition-duration = 150ms
     flex 1 1
     .highlight-match
       color mp-blue
-
-  li.list-option.list-option-active
-    .option-icon
-      svg-icon-style(grey-900)
-    .option-label
-      color red
-      cursor default
-      font-weight 900
-    .caret-icon
-      opacity 0
-      svg-icon-style(mp-blue)
 
   li.list-option.list-option-selected
     .option-icon

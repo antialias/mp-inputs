@@ -475,6 +475,26 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     }
   }
 
+  setActiveItem(newActiveItem, scrollIntoView=true) {
+    this.updateBuilder({activeListItem: newActiveItem});
+
+    if (scrollIntoView) {
+      window.requestAnimationFrame(() => {
+        const activeEl = this.el.querySelector(`.list-option-active`);
+        if (activeEl) {
+          const listEl = this.el.querySelector(`.screen-list-container`);
+          const viewportBottom = listEl.scrollTop + listEl.offsetHeight;
+          const activeElBottom = activeEl.offsetTop + activeEl.offsetHeight;
+          if (activeEl.offsetTop < listEl.scrollTop) {
+            listEl.scrollTop = activeEl.offsetTop - 8;
+          } else if (activeElBottom > viewportBottom) {
+            listEl.scrollTop = activeElBottom - listEl.offsetHeight + 8;
+          }
+        }
+      });
+    }
+  }
+
   handleKeydown(e) {
     const listItems = this.state.builderPane.visibleListItems;
     const activeIdx = listItems.indexOf(this.state.builderPane.activeListItem);
@@ -485,14 +505,14 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       case 38: { // up arrow
         e.preventDefault();
         if (activeIdx !== 0) {
-          this.app.updateBuilder({activeListItem: listItems[activeIdx - 1]});
+          this.setActiveItem(listItems[activeIdx - 1]);
         }
         break;
       }
       case 40: { // down arrow
         e.preventDefault();
         if (activeIdx < listItems.length - 1) {
-          this.app.updateBuilder({activeListItem: listItems[activeIdx + 1]});
+          this.setActiveItem(listItems[activeIdx + 1]);
         }
         break;
       }

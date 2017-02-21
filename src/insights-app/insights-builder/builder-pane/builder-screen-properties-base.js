@@ -46,8 +46,8 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       .filter(property => resourceType === Clause.RESOURCE_TYPE_ALL || property.resourceType === resourceType)
       .slice(0, 3);
 
-    recentProperties.forEach((prop) => {
-       prop.section = `recent`
+    recentProperties.forEach(prop => {
+      prop.section = `recent`;
     });
 
     return this.matchingItems(recentProperties, renameProperty);

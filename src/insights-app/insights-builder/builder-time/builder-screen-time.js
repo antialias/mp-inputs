@@ -18,7 +18,7 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
       helpers: extend(super.config.helpers, {
         RANGES: TimeClause.RANGES,
         activeListItem: () => {
-          return this.state.builderPane.activeListItem
+          return this.state.builderPane.activeListItem;
         },
         availableRanges: () => this.availableRanges(),
         clickedRange: range => {
