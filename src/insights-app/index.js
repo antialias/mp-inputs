@@ -498,11 +498,12 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   handleKeydown(e) {
     const activeIdx = this.state.builderPane.activeIndex;
-    const itemCount = this.el.querySelectorAll(`.builder-pane .list-option:not(.contextual-menu-option)`).length;
+    const items = this.el.querySelectorAll(`.builder-pane .list-option:not(.contextual-menu-option)`);
+    const itemCount = items.length;
 
     switch(e.keyCode) {
       case 13: // enter
-        //todo
+        items[activeIdx].click();
         break;
       case 38: { // up arrow
         e.preventDefault();

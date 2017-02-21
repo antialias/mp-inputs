@@ -16,26 +16,6 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     };
   }
 
-  attachedCallback() {
-    super.attachedCallback(...arguments);
-    this.updateVisibleItemList();
-  }
-
-  detachedCallback() {
-    this.app.updateBuilder({
-      activeListItem: null,
-      visibleListItems: [],
-    });
-  }
-
-  updateVisibleItemList() {
-    const propertyList = [...this.getMatchedRecentProperties(), ...this.getProperties()];
-    this.app.updateBuilder({
-      activeListItem: propertyList.length ? propertyList[0] : null,
-      visibleListItems: propertyList,
-    });
-  }
-
   filterToResourceType(type) {
     return function(property) {
       return type === ShowClause.RESOURCE_TYPE_ALL || property.resourceType === type;

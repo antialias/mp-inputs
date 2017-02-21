@@ -80,7 +80,7 @@ mixin property-list(properties, options)
     - const source = options.source
     if properties.length
       each property in properties
-        - const label = (util.renameProperty(property.name) || property.name) + property.index
+        - const label = util.renameProperty(property.name) || property.name
         - const isSelected = property.resourceType === source && property.name === selected
         li.list-option(
           class={
