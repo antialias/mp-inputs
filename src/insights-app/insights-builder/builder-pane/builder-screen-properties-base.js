@@ -19,7 +19,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
 
   attachedCallback() {
     super.attachedCallback(...arguments);
-    const propertyList = this.getProperties();
+    const propertyList = [...this.getMatchedRecentProperties(), ...this.getProperties()];
     this.app.updateBuilder({
       activeListItem: propertyList.length ? propertyList[0] : null,
       visibleListItems: propertyList,
@@ -45,6 +45,11 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     const recentProperties = this.state.recentProperties
       .filter(property => resourceType === Clause.RESOURCE_TYPE_ALL || property.resourceType === resourceType)
       .slice(0, 3);
+
+    recentProperties.forEach((prop) => {
+       prop.section = `recent`
+    });
+
     return this.matchingItems(recentProperties, renameProperty);
   }
 

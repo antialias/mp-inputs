@@ -35,7 +35,9 @@ export class BuilderScreenBase extends Component {
           if (activeItem === null || item === null) {
             return false;
           }
-          return item.name === activeItem.name && item.resourceType === activeItem.resourceType;
+          return item.name === activeItem.name &&
+                 item.resourceType === activeItem.resourceType &&
+                 item.section === activeItem.section;
         },
         clickedEvent: value => {
           this.app.updateRecentEvents(value);
