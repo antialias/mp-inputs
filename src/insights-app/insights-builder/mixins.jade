@@ -31,7 +31,7 @@ mixin generic-options-list-item(label, options)
     +small-caret-icon()
 
 mixin secondary-action-pill(label, options)
-  .option-secondary-action.irb-learn-disabled.pill(on={click: options.onclick})
+  .option-secondary-action.insights-learn-disabled.pill(on={click: options.onclick})
     span.secondary-label= label
     +small-caret-icon()
 
@@ -53,7 +53,7 @@ mixin event-list(events, options)
         attrs={title: mpEvent.name}
         class={
           'list-option-selected': isSelected,
-          'irb-learn-disabled': util.isSpecialEvent(mpEvent),
+          'insights-learn-disabled': util.isSpecialEvent(mpEvent),
         }
         on={click: isSelected ? null : () => options.clickedEvent(mpEvent)}
       )

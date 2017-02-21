@@ -25,13 +25,13 @@ document.registerElement(`extras-menu`, class extends Component {
           return style;
         },
         valueChoices: () => VALUE_LIST,
-        isAnalysisDisabled: analysis => !this.IRBResult.isAnalysisEnabled(analysis),
-        isValueToggleDisabled: () => !this.IRBResult.isValueToggleEnabled(),
+        isAnalysisDisabled: analysis => !this.InsightsResult.isAnalysisEnabled(analysis),
+        isValueToggleDisabled: () => !this.InsightsResult.isValueToggleEnabled(),
         menuChange: ev => ev.detail && ev.detail.state === `closed` && this.app.stopEditingExtrasMenu(),
         onClickExtrasMenu: () => this.update({isEditingExtrasMenu: !this.state.isEditingExtrasMenu}),
         onAnalysisClick: analysis => {
           const reportTrackingData = this.state.report.toTrackingData();
-          this.IRBResult.updateDisplayOptions({analysis});
+          this.InsightsResult.updateDisplayOptions({analysis});
           this.app.stopEditingExtrasMenu();
           this.app.trackEvent(
             `Chart Options - Changed Analysis`,
@@ -40,7 +40,7 @@ document.registerElement(`extras-menu`, class extends Component {
         },
         onValueClick: value => {
           const reportTrackingData = this.state.report.toTrackingData();
-          this.IRBResult.updateDisplayOptions({value});
+          this.InsightsResult.updateDisplayOptions({value});
           this.app.stopEditingExtrasMenu();
           this.app.trackEvent(
             `Chart Options - Changed Value Display`,
@@ -51,8 +51,8 @@ document.registerElement(`extras-menu`, class extends Component {
     };
   }
 
-  get IRBResult() {
-    this._IRBResult = this._IRBResult || this.findPanelParentByTagName(`irb-result`);
-    return this._IRBResult;
+  get InsightsResult() {
+    this._InsightsResult = this._InsightsResult || this.findPanelParentByTagName(`insights-result`);
+    return this._InsightsResult;
   }
 });

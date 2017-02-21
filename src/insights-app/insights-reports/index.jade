@@ -85,7 +85,7 @@ mixin user-filter-option(label, value)
                 .report-col.reportlist-field-user
                   .user-icon(class={[`color-${initials[0]}`]: true})
                     = initials
-                    irb-mp-tooltip= report.user
+                    insights-mp-tooltip= report.user
                 .report-col.reportlist-field-modified= report.modifiedStr
                 .report-col.delete
                   if $helpers.hasWritePermissions()
@@ -95,7 +95,7 @@ mixin user-filter-option(label, value)
         svg-icon(attrs={icon: 'x'} on={click: $helpers.close})
 
   - const toDelete = reportsDrawer.confirmDelete
-  irb-mp-confirm-delete(
+  insights-mp-confirm-delete(
     attrs={open: !!toDelete, closeable: true}
     on={
       change: ev => $helpers.handleConfirmChange(ev.detail.state),

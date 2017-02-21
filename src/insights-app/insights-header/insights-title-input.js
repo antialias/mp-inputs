@@ -1,9 +1,9 @@
 import { Component } from 'panel';
 
-import template from './irb-title-input.jade';
-import './irb-title-input.styl';
+import template from './insights-title-input.jade';
+import './insights-title-input.styl';
 
-document.registerElement(`irb-title-input`, class extends Component {
+document.registerElement(`insights-title-input`, class extends Component {
   get config() {
     return {
       defaultState: {

@@ -1,7 +1,7 @@
-import initIRB from './init';
+import initInsights from './init';
 
-initIRB().then(IRB => {
+initInsights().then(Insights => {
   const appContainer = document.getElementById(`mixpanel-application`);
   appContainer.innerHTML = ``;
-  appContainer.appendChild(IRB);
+  appContainer.appendChild(Insights);
 });

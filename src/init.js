@@ -2,30 +2,30 @@ import MPContext from './mp-context';
 import { mixpanel, rollbar } from './tracking';
 import { parseURLQueryParams } from './util';
 
-import './irb-app';
+import './insights-app';
 
 import './stylesheets/index.styl';
 
 
-const initIRB = () => new Promise(resolve => {
-  const IRB = document.createElement(`irb-app`);
+const initInsights = () => new Promise(resolve => {
+  const Insights = document.createElement(`insights-app`);
 
   const mpContext = new MPContext();
-  IRB.apiHost = mpContext.apiHost;
+  Insights.apiHost = mpContext.apiHost;
 
   if (mpContext.standalone) {
 
     const queryParams = parseURLQueryParams();
-    IRB.apiKey = queryParams.api_key;
-    IRB.apiSecret = queryParams.api_secret;
-    IRB.setMPContext(mpContext);
-    resolve(IRB);
+    Insights.apiKey = queryParams.api_key;
+    Insights.apiSecret = queryParams.api_secret;
+    Insights.setMPContext(mpContext);
+    resolve(Insights);
 
   } else {
 
-    IRB.apiKey = mpContext.apiKey;
-    IRB.apiSecret = mpContext.apiSecret;
-    IRB.setMPContext(mpContext);
+    Insights.apiKey = mpContext.apiKey;
+    Insights.apiSecret = mpContext.apiSecret;
+    Insights.setMPContext(mpContext);
 
     mixpanel.identify(mpContext.userID);
     mixpanel.register({
@@ -46,9 +46,9 @@ const initIRB = () => new Promise(resolve => {
         },
       },
     });
-    resolve(IRB);
+    resolve(Insights);
 
   }
 });
 
-export default initIRB;
+export default initInsights;

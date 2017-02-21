@@ -157,7 +157,7 @@ mixin filter-number-input(value, oninput, options)
             - const [from, to] = Array.isArray(clause.filterValue) ? clause.filterValue : [null, null];
             - const isBetween = clause.filterOperator === `was between`
             .filter-numdate
-              irb-datepicker(
+              insights-datepicker(
                 attrs={
                   'max-data-history': $helpers.getMaxDataHistoryDays(),
                   range: isBetween,

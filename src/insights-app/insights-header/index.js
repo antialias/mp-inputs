@@ -2,12 +2,12 @@ import { Component } from 'panel';
 
 import { dataToCSV } from '../../util/csv';
 
-import './irb-title-input';
+import './insights-title-input';
 
 import template from './index.jade';
 import './index.styl';
 
-document.registerElement(`irb-header`, class extends Component {
+document.registerElement(`insights-header`, class extends Component {
   get config() {
     return {
       helpers: {

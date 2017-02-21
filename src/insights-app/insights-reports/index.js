@@ -19,7 +19,7 @@ import './index.styl';
 // mixpanel-common and panel soon
 // -------------------------------------------------------------------------------
 // const MPToggle = window[`mp-common-registered-components`][`mp-toggle`];
-// document.registerElement(`irb-mp-toggle`, class extends MPToggle {
+// document.registerElement(`insights-mp-toggle`, class extends MPToggle {
 //   attachedCallback() {
 //     if (this.initialized) {
 //       return;
@@ -28,7 +28,7 @@ import './index.styl';
 //   }
 // });
 const MPTooltip = window[`mp-common-registered-components`][`mp-tooltip`];
-document.registerElement(`irb-mp-tooltip`, class extends MPTooltip {
+document.registerElement(`insights-mp-tooltip`, class extends MPTooltip {
   attachedCallback() {
     if (!this.initialized) {
       super.attachedCallback(...arguments);
@@ -40,7 +40,7 @@ document.registerElement(`irb-mp-tooltip`, class extends MPTooltip {
   }
 });
 const MPConfDel = window[`mp-common-registered-components`][`mp-confirm-delete`];
-document.registerElement(`irb-mp-confirm-delete`, class extends MPConfDel {
+document.registerElement(`insights-mp-confirm-delete`, class extends MPConfDel {
   attachedCallback() {
     if (this.initialized) {
       return;
@@ -64,7 +64,7 @@ const LEQ_ORDER = {
   desc: leqToNumericOrdering((a, b) => b <= a),
 };
 
-document.registerElement(`irb-reports`, class extends Component {
+document.registerElement(`insights-reports`, class extends Component {
   get config() {
     return {
       template,

@@ -1,12 +1,12 @@
-import initIRB from '../../src/init';
+import initInsights from '../../src/init';
 
 const raf = () => new Promise(requestAnimationFrame);
 
-describe(`fully integrated irb-app`, function() {
+describe(`fully integrated insights-app`, function() {
   let app;
 
   beforeEach(async function() {
-    app = await initIRB();
+    app = await initInsights();
     app.apiSecret = `test_secret`;
     document.body.innerHTML = ``;
     document.body.appendChild(app);
@@ -14,7 +14,7 @@ describe(`fully integrated irb-app`, function() {
   });
 
   it(`renders main sections`, function() {
-    for (const section of [`irb-header`, `irb-builder`, `irb-result`, `irb-reports`]) {
+    for (const section of [`insights-header`, `insights-builder`, `insights-result`, `insights-reports`]) {
       expect(app.querySelector(section)).to.be.ok;
     }
   });

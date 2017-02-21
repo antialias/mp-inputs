@@ -1,11 +1,11 @@
-mixin irb-learn-tooltip(...stepNames)
+mixin insights-learn-tooltip(...stepNames)
   if learnActive
     - const step = util.getLearnStep(report, learnModalStepIndex)
     - const stepName = stepNames.includes(step.name) ? step.name : stepNames[stepNames.length - 1].name
 
     mp-tutorial-tooltip(
       class={
-        'irb-learn-reminding': learnReminding,
+        'insights-learn-reminding': learnReminding,
       }
       attrs={
         hide: learnTransitioningOut || !stepNames.includes(step.name),

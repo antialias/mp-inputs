@@ -1,18 +1,18 @@
 - const learnStep = learnActive && util.getLearnStep(report, learnModalStepIndex);
 - const learnClass = learnStep && learnStep.cls;
 
-.irb-app(class={
+.insights-app(class={
   'error-no-project-data': !projectHasEvents,
-  'irb-learn-active': !!learnActive,
+  'insights-learn-active': !!learnActive,
   [learnClass]: !!learnClass,
 })
   if learnActive
-    = $component.child(`irb-learn`)
-  .irb-main-panel.top-panel
-    = $component.child(`irb-header`)
-    = $component.child(`irb-builder`)
-  .irb-main-panel.bottom-panel
-    = $component.child(`irb-result`)
+    = $component.child(`insights-learn`)
+  .insights-main-panel.top-panel
+    = $component.child(`insights-header`)
+    = $component.child(`insights-builder`)
+  .insights-main-panel.bottom-panel
+    = $component.child(`insights-result`)
 
   .refresh-toast-stage
     mp-toast(
@@ -26,4 +26,4 @@
       }
     ) You have new data.
 
-  = $component.child(`irb-reports`)
+  = $component.child(`insights-reports`)

@@ -10,7 +10,7 @@ const SORT_ICONS = {
   value: `value`,
 };
 
-document.registerElement(`irb-bar-chart-header`, class extends Component {
+document.registerElement(`insights-bar-chart-header`, class extends Component {
   get config() {
     return {
       helpers: {

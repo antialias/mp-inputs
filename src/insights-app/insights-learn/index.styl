@@ -2,7 +2,7 @@
 
 // Learn modals
 
-body irb-mp-modal.irb-learn
+body insights-mp-modal.insights-learn
   width 520px
 
   .mp-modal-content
@@ -28,25 +28,25 @@ body irb-mp-modal.irb-learn
       svg-icon-style(grey-200)
 
   // TODO these styles shouldn't be necessary once we don't need to extend mp-button-bar
-  //      to irb-mp-button-bar; they're normally applied via mp-button-bar host-context
-  irb-mp-button-bar
+  //      to insights-mp-button-bar; they're normally applied via mp-button-bar host-context
+  insights-mp-button-bar
     display block
     height 48px
     margin-bottom -2px
     margin-left -1px
     width calc(100% + 2px)
 
-.irb-app.irb-learn-active
+.insights-app.insights-learn-active
 
   // Learn tooltips
 
-  .irb-learn-tooltip-container
+  .insights-learn-tooltip-container
     position relative
 
     mp-tutorial-tooltip
       z-index 99 // allow drop-menus to overlap tooltips
 
-    &:not(.irb-learn-transitioning) mp-tutorial-tooltip:not(.irb-learn-reminding)[hide="false"] + *
+    &:not(.insights-learn-transitioning) mp-tutorial-tooltip:not(.insights-learn-reminding)[hide="false"] + *
       z-index 100 // make sure tooltips don't overlap adjacent controls
 
     .mp-tooltip-title
@@ -63,37 +63,37 @@ body irb-mp-modal.irb-learn
 
   // Learn disabled UI
 
-  .irb-learn-disabled,
-  .irb-learn-disabled-except-first-child > :not(:first-child),
-  .irb-learn-disabled-except-last-child > :not(:last-child)
+  .insights-learn-disabled,
+  .insights-learn-disabled-except-first-child > :not(:first-child),
+  .insights-learn-disabled-except-last-child > :not(:last-child)
     opacity 0.2
     pointer-events none
 
-  &.irb-learn-choose-event
-    .irb-learn-choose-event-disabled,
-    .irb-learn-choose-event-disabled-except-first-child > :not(:first-child),
-    .irb-learn-choose-event-disabled-except-last-child > :not(:last-child)
+  &.insights-learn-choose-event
+    .insights-learn-choose-event-disabled,
+    .insights-learn-choose-event-disabled-except-first-child > :not(:first-child),
+    .insights-learn-choose-event-disabled-except-last-child > :not(:last-child)
       opacity 0.2
       pointer-events none
 
-  &.irb-learn-compare-event
-    .irb-learn-compare-event-disabled,
-    .irb-learn-compare-event-disabled-except-first-child > :not(:first-child),
-    .irb-learn-compare-event-disabled-except-last-child > :not(:last-child)
+  &.insights-learn-compare-event
+    .insights-learn-compare-event-disabled,
+    .insights-learn-compare-event-disabled-except-first-child > :not(:first-child),
+    .insights-learn-compare-event-disabled-except-last-child > :not(:last-child)
       opacity 0.2
       pointer-events none
 
-  &.irb-learn-group-by
-    .irb-learn-group-by-disabled,
-    .irb-learn-group-by-disabled-except-first-child > :not(:first-child),
-    .irb-learn-group-by-disabled-except-last-child > :not(:last-child)
+  &.insights-learn-group-by
+    .insights-learn-group-by-disabled,
+    .insights-learn-group-by-disabled-except-first-child > :not(:first-child),
+    .insights-learn-group-by-disabled-except-last-child > :not(:last-child)
       opacity 0.2
       pointer-events none
 
-  &.irb-learn-manipulate-data
-    .irb-learn-manipulate-data-disabled,
-    .irb-learn-manipulate-data-disabled-except-first-child > :not(:first-child),
-    .irb-learn-manipulate-data-disabled-except-last-child > :not(:last-child)
+  &.insights-learn-manipulate-data
+    .insights-learn-manipulate-data-disabled,
+    .insights-learn-manipulate-data-disabled-except-first-child > :not(:first-child),
+    .insights-learn-manipulate-data-disabled-except-last-child > :not(:last-child)
       opacity 0.2
       pointer-events none
 
@@ -113,9 +113,9 @@ body irb-mp-modal.irb-learn
     90%
       transform translateX(1px)
 
-  .irb-learn-transitioning .irb-learn-emphasize,
-  .irb-learn-transitioning.irb-learn-emphasize > :not(mp-tutorial-tooltip),
-  .irb-learn-reminding .irb-learn-emphasize,
-  mp-tutorial-tooltip.irb-learn-reminding
+  .insights-learn-transitioning .insights-learn-emphasize,
+  .insights-learn-transitioning.insights-learn-emphasize > :not(mp-tutorial-tooltip),
+  .insights-learn-reminding .insights-learn-emphasize,
+  mp-tutorial-tooltip.insights-learn-reminding
     animation wiggle 1s cubic-bezier(.36,.07,.19,.97) 200ms both
     transform translateX(0)

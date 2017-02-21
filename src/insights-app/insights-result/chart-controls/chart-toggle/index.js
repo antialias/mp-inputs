@@ -41,7 +41,7 @@ document.registerElement(`chart-toggle`, class extends Component {
           if (this.app.state.projectHasEvents && !this.isChartTypeDisabled(chartType)) {
             const reportTrackingData = this.state.report.toTrackingData();
             const displayOptions = this.state.report.displayOptions;
-            this.IRBResult.updateDisplayOptions({chartType, plotStyle});
+            this.InsightsResult.updateDisplayOptions({chartType, plotStyle});
             if (displayOptions.chartType !== chartType || displayOptions.plotStyle !== plotStyle) {
               this.app.trackEvent(
                 `Chart Options - Changed Chart Type`,
@@ -65,8 +65,8 @@ document.registerElement(`chart-toggle`, class extends Component {
     return disabledChartTypes.has(type);
   }
 
-  get IRBResult() {
-    this._IRBResult = this._IRBResult || this.findPanelParentByTagName(`irb-result`);
-    return this._IRBResult;
+  get InsightsResult() {
+    this._InsightsResult = this._InsightsResult || this.findPanelParentByTagName(`insights-result`);
+    return this._InsightsResult;
   }
 });

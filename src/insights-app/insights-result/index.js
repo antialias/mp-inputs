@@ -49,7 +49,7 @@ const VALUE_TOGGLE_AVAILABLE = {
   'Stacked line': true,
 };
 
-document.registerElement(`irb-result`, class extends Component {
+document.registerElement(`insights-result`, class extends Component {
   get config() {
     return {
       template,

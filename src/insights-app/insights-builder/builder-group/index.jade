@@ -3,7 +3,7 @@ include ../mixins.jade
 - const groupClauses = report.sections.group.clauses
 - const lenGroupClauses = groupClauses.length
 
-.builder-section.builder-group.irb-learn-disabled
+.builder-section.builder-group.insights-learn-disabled
   each clause, clauseIdx in groupClauses
     - const reorderRight = clauseIdx < lenGroupClauses - 1
     .clause-container

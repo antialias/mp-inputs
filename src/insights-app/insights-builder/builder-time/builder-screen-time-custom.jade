@@ -15,7 +15,7 @@ include ../mixins.jade
   else
     +screen-title(`Choose a date range`, {backButton: true})
   .range-control
-    irb-datepicker(
+    insights-datepicker(
       attrs={
         'max-data-history': maxDataHistoryDays,
         range: true,

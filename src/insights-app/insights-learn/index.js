@@ -8,7 +8,7 @@ import './index.styl';
 // mixpanel-common and panel soon
 // -------------------------------------------------------------------------------
 const MPButtonBar = window[`mp-common-registered-components`][`mp-button-bar`];
-document.registerElement(`irb-mp-button-bar`, class extends MPButtonBar {
+document.registerElement(`insights-mp-button-bar`, class extends MPButtonBar {
   attachedCallback() {
     if (!this.initialized) {
       super.attachedCallback(...arguments);
@@ -17,7 +17,7 @@ document.registerElement(`irb-mp-button-bar`, class extends MPButtonBar {
 });
 
 const MPModal = window[`mp-common-registered-components`][`mp-modal`];
-document.registerElement(`irb-mp-modal`, class extends MPModal {
+document.registerElement(`insights-mp-modal`, class extends MPModal {
   attachedCallback() {
     if (this.initialized) {
       return;
@@ -36,7 +36,7 @@ document.registerElement(`irb-mp-modal`, class extends MPModal {
 });
 // -------------------------------------------------------------------------------
 
-document.registerElement(`irb-learn`, class extends Component {
+document.registerElement(`insights-learn`, class extends Component {
   get config() {
     return {
       template,

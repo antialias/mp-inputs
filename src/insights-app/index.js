@@ -20,18 +20,18 @@ import QueryCache from '../models/queries/query-cache';
 import Report from '../models/report';
 import Result from '../models/result';
 
-import './irb-header';
-import './irb-builder';
-import './irb-result';
-import './irb-learn';
-import './irb-reports';
+import './insights-header';
+import './insights-builder';
+import './insights-result';
+import './insights-learn';
+import './insights-reports';
 
 import template from './index.jade';
 import './index.styl';
 
 const MINUTE_MS = 1000 * 60;
 
-document.registerElement(`irb-app`, class IRBApp extends MPApp {
+document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   get config() {
     return {
       template,
@@ -331,7 +331,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   get persistenceKey() {
-    return `irb-de8ae95`;
+    return `insights-de8ae95`;
   }
 
   toSerializationAttrs() {

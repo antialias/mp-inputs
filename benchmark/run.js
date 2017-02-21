@@ -23,12 +23,12 @@ const debugLog = function() {
   }
 }
 
-// track to IRB project
+// track to Insights project
 const mixpanel = Mixpanel.init('2fd54f3085a7b7d70da94096fc415078');
 
-function buildIRBQuery(queryParams) {
+function buildInsightsQuery(queryParams) {
   debugLog('Building query for params:', queryParams);
-  const irbQuery = new SegmentationQuery({
+  const insightsQuery = new SegmentationQuery({
     apiHost: API_BASE,
     apiSecret: queryParams.apiSecret,
   }, {customEvents: []});
@@ -53,13 +53,13 @@ function buildIRBQuery(queryParams) {
   }
   debugLog(state.report.sections.show);
   debugLog(state.report.sections.group);
-  irbQuery.query = irbQuery.buildQuery(state);
-  debugLog(irbQuery.query);
-  return irbQuery;
+  insightsQuery.query = insightsQuery.buildQuery(state);
+  debugLog(insightsQuery.query);
+  return insightsQuery;
 }
 
 function timeJQLQueries(queryParams) {
-  return buildIRBQuery(queryParams).buildJQLArgs().map(queryArgs => queryArgs.then(queryArgs => {
+  return buildInsightsQuery(queryParams).buildJQLArgs().map(queryArgs => queryArgs.then(queryArgs => {
     const [url, params, options] = queryArgs;
     debugLog(params.params);    // JQL params
     return timeQuery(`${API_BASE}/${url}`, {
@@ -75,31 +75,31 @@ function timeJQLQueries(queryParams) {
 }
 
 function timeSegQueries(queryParams) {
-  return buildIRBQuery(queryParams).buildJQLArgs().map(queryArgs => queryArgs.then(queryArgs => {
-    const irbParams = JSON.parse(queryArgs[1].params);
+  return buildInsightsQuery(queryParams).buildJQLArgs().map(queryArgs => queryArgs.then(queryArgs => {
+    const insightsParams = JSON.parse(queryArgs[1].params);
     const params = {
-      event: irbParams.selectors[0].event,
-      from_date: irbParams.dates.from,
-      to_date: irbParams.dates.to,
+      event: insightsParams.selectors[0].event,
+      from_date: insightsParams.dates.from,
+      to_date: insightsParams.dates.to,
       type: 'general',
-      unit: irbParams.dates.unit,
+      unit: insightsParams.dates.unit,
     };
-    debugLog(irbParams);        // IRB params
+    debugLog(insightsParams);        // Insights params
     let url = SEGMENTATION_API_BASE;
-    const groups = irbParams.groups;
-    if (irbParams.property && groups.length > 0) {
+    const groups = insightsParams.groups;
+    if (insightsParams.property && groups.length > 0) {
       console.error('Segmentation only supports operators on numeric properties with no groupBys.');
       process.exit(1);
     }
 
     switch (groups.length) {
       case 0:
-        if (irbParams.property) {
-          if (['unique', 'median'].includes(irbParams.type)) {
-            console.error(`Segmentation does not support ${irbParams.type} for numeric properties.`);
+        if (insightsParams.property) {
+          if (['unique', 'median'].includes(insightsParams.type)) {
+            console.error(`Segmentation does not support ${insightsParams.type} for numeric properties.`);
             process.exit(1);
           }
-          const property = irbParams.property;
+          const property = insightsParams.property;
           Object.assign(params, {
             on: `number(${toArbSelectorPropertyToken(property.resourceType, property.name)})`,
             limit: 150,
@@ -107,7 +107,7 @@ function timeSegQueries(queryParams) {
             allow_more_buckets: false,
           });
 
-          const type = irbParams.type === 'total' ? 'sum' : irbParams.type;
+          const type = insightsParams.type === 'total' ? 'sum' : insightsParams.type;
           url = `${url}/${type}`;
         }
         break;

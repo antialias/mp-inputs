@@ -351,7 +351,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     // a whole pile of garbage courtesy of
     // https://github.com/mixpanel/mixpanel-platform/blob/d171a3e/js/ui/chart.js#L449-L580
 
-    // I presume we can replace this with one of our existing IRB/mp-common utils
+    // I presume we can replace this with one of our existing Insights/mp-common utils
     const _flat = function(obj, depth) {
       if (typeof obj !== `object`) {
         return obj;

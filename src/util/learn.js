@@ -22,27 +22,27 @@ const steps = [{
 }, {
   name: `choose-event`,
   trackName: `Show`,
-  cls: `irb-learn-choose-event`,
+  cls: `insights-learn-choose-event`,
   condition: index => index === 1,
   transitionOutMs: 0,
   transitionInMs: 1200,
 }, {
   name: `compare-event`,
   trackName: `Compare`,
-  cls: `irb-learn-compare-event`,
+  cls: `insights-learn-compare-event`,
   condition: (index, report) => getShowClauseEvents(report).length === 1,
   transitionOutMs: 1200,
   transitionInMs: 1200,
 }, {
   name: `group-by`,
   trackName: `Group`,
-  cls: `irb-learn-group-by`,
+  cls: `insights-learn-group-by`,
   condition: (index, report) => getShowClauseEvents(report).length === 2,
   transitionInMs: 1200,
 }, {
   name: `manipulate-data`,
   trackName: `Chart`,
-  cls: `irb-learn-manipulate-data`,
+  cls: `insights-learn-manipulate-data`,
   condition: (index, report) => getGroupClauseProperties(report).length === 1,
   transitionOutMs: 1200,
   transitionInMs: 1200,
@@ -84,28 +84,28 @@ export function learnClasses({
   if (disabledSteps.length) {
     classes = disabledSteps.map((step, i) => {
       const childClass = childClasses[i] || ``;
-      return `irb-learn-${step}-disabled${childClass}`;
+      return `insights-learn-${step}-disabled${childClass}`;
     });
   } else if (childClasses.length) {
-    classes = childClasses.map(cls => `irb-learn-disabled${cls}`);
+    classes = childClasses.map(cls => `insights-learn-disabled${cls}`);
   } else if (disabled) {
-    classes = [`irb-learn-disabled`];
+    classes = [`insights-learn-disabled`];
   }
 
   if (tooltipContainer) {
-    classes.push(`irb-learn-tooltip-container`);
+    classes.push(`insights-learn-tooltip-container`);
   }
 
   if (transitioning) {
-    classes.push(`irb-learn-transitioning`);
+    classes.push(`insights-learn-transitioning`);
   }
 
   if (reminding) {
-    classes.push(`irb-learn-reminding`);
+    classes.push(`insights-learn-reminding`);
   }
 
   if (emphasize) {
-    classes.push(`irb-learn-emphasize`);
+    classes.push(`insights-learn-emphasize`);
   }
 
   return Object.assign(...classes.map(cls => ({[cls]: true})));

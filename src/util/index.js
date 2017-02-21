@@ -1,4 +1,4 @@
-// IRB-specific utils
+// Insights-specific utils
 import cloneDeep from 'lodash/cloneDeep';
 import { nestedObjectDepth, objectFromPairs } from 'mixpanel-common/util';
 

@@ -97,4 +97,4 @@ class DatePicker extends Component {
   }
 }
 
-document.registerElement(`irb-datepicker`, DatePicker);
+document.registerElement(`insights-datepicker`, DatePicker);

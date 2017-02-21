@@ -1,4 +1,4 @@
-include ../irb-learn/tooltip.jade
+include ../insights-learn/tooltip.jade
 
 - const open = $helpers.isPaneOpen()
 - const showUpsellIcon = $helpers.shouldShowUpsellIcon()
@@ -11,9 +11,9 @@ include ../irb-learn/tooltip.jade
     transitioning: learnTransitioningIn && [`compare-event`, `group-by`].includes(learnStep.name),
   })
 )
-  +irb-learn-tooltip(`compare-event`, `group-by`)
-  .irb-new-control.new-query-builder(class={'pane-open': open})
-    .control-buttons.add-control.irb-learn-emphasize
+  +insights-learn-tooltip(`compare-event`, `group-by`)
+  .insights-new-control.new-query-builder(class={'pane-open': open})
+    .control-buttons.add-control.insights-learn-emphasize
       button.add-button(
         class={'disable-add-button': showUpsellIcon}
         on={click: $helpers.clickedAdd}

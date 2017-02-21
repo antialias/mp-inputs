@@ -2,4 +2,4 @@ import '../../standalone'; // run polyfills and define mixpanel-common component
 import '../../src/init';   // define all app components
 
 // import test suites
-import './irb-app';
+import './insights-app';
