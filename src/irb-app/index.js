@@ -659,10 +659,9 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
     if (isPeopleAndNotTimeSeries && report.displayOptions.chartType === `line`) {
       report.displayOptions.chartType = `bar`;
     }
-
     this.update({report});
-    const nextLearnStep = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
 
+    const nextLearnStep = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
     const prevLearnStep = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
     if (this.state.learnActive && prevLearnStep.name !== nextLearnStep.name) {
       this.transitionLearn();
