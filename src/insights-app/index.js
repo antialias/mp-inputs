@@ -331,7 +331,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   get persistenceKey() {
-    return `insights-de8ae95`;
+    // TODO rename to insights- at next format change
+    return `irb-de8ae95`;
   }
 
   toSerializationAttrs() {
