@@ -6,6 +6,9 @@ set -o errexit -o pipefail -o nounset -o xtrace
 wget -qO - https://deb.nodesource.com/setup_4.x | bash -
 apt-get install -y nodejs
 
+export SAUCE_USERNAME=mixpanel
+export SAUCE_ACCESS_KEY=`cat /etc/secrets/saucelabs/access-key`
+
 # run
 npm install
 npm run lint

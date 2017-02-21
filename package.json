@@ -14,6 +14,7 @@
     "start": "npm run watch",
     "test": "npm run test-unit && npm run build-test && npm run test-browser-sauce",
     "test-browser-local": "wct --plugin local test/browser/index.html",
+    "test-browser-sauce": "wct --plugin sauce test/browser/index.html",
     "test-p": "wct --plugin local --persistent test/browser/index.html",
     "test-unit": "mocha --require babel-core/register --require babel-polyfill test/unit",
     "watch": "webpack --progress --colors --watch"
