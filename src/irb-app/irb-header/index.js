@@ -30,10 +30,7 @@ document.registerElement(`irb-header`, class extends Component {
               this.resetSaveFeedback();
               clearTimeout(this.saveFeedbackTimeout);
               this.app.saveReport({saveAsNew: ev.detail.saveAsNew, newReportData})
-                .then(() => {
-                  this.update({saved: true});
-                  this.app.updateReport(newReportData);
-                })
+                .then(() => this.update({saved: true}))
                 .catch(() => this.update({saveFailed: true}))
                 // TODO extract and share this duration, also used in add-to-dash
                 .then(() => this.saveFeedbackTimeout = setTimeout(() => this.resetSaveFeedback(), 3300));

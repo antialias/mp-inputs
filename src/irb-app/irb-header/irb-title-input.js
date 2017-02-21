@@ -14,8 +14,10 @@ document.registerElement(`irb-title-input`, class extends Component {
       },
       helpers: {
         blur: () => {
-          this.update({active: false});
-          this.dispatchChange();
+          if (this.state.active) {
+            this.update({active: false});
+            this.dispatchChange();
+          }
         },
         focus: () => this.update({active: true, isDirty: false}),
         inputChange: () => {
@@ -61,6 +63,7 @@ document.registerElement(`irb-title-input`, class extends Component {
     ev.stopPropagation();
     if (this.state.active) {
       this.dispatchChange({save: true, saveAsNew});
+      this.update({active: false});
       this.inputEl.blur();
     } else {
       this.inputEl.focus();
