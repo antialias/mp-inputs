@@ -30,15 +30,7 @@ export class BuilderScreenBase extends Component {
   get config() {
     return {
       helpers: {
-        isActiveItem: item => {
-          const activeItem = this.state.builderPane.activeListItem;
-          if (activeItem === null || item === null) {
-            return false;
-          }
-          return item.name === activeItem.name && 
-                 item.resourceType === activeItem.resourceType &&
-                 item.section === activeItem.section;
-        },
+        isActiveItem: item => item.index === this.state.builderPane.activeIndex,
         clickedEvent: value => {
           this.app.updateRecentEvents(value);
           this.updateAndCommitStageClause({value, property: null});
@@ -178,6 +170,7 @@ export class BuilderScreenBase extends Component {
     if (!this.state.builderPane.inTransition) {
       this.app.update({contextFilter: ``});
       this.app.updateBuilder({
+        activeIndex: 0,
         inTransition: true,
         screens: this.state.builderPane.screens.concat({componentName}),
       });

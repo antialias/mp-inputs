@@ -11,26 +11,32 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
     return {
       template,
       helpers: extend(super.config.helpers, {
-        getEvents: () => this.buildProgressiveList(),
-        getRecentEvents: () => this.getRecentEvents(),
+        getEventSections: () => this.getAllEvents(),
       }),
     };
   }
 
-  attachedCallback() {
-    super.attachedCallback(...arguments);
-    const eventList = [...this.getRecentEvents(), ...this.buildList()];
-    this.app.updateBuilder({
-      activeListItem: eventList.length ? eventList[0] : null,
-      visibleListItems: eventList,
-    });
-  }
+  getAllEvents() {
+    let sections = [];
 
-  detachedCallback() {
-    this.app.updateBuilder({
-      activeListItem: null,
-      visibleListItems: [],
+    sections.push({
+      label: `Recently Viewed`,
+      list: this.getRecentEvents(),
     });
+
+    sections.push({
+      label: `Events`,
+      list: this.buildProgressiveList(),
+    });
+
+    let index = 0;
+    sections.forEach(section => {
+      section.list.forEach(option => {
+        option.index = index++;
+      });
+    });
+
+    return sections;
   }
 
   getRecentEvents() {

@@ -16,20 +16,23 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     };
   }
 
-
   attachedCallback() {
     super.attachedCallback(...arguments);
-    const propertyList = [...this.getMatchedRecentProperties(), ...this.getProperties()];
-    this.app.updateBuilder({
-      activeListItem: propertyList.length ? propertyList[0] : null,
-      visibleListItems: propertyList,
-    });
+    this.updateVisibleItemList();
   }
 
   detachedCallback() {
     this.app.updateBuilder({
       activeListItem: null,
       visibleListItems: [],
+    });
+  }
+
+  updateVisibleItemList() {
+    const propertyList = [...this.getMatchedRecentProperties(), ...this.getProperties()];
+    this.app.updateBuilder({
+      activeListItem: propertyList.length ? propertyList[0] : null,
+      visibleListItems: propertyList,
     });
   }
 
@@ -115,6 +118,13 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
         list: this.getProperties(ShowClause.RESOURCE_TYPE_PEOPLE),
       });
     }
+
+    let index = 0;
+    sections.forEach(section => {
+      section.list.forEach(option => {
+        option.index = index++;
+      });
+    });
 
     return sections;
   }

@@ -1,6 +1,6 @@
 include ../mixins.jade
 
-- const recentEvents = $helpers.getRecentEvents()
+- const allEvents = $helpers.getEventSections()
 - const eventListOptions = {
 -   clickedEvent: $helpers.clickedEvent,
 -   clickedEventProperties: $helpers.clickedEventProperties,
@@ -15,7 +15,13 @@ include ../mixins.jade
     hook={postpatch: $helpers.updateRenderedSize}
     on={scroll: $helpers.scrolledList}
   )
-    if recentEvents.length
-      .builder-label Recently viewed
-      +event-list(recentEvents, eventListOptions)
-    +event-list($helpers.getEvents(), eventListOptions)
+    - let hasResults = false
+    each section, idx in allEvents
+      if section.list.length
+        if hasResults === true
+          .builder-divider
+        .builder-label= section.label
+        +event-list(section.list, eventListOptions)
+        - hasResults = true
+    if !hasResults
+      li.list-option.list-empty Your search returned no results

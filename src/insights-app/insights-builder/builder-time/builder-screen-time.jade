@@ -1,15 +1,15 @@
 include ../mixins.jade
 
 - const selected = $component.getAttribute(`selected`)
-- const activeItem = $helpers.activeListItem()
+- const activeIdx = builderPane.activeIndex
 
 .builder-screen.time
   ul.screen-options-list(hook={postpatch: $helpers.updateRenderedSize})
     - const ranges = $helpers.availableRanges()
     if ranges.length
-      each range in ranges
+      each range, idx in ranges
         - const isSelected = range.name === selected
-        - const isActive = range.name === (activeItem ? activeItem.name : '')
+        - const isActive = idx === activeIdx
         - const isCustom = range.name === $helpers.RANGES.CUSTOM
         - const showUpsellIcon = range.upsell
         li.list-option(

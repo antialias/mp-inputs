@@ -39,6 +39,7 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
         isPaneOpen: () => this.isPaneOpen(),
         changedSearch: throttle(ev => {
           this.update({contextFilter: ev.target.value});
+          this.app.updateBuilder({activeIndex: 0});
           this.app.updateBuilderCurrentScreen({progressiveListSize: null});
         }, 200, {leading: true, maxWait: 200}),
         shouldShowUpsellModal: () => (this.state.upsellModal === `builderClause`),

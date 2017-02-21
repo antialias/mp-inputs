@@ -35,6 +35,7 @@ export class EditControl extends Component {
         menuChange: ev => ev.detail && ev.detail.state === `closed` && this.isPaneOpen() && this.app.stopBuildingQuery(),
         changedSearch: throttle(ev => {
           this.update({contextFilter: ev.target.value});
+          this.app.updateBuilder({activeIndex: 0});
           this.app.updateBuilderCurrentScreen({progressiveListSize: null});
         }, 200, {leading: true, maxWait: 200}),
         getLabel: () => this.getLabel(),

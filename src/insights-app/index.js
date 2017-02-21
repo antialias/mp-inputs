@@ -448,9 +448,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   get defaultBuilderState() {
     return {
-      activeListItem: null,
-      selectedListItem: null,
-      visibleListItems: [],
+      activeIndex: 0,
       inTransition: false,
       isContextualMenuOpen: false,
       isEditingTypecast: false,
@@ -475,18 +473,19 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     }
   }
 
-  setActiveItem(newActiveItem, scrollIntoView=true) {
-    this.updateBuilder({activeListItem: newActiveItem});
+  setActiveIndex(newIndex, scrollIntoView=true) {
+    this.updateBuilder({activeIndex: newIndex});
+    const listEl = this.el.querySelector(`.screen-list-container`);
 
-    if (scrollIntoView) {
+    if (scrollIntoView && listEl) {
       window.requestAnimationFrame(() => {
         const activeEl = this.el.querySelector(`.list-option-active`);
         if (activeEl) {
-          const listEl = this.el.querySelector(`.screen-list-container`);
+          const screenTitle = this.el.querySelector(`.screen-title`);
+          const resourceControl = this.el.querySelector(`.resource-type-control`);
           const viewportBottom = listEl.scrollTop + listEl.offsetHeight;
           const activeElBottom = activeEl.offsetTop + activeEl.offsetHeight;
-          const headerHeight = this.el.querySelector(`.screen-title`).offsetHeight +
-                               this.el.querySelector(`.resource-type-control`).offsetHeight;
+          const headerHeight = (screenTitle ? screenTitle.offsetHeight : 0) + (resourceControl ? resourceControl.offsetHeight : 0);
           if (activeEl.offsetTop - headerHeight < listEl.scrollTop) {
             listEl.scrollTop = activeEl.offsetTop - headerHeight - 8;
           } else if (activeElBottom > viewportBottom) {
@@ -498,8 +497,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   handleKeydown(e) {
-    const listItems = this.state.builderPane.visibleListItems;
-    const activeIdx = listItems.indexOf(this.state.builderPane.activeListItem);
+    const activeIdx = this.state.builderPane.activeIndex;
+    const itemCount = this.el.querySelectorAll(`.builder-pane .list-option:not(.contextual-menu-option)`).length;
+
     switch(e.keyCode) {
       case 13: // enter
         //todo
@@ -507,14 +507,14 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       case 38: { // up arrow
         e.preventDefault();
         if (activeIdx !== 0) {
-          this.setActiveItem(listItems[activeIdx - 1]);
+          this.setActiveIndex(activeIdx - 1);
         }
         break;
       }
       case 40: { // down arrow
         e.preventDefault();
-        if (activeIdx < listItems.length - 1) {
-          this.setActiveItem(listItems[activeIdx + 1]);
+        if (activeIdx < itemCount - 1) {
+          this.setActiveIndex(activeIdx + 1);
         }
         break;
       }
