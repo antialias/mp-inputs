@@ -1,7 +1,7 @@
 {
-  "name": "irb",
-  "version": "0.1.0",
-  "description": "Interactive report builder",
+  "name": "insights",
+  "version": "1.0.0",
+  "description": "Mixpanel's Insights report",
   "main": "index.js",
   "scripts": {
     "benchmark": "babel-node --presets es2015 --plugins syntax-async-functions,transform-regenerator benchmark/run",
