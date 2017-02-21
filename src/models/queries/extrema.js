@@ -1,6 +1,6 @@
 import BaseQuery from './base';
 import { Clause } from '../clause';
-import { extend, formatDateISO, pick } from '../../util';
+import { extend, formatDate, pick } from '../../util';
 
 import main from './extrema.jql.js';
 
@@ -33,8 +33,8 @@ export default class ExtremaJQLQuery extends BaseQuery {
 
   buildParams({params={}}={}) {
     params = extend(params, pick(this.query, [`selectors`, `property`]));
-    params.from = formatDateISO(this.query.from);
-    params.to = formatDateISO(this.query.to);
+    params.from = formatDate(this.query.from, {iso: true});
+    params.to = formatDate(this.query.to, {iso: true});
     params.propertyPath = `properties.${params.property}`;
     if (this.query.isPeopleProperty) {
       params.queryResourceType = Clause.RESOURCE_TYPE_PEOPLE;

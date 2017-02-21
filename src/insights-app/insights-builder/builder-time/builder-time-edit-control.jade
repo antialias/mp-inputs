@@ -3,8 +3,8 @@
 .control-container
   .insights-new-control.new-query-builder(class={'pane-open': open})
     .control-buttons.edit-control.control-button-text
-      if open
-        if $helpers.isPresetRange()
+      if $helpers.isPresetRange()
+        if open
           resize-input.control-label(
             attrs={
               autofocus: true,
@@ -21,7 +21,11 @@
             }
           )
         else
-          - const {from, to} = $helpers.getDates()
+          .control-label
+            .control-label-text(on={click: $helpers.clickedLabel})= $helpers.getLabel()
+      else
+        - const {from, to} = $helpers.getDates()
+        if open && builderPane.fromFocused
           resize-date-input.control-label(
             attrs={
               autofocus: builderPane.fromFocused,
@@ -36,11 +40,19 @@
               click: $helpers.clickedInput,
               input: $helpers.updatedFrom,
               change: $helpers.changedFrom,
-              focus: $helpers.focusedFrom,
-              blur: $helpers.blurredFrom,
+              focus: $helpers.focusFrom,
+              blur: $helpers.refocusFrom,
+            }
+            hook={
+              postpatch: builderPane.fromFocused ? $helpers.focus : null,
             }
           )
-          .clause-language.preposition to
+        else
+          .control-label
+            .control-label-text(on={click: $helpers.clickedFromLabel})
+              = util.formatDate(util.parseDate(from))
+        .clause-language.preposition to
+        if open && builderPane.toFocused
           resize-date-input.control-label(
             attrs={
               autofocus: builderPane.toFocused,
@@ -55,22 +67,17 @@
               click: $helpers.clickedInput,
               input: $helpers.updatedTo,
               change: $helpers.changedTo,
-              focus: $helpers.focusedTo,
-              blur: $helpers.blurredTo,
+              focus: $helpers.focusTo,
+              blur: $helpers.refocusTo,
+            }
+            hook={
+              postpatch: builderPane.toFocused ? $helpers.focus : null,
             }
           )
-      else if $helpers.isPresetRange()
-        .control-label
-          .control-label-text(on={click: $helpers.clickedLabel})= $helpers.getLabel()
-      else
-        - const {from, to} = $helpers.getDates()
-        .control-label
-          .control-label-text(on={click: $helpers.clickedFromLabel})
-            = util.formatDate(util.parseDate(from))
-        .clause-language.preposition to
-        .control-label
-          .control-label-text(on={click: $helpers.clickedToLabel})
-            = util.formatDate(util.parseDate(to))
+        else
+          .control-label
+            .control-label-text(on={click: $helpers.clickedToLabel})
+              = util.formatDate(util.parseDate(to))
     .drop-menu
       mp-drop-menu(attrs={open} on={change: $helpers.menuChange})
         .new-pane-content(attrs={'slot-body': true})

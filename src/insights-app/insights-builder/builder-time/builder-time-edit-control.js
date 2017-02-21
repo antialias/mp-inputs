@@ -30,17 +30,26 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
         updatedFrom: ev => this.updateScreen(ev.target.value, {fromFocused: true}),
         updatedTo: ev => this.updateScreen(ev.target.value, {toFocused: true}),
         clickedFromLabel: () => {
-          this.app.updateBuilder({fromFocused: true});
+          this.helpers.focusFrom();
           this.helpers.clickedLabel();
         },
         clickedToLabel: () => {
-          this.app.updateBuilder({toFocused: true});
+          this.helpers.focusTo();
           this.helpers.clickedLabel();
         },
-        focusedFrom: () => this.app.updateBuilder({fromFocused: true}),
-        focusedTo: () => this.app.updateBuilder({toFocused: true}),
-        blurredFrom: () => this.app.updateBuilder({fromFocused: false}),
-        blurredTo: () => this.app.updateBuilder({toFocused: false}),
+        focus: vnode => requestAnimationFrame(() => vnode.elm.focus()),
+        focusFrom: () => this.app.updateBuilder({fromFocused: true, toFocused: false}),
+        focusTo: () => this.app.updateBuilder({toFocused: true, fromFocused: false}),
+        refocusFrom: () => requestAnimationFrame(() => {
+          if (!this.state.builderPane.toFocused && this.helpers.isPaneOpen()) {
+            this.helpers.focusFrom(); // re-focus if the input accidentally lost focus
+          }
+        }),
+        refocusTo: () => requestAnimationFrame(() => {
+          if (!this.state.builderPane.fromFocused && this.helpers.isPaneOpen()) {
+            this.helpers.focusTo(); // re-focus if the input accidentally lost focus
+          }
+        }),
         changedFrom: ev => this.setDates({from: ev.detail}),
         changedTo: ev => this.setDates({to: ev.detail}),
       }),

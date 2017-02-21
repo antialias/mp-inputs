@@ -24,12 +24,6 @@ export class EditControl extends Component {
           this.app.stopEditingClause();
           this.app.startEditingClause(this.section, this.clauseIndex);
         },
-        clickedFromLabel: () => {
-          this.helpers.clickedLabel();
-        },
-        clickedToLabel: () => {
-          this.helpers.clickedLabel();
-        },
         handleKeydown: ev => this.app.handleKeydown(ev),
         labelPrefixComponent: () => this.labelPrefixComponent(),
         menuChange: ev => ev.detail && ev.detail.state === `closed` && this.isPaneOpen() && this.app.stopBuildingQuery(),
