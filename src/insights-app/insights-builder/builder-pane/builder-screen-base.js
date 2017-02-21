@@ -32,7 +32,7 @@ export class BuilderScreenBase extends Component {
       helpers: {
         isActiveItem: item => {
           const activeItem = this.state.builderPane.activeListItem;
-          if (activeItem === null) {
+          if (activeItem === null || item === null) {
             return false;
           }
           return item.name === activeItem.name && item.resourceType === activeItem.resourceType;

@@ -30,6 +30,7 @@ export class EditControl extends Component {
         clickedToLabel: () => {
           this.helpers.clickedLabel();
         },
+        handleKeydown: e => this.app.handleKeydown(e),
         labelPrefixComponent: () => this.labelPrefixComponent(),
         menuChange: ev => ev.detail && ev.detail.state === `closed` && this.isPaneOpen() && this.app.stopBuildingQuery(),
         changedSearch: throttle(ev => {

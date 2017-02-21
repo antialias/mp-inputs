@@ -27,6 +27,7 @@ document.registerElement(`builder-filter-add-control`, class extends Component {
           }
         },
         clickedInput: ev => ev.stopPropagation(), // don't close menu!
+        handleKeydown: ev => this.app.handleKeydown(ev),
         insertedInput: vnode => vnode.elm.focus(),
         isPaneOpen: () => this.isPaneOpen(),
         changedSearch: ev => this.update({contextFilter: ev.target.value}),

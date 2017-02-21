@@ -18,14 +18,10 @@ document.registerElement(`typecast-pane`, class extends Component {
   get config() {
     return {
       helpers: {
-        avaliableTypes: () => {
-          const avaliableTypes = Array.from(new Set(GroupClause.PROPERTY_TYPECASTS.concat(this.getClausePropertyType())));
-          return avaliableTypes.map(type => ({
-            icon: getIconForPropertyType(type),
-            name: TYPE_FORMAT_MAP[type],
-            type,
-          }));
+        isActiveItem: item => {
+          return false;
         },
+        availableTypes: () => this.availableTypes(),
         clickedType: (ev, item) => {
           ev.stopPropagation();
           const typeCast = this.getClausePropertyType() === item.type ? null : item.type;
@@ -45,6 +41,15 @@ document.registerElement(`typecast-pane`, class extends Component {
       },
       template,
     };
+  }
+
+  availableTypes() {
+    const availableTypes = Array.from(new Set(GroupClause.PROPERTY_TYPECASTS.concat(this.getClausePropertyType())));
+    return availableTypes.map(type => ({
+      icon: getIconForPropertyType(type),
+      name: TYPE_FORMAT_MAP[type],
+      type,
+    }));
   }
 
   get clauseIndex() {

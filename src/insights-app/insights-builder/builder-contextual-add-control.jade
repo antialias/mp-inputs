@@ -39,6 +39,7 @@ include ../insights-learn/tooltip.jade
           on={
             click: $helpers.clickedInput,
             input: $helpers.changedSearch,
+            keydown: $helpers.handleKeydown,
           }
           props={
             autoFocus: true,

@@ -475,6 +475,30 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     }
   }
 
+  handleKeydown(e) {
+    const listItems = this.state.builderPane.visibleListItems;
+    const activeIdx = listItems.indexOf(this.state.builderPane.activeListItem);
+    switch(e.keyCode) {
+      case 13: // enter
+        //todo
+        break;
+      case 38: { // up arrow
+        e.preventDefault();
+        if (activeIdx !== 0) {
+          this.app.updateBuilder({activeListItem: listItems[activeIdx - 1]});
+        }
+        break;
+      }
+      case 40: { // down arrow
+        e.preventDefault();
+        if (activeIdx < listItems.length - 1) {
+          this.app.updateBuilder({activeListItem: listItems[activeIdx + 1]});
+        }
+        break;
+      }
+    }
+  }
+
   stopBuildingQuery() {
     this.stopEditingClause();
     // time for menu to close

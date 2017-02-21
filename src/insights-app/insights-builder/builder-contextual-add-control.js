@@ -28,6 +28,7 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
           }
         },
         clickedInput: ev => ev.stopPropagation(), // don't close menu!
+        handleKeydown: e => this.app.handleKeydown(e),
         menuChange: ev => ev.detail && ev.detail.state === `closed` && this.isPaneOpen() && this.app.stopBuildingQuery(),
         shouldShowUpsellIcon: () => (!this.app.canAddBuilderClause()),
         getPreposition: () => ({
