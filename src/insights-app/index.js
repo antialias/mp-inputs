@@ -485,8 +485,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
           const listEl = this.el.querySelector(`.screen-list-container`);
           const viewportBottom = listEl.scrollTop + listEl.offsetHeight;
           const activeElBottom = activeEl.offsetTop + activeEl.offsetHeight;
-          if (activeEl.offsetTop < listEl.scrollTop) {
-            listEl.scrollTop = activeEl.offsetTop - 8;
+          const headerHeight = this.el.querySelector(`.screen-title`).offsetHeight +
+                               this.el.querySelector(`.resource-type-control`).offsetHeight;
+          if (activeEl.offsetTop - headerHeight < listEl.scrollTop) {
+            listEl.scrollTop = activeEl.offsetTop - headerHeight - 8;
           } else if (activeElBottom > viewportBottom) {
             listEl.scrollTop = activeElBottom - listEl.offsetHeight + 8;
           }
