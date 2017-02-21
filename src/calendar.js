@@ -172,4 +172,4 @@ class Calendar extends WebComponent {
   }
 }
 
-document.registerElement(`irb-calendar`, Calendar);
+document.registerElement(`insights-calendar`, Calendar);
