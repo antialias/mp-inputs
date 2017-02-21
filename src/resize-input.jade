@@ -1,0 +1,22 @@
+.resize-input
+  input(
+    attrs={
+      placeholder: $component.placeholder,
+    }
+    props={
+      maxLength: 50,
+      type: `text`,
+      value: inputValue,
+    }
+    style={
+      width: `${inputWidth}px`,
+    }
+    on={
+      blur: $helpers.blurredInput,
+      focus: $helpers.focusedInput,
+      input: $helpers.updatedInput,
+    }
+    hook={
+      insert: $helpers.inserted,
+    }
+  )

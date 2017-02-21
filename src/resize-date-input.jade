@@ -1,0 +1,22 @@
+.resize-date-input
+  input(
+    attrs={
+      type: `text`,
+      placeholder: inputValue ? $helpers.formatDateDisplay(inputValue) : '',
+    }
+    props={
+      maxLength: 50,
+    }
+    style={
+      width: `${inputWidth}px`,
+    }
+    on={
+      input: $helpers.updatedInput,
+      focus: $helpers.focusedInput,
+      blur: $helpers.blurredInput,
+      change: $helpers.changedInput,
+    }
+    hook={
+      insert: $component.getAttribute('autofocus') ? $helpers.inserted : null,
+    }
+  )
