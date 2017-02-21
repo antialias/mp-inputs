@@ -8,24 +8,24 @@ import './stylesheets/index.styl';
 
 
 const initInsights = () => new Promise(resolve => {
-  const Insights = document.createElement(`insights-app`);
+  const app = document.createElement(`insights-app`);
 
   const mpContext = new MPContext();
-  Insights.apiHost = mpContext.apiHost;
+  app.apiHost = mpContext.apiHost;
 
   if (mpContext.standalone) {
 
     const queryParams = parseURLQueryParams();
-    Insights.apiKey = queryParams.api_key;
-    Insights.apiSecret = queryParams.api_secret;
-    Insights.setMPContext(mpContext);
-    resolve(Insights);
+    app.apiKey = queryParams.api_key;
+    app.apiSecret = queryParams.api_secret;
+    app.setMPContext(mpContext);
+    resolve(app);
 
   } else {
 
-    Insights.apiKey = mpContext.apiKey;
-    Insights.apiSecret = mpContext.apiSecret;
-    Insights.setMPContext(mpContext);
+    app.apiKey = mpContext.apiKey;
+    app.apiSecret = mpContext.apiSecret;
+    app.setMPContext(mpContext);
 
     mixpanel.identify(mpContext.userID);
     mixpanel.register({
@@ -46,7 +46,7 @@ const initInsights = () => new Promise(resolve => {
         },
       },
     });
-    resolve(Insights);
+    resolve(app);
 
   }
 });

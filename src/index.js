@@ -1,7 +1,7 @@
 import initInsights from './init';
 
-initInsights().then(Insights => {
+initInsights().then(app => {
   const appContainer = document.getElementById(`mixpanel-application`);
   appContainer.innerHTML = ``;
-  appContainer.appendChild(Insights);
+  appContainer.appendChild(app);
 });
