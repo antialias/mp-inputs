@@ -650,20 +650,23 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   updateReport(attrs) {
-    const prevLearnStep = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
+    const oldUrlData = this.state.report.toUrlData();
     const report = Object.assign(this.state.report, attrs);
+    const newUrlData = report.toUrlData();
+
     const isPeopleAndNotTimeSeries = report.sections.show.isPeopleOnlyQuery() && !report.sections.group.isPeopleTimeSeries();
     if (isPeopleAndNotTimeSeries && report.displayOptions.chartType === `line`) {
       report.displayOptions.chartType = `bar`;
     }
+
     this.update({report});
     const nextLearnStep = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
 
+    const prevLearnStep = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
     if (this.state.learnActive && prevLearnStep.name !== nextLearnStep.name) {
       this.transitionLearn();
-    } else {
-      const fragment = JSURL.stringify(report.toUrlData());
-      history.replaceState(null, null, `#${fragment}`);
+    } else if (!util.isEqual(oldUrlData, newUrlData)) {
+      history.replaceState(null, null, `#${JSURL.stringify(newUrlData)}`);
     }
   }
 
@@ -672,6 +675,7 @@ document.registerElement(`irb-app`, class IRBApp extends MPApp {
   }
 
   resetQuery() {
+    history.replaceState(null, null, `#`);
     return this.loadReport(null);
   }
 
