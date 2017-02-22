@@ -498,10 +498,19 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   handleKeydown(e) {
     const activeIdx = this.state.builderPane.activeIndex;
-    const items = this.el.querySelectorAll(`.builder-pane .list-option:not(.contextual-menu-option)`);
+    const screenIndex = this.state.builderPane.screens.length - 1;
+    const selectorString = `.builder-pane [screen-index="` + screenIndex +`"] .list-option`;
+    const items = this.el.querySelectorAll(selectorString);
     const itemCount = items.length;
 
-    switch(e.keyCode) {
+    switch(e.keyCode) { // tab
+      case 9: {
+        const pill = this.el.querySelector(`.list-option-active .pill`);
+        if (pill) {
+          pill.click();
+        }
+        break;
+      }
       case 13: // enter
         items[activeIdx].click();
         break;

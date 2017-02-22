@@ -1,5 +1,7 @@
 include ../mixins.jade
 
+- const activeIdx = builderPane.activeIndex
+
 .builder-screen.sources
   ul.screen-options-list(
     class=util.learnClasses({
@@ -12,8 +14,9 @@ include ../mixins.jade
     if contextFilter
       +filtered-options-lists($helpers.getContextLists())
     else
-      each option in $helpers.getContextOptions()
+      each option, idx in $helpers.getContextOptions()
         +generic-options-list-item(option.name, {
           class: `contextual-menu-option`,
+          isActive: idx === activeIdx,
           onclick: () => $helpers.clickedOption(option),
         })

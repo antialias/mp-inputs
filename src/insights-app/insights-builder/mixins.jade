@@ -24,7 +24,10 @@ mixin filtered-options-lists(lists)
 
 mixin generic-options-list-item(label, options)
   li.list-option.generic-list(
-    class={[options.class]: true}
+    class={
+      [options.class]: true,
+      'list-option-active': options.isActive,
+    }
     on={click: options.onclick}
   )
     +screen-option(label, {noIcon: true})

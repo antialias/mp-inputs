@@ -42,7 +42,12 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
             }
           }
         },
-        getContextOptions: () => CONTEXT_OPTIONS[this.state.report.sections.show.clauseResourceTypes()] || [],
+        getContextOptions: () => {
+          let options = CONTEXT_OPTIONS[this.state.report.sections.show.clauseResourceTypes()] || [];
+          let index = 0;
+          options.forEach(option => option.index = index++);
+          return options;
+        },
         getContextLists: () => this.buildProgressiveList(),
         clickedProperty: (ev, property) => {
           this.app.startAddingClause(`group`);

@@ -34,8 +34,9 @@ transition-time = .125s
           svg-icon-style(mp-blue, speed: 0s)
           visibility hidden
 
-        &:hover .caret-icon
-          visibility visible
+        &:hover, &.list-option-active
+           .caret-icon
+              visibility visible
 
     &.sources
       width 260px
@@ -46,8 +47,10 @@ transition-time = .125s
         font-weight 600
         text-transform uppercase
 
-      .list-option.generic-list.contextual-menu-option:hover .option-label
-        color mp-blue
+      .list-option.generic-list.contextual-menu-option
+        &:hover, &.list-option-active
+          .option-label
+            color mp-blue
 
       .screen-options-list
         border-bottom 1px solid grey-150
