@@ -475,7 +475,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   setActiveIndex(newIndex, scrollIntoView=true) {
     this.updateBuilder({activeIndex: newIndex});
-    const listEl = this.el.querySelector(`.screen-list-container`);
+    const listEl = this.el.querySelector(`.screen-list-container`) || this.el.querySelector(`.builder-screen`);
 
     if (scrollIntoView && listEl) {
       window.requestAnimationFrame(() => {
@@ -498,8 +498,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   handleKeydown(e) {
     const activeIdx = this.state.builderPane.activeIndex;
-    const screenIndex = this.state.builderPane.screens.length - 1;
-    const selectorString = `.builder-pane [screen-index="` + screenIndex +`"] .list-option`;
+
+    const screenIdx = this.state.builderPane.screens.length - 1;
+    const selectorString = `.builder-pane [screen-index="` + screenIdx +`"] .list-option`;
     const items = this.el.querySelectorAll(selectorString);
     const itemCount = items.length;
 

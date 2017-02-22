@@ -30,9 +30,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
       list: this.buildProgressiveList(),
     });
 
-    indexSectionLists(sections);
-
-    return sections;
+    return indexSectionLists(sections);
   }
 
   getRecentEvents() {

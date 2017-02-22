@@ -1,6 +1,6 @@
 import { BuilderScreenBase } from './builder-screen-base';
 import { Clause, GroupClause, ShowClause } from '../../../models/clause';
-import { extend, indexArrayOfObjects } from '../../../util';
+import { extend, indexArrayOfObjects, indexSectionLists } from '../../../util';
 
 import template from './builder-screen-contextual.jade';
 
@@ -44,8 +44,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
         },
         getContextOptions: () => {
           let options = CONTEXT_OPTIONS[this.state.report.sections.show.clauseResourceTypes()] || [];
-          indexArrayOfObjects(options);
-          return options;
+          return indexArrayOfObjects(options);;
         },
         getContextLists: () => this.buildProgressiveList(),
         clickedProperty: (ev, property) => {
@@ -72,9 +71,10 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
   }
 
   buildList() {
+    let sections = [];
     switch(this.state.report.sections.show.clauseResourceTypes()) {
       case ShowClause.RESOURCE_TYPE_EVENTS:
-        return [
+        sections = [
           {
             label: `Group by an event property`,
             list: this.allMatchingProperties(Clause.RESOURCE_TYPE_EVENTS),
@@ -91,17 +91,21 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
             resourceType: `event`,
           },
         ];
+        break;
       case ShowClause.RESOURCE_TYPE_PEOPLE:
-        return [
+        sections = [
           {
             label: `Group by a people property`,
             list: this.allMatchingProperties(Clause.RESOURCE_TYPE_PEOPLE),
             resourceType: `property`,
           },
         ];
+        break;
       default:
-        return [];
+        sections = [];
     }
+
+    return indexSectionLists(sections);
   }
 
   buildProgressiveList() {

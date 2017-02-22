@@ -1,7 +1,7 @@
 import { BuilderScreenBase } from './builder-screen-base';
 import { Clause } from '../../../models/clause';
 
-import { extend, indexArrayOfObjects } from '../../../util';
+import { extend, indexArrayOfObjects, indexSectionLists } from '../../../util';
 
 import template from './builder-screen-sources.jade';
 
@@ -18,8 +18,7 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
         getSources: () => {
           this.updateRenderedSizeOnNextFrame();
           let indexedSources = SOURCES.slice();
-          indexArrayOfObjects(indexedSources);
-          return indexedSources;
+          return indexArrayOfObjects(indexedSources);
         },
 
         clickedSource: source => {
@@ -36,7 +35,7 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
   }
 
   buildList() {
-    return [
+    let sections = [
       {
         label: `Events`,
         list: this.allMatchingEvents(),
@@ -53,6 +52,8 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
         resourceType: `property`,
       },
     ];
+
+    return indexSectionLists(sections);
   }
 
   buildProgressiveList() {

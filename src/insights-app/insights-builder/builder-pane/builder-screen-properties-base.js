@@ -64,9 +64,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       ...properties,
     ];
 
-    indexArrayOfObjects(allProperties);
-
-    return allProperties;
+    return indexArrayOfObjects(allProperties);
   }
 
   getEventPropertyCount() {
@@ -103,9 +101,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       });
     }
 
-    indexSectionLists(sections);
-
-    return sections;
+    return indexSectionLists(sections);
   }
 
   getSelectedResourceType() {

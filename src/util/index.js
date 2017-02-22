@@ -78,6 +78,7 @@ export function getIconForEvent(mpEvent) {
 export function indexArrayOfObjects(arr) {
   let index = 0;
   arr.forEach(obj => obj.index = index++);
+  return arr;
 }
 
 export function indexSectionLists(sections) {
@@ -87,6 +88,7 @@ export function indexSectionLists(sections) {
       option.index = index++;
     });
   });
+  return sections;
 }
 
 const PROPERTY_TYPE_ICON_MAP = {
