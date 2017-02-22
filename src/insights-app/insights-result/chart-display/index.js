@@ -116,6 +116,7 @@ document.registerElement(`chart-display`, class extends Component {
           const processed = pick(result, [`series`, `headers`]);
           if (flattenedData) {
             processed.series = result.peopleTimeSeries || result.series;
+            processed.dataId = result.id;
           } else if (this.helpers.showLegend()) {
             const legend = this.state.report.legend;
             processed.series = filterObject(result.series, (value, depth) => depth > 1 ? legend.data[depth - 2].seriesData[value] : true);

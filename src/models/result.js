@@ -42,6 +42,7 @@ export default class Result {
       headers: this.headers,
       series: newSeries,
       peopleTimeSeries: newpeopleTimeSeries,
+      id: [this.id, options.analysis, options.windowSize].join(`-`),
     };
   }
 }

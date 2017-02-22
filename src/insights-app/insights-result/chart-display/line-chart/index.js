@@ -66,7 +66,7 @@ document.registerElement(`line-chart`, class extends Component {
       return;
     }
 
-    let {headers, series} = this.chartData;
+    let {headers, series, dataId} = this.chartData;
     const chartLabel = JSON.parse(this.getAttribute(`chart-label`));
 
     if (headers && series) {
@@ -77,6 +77,7 @@ document.registerElement(`line-chart`, class extends Component {
         data: util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
           [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
         )),
+        dataId,
         displayOptions: JSON.parse(this.getAttribute(`display-options`)),
         utcOffset: this.utcOffset,
       });
@@ -365,7 +366,6 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       highchartsOptions.yAxis.type = `logarithmic`;
       highchartsOptions.yAxis.min = LOGARITHMIC_CHART_ZERO_REMAPPING;
     }
-
     const data = this.chartData;
 
     const seriesMap = {};
@@ -443,12 +443,12 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       this.appendChild(this.el);
       this.highchart = new Highcharts.Chart(this.createChartOptions());
     }
-    this.createChartOptions().series.forEach((series, idx) => {
-      const oldSeries = this.highchart.series[idx];
-      if (!oldSeries) {
-        this.highchart.addSeries(series);
-      }
-    });
+
+    const dataId = this.getJSONAttribute(`data-id`);
+    if (dataId !== this.dataId || !this.highchart.series.length) {
+      this.dataId = dataId;
+      this.highchart = new Highcharts.Chart(this.createChartOptions());
+    }
 
   }
 
@@ -464,7 +464,9 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       return;
     }
 
-    (keys || Object.keys(this._segFilters)).forEach(segmentName => {
+    keys = keys || Object.keys(this._segFilters);
+
+    keys.forEach(segmentName => {
       const segIdx = this.highchartSegmentIdxMap[segmentName];
       if (this.isSegmentShowing(segmentName)) {
         this.highchart.series[segIdx].show();
