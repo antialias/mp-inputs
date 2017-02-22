@@ -11,5 +11,6 @@ include ../mixins.jade
     else
       each source in $helpers.getSources()
         +generic-options-list-item(source.name, {
+          isActive: source.index === builderPane.activeIndex,
           onclick: () => $helpers.clickedSource(source),
         })

@@ -75,6 +75,20 @@ export function getIconForEvent(mpEvent) {
   }
 }
 
+export function indexArrayOfObjects(arr) {
+  let index = 0;
+  arr.forEach(obj => obj.index = index++);
+}
+
+export function indexSectionLists(sections) {
+  let index = 0;
+  sections.forEach(section => {
+    section.list.forEach(option => {
+      option.index = index++;
+    });
+  });
+}
+
 const PROPERTY_TYPE_ICON_MAP = {
   boolean:  `type-boolean`,
   datetime: `type-date`,

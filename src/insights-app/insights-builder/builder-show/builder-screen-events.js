@@ -1,6 +1,7 @@
 import { BuilderScreenBase } from '../builder-pane/builder-screen-base';
 import {
   extend,
+  indexSectionLists,
   renameEvent,
 } from '../../../util';
 
@@ -29,12 +30,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
       list: this.buildProgressiveList(),
     });
 
-    let index = 0;
-    sections.forEach(section => {
-      section.list.forEach(option => {
-        option.index = index++;
-      });
-    });
+    indexSectionLists(sections);
 
     return sections;
   }

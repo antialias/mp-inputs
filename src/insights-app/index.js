@@ -503,15 +503,21 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     const items = this.el.querySelectorAll(selectorString);
     const itemCount = items.length;
 
+    const pill = this.el.querySelector(`.list-option-active .pill`);
+    const activeClass = `pill-active`;
+
     switch(e.keyCode) { // tab
       case 9: {
-        const pill = this.el.querySelector(`.list-option-active .pill`);
+        e.preventDefault();
         if (pill) {
-          pill.click();
+          pill.classList.toggle(activeClass);
         }
         break;
       }
       case 13: // enter
+        if (pill && pill.classList.contains(activeClass)) {
+          pill.click();
+        }
         items[activeIdx].click();
         break;
       case 38: { // up arrow

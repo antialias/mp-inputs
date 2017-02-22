@@ -1,6 +1,7 @@
 include ../mixins.jade
 
 - const loading = $helpers.isLoading()
+- const allPeople = $helpers.getAllPeopleProperties()
 
 .builder-screen.properties
   +screen-title(`People`, {backButton: !!$helpers.screenIdx()})
@@ -9,17 +10,20 @@ include ../mixins.jade
     hook={postpatch: $helpers.updateRenderedSize}
     on={scroll: $helpers.scrolledList}
   )
-    +property-list($helpers.getSpecialOptions(), {
-      clickedProperty: $helpers.clickedSpecialOptions,
-      selected: $component.getAttribute(`selected`),
-      source: $component.getAttribute(`source`),
-    })
-    +property-list($helpers.getProperties(), {
-      clickedProperty: $helpers.clickedProperty,
-      selected: $component.getAttribute(`selected`),
-      source: $component.getAttribute(`source`),
-      loading,
-    })
+    - let hasResults = false
+    each section, idx in allPeople
+      if section.list.length
+        if hasResults === true
+          .builder-divider
+        +property-list(section.list, {
+          clickedProperty: section.clickedPropertyFunction || $helpers.clickedProperty,
+          selected: $component.getAttribute(`selected`),
+          source: $component.getAttribute(`source`),
+          loading: section.showLoading && loading
+        })
+        - hasResults = true
+    if !hasResults
+      li.list-option.list-empty Your search returned no results
   if !loading
     +screen-footer-button(($component.isShowingNonNumericProperties() ? `Hide` : `View all`) + ` non-numeric properties`, {
       onclick: $helpers.toggleNonNumericProperties,

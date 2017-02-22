@@ -1,7 +1,7 @@
 import { BuilderScreenNumericPropertiesBase } from '../builder-pane/builder-screen-numeric-properties-base';
 import BaseQuery from '../../../models/queries/base';
 import { ShowClause } from '../../../models/clause';
-import { extend } from '../../../util';
+import { extend, indexSectionLists } from '../../../util';
 
 import template from './builder-screen-people.jade';
 
@@ -10,12 +10,37 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenNum
     return {
       template,
       helpers: extend(super.config.helpers, {
-        clickedSpecialOptions: (ev, value) => {
-          this.updateAndCommitStageClause({value, property: null});
-        },
-        getSpecialOptions: () => [extend(ShowClause.ALL_PEOPLE, {icon: `profile`})],
+        getAllPeopleProperties: () => this.getAllPeopleProperties(),
       }),
     };
+  }
+
+  clickedSpecialOptions(ev, value) {
+    this.updateAndCommitStageClause({value, property: null});
+  }
+  
+  getSpecialOptions() {
+    return [extend(ShowClause.ALL_PEOPLE, {icon: `profile`})];
+  }
+
+  getAllPeopleProperties() {
+    let sections = [];
+
+    sections.push({
+      clickedPropertyFunction: (ev, value) => this.clickedSpecialOptions(ev, value),
+      list: this.getSpecialOptions(),
+      showLoading: false,
+    });
+
+    sections.push({
+      clickedPropertyFunction: null,
+      list: this.buildProgressiveList(),
+      showLoading: true,
+    });
+
+    indexSectionLists(sections);
+
+    return sections;
   }
 
   isLoading() {

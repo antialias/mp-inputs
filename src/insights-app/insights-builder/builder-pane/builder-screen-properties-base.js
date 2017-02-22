@@ -1,7 +1,7 @@
 import { BuilderScreenBase } from './builder-screen-base';
 import { Clause, GroupClause, ShowClause } from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
-import { extend, sorted, renameProperty, unique } from '../../../util';
+import { extend, indexArrayOfObjects, indexSectionLists, sorted, renameProperty, unique } from '../../../util';
 
 export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   get config() {
@@ -64,11 +64,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       ...properties,
     ];
 
-    let index = 0;
-
-    allProperties.forEach(prop => {
-      prop.index = index++;
-    });
+    indexArrayOfObjects(allProperties);
 
     return allProperties;
   }
@@ -107,12 +103,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       });
     }
 
-    let index = 0;
-    sections.forEach(section => {
-      section.list.forEach(option => {
-        option.index = index++;
-      });
-    });
+    indexSectionLists(sections);
 
     return sections;
   }
