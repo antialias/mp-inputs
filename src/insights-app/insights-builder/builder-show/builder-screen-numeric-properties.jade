@@ -16,7 +16,7 @@ include ../mixins.jade
       source: $component.getAttribute(`source`),
       loading,
     })
-  if !loading && properties.length
+  if !loading
     +screen-footer-button(($component.isShowingNonNumericProperties() ? `Hide` : `View all`) + ` non-numeric properties`, {
       onclick: $helpers.toggleNonNumericProperties,
     })
