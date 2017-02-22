@@ -18,9 +18,6 @@ document.registerElement(`typecast-pane`, class extends Component {
   get config() {
     return {
       helpers: {
-        isActiveItem: () => {
-          return false;
-        },
         availableTypes: () => this.availableTypes(),
         clickedType: (ev, item) => {
           ev.stopPropagation();

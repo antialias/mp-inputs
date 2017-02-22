@@ -30,7 +30,6 @@ export class BuilderScreenBase extends Component {
   get config() {
     return {
       helpers: {
-        isActiveItem: item => item.index === this.state.builderPane.activeIndex,
         clickedEvent: value => {
           this.app.updateRecentEvents(value);
           this.updateAndCommitStageClause({value, property: null});
