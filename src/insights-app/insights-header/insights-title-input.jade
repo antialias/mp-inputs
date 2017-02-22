@@ -11,9 +11,10 @@
           value: inputValue,
         }
         on={
-          input: $helpers.inputChange,
           blur: $helpers.blur,
           focus: $helpers.focus,
+          input: $helpers.inputChange,
+          keydown: $helpers.keydownHandler,
         }
       )
       if active

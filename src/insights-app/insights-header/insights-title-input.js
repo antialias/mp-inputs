@@ -23,7 +23,11 @@ document.registerElement(`insights-title-input`, class extends Component {
         inputChange: () => {
           this.update({inputValue: this.value, isDirty: true});
         },
-
+        keydownHandler: (ev) => {
+          if (ev.keyCode === 13) {
+            this.saveReport(ev);
+          }
+        },
         buttonMousedown: ev => {
           if (this.state.active) {
             // don't let input blur until we save!
