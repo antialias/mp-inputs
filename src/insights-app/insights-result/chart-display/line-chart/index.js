@@ -256,7 +256,6 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       global: {
         useUTC: false,
       },
-
       plotOptions: {
         line: {
           incompleteStyle: {
@@ -465,15 +464,12 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     }
 
     keys = keys || Object.keys(this._segFilters);
-
     keys.forEach(segmentName => {
       const segIdx = this.highchartSegmentIdxMap[segmentName];
-      if (this.isSegmentShowing(segmentName)) {
-        this.highchart.series[segIdx].show();
-      } else {
-        this.highchart.series[segIdx].hide();
-      }
+      const isVisible = this.isSegmentShowing(segmentName);
+      this.highchart.series[segIdx].setVisible(isVisible, false);
     });
+    this.highchart.redraw();
 
   }
 
