@@ -97,8 +97,11 @@ export function resultToCSVArray(data, {timeUnit=`day`}={}) {
   return csvArray;
 }
 
+const CSV_SEPARATOR = `,`;
+const FIND_ALL_SEPARATORS = new RegExp(CSV_SEPARATOR, `g`);
 export function dataToCSV(data, options) {
   return resultToCSVArray(data, options)
-    .map(row => row.join(`,`))
+    .map(row => row.map(val => String(val).replace(FIND_ALL_SEPARATORS, ``))
+    .join(CSV_SEPARATOR))
     .join(`\n`);
 }
