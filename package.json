@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/mixpanel-platform/irb.git"
+    "url": "git+ssh://git@github.com/mixpanel-platform/insights.git"
   },
   "keywords": [
     "mixpanel"
@@ -29,9 +29,9 @@
   "author": "dev@mixpanel.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/irb/irb/issues"
+    "url": "https://github.com/mixpanel-platform/insights/issues"
   },
-  "homepage": "https://github.com/irb/irb#readme",
+  "homepage": "https://github.com/mixpanel-platform/insights#readme",
   "dependencies": {
     "babel-polyfill": "6.7.4",
     "d3-dsv": "1.0.3",
