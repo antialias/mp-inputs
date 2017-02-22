@@ -34,6 +34,7 @@
   "homepage": "https://github.com/irb/irb#readme",
   "dependencies": {
     "babel-polyfill": "6.7.4",
+    "d3-dsv": "1.0.3",
     "framesg": "0.1.2",
     "jsurl": "0.1.5",
     "lodash": "4.15.0",
