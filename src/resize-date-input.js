@@ -1,7 +1,6 @@
 import {
   extend,
-  formatDateDisplay,
-  formatDateISO,
+  formatDate,
   parseDate,
 } from '../../util';
 
@@ -16,7 +15,7 @@ export default class ResizeDateInput extends ResizeInput {
       template,
       helpers: extend(config.helpers, {
         // TODO: remove duplication of helpers between this and DateInput
-        formatDateDisplay,
+        formatDate: dateString => formatDate(parseDate(dateString)),
         focusedInput: () => this.emitFocus(),
         blurredInput: () => {
           this.inputEl.value = ``;
@@ -46,7 +45,7 @@ export default class ResizeDateInput extends ResizeInput {
   }
 
   emitChange() {
-    const detail = formatDateISO(this.value);
+    const detail = formatDate(parseDate(this.value), {iso: true});
     this.dispatchEvent(new CustomEvent(`change`, {detail}));
   }
 

@@ -1,8 +1,7 @@
 import { Component } from 'panel';
 
 import {
-  formatDateDisplay,
-  formatDateISO,
+  formatDate,
   parseDate,
 } from '../../util';
 
@@ -16,7 +15,7 @@ export default class DateInput extends Component {
         inputValue: null,
       },
       helpers: {
-        formatDateDisplay,
+        formatDate: dateString => formatDate(parseDate(dateString)),
         focus: vnode => requestAnimationFrame(() => vnode.elm.focus()),
         focusedInput: () => this.emitFocus(),
         blurredInput: () => {
@@ -42,7 +41,7 @@ export default class DateInput extends Component {
   }
 
   emitChange() {
-    const detail = formatDateISO(this.value);
+    const detail = formatDate(parseDate(this.value), {iso: true});
     this.dispatchEvent(new CustomEvent(`change`, {detail}));
   }
 
