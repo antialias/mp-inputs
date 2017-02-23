@@ -99,7 +99,7 @@ export function isIncompleteInterval(data, options) {
  * @param {boolean} addLeafHeader - Whether to append leafHeader to headers
  * @returns {{headers: string[], series: any}} - Tuple of header and series with cols transposed
  */
-export function transposeColsToRows(headers, series, leafHeader, addLeafHeader = true) {
+export function transposeColsToRows(headers, series, leafHeader, addLeafHeader=true) {
   if (headers.length !== 2) {
     throw new Error(`Expecting ${headers} to be of length 2`);
   }
@@ -111,5 +111,5 @@ export function transposeColsToRows(headers, series, leafHeader, addLeafHeader =
     ))
   ));
 
-  return { headers:newHeaders, series:newSeries };
+  return {headers:newHeaders, series:newSeries};
 }
