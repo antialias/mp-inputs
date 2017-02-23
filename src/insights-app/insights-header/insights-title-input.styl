@@ -41,10 +41,14 @@ insights-title-input
       &.title-save-new
         border 1px solid grey-200
         color grey-700
+        transition border 150ms, box-shadow 150ms, color 150ms
         &.title-button-disabled
           color grey-500
-        &.focused
-          border 1px solid grey-300
+        &.focused, &:focus
+          border 1px solid blue-100
+          box-shadow 0 0 3px rgba(mp-blue, .75)
+          color mp-blue
+          transition border 150ms, box-shadow 150ms, color 150ms
         &:hover
           box-shadow 0 1px 3px rgba(76,96,113,.16)
           color blue-300
@@ -52,15 +56,20 @@ insights-title-input
           background-color grey-50
           box-shadow 0 1px 3px rgba(76,96,113,.16)
       &.title-save
-        background-image linear-gradient(to top, blue-300, blue-100), linear-gradient(blue-300, blue-300)
-        border 1px solid blue-500
+        background-image linear-gradient(0deg, mp-blue 0, blue-100 100%)
+        border-color blue-500
         color #fff
+        transition border 150ms, box-shadow 150ms, color 150ms
         &.title-button-disabled
           color grey-200
-        &.focused
-          border 1px solid blue-700
+        &.focused, &:focus
+          background-image linear-gradient(0deg, blue-100 0, blue-100 100%)
+          border 1px solid blue-900
+          box-shadow 0 0 3px rgba(blue-500, .65)
+          transition border 150ms, box-shadow 150ms, color 150ms
         &:hover
-          box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.16);
+          background-image linear-gradient(0deg, blue-100 0, blue-100 100%)
+          box-shadow 0 1.5px 2.5px 0 alpha(black, 0.3)
         &:active
           background-image linear-gradient(to top, blue-500, blue-300), linear-gradient(blue-500, blue-500)
           box-shadow inset 0 1px 3px 0 rgba(0, 0, 0, 0.15);
