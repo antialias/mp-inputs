@@ -474,8 +474,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   buildScreenSpecificSelector(selector) {
-    const screenIdx = this.state.builderPane.screens.length - 1;
-    return `.builder-pane [screen-index="` + screenIdx +`"] ` + selector;
+    const tagName = this.getBuilderCurrentScreen().componentName;
+    return tagName + ` ` + selector;
   }
 
   setActiveIndex(newIndex, scrollIntoView=true) {
