@@ -10,9 +10,13 @@ include ../mixins.jade
     - const units = $helpers.availableUnits()
     if units.length
       each unit in units
+        - const isActive = unit.index === builderPane.activeIndex
         - const isSelected = unit.name.toLowerCase() === selectedUnit
         li.list-option(
-          class={'list-option-selected': isSelected}
+          class={
+            'list-option-active': isActive,
+            'list-option-selected': isSelected
+          }
           on={
             click: !isSelected ? () => $helpers.clickedUnit(unit) : null,
           }
