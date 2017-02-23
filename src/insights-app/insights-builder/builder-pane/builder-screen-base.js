@@ -165,13 +165,13 @@ export class BuilderScreenBase extends Component {
     this.focusInput();
   }
 
-  nextScreen(componentName) {
+  nextScreen(componentName, screenAttrs) {
     if (!this.state.builderPane.inTransition) {
       this.app.update({contextFilter: ``});
       this.app.updateBuilder({
         activeIndex: 0,
         inTransition: true,
-        screens: this.state.builderPane.screens.concat({componentName}),
+        screens: this.state.builderPane.screens.concat(extend({componentName}, screenAttrs)),
       });
       this.focusInput();
     }
@@ -229,8 +229,7 @@ export class BuilderScreenBase extends Component {
   }
 
   get progressiveListSize() {
-    const screen = this.app.getBuilderCurrentScreen();
-    return (screen && screen.progressiveListSize) || PROGRESSIVE_LIST_START_SIZE;
+    return this.app.getBuilderCurrentScreenAttr(`progressiveListSize`) || PROGRESSIVE_LIST_START_SIZE;
   }
 
   increaseProgressiveListSize() {

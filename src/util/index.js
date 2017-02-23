@@ -75,12 +75,6 @@ export function getIconForEvent(mpEvent) {
   }
 }
 
-export function indexArrayOfObjects(arr) {
-  let index = 0;
-  arr.forEach(obj => obj.index = index++);
-  return arr;
-}
-
 export function indexSectionLists(sections) {
   let index = 0;
   sections.forEach(section => {

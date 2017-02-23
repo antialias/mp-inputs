@@ -15,13 +15,12 @@ include ../mixins.jade
     hook={postpatch: $helpers.updateRenderedSize}
     on={scroll: $helpers.scrolledList}
   )
-    - let hasResults = false
     each section, idx in allEvents
       if section.list.length
-        if hasResults === true
+        if idx
           .builder-divider
         .builder-label= section.label
         +event-list(section.list, eventListOptions)
         - hasResults = true
-    if !hasResults
+    if !allEvents.length
       li.list-option.list-empty Your search returned no results

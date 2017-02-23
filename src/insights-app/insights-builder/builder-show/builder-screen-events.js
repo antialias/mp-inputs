@@ -12,7 +12,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
     return {
       template,
       helpers: extend(super.config.helpers, {
-        getEventSections: () => this.getAllEvents(),
+        getEventSections: () => this.getAllEvents().filter(section => section.list.length),
       }),
     };
   }
@@ -34,11 +34,8 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
   }
 
   getRecentEvents() {
-    let matched = this.matchingItems(this.state.recentEvents.slice(0, 3), renameEvent);
-    matched.forEach(event => {
-      event.section = `recent`;
-    });
-    return matched;
+    return this.matchingItems(this.state.recentEvents.slice(0, 3), renameEvent)
+      .map(mpEvent => Object.assign(mpEvent, {section: `recent`}));
   }
 
   buildList() {

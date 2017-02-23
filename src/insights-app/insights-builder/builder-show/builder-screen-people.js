@@ -10,7 +10,7 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenNum
     return {
       template,
       helpers: extend(super.config.helpers, {
-        getAllPeopleProperties: () => this.getAllPeopleProperties(),
+        getAllPeopleProperties: () => this.getAllPeopleProperties().filter(section => section.list.length),
       }),
     };
   }

@@ -1,7 +1,7 @@
 import { BuilderScreenBase } from './builder-screen-base';
 import { Clause, GroupClause, ShowClause } from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
-import { extend, indexArrayOfObjects, indexSectionLists, sorted, renameProperty, unique } from '../../../util';
+import { extend, indexSectionLists, sorted, renameProperty, unique } from '../../../util';
 
 export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   get config() {
@@ -64,7 +64,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       ...properties,
     ];
 
-    return indexArrayOfObjects(allProperties);
+    return allProperties.map((prop, index) => extend(prop, {index}));
   }
 
   getEventPropertyCount() {

@@ -505,18 +505,18 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     const itemCount = items.length;
 
     const pill = this.el.querySelector(`.list-option-active .pill`);
-    const activeClass = `pill-active`;
+    const activePillClass = `pill-active`;
 
     switch(e.keyCode) { // tab
       case 9: {
         e.preventDefault();
         if (pill) {
-          pill.classList.toggle(activeClass);
+          pill.classList.toggle(activePillClass);
         }
         break;
       }
       case 13: // enter
-        if (pill && pill.classList.contains(activeClass)) {
+        if (pill && pill.classList.contains(activePillClass)) {
           pill.click();
         }
         items[activeIdx].click();

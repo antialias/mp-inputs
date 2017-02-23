@@ -116,15 +116,15 @@ mixin property-screen-body(options)
           mp-toggle-option(attrs={value: type})= util.formatResourceType(type)
 
   .screen-list-container(on={scroll: options.scrolledList})
-    - let hasResults = false
-    each section, idx in options.propertySections
+    - const propertySections = options.propertySections
+    each section, idx in propertySections
       if section.list.length
-        if hasResults === true
+        if idx
           .builder-divider
         .builder-label= section.label
         +property-list(section.list, options)
         - hasResults = true
-    if !hasResults
+    if !propertySections.length
       li.list-option.list-empty Your search returned no results
 
 mixin screen-footer-button(label, options)

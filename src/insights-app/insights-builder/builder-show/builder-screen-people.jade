@@ -10,10 +10,9 @@ include ../mixins.jade
     hook={postpatch: $helpers.updateRenderedSize}
     on={scroll: $helpers.scrolledList}
   )
-    - let hasResults = false
     each section, idx in allPeople
       if section.list.length
-        if hasResults === true
+        if idx
           .builder-divider
         +property-list(section.list, {
           clickedProperty: section.clickedPropertyFunction || $helpers.clickedProperty,
@@ -22,7 +21,7 @@ include ../mixins.jade
           loading: section.showLoading && loading
         })
         - hasResults = true
-    if !hasResults
+    if !allPeople.length
       li.list-option.list-empty Your search returned no results
   if !loading
     +screen-footer-button(($component.isShowingNonNumericProperties() ? `Hide` : `View all`) + ` non-numeric properties`, {

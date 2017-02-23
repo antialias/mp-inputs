@@ -1,7 +1,7 @@
 import { BuilderScreenBase } from './builder-screen-base';
 import { Clause } from '../../../models/clause';
 
-import { extend, indexArrayOfObjects, indexSectionLists } from '../../../util';
+import { extend, indexSectionLists } from '../../../util';
 
 import template from './builder-screen-sources.jade';
 
@@ -18,7 +18,7 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
         getSources: () => {
           this.updateRenderedSizeOnNextFrame();
           let indexedSources = SOURCES.slice();
-          return indexArrayOfObjects(indexedSources);
+          return indexedSources.map((source, index) => extend(source, {index}));
         },
 
         clickedSource: source => {

@@ -1,6 +1,6 @@
 import { BuilderScreenBase } from './builder-screen-base';
 import { Clause, GroupClause, ShowClause } from '../../../models/clause';
-import { extend, indexArrayOfObjects, indexSectionLists } from '../../../util';
+import { extend, indexSectionLists } from '../../../util';
 
 import template from './builder-screen-contextual.jade';
 
@@ -43,8 +43,8 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
           }
         },
         getContextOptions: () => {
-          let options = CONTEXT_OPTIONS[this.state.report.sections.show.clauseResourceTypes()] || [];
-          return indexArrayOfObjects(options);;
+          return CONTEXT_OPTIONS[this.state.report.sections.show.clauseResourceTypes()] || []
+            .map((option, index) => option.extend({index}));
         },
         getContextLists: () => this.buildProgressiveList(),
         clickedProperty: (ev, property) => {
@@ -101,8 +101,6 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
           },
         ];
         break;
-      default:
-        sections = [];
     }
 
     return indexSectionLists(sections);
