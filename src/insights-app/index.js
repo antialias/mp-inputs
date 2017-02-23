@@ -506,7 +506,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     const items = this.el.querySelectorAll(this.buildScreenSpecificSelector(`.list-option`));
     const itemCount = items.length;
 
-    const pill = this.el.querySelector(`.list-option-active .pill`);
+    const pill = this.el.querySelector(this.buildScreenSpecificSelector(`.list-option-active .pill`));
     const activePillClass = `pill-active`;
 
     switch(e.keyCode) { // tab

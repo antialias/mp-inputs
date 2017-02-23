@@ -17,7 +17,20 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
       template,
       helpers: extend(super.config.helpers, {
         RANGES: TimeClause.RANGES,
-        availableRanges: () => this.availableRanges(),
+        availableRanges: () => {
+          const dataHistoryMS = this.app.maxDataHistoryDays() * MS_BY_UNIT[`day`];
+          const featureGatedOptions = RANGE_ITEMS.map((range, index) => {
+            if (range.name === RANGES.CUSTOM) {
+              range.upsell = false;
+            } else {
+              const optionMS = RANGE_INFO[range.name].value * MS_BY_UNIT[RANGE_INFO[range.name].unit];
+              range.upsell = optionMS >= dataHistoryMS;
+            }
+            return extend(range, {index});
+          });
+
+          return this.matchingItems(featureGatedOptions);
+        },
         clickedRange: range => {
           if (range.upsell) {
             this.app.openUpsellModal(`timeClause`);
@@ -35,27 +48,4 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
     };
   }
 
-  availableRanges() {
-    const dataHistoryMS = this.app.maxDataHistoryDays() * MS_BY_UNIT[`day`];
-    const featureGatedOptions = RANGE_ITEMS.map(range => {
-      if (range.name === RANGES.CUSTOM) {
-        range.upsell = false;
-      } else {
-        const optionMS = RANGE_INFO[range.name].value * MS_BY_UNIT[RANGE_INFO[range.name].unit];
-        range.upsell = optionMS >= dataHistoryMS;
-      }
-      return range;
-    });
-
-    return this.matchingItems(featureGatedOptions);
-  }
-
-  attachedCallback() {
-    super.attachedCallback(...arguments);
-    const timeList = this.availableRanges();
-    this.app.updateBuilder({
-      activeListItem: timeList.length ? timeList[0] : null,
-      visibleListItems: timeList,
-    });
-  }
 });
