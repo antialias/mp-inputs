@@ -1,6 +1,6 @@
 // Insights-specific utils
 import cloneDeep from 'lodash/cloneDeep';
-import { nestedObjectDepth, objectFromPairs } from 'mixpanel-common/util';
+import { extend, nestedObjectDepth, objectFromPairs } from 'mixpanel-common/util';
 
 import { GroupClause, ShowClause } from '../models/clause';
 
@@ -77,12 +77,11 @@ export function getIconForEvent(mpEvent) {
 
 export function indexSectionLists(sections) {
   let index = 0;
-  sections.forEach(section => {
-    section.list.forEach(option => {
-      option.index = index++;
-    });
+  return sections.map(section => {
+    return extend(section, {list: section.list.map(option => {
+      return extend(option, {index: index++});
+    })});
   });
-  return sections;
 }
 
 const PROPERTY_TYPE_ICON_MAP = {
