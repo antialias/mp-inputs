@@ -10,6 +10,7 @@ export * from 'mixpanel-common/util/string';
 
 export {
   isIncompleteInterval,
+  transposeColsToRows,
 } from './chart';
 
 export {

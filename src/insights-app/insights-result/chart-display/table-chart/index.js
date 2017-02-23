@@ -81,6 +81,24 @@ document.registerElement(`table-chart`, class extends Component {
     }
     this.sortConfig = sortConfig;
 
+    // The table-chart component can render more than 2 dimensions of data.
+    // For more than 2 dimensions it stacks vertically, then horizontally.
+    // For a special case of exactly 2 dimensions (proper table), 
+    // if it contains only 1 row and > 1 columns,
+    // We stack vertically offering a better experience in comparing values.
+    const depth = headers.length;
+    if (depth === 2) {
+      const rowNames = Object.keys(series);
+      if (rowNames.length === 1) {
+
+        const colNames = Object.keys(series[rowNames[0]]);
+        if (colNames.length > 1) {
+          sortConfig.colSortAttrs = [...sortConfig.colSortAttrs, {sortBy: `label`, sortOrder: `asc`}];
+          ({headers, series} = util.transposeColsToRows(headers, series, resourceDescription));
+        }
+      }
+    }
+
     series = util.nestedObjectSum(series);
 
     let columnHeaders;

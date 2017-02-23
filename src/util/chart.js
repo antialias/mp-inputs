@@ -1,3 +1,5 @@
+import { mapValues } from 'mixpanel-common/util';
+
 // From media/js/charts/chart.js.
 
 // TODO
@@ -86,4 +88,27 @@ export function isIncompleteInterval(data, options) {
   } else {
     return false;
   }
+}
+
+/** 
+ * Transpose rows to columns like an extra group by clause does
+ * It is assumed that series has only 2 dimensions
+ * @param {string[]} headers - Names for the different series in order of group by
+ * @param {any} series - object with rowNames as properties and colNames as subProperties
+ * @param {string} resourceDescription - e.g 'Total number of'
+ * @returns {{headers: string[], series: any}} - Tuple of header and series with cols transposed
+ */
+export function transposeColsToRows(headers, series, resourceDescription) {
+  if (headers.length !== 2) {
+    throw new Error(`Expecting ${headers} to be of length 2`);
+  }
+
+  const newHeaders = [...headers, resourceDescription];
+  const newSeries = mapValues(series, row => (
+    mapValues(row, col => (
+      {[resourceDescription]: col}
+    ))
+  ));
+
+  return {headers:newHeaders, series:newSeries};
 }
