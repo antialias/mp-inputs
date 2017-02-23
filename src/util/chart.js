@@ -95,18 +95,19 @@ export function isIncompleteInterval(data, options) {
  * It is assumed that series has only 2 dimensions
  * @param {string[]} headers - Names for the different series in order of group by
  * @param {any} series - object with rowNames as properties and colNames as subProperties
- * @param {string} resourceDescription - e.g 'Total number of'
+ * @param {string} leafHeader - e.g 'Total number of'
+ * @param {boolean} addLeafHeader - Whether to append leafHeader to headers
  * @returns {{headers: string[], series: any}} - Tuple of header and series with cols transposed
  */
-export function transposeColsToRows(headers, series, resourceDescription) {
+export function transposeColsToRows(headers, series, leafHeader, addLeafHeader = true) {
   if (headers.length !== 2) {
     throw new Error(`Expecting ${headers} to be of length 2`);
   }
 
-  const newHeaders = [...headers, resourceDescription];
+  const newHeaders = addLeafHeader ? [...headers, leafHeader] : headers;
   const newSeries = mapValues(series, row => (
     mapValues(row, col => (
-      {[resourceDescription]: col}
+      {[leafHeader]: col}
     ))
   ));
 

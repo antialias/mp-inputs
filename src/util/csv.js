@@ -10,6 +10,7 @@ import {
 } from 'mixpanel-common/util';
 
 import { parseDate } from './time';
+import {transposeColsToRows} from './chart';
 
 
 const CSV_TIME_FORMAT = {
@@ -60,6 +61,18 @@ export function resultToCSVArray(data, {timeUnit=`day`}={}) {
   } else {
     headers = data.headers.slice(0, data.headers.length - 1);
     series = data.series;
+  }
+
+  // If series is a true table and only contain one row but many columns
+  // Then transpose the cols to rows
+  if (!data.peopleTimeSeries && data.headers.length === 2) {
+    const rowLabels = Object.keys(series);
+    if (rowLabels.length === 1) {
+      const colLabels = Object.keys(series[rowLabels[0]]);
+      if (colLabels.length > 1) {
+        ({headers, series} = transposeColsToRows(data.headers, series, `Total number of`, false));
+      }
+    }
   }
 
   const depth = nestedObjectDepth(series);
