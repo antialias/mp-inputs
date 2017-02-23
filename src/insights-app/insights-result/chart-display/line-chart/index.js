@@ -112,9 +112,10 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     this.renderChart();
   }
 
-  epochToTimeUnitFunction({displayRangeIfWeek=true}={}) {
+  timestampToTimeUnitFunction({displayRangeIfWeek=true}={}) {
+    const unit = this._displayOptions.timeUnit;
     const customFormatting = {'day': `MMM D`};
-    return epoch => util.epochToFormattedDate(epoch, this._displayOptions.timeUnit, {displayRangeIfWeek, customFormatting});
+    return timestamp => util.formatDate(timestamp, {unit, displayRangeIfWeek, customFormatting});
   }
 
   getTickPositions() {
@@ -136,7 +137,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   }
 
   tooltipFormatter() {
-    const timeFormatter = this.epochToTimeUnitFunction();
+    const timeFormatter = this.timestampToTimeUnitFunction();
     const unit = this._displayOptions.timeUnit;
     const utcOffset = this.utcOffset;
 
@@ -165,7 +166,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   }
 
   xAxisFormatter() {
-    var timeFormatter = this.epochToTimeUnitFunction({displayRangeIfWeek: false});
+    var timeFormatter = this.timestampToTimeUnitFunction({displayRangeIfWeek: false});
     return function() {
       return timeFormatter(this.value);
     };

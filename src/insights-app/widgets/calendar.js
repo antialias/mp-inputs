@@ -3,7 +3,7 @@ import WebComponent from 'webcomponent';
 
 import {
   extend,
-  formatDateISO,
+  formatDate,
   parseDate,
 } from '../../util';
 
@@ -132,9 +132,9 @@ class Calendar extends WebComponent {
     }
 
     if (
-      formatDateISO(this.date) !== formatDateISO(oldDate) ||
-      formatDateISO(this.from) !== formatDateISO(oldFrom) ||
-      formatDateISO(this.to) !== formatDateISO(oldTo)
+      formatDate(this.date, {iso: true}) !== formatDate(oldDate, {iso: true}) ||
+      formatDate(this.from, {iso: true}) !== formatDate(oldFrom, {iso: true}) ||
+      formatDate(this.to, {iso: true}) !== formatDate(oldTo, {iso: true})
     ) {
       this.updatePicker();
     }
@@ -145,9 +145,9 @@ class Calendar extends WebComponent {
   }
 
   emitChange() {
-    const from = formatDateISO(this.from);
-    const to = formatDateISO(this.to);
-    const date = formatDateISO(this.date);
+    const from = formatDate(this.from, {iso: true});
+    const to = formatDate(this.to, {iso: true});
+    const date = formatDate(this.date, {iso: true});
     const detail = this.isRange ? {from, to} : date;
 
     if (detail) {

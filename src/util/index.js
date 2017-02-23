@@ -7,6 +7,7 @@ import { GroupClause, ShowClause } from '../models/clause';
 export * from 'mixpanel-common/report/util';
 export * from 'mixpanel-common/util';
 export * from 'mixpanel-common/util/string';
+export * from 'mixpanel-common/util/date';
 
 export {
   isIncompleteInterval,
@@ -19,20 +20,6 @@ export {
   transitionLearn,
   finishLearn,
 } from './learn';
-
-export {
-  epochToFormattedDate,
-  MOMENT_TIME_FORMATTING,
-  MS_IN_HOUR,
-  MS_IN_DAY,
-  MS_BY_UNIT,
-  formatDateDisplay,
-  formatDateISO,
-  normalizeDates,
-  parseDate,
-  relativeToAbsoluteDate,
-  unitForDateRange,
-} from './time';
 
 export {
   filterToArbSelectorString,

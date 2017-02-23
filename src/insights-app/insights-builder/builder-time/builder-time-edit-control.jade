@@ -66,11 +66,11 @@
         - const {from, to} = $helpers.getDates()
         .control-label
           .control-label-text(on={click: $helpers.clickedFromLabel})
-            = util.formatDateDisplay(from)
+            = util.formatDate(util.parseDate(from))
         .clause-language.preposition to
         .control-label
           .control-label-text(on={click: $helpers.clickedToLabel})
-            = util.formatDateDisplay(to)
+            = util.formatDate(util.parseDate(to))
     .drop-menu
       mp-drop-menu(attrs={open} on={change: $helpers.menuChange})
         .new-pane-content(attrs={'slot-body': true})

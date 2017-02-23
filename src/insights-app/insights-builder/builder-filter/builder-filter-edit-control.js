@@ -1,7 +1,7 @@
 import { EditControl } from '../edit-control';
 
 import { FilterClause, TimeClause } from '../../../models/clause';
-import { capitalize, renameProperty, parseDate, formatDateDisplay } from '../../../util';
+import { capitalize, renameProperty, parseDate, formatDate } from '../../../util';
 
 import './builder-filter-edit-control.styl';
 
@@ -35,7 +35,7 @@ document.registerElement(`builder-filter-edit-control`, class extends EditContro
       switch (operator) {
         case `was on`:
         case `was between`:
-          value = value.map(val => formatDateDisplay(parseDate(val)) || val);
+          value = value.map(val => formatDate(parseDate(val)) || val);
           break;
         case `was in the`:
           value = TimeClause.UNIT_AND_VALUE_TO_RANGE[clause.filterDateUnit][clause.filterValue];

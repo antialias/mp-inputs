@@ -662,15 +662,15 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     let to = null;
 
     if (Number.isInteger(value)) {
-      from = util.formatDateISO(util.relativeToAbsoluteDate(value, unit));
-      to = util.formatDateISO(util.relativeToAbsoluteDate(0, unit));
+      from = util.formatDate(util.relativeToAbsoluteDate(value, unit), {iso: true});
+      to = util.formatDate(util.relativeToAbsoluteDate(0, unit), {iso: true});
     } else if (Array.isArray(value)) {
       [from, to] = value;
       if (Number.isInteger(from)) {
-        from = util.formatDateISO(util.relativeToAbsoluteDate(from, unit));
+        from = util.formatDate(util.relativeToAbsoluteDate(from, unit), {iso: true});
       }
       if (Number.isInteger(to)) {
-        to = util.formatDateISO(util.relativeToAbsoluteDate(to, unit));
+        to = util.formatDate(util.relativeToAbsoluteDate(to, unit), {iso: true});
       }
     }
 

@@ -1,4 +1,4 @@
-import { csvFormatRows } from 'd3-dsv';
+import {csvFormatRows} from 'd3-dsv';
 import moment from 'moment';
 import {
   renameProperty,
@@ -9,9 +9,8 @@ import {
   nestedObjectKeys,
 } from 'mixpanel-common/util';
 
-import { parseDate } from './time';
+import {parseDate} from './index';
 import {transposeColsToRows} from './chart';
-
 
 const CSV_TIME_FORMAT = {
   hour:    `YYYY-MM-DD HH:mm:ss`,

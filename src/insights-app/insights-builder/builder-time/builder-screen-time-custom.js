@@ -2,9 +2,9 @@ import { BuilderScreenBase } from '../builder-pane/builder-screen-base';
 import { TimeClause } from '../../../models/clause';
 import {
   extend,
-  formatDateISO,
+  formatDate,
   relativeToAbsoluteDate,
-  unitForDateRange,
+  dateRangeToUnit,
 } from '../../../util';
 
 import template from './builder-screen-time-custom.jade';
@@ -29,8 +29,8 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
           const presetRange = unitPresets && unitPresets[value];
 
           if (presetRange) { // need to convert to absolute date values to allow new unit
-            const from = formatDateISO(relativeToAbsoluteDate(value, unit));
-            const to = formatDateISO(new Date());
+            const from = formatDate(relativeToAbsoluteDate(value, unit), {iso: true});
+            const to = formatDate(new Date(), {iso: true});
             update = extend(update, {value: [from, to]});
           }
 
@@ -43,7 +43,7 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
             return;
           }
           const {from, to} = ev.detail;
-          const unit = unitForDateRange(from, to);
+          const unit = dateRangeToUnit(from, to);
           const old = this.app.getTimeClauseValue(this.app.activeStageClause);
           if (from !== old.from || to !== old.to || unit !== old.unit) {
             this.setDates(from, to, unit);

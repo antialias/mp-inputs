@@ -1,6 +1,6 @@
 import { Component } from 'panel';
 
-import { formatDateISO, normalizeDates } from '../../util';
+import { normalizeDateStrings } from '../../util';
 
 import template from './datepicker.jade';
 import './datepicker.styl';
@@ -28,10 +28,10 @@ class DatePicker extends Component {
         changedDates: ev => {
           if (this.isRange) {
             let {from=this.state.from, to=this.state.to} = ev.detail;
-            [from=null, to=null] = normalizeDates(from, to);
+            [from=null, to=null] = normalizeDateStrings(from, to);
             this.update({from, to, date: null});
           } else {
-            let [date=null] = normalizeDates(ev.detail || this.state.date);
+            let [date=null] = normalizeDateStrings(ev.detail || this.state.date);
             this.update({date, from: null, to: null});
           }
           this.emitChange();
@@ -58,9 +58,9 @@ class DatePicker extends Component {
   }
 
   get value() {
-    const from = this.state.from ? formatDateISO(this.state.from) : null;
-    const to = this.state.to ? formatDateISO(this.state.to) : null;
-    const date = this.state.date ? formatDateISO(this.state.date) : null;
+    const from = this.state.from || null;
+    const to = this.state.to || null;
+    const date = this.state.date || null;
     return this.isRange ? {from, to} : date;
   }
 

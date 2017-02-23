@@ -1,7 +1,7 @@
 import {
   extend,
-  normalizeDates,
-  unitForDateRange,
+  normalizeDateStrings,
+  dateRangeToUnit,
   stringFilterMatches,
 } from '../../../util';
 
@@ -53,13 +53,13 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
     let update = {};
 
     if (from && to) {
-      [from, to] = normalizeDates(from, to);
-      update = {value: [from, to], unit: unitForDateRange(from, to)};
+      [from, to] = normalizeDateStrings(from, to);
+      update = {value: [from, to], unit: dateRangeToUnit(from, to)};
     } else if (from) {
-      [from] = normalizeDates(from);
+      [from] = normalizeDateStrings(from);
       update = {value: [from, to]};
     } else if (to) {
-      [to] = normalizeDates(to);
+      [to] = normalizeDateStrings(to);
       update = {value: [from, to]};
     }
 
