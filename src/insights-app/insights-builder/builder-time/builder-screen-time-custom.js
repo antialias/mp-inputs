@@ -66,6 +66,7 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
         dateLimited: () => {
           return this.app.maxDataHistoryDays() !== this.app.getFeatureGateValue(`unlimited`);
         },
+        isUnitRelevant: () => this.state.report.displayOptions.chartType === `line`,
       }),
     };
   }
@@ -75,6 +76,7 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
     if (unit) {
       params.unit = unit;
     }
-    this.updateStageClause(params, {shouldCommit: true});
+    const shouldStopEditing = from && to && !this.helpers.isUnitRelevant();
+    this.updateStageClause(params, {shouldCommit: true, shouldStopEditing});
   }
 });

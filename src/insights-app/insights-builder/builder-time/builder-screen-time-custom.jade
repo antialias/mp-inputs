@@ -32,7 +32,7 @@ include ../mixins.jade
         resize: $helpers.resizedCalendar,
       }
     )
-  if report.displayOptions.chartType === `line`
+  if $helpers.isUnitRelevant()
     .unit-control
       .builder-label Time unit
       mp-toggle(
