@@ -355,16 +355,7 @@ export default class SegmentationQuery extends BaseQuery {
     const isPeopleOnlyQuery = this.query.jqlQueries.every(query => query.resourceType === `people`);
     const needsPeopleTimeSeries = isPeopleOnlyQuery && querySegments.length && querySegments[querySegments.length - 1].propertyType === `datetime`;
 
-    //  timestamp dates of properties come back in seconds. 10^3 is needed to bring it to ms for moment.
-    const dateKeyCache = {};
-    const getDateKey = timestamp => {
-      const timestampInMS = isPeopleOnlyQuery ? (timestamp * 1000) : timestamp;
-      if (!dateKeyCache[timestampInMS]) {
-        dateKeyCache[timestampInMS] = moment.utc(timestampInMS).format();
-      }
-      return dateKeyCache[timestampInMS];
-    };
-
+    //  epoch dates of properties come back in seconds. 10^3 is needed to bring it to ms for moment.
     const formattedDateCache = {};
     const getFormattedDate = (timestamp, {unit=`day`, convertTimestampMultiplier=1000}={}) => {
       const timestampInMS = timestamp * convertTimestampMultiplier;
@@ -376,7 +367,7 @@ export default class SegmentationQuery extends BaseQuery {
     };
 
     if (!needsPeopleTimeSeries) {
-      results.forEach(r => baseDateResults[getDateKey(r.key[r.key.length - 1])] = 0);
+      results.forEach(r => baseDateResults[r.key[r.key.length - 1]] = 0);
     }
 
     if (results) {
@@ -416,7 +407,7 @@ export default class SegmentationQuery extends BaseQuery {
             obj = obj[key];
           }
 
-          obj[getDateKey(item.key[item.key.length - 1])] = item.value;
+          obj[item.key[item.key.length - 1]] = item.value;
           return seriesObj;
         };
       };

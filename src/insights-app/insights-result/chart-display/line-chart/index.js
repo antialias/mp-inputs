@@ -328,6 +328,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
         tickmarkPlacement: `on`,
         tickPosition: `outside`,
         tickPositions: this.getTickPositions(),
+        type: `datetime`,
       }),
       yAxis: util.extend(axisOptions, {
         allowDecimals: true,
@@ -363,59 +364,29 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       highchartsOptions.yAxis.type = `logarithmic`;
       highchartsOptions.yAxis.min = LOGARITHMIC_CHART_ZERO_REMAPPING;
     }
-    const data = this.chartData;
 
-    const seriesMap = {};
-    let allLabelsAreDates = true;
-    for (let segmentName of Object.keys(data)) {
-      const counts = data[segmentName];
-      if (Object.keys(counts).length === 1) {
-        highchartsOptions.plotOptions.series.marker.enabled = true;
-      }
+    const dataKeys = Object.keys(this.chartData);
 
-      let type = `line`;
-      if (highchartsOptions && highchartsOptions.chart && highchartsOptions.chart.type === `area`) {
-        type = `area`;
-      }
-      const series = {
+    const seriesMap = dataKeys.reduce((seriesMap, segmentName) => {
+      const counts = this.chartData[segmentName];
+      return Object.assign(seriesMap, {[segmentName]: {
         name: segmentName,
-        type,
-        data: Object.keys(counts).map(label => {
-          const count = counts[label];
-          // Todo Jordan: remove when implementing new line chart logic
-          let labelAsDate = moment(label.split(`Z`)[0]);
-          if (labelAsDate.isValid()) {
-            label = labelAsDate.valueOf();
-          } else {
-            allLabelsAreDates = false;
-          }
-          return [label, count];
-        }),
-      };
-      seriesMap[segmentName] = series;
-    }
+        type: highchartsOptions.chart.type,
+        data: util.sorted(Object.keys(counts), {transform: Number}).map(timestamp => [Number(timestamp), counts[timestamp]]),
+      }});
+    }, {});
 
-    if (allLabelsAreDates) {
-      highchartsOptions.xAxis.type = `datetime`;
-      for (let series of Object.values(seriesMap)) {
-        series.data = util.sorted(series.data, {transform: d => d[0]}); // sort by date
-      }
-    } else {
-      highchartsOptions.xAxis.type = `category`;
-    }
-
-    const sortedSegments = Object.keys(data)
+    const sortedSegments = dataKeys
       .map(segment => {
         // vals is a dictionary of timestamps to counts
-        const vals = data[segment];
+        const vals = this.chartData[segment];
         const segmentTotal = Object.values(vals).reduce((sum, val) => sum + val, 0);
         return [segment, segmentTotal];
       })
       .sort((a, b) => b[1] - a[1])
       .map(pair => pair[0]);
 
-    this.highchartSegmentIdxMap = sortedSegments
-      .reduce((obj, seg, idx) => Object.assign(obj, {[seg]: idx}), {});
+    this.highchartSegmentIdxMap = sortedSegments.reduce((obj, seg, idx) => Object.assign(obj, {[seg]: idx}), {});
 
     highchartsOptions.series = sortedSegments.map((s, idx) => util.extend(seriesMap[s], {
       visible: this.isSegmentShowing(seriesMap[s].name),
@@ -433,13 +404,11 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     if (!this.chartData || !this.initialized || !this._displayOptions) {
       return;
     }
-
     if (!this.el) {
       this.el = document.createElement(`div`);
       this.el.className = `mp-highcharts-container`;
       this.appendChild(this.el);
     }
-
     this.highchart = new Highcharts.Chart(this.createChartOptions());
 
   }
@@ -447,6 +416,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   isSegmentShowing(segmentName) {
     const segIdx = this.highchartSegmentIdxMap[segmentName];
     return (Number.isInteger(segIdx) &&
+      this._segFilters &&
       this._segFilters.hasOwnProperty(segmentName) &&
       this._segFilters[segmentName]);
   }
