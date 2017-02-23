@@ -122,10 +122,8 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   attributeChangedCallback(attrName, _, newVal) {
     if (attrName === `seg-filters`) {
       this._segFilters = this._segFilters || {};
-      const newSegFilters = JSON.parse(newVal);
-      const segChangesByKeys = Object.keys(newSegFilters).filter(key => this._segFilters[key] !== newSegFilters[key]);
-      this._segFilters = newSegFilters;
-      this.updateShowHideSegments(segChangesByKeys);
+      this._segFilters = JSON.parse(newVal);
+      this.updateShowHideSegments();
     } else {
       this._displayOptions = JSON.parse(this.getAttribute(`display-options`) || `{}`);
       this.renderChart();
@@ -463,8 +461,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       return;
     }
 
-    keys = keys || Object.keys(this._segFilters);
-    keys.forEach(segmentName => {
+    Object.keys(this._segFilters).forEach(segmentName => {
       const segIdx = this.highchartSegmentIdxMap[segmentName];
       const isVisible = this.isSegmentShowing(segmentName);
       this.highchart.series[segIdx].setVisible(isVisible, false);
