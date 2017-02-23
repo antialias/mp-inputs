@@ -4,12 +4,12 @@ import moment from 'moment';
 import { Component } from 'panel';
 import WebComponent from 'webcomponent';
 
-import { HIGHCHART_OPTIONS } from './base-highchart-options.js';
 import * as util from '../../../../util';
-import { nestedObjectPaths } from '../../chart-util';
+import {
+  nestedObjectPaths,
+} from '../../chart-util';
 
-
-
+import commonCSS from '!!style!css?camelCase!stylus!../../../../stylesheets/common.styl';
 import template from './index.jade';
 import './index.styl';
 
@@ -85,7 +85,7 @@ document.registerElement(`line-chart`, class extends Component {
           data: util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
             [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
           )),
-        }
+        };
       }
       this.update(newState);
     }
@@ -198,15 +198,158 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
 
   createChartOptions() {
     const displayOptions = this._displayOptions || {};
+    const axisOptions = {
+      endOnTick: true,
+      lineWidth: 1,
+      lineColor: commonCSS.grey150,
+      minPadding: 0,
+      maxPadding: 0,
+      startOnTick: true,
+    };
+    const highchartsOptions = {
 
-    const highchartsOptions = util.extend(HIGHCHART_OPTIONS);
-    highchartsOptions.chart.renderTo = this.el;
-    highchartsOptions.chart.events.redraw = killLastGridline;
-    highchartsOptions.tooltip.formatter = this.tooltipFormatter();
-    highchartsOptions.xAxis.labels.formatter = this.xAxisFormatter();
-    highchartsOptions.xAxis.minTickInterval = util.MS_BY_UNIT[this._displayOptions.timeUnit];
-    highchartsOptions.xAxis.tickPositions = this.getTickPositions();
-    highchartsOptions.yAxis.labels.formatter = this.yAxisFormatter();
+      chart: {
+        backgroundColor: `rgba(255,255,255,0)`,
+        borderRadius: 0,
+        events: {
+          redraw: killLastGridline,
+        },
+        marginTop: 0,
+        marginRight: 0,
+        marginBottom: null,
+        marginLeft: null,
+        renderTo: this.el,
+        spacingBottom: 30,
+        spacingLeft: 28,
+        style: {
+          fontFamily: `"Helvetica Neue", helvetica, sans-serif`,
+          fontSize: `12px`,
+        },
+        type: `line`,
+        zoomType: `x`,
+      },
+
+      colors: [
+        commonCSS.segmentColor1,
+        commonCSS.segmentColor2,
+        commonCSS.segmentColor3,
+        commonCSS.segmentColor4,
+        commonCSS.segmentColor5,
+        commonCSS.segmentColor6,
+        commonCSS.segmentColor7,
+        commonCSS.segmentColor8,
+      ],
+
+      credits: {
+        enabled: false,
+      },
+      legend: {
+        enabled: false,
+      },
+      loading: {
+        labelStyle: {
+          color: `transparent`,
+        },
+      },
+      global: {
+        useUTC: false,
+      },
+      plotOptions: {
+        line: {
+          incompleteStyle: {
+            'stroke-dasharray': `3,5`,
+          },
+          lineWidth: 3,
+          marker: {
+            hover: {
+              enabled: true,
+            },
+            lineColor: `#fff`,
+            lineWidth: 2,
+            radius: 5,
+            symbol: `circle`,
+          },
+          shadow: false,
+          states: {
+            hover: {
+              lineWidth: 4,
+              lineWidthPlus: 0,
+            },
+          },
+          turboThreshold: 0,
+        },
+        series: {
+          animation: {
+            duration: 300,
+          },
+          cursor: `pointer`,
+          fillOpacity: 1,
+          marker: {
+            enabled: null,
+            hover: {
+              enabled: true,
+            },
+            lineWidth: 2,
+            symbol: `circle`,
+          },
+          shadow: false,
+          stacking: null,
+        },
+      },
+
+      title: {
+        text: null,
+      },
+
+      tooltip: {
+        backgroundColor: `#fff`,
+        borderWidth: 0,
+        formatter: this.tooltipFormatter(),
+        shadow: false,
+        useHTML: true,
+      },
+
+      xAxis: util.extend(axisOptions, {
+        dateTimeLabelFormats: {
+          day: `%b %e`,
+        },
+        endOnTick: false,
+        labels: {
+          formatter: this.xAxisFormatter(),
+          style: {
+            color: `#868ea3`,
+          },
+          y: 18,
+        },
+        maxPadding: 0.017,
+        minPadding: 0.017,
+        minTickInterval: util.MS_BY_UNIT[this._displayOptions.timeUnit],
+        startOnTick: false,
+        tickmarkPlacement: `on`,
+        tickPosition: `outside`,
+        tickPositions: this.getTickPositions(),
+      }),
+      yAxis: util.extend(axisOptions, {
+        allowDecimals: true,
+        gridLineColor: `#e6e8eb`,
+        gridLineDashStyle: `shortDash`,
+        labels: {
+          formatter: this.yAxisFormatter(),
+          style: {
+            fontWeight: `bold`,
+            color: `#868ea3`,
+          },
+          x: -20,
+        },
+        min: 0,
+        minPadding: 0,
+        title: {
+          text: null,
+        },
+        showFirstLabel: false,
+        showLastLabel: false,
+      }),
+    };
 
     if (displayOptions.plotStyle === `stacked`) {
       highchartsOptions.plotOptions.series.stacking = `normal`;
