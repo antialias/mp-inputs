@@ -17,7 +17,7 @@ document.registerElement(`insights-title-input`, class extends Component {
       helpers: {
         blur: () => {
           if (this.state.active) {
-            this.update({active: true, saveFocused: false, saveNewFocused: false});
+            this.update({active: false, saveFocused: false, saveNewFocused: false});
             this.dispatchChange();
           }
         },
@@ -34,7 +34,7 @@ document.registerElement(`insights-title-input`, class extends Component {
               break;
             }
             case 13: {
-                this.saveReport(ev, {saveAsNew: this.state.saveNewFocused});
+              this.saveReport(ev, {saveAsNew: this.state.saveNewFocused});
             }
           }
         },
@@ -77,7 +77,7 @@ document.registerElement(`insights-title-input`, class extends Component {
     ev.stopPropagation();
     if (this.state.active) {
       this.dispatchChange({save: true, saveAsNew});
-      this.update({active: true, saveFocused: false, saveNewFocused: false});
+      this.update({active: false, saveFocused: false, saveNewFocused: false});
       this.inputEl.blur();
     } else {
       this.inputEl.focus();
