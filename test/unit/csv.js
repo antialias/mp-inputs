@@ -1,4 +1,4 @@
-import {describe, it} from 'mocha';
+import { describe, it } from 'mocha';
 import expect from 'expect.js';
 import { resultToCSVArray } from '../../src/util/csv';
 

@@ -1,5 +1,5 @@
 import expect from 'expect.js';
-import {describe, it} from 'mocha';
+import { describe, it } from 'mocha';
 
 import {
   d2Obj,
