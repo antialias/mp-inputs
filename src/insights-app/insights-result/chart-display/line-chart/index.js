@@ -1,4 +1,5 @@
 /* global $, Highcharts */
+import isEqual from 'lodash/isEqual';
 import moment from 'moment';
 import { Component } from 'panel';
 import WebComponent from 'webcomponent';
@@ -79,9 +80,12 @@ document.registerElement(`line-chart`, class extends Component {
       if (this.state.dataId !== dataId) {
         // transform nested object into single-level object:
         // {'a': {'b': {'c': 5}}} => {'a / b / c': 5}
-        newState.data = util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
-          [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
-        ));
+        newState.data = {
+          id: dataId,
+          data: util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
+            [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
+          )),
+        }
       }
       this.update(newState);
     }
@@ -118,8 +122,11 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       this._segFilters = JSON.parse(newVal);
       this.updateShowHideSegments();
     } else {
-      this._displayOptions = JSON.parse(this.getAttribute(`display-options`) || `{}`);
-      this.renderChart();
+      const newDisplayOptions = JSON.parse(this.getAttribute(`display-options`) || `{}`);
+      if (!isEqual(this._displayOptions, newDisplayOptions)) {
+        this._displayOptions = newDisplayOptions;
+        this.renderChart();
+      }
     }
   }
 
@@ -288,14 +295,9 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       this.el = document.createElement(`div`);
       this.el.className = `mp-highcharts-container`;
       this.appendChild(this.el);
-      this.highchart = new Highcharts.Chart(this.createChartOptions());
     }
 
-    const dataId = this.getJSONAttribute(`data-id`);
-    if (dataId !== this.dataId || !this.highchart.series.length) {
-      this.dataId = dataId;
-      this.highchart = new Highcharts.Chart(this.createChartOptions());
-    }
+    this.highchart = new Highcharts.Chart(this.createChartOptions());
 
   }
 
@@ -325,8 +327,11 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   }
 
   set chartData(data) {
-    this._chartData = data;
-    this.renderChart();
+    if (this._chartDataId !== data.id) {
+      this._chartDataId = data.id;
+      this._chartData = data.data;
+      this.renderChart();
+    }
   }
 
   get utcOffset() {
@@ -334,7 +339,9 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   }
 
   set utcOffset(offset) {
-    this._utcOffset = offset;
-    this.renderChart();
+    if (!isEqual(this._utcOffset, offset)) {
+      this._utcOffset = offset;
+      this.renderChart();
+    }
   }
 });
