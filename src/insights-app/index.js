@@ -473,11 +473,14 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     }
   }
 
+  buildScreenSpecificSelector(selector) {
+    const screenIdx = this.state.builderPane.screens.length - 1;
+    return `.builder-pane [screen-index="` + screenIdx +`"] ` + selector;
+  }
+
   setActiveIndex(newIndex, scrollIntoView=true) {
     this.updateBuilder({activeIndex: newIndex});
-    const screenIdx = this.state.builderPane.screens.length - 1;
-    const selectorString = `.builder-pane [screen-index="` + screenIdx +`"] .arrow-key-scrollable`;
-    const listEl = this.el.querySelector(selectorString);
+    const listEl = this.el.querySelector(this.buildScreenSpecificSelector(`.arrow-key-scrollable`));
 
     if (scrollIntoView && listEl) {
       window.requestAnimationFrame(() => {
@@ -501,9 +504,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   handleKeydown(e) {
     const activeIdx = this.state.builderPane.activeIndex;
 
-    const screenIdx = this.state.builderPane.screens.length - 1;
-    const selectorString = `.builder-pane [screen-index="` + screenIdx +`"] .list-option`;
-    const items = this.el.querySelectorAll(selectorString);
+    const items = this.el.querySelectorAll(this.buildScreenSpecificSelector(`.list-option`));
     const itemCount = items.length;
 
     const pill = this.el.querySelector(`.list-option-active .pill`);
