@@ -5,7 +5,7 @@ include ../mixins.jade
 
 .builder-screen.properties
   +screen-title(`Properties of ${$helpers.getEventName()}`, {backButton: $helpers.screenIdx() > 1})
-  .screen-list-container(
+  .screen-list-container.arrow-key-scrollable(
     hook={postpatch: $helpers.updateRenderedSize}
     on={scroll: $helpers.scrolledList}
   )

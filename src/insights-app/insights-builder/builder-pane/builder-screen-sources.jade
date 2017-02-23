@@ -1,7 +1,7 @@
 include ../mixins.jade
 
 .builder-screen.sources
-  ul.screen-options-list(
+  ul.screen-options-list.arrow-key-scrollable(
     class=util.learnClasses({disabledExceptChildren: [`first`]})
     hook={postpatch: $helpers.updateRenderedSize}
     on={scroll: $helpers.scrolledList}

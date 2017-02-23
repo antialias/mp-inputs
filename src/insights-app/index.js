@@ -475,7 +475,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   setActiveIndex(newIndex, scrollIntoView=true) {
     this.updateBuilder({activeIndex: newIndex});
-    const listEl = this.el.querySelector(`.screen-list-container`) || this.el.querySelector(`.builder-screen`);
+    const screenIdx = this.state.builderPane.screens.length - 1;
+    const selectorString = `.builder-pane [screen-index="` + screenIdx +`"] .arrow-key-scrollable`;
+    const listEl = this.el.querySelector(selectorString);
 
     if (scrollIntoView && listEl) {
       window.requestAnimationFrame(() => {
