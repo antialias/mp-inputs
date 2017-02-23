@@ -503,7 +503,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   handleKeydown(e) {
     const activeIdx = this.state.builderPane.activeIndex;
-
     const items = this.el.querySelectorAll(this.buildScreenSpecificSelector(`.list-option`));
     const itemCount = items.length;
 
@@ -515,6 +514,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         e.preventDefault();
         if (pill) {
           pill.classList.toggle(activePillClass);
+        } else {
+          items[activeIdx].click();
         }
         break;
       }

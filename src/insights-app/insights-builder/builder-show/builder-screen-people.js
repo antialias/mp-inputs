@@ -38,9 +38,7 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenNum
       showLoading: true,
     });
 
-    indexSectionLists(sections);
-
-    return sections;
+    return indexSectionLists(sections);
   }
 
   isLoading() {
