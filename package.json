@@ -71,7 +71,7 @@
     "stylus": "0.53.0",
     "stylus-loader": "2.4.0",
     "url-loader": "0.5.7",
-    "virtual-jade": "0.8.1",
+    "virtual-jade": "0.8.2",
     "virtual-jade-loader": "0.5.0",
     "web-component-tester": "5.0.0",
     "webpack": "1.12.9",
