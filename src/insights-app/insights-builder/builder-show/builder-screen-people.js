@@ -24,19 +24,15 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenNum
   }
 
   getAllPeopleProperties() {
-    let sections = [];
-
-    sections.push({
+    let sections = [{
       clickedPropertyFunction: (ev, value) => this.clickedSpecialOptions(ev, value),
       list: this.getSpecialOptions(),
       showLoading: false,
-    });
-
-    sections.push({
+    }, {
       clickedPropertyFunction: null,
       list: this.buildProgressiveList(),
       showLoading: true,
-    });
+    }];
 
     return indexSectionLists(sections);
   }

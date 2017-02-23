@@ -43,8 +43,8 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
           }
         },
         getContextOptions: () => {
-          return CONTEXT_OPTIONS[this.state.report.sections.show.clauseResourceTypes()] || []
-            .map((option, index) => option.extend({index}));
+          return (CONTEXT_OPTIONS[this.state.report.sections.show.clauseResourceTypes()] || [])
+            .map((option, index) => extend(option, {index}));
         },
         getContextLists: () => this.buildProgressiveList(),
         clickedProperty: (ev, property) => {

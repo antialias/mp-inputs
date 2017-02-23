@@ -18,17 +18,13 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
   }
 
   getAllEvents() {
-    let sections = [];
-
-    sections.push({
+    let sections = [{
       label: `Recently Viewed`,
       list: this.getRecentEvents(),
-    });
-
-    sections.push({
+    }, {
       label: `Events`,
       list: this.buildProgressiveList(),
-    });
+    }];
 
     return indexSectionLists(sections);
   }

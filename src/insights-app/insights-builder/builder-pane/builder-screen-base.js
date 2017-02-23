@@ -165,7 +165,7 @@ export class BuilderScreenBase extends Component {
     this.focusInput();
   }
 
-  nextScreen(componentName, screenAttrs) {
+  nextScreen(componentName, screenAttrs={}) {
     if (!this.state.builderPane.inTransition) {
       this.app.update({contextFilter: ``});
       this.app.updateBuilder({

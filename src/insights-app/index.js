@@ -522,8 +522,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       case 13: // enter
         if (pill && pill.classList.contains(activePillClass)) {
           pill.click();
+        } else {
+          items[activeIdx].click();
         }
-        items[activeIdx].click();
         break;
       case 38: { // up arrow
         e.preventDefault();

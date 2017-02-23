@@ -56,12 +56,10 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       specialProps = specialProps.concat(GroupClause.EVENT_DATE);
     }
 
-    let allProperties = [
+    return [
       ...this.matchingItems(specialProps, renameProperty),
       ...properties,
-    ];
-
-    return allProperties.map((prop, index) => extend(prop, {index}));
+    ].map((prop, index) => extend(prop, {index}));
   }
 
   getEventPropertyCount() {
