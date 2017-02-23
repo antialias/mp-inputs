@@ -67,20 +67,23 @@ document.registerElement(`line-chart`, class extends Component {
     }
 
     let {headers, series, dataId} = this.chartData;
-    const chartLabel = JSON.parse(this.getAttribute(`chart-label`));
 
     if (headers && series) {
-      this.update({
-        // transform nested object into single-level object:
-        // {'a': {'b': {'c': 5}}} => {'a / b / c': 5}
-        chartLabel,
-        data: util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
-          [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
-        )),
+      const newState = {
+        chartLabel: JSON.parse(this.getAttribute(`chart-label`)),
         dataId,
         displayOptions: JSON.parse(this.getAttribute(`display-options`)),
         utcOffset: this.utcOffset,
-      });
+      };
+
+      if (this.state.dataId !== dataId) {
+        // transform nested object into single-level object:
+        // {'a': {'b': {'c': 5}}} => {'a / b / c': 5}
+        newState.data = util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
+          [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
+        ));
+      }
+      this.update(newState);
     }
   }
 
@@ -98,18 +101,8 @@ document.registerElement(`line-chart`, class extends Component {
   }
 
   set chartData(data) {
-    // if (!isEqual(data, this._chartData)) {
     this._chartData = data;
     this.updateChartState();
-    // }
-  }
-
-  get segFilters() {
-    return this._segFilters;
-  }
-
-  set segFilters(filters) {
-    this._segFilters = filters;
   }
 });
 
