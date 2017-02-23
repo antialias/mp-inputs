@@ -26,22 +26,15 @@ document.registerElement(`insights-title-input`, class extends Component {
           this.update({inputValue: this.value, isDirty: true, saveFocused: false, saveNewFocused: false});
         },
         keydownHandler: ev => {
+          const saveFocused = this.state.saveFocused;
           switch(ev.keyCode) {
             case 9: {
               ev.preventDefault();
-              if (this.state.saveFocused) {
-                this.update({saveFocused: false, saveNewFocused: true});
-              } else {
-                this.update({saveFocused: true, saveNewFocused: false});
-              }
+              this.update({saveFocused: !saveFocused, saveNewFocused: saveFocused});
               break;
             }
             case 13: {
-              if (this.state.saveFocused) {
-                this.saveReport(ev);
-              } else if (this.state.saveNewFocused) {
-                this.saveReport(ev, {saveAsNew: true});
-              }
+                this.saveReport(ev, {saveAsNew: this.state.saveNewFocused});
             }
           }
         },
