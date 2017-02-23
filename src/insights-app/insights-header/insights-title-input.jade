@@ -21,7 +21,7 @@
         if $component.isAttributeEnabled(`show-save-new`)
           button.title-save-new(
             class={
-              focused: saveNewFocused,
+              'title-button-focused': saveNewFocused,
               'title-button-disabled': $helpers.isSaveNewDisabled()
             }
             on={
@@ -31,7 +31,7 @@
           ) Save new
         button.title-save(
           class={
-            focused: saveFocused,
+            'title-button-focused': saveFocused,
             'title-button-disabled': $helpers.isSaveDisabled()
           }
           on={

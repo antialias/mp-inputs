@@ -34,7 +34,10 @@ document.registerElement(`insights-title-input`, class extends Component {
               break;
             }
             case 13: {
-              this.saveReport(ev, {saveAsNew: this.state.saveNewFocused});
+              const saveNewFocused = this.state.saveNewFocused;
+              if (saveFocused || saveNewFocused) {
+                this.saveReport(ev, {saveAsNew: saveNewFocused});
+              }
             }
           }
         },
