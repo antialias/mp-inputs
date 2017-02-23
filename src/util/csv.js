@@ -70,7 +70,7 @@ export function resultToCSVArray(data, {timeUnit=`day`}={}) {
     if (rowLabels.length === 1) {
       const colLabels = Object.keys(series[rowLabels[0]]);
       if (colLabels.length > 1) {
-        ({headers, series} = transposeColsToRows(data.headers, series, `Total number of`, false));
+        ({headers, series} = transposeColsToRows(data.headers, series, `Total number of`, /* addLeafHeader: */false));
       }
     }
   }
