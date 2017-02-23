@@ -20,14 +20,20 @@
       if active
         if $component.isAttributeEnabled(`show-save-new`)
           button.title-save-new(
-            class={'title-button-disabled': $helpers.isSaveNewDisabled()}
+            class={
+              focused: saveNewFocused,
+              'title-button-disabled': $helpers.isSaveNewDisabled()
+            }
             on={
               click: $helpers.clickSaveNew,
               mousedown: $helpers.buttonMousedown,
             }
           ) Save new
         button.title-save(
-          class={'title-button-disabled': $helpers.isSaveDisabled()}
+          class={
+            focused: saveFocused,
+            'title-button-disabled': $helpers.isSaveDisabled()
+          }
           on={
             click: $helpers.clickSave,
             mousedown: $helpers.buttonMousedown,

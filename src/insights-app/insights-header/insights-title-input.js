@@ -11,21 +11,38 @@ document.registerElement(`insights-title-input`, class extends Component {
         active: false,
         inputValue: ``,
         isDirty: false,
+        saveFocused: false,
+        saveNewFocused: false,
       },
       helpers: {
         blur: () => {
           if (this.state.active) {
-            this.update({active: false});
+            this.update({active: true, saveFocused: false, saveNewFocused: false});
             this.dispatchChange();
           }
         },
         focus: () => this.update({active: true, isDirty: false}),
         inputChange: () => {
-          this.update({inputValue: this.value, isDirty: true});
+          this.update({inputValue: this.value, isDirty: true, saveFocused: false, saveNewFocused: false});
         },
-        keydownHandler: (ev) => {
-          if (ev.keyCode === 13) {
-            this.saveReport(ev);
+        keydownHandler: ev => {
+          switch(ev.keyCode) {
+            case 9: {
+              ev.preventDefault();
+              if (this.state.saveFocused) {
+                this.update({saveFocused: false, saveNewFocused: true});
+              } else {
+                this.update({saveFocused: true, saveNewFocused: false});
+              }
+              break;
+            }
+            case 13: {
+              if (this.state.saveFocused) {
+                this.saveReport(ev);
+              } else if (this.state.saveNewFocused) {
+                this.saveReport(ev, {saveAsNew: true});
+              }
+            }
           }
         },
         buttonMousedown: ev => {
@@ -67,7 +84,7 @@ document.registerElement(`insights-title-input`, class extends Component {
     ev.stopPropagation();
     if (this.state.active) {
       this.dispatchChange({save: true, saveAsNew});
-      this.update({active: false});
+      this.update({active: true, saveFocused: false, saveNewFocused: false});
       this.inputEl.blur();
     } else {
       this.inputEl.focus();
