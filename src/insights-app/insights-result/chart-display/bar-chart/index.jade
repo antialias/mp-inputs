@@ -55,13 +55,13 @@ mixin chart-bar(options={})
     tbody
       - const singleRowData = rows.length == 1
       each row, rowIndex in rows
-        - rowIsKeyValuePair = row.length == 2
+        - const rowIsKeyValuePair = row.length == 2
         - const addTopLevelKey = singleRowData && rowIsKeyValuePair && isStacked
         - const isMultiColor = row.length > 2 || isStacked
+        - const lastCellIdx = row.length - 1
+        - const segmentSum = util.sum(row[lastCellIdx])
         tr
           each cell, cellIndex in row
-            - const lastCellIdx = row.length - 1
-            - const segmentSum = util.sum(row[lastCellIdx])
             if cell
               - const headersToDisplay = $helpers.headersToDisplay()
               if cellIndex < lastCellIdx
