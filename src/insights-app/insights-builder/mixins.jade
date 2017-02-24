@@ -30,7 +30,7 @@ mixin generic-options-list-item(label, options)
     }
     on={
       click: options.onclick,
-      mouseenter: () => $helpers.updateActiveIndex(options.index)
+      mouseenter: () => $helpers.updateActiveIndex(options.index),
     }
   )
     +screen-option(label, {noIcon: true})
@@ -64,7 +64,7 @@ mixin event-list(events, options)
         }
         on={
           click: isSelected ? null : () => options.clickedEvent(mpEvent),
-          mouseenter: () => $helpers.updateActiveIndex(mpEvent.index)
+          mouseenter: () => $helpers.updateActiveIndex(mpEvent.index),
         }
       )
         +screen-option(renamedMpEvent, {
@@ -98,8 +98,8 @@ mixin property-list(properties, options)
             [property.type]: true,
           }
           on={
-          click: (isSelected && property.type !== `datetime`)  ? null : ev => options.clickedProperty(ev, property),
-          mouseenter: () => $helpers.updateActiveIndex(property.index)
+          click: (isSelected && property.type !== `datetime`) ? null : ev => options.clickedProperty(ev, property),
+          mouseenter: () => $helpers.updateActiveIndex(property.index),
 
           }
         )
