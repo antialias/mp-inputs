@@ -38,7 +38,9 @@ export class BuilderScreenBase extends Component {
           ev.stopPropagation();
           const isInContextualMenu = !!this.state.builderPane.isContextualMenuOpen;
           this.updateStageClause({value, property: null}, {shouldCommit: !isInContextualMenu});
-          this.nextScreen(`builder-screen-numeric-properties`);
+          this.nextScreen(`builder-screen-numeric-properties`, {
+            previousScreens: [`builder-screen-events`],
+          });
         },
         clickedProperty: (ev, property) => {
           const clauseAttrs = {
@@ -166,13 +168,17 @@ export class BuilderScreenBase extends Component {
     this.focusInput();
   }
 
-  nextScreen(componentName, screenAttrs={}) {
+  nextScreen(componentName, {previousScreens=[], screenAttrs={}}={}) {
     if (!this.state.builderPane.inTransition) {
+      const currScreen = extend({componentName}, screenAttrs);
+      const prevScreens = previousScreens.map(componentName => ({componentName}));
+      const screens = [...this.state.builderPane.screens, ...prevScreens, currScreen];
+
       this.app.update({contextFilter: ``});
       this.app.updateBuilder({
         activeIndex: 0,
         inTransition: true,
-        screens: this.state.builderPane.screens.concat(extend({componentName}, screenAttrs)),
+        screens,
       });
       this.focusInput();
     }

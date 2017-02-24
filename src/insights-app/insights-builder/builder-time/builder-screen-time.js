@@ -39,7 +39,9 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
           if (range.name === TimeClause.RANGES.CUSTOM) {
             const position = this.getBoundingClientRect();
             const willCrossViewportEdge = window.innerWidth - position.left < TIME_CUSTOM_SCREEN_WIDTH;
-            this.nextScreen(`builder-screen-time-custom`, {alignTimeCustomPaneRight: willCrossViewportEdge});
+            this.nextScreen(`builder-screen-time-custom`, {
+              screenAttrs: {alignTimeCustomPaneRight: willCrossViewportEdge},
+            });
           } else {
             this.updateAndCommitStageClause({range: range.name});
           }

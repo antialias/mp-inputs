@@ -461,9 +461,12 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     };
   }
 
-  startBuilderOnScreen(componentName) {
+  startBuilderOnScreen(componentName, {previousScreens=[], screenAttrs={}}={}) {
     const hasExistingScreens = !!this.state.builderPane.screens.length;
-    const screens = [{componentName}];
+    const currScreen = extend({componentName}, screenAttrs);
+    const prevScreens = previousScreens.map(componentName => ({componentName}));
+    const screens = [...prevScreens, currScreen];
+
     this.resetBuilder();
     this.stopEditingClause();
     if (hasExistingScreens) {

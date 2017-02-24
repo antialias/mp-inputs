@@ -70,6 +70,8 @@ document.registerElement(`builder-filter-edit-control`, class extends EditContro
   }
 
   openPane() {
-    this.app.startBuilderOnScreen(`builder-screen-filter-property`);
+    this.app.startBuilderOnScreen(`builder-screen-filter-property`, {
+      previousScreens: [`builder-screen-filter-properties-list`],
+    });
   }
 });
