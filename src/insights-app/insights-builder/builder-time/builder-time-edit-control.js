@@ -1,7 +1,9 @@
 import {
+  KEY_CODES,
+  dateRangeToUnit,
   extend,
   normalizeDateStrings,
-  dateRangeToUnit,
+  parseDate,
   stringFilterMatches,
 } from '../../../util';
 
@@ -52,28 +54,42 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
         }),
         changedFrom: ev => this.setDates({from: ev.detail}),
         changedTo: ev => this.setDates({to: ev.detail}),
+        pressedKey: ev => {
+          switch (ev.keyCode) {
+            case KEY_CODES.tab:
+              if (this.state.builderPane.fromFocused) {
+                this.helpers.focusTo();
+              } else if (this.state.builderPane.toFocused) {
+                this.helpers.focusFrom();
+              }
+              break;
+            case KEY_CODES.enter:
+              // use RAF so we don't stop editing while a setDates call is happening
+              requestAnimationFrame(() => this.app.stopEditingClause());
+              break;
+          }
+        },
       }),
     };
   }
 
-  setDates(dates) {
+  setDates(dates={}) {
     const old = this.app.getTimeClauseValue();
+    const unit = old.unit;
     let {from=old.from, to=old.to} = dates;
-    let update = {};
 
     if (from && to) {
       [from, to] = normalizeDateStrings(from, to);
-      update = {value: [from, to], unit: dateRangeToUnit(from, to)};
     } else if (from) {
       [from] = normalizeDateStrings(from);
-      update = {value: [from, to]};
     } else if (to) {
       [to] = normalizeDateStrings(to);
-      update = {value: [from, to]};
     }
 
-    this.app.updateStageClause(update);
-    this.app.commitStageClause();
+    this.app.updateStageClause({
+      value: [from, to],
+      unit: dateRangeToUnit(parseDate(from), parseDate(to)),
+    }, {shouldCommit: true});
   }
 
   get section() {

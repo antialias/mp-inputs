@@ -16,7 +16,10 @@ export default class ResizeDateInput extends ResizeInput {
       helpers: extend(config.helpers, {
         // TODO: remove duplication of helpers between this and DateInput
         formatDate: dateString => formatDate(parseDate(dateString)),
-        focusedInput: () => this.emitFocus(),
+        focusedInput: () => {
+          this.resize();
+          this.emitFocus();
+        },
         blurredInput: () => {
           this.inputEl.value = ``;
           this.emitBlur();
@@ -45,7 +48,7 @@ export default class ResizeDateInput extends ResizeInput {
   }
 
   emitChange() {
-    const detail = formatDate(parseDate(this.value), {iso: true});
+    const detail = formatDate(this.value, {iso: true});
     this.dispatchEvent(new CustomEvent(`change`, {detail}));
   }
 

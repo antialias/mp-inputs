@@ -868,7 +868,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     }
   }
 
-  updateStageClause(clauseData={}) {
+  updateStageClause(clauseData={}, {shouldCommit=false, shouldStopEditing=true}={}) {
     const stageClauses = this.state.stageClauses.concat();
     let currentClause = stageClauses.pop();
     if (currentClause) {
@@ -903,6 +903,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     }
 
     this.update(newState);
+
+    if (shouldCommit) {
+      this.commitStageClause({shouldStopEditing});
+    }
   }
 
   commitStageClause({shouldStopEditing=true}={}) {

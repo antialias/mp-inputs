@@ -42,6 +42,7 @@
               change: $helpers.changedFrom,
               focus: $helpers.focusFrom,
               blur: $helpers.refocusFrom,
+              keydown: $helpers.pressedKey,
             }
             hook={
               postpatch: builderPane.fromFocused ? $helpers.focus : null,
@@ -69,6 +70,7 @@
               change: $helpers.changedTo,
               focus: $helpers.focusTo,
               blur: $helpers.refocusTo,
+              keydown: $helpers.pressedKey,
             }
             hook={
               postpatch: builderPane.toFocused ? $helpers.focus : null,
