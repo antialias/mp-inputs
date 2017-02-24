@@ -14,6 +14,11 @@ import '../../widgets/resize-date-input';
 
 import template from './builder-time-edit-control.jade';
 
+const SCREENS = {
+  preset: `builder-screen-time`,
+  custom: `builder-screen-time-custom`,
+};
+
 document.registerElement(`builder-time-edit-control`, class extends EditControl {
   get config() {
     return {
@@ -72,7 +77,6 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
 
   setDates(dates={}) {
     const old = this.app.getTimeClauseValue();
-    const unit = old.unit;
     let {from=old.from, to=old.to} = dates;
 
     if (from && to) {
@@ -109,22 +113,29 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
   }
 
   openPane() {
-    this.app.startBuilderOnScreen(`builder-screen-time`);
+    this.app.startBuilderOnScreen(SCREENS.preset);
+
+    if (!this.getClause().range) {
+      // need timeout to avoid app.resetBuilder call that happens shortly after this
+      setTimeout(() => this.showCustomScreen(), 250);
+    }
   }
 
   // based on the value of the input, decide whether to show the preset or custom range screen
   updateScreen(value, focused) {
-    const presetRangeScreen = `builder-screen-time`;
-    const customRangeScreen = `builder-screen-time-custom`;
-    const currentScreen = this.app.getBuilderCurrentScreenAttr(`componentName`);
     if (
-      currentScreen === presetRangeScreen && value.length >= 3 &&
+      value.length >= 3 &&
+      this.app.getBuilderCurrentScreenAttr(`componentName`) === SCREENS.preset &&
       TimeClause.RANGE_LIST.every(range => !stringFilterMatches(range, value))
     ) {
-      this.app.updateBuilder(extend(focused, {
-        screens: this.state.builderPane.screens.concat({componentName: customRangeScreen}),
-        inTransition: true,
-      }));
+      this.showCustomScreen(focused);
     }
+  }
+
+  showCustomScreen(focused={}) {
+    this.app.updateBuilder(extend(focused, {
+      screens: this.state.builderPane.screens.concat({componentName: SCREENS.custom}),
+      inTransition: true,
+    }));
   }
 });
