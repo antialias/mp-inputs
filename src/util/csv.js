@@ -21,7 +21,7 @@ const CSV_TIME_FORMAT = {
   year:    `YYYY`,
 };
 function formatCSVDate(dateStr, timeUnit) {
-  return moment(parseDate(dateStr)).format(CSV_TIME_FORMAT[timeUnit]);
+  return moment.utc(parseDate(dateStr, {iso: true})).format(CSV_TIME_FORMAT[timeUnit]);
 }
 
 const SPECIAL_NAMES = {

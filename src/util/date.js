@@ -57,15 +57,22 @@ const DISPLAY_DATE_FORMATS = {
  * @param {Boolean} endOfDay - optional; set date time to end of day
  * @returns {Date|null} - the Date object the input string parses to, or null if input is invalid
  */
-export function parseDate(dateString, {endOfDay=false}={}) {
+export function parseDate(dateString, {iso=false, startOfDay=false, endOfDay=false}={}) {
   if (typeof dateString === `string`) {
-    // replace all chars other than alphanumerics and spaces with a space
-    // this allows strings like '"2017-02-02"' to be parsed correctly
-    dateString = dateString.replace(/[^\w\s]+/g, ` `);
-    let date = moment(dateString, PARSE_DATE_FORMATS);
+    let date = null;
+
+    if (iso) {
+      date = moment.utc(new Date(dateString));
+    } else {
+      // replace all chars other than alphanumerics and spaces with a space
+      // this allows strings like '"2017-02-02"' to be parsed correctly
+      dateString = dateString.replace(/[^\w\s]+/g, ` `);
+      date = moment(dateString, PARSE_DATE_FORMATS);
+    }
 
     if (date.isValid()) {
-      date = endOfDay ? date.endOf(UNITS.day) : date.startOf(UNITS.day);
+      date = startOfDay ? date.startOf(UNITS.day) : date;
+      date = endOfDay ? date.endOf(UNITS.day) : date;
 
       // make dates like "12/31" parse to the most recent past instance of that date
       date = date > moment() ? date.subtract(1, `${UNITS.year}s`) : date;
