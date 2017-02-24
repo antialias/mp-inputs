@@ -124,9 +124,9 @@ document.registerElement(`table-chart`, class extends Component {
 
     let singleValueColumnSum = (columnHeaders.length === 1)? util.nestedObjectSum(series) : null;
     if (isTransposed) { // If transposed then we compute nested sum from series
-      for (let i = 0; i < headers.length; ++i) {
+      headers.forEach(() =>{
         singleValueColumnSum = util.nestedObjectSum(singleValueColumnSum);
-      }
+      });
     }
 
     this.update({
