@@ -478,7 +478,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return tagName + ` ` + selector;
   }
 
-  setActiveIndex(newIndex, scrollIntoView=true) {
+  setActiveIndex(newIndex, {scrollIntoView=true}={}) {
     this.updateBuilder({activeIndex: newIndex});
     const listEl = this.el.querySelector(this.buildScreenSpecificSelector(`.arrow-key-scrollable`));
 
@@ -510,7 +510,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     const activePillClass = `pill-active`;
 
     switch(e.keyCode) { // tab
-      case 9: {
+      case util.KEY_CODES.tab: {
         e.preventDefault();
         if (pill) {
           pill.classList.toggle(activePillClass);
@@ -519,21 +519,21 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         }
         break;
       }
-      case 13: // enter
+      case util.KEY_CODES.enter: // enter
         if (pill && pill.classList.contains(activePillClass)) {
           pill.click();
         } else {
           items[activeIdx].click();
         }
         break;
-      case 38: { // up arrow
+      case util.KEY_CODES.upArrow: { // up arrow
         e.preventDefault();
         if (activeIdx !== 0) {
           this.setActiveIndex(activeIdx - 1);
         }
         break;
       }
-      case 40: { // down arrow
+      case util.KEY_CODES.downArrow: { // down arrow
         e.preventDefault();
         if (activeIdx < itemCount - 1) {
           this.setActiveIndex(activeIdx + 1);

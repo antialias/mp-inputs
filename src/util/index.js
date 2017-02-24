@@ -39,6 +39,14 @@ export {
   toArbSelectorPropertyToken,
 } from './queries';
 
+
+export const KEY_CODES = {
+  tab: 9,
+  enter: 13,
+  upArrow: 38,
+  downArrow: 40,
+};
+
 // TODO move to mixpanel-common
 export function parseURLQueryParams() {
   return window.location.search.slice(1).split(`&`)
@@ -77,11 +85,11 @@ export function getIconForEvent(mpEvent) {
 
 export function indexSectionLists(sections) {
   let index = 0;
-  return sections.map(section => {
-    return extend(section, {list: section.list.map(option => {
-      return extend(option, {index: index++});
-    })});
-  });
+  return sections.map(section => 
+    extend(section, {list: section.list.map(option => 
+      extend(option, {index: index++})
+    )})
+  );
 }
 
 const PROPERTY_TYPE_ICON_MAP = {
