@@ -99,7 +99,7 @@ document.registerElement(`chart-display`, class extends Component {
           if (chartName.includes(`bar`)) {
             shouldShow = groupClauses.length > 0 || (chartName === `stacked bar` && showClauses.length > 1);
           } else if (chartName.includes(`line`)) {
-            shouldShow = groupClauses.length > 0 || showClauses.length > 1 || (chartName === `line` && showClauses[0].value.name === `$top_events`);
+            shouldShow = groupClauses.length > 0 || showClauses.length > 1 || (/line/.test(chartName) && showClauses[0].value.name === `$top_events`);
           }
 
           return shouldShow;
