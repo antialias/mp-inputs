@@ -7,7 +7,10 @@ import { GroupClause, ShowClause } from '../models/clause';
 export * from 'mixpanel-common/report/util';
 export * from 'mixpanel-common/util';
 export * from 'mixpanel-common/util/string';
-export * from 'mixpanel-common/util/date';
+
+// TODO switch date utils to mixpanel-common once they are merged there
+//export * from 'mixpanel-common/util/date';
+export * from './date';
 
 export {
   isIncompleteInterval,
@@ -73,8 +76,8 @@ export function getIconForEvent(mpEvent) {
 
 export function indexSectionLists(sections) {
   let index = 0;
-  return sections.map(section => 
-    extend(section, {list: section.list.map(option => 
+  return sections.map(section =>
+    extend(section, {list: section.list.map(option =>
       extend(option, {index: index++})
     )})
   );
