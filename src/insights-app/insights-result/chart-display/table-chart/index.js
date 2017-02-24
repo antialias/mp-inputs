@@ -32,6 +32,15 @@ document.registerElement(`table-chart`, class extends Component {
           }}));
         },
 
+        getCellValue: (headerName, cellValue) => {
+          if (headerName === `$event`) {
+            return util.renameEvent(cellValue);
+          } else if (/country_code/.test(headerName)) {
+            return util.renamePropertyValue(cellValue);
+          }
+          return cellValue;
+        },
+
         leftSortArrowClasses: idx => {
           if (this.sortConfig.sortBy === `column`) {
             return {
