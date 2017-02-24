@@ -40,6 +40,10 @@ document.registerElement(`chart-display`, class extends Component {
     return {
       helpers: {
         getChartLabel: () => {
+          if (this.state.report.displayOptions.value === `relative`) {
+            return `Percent of the group`;
+          }
+
           let chartLabel = [`number of`];
           const mathTypes = Array.from(new Set(this.state.report.sections.show.clauses.map(clause => clause.math)));
           if (mathTypes && mathTypes.length === 1) {

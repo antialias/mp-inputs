@@ -59,8 +59,7 @@ document.registerElement(`insights-bar-chart-header`, class extends Component {
             }
             return abbreviateNumber(Math.ceil(max / roundToNearestPow10) * roundToNearestPow10);
           } else {
-            const percent = max / this.state.chartRowMax * 100;
-            return Math.ceil(percent / 5) * 5 + `%`;
+            return Math.ceil(this.state.chartPercentMax / 5) * 5 + `%`;
           }
         },
         isSortSelected: (colAccessor, sortBy, sortOrder) => {
