@@ -62,6 +62,8 @@
                     if isRelativeValue
                       - percent = util.formatPercent(cellValue / segmentMax)
                       - cellValue = percent === '0%' ? '< 0.01%' : percent
+                    if cellValue > 1000
+                      - cellValue = util.commaizeNumber(cellValue)
                     td(props={rowSpan: cell.rowSpan || 1})= cellValue
                   else
                     td
