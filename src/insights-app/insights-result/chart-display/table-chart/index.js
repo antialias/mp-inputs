@@ -87,6 +87,7 @@ document.registerElement(`table-chart`, class extends Component {
     // if it contains only 1 row and > 1 columns,
     // We stack vertically offering a better experience in comparing values.
     const depth = headers.length;
+    let isTransposed = false;
     if (depth === 2) {
       const rowNames = Object.keys(series);
       if (rowNames.length === 1) {
@@ -95,6 +96,7 @@ document.registerElement(`table-chart`, class extends Component {
         if (colNames.length > 1) {
           sortConfig.colSortAttrs = [...sortConfig.colSortAttrs, {sortBy: `label`, sortOrder: `asc`}];
           ({headers, series} = util.transposeColsToRows(headers, series, resourceDescription));
+          isTransposed = true;
         }
       }
     }
@@ -120,7 +122,12 @@ document.registerElement(`table-chart`, class extends Component {
       columnRows = rowData.map(row => [row.value]);
     }
 
-    const singleValueColumnSum = columnHeaders.length === 1 ? util.sum(Object.values(series)) : null;
+    let singleValueColumnSum = (columnHeaders.length === 1)? util.nestedObjectSum(series) : null;
+    if (isTransposed) { // If transposed then we compute nested sum from series
+      for (let i = 0; i < headers.length; ++i) {
+        singleValueColumnSum = util.nestedObjectSum(singleValueColumnSum);
+      }
+    }
 
     this.update({
       headers,

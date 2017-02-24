@@ -111,5 +111,5 @@ export function transposeColsToRows(headers, series, leafHeader, addLeafHeader=t
     ))
   ));
 
-  return {headers:newHeaders, series:newSeries};
+  return {headers: newHeaders, series: newSeries};
 }
