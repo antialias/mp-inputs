@@ -42,10 +42,12 @@ export default class ResizeInput extends Component {
   }
 
   attachedCallback() {
-    super.attachedCallback(...arguments);
-    this.removeSizer();
-    this.setMinimumWidth(this.getTextWidth(this.placeholder));
-    this.resize();
+    if (!this.initialized) {
+      super.attachedCallback(...arguments);
+      this.removeSizer();
+      this.setMinimumWidth(this.getTextWidth(this.placeholder));
+      this.resize();
+    }
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
