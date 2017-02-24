@@ -3,7 +3,11 @@
 })
   if report.sections.time.clauses.length
     .clause-container
-      .clause-language.preposition in the
+      .clause-language.preposition
+        if $helpers.isPresetRange()
+          | in the
+        else
+          | from
     .clause-container
       .clause-header
         .header-label Time

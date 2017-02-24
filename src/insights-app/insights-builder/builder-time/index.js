@@ -15,6 +15,10 @@ document.registerElement(`query-builder-time`, class extends Component {
         showUpsellModal: () => this.state.upsellModal === `timeClause`,
         closeUpsellModal: ev => this.app.maybeCloseUpsellModal(ev, `timeClause`),
         alignCustomPaneRight: () => !!this.app.getBuilderCurrentScreenAttr(`alignTimeCustomPaneRight`),
+        isPresetRange: () => {
+          const {range} = this.app.getTimeClauseValue();
+          return range && !this.app.isShowingTimeClauseCustomControls();
+        },
       },
     };
   }

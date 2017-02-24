@@ -20,11 +20,8 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
       template,
       helpers: extend(super.config.helpers, {
         getDates: () => this.app.getTimeClauseValue(),
-        isPresetRange: () => {
-          const currentScreen = this.app.getBuilderCurrentScreenAttr(`componentName`);
-          const showingCustomRangeControls = currentScreen === `builder-screen-time-custom`;
-          return this.getClause().range && (!screen || !showingCustomRangeControls);
-        },
+        isPresetRange: () =>
+          this.getClause().range && !this.app.isShowingTimeClauseCustomControls(),
         updatedInput: ev => {
           this.helpers.changedSearch(ev);
           this.updateScreen(ev.target.value, {fromFocused: true});

@@ -657,7 +657,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   getTimeClauseValue(clause) {
     clause = clause || this.getClausesForType(TimeClause.TYPE)[0];
-    const {value, unit} = clause;
+    const {value, unit, range} = clause;
     let from = null;
     let to = null;
 
@@ -674,7 +674,12 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       }
     }
 
-    return {from, to, unit};
+    return {from, to, unit, range};
+  }
+
+  isShowingTimeClauseCustomControls() {
+    const currentScreen = this.getBuilderCurrentScreenAttr(`componentName`);
+    return screen && currentScreen === `builder-screen-time-custom`;
   }
 
   // State modifiers
