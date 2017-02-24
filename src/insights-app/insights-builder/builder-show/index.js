@@ -99,7 +99,7 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
     const clause = this.getClause();
     return {
       source: clause.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE ? `people` : `events`,
-      selected: clause.property.name,
+      selected: clause.property ? clause.property.name : null,
     };
   }
 

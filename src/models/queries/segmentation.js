@@ -11,7 +11,7 @@ import QueryCache from './query-cache';
 import {
   abbreviateNumber,
   capitalize,
-  epochToFormattedDate,
+  formatDate,
   extend,
   filterToArbSelectorString,
   isFilterValid,
@@ -353,24 +353,24 @@ export default class SegmentationQuery extends BaseQuery {
     const isPeopleOnlyQuery = this.query.jqlQueries.every(query => query.resourceType === `people`);
     const needsPeopleTimeSeries = isPeopleOnlyQuery && querySegments.length && querySegments[querySegments.length - 1].propertyType === `datetime`;
 
-    //  epoch dates of properties come back in seconds. 10^3 is needed to bring it to ms for moment.
+    //  timestamp dates of properties come back in seconds. 10^3 is needed to bring it to ms for moment.
     const dateKeyCache = {};
-    const getDateKey = epoch => {
-      const epochInMS = isPeopleOnlyQuery ? (epoch * 1000) : epoch;
-      if (!dateKeyCache[epochInMS]) {
-        dateKeyCache[epochInMS] = moment.utc(epochInMS).format();
+    const getDateKey = timestamp => {
+      const timestampInMS = isPeopleOnlyQuery ? (timestamp * 1000) : timestamp;
+      if (!dateKeyCache[timestampInMS]) {
+        dateKeyCache[timestampInMS] = moment.utc(timestampInMS).format();
       }
-      return dateKeyCache[epochInMS];
+      return dateKeyCache[timestampInMS];
     };
 
     const formattedDateCache = {};
-    const getFormattedDate = (epoch, {unit=`day`, convertEpochMultiplier=1000}={}) => {
-      const epochInMS = epoch * convertEpochMultiplier;
+    const getFormattedDate = (timestamp, {unit=`day`, convertTimestampMultiplier=1000}={}) => {
+      const timestampInMS = timestamp * convertTimestampMultiplier;
       formattedDateCache[unit] = formattedDateCache[unit] || {};
-      if (!formattedDateCache[unit][epochInMS]) {
-        formattedDateCache[unit][epochInMS] = epochToFormattedDate(epochInMS, unit);
+      if (!formattedDateCache[unit][timestampInMS]) {
+        formattedDateCache[unit][timestampInMS] = formatDate(timestampInMS, {iso: true, unit});
       }
-      return formattedDateCache[unit][epochInMS];
+      return formattedDateCache[unit][timestampInMS];
     };
 
     if (!needsPeopleTimeSeries) {
@@ -381,7 +381,7 @@ export default class SegmentationQuery extends BaseQuery {
       const isSegDatetime = idx => querySegments[idx].propertyType === `datetime`;
       const unitsForDatetimeSet = idx => ({
         unit: querySegments[idx].unit,
-        convertEpochMultiplier: querySegments[idx].isEventDate ? 1 : 1000,
+        convertTimestampMultiplier: querySegments[idx].isEventDate ? 1 : 1000,
       });
 
       const createSeriesReducerFunc = ({isTimeSeries=true}={}) => {
