@@ -28,7 +28,10 @@ mixin generic-options-list-item(label, options)
       [options.class]: true,
       'list-option-active': options.isActive,
     }
-    on={click: options.onclick}
+    on={
+      click: options.onclick,
+      mouseenter: () => $helpers.updateActiveIndex(options.index)
+    }
   )
     +screen-option(label, {noIcon: true})
     +small-caret-icon()
@@ -59,7 +62,10 @@ mixin event-list(events, options)
           'list-option-selected': isSelected,
           'insights-learn-disabled': util.isSpecialEvent(mpEvent),
         }
-        on={click: isSelected ? null : () => options.clickedEvent(mpEvent)}
+        on={
+          click: isSelected ? null : () => options.clickedEvent(mpEvent),
+          mouseenter: () => $helpers.updateActiveIndex(mpEvent.index)
+        }
       )
         +screen-option(renamedMpEvent, {
           icon: util.getIconForEvent(mpEvent),
@@ -91,7 +97,11 @@ mixin property-list(properties, options)
             'list-option-selected': isSelected,
             [property.type]: true,
           }
-          on={click: (isSelected && property.type !== `datetime`)  ? null : ev => options.clickedProperty(ev, property)}
+          on={
+          click: (isSelected && property.type !== `datetime`)  ? null : ev => options.clickedProperty(ev, property),
+          mouseenter: () => $helpers.updateActiveIndex(property.index)
+
+          }
         )
           +screen-option(label, {
             icon: property.icon || util.getIconForProperty(property),

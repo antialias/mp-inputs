@@ -9,8 +9,8 @@ include ../mixins.jade
   ul.screen-options-list(hook={postpatch: $helpers.updateRenderedSize})
     - const units = $helpers.availableUnits()
     if units.length
-      each unit in units
-        - const isActive = unit.index === builderPane.activeIndex
+      each unit, index in units
+        - const isActive = index === builderPane.activeIndex
         - const isSelected = unit.name.toLowerCase() === selectedUnit
         li.list-option(
           class={
@@ -19,6 +19,7 @@ include ../mixins.jade
           }
           on={
             click: !isSelected ? () => $helpers.clickedUnit(unit) : null,
+            mouseenter: () => $helpers.updateActiveIndex(index)
           }
         )
           +screen-option(unit.name, {noIcon: true, matches: unit.matches})

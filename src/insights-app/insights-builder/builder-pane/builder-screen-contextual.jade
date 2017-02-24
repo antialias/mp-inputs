@@ -17,6 +17,7 @@ include ../mixins.jade
       each option, idx in $helpers.getContextOptions()
         +generic-options-list-item(option.name, {
           class: `contextual-menu-option`,
+          index: idx,
           isActive: idx === activeIdx,
           onclick: () => $helpers.clickedOption(option),
         })

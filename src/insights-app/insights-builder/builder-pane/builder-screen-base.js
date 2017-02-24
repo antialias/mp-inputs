@@ -65,6 +65,7 @@ export class BuilderScreenBase extends Component {
           this.app.activeStageClause && this.app.activeStageClause[attr],
         isLoading: () => this.isLoading(),
         updateRenderedSize: throttle(() => this.updateRenderedSize(), 200, {leading: true}),
+        updateActiveIndex: index => this.app.setActiveIndex(index, {scrollIntoView: false}),
       },
     };
   }

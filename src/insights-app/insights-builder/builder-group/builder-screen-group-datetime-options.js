@@ -11,7 +11,7 @@ document.registerElement(`builder-screen-group-datetime-options`, class extends 
     return {
       template,
       helpers: extend(super.config.helpers, {
-        availableUnits: () => this.matchingItems(TIME_UNIT_LIST).map((unit, index) => extend(unit, {index})),
+        availableUnits: () => this.matchingItems(TIME_UNIT_LIST),
         clickedUnit: unit => this.updateAndCommitStageClause({unit: unit.value, editing: false}),
         getGroupClause: () => (this.app.getActiveStageClause() || {}),
       }),
