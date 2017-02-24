@@ -21,7 +21,7 @@ include ../mixins.jade
           }
           on={
             click: !isSelected || isCustom ? () => $helpers.clickedRange(range) : null,
-            mouseenter: () => $helpers.updateActiveIndex(range.index)
+            mouseenter: () => $helpers.updateActiveIndex(idx)
           }
         )
           +screen-option(range.name, {noIcon: true, matches: range.matches})

@@ -19,14 +19,14 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
         RANGES: TimeClause.RANGES,
         availableRanges: () => {
           const dataHistoryMS = this.app.maxDataHistoryDays() * MS_BY_UNIT[`day`];
-          const featureGatedOptions = RANGE_ITEMS.map((range, index) => {
+          const featureGatedOptions = RANGE_ITEMS.map(range => {
             if (range.name === RANGES.CUSTOM) {
               range.upsell = false;
             } else {
               const optionMS = RANGE_INFO[range.name].value * MS_BY_UNIT[RANGE_INFO[range.name].unit];
               range.upsell = optionMS >= dataHistoryMS;
             }
-            return extend(range, {index});
+            return range;
           });
 
           return this.matchingItems(featureGatedOptions);
