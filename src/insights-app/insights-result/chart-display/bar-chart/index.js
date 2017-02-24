@@ -179,6 +179,7 @@ document.registerElement(`bar-chart`, class extends Component {
     const rows = nestedObjectToBarChartData(series, sortConfig);
 
     const chartMax = displayOptions.plotStyle === `stacked` ? stackedNestedObjectMax(series) : nestedObjectMax(series);
+    const chartRowMax = Math.max(...rows.map(series => util.sum(series[series.length - 1])));
 
     sortConfig = util.extend(sortConfig, {hideFirstSort: displayOptions.plotStyle === `stacked` && rows.length === 1});
 
@@ -194,6 +195,7 @@ document.registerElement(`bar-chart`, class extends Component {
     this.update({
       chartLabel,
       chartMax,
+      chartRowMax,
       displayOptions,
       functionLabel,
       headers,

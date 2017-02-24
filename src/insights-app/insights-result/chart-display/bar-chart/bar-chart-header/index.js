@@ -49,7 +49,20 @@ document.registerElement(`insights-bar-chart-header`, class extends Component {
           }
           return icon;
         },
-        getMaxValueLabel: () => this.state.displayOptions.value === `absolute` ? abbreviateNumber(this.state.chartMax) : `%`,
+        getMaxValueLabel: () => {
+          const max = this.state.chartMax;
+
+          if (this.state.displayOptions.value === `absolute`) {
+            let roundToNearestPow10 = 1;
+            while (roundToNearestPow10 * 100 < max) {
+              roundToNearestPow10 *= 10;
+            }
+            return abbreviateNumber(Math.ceil(max / roundToNearestPow10) * roundToNearestPow10);
+          } else {
+            const percent = max / this.state.chartRowMax * 100;
+            return Math.ceil(percent / 5) * 5 + `%`;
+          }
+        },
         isSortSelected: (colAccessor, sortBy, sortOrder) => {
           let sortConfig = this.state.sortConfig;
           if (isFinite(colAccessor)) {
