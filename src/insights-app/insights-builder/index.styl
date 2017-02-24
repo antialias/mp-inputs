@@ -251,7 +251,7 @@ header-button-transition-duration = 150ms
     &:last-child
       margin-bottom 10px
 
-    &:hover, &.list-option-active
+    &.list-option-active
       background-color grey-100
       color mp-blue
 
@@ -295,6 +295,8 @@ header-button-transition-duration = 150ms
     svg-icon-style(grey-700)
 
   .option-label
+    font-size 12px
+    font-weight 500
     padding-left 8px
     ellipsis()
     flex 1 1
@@ -312,7 +314,7 @@ header-button-transition-duration = 150ms
       opacity 0
       svg-icon-style(mp-blue)
 
-    &:hover .caret-icon
+    &.list-option-active .caret-icon
       opacity 1
 
   // screen-title
