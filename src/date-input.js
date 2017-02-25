@@ -41,7 +41,7 @@ export default class DateInput extends Component {
   }
 
   emitChange() {
-    const detail = formatDate(parseDate(this.value), {iso: true});
+    const detail = formatDate(this.value, {iso: true});
     this.dispatchEvent(new CustomEvent(`change`, {detail}));
   }
 
