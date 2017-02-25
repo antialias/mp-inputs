@@ -2,7 +2,6 @@ import { Component } from 'panel';
 
 import {
   extend,
-  renameEvent,
   renamePropertyValue,
   stringFilterMatches,
   pick,
@@ -98,7 +97,7 @@ document.registerElement(`chart-legend`, class extends Component {
           return seriesData.some(series => series.seriesValues.length) ? seriesData : [];
         },
         renameSeriesValue: (seriesIdx, name) => (
-          this.state.report.legend.data[seriesIdx].seriesName === `$event` ? renameEvent(name) : renamePropertyValue(name)
+          renamePropertyValue(name, this.state.report.legend.data[seriesIdx].seriesName)
         ),
         changedSearch: ev => {
           if (ev.target.value) {

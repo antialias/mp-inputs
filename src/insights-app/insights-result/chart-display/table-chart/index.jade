@@ -24,7 +24,7 @@
               each cell, cellIdx in row
                 - const isFirstCol = cellIdx === 0;
                 if cell
-                  - const value = $helpers.getCellValue(headers[cellIdx], cell.value)
+                  - const value = util.renamePropertyValue(cell.value, headers[cellIdx])
                   td(
                     class={
                       'first-column-cell': isFirstCol,

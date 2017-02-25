@@ -2,7 +2,6 @@ import {csvFormatRows} from 'd3-dsv';
 import moment from 'moment';
 import {
   renameProperty,
-  renamePropertyValue,
 } from 'mixpanel-common/report/util';
 import {
   nestedObjectDepth,
@@ -33,7 +32,7 @@ const SPECIAL_NAMES = {
   /* eslint-enable camelcase */
 };
 function renameKey(key) {
-  return SPECIAL_NAMES[key] || renamePropertyValue(renameProperty(key));
+  return SPECIAL_NAMES[key] || renameProperty(key);
 }
 
 function rowsForLeafKey(leafKey, data, keysAtDepth, depth, row) {
