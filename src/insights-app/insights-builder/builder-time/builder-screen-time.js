@@ -41,6 +41,7 @@ document.registerElement(`builder-screen-time`, class extends BuilderScreenBase 
             this.nextScreen(`builder-screen-time-custom`, {
               screenAttrs: {alignTimeCustomPaneRight: willCrossViewportEdge},
             });
+            this.app.updateBuilder({fromFocused: true, toFocused: false});
           } else {
             this.updateAndCommitStageClause({range: range.name});
           }
