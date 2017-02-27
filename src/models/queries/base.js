@@ -5,12 +5,17 @@ export default class BaseQuery {
     this.query = null; // used to check for obsolete queries
     this.apiHost = apiAttrs.apiHost;
     this.apiSecret = apiAttrs.apiSecret;
+    this.accessToken = apiAttrs.accessToken;
+    this.projectId = apiAttrs.projectId;
 
     if (!this.apiHost) {
       throw new Error(`apiHost required for Query!`);
     }
-    if (!this.apiSecret) {
-      throw new Error(`apiSecret required for Query!`);
+    if (!this.apiSecret && !this.accessToken) {
+      throw new Error(`apiSecret or accessToken required for Query!`);
+    }
+    if (this.accessToken && !this.projectId) {
+      throw new Error(`projectId is required when using accessToken auth`);
     }
     for (let attr of Object.keys(options)) {
       this[attr] = options[attr];
@@ -69,10 +74,17 @@ export default class BaseQuery {
   }
 
   fetch(endpoint, params, queryOptions) {
-    const url = `${this.apiHost}/${endpoint}`;
+    let authHeader, url;
+    if (this.apiSecret) {
+      authHeader = `Basic ${btoa(this.apiSecret + `:`)}`;
+      url = `${this.apiHost}/${endpoint}`;
+    } else if (this.accessToken) {
+      authHeader = `Bearer ${this.accessToken}`;
+      url = `${this.apiHost}/${endpoint}?project_id=${this.projectId}`;
+    }
     return fetch(url, Object.assign({
       headers: {
-        Authorization: `Basic ${btoa(this.apiSecret + `:`)}`,
+        Authorization: authHeader,
       },
       method: `POST`,
       body: objToQueryString(params),
