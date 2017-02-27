@@ -35,9 +35,7 @@ document.registerElement(`bar-chart`, class extends Component {
         util,
       },
       helpers: {
-        formatLabel: (header, value) => {
-          return util.renamePropertyValue(value, header);
-        },
+        formatLabel: (header, value) => util.renamePropertyValue(value, header),
         getHeaderWidth: text => util.getTextWidth(text, `bold 14px Helvetica`) + SORT_ICON_WIDTH,
         getHeaderStyle: () => {
           const style = {};
