@@ -138,7 +138,7 @@ export default class Legend {
   showAllLegendSeries(dataType) {
     this.changeID++;
     Object.keys(this.data).forEach(seriesIdx => {
-      const series = this.data[seriesIdx][dataType];
+      const series = this.data[seriesIdx][dataType] || [];
       Object.keys(series).forEach(key => series[key] = true);
     });
     return this;
