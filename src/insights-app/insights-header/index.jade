@@ -30,7 +30,7 @@
           feature: `export-csv`,
           open: $helpers.showExportCSVUpsell(),
         }
-        on={change: $helpers.closeUpsell}
+        on={change: ev => $helpers.closeUpsell(ev, `export-csv`)}
       )
     button.report-list-button(
       attrs={title: `Saved reports`}
@@ -45,7 +45,7 @@
           feature: `bookmark-maximum`,
           open: $helpers.showSaveReportUpsell(),
         }
-        on={change: $helpers.closeUpsell}
+        on={change: ev => $helpers.closeUpsell(ev, `bookmark-maximum`)}
       )
     if $helpers.showAddToDash()
       if $helpers.addToDashEnabled()

@@ -250,6 +250,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   maybeCloseUpsellModal(ev, type) {
     const maybeCloseFeature = ev.target.attributes[`feature`].value;
+    console.log(maybeCloseFeature, type)
     if (maybeCloseFeature === type && ev.detail && ev.detail.state === `closed`) {
       this.update({upsellModal: null});
     }

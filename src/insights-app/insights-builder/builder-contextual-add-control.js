@@ -43,7 +43,7 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
           this.app.updateBuilderCurrentScreen({progressiveListSize: null});
         }, 200, {leading: true, maxWait: 200}),
         shouldShowUpsellModal: () => (this.state.upsellModal === `builderClause`),
-        closeUpsellModal: ev => this.app.maybeCloseUpsellModal(ev, `builderClause`),
+        closeUpsellModal: ev => this.app.maybeCloseUpsellModal(ev, `filter-levels`),
       },
     };
   }

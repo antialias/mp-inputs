@@ -33,7 +33,7 @@ document.registerElement(`builder-filter-add-control`, class extends Component {
         changedSearch: ev => this.update({contextFilter: ev.target.value}),
         shouldShowUpsellIcon: () => (!this.app.canAddFilterClause()),
         shouldShowUpsellModal: () => this.state.upsellModal === `filterClause`,
-        closeUpsellModal: ev => this.app.maybeCloseUpsellModal(ev, `filterClause`),
+        closeUpsellModal: ev => this.app.maybeCloseUpsellModal(ev, `filter-levels`),
       },
     };
   }
