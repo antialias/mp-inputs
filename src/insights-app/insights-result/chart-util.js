@@ -1,5 +1,7 @@
 import { nestedObjectDepth, sum } from 'mixpanel-common/util';
 
+import { parseDate } from '../../util/date';
+
 const CHART_OPTIONS = {
   bar: {
     standard: `Bar`,
@@ -45,6 +47,33 @@ export function countRun(row, start) {
   let i;
   for (i = start; row[i] === row[start]; i++);
   return i - start;
+}
+
+function compareNumDateAlpha(a, b, sortOrder) {
+  a = a.toLowerCase ? a.toLowerCase() : a;
+  b = b.toLowerCase ? b.toLowerCase() : b;
+
+  const aNumber = Number(a);
+  const bNumber = Number(b);
+
+  if (!isNaN(aNumber) && !isNaN(bNumber)) {
+    a = aNumber;
+    b = bNumber;
+  } else {
+    const aDate = parseDate(a, {iso: true});
+    const bDate = parseDate(b, {iso: true});
+
+    if (aDate && bDate) {
+      a = aDate.getTime();
+      b = bDate.getTime();
+    }
+  }
+
+  let result = 0;
+  result = a > b ? 1 : result;
+  result = a < b ? -1 : result;
+  result = sortOrder === `desc` ? -1 * result : result;
+  return result;
 }
 
 /**
@@ -120,11 +149,8 @@ function sortTableColumns(arr, colSortAttrs) {
       return [child[0], sortTableColumns(child[1], childSortAttrs)];
     });
   }
-  return arr
-    .sort((a, b) => {
-      [a, b] = [a, b].map(entry => entry[0].value.toLowerCase());
-      return (a > b ? 1 : (a < b ? -1 : 0)) * (colSortAttrs[0].sortOrder === `desc` ? -1 : 1);
-    });
+  const sortOrder = colSortAttrs[0].sortOrder;
+  return arr.sort((a, b) => compareNumDateAlpha(a[0].value, b[0].value, sortOrder));
 }
 
 /**
@@ -247,23 +273,14 @@ function flattenNestedObjectToArray(obj) {
   }
 }
 
-// sort utils for nestedObjectToNestedArray
-function compareByLabel(a, b) {
-  [a, b] = [a.label.toLowerCase(), b.label.toLowerCase()];
-  return a > b ? 1 : (a < b ? -1 : 0);
-}
-function compareByValue(a, b) {
-  [a, b] = [a.value, b.value];
-  return a > b ? 1 : (a < b ? -1 : 0);
-}
 export const NESTED_ARRAY_SORT_FUNCS = {
   label: {
-    asc:  (a, b) => compareByLabel(a, b),
-    desc: (a, b) => compareByLabel(a, b) * -1,
+    asc:  (a, b) => compareNumDateAlpha(a.label, b.label),
+    desc: (a, b) => compareNumDateAlpha(a.label, b.label, `desc`),
   },
   value: {
-    asc:  (a, b) => compareByValue(a, b),
-    desc: (a, b) => compareByValue(a, b) * -1,
+    asc:  (a, b) => compareNumDateAlpha(a.value, b.value),
+    desc: (a, b) => compareNumDateAlpha(a.value, b.value, `desc`),
   },
 };
 
