@@ -376,6 +376,9 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     let allLabelsAreDates = true;
     for (let segmentName of Object.keys(data)) {
       const counts = data[segmentName];
+      if (Object.keys(counts).length === 1) {
+        highchartsOptions.plotOptions.series.marker.enabled = true;
+      }
 
       let type = `line`;
       if (highchartsOptions && highchartsOptions.chart && highchartsOptions.chart.type === `area`) {
