@@ -31,7 +31,7 @@
             else
               each labelPart in label
                 span.edit-label-part= labelPart
-      if $helpers.isRemovable() && $helpers.getSection() === `filter`
+      if $helpers.isRemovable() && ($helpers.getSection() === `filter` || $helpers.getSection() === `show`)
         button.remove(on={click: $helpers.removeClause})
           svg-icon(attrs={icon: 'x'})
     .drop-menu
