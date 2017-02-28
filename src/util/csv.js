@@ -2,6 +2,7 @@ import {csvFormatRows} from 'd3-dsv';
 import moment from 'moment';
 import {
   renameProperty,
+  renamePropertyValue,
 } from 'mixpanel-common/report/util';
 import {
   nestedObjectDepth,
@@ -53,6 +54,27 @@ function rowsForLeafKey(leafKey, data, keysAtDepth, depth, row) {
   return allRows;
 }
 
+/**
+ * Recursively renames property names in a nested series based on headers
+ * @param {string[]} headers - e.g ['$country_code', '$event']
+ * @param {any} series - e.g {US: {$top_events: 200}}
+ * @returns {any} - e.g {'United States': {'Your Top Events': 200}}
+ */
+function renameSeriesPropertyNames(headers, series) {
+  if (headers.length) {
+    const propertyName = headers[0];
+    const leafHeaders = headers.slice(1);
+    const renamedSeries = {};
+
+    Object.keys(series).map(key => {
+      renamedSeries[renamePropertyValue(key, propertyName)] = renameSeriesPropertyNames(leafHeaders, series[key]);
+    });
+    
+    return renamedSeries;
+  }
+  return series;
+}
+
 export function resultToCSVArray(data, {timeUnit=`day`}={}) {
   let headers, series;
   if (data.peopleTimeSeries) {
@@ -75,6 +97,7 @@ export function resultToCSVArray(data, {timeUnit=`day`}={}) {
     }
   }
 
+  series = renameSeriesPropertyNames(data.headers, series);
   const depth = nestedObjectDepth(series);
   const keysAtDepth = Array(depth).fill().map((__, level) =>
     nestedObjectKeys(series, level + 1).sort()
