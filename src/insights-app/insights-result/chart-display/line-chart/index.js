@@ -389,7 +389,8 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
         type,
         data: Object.keys(counts).map(label => {
           const count = counts[label];
-          const labelAsDate = moment(label);
+          // Todo Jordan: remove when implementing new line chart logic
+          let labelAsDate = moment(label.split(`Z`)[0]);
           if (labelAsDate.isValid()) {
             label = labelAsDate.valueOf();
           } else {
