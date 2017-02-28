@@ -28,8 +28,6 @@ document.registerElement(`builder-filter-edit-control`, class extends EditContro
     } else {
       value = [value];
     }
-    // Workaround for <https://mixpanel.atlassian.net/browse/CA-1990>.
-    value = value.map(val => val === 0 ? `0` : val);
 
     if (type === `datetime`) {
       switch (operator) {
