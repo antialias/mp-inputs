@@ -215,7 +215,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         search: null,
       }),
       sorting: this.sortConfigFor(null),
-      title: `Untitled report`,
+      title: ``,
     });
   }
 
