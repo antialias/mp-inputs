@@ -20,8 +20,9 @@ document.registerElement(`typecast-pane`, class extends Component {
       helpers: {
         availableTypes: () => {
           const availableTypes = Array.from(new Set(GroupClause.PROPERTY_TYPECASTS.concat(this.getClausePropertyType())));
-          return availableTypes.map(type => ({
+          return availableTypes.map((type, index) => ({
             icon: getIconForPropertyType(type),
+            index,
             name: TYPE_FORMAT_MAP[type],
             type,
           }));
@@ -42,6 +43,7 @@ document.registerElement(`typecast-pane`, class extends Component {
             }
           }
         },
+        updateActiveIndex: idx => this.app.updateBuilder({activeIndex: idx}),
       },
       template,
     };
