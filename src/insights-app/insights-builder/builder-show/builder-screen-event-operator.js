@@ -21,6 +21,7 @@ document.registerElement(`builder-screen-event-operator`, class extends BuilderS
           // Filter out unique mathType if the show clause has a numeric property selected
           return ShowClause.MATH_TYPES.filter(mathType => numericPropSelected ? mathType !== ShowClause.MATH_TYPE_UNIQUE : true);
         },
+        updateActiveIdx: idx => this.app.updateBuilder({activeIndex: idx}),
       }),
     };
   }
