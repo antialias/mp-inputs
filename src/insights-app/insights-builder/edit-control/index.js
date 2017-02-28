@@ -40,6 +40,7 @@ export class EditControl extends Component {
         getSelectionAttrs: open => extend(this.getSelectionAttrs(), {open}),
         getSection: () => this.section,
         isPaneOpen: () => this.isPaneOpen(),
+        isShowProperty: () => this.isShowProperty(),
         isRemovable: () => this.isRemovable(),
         removeClause: () => this.remove(),
       }),
@@ -82,6 +83,10 @@ export class EditControl extends Component {
     return !!this.state.builderPane.screens.length
       && this.app.isEditingClause(this.section, this.clauseIndex)
       && this.state.activeMathMenuIndex === null;
+  }
+
+  isShowProperty() {
+    return false;
   }
 
   isRemovable() {

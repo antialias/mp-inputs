@@ -32,7 +32,6 @@ document.registerElement(`query-builder-show`, class extends Component {
           const buttonWidth = 12;
           this.app.updateShowClauseButtonPosition(idx, headerWidth + buttonWidth > clauseWidth);
         },
-        removeProperty: (idx) => this.app.updateClause(this.section, this.clauseIndex, {property: null}),
       },
     };
   }
@@ -109,6 +108,10 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
   }
 
   isRemovable() {
+    return true;
+  }
+
+  isShowProperty() {
     return true;
   }
 
