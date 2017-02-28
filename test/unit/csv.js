@@ -242,8 +242,8 @@ describe(`resultToCSVArray`, function() {
 
     expect(csvArray).to.eql([
       [`People`, `Country`, `Total number of`],
-      [`CSV exports`, `India`, 80435],
-      [`CSV exports`, `United States`, 505453],
+      [`CSV exports`, `IN`, 80435],
+      [`CSV exports`, `US`, 505453],
     ]);
   });
 
@@ -279,8 +279,8 @@ describe(`resultToCSVArray`, function() {
 
     expect(csvArray).to.eql([
       [`People`, `Country`, `Chrome`, `Firefox`],
-      [`CSV exports`, `India`, 80435, 123],
-      [`CSV exports`, `United States`, 505453, 2323],
+      [`CSV exports`, `IN`, 80435, 123],
+      [`CSV exports`, `US`, 505453, 2323],
     ]);
   });
 
@@ -312,7 +312,7 @@ describe(`resultToCSVArray`, function() {
     const csvArray = resultToCSVArray(result);
 
     expect(csvArray).to.eql([
-      [`People`, `India`, `United States`],
+      [`People`, `IN`, `US`],
       [`CSV exports`, 80435, 505453],
       [`Current tally`, 3, 15],
     ]);
