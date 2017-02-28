@@ -60,11 +60,10 @@ function rowsForLeafKey(leafKey, data, keysAtDepth, depth, row) {
  */
 function renameSeriesPropertyNames(headers, series) {
   if (headers.length) {
-    const propertyName = headers[0];
-    const leafHeaders = headers.slice(1);
+    const [propertyName, ...leafHeaders] = headers;
     const renamedSeries = {};
 
-    Object.keys(series).map(key => {
+    Object.keys(series).forEach(key => {
       renamedSeries[renamePropertyValue(key, propertyName)] = renameSeriesPropertyNames(leafHeaders, series[key]);
     });
     
