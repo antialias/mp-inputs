@@ -1,5 +1,7 @@
 import { Component } from 'panel';
 
+import 'mixpanel-common/widgets/add-to-dash';
+
 import { dataToCSV } from '../../util/csv';
 
 import './insights-title-input';
@@ -57,6 +59,7 @@ document.registerElement(`insights-header`, class extends Component {
         showExportCSVUpsell: () => this.state.upsellModal === `exportCSV`,
         showExportCSVIcon: () => this.app.getFeatureGateValue(`can_export_csv`) === false,
         closeUpsell: ev => this.app.maybeCloseUpsellModal(ev, `saveReport`),
+        dashboardReportAdded: () => this.app.mpContext.setFlag(`DASHBOARD_ADDED_REPORT_OR_SEEN_TOOLTIP`),
       },
       template,
     };

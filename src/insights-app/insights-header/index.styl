@@ -9,11 +9,6 @@
   position relative
   panel-top()
 
-  // TODO: remove me
-  // position/z-index are only to stack bottom-placed loading-dock tooltips above the reset query X.
-  position relative
-  z-index 1
-
   button
     background-color initial
     border 1px solid grey-300
@@ -27,12 +22,20 @@
     display inline-flex
     margin-left auto
 
+    add-to-dash
+      margin-left 3px
+      z-index 2 // needs to be positioned over the sticky header which is z-index 1
+
     button
       border none
       border-radius 0
       height 25px
       margin-left 5px
       width 30px
+
+      // TODO: remove me
+      // z-index is only to stack bottom-placed loading-dock tooltips above the reset query X.
+      z-index 1
 
       &.refresh-query,
       &.report-list-button,
@@ -55,6 +58,9 @@
           right 0
           top 0
           svg-icon-style(mp-purple, size: 16px, right: 0, top: 0)
+
+      mp-tooltip
+        white-space nowrap
 
   .upsell-wrapper
     position absolute

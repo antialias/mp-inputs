@@ -47,3 +47,28 @@
         }
         on={change: $helpers.closeUpsell}
       )
+    - const existingBookmark = $component.app.mpContext.bookmarks.find(bm => bm.id === report.id);
+    - const mp = $component.app.mpContext;
+    - const flags = mp.flags;
+    if !mp.standalone && existingBookmark
+      add-to-dash(
+        attrs={
+          'access-token': mp.accessToken,
+          'all-tags': JSON.stringify(mp.dashboardTags),
+          'selected-tags': JSON.stringify(existingBookmark.tags || []),
+          'disabled': !report.id,
+          'report-name': report.title,
+          'report-type': 'insights',
+          'mixpanel-host': $component.app.apiHost,
+          'project-id': mp.projectID,
+          'user-id': mp.userID,
+          'bookmark': JSON.stringify(existingBookmark),
+          'show-tutorial-tooltip': flags.VIEWED_REPORT_COUNT >= 30 && !flags.DASHBOARD_ADDED_REPORT_OR_SEEN_TOOLTIP,
+        }
+        on={'report-added': $helpers.dashboardReportAdded}
+      )
+    else
+      add-to-dash(attrs={
+        disabled: true,
+        'report-type': 'insights',
+      })

@@ -15,9 +15,11 @@ export default class MPContext {
 
     if (!this.standalone) {
       // global garbage
+      this.accessToken = mp.report.globals.access_token;
       this.appName = mp.report.globals.app_name;
       this.bookmarks = mp.report.globals.bookmarks;
       this.customEvents = mp.report.globals.custom_events;
+      this.dashboardTags = mp.report.globals.dashboard_tags;
       this.featureGates = mp.report.globals.feature_gates;
       this.flags = mp.report.globals.flags;
       this.hasIntegratedArb = mp.report.globals.has_integrated_arb;
@@ -94,6 +96,7 @@ export default class MPContext {
         if (res.error) {
           throw new Error(res.error);
         }
+        this.bookmarks.push(res.bookmark)
         return res.bookmark;
       });
   }
