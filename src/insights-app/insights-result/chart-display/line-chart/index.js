@@ -1,5 +1,4 @@
 /* global $, Highcharts */
-import isEqual from 'lodash/isEqual';
 import moment from 'moment';
 import { Component } from 'panel';
 import WebComponent from 'webcomponent';
@@ -80,12 +79,9 @@ document.registerElement(`line-chart`, class extends Component {
       if (this.state.dataId !== dataId) {
         // transform nested object into single-level object:
         // {'a': {'b': {'c': 5}}} => {'a / b / c': 5}
-        newState.data = {
-          id: dataId,
-          data: util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
+        newState.data = util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
             [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
-          )),
-        };
+        ));
       }
       this.update(newState);
     }
@@ -113,7 +109,9 @@ document.registerElement(`line-chart`, class extends Component {
 document.registerElement(`mp-line-chart`, class extends WebComponent {
   attachedCallback() {
     this.initialized = true;
-    this.renderChart();
+    this.el = document.createElement(`div`);
+    this.el.className = `mp-highcharts-container`;
+    this.appendChild(this.el);
   }
 
   attributeChangedCallback(attrName, _, newVal) {
@@ -121,12 +119,6 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       this._segFilters = this._segFilters || {};
       this._segFilters = JSON.parse(newVal);
       this.updateShowHideSegments();
-    } else {
-      const newDisplayOptions = JSON.parse(this.getAttribute(`display-options`) || `{}`);
-      if (!isEqual(this._displayOptions, newDisplayOptions)) {
-        this._displayOptions = newDisplayOptions;
-        this.renderChart();
-      }
     }
   }
 
@@ -196,7 +188,11 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     };
   }
 
-  createChartOptions() {
+  renderChart() {
+    if (!this.chartData || !this.initialized || !this._displayOptions || !this._changeId) {
+      return;
+    }
+
     const displayOptions = this._displayOptions || {};
     const axisOptions = {
       endOnTick: true,
@@ -386,9 +382,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       .sort((a, b) => b[1] - a[1])
       .map(pair => pair[0]);
 
-    this.highchartSegmentIdxMap = sortedSegments.reduce((obj, seg, idx) => Object.assign(obj, {[seg]: idx}), {});
-
-    highchartsOptions.series = sortedSegments.map((s, idx) => util.extend(seriesMap[s], {
+    const series = sortedSegments.map((s, idx) => util.extend(seriesMap[s], {
       visible: this.isSegmentShowing(seriesMap[s].name),
       color: highchartsOptions.colors[idx % highchartsOptions.colors.length],
       isIncompletePath: util.isIncompleteInterval(seriesMap[s].data, {
@@ -396,27 +390,28 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
         utcOffset: this.utcOffset,
       }),
     }));
+    const { showingSeries, hiddenSeries } = series.reduce((series, segment) => {
+      if (segment.visible) {
+        series.showingSeries.push(segment);
+      } else {
+        series.hiddenSeries.push(segment);
+      }
+      return series;
+    }, {showingSeries: [], hiddenSeries: []});
 
-    return highchartsOptions;
-  }
+    // Rendering is EXPENSIVE. Start the Chart with only visible segments. updateShowHideSegments adds segments to the Chart as needed.
+    highchartsOptions.series = showingSeries;
 
-  renderChart() {
-    if (!this.chartData || !this.initialized || !this._displayOptions) {
-      return;
-    }
-    if (!this.el) {
-      this.el = document.createElement(`div`);
-      this.el.className = `mp-highcharts-container`;
-      this.appendChild(this.el);
-    }
-    this.highchart = new Highcharts.Chart(this.createChartOptions());
+    // highchartSegmentIdxMap is the living map of segments rendered to the Chart.
+    this.highchartSegmentIdxMap = highchartsOptions.series.reduce((obj, seg, idx) => Object.assign(obj, {[seg.name]: idx}), {});
+
+    this.hiddenSeries = hiddenSeries.reduce((obj, series) => Object.assign(obj, {[series.name]: series}), {});
+    this.highchart = new Highcharts.Chart(highchartsOptions);
 
   }
 
   isSegmentShowing(segmentName) {
-    const segIdx = this.highchartSegmentIdxMap[segmentName];
-    return (Number.isInteger(segIdx) &&
-      this._segFilters &&
+    return (this._segFilters &&
       this._segFilters.hasOwnProperty(segmentName) &&
       this._segFilters[segmentName]);
   }
@@ -427,9 +422,19 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     }
 
     Object.keys(this._segFilters).forEach(segmentName => {
-      const segIdx = this.highchartSegmentIdxMap[segmentName];
       const isVisible = this.isSegmentShowing(segmentName);
-      this.highchart.series[segIdx].setVisible(isVisible, false);
+      const visibleSegIdx = this.highchartSegmentIdxMap[segmentName];
+      if (Number.isInteger(visibleSegIdx)) {
+        // this segment already exists in the Chart. Make it visible
+        if (this.highchart.series[visibleSegIdx]) {
+          this.highchart.series[visibleSegIdx].setVisible(isVisible, false);
+        }
+      } else if (isVisible) {
+        // this segment does NOT exists in the Chart. Add it to the series as visible and update highchartSegmentIdxMap.
+        const hiddenSegment = util.extend(this.hiddenSeries[segmentName], {visible: true});
+        this.highchart.addSeries(hiddenSegment, false, false);
+        this.highchartSegmentIdxMap[segmentName] = this.highchart.series.length - 1;
+      }
     });
     this.highchart.redraw();
 
@@ -439,12 +444,22 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     return this._chartData;
   }
 
-  set chartData(data) {
-    if (this._chartDataId !== data.id) {
-      this._chartDataId = data.id;
-      this._chartData = data.data;
+  renderChartIfChange() {
+    const {analysis, plotStyle, value, timeUnit} = this._displayOptions;
+    const changeAttrs = [this._dataId, this._utcOffset, analysis, plotStyle, value, timeUnit];
+    const changeId = changeAttrs.every(Boolean) ? changeAttrs.join(`-`) : null;
+
+    if (changeId && this._changeId !== changeId) {
+      this._changeId = changeId;
       this.renderChart();
     }
+  }
+
+  set chartData(chartData) {
+    this._dataId = chartData.dataId;
+    this._displayOptions = chartData.displayOptions || {};
+    this._chartData = chartData.data;
+    this.renderChartIfChange();
   }
 
   get utcOffset() {
@@ -452,9 +467,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   }
 
   set utcOffset(offset) {
-    if (!isEqual(this._utcOffset, offset)) {
-      this._utcOffset = offset;
-      this.renderChart();
-    }
+    this._utcOffset = offset;
+    this.renderChartIfChange();
   }
 });

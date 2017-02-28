@@ -2,10 +2,8 @@
   .chart-header-container= chartLabel
   .line-chart
     mp-line-chart(
-      props={chartData: data, utcOffset}
+      props={chartData: {data, dataId, displayOptions}, utcOffset}
       attrs={
-        'data-id':  JSON.stringify(dataId),
-        'display-options': JSON.stringify(displayOptions),
         'seg-filters': JSON.stringify(segFilters),
       }
     )
