@@ -245,14 +245,22 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   openUpsellModal(type) {
+    let clickHandlers = this.app.clickOutsideHandlers;
+    if (clickHandlers.closeModal) {
+      delete clickHandlers.closeModal;
+    }
     this.update({upsellModal: type});
+    window.setTimeout(() => this.onClickOutside(`mp-upsell-modal`, `closeModal`), 100);
+  }
+
+  closeModal() {
+    this.update({upsellModal: null});
   }
 
   maybeCloseUpsellModal(ev, type) {
     const maybeCloseFeature = ev.target.attributes[`feature`].value;
-    console.log(maybeCloseFeature, type)
     if (maybeCloseFeature === type && ev.detail && ev.detail.state === `closed`) {
-      this.update({upsellModal: null});
+      this.closeModal();
     }
   }
 
