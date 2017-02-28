@@ -33,8 +33,6 @@ const SPECIAL_NAMES = {
   /* eslint-enable camelcase */
 };
 function renameKey(key) {
-  // TODO 2/27/17 - noj, tdumitrescu this was previously renamePropertyValue(renameProperty(key)) to rewrite
-  //                country code keys, but that now requires a `propertyName` val. Do we want to update here?
   return SPECIAL_NAMES[key] || renameProperty(key);
 }
 
