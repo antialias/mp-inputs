@@ -329,7 +329,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       this.navigate(`report/${this.state.report.id}`);
     }
 
-    this.onClickOutside(`mp-upsell-modal`, `closeUpsellModal`)
+    this.onClickOutside(`mp-upsell-modal`, `closeUpsellModal`);
   }
 
   navigateToSetup() {
