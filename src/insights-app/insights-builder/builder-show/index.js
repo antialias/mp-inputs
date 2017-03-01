@@ -107,10 +107,6 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
     return super.isPaneOpen() && this.state.isEditingNumericProperty;
   }
 
-  isRemovable() {
-    return true;
-  }
-
   isShowProperty() {
     return true;
   }
