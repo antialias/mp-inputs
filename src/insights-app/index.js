@@ -103,7 +103,15 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       },
 
       jsurl: (stateUpdate={}, jsurl) => {
-        const parsedURL = jsurl && JSURL.tryParse(jsurl);
+        let parsedURL = jsurl && JSURL.tryParse(jsurl);
+        if (jsurl && !parsedURL) {
+          // if there is a JSURL but it is invalid make sure it is surrounded by ~( ... ). This can be stripped by some sites
+          jsurl = `~(${jsurl.replace(/^\~\(|\)$/g, ``)})`;
+          parsedURL = JSURL.tryParse(jsurl);
+          if (parsedURL) {
+            history.replaceState(null, null, `#${jsurl}`);
+          }
+        }
         if (parsedURL) {
           const report = Report.deserialize(extend(this.defaultReportState, parsedURL));
           if (report && report.valid) {
