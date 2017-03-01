@@ -251,10 +251,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   closeUpsellModal(ev, modalName=null) {
-    // if maybeCloseUpsellModal called this on a particular modal,
-    // make sure that modal hasn't been replaced. If a click outside
-    // caused it, continue.
-    if (modalName === null || modalName === this.state.upsellModal) {
+    // if maybeCloseUpsellModal called this on behalf of a particular modal,
+    // make sure that modal hasn't been replaced already. If a click outside
+    // caused the function call, continue.
+    if (modalName === this.state.upsellModal || modalName === null) {
       this.update({upsellModal: null});
     }
   }
