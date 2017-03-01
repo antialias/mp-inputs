@@ -363,6 +363,10 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
 
     const dataKeys = Object.keys(this.chartData);
 
+    highchartsOptions.plotOptions.series.marker.enabled = dataKeys.every(segmentName => (
+      Object.keys(this.chartData[segmentName]).length <= 1
+    ));
+
     const seriesMap = dataKeys.reduce((seriesMap, segmentName) => {
       const counts = this.chartData[segmentName];
       return Object.assign(seriesMap, {[segmentName]: {
