@@ -246,8 +246,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   openUpsellModal(type) {
     window.requestAnimationFrame(() => {
-      console.log('open modal ' + type);
-      this.update({upsellModal: type})
+      this.update({upsellModal: type});
     });
   }
 
@@ -336,7 +335,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       this.navigate(`report/${this.state.report.id}`);
     }
 
-    this.onClickOutside(`mp-upsell-modal`, `closeUpsellModal`)
+    this.onClickOutside(`mp-upsell-modal`, `closeUpsellModal`);
   }
 
   navigateToSetup() {
