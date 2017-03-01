@@ -75,7 +75,6 @@ document.registerElement(`chart-display`, class extends Component {
           } else {
             options.timeUnit = this.state.report.sections.time.clauses[0].unit;
           }
-          console.log(options)
           return options;
         },
         getFunctionLabel: () => {

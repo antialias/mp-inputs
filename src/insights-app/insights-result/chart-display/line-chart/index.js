@@ -367,9 +367,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     ));
 
     // Highcharts is to old to let us force a timezone
-    const offsetDate = timestamp => {
-      return Number(timestamp) - (this.utcOffset * 60 * 1000);
-    };
+    const offsetDate = timestamp => Number(timestamp) - (this.utcOffset * 60 * 1000);
 
     const seriesMap = dataKeys.reduce((seriesMap, segmentName) => {
       const counts = this.chartData[segmentName];

@@ -357,8 +357,8 @@ export default class SegmentationQuery extends BaseQuery {
 
     //  epoch dates of properties come back in seconds. 10^3 is needed to bring it to ms for moment.
     const formattedDateCache = {};
-    const getFormattedDate = (timestamp, {unit=`day`, convertTimestampMultiplier=1000}={}) => {
-      const timestampInMS = timestamp * convertTimestampMultiplier;
+    const getFormattedDate = (timestamp, {unit=`day`, timestampMultiplier=1000}={}) => {
+      const timestampInMS = timestamp * timestampMultiplier;
       formattedDateCache[unit] = formattedDateCache[unit] || {};
       if (!formattedDateCache[unit][timestampInMS]) {
         formattedDateCache[unit][timestampInMS] = formatDate(timestampInMS, {unit, utc: true});
@@ -374,10 +374,10 @@ export default class SegmentationQuery extends BaseQuery {
       const isSegDatetime = idx => querySegments[idx].propertyType === `datetime`;
       const unitsForDatetimeSet = idx => ({
         unit: querySegments[idx].unit,
-        convertTimestampMultiplier: querySegments[idx].isEventDate ? 1 : 1000,
+        timestampMultiplier: querySegments[idx].isEventDate ? 1 : 1000,
       });
 
-      const createSeriesReducerFunc = ({isTimeSeries=true}={}) => {
+      const createSeriesReducerFunc = ({isTimeSeries=true, timestampMultiplier=1}={}) => {
         return (seriesObj, item) => {
           // transform item.key array into nested obj,
           // with item.value at the deepest level
@@ -407,13 +407,16 @@ export default class SegmentationQuery extends BaseQuery {
             obj = obj[key];
           }
 
-          obj[item.key[item.key.length - 1]] = item.value;
+          let label = item.key[item.key.length - 1];
+          label = Number.isInteger(label) ? (label * timestampMultiplier) : label;
+          obj[label] = item.value;
           return seriesObj;
         };
       };
 
       series = results.reduce(createSeriesReducerFunc({isTimeSeries: !isPeopleOnlyQuery}), {});
-      peopleTimeSeries = needsPeopleTimeSeries ? results.reduce(createSeriesReducerFunc(), {}) : null;
+
+      peopleTimeSeries = needsPeopleTimeSeries ? results.reduce(createSeriesReducerFunc({timestampMultiplier: 1000}), {}) : null;
     }
 
     headers = [isPeopleOnlyQuery ? `$people` : `$event`].concat(headers);
