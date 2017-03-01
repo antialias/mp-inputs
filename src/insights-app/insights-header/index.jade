@@ -55,15 +55,15 @@
         attrs={
           'access-token': mp.accessToken,
           'all-tags': JSON.stringify(mp.dashboardTags),
-          'selected-tags': JSON.stringify(existingBookmark.tags || []),
+          'bookmark': JSON.stringify(existingBookmark),
           'disabled': !report.id,
-          'report-name': report.title,
-          'report-type': 'insights',
           'mixpanel-host': $component.app.apiHost,
           'project-id': mp.projectID,
-          'user-id': mp.userID,
-          'bookmark': JSON.stringify(existingBookmark),
+          'report-name': report.title,
+          'report-type': 'insights',
+          'selected-tags': JSON.stringify(existingBookmark.tags || []),
           'show-tutorial-tooltip': flags.VIEWED_REPORT_COUNT >= 30 && !flags.DASHBOARD_ADDED_REPORT_OR_SEEN_TOOLTIP,
+          'user-id': mp.userID,
         }
         on={'report-added': $helpers.dashboardReportAdded}
       )
