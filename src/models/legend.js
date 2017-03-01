@@ -58,9 +58,8 @@ export default class Legend {
   }
 
   getFlattenedFilters() {
-    return this.data[0].flattenedData;
+    return (this.data && this.data[0]) ? this.data[0].flattenedData : {};
   }
-
 
   getSeriesDisplayAtIndex(seriesIdx) {
     return this.seriesShowing[seriesIdx] || null;
@@ -82,6 +81,10 @@ export default class Legend {
       this._seriesShowing = this.data.map((series, idx) => idx === 0 ? this._seriesDisplaySetting(series) : `hidden`);
     }
     return this._seriesShowing;
+  }
+
+  numberOfFlattenedSegments() {
+    return Object.keys(this.getFlattenedFilters()).length;
   }
 
   set seriesShowing(value) {

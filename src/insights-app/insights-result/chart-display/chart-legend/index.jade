@@ -17,6 +17,8 @@ include ../../../mixins.jade
       - const legendDataToDisplay = $helpers.legendDataToDisplay()
       - const isFlattenedData = $helpers.isFlattenedData()
       - const isSearchActive = $helpers.isSearchActive()
+      //- Rendering more than 1k segmented all at one time is slow
+      - const hideSelectAll = isSearchActive || (isFlattenedData && report.legend.numberOfFlattenedSegments() > 1000);
       - const isMultiColor = !(report.displayOptions.chartType === 'bar' && report.displayOptions.plotStyle === 'standard' && legendDataToDisplay.length === 1)
       .search(class={active: isSearchActive})
         svg-icon(attrs={icon: 'search'})
@@ -47,7 +49,7 @@ include ../../../mixins.jade
                 .count #{$helpers.selectedSeriesCount(seriesIdx)}/#{$helpers.totalSeriesCount(seriesIdx)}
             ul.series-values
               if isSeriesShowing
-                if !isSearchActive
+                if !hideSelectAll
                   +checkbox-select-all($helpers.allSeriesSelected(seriesIdx), () => $helpers.toggleAllSeriesValue(seriesIdx))
                 if !series.seriesValues.length
                   .no-result= 'No results'
