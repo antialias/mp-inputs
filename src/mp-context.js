@@ -86,7 +86,7 @@ export default class MPContext {
       })
       .then(() => {
         return this.post(`${this.bmURL}/${endpoint}`, {
-          name: data.name,
+          name: data.title,
           params: JSON.stringify(data),
           icon: data.icon,
         });

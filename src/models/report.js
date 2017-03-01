@@ -84,7 +84,7 @@ export default class Report {
   }
 
   toBookmarkData({saveAsNew=false, newReportData={}}={}) {
-    let bm = extend({name: this.title, icon: this.displayOptions.chartType}, this.serialize(), newReportData);
+    let bm = extend({icon: this.displayOptions.chartType}, this.serialize(), newReportData);
     if (!this.isNew()) {
       bm.id = this.id;
     }
