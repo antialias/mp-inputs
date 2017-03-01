@@ -251,13 +251,13 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   maybeCloseUpsellModal(ev, modalName=null) {
-    // called from clickOutsideHandler
-    if (modalName === null) {
+    if (modalName === null) { // called from clickOutsideHandler
       this.update({upsellModal: null});
-    } else {
-      // called from a helper function when a modal was closed intentionally
-      const maybeCloseFeature = ev.target.attributes[`name`].value;
-      if (maybeCloseFeature === modalName && modalName === this.state.upsellModal && ev.detail && ev.detail.state === `closed`) {
+    } else { // called from a helper function when a modal was closed intentionally
+      const eventOriginModalName = ev.target.attributes[`name`].value;
+      const eventMatchesCurrentModal = eventOriginModalName === this.state.upsellModal;
+      const isModalClosed = ev.detail && ev.detail.state === `closed`;
+      if (eventMatchesCurrentModal && isModalClosed) {
         this.update({upsellModal: null});
       }
     }
