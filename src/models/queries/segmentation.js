@@ -163,6 +163,7 @@ export default class SegmentationQuery extends BaseQuery {
       .map(filter => filterToArbSelectorString(filter))
       .join(` ${conjunction} `);
 
+
     // TODO (jordan): handle resetting dates when building params
     const time = sections.time.clauses[0];
     const unit = time.unit;
