@@ -72,6 +72,10 @@ export default class Legend {
     return this._colorMap;
   }
 
+  get flattenedColorMap() {
+    return this._flattenedColorMap || {};
+  }
+
   getColorForSeries(series, flattenedData=false) {
     return this[flattenedData ? `_flattenedColorMap` : `_colorMap`][series];
   }

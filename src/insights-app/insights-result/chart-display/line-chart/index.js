@@ -73,6 +73,7 @@ document.registerElement(`line-chart`, class extends Component {
         chartLabel: JSON.parse(this.getAttribute(`chart-label`)),
         dataId,
         displayOptions: JSON.parse(this.getAttribute(`display-options`)),
+        segmentColorMap: this.getJSONAttribute(`segment-color-map`),
         utcOffset: this.utcOffset,
       };
 
@@ -369,33 +370,19 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     // Highcharts is to old to let us force a timezone
     const offsetDate = timestamp => Number(timestamp) - (this.utcOffset * 60 * 1000);
 
-    const seriesMap = dataKeys.reduce((seriesMap, segmentName) => {
+    const { showingSeries, hiddenSeries } = dataKeys.reduce((series, segmentName) => {
       const counts = this.chartData[segmentName];
-      return Object.assign(seriesMap, {[segmentName]: {
+      const data = util.sorted(Object.keys(counts), {transform: Number})
+        .map(timestamp => [offsetDate(timestamp), counts[timestamp]]);
+      const segment = {
+        color: highchartsOptions.colors[this.colorIdxForSegment(segmentName)],
+        data,
+        isIncompletePath: util.isIncompleteInterval(data, {unit: this._displayOptions.timeUnit}),
         name: segmentName,
         type: highchartsOptions.chart.type,
-        data: util.sorted(Object.keys(counts), {transform: Number}).map(timestamp => [offsetDate(timestamp), counts[timestamp]]),
-      }});
-    }, {});
+        visible: this.isSegmentShowing(segmentName),
+      };
 
-    const sortedSegments = dataKeys
-      .map(segment => {
-        // vals is a dictionary of timestamps to counts
-        const vals = this.chartData[segment];
-        const segmentTotal = Object.values(vals).reduce((sum, val) => sum + val, 0);
-        return [segment, segmentTotal];
-      })
-      .sort((a, b) => b[1] - a[1])
-      .map(pair => pair[0]);
-
-    const series = sortedSegments.map((s, idx) => util.extend(seriesMap[s], {
-      visible: this.isSegmentShowing(seriesMap[s].name),
-      color: highchartsOptions.colors[idx % highchartsOptions.colors.length],
-      isIncompletePath: util.isIncompleteInterval(seriesMap[s].data, {
-        unit: this._displayOptions.timeUnit,
-      }),
-    }));
-    const { showingSeries, hiddenSeries } = series.reduce((series, segment) => {
       if (segment.visible) {
         series.showingSeries.push(segment);
       } else {
@@ -449,9 +436,22 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     return this._chartData;
   }
 
+  colorIdxForSegment(segmentName) {
+    return (this._segmentColorMap[segmentName] || 1) - 1;
+  }
+
   renderChartIfChange() {
     const {analysis, plotStyle, value, timeUnit} = this._displayOptions;
-    const changeAttrs = [this._dataId, this.utcOffset, analysis, plotStyle, value, timeUnit];
+    const changeAttrs = [
+      this._dataId,
+      this.utcOffset,
+      analysis,
+      plotStyle,
+      value,
+      timeUnit,
+      Boolean(this._segmentColorMap),
+    ];
+
     const changeId = changeAttrs.every(Boolean) ? changeAttrs.join(`-`) : null;
 
     if (changeId && this._changeId !== changeId) {
@@ -464,6 +464,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     this._dataId = chartData.dataId;
     this._displayOptions = chartData.displayOptions || {};
     this._chartData = chartData.data;
+    this._segmentColorMap = chartData.segmentColorMap;
     this.renderChartIfChange();
   }
 
