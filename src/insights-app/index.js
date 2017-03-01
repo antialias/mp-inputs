@@ -250,19 +250,16 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     });
   }
 
-  closeUpsellModal(ev, modalName=null) {
-    // if maybeCloseUpsellModal called this on behalf of a particular modal,
-    // make sure that modal hasn't been replaced already. If a click outside
-    // caused the function call, continue.
-    if (modalName === this.state.upsellModal || modalName === null) {
+  maybeCloseUpsellModal(ev, modalName=null) {
+    // called from clickOutsideHandler
+    if (modalName === null) {
       this.update({upsellModal: null});
-    }
-  }
-
-  maybeCloseUpsellModal(ev, modalName) {
-    const maybeCloseFeature = ev.target.attributes[`name`].value;
-    if (maybeCloseFeature === modalName && ev.detail && ev.detail.state === `closed`) {
-      this.closeUpsellModal(ev, modalName);
+    } else {
+      // called from a helper function when a modal was closed intentionally
+      const maybeCloseFeature = ev.target.attributes[`name`].value;
+      if (maybeCloseFeature === modalName && modalName === this.state.upsellModal && ev.detail && ev.detail.state === `closed`) {
+        this.update({upsellModal: null});
+      }
     }
   }
 
@@ -335,7 +332,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       this.navigate(`report/${this.state.report.id}`);
     }
 
-    this.onClickOutside(`mp-upsell-modal`, `closeUpsellModal`);
+    this.onClickOutside(`mp-upsell-modal`, `maybeCloseUpsellModal`);
   }
 
   navigateToSetup() {
