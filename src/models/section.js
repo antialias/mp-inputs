@@ -83,6 +83,10 @@ export class Section {
     return this.validate(Section.create(this.TYPE, extend(this, {clauses: insertAtIndex(this.clauses, this.clauses.length, newClause)})));
   }
 
+  getLastClause() {
+    return this.hasClauses() ? this.clauses[this.clauses.length - 1] : null;
+  }
+
   insertClause(index, newClause) {
     return this.validate(Section.create(this.TYPE, extend(this, {clauses: insertAtIndex(this.clauses, index, newClause)})));
   }

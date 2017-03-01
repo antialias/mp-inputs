@@ -67,10 +67,17 @@ document.registerElement(`chart-display`, class extends Component {
           }
           return style;
         },
-        getDisplayOptions: () => extend(
-          pick(this.state.report.displayOptions, [`analysis`, `plotStyle`, `value`]),
-          {timeUnit: this.state.report.sections.time.clauses[0].unit}
-        ),
+        getDisplayOptions: () => {
+          const options = pick(this.state.report.displayOptions, [`analysis`, `plotStyle`, `value`]);
+          if (this.state.result.peopleTimeSeries) {
+            const peopleTimeClause = this.state.report.sections.group.getLastClause();
+            options.timeUnit = peopleTimeClause && peopleTimeClause.unit;
+          } else {
+            options.timeUnit = this.state.report.sections.time.clauses[0].unit;
+          }
+          console.log(options)
+          return options;
+        },
         getFunctionLabel: () => {
           switch (this.helpers.getDisplayOptions().analysis) {
             case `logarithmic`:
