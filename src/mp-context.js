@@ -96,7 +96,7 @@ export default class MPContext {
         if (res.error) {
           throw new Error(res.error);
         }
-        this.bookmarks.push(res.bookmark)
+        this.bookmarks.push(res.bookmark);
         return res.bookmark;
       });
   }
