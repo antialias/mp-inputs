@@ -13,6 +13,24 @@ document.registerElement(`insights-header`, class extends Component {
   get config() {
     return {
       helpers: {
+        showAddToDash: () => this.app.hasWhitelist(`webdash-v2`),
+        addToDashEnabled: () => !this.app.standalone && this._getBookmark(this.state.report.id),
+        dashboardAttrs: () => {
+          const existingBookmark = this._getBookmark(this.state.report.id);
+          return {
+            'access-token': this.app.accessToken,
+            'all-tags': JSON.stringify(this.app.dashboardTags),
+            'bookmark': JSON.stringify(existingBookmark),
+            'mixpanel-host': this.app.apiHost,
+            'project-id': this.app.projectID,
+            'report-name': this.state.report.title,
+            'report-type': `insights`,
+            'selected-tags': JSON.stringify(existingBookmark.tags || []),
+            'show-tutorial-tooltip': this.app.getFlag(`VIEWED_REPORT_COUNT`) >= 30 && !this.app.getFlag(`DASHBOARD_ADDED_REPORT_OR_SEEN_TOOLTIP`),
+            'user-id': this.app.userID,
+          };
+        },
+
         isExistingReport: () => !this.state.report.isNew(),
 
         refresh: () => {
@@ -85,5 +103,9 @@ document.registerElement(`insights-header`, class extends Component {
     // clean up
     URL.revokeObjectURL(blobURL);
     link.remove();
+  }
+
+  _getBookmark(id) {
+    return this.app.bookmarks.find(bm => bm.id === id);
   }
 });

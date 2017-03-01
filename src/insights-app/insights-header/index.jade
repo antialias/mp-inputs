@@ -47,25 +47,10 @@
         }
         on={change: $helpers.closeUpsell}
       )
-    - const mp = $component.app.mpContext;
-    if mp.whitelists.includes('webdash-v2')
-      - const existingBookmark = $component.app.mpContext.bookmarks.find(bm => bm.id === report.id);
-      - const flags = mp.flags;
-      if !mp.standalone && existingBookmark
+    if $helpers.showAddToDash()
+      if $helpers.addToDashEnabled()
         add-to-dash(
-          attrs={
-            'access-token': mp.accessToken,
-            'all-tags': JSON.stringify(mp.dashboardTags),
-            'bookmark': JSON.stringify(existingBookmark),
-            'disabled': !report.id,
-            'mixpanel-host': $component.app.apiHost,
-            'project-id': mp.projectID,
-            'report-name': report.title,
-            'report-type': 'insights',
-            'selected-tags': JSON.stringify(existingBookmark.tags || []),
-            'show-tutorial-tooltip': flags.VIEWED_REPORT_COUNT >= 30 && !flags.DASHBOARD_ADDED_REPORT_OR_SEEN_TOOLTIP,
-            'user-id': mp.userID,
-          }
+          attrs=$helpers.dashboardAttrs(),
           on={'report-added': $helpers.dashboardReportAdded}
         )
       else

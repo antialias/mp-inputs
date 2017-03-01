@@ -247,6 +247,15 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     }
   }
 
+  hasWhitelist(name) {
+    return this.mpContext && this.mpContext.whitelists && this.mpContext.whitelists.includes(name);
+  }
+
+  getFlag(name) {
+    return this.mpContext && this.mpContext.whitelists && this.mpContext.flags[name];
+  }
+
+
   /**
    * initialize app with data/settings from mixpanel.com if available
    */
@@ -260,6 +269,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.hasWritePermissions = !this.mpContext.hasPermissions || this.mpContext.permissions.includes(`write_insights`);
     this.projectHasEvents = true;
     this.userID = this.mpContext.userID;
+    this.projectID = this.mpContext.projectID;
+    this.accessToken = this.mpContext.accessToken;
+    this.dashboardTags = this.mpContext.dashboardTags || [];
+    this.bookmarks = this.mpContext.bookmarks || [];
 
     if (!this.standalone) {
       this.projectHasEvents = !!this.mpContext.hasIntegratedArb;
