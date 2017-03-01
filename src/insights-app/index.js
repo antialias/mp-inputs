@@ -250,19 +250,19 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     });
   }
 
-  closeUpsellModal(ev, type=null) {
+  closeUpsellModal(ev, modalName=null) {
     // if maybeCloseUpsellModal called this on a particular modal,
     // make sure that modal hasn't been replaced. If a click outside
     // caused it, continue.
-    if (type === null || type === this.state.upsellModal) {
+    if (modalName === null || modalName === this.state.upsellModal) {
       this.update({upsellModal: null});
     }
   }
 
-  maybeCloseUpsellModal(ev, type) {
-    const maybeCloseFeature = ev.target.attributes[`feature`].value;
-    if (maybeCloseFeature === type && ev.detail && ev.detail.state === `closed`) {
-      this.closeUpsellModal(ev, type);
+  maybeCloseUpsellModal(ev, modalName) {
+    const maybeCloseFeature = ev.target.attributes[`name`].value;
+    if (maybeCloseFeature === modalName && ev.detail && ev.detail.state === `closed`) {
+      this.closeUpsellModal(ev, modalName);
     }
   }
 

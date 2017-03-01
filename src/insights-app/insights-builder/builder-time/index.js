@@ -13,7 +13,7 @@ document.registerElement(`query-builder-time`, class extends Component {
       template,
       helpers: {
         showUpsellModal: () => this.state.upsellModal === `timeClause`,
-        closeUpsellModal: ev => this.app.maybeCloseUpsellModal(ev, `date-range`),
+        closeUpsellModal: ev => this.app.maybeCloseUpsellModal(ev, `timeClause`),
         alignCustomPaneRight: () => !!this.app.getBuilderCurrentScreenAttr(`alignTimeCustomPaneRight`),
         isPresetRange: () => {
           const {range} = this.app.getTimeClauseValue();

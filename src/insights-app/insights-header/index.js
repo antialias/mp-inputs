@@ -76,7 +76,7 @@ document.registerElement(`insights-header`, class extends Component {
         showSaveReportUpsell: () => this.state.upsellModal === `saveReport`,
         showExportCSVUpsell: () => this.state.upsellModal === `exportCSV`,
         showExportCSVIcon: () => this.app.getFeatureGateValue(`can_export_csv`) === false,
-        closeUpsell: (ev, feature) => this.app.maybeCloseUpsellModal(ev, feature),
+        closeUpsell: (ev, name) => this.app.maybeCloseUpsellModal(ev, name),
         dashboardReportAdded: () => this.app.mpContext.setFlag(`DASHBOARD_ADDED_REPORT_OR_SEEN_TOOLTIP`),
       },
       template,

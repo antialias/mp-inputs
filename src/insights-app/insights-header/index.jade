@@ -28,9 +28,10 @@
       mp-upsell-popup(
         attrs={
           feature: `export-csv`,
+          name: `exportCSV`,
           open: $helpers.showExportCSVUpsell(),
         }
-        on={change: ev => $helpers.closeUpsell(ev, `export-csv`)}
+        on={change: ev => $helpers.closeUpsell(ev, `exportCSV`)}
       )
     button.report-list-button(
       attrs={title: `Saved reports`}
@@ -43,9 +44,10 @@
       mp-upsell-popup(
         attrs={
           feature: `bookmark-maximum`,
+          name: `saveReport`,
           open: $helpers.showSaveReportUpsell(),
         }
-        on={change: ev => $helpers.closeUpsell(ev, `bookmark-maximum`)}
+        on={change: ev => $helpers.closeUpsell(ev, `saveReport`)}
       )
     if $helpers.showAddToDash()
       if $helpers.addToDashEnabled()

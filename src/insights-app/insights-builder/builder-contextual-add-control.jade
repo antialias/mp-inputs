@@ -24,8 +24,9 @@ include ../insights-learn/tooltip.jade
           svg-icon(attrs={icon: 'lighting-bolt'})
       if $helpers.shouldShowUpsellModal()
         .upsell-wrapper
-          mp-upsell-popup(
+          mp-upsell-popup.builderClause(
             attrs={
+              name: `builderClause`,
               feature: `filter-levels`,
               open: $helpers.shouldShowUpsellModal(),
             }
