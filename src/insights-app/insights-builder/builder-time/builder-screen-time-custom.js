@@ -42,11 +42,22 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
             // TODO remove once mp-toggle no longer fires change events
             return;
           }
+
           const {from, to} = ev.detail;
           const unit = dateRangeToUnit(from, to);
           const old = this.app.getTimeClauseValue(this.app.activeStageClause);
-          if (from !== old.from || to !== old.to || unit !== old.unit) {
-            this.setDates(from, to, unit);
+          const fromChanged = from !== old.from;
+          const toChanged = to !== old.to;
+          const unitChanged = unit !== old.unit;
+
+          if (fromChanged || toChanged || unitChanged) {
+            this.setDates(from, to, unit, {
+              shouldStopEditing: toChanged && !this.helpers.isUnitRelevant(),
+            });
+          }
+
+          if (fromChanged) {
+            this.app.updateBuilder({fromFocused: false, toFocused: true});
           }
         },
         resizedCalendar: () => this.updateRenderedSize({
@@ -71,12 +82,10 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
     };
   }
 
-  setDates(from, to, unit) {
-    const params = {value: [from, to]};
-    if (unit) {
-      params.unit = unit;
-    }
-    const shouldStopEditing = from && to && !this.helpers.isUnitRelevant();
-    this.updateStageClause(params, {shouldCommit: true, shouldStopEditing});
+  setDates(from, to, unit, {shouldStopEditing=false}={}) {
+    this.updateStageClause(extend({value: [from, to]}, unit ? {unit} : {}), {
+      shouldCommit: true,
+      shouldStopEditing,
+    });
   }
 });
