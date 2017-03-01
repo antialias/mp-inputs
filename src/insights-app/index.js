@@ -245,7 +245,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   openUpsellModal(type) {
-    // wait for onClickOutside handler to call closeUpsellModal, then set to the correct type
     window.requestAnimationFrame(() => {
       console.log('open modal ' + type);
       this.update({upsellModal: type})
@@ -253,6 +252,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   closeUpsellModal(ev, type=null) {
+    // if maybeCloseUpsellModal called this on a particular modal,
+    // make sure that modal hasn't been replaced. If a click outside
+    // caused it, continue.
     if (type === null || type === this.state.upsellModal) {
       this.update({upsellModal: null});
     }
