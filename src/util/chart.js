@@ -22,7 +22,7 @@ import { mapValues } from 'mixpanel-common/util';
 // Highcharts).
 
 /**
-  * isIncompleteInterval -- Returns true if the last time-period has not been completed 
+  * isIncompleteInterval -- Returns true if the last time-period has not been completed
   *
   * @param {Hash} series A single series, in highcharts format
   * @param {Hash} an options hash.
@@ -42,7 +42,7 @@ export function isIncompleteInterval(data, options) {
     var lastDate = Array.isArray(lastPoint) ? lastPoint[0] : lastPoint.x;
     var date = new Date();
     var currentDate = date.getTime();
-    var timezoneOffset = options.utcOffset;
+    var timezoneOffset = options.utcOffset || 0;
     if (options.adjust_for_local_time) {
       // many dates passed in are in the local time of the browser.
       timezoneOffset += date.getTimezoneOffset();
@@ -90,7 +90,7 @@ export function isIncompleteInterval(data, options) {
   }
 }
 
-/** 
+/**
  * Transpose rows to columns like an extra group by clause does
  * It is assumed that series has only 2 dimensions
  * @param {string[]} headers - Names for the different series in order of group by

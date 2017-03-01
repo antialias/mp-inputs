@@ -149,10 +149,9 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   tooltipFormatter() {
     const timeFormatter = this.timestampToTimeUnitFunction();
     const unit = this._displayOptions.timeUnit;
-    const utcOffset = this.utcOffset;
 
     return function() {
-      const isIncomplete = util.isIncompleteInterval([this], {unit, utcOffset});
+      const isIncomplete = util.isIncompleteInterval([this], {unit});
       const index = this.series.data.indexOf(this.point);
       let delta = null;
       // TODO: revisit design for stacked chart, which already shows proportional percentage
@@ -367,12 +366,17 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       Object.keys(this.chartData[segmentName]).length <= 1
     ));
 
+    // Highcharts is to old to let us force a timezone
+    const offsetDate = timestamp => {
+      return Number(timestamp) - (this.utcOffset * 60 * 1000);
+    };
+
     const seriesMap = dataKeys.reduce((seriesMap, segmentName) => {
       const counts = this.chartData[segmentName];
       return Object.assign(seriesMap, {[segmentName]: {
         name: segmentName,
         type: highchartsOptions.chart.type,
-        data: util.sorted(Object.keys(counts), {transform: Number}).map(timestamp => [Number(timestamp), counts[timestamp]]),
+        data: util.sorted(Object.keys(counts), {transform: Number}).map(timestamp => [offsetDate(timestamp), counts[timestamp]]),
       }});
     }, {});
 
@@ -391,7 +395,6 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       color: highchartsOptions.colors[idx % highchartsOptions.colors.length],
       isIncompletePath: util.isIncompleteInterval(seriesMap[s].data, {
         unit: this._displayOptions.timeUnit,
-        utcOffset: this.utcOffset,
       }),
     }));
     const { showingSeries, hiddenSeries } = series.reduce((series, segment) => {
@@ -450,7 +453,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
 
   renderChartIfChange() {
     const {analysis, plotStyle, value, timeUnit} = this._displayOptions;
-    const changeAttrs = [this._dataId, this._utcOffset, analysis, plotStyle, value, timeUnit];
+    const changeAttrs = [this._dataId, this.utcOffset, analysis, plotStyle, value, timeUnit];
     const changeId = changeAttrs.every(Boolean) ? changeAttrs.join(`-`) : null;
 
     if (changeId && this._changeId !== changeId) {
@@ -470,8 +473,8 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     return this._utcOffset;
   }
 
-  set utcOffset(offset) {
-    this._utcOffset = offset;
+  set utcOffset(timezoneOffset) {
+    this._utcOffset = timezoneOffset;
     this.renderChartIfChange();
   }
 });
