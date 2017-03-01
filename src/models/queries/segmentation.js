@@ -368,7 +368,7 @@ export default class SegmentationQuery extends BaseQuery {
       const timestampInMS = timestamp * convertTimestampMultiplier;
       formattedDateCache[unit] = formattedDateCache[unit] || {};
       if (!formattedDateCache[unit][timestampInMS]) {
-        formattedDateCache[unit][timestampInMS] = formatDate(timestampInMS, {iso: true, unit, utc: true});
+        formattedDateCache[unit][timestampInMS] = formatDate(timestampInMS, {unit, utc: true});
       }
       return formattedDateCache[unit][timestampInMS];
     };
