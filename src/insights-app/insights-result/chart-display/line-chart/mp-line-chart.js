@@ -8,7 +8,7 @@ import {
   dataObjectToSortedSeries,
   generateChangeId,
   killLastGridline,
-} from './line-chart-util';
+} from '../../../../util/line-chart';
 
 import commonCSS from '!!style!css?camelCase!stylus!../../../../stylesheets/common.styl';
 

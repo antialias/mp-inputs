@@ -10,7 +10,7 @@ import {
   nestedObjectToNestedArray,
   nestedObjectToBarChartData,
   nestedObjectToTableData,
-} from '../../src/insights-app/insights-result/chart-util';
+} from '../../src/util/chart';
 
 describe('nestedObjectToTableData', function() {
   it('sorts simple 1-column data by label', function() {

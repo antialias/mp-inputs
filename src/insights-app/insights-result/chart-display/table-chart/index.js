@@ -4,9 +4,7 @@ import { Component } from 'panel';
 import WebComponent from 'webcomponent';
 
 import * as util from '../../../../util';
-import {
-  nestedObjectToTableData,
-} from '../../chart-util';
+import { nestedObjectToTableData } from '../../../../util/chart';
 
 import template from './index.jade';
 import './index.styl';
@@ -92,7 +90,7 @@ document.registerElement(`table-chart`, class extends Component {
 
     // The table-chart component can render more than 2 dimensions of data.
     // For more than 2 dimensions it stacks vertically, then horizontally.
-    // For a special case of exactly 2 dimensions (proper table), 
+    // For a special case of exactly 2 dimensions (proper table),
     // if it contains only 1 row and > 1 columns,
     // We stack vertically offering a better experience in comparing values.
     const depth = headers.length;

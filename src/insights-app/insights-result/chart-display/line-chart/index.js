@@ -66,4 +66,3 @@ document.registerElement(`line-chart`, class extends Component {
     this.updateChartState();
   }
 });
-

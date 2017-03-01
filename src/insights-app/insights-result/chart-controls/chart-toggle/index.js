@@ -1,8 +1,11 @@
 import { Component } from 'panel';
 
-import { formattedChartName, styleChoicesForChartType } from '../../chart-util';
 import { Clause } from '../../../../models/clause';
 import { extend, pick } from '../../../../util';
+import {
+  formattedChartName,
+  styleChoicesForChartType,
+} from '../../../../util/chart';
 
 import template from './index.jade';
 import './index.styl';

@@ -1,7 +1,5 @@
 /* global $ */
-import {
-  sorted,
-} from '../../../../util';
+import { sorted } from '../util';
 
 /**
  * https://github.com/mixpanel/mixpanel-platform/blob/d171a3ec/js/ui/chart.js#L38-L54

@@ -6,7 +6,7 @@ import {
   stringFilterMatches,
   pick,
 } from '../../../../util';
-import { NESTED_ARRAY_SORT_FUNCS } from '../../chart-util';
+import { NESTED_ARRAY_SORT_FUNCS } from '../../../../util/chart';
 import '../../../widgets/sticky-scroll';
 
 import template from './index.jade';

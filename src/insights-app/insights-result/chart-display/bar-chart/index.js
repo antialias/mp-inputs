@@ -6,7 +6,7 @@ import {
   nestedObjectMax,
   nestedObjectToBarChartData,
   stackedNestedObjectMax,
-} from '../../chart-util';
+} from '../../../../util/chart';
 
 import template from './index.jade';
 import './index.styl';

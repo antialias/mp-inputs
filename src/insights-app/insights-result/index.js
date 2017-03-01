@@ -1,6 +1,6 @@
 import { Component } from 'panel';
 
-import { formattedChartName } from './chart-util';
+import { formattedChartName } from '../../util/chart';
 import { extend } from '../../util';
 
 import './chart-controls';
