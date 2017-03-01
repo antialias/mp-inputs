@@ -75,7 +75,7 @@ export function parseDate(dateString, {iso=false, startOfDay=false, endOfDay=fal
       date = endOfDay ? date.endOf(UNITS.day) : date;
 
       // make dates like "12/31" parse to the most recent past instance of that date
-      date = date > moment() ? date.subtract(1, `${UNITS.year}s`) : date;
+      date = (!endOfDay && date > moment()) ? date.subtract(1, `${UNITS.year}s`) : date;
 
       return new Date(date);
     }
