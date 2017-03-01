@@ -246,17 +246,22 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   openUpsellModal(type) {
     // wait for onClickOutside handler to call closeUpsellModal, then set to the correct type
-    window.setTimeout(() => this.update({upsellModal: type}), 20);
+    window.requestAnimationFrame(() => {
+      console.log('open modal ' + type);
+      this.update({upsellModal: type})
+    });
   }
 
-  closeUpsellModal() {
-    this.update({upsellModal: null});
+  closeUpsellModal(ev, type=null) {
+    if (type === null || type === this.state.upsellModal) {
+      this.update({upsellModal: null});
+    }
   }
 
   maybeCloseUpsellModal(ev, type) {
     const maybeCloseFeature = ev.target.attributes[`feature`].value;
     if (maybeCloseFeature === type && ev.detail && ev.detail.state === `closed`) {
-      this.closeUpsellModal();
+      this.closeUpsellModal(ev, type);
     }
   }
 
@@ -329,7 +334,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       this.navigate(`report/${this.state.report.id}`);
     }
 
-    this.onClickOutside(`mp-upsell-modal`, `closeUpsellModal`);
+    this.onClickOutside(`mp-upsell-modal`, `closeUpsellModal`)
   }
 
   navigateToSetup() {
