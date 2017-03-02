@@ -126,7 +126,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   timestampToTimeUnitFunction({displayRangeIfWeek=true}={}) {
     const unit = this._displayOptions.timeUnit;
     const customFormatting = {'day': `MMM D`};
-    return timestamp => util.formatDate(timestamp, {unit, displayRangeIfWeek, customFormatting});
+    return timestamp => util.formatDate(timestamp, {unit, displayRangeIfWeek, customFormatting, utc: true});
   }
 
   getTickPositions() {
