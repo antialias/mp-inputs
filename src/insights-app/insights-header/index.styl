@@ -22,9 +22,16 @@
     display inline-flex
     margin-left auto
 
-    add-to-dash
-      margin-left 3px
-      z-index 4 // needs to be positioned over the sticky header which is z-index 1 and extras-menu-container which is z-index 3
+    .add-to-dash
+      z-index 1
+
+      add-to-dash
+        margin-left 3px
+        z-index 4 // needs to be positioned over the sticky header which is z-index 1 and extras-menu-container which is z-index 3
+
+      mp-tooltip
+        text-align center
+        white-space nowrap
 
     button
       border none

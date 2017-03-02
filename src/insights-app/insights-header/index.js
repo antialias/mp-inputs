@@ -25,7 +25,6 @@ document.registerElement(`insights-header`, class extends Component {
             'project-id': this.app.projectID,
             'report-name': this.state.report.title,
             'report-type': `insights`,
-            'selected-tags': JSON.stringify(existingBookmark.tags || []),
             'show-tutorial-tooltip': this.app.getFlag(`VIEWED_REPORT_COUNT`) >= 30 && !this.app.getFlag(`DASHBOARD_ADDED_REPORT_OR_SEEN_TOOLTIP`),
             'user-id': this.app.userID,
           };
