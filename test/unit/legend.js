@@ -25,31 +25,31 @@ describe('Legend', function() {
         Opera: true,
       });
       expect(this.legend.data[0].flattenedData).to.eql({
-        'Mac OS X Chrome': true,
-        'Windows Chrome': true,
-        'Mac OS X Safari': true,
-        'Windows Firefox': true,
-        'Mac OS X Firefox': true,
-        'Windows Opera': true,
+        'Mac OS X / Chrome': true,
+        'Windows / Chrome': true,
+        'Mac OS X / Safari': true,
+        'Windows / Firefox': true,
+        'Mac OS X / Firefox': true,
+        'Windows / Opera': true,
       });
     });
 
     it('creates flattened data for the first segment', function() {
       expect(this.legend.data[0].flattenedDataPaths).to.eql({
-        'Mac OS X Chrome': [ 'Mac OS X', 'Chrome' ],
-        'Mac OS X Firefox': [ 'Mac OS X', 'Firefox' ],
-        'Mac OS X Safari': [ 'Mac OS X', 'Safari' ],
-        'Windows Chrome': [ 'Windows', 'Chrome' ],
-        'Windows Firefox': [ 'Windows', 'Firefox' ],
-        'Windows Opera': [ 'Windows', 'Opera' ],
+        'Mac OS X / Chrome': [ 'Mac OS X', 'Chrome' ],
+        'Mac OS X / Firefox': [ 'Mac OS X', 'Firefox' ],
+        'Mac OS X / Safari': [ 'Mac OS X', 'Safari' ],
+        'Windows / Chrome': [ 'Windows', 'Chrome' ],
+        'Windows / Firefox': [ 'Windows', 'Firefox' ],
+        'Windows / Opera': [ 'Windows', 'Opera' ],
       });
       expect(this.legend.data[0].flattenedDataSortedKeys).to.eql([
-        'Mac OS X Chrome',
-        'Windows Chrome',
-        'Mac OS X Safari',
-        'Windows Firefox',
-        'Mac OS X Firefox',
-        'Windows Opera',
+        'Mac OS X / Chrome',
+        'Windows / Chrome',
+        'Mac OS X / Safari',
+        'Windows / Firefox',
+        'Mac OS X / Firefox',
+        'Windows / Opera',
       ]);
     });
 
@@ -64,9 +64,9 @@ describe('Legend', function() {
     });
 
     it('orders from highest numerical value to lowest for flattened data', function() {
-      expect(this.legend.getColorForSeries('Mac OS X Chrome', true)).to.eql(1);
-      expect(this.legend.getColorForSeries('Mac OS X Firefox', true)).to.eql(5);
-      expect(this.legend.getColorForSeries('Mac OS X Safari', true)).to.eql(3);
+      expect(this.legend.getColorForSeries('Mac OS X / Chrome', true)).to.eql(1);
+      expect(this.legend.getColorForSeries('Mac OS X / Firefox', true)).to.eql(5);
+      expect(this.legend.getColorForSeries('Mac OS X / Safari', true)).to.eql(3);
     });
 
     it('repeats after running out of numbers', function() {
