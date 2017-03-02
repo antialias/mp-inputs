@@ -30,7 +30,8 @@ document.registerElement(`query-builder-show`, class extends Component {
           const clauseWidth = clauseContainer.offsetWidth;
           const headerWidth = clauseContainer.querySelector(`.header-label`).offsetWidth;
           const buttonWidth = 12;
-          this.app.updateShowClauseButtonPosition(idx, headerWidth + buttonWidth > clauseWidth);
+          const position = Math.max(headerWidth, clauseWidth - buttonWidth);
+          this.app.updateShowClauseButtonPosition(idx, position);
         },
       },
     };

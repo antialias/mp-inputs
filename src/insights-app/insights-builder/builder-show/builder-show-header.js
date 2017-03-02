@@ -9,8 +9,9 @@ document.registerElement(`query-builder-show-header`, class extends Component {
     return {
       template,
       helpers: {
-        isButtonOutside: () => {
-          return this.state.showClauseButtonPosition[this.clauseIndex];
+        hasNumericProperty: () => this.getAssociatedClause().property !== null,
+        buttonPosition: () => {
+          return this.state.showClauseButtonPosition[this.clauseIndex] + `px`
         },
         isStaticHeader: () => {
           // Static Header for "All People" with no numeric properties

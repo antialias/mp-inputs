@@ -14,8 +14,11 @@ include ../../mixins.jade
           svg-icon.math-caret(attrs={icon: 'caret-down'})
     if $helpers.isRemovable()
       button.remove(
-        class={'outside': $helpers.isButtonOutside()}
-        on={click: ev => $helpers.removeClause(ev)}
+        style={left: $helpers.buttonPosition()}
+        class={
+          'property': hasProperty,
+        }
+        on={click: hasProperty ? ev => $helpers.removeProperty(ev) : ev => $helpers.removeClause(ev)}
       )
         svg-icon(attrs={icon: 'x'})
   .drop-menu
