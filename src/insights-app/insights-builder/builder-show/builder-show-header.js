@@ -11,7 +11,7 @@ document.registerElement(`query-builder-show-header`, class extends Component {
       helpers: {
         hasNumericProperty: () => this.getAssociatedClause().property !== null,
         buttonPosition: () => {
-          return this.state.showClauseButtonPosition[this.clauseIndex] + `px`
+          return this.state.showClauseButtonPosition[this.clauseIndex] + `px`;
         },
         isStaticHeader: () => {
           // Static Header for "All People" with no numeric properties
@@ -49,6 +49,10 @@ document.registerElement(`query-builder-show-header`, class extends Component {
         removeClause: ev => {
           ev.stopPropagation();
           this.app.removeClause(`show`, this.clauseIndex);
+        },
+        removeProperty: ev => {
+          ev.stopPropagation();
+          this.app.updateClause(`show`, this.clauseIndex, {property: null});
         },
       },
     };

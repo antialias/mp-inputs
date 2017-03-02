@@ -85,10 +85,6 @@ export class EditControl extends Component {
       && this.state.activeMathMenuIndex === null;
   }
 
-  isShowProperty() {
-    return false;
-  }
-
   isRemovable() {
     return true;
   }

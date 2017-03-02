@@ -26,8 +26,12 @@ document.registerElement(`query-builder-show`, class extends Component {
           this.state.report.sections.show.clauseResourceTypes() !== ShowClause.RESOURCE_TYPE_PEOPLE
         ),
         mouseEntered: (ev, idx) => {
+          const hasProperty = this.state.report.sections.getClause(`show`, idx).property !== null;
           const clauseContainer = ev.target;
-          const clauseWidth = clauseContainer.offsetWidth;
+          let clauseWidth = clauseContainer.offsetWidth;
+          if (hasProperty) {
+            clauseWidth = ev.target.querySelector('builder-numeric-property-edit-control .control-container').offsetWidth;
+          }
           const headerWidth = clauseContainer.querySelector(`.header-label`).offsetWidth;
           const buttonWidth = 12;
           const position = Math.max(headerWidth, clauseWidth - buttonWidth);
