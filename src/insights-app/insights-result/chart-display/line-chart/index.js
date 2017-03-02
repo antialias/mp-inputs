@@ -1,4 +1,5 @@
 /* global $, Highcharts */
+import partition from 'lodash/partition';
 import moment from 'moment';
 import { Component } from 'panel';
 import WebComponent from 'webcomponent';
@@ -53,7 +54,7 @@ document.registerElement(`line-chart`, class extends Component {
     this.updateChartState();
   }
 
-  attributeChangedCallback(attrName, _, newVal) {
+  attributeChangedCallback(attrName, oldVal, newVal) {
     if (attrName === `seg-filters`) {
       this.update({segFilters: JSON.parse(newVal)});
     } else {
@@ -70,9 +71,9 @@ document.registerElement(`line-chart`, class extends Component {
 
     if (headers && series) {
       const newState = {
-        chartLabel: JSON.parse(this.getAttribute(`chart-label`)),
+        chartLabel: this.getJSONAttribute(`chart-label`),
         dataId,
-        displayOptions: JSON.parse(this.getAttribute(`display-options`)),
+        displayOptions: this.getJSONAttribute(`display-options`),
         segmentColorMap: this.getJSONAttribute(`segment-color-map`),
         utcOffset: this.utcOffset,
       };
@@ -115,9 +116,8 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
     this.appendChild(this.el);
   }
 
-  attributeChangedCallback(attrName, _, newVal) {
+  attributeChangedCallback(attrName, oldVal, newVal) {
     if (attrName === `seg-filters`) {
-      this._segFilters = this._segFilters || {};
       this._segFilters = JSON.parse(newVal);
       this.updateShowHideSegments();
     }
@@ -126,7 +126,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
   timestampToTimeUnitFunction({displayRangeIfWeek=true}={}) {
     const unit = this._displayOptions.timeUnit;
     const customFormatting = {'day': `MMM D`};
-    return timestamp => util.formatDate(timestamp, {unit, displayRangeIfWeek, customFormatting, utc: true});
+    return timestamp => util.formatDate(timestamp, {unit, displayRangeIfWeek, customFormatting, utc: false});
   }
 
   getTickPositions() {
@@ -367,35 +367,32 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       Object.keys(this.chartData[segmentName]).length <= 1
     ));
 
-    // Highcharts is to old to let us force a timezone
+    // Highcharts is too old to let us set a timezone so we need to add the offset to the date.
     const offsetDate = timestamp => Number(timestamp) - (this.utcOffset * 60 * 1000);
 
-    const { showingSeries, hiddenSeries } = dataKeys.reduce((series, segmentName) => {
-      const counts = this.chartData[segmentName];
-      const data = util.sorted(Object.keys(counts), {transform: Number})
-        .map(timestamp => [offsetDate(timestamp), counts[timestamp]]);
-      const segment = {
-        color: highchartsOptions.colors[this.colorIdxForSegment(segmentName)],
-        data,
-        isIncompletePath: util.isIncompleteInterval(data, {unit: this._displayOptions.timeUnit}),
-        name: segmentName,
-        type: highchartsOptions.chart.type,
-        visible: this.isSegmentShowing(segmentName),
-      };
+    const chartSeries = dataKeys.map(segmentName => {
+        const counts = this.chartData[segmentName];
+        const data = util.sorted(Object.keys(counts), {transform: Number})
+          .map(timestamp => [offsetDate(timestamp), counts[timestamp]]);
+        return {
+          color: highchartsOptions.colors[this.colorIdxForSegment(segmentName)],
+          data,
+          isIncompletePath: util.isIncompleteInterval(data, {unit: this._displayOptions.timeUnit}),
+          name: segmentName,
+          type: highchartsOptions.chart.type,
+          visible: this.isSegmentShowing(segmentName),
+        };
+      });
 
-      if (segment.visible) {
-        series.showingSeries.push(segment);
-      } else {
-        series.hiddenSeries.push(segment);
-      }
-      return series;
-    }, {showingSeries: [], hiddenSeries: []});
+    const [showingSeries, hiddenSeries] = partition(chartSeries, s => s.visible);
 
     // Rendering is EXPENSIVE. Start the Chart with only visible segments. updateShowHideSegments adds segments to the Chart as needed.
     highchartsOptions.series = showingSeries;
 
     // highchartSegmentIdxMap is the living map of segments rendered to the Chart.
-    this.highchartSegmentIdxMap = highchartsOptions.series.reduce((obj, seg, idx) => Object.assign(obj, {[seg.name]: idx}), {});
+    this.highchartSegmentIdxMap = highchartsOptions.series.reduce((obj, seg, idx) =>
+      Object.assign(obj, {[seg.name]: idx})
+    , {});
 
     this.hiddenSeries = hiddenSeries.reduce((obj, series) => Object.assign(obj, {[series.name]: series}), {});
     this.highchart = new Highcharts.Chart(highchartsOptions);
@@ -442,6 +439,7 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
 
   renderChartIfChange() {
     const {analysis, plotStyle, value, timeUnit} = this._displayOptions;
+    const colorMapKey = this._segmentColorMap ? !!this._segmentColorMap : this._segmentColorMap;
     const changeAttrs = [
       this._dataId,
       this.utcOffset,
@@ -449,10 +447,10 @@ document.registerElement(`mp-line-chart`, class extends WebComponent {
       plotStyle,
       value,
       timeUnit,
-      Boolean(this._segmentColorMap),
+      colorMapKey,
     ];
 
-    const changeId = changeAttrs.every(Boolean) ? changeAttrs.join(`-`) : null;
+    const changeId = changeAttrs.every(a => typeof a !== `undefined`) ? changeAttrs.join(`-`) : null;
 
     if (changeId && this._changeId !== changeId) {
       this._changeId = changeId;

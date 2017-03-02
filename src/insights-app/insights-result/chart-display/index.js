@@ -13,7 +13,7 @@ import {
   renameProperty,
 } from '../../../util';
 
-import { Clause } from '../../../models/clause';
+import { Clause, TimeClause } from '../../../models/clause';
 
 import './chart-legend';
 import './bar-chart';
@@ -71,7 +71,7 @@ document.registerElement(`chart-display`, class extends Component {
           const options = pick(this.state.report.displayOptions, [`analysis`, `plotStyle`, `value`]);
           if (this.state.result.peopleTimeSeries) {
             const peopleTimeClause = this.state.report.sections.group.getLastClause();
-            options.timeUnit = peopleTimeClause && peopleTimeClause.unit;
+            options.timeUnit = peopleTimeClause ? peopleTimeClause.unit : TimeClause.TIME_UNITS.DAY;
           } else {
             options.timeUnit = this.state.report.sections.time.clauses[0].unit;
           }
@@ -125,7 +125,9 @@ document.registerElement(`chart-display`, class extends Component {
             processed.dataId = result.id;
           } else if (this.helpers.showLegend()) {
             const legend = this.state.report.legend;
-            processed.series = filterObject(result.series, (value, depth) => depth > 1 ? legend.data[depth - 2].seriesData[value] : true);
+            processed.series = filterObject(result.series, (value, depth) => (
+              depth > 1 ? legend.data[depth - 2].seriesData[value] : true
+            ));
           }
           return processed;
         },
