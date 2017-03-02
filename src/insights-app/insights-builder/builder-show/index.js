@@ -35,7 +35,7 @@ document.registerElement(`query-builder-show`, class extends Component {
     const clauseContainer = ev.target;
     let clauseWidth = clauseContainer.offsetWidth;
     if (hasProperty) {
-      clauseWidth = ev.target.querySelector('builder-numeric-property-edit-control .control-container').offsetWidth;
+      clauseWidth = ev.target.querySelector(`builder-numeric-property-edit-control .control-container`).offsetWidth;
     }
     const headerWidth = clauseContainer.querySelector(`.header-label`).offsetWidth;
     const buttonWidth = 12;
