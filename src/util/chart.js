@@ -52,33 +52,6 @@ export function countRun(row, start) {
   return i - start;
 }
 
-function compareNumDateAlpha(a, b, sortOrder) {
-  a = a.toLowerCase ? a.toLowerCase() : a;
-  b = b.toLowerCase ? b.toLowerCase() : b;
-
-  const aNumber = Number(a);
-  const bNumber = Number(b);
-
-  if (!isNaN(aNumber) && !isNaN(bNumber)) {
-    a = aNumber;
-    b = bNumber;
-  } else {
-    const aDate = parseDate(a, {iso: true});
-    const bDate = parseDate(b, {iso: true});
-
-    if (aDate && bDate) {
-      a = aDate.getTime();
-      b = bDate.getTime();
-    }
-  }
-
-  let result = 0;
-  result = a > b ? 1 : result;
-  result = a < b ? -1 : result;
-  result = sortOrder === `desc` ? -1 * result : result;
-  return result;
-}
-
 /**
  * Get the max leaf value of a nested object
  */
@@ -152,8 +125,12 @@ function sortTableColumns(arr, colSortAttrs) {
       return [child[0], sortTableColumns(child[1], childSortAttrs)];
     });
   }
-  const sortOrder = colSortAttrs[0].sortOrder;
-  return arr.sort((a, b) => compareNumDateAlpha(a[0].value, b[0].value, sortOrder));
+  return sorted(arr, {
+    order: colSortAttrs[0].sortOrder,
+    lowercase: true,
+    orderNumDateAlpha: true,
+    transform: item => item[0].value,
+  });
 }
 
 /**
@@ -276,14 +253,19 @@ function flattenNestedObjectToArray(obj) {
   }
 }
 
+const sortParams = {
+  lowercase: true,
+  orderNumDateAlpha: true,
+  parseDateConfig: {iso: true},
+};
 export const NESTED_ARRAY_SORT_FUNCS = {
   label: {
-    asc:  (a, b) => compareNumDateAlpha(a.label, b.label),
-    desc: (a, b) => compareNumDateAlpha(a.label, b.label, `desc`),
+    asc: arr => sorted(arr, extend(sortParams, {transform: item => item.label, order: `asc`})),
+    desc: arr => sorted(arr, extend(sortParams, {transform: item => item.label, order: `desc`})),
   },
   value: {
-    asc:  (a, b) => compareNumDateAlpha(a.value, b.value),
-    desc: (a, b) => compareNumDateAlpha(a.value, b.value, `desc`),
+    asc: arr => sorted(arr, extend(sortParams, {transform: item => item.value, order: `asc`})),
+    desc: arr => sorted(arr, extend(sortParams, {transform: item => item.value, order: `desc`})),
   },
 };
 
@@ -298,7 +280,8 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
 
     case `column`: {
       const colSortAttrs = sortConfig.colSortAttrs[0];
-      arr = Object.keys(obj)
+      const sortFunc = NESTED_ARRAY_SORT_FUNCS[colSortAttrs.sortBy][colSortAttrs.sortOrder];
+      arr = sortFunc(Object.keys(obj)
         .map(k => {
           const entry = {label: k};
           const value = obj[k];
@@ -311,14 +294,13 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
             entry.value = value;
           }
           return entry;
-        })
-        .sort(NESTED_ARRAY_SORT_FUNCS[colSortAttrs.sortBy][colSortAttrs.sortOrder]);
+        }));
       break;
     }
 
     case `value`:
-      arr = flattenNestedObjectToArray(obj)
-        .sort(NESTED_ARRAY_SORT_FUNCS.value[sortConfig.sortOrder]);
+      const sortFunc = NESTED_ARRAY_SORT_FUNCS.value[sortConfig.sortOrder];
+      arr = sortFunc(flattenNestedObjectToArray(obj));
       break;
 
     default:
