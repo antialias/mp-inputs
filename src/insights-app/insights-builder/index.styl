@@ -131,10 +131,10 @@ header-button-transition-duration = 150ms
 
       button.add-button
         align-items center
-        background-color white
-        border 1px solid grey-150
+        background-image linear-gradient(0deg, grey-50 0, white 100%)
+        border 1px solid grey-300
         border-radius 50%
-        box-shadow 0 1px 1px 0 rgba(76, 96, 113, 0.08)
+        box-shadow 0 1px 1px 0 alpha(black, 0.2)
         display flex
         height 28px
         justify-content center
@@ -147,8 +147,14 @@ header-button-transition-duration = 150ms
           transform rotateZ(-45deg)
 
         &:hover:not(.disable-add-button)
-          box-shadow 0 1px 3px rgba(76,96,113,0.16)
+          background-image linear-gradient(0deg, white 0, white 100%)
+          box-shadow 0 1px 2px 0 alpha(black, 0.23)
           svg-icon-style(mp-blue, size: 22px)
+
+        &:active, &.active
+          border-color grey-200
+          box-shadow 0 1px 0 0 grey-150, inset 0 2px 3px 0 grey-200
+          svg-icon-style(rgba(110, 133, 157, 0.8), size: 22px)
 
       .upsell-wrapper
         position absolute

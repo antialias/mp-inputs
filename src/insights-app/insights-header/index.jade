@@ -13,7 +13,7 @@
       on={click: $helpers.refresh}
     )
       svg-icon(attrs={icon: `refresh`})
-      mp-tooltip(attrs={placement: `bottom`}) Refresh
+      mp-tooltip(attrs={placement: `top`}) Refresh
     button.download(
       attrs={title: `Download CSV`}
       class={enabled: !resultLoading}
@@ -23,7 +23,7 @@
       if $helpers.showExportCSVIcon()
         .upsell-icon
           svg-icon(attrs={icon: `lighting-bolt`})
-      mp-tooltip(attrs={placement: `bottom`}) Download CSV
+      mp-tooltip(attrs={placement: `top`}) Download CSV
     .upsell-wrapper.csv-export
       mp-upsell-popup(
         attrs={
@@ -39,7 +39,7 @@
       on={click: $helpers.clickReportList}
     )
       svg-icon(attrs={icon: `saved-reports`})
-      mp-tooltip(attrs={placement: `bottom`}) Saved reports
+      mp-tooltip(attrs={placement: `top`}) Saved reports
     .upsell-wrapper.save-report
       mp-upsell-popup(
         attrs={
