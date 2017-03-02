@@ -40,7 +40,6 @@ export class EditControl extends Component {
         getSelectionAttrs: open => extend(this.getSelectionAttrs(), {open}),
         getSection: () => this.section,
         isPaneOpen: () => this.isPaneOpen(),
-        isShowProperty: () => this.isShowProperty(),
         isRemovable: () => this.isRemovable(),
         removeClause: () => this.remove(),
       }),

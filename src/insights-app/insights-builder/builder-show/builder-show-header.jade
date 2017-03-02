@@ -16,9 +16,6 @@ include ../../mixins.jade
     if $helpers.isRemovable() || hasProperty
       button.remove(
         style={left: $helpers.buttonPosition()}
-        class={
-          'property': hasProperty,
-        }
         on={click: hasProperty ? ev => $helpers.removeProperty(ev) : ev => $helpers.removeClause(ev)}
       )
         svg-icon(attrs={icon: 'x'})

@@ -114,10 +114,6 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
     return super.isPaneOpen() && this.state.isEditingNumericProperty;
   }
 
-  isShowProperty() {
-    return true;
-  }
-
   openPane() {
     this.app.startBuilderOnScreen(`builder-screen-numeric-properties`);
     this.app.update({isEditingNumericProperty: true});
