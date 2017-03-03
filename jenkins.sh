@@ -3,7 +3,7 @@ set -o errexit -o pipefail -o nounset -o xtrace
 # This script is run by Jenkins. See https://jenkins.gcp.corp.mixpanel.org/job/IRB/
 
 # set up
-wget -qO - https://deb.nodesource.com/setup_4.x | bash -
+wget -qO - https://deb.nodesource.com/setup_6.x | bash -
 apt-get install -y nodejs
 
 export SAUCE_USERNAME=mixpanel
