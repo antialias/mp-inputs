@@ -1064,12 +1064,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     }));
   }
 
-  updateShowClauseButtonPosition(key, buttonOutside) {
-    let showClauseButtonPosition = this.state.showClauseButtonPosition;
-    showClauseButtonPosition[key] = buttonOutside;
-    this.update({showClauseButtonPosition});
-  }
-
   updateLegendState(newState) {
     this.resetToastTimer();
     this.updateReport({legend: this.state.report.legend.update(newState)});
