@@ -18,8 +18,11 @@ import {
 } from '../../src/util';
 
 import {
+  dataObjectToSortedSeries,
   transposeColsToRows,
 } from '../../src/util/chart';
+
+
 
 describe(`filterObject`, () => {
   it(`filters one value at lowest depth`, () => {
@@ -145,18 +148,18 @@ describe(`nestedObjectCumulative`, () => {
     const arr = nestedObjectCumulative(timeseriesResultObj);
     expect(arr).to.eql({
       US: {
-        '2016-06-01': 8,
-        '2016-06-02': 10,
-        '2016-06-03': 12,
-        '2016-06-04': 20,
-        '2016-06-05': 34,
+        '1464739200000': 8,
+        '1464825600000': 10,
+        '1464912000000': 12,
+        '1464998400000': 20,
+        '1465084800000': 34,
       },
       Canada: {
-        '2016-06-01': 6,
-        '2016-06-02': 9,
-        '2016-06-03': 12,
-        '2016-06-04': 24,
-        '2016-06-05': 30,
+        '1464739200000': 6,
+        '1464825600000': 9,
+        '1464912000000': 12,
+        '1464998400000': 24,
+        '1465084800000': 30,
       },
     });
   });

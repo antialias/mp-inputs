@@ -35,7 +35,6 @@ describe('Legend', function() {
     });
 
     it('creates flattened data for the first segment', function() {
-      console.log(this.legend.data[0].flattenedDataPaths)
       expect(this.legend.data[0].flattenedDataPaths).to.eql({
         'Mac OS X Chrome': [ 'Mac OS X', 'Chrome' ],
         'Mac OS X Firefox': [ 'Mac OS X', 'Firefox' ],
