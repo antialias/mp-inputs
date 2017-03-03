@@ -73,11 +73,14 @@ export default class Legend {
   }
 
   get flattenedColorMap() {
-    return this._flattenedColorMap || {};
+    if (!Object.keys(this._flattenedColorMap || {}).length) {
+      this.buildColorMap();
+    }
+    return this._flattenedColorMap;
   }
 
   getColorForSeries(series, flattenedData=false) {
-    return this[flattenedData ? `_flattenedColorMap` : `_colorMap`][series];
+    return this[flattenedData ? `flattenedColorMap` : `colorMap`][series];
   }
 
   get seriesShowing() {
