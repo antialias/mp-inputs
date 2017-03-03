@@ -47,7 +47,11 @@ export class MPLineChart extends WebComponent {
   timestampToTimeUnitFunction({displayRangeIfWeek=true}={}) {
     const unit = this._displayOptions.timeUnit;
     const customFormatting = {'day': `MMM D`};
-    return timestamp => util.formatDate(timestamp, {unit, displayRangeIfWeek, customFormatting, utc: false});
+    return timestamp => {
+      // Highcharts is too old to let us set a timezone so we need to add the offset to the date.
+      timestamp = Number(timestamp) - (this.utcOffset * 60 * 1000);
+      return util.formatDate(timestamp, {unit, displayRangeIfWeek, customFormatting});
+    };
   }
 
   getTickPositions() {
@@ -227,9 +231,6 @@ export class MPLineChart extends WebComponent {
       },
 
       xAxis: util.extend(axisOptions, {
-        dateTimeLabelFormats: {
-          day: `%b %e`,
-        },
         endOnTick: false,
         labels: {
           formatter: this.xAxisFormatter(),
@@ -288,13 +289,10 @@ export class MPLineChart extends WebComponent {
       Object.keys(this.chartData[segmentName]).length <= 1
     ));
 
-    // Highcharts is too old to let us set a timezone so we need to add the offset to the date.
-    const offsetDate = timestamp => Number(timestamp) - (this.utcOffset * 60 * 1000);
-
     const chartSeries = dataKeys.map(segmentName => {
       const counts = this.chartData[segmentName];
       const data = util.sorted(Object.keys(counts), {transform: Number})
-        .map(timestamp => [offsetDate(timestamp), counts[timestamp]]);
+        .map(timestamp => [Number(timestamp), counts[timestamp]]);
       return {
         color: highchartsOptions.colors[this.colorIdxForSegment(segmentName)],
         data,
