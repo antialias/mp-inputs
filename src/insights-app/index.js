@@ -401,7 +401,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.persistence.set(this._getRecentPersistenceKey(type), JSON.stringify(this.state[stateKey]));
   }
 
-
   getBookmark(report) {
     return this.app.bookmarks.find(bm => bm.id === report.id);
   }

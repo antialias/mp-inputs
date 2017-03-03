@@ -30,11 +30,10 @@ document.registerElement(`insights-header`, class extends Component {
           };
         },
         dashboardReportAdded: e => {
-          this.app.mpContext.setFlag(`DASHBOARD_ADDED_REPORT_OR_SEEN_TOOLTIP`)
+          this.app.mpContext.setFlag(`DASHBOARD_ADDED_REPORT_OR_SEEN_TOOLTIP`);
           // update the bookmark data in memory
           Object.assign(this.app.getBookmark(this.state.report) || {}, e.detail.updatedBookmark);
         },
-
 
         isExistingReport: () => !this.state.report.isNew(),
 
