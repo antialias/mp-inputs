@@ -6,6 +6,7 @@ import {
   d3Obj,
   d4Obj,
   timeseriesResultObj,
+  d2ResultsObj,
   d3ResultsObj,
 } from './fixtures';
 
@@ -267,4 +268,40 @@ describe(`transposeColsToRows`, () => {
       },
     });
   });
+});
+
+describe(`dataObjectToSortedSeries`, () => {
+  it(`convert flat series to time sorted data for Highcharts`, () => {
+    const flattenedSeries = flattenNestedObjectToPath(d2ResultsObj.series)
+    expect(dataObjectToSortedSeries(flattenedSeries.values)).to.eql([
+      {
+        'data': [[1472626800000, 1990], [1472630400000, 2122], [1472634000000, 2035]],
+        'name': 'Mac OS X Chrome',
+      },
+      {
+        'data': [[1472626800000, 56], [1472630400000, 93], [1472634000000, 82]],
+        'name': 'Mac OS X Firefox',
+      },
+      {
+        'data': [[1472626800000, 0], [1472630400000, 0], [1472634000000, 0]],
+        'name': 'Mac OS X Opera',
+      },
+      {
+        'data': [[1472626800000, 329], [1472630400000, 459], [1472634000000, 579]],
+        'name': 'Mac OS X Safari',
+      },
+      {
+        'data': [[1472626800000, 1300], [1472630400000, 1212], [1472634000000, 1162]],
+        'name': 'Windows Chrome',
+      },
+      {
+        'data': [[1472626800000, 100], [1472630400000, 131], [1472634000000, 138]],
+        'name': 'Windows Firefox',
+      },
+      {
+        'data': [[1472626800000, 1], [1472630400000, 1], [1472634000000, 3]],
+        'name': 'Windows Opera',
+      },
+    ]);
+  })
 });
