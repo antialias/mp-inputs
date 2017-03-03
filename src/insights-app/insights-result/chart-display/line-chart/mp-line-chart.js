@@ -352,7 +352,7 @@ export class MPLineChart extends WebComponent {
     return commonCSS[`segmentColor${colorIdx}`];
   }
 
-  renderChartIfChange() {
+  generateChangeId() {
     const {analysis, plotStyle, value, timeUnit} = this._displayOptions;
     const colorMapKey = this._segmentColorMap ? !!this._segmentColorMap : this._segmentColorMap;
     const changeAttrs = [
@@ -364,9 +364,11 @@ export class MPLineChart extends WebComponent {
       timeUnit,
       colorMapKey,
     ];
+    return changeAttrs.every(a => typeof a !== `undefined`) ? changeAttrs.join(`-`) : null;
+  }
 
-    const changeId = changeAttrs.every(a => typeof a !== `undefined`) ? changeAttrs.join(`-`) : null;
-
+  renderChartIfChange() {
+    const changeId = this.generateChangeId();
     if (changeId && this._changeId !== changeId) {
       this._changeId = changeId;
       this.renderChart();
