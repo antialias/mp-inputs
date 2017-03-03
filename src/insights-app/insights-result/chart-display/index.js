@@ -106,10 +106,11 @@ document.registerElement(`chart-display`, class extends Component {
           const groupClauses = this.state.report.sections.group.clauses;
           let shouldShow = false;
 
-          if (chartName.includes(`bar`)) {
+          if (/bar/.test(chartName)) {
             shouldShow = groupClauses.length > 0 || (chartName === `stacked bar` && showClauses.length > 1);
-          } else if (chartName.includes(`line`)) {
-            shouldShow = groupClauses.length > 0 || showClauses.length > 1 || (/line/.test(chartName) && showClauses[0].value.name === `$top_events`);
+          } else if (/line/.test(chartName)) {
+            const minGroupClauses = this.state.result.peopleTimeSeries ? 1 : 0;
+            shouldShow = showClauses.length > 1 || groupClauses.length > minGroupClauses || showClauses[0].value.name === `$top_events`;
           }
 
           return shouldShow;
