@@ -234,27 +234,61 @@ export function formatPercent(decimal, precision=2) {
 }
 
 /**
+ * Turn a nested object into a list of "path" arrays,
+ * which represent all of its key combinations.
+ * Example:
+ *   {                     [['a', 'x', 1],
+ *     a: {x: 1, y: 2}, =>  ['a', 'y', 2],
+ *     b: {x: 1, y: 2},     ['b', 'x', 1],
+ *   }                      ['b', 'y', 2]]
+ * The depth param controls how deep into the object the
+ * transformation is applied. Sub-objects of the given
+ * depth will be placed at the last index of the path.
+ * Example (depth=1):
+ *   {                     [['a', {x: 1}],
+ *     a: {x: 1, y: 2}, =>  ['a', {y: 2}],
+ *     b: {x: 1, y: 2},     ['b', {x: 1}],
+ *   }                      ['b', {y: 2}]]
+ */
+export function nestedObjectPaths(obj, depth=0) {
+  let paths = [];
+
+  function _getObjectPaths(obj, path=[]) {
+    if (nestedObjectDepth(obj) > depth) {
+      Object.keys(obj).forEach(key => _getObjectPaths(obj[key], [...path, key]));
+    } else {
+      paths.push([...path, obj]);
+    }
+  }
+
+  _getObjectPaths(obj);
+
+  return paths;
+}
+
+/**
  * Flatten a nested object to show all possible paths + corresponding values of that object
  * @param {string} obj - nested object to be flattened
  * @returns {object} with all nested keys seperated by spaces
  * @example
  * flattenNestedObjectToPath({'US': {'California': 1, 'New York' : 2}});
- * // {'US California': 1, 'US New York': 2}
+ * // {
+ * //   values: {'US California': 1, 'US New York': 2},
+ * //   paths: {{'US California': ['US', 'California'], 'US New York': ['US', 'New York']},
+ * // }
  */
-export function flattenNestedObjectToPath(obj, options={}, parentKeys=[], results=null) {
-  results = results || {values: {}, paths: {}};
-  Object.keys(obj).forEach(key => {
-    const newParentKey = parentKeys.concat(key);
-    if (typeof obj[key] === `object`) {
-      results = flattenNestedObjectToPath(obj[key], options, newParentKey, results);
-    } else {
-      const resultName = options.transformKeyName ? options.transformKeyName(newParentKey) : newParentKey.join(` `);
-      results.values[resultName] = obj[key];
-      results.paths[resultName] = newParentKey;
-      return results;
-    }
-  });
-  return results;
+export function flattenNestedObjectToPath(series, {flattenValues=false, formatHeader=null}={}) {
+  const paths = {};
+  let values = nestedObjectPaths(series, 1).reduce((values, headers) => {
+    const results = headers.pop();
+    const key = formatHeader ? formatHeader(headers) : headers.join(` `);
+    paths[key] = headers;
+    return Object.assign(values, {[key]: results});
+  }, {});
+  if (flattenValues) {
+    values = nestedObjectSum(values);
+  }
+  return {paths, values};
 }
 
 /**

@@ -63,39 +63,6 @@ export function stackedNestedObjectMax(obj) {
 }
 
 /**
- * Turn a nested object into a list of "path" arrays,
- * which represent all of its key combinations.
- * Example:
- *   {                     [['a', 'x', 1],
- *     a: {x: 1, y: 2}, =>  ['a', 'y', 2],
- *     b: {x: 1, y: 2},     ['b', 'x', 1],
- *   }                      ['b', 'y', 2]]
- * The depth param controls how deep into the object the
- * transformation is applied. Sub-objects of the given
- * depth will be placed at the last index of the path.
- * Example (depth=1):
- *   {                     [['a', {x: 1}],
- *     a: {x: 1, y: 2}, =>  ['a', {y: 2}],
- *     b: {x: 1, y: 2},     ['b', {x: 1}],
- *   }                      ['b', {y: 2}]]
- */
-export function nestedObjectPaths(obj, depth=0) {
-  let paths = [];
-
-  function _getObjectPaths(obj, path=[]) {
-    if (nestedObjectDepth(obj) > depth) {
-      Object.keys(obj).forEach(key => _getObjectPaths(obj[key], [...path, key]));
-    } else {
-      paths.push([...path, obj]);
-    }
-  }
-
-  _getObjectPaths(obj);
-
-  return paths;
-}
-
-/**
  * Helper for nestedObjectToTableData.
  * Converts data object into nested array structure (with subgroup sums),
  * which can subsequently be sorted.

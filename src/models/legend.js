@@ -187,13 +187,12 @@ export default class Legend {
 
       if (!idx) {
         // Flattened Data for Line Chart
-        const sumNestedLineResults = nestedObjectSum(result.dataForLineChart());
-        const resultsFlattened = flattenNestedObjectToPath(sumNestedLineResults, {transformKeyName: keys => keys.join(` / `)});
-        const flatResults = this._sortAndLimitSeries(resultsFlattened.values, defaultValue, 20, prevSeriesLegend.flattenedData);
+        const flattenHeaders = flattenNestedObjectToPath(result.dataForLineChart(), {flattenValues: true});
+        const flatResults = this._sortAndLimitSeries(flattenHeaders.values, defaultValue, 20, prevSeriesLegend.flattenedData);
 
         Object.assign(dataSegment, {
           flattenedData: flatResults.defaultStates,
-          flattenedDataPaths: resultsFlattened.paths,
+          flattenedDataPaths: flattenHeaders.paths,
           flattenedDataSortedKeys: flatResults.sortedKeys,
           seriesDataSortedKeys: seriesResults.sortedKeys,
         });

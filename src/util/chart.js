@@ -115,14 +115,13 @@ export function transposeColsToRows(headers, series, leafHeader, addLeafHeader=t
 }
 
 /**
- * Transpose rows to columns like an extra group by clause does
- * It is assumed that series has only 2 dimensions
- * @param {string[]} headers - Names for the different series in order of group by
- * @param {any} series - object with rowNames as properties and colNames as subProperties
- * @param {string} leafHeader - e.g 'Total number of'
- * @param {boolean} addLeafHeader - Whether to append leafHeader to headers
- * @returns {{headers: string[], series: any}} - Tuple of header and series with cols transposed
+ * Convert a chart data object with timestamps and counts into a list of objects
+ * with the timestamps sorted as arrays for Highcharts.
+ * @param {Object} chartData - An object of the flattened segments.
+ * The key of each segment value is an object of timestamps and counts for those timestamps
+ * @returns {[{name: segmentName, data: [sortedSegmentData] }]} - a list of objects that contain the segmentName and sorted timestamps with counts.
  */
+ // TODO: TESTS
 export function dataObjectToSortedSeries(chartData) {
   return Object.keys(chartData).map(name => {
     const counts = chartData[name];

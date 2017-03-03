@@ -1,9 +1,6 @@
 import { Component } from 'panel';
 
 import * as util from '../../../../util';
-import {
-  nestedObjectPaths,
-} from '../../chart-util';
 
 import template from './index.jade';
 import './index.styl';
@@ -48,28 +45,16 @@ document.registerElement(`line-chart`, class extends Component {
         chartLabel: this.getJSONAttribute(`chart-label`),
         dataId,
         displayOptions: this.getJSONAttribute(`display-options`),
+        headers,
         segmentColorMap: this.getJSONAttribute(`segment-color-map`),
         utcOffset: this.utcOffset,
       };
 
       if (this.state.dataId !== dataId) {
-        // transform nested object into single-level object:
-        // {'a': {'b': {'c': 5}}} => {'a / b / c': 5}
-        newState.data = util.objectFromPairs(nestedObjectPaths(series, 1).map(path =>
-            [this.formatHeader(path.slice(0, -1), headers), path.slice(-1)[0]]
-        ));
+        newState.data = util.flattenNestedObjectToPath(series);
       }
       this.update(newState);
     }
-  }
-
-  formatHeader(parts, headers) {
-    if (headers[0] === `$events`) {
-      parts = [util.renameEvent(parts[0]), ...parts.slice(0, -1).map(util.renamePropertyValue)];
-    } else {
-      parts = parts.map(util.renamePropertyValue);
-    }
-    return parts.join(` / `);
   }
 
   get chartData() {

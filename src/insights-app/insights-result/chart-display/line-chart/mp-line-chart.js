@@ -79,7 +79,14 @@ export class MPLineChart extends WebComponent {
     const timeFormatter = this.timestampToTimeUnitFunction();
     const unit = this._displayOptions.timeUnit;
 
+    const formatSeriesName = segments => {
+      return segments.map((segment, idx) => {
+        return util.renamePropertyValue(segment, this._headers[idx]);
+      }).join(` / `);
+    };
+
     return function() {
+      const seriesName = formatSeriesName(this.point.series.options.headerPath);
       const isIncomplete = util.isIncompleteInterval([this], {unit});
       const index = this.series.data.indexOf(this.point);
       let delta = null;
@@ -89,7 +96,7 @@ export class MPLineChart extends WebComponent {
         delta = last.y > 0 ? (this.y - last.y) / last.y : null;
       }
       return `
-        <div class="title" style="background-color: ${this.series.color};">${util.truncateMiddle(this.series.name, 45)}</div>
+        <div class="title" style="background-color: ${this.series.color};">${util.truncateMiddle(seriesName, 45)}</div>
         <div class="results">
           <div class="absolute">
             <span class="date">${timeFormatter(this.key)}: </span>
@@ -275,7 +282,6 @@ export class MPLineChart extends WebComponent {
       highchartsOptions.yAxis.min = LOGARITHMIC_CHART_ZERO_REMAPPING;
     }
 
-
     highchartsOptions.plotOptions.series.marker.enabled = Object.keys(this.chartData).every(segmentName => (
       Object.keys(this.chartData[segmentName]).length <= 1
     ));
@@ -289,6 +295,7 @@ export class MPLineChart extends WebComponent {
       }),
       type: highchartsOptions.chart.type,
       visible: this.isSegmentShowing(series.name),
+      headerPath: this.chartDataPaths[series.name],
     }));
 
     const [showingSeries, hiddenSeries] = partition(chartSeries, s => s.visible);
@@ -369,7 +376,9 @@ export class MPLineChart extends WebComponent {
   set chartData(chartData) {
     this._dataId = chartData.dataId;
     this._displayOptions = chartData.displayOptions || {};
-    this._chartData = chartData.data;
+    this._chartData = chartData.data.values;
+    this.chartDataPaths = chartData.data.paths;
+    this._headers = chartData.headers;
     this._segmentColorMap = chartData.segmentColorMap;
     this.renderChartIfChange();
   }

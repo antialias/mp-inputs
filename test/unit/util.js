@@ -85,73 +85,56 @@ describe(`filterObject`, () => {
 
 describe(`flattenNestedObjectToPath`, () => {
   it(`flattens a 2d object to values and paths`, () => {
-    const obj = flattenNestedObjectToPath(d2Obj);
+    const obj = flattenNestedObjectToPath(d2Obj, {flattenValues: true});
     expect(obj).to.eql({
       'paths': {
-        'Canada aardvark': [`Canada`, `aardvark`],
-        'Canada llama': [`Canada`, `llama`],
-        'Mexico aardvark': [`Mexico`, `aardvark`],
-        'Mexico llama': [`Mexico`, `llama`],
-        'US aardvark': [`US`, `aardvark`],
-        'US llama': [`US`, `llama`],
+        'Canada': [`Canada`],
+        'Mexico': [`Mexico`],
+        'US': [`US`],
       },
       'values': {
-        'Canada aardvark': 6,
-        'Canada llama': 13,
-        'Mexico aardvark': 7,
-        'Mexico llama': 35,
-        'US aardvark': 8,
-        'US llama': 5,
+        'Canada': 19,
+        'Mexico': 42,
+        'US': 13,
       },
     });
   });
 
   it(`flattens a 3d object to values and paths`, () => {
-    const obj = flattenNestedObjectToPath(d3Obj);
+    const obj = flattenNestedObjectToPath(d3Obj, {flattenValues: true});
     expect(obj).to.eql({
       'paths': {
-        'Canada aardvark blue': [`Canada`, `aardvark`, `blue`],
-        'Canada aardvark red': [`Canada`, `aardvark`, `red`],
-        'Canada llama blue': [`Canada`, `llama`, `blue`],
-        'Canada llama red': [`Canada`, `llama`, `red`],
-        'US aardvark blue': [`US`, `aardvark`, `blue`],
-        'US aardvark red': [`US`, `aardvark`, `red`],
-        'US llama blue': [`US`, `llama`, `blue`],
-        'US llama red': [`US`, `llama`, `red`],
+        'US llama': [`US`, `llama`],
+        'US aardvark': [`US`, `aardvark`],
+        'Canada llama': [`Canada`, `llama`],
+        'Canada aardvark': [`Canada`, `aardvark`],
       },
       'values': {
-        'Canada aardvark blue': 5,
-        'Canada aardvark red': 1,
-        'Canada llama blue': 3,
-        'Canada llama red': 10,
-        'US aardvark blue': 6,
-        'US aardvark red': 2,
-        'US llama blue': 2,
-        'US llama red': 3,
+        'US llama': 5,
+        'US aardvark': 8,
+        'Canada llama': 13,
+        'Canada aardvark': 6,
       },
     });
   });
 
   it(`flattens a 2d object to values and paths with a custom key`, () => {
-    const obj = flattenNestedObjectToPath(d2Obj, {
-      transformKeyName: keys => keys.map((key, idx) => `${idx + 1}) ${key}`).join(`, `),
+    const obj = flattenNestedObjectToPath(d3Obj, {
+      flattenValues: true,
+      formatHeader: keys => keys.map((key, idx) => `${idx + 1}) ${key}`).join(`, `),
     });
     expect(obj).to.eql({
       'paths': {
-        '1) Canada, 2) aardvark': [`Canada`, `aardvark`],
         '1) Canada, 2) llama': [`Canada`, `llama`],
-        '1) Mexico, 2) aardvark': [`Mexico`, `aardvark`],
-        '1) Mexico, 2) llama': [`Mexico`, `llama`],
-        '1) US, 2) aardvark': [`US`, `aardvark`],
+        '1) Canada, 2) aardvark': [`Canada`, `aardvark`],
         '1) US, 2) llama': [`US`, `llama`],
+        '1) US, 2) aardvark': [`US`, `aardvark`],
       },
       'values': {
-        '1) Canada, 2) aardvark': 6,
         '1) Canada, 2) llama': 13,
-        '1) Mexico, 2) aardvark': 7,
-        '1) Mexico, 2) llama': 35,
-        '1) US, 2) aardvark': 8,
+        '1) Canada, 2) aardvark': 6,
         '1) US, 2) llama': 5,
+        '1) US, 2) aardvark': 8,
       },
     });
   });
