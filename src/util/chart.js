@@ -1,4 +1,4 @@
-import { mapValues } from 'mixpanel-common/util';
+import { mapValues, sorted } from 'mixpanel-common/util';
 
 // From media/js/charts/chart.js.
 
@@ -112,4 +112,22 @@ export function transposeColsToRows(headers, series, leafHeader, addLeafHeader=t
   ));
 
   return {headers: newHeaders, series: newSeries};
+}
+
+/**
+ * Transpose rows to columns like an extra group by clause does
+ * It is assumed that series has only 2 dimensions
+ * @param {string[]} headers - Names for the different series in order of group by
+ * @param {any} series - object with rowNames as properties and colNames as subProperties
+ * @param {string} leafHeader - e.g 'Total number of'
+ * @param {boolean} addLeafHeader - Whether to append leafHeader to headers
+ * @returns {{headers: string[], series: any}} - Tuple of header and series with cols transposed
+ */
+export function dataObjectToSortedSeries(chartData) {
+  return Object.keys(chartData).map(name => {
+    const counts = chartData[name];
+    const data = sorted(Object.keys(counts), {transform: Number})
+      .map(timestamp => [Number(timestamp), counts[timestamp]]);
+    return {data, name};
+  });
 }

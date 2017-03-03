@@ -275,25 +275,21 @@ export class MPLineChart extends WebComponent {
       highchartsOptions.yAxis.min = LOGARITHMIC_CHART_ZERO_REMAPPING;
     }
 
-    const dataKeys = Object.keys(this.chartData);
 
-    highchartsOptions.plotOptions.series.marker.enabled = dataKeys.every(segmentName => (
+    highchartsOptions.plotOptions.series.marker.enabled = Object.keys(this.chartData).every(segmentName => (
       Object.keys(this.chartData[segmentName]).length <= 1
     ));
 
-    const chartSeries = dataKeys.map(segmentName => {
-      const counts = this.chartData[segmentName];
-      const data = util.sorted(Object.keys(counts), {transform: Number})
-        .map(timestamp => [Number(timestamp), counts[timestamp]]);
-      return {
-        color: this.colorForSegment(segmentName),
-        data,
-        isIncompletePath: util.isIncompleteInterval(data, {unit: this._displayOptions.timeUnit}),
-        name: segmentName,
-        type: highchartsOptions.chart.type,
-        visible: this.isSegmentShowing(segmentName),
-      };
-    });
+    let chartSeries = util.dataObjectToSortedSeries(this.chartData);
+    chartSeries = chartSeries.map(series => Object.assign(series, {
+      color: this.colorForSegment(series.name),
+      isIncompletePath: util.isIncompleteInterval(series.data, {
+        unit: this._displayOptions.timeUnit,
+        utcOffset: this.utcOffset,
+      }),
+      type: highchartsOptions.chart.type,
+      visible: this.isSegmentShowing(series.name),
+    }));
 
     const [showingSeries, hiddenSeries] = partition(chartSeries, s => s.visible);
 

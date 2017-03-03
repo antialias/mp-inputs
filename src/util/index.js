@@ -14,6 +14,7 @@ export * from './date';
 
 export {
   isIncompleteInterval,
+  dataObjectToSortedSeries,
   transposeColsToRows,
 } from './chart';
 
