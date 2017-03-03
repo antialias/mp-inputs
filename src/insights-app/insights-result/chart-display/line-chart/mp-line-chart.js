@@ -1,6 +1,5 @@
 /* global $, Highcharts */
 import partition from 'lodash/partition';
-import moment from 'moment';
 import WebComponent from 'webcomponent';
 
 import * as util from '../../../../util';
@@ -154,17 +153,6 @@ export class MPLineChart extends WebComponent {
         zoomType: `x`,
       },
 
-      colors: [
-        commonCSS.segmentColor1,
-        commonCSS.segmentColor2,
-        commonCSS.segmentColor3,
-        commonCSS.segmentColor4,
-        commonCSS.segmentColor5,
-        commonCSS.segmentColor6,
-        commonCSS.segmentColor7,
-        commonCSS.segmentColor8,
-      ],
-
       credits: {
         enabled: false,
       },
@@ -298,7 +286,7 @@ export class MPLineChart extends WebComponent {
       const data = util.sorted(Object.keys(counts), {transform: Number})
         .map(timestamp => [Number(timestamp), counts[timestamp]]);
       return {
-        color: highchartsOptions.colors[this.colorIdxForSegment(segmentName)],
+        color: this.colorForSegment(segmentName),
         data,
         isIncompletePath: util.isIncompleteInterval(data, {unit: this._displayOptions.timeUnit}),
         name: segmentName,
@@ -356,8 +344,9 @@ export class MPLineChart extends WebComponent {
     return this._chartData;
   }
 
-  colorIdxForSegment(segmentName) {
-    return (this._segmentColorMap[segmentName] || 1) - 1;
+  colorForSegment(segmentName) {
+    const colorIdx = this._segmentColorMap[segmentName] || 1;
+    return commonCSS[`segmentColor${colorIdx}`];
   }
 
   renderChartIfChange() {
