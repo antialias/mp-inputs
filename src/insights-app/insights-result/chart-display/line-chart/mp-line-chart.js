@@ -44,12 +44,16 @@ export class MPLineChart extends WebComponent {
     }
   }
 
+  convertDateForOffset(timestamp) {
+    return Number(timestamp) - (this.utcOffset * 60 * 1000);
+  }
+
   timestampToTimeUnitFunction({displayRangeIfWeek=true}={}) {
     const unit = this._displayOptions.timeUnit;
     const customFormatting = {'day': `MMM D`};
     return timestamp => {
       // Highcharts is too old to let us set a timezone so we need to add the offset to the date.
-      timestamp = Number(timestamp) - (this.utcOffset * 60 * 1000);
+      timestamp = this.convertDateForOffset(timestamp);
       return util.formatDate(timestamp, {unit, displayRangeIfWeek, customFormatting});
     };
   }
@@ -59,7 +63,7 @@ export class MPLineChart extends WebComponent {
     if ([`week`, `quarter`].includes(this._displayOptions.timeUnit)) {
       const uniqueDates = new Set();
       Object.keys(this.chartData).forEach(segment => {
-        Object.keys(this.chartData[segment]).forEach(date => uniqueDates.add(moment.utc(date).unix() * 1000));
+        Object.keys(this.chartData[segment]).forEach(date => uniqueDates.add(this.convertDateForOffset(date)));
       });
       let ticks = [...uniqueDates].sort();
       const MAX_TICKS = 20;
