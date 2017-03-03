@@ -366,8 +366,16 @@ export default class SegmentationQuery extends BaseQuery {
       return formattedDateCache[unit][timestampInMS];
     };
 
-    if (!needsPeopleTimeSeries) {
-      results.forEach(r => baseDateResults[r.key[r.key.length - 1]] = 0);
+    if (!isPeopleOnlyQuery || needsPeopleTimeSeries) {
+      // create base values for all known dates if anything but non-time people query.
+      // TODO jordan: use to/from + units to create a true 0 base date obj.
+      results.forEach(r => {
+        let timestamp = r.key[r.key.length - 1];
+        timestamp = isPeopleOnlyQuery ? timestamp * 1000 : timestamp;
+        if (timestamp && Number.isInteger(Number(timestamp))) {
+          baseDateResults[timestamp] = 0;
+        }
+      });
     }
 
     if (results) {
@@ -408,14 +416,19 @@ export default class SegmentationQuery extends BaseQuery {
           }
 
           let label = item.key[item.key.length - 1];
-          label = Number.isInteger(label) ? (label * timestampMultiplier) : label;
-          obj[label] = item.value;
+          if (isTimeSeries) {
+            if (Number.isInteger(label)) {
+              label = label * timestampMultiplier;
+              obj[label] = item.value;
+            }
+          } else {
+            obj[label] = item.value;
+          }
           return seriesObj;
         };
       };
 
       series = results.reduce(createSeriesReducerFunc({isTimeSeries: !isPeopleOnlyQuery}), {});
-
       peopleTimeSeries = needsPeopleTimeSeries ? results.reduce(createSeriesReducerFunc({timestampMultiplier: 1000}), {}) : null;
     }
 
