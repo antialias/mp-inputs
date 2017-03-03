@@ -14,9 +14,9 @@ document.registerElement(`insights-header`, class extends Component {
     return {
       helpers: {
         showAddToDash: () => this.app.hasWhitelist(`webdash-v2`),
-        addToDashEnabled: () => !this.app.standalone && this._getBookmark(this.state.report.id),
+        addToDashEnabled: () => !this.app.standalone && this.app.getBookmark(this.state.report),
         dashboardAttrs: () => {
-          const existingBookmark = this._getBookmark(this.state.report.id);
+          const existingBookmark = this.app.getBookmark(this.state.report);
           return {
             'access-token': this.app.accessToken,
             'all-tags': JSON.stringify(this.app.dashboardTags),
@@ -29,6 +29,12 @@ document.registerElement(`insights-header`, class extends Component {
             'user-id': this.app.userID,
           };
         },
+        dashboardReportAdded: e => {
+          this.app.mpContext.setFlag(`DASHBOARD_ADDED_REPORT_OR_SEEN_TOOLTIP`)
+          // update the bookmark data in memory
+          Object.assign(this.app.getBookmark(this.state.report) || {}, e.detail.updatedBookmark);
+        },
+
 
         isExistingReport: () => !this.state.report.isNew(),
 
@@ -76,7 +82,6 @@ document.registerElement(`insights-header`, class extends Component {
         showExportCSVUpsell: () => this.state.upsellModal === `exportCSV`,
         showExportCSVIcon: () => this.app.getFeatureGateValue(`can_export_csv`) === false,
         closeUpsell: (ev, name) => this.app.maybeCloseUpsellModal(ev, name),
-        dashboardReportAdded: () => this.app.mpContext.setFlag(`DASHBOARD_ADDED_REPORT_OR_SEEN_TOOLTIP`),
       },
       template,
     };
@@ -104,7 +109,4 @@ document.registerElement(`insights-header`, class extends Component {
     link.remove();
   }
 
-  _getBookmark(id) {
-    return this.app.bookmarks.find(bm => bm.id === id);
-  }
 });

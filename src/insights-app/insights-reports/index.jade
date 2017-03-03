@@ -108,3 +108,7 @@ mixin user-filter-option(label, value)
         .mp-confirm-delete-description
           | Are you sure you want to delete "#{toDelete.title}"?
           |  This action is permanent and cannot be undone.
+          if $component.app.getBookmark(toDelete).include_in_dashboard
+            br
+            br
+            | Deleting it will also remove it from all dashboards.
