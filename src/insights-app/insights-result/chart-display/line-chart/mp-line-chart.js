@@ -28,6 +28,43 @@ function killLastGridline() {
   }
 }
 
+/**
+ * Convert a chart data object with timestamps and counts into a list of objects
+ * with the timestamps sorted as arrays for Highcharts.
+ * @param {Object} chartData - An object of the flattened segments.
+ * The key of each segment value is an object of timestamps and counts for those timestamps
+ * @returns {[{name: segmentName, data: [sortedSegmentData] }]} - a list of objects that contain the segmentName and sorted timestamps with counts.
+ */
+function dataObjectToSortedSeries(chartData) {
+  return Object.keys(chartData).map(name => {
+    const counts = chartData[name];
+    const data = util.sorted(Object.keys(counts), {transform: Number})
+      .map(timestamp => [Number(timestamp), counts[timestamp]]);
+    return {data, name};
+  });
+}
+
+/**
+ * creates a unique ID that determines if a chart render should happen.
+ * Any attribute that should cuase a render should go through here.
+ * Only renders if ALL attributes are not null or undefined (falsey values allowed)
+ */
+function generateChangeId(attrs={}) {
+  const {analysis, plotStyle, value, timeUnit} = attrs.displayOptions || {};
+  const colorMapKey = attrs.segmentColorMap ? !!attrs.segmentColorMap : attrs.segmentColorMap;
+  const changeAttrs = [
+    attrs.dataId,
+    attrs.utcOffset,
+    analysis,
+    plotStyle,
+    value,
+    timeUnit,
+    colorMapKey,
+  ];
+  const allAttributesExist = changeAttrs.every(attr => typeof attr !== `undefined` || attr !== null);
+  return allAttributesExist ? changeAttrs.join(`-`) : null;
+}
+
 export class MPLineChart extends WebComponent {
   attachedCallback() {
     this.initialized = true;
@@ -286,7 +323,7 @@ export class MPLineChart extends WebComponent {
       Object.keys(this.chartData[segmentName]).length <= 1
     ));
 
-    let chartSeries = util.dataObjectToSortedSeries(this.chartData);
+    let chartSeries = dataObjectToSortedSeries(this.chartData);
     chartSeries = chartSeries.map(series => Object.assign(series, {
       color: this.colorForSegment(series.name),
       isIncompletePath: util.isIncompleteInterval(series.data, {
@@ -352,23 +389,13 @@ export class MPLineChart extends WebComponent {
     return commonCSS[`segmentColor${colorIdx}`];
   }
 
-  generateChangeId() {
-    const {analysis, plotStyle, value, timeUnit} = this._displayOptions;
-    const colorMapKey = this._segmentColorMap ? !!this._segmentColorMap : this._segmentColorMap;
-    const changeAttrs = [
-      this._dataId,
-      this.utcOffset,
-      analysis,
-      plotStyle,
-      value,
-      timeUnit,
-      colorMapKey,
-    ];
-    return changeAttrs.every(a => typeof a !== `undefined`) ? changeAttrs.join(`-`) : null;
-  }
-
   renderChartIfChange() {
-    const changeId = this.generateChangeId();
+    const changeId = generateChangeId({
+      dataId: this._dataId,
+      displayOptions: this._displayOptions,
+      segmentColorMap: this._segmentColorMap,
+      utcOffset: this.utcOffset,
+    });
     if (changeId && this._changeId !== changeId) {
       this._changeId = changeId;
       this.renderChart();

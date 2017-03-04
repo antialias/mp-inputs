@@ -1,4 +1,4 @@
-import { mapValues, sorted } from 'mixpanel-common/util';
+import { mapValues } from 'mixpanel-common/util';
 
 // From media/js/charts/chart.js.
 
@@ -112,21 +112,4 @@ export function transposeColsToRows(headers, series, leafHeader, addLeafHeader=t
   ));
 
   return {headers: newHeaders, series: newSeries};
-}
-
-/**
- * Convert a chart data object with timestamps and counts into a list of objects
- * with the timestamps sorted as arrays for Highcharts.
- * @param {Object} chartData - An object of the flattened segments.
- * The key of each segment value is an object of timestamps and counts for those timestamps
- * @returns {[{name: segmentName, data: [sortedSegmentData] }]} - a list of objects that contain the segmentName and sorted timestamps with counts.
- */
- // TODO: TESTS
-export function dataObjectToSortedSeries(chartData) {
-  return Object.keys(chartData).map(name => {
-    const counts = chartData[name];
-    const data = sorted(Object.keys(counts), {transform: Number})
-      .map(timestamp => [Number(timestamp), counts[timestamp]]);
-    return {data, name};
-  });
 }
