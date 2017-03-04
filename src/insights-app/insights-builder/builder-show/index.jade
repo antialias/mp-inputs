@@ -23,7 +23,7 @@ include ../../insights-learn/tooltip.jade
         hook={postpatch: vnode => $helpers.clauseUpdated(vnode.elm, clauseIdx)}
       )
         if clause.property && $helpers.showSourceForNumericProperties()
-            .control-container= $component.child('builder-numeric-property-edit-control', {attrs})
-            .clause-language.preposition on
-          .control-container= $component.child('builder-show-edit-control', {attrs})
+          .control-container= $component.child('builder-numeric-property-edit-control', {attrs})
+          .clause-language.preposition on
+        .control-container= $component.child('builder-show-edit-control', {attrs})
   +insights-learn-tooltip(`choose-event`)
