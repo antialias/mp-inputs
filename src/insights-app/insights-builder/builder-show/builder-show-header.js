@@ -11,7 +11,10 @@ document.registerElement(`query-builder-show-header`, class extends Component {
       helpers: {
         hasNumericProperty: () => this.getAssociatedClause().property !== null,
         buttonPosition: () => {
-          return this.state.showClauseButtonPosition[this.clauseIndex] + `px`;
+          const showClauseWidths = this.state.showClauseWidths;
+          const relevantWidths = showClauseWidths[this.clauseIndex] || {};
+          const clauseOffset = (relevantWidths.numericPropertyWidth || relevantWidths.clauseWidth || 0);
+          return Math.max(clauseOffset, relevantWidths.headerWidth) + `px`;
         },
         isStaticHeader: () => {
           // Static Header for "All People" with no numeric properties

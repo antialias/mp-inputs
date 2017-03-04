@@ -1,6 +1,7 @@
 import { Component } from 'panel';
 
 import {
+  extend,
   renameEvent,
   renameProperty,
 } from '../../../util';
@@ -25,23 +26,37 @@ document.registerElement(`query-builder-show`, class extends Component {
         showSourceForNumericProperties: () => (
           this.state.report.sections.show.clauseResourceTypes() !== ShowClause.RESOURCE_TYPE_PEOPLE
         ),
-        mouseEntered: (ev, idx) => this.updateRemoveButtonPosition(ev.target, idx),
+        clauseUpdated: (el, idx) => this.updateStoredWidths(el, idx),
+        mouseEntered: (ev, idx) => this.updateHeaderWidth(ev.target, idx),
       },
     };
   }
 
-  updateRemoveButtonPosition(clauseContainer, idx) {
-    const hasProperty = this.state.report.sections.getClause(`show`, idx).property !== null;
-    let clauseWidth = clauseContainer.offsetWidth;
-    if (hasProperty) {
-      clauseWidth = clauseContainer.querySelector(`builder-numeric-property-edit-control .control-container`).offsetWidth;
-    }
+  updateHeaderWidth(clauseContainer, idx) {
     const headerWidth = clauseContainer.querySelector(`.header-label`).offsetWidth;
-    const buttonWidth = 12;
-    const position = Math.max(headerWidth, clauseWidth - buttonWidth);
-    let showClauseButtonPosition = this.state.showClauseButtonPosition;
-    showClauseButtonPosition[idx] = position;
-    this.update({showClauseButtonPosition});  
+    if (headerWidth !== this.state.showClauseWidths[idx].headerWidth) {
+      this.app.updateShowClauseWidths(idx, {headerWidth});
+    }
+  }
+
+  updateStoredWidths(clauseBody, idx) {
+    const showClauseWidths = this.state.showClauseWidths[idx] === undefined ? {} : this.state.showClauseWidths[idx];
+
+    let newShowClauseWidths = extend({}, showClauseWidths);
+
+    const numericProperty = clauseBody.querySelector(`builder-numeric-property-edit-control .control-container`);
+    const offset = 12;
+
+    newShowClauseWidths.clauseWidth = clauseBody.offsetWidth - offset;
+    newShowClauseWidths.numericPropertyWidth = numericProperty ? numericProperty.offsetWidth - offset : null;
+    Object.keys(newShowClauseWidths).forEach(key => {
+      if (showClauseWidths[key] !== newShowClauseWidths[key]) {
+        this.app.updateShowClauseWidths(idx, newShowClauseWidths);
+        return;
+      }
+    });
+
+    return;
   }
 });
 

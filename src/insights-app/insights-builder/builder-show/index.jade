@@ -15,12 +15,15 @@ include ../../insights-learn/tooltip.jade
         .clause-language.preposition and
     .clause-container(
       attrs=attrs
+      hook={postpatch: vnode => $helpers.clauseUpdated(vnode.elm, clauseIdx)}
       on={mouseenter: ev => $helpers.mouseEntered(ev, clauseIdx)}
     )
       .clause-header.insights-learn-disabled= $component.child('query-builder-show-header', {attrs})
-      .clause-body
+      .clause-body(
+        hook={postpatch: vnode => $helpers.clauseUpdated(vnode.elm, clauseIdx)}
+      )
         if clause.property && $helpers.showSourceForNumericProperties()
-          .control-container= $component.child('builder-numeric-property-edit-control', {attrs})
-          .clause-language.preposition on
-        .control-container= $component.child('builder-show-edit-control', {attrs})
+            .control-container= $component.child('builder-numeric-property-edit-control', {attrs})
+            .clause-language.preposition on
+          .control-container= $component.child('builder-show-edit-control', {attrs})
   +insights-learn-tooltip(`choose-event`)

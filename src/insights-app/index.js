@@ -174,7 +174,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         },
       },
       activeMathMenuIndex: null,
-      showClauseButtonPosition: {},
+      showClauseWidths: {},
       contextFilter: ``,
       isEditingExtrasMenu: false,
       isEditingNumericProperty: false,
@@ -1062,6 +1062,12 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       'clause type': sectionType,
       'clause index': clauseIndex,
     }));
+  }
+
+  updateShowClauseWidths(idx, attrs={}) {
+    let showClauseWidths = this.state.showClauseWidths;
+    showClauseWidths[idx] = attrs;
+    this.update({showClauseWidths});
   }
 
   updateLegendState(newState) {
