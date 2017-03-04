@@ -6,7 +6,7 @@ import {
   stringFilterMatches,
   pick,
 } from '../../../../util';
-import { NESTED_ARRAY_SORT_FUNCS } from '../../../../util/chart';
+import { sortComparator } from '../../../../util/chart';
 import '../../../widgets/sticky-scroll';
 
 import template from './index.jade';
@@ -87,7 +87,10 @@ document.registerElement(`chart-legend`, class extends Component {
               if (sortConfig.sortBy !== `value` || !sortConfig.sortOrder) {
                 configForSeries = sortConfig.colSortAttrs[sortConfig.colSortAttrs.length - 1 - idx];
               }
-              seriesValues.sort(NESTED_ARRAY_SORT_FUNCS[configForSeries.sortBy][configForSeries.sortOrder]);
+              seriesValues.sort(sortComparator({
+                order: configForSeries.sortOrder,
+                transform: item => item[configForSeries.sortBy],
+              }));
             }
             if (legend.getSeriesDisplayAtIndex(idx) === `minimized`) {
               seriesValues.splice(12);

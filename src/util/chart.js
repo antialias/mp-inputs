@@ -1,9 +1,10 @@
 import {
+  numDateAlphaComparator,
   nestedObjectDepth,
   mapValues,
   sum,
 } from 'mixpanel-common/util';
-import { parseDate } from 'mixpanel-common/util/date';
+import { identity } from 'mixpanel-common/util/function';
 
 const CHART_OPTIONS = {
   bar: {
@@ -27,6 +28,16 @@ export function styleChoicesForChartType(type) {
   return Object.keys(CHART_OPTIONS[type]);
 }
 
+export function sortComparator({order=`asc`, transform=identity}) {
+  return numDateAlphaComparator({
+    order,
+    dateRegex: `\d\d\d\d-\d\d-\d\d`,
+    transform: item => {
+      item = transform(item);
+      return item.toLowerCase ? item.toLowerCase() : item;
+    },
+  });
+}
 
 /**
  * Transpose a 2-dimensional array:
@@ -125,12 +136,10 @@ function sortTableColumns(arr, colSortAttrs) {
       return [child[0], sortTableColumns(child[1], childSortAttrs)];
     });
   }
-  return sorted(arr, {
+  return arr.sort(sortComparator({
     order: colSortAttrs[0].sortOrder,
-    lowercase: true,
-    orderNumDateAlpha: true,
     transform: item => item[0].value,
-  });
+  }));
 }
 
 /**
@@ -156,11 +165,11 @@ export function nestedObjectToTableData(obj, sortConfig) {
       arr = expandTableHeaderRows(arr, objDepth);
       break;
     case `value`:
-      arr = expandTableHeaderRows(arr, objDepth, false);
-      arr = arr.sort((a, b) => {
-        [a, b] = [a, b].map(entry => entry[entry.length - 1][sortConfig.sortColumn] || 0);
-        return (a > b ? 1 : (a < b ? -1 : 0)) * (sortConfig.sortOrder === `desc` ? -1 : 1);
-      });
+      arr = expandTableHeaderRows(arr, objDepth, false)
+        .sort(sortComparator({
+          order: sortConfig.sortOrder,
+          transform: item => item[item.length - 1][sortConfig.sortcolumn] || 0,
+        }));
       break;
   }
   return arr;
@@ -253,22 +262,6 @@ function flattenNestedObjectToArray(obj) {
   }
 }
 
-const sortParams = {
-  lowercase: true,
-  orderNumDateAlpha: true,
-  parseDateConfig: {iso: true},
-};
-export const NESTED_ARRAY_SORT_FUNCS = {
-  label: {
-    asc: arr => sorted(arr, extend(sortParams, {transform: item => item.label, order: `asc`})),
-    desc: arr => sorted(arr, extend(sortParams, {transform: item => item.label, order: `desc`})),
-  },
-  value: {
-    asc: arr => sorted(arr, extend(sortParams, {transform: item => item.value, order: `asc`})),
-    desc: arr => sorted(arr, extend(sortParams, {transform: item => item.value, order: `desc`})),
-  },
-};
-
 /**
  * Helper for nestedObjectToBarChartData. Turns a nested object with numeric leaves
  * into a nested array with rows sorted according to given multi-level config.
@@ -280,8 +273,7 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
 
     case `column`: {
       const colSortAttrs = sortConfig.colSortAttrs[0];
-      const sortFunc = NESTED_ARRAY_SORT_FUNCS[colSortAttrs.sortBy][colSortAttrs.sortOrder];
-      arr = sortFunc(Object.keys(obj)
+      arr = Object.keys(obj)
         .map(k => {
           const entry = {label: k};
           const value = obj[k];
@@ -294,13 +286,18 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
             entry.value = value;
           }
           return entry;
+        })
+        .sort(sortComparator({
+          order: colSortAttrs.sortOrder,
+          transform: item => item[colSortAttrs.sortBy],
         }));
       break;
     }
 
     case `value`:
-      const sortFunc = NESTED_ARRAY_SORT_FUNCS.value[sortConfig.sortOrder];
-      arr = sortFunc(flattenNestedObjectToArray(obj));
+      arr = flattenNestedObjectToArray(obj).sort(sortComparator({
+        order: sortConfig.sortOrder,
+      }));
       break;
 
     default:
