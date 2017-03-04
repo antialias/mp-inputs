@@ -1,5 +1,7 @@
 import { Component } from 'panel';
 
+import isEqual from 'lodash/isEqual';
+
 import {
   extend,
   renameEvent,
@@ -33,7 +35,8 @@ document.registerElement(`query-builder-show`, class extends Component {
   }
 
   updateHeaderWidth(clauseContainer, idx) {
-    const headerWidth = clauseContainer.querySelector(`.header-label`).offsetWidth;
+    let header = clauseContainer.querySelector(`.header-label`);
+    const headerWidth = header ? header.offsetWidth : 0;
     if (headerWidth !== this.state.showClauseWidths[idx].headerWidth) {
       this.app.updateShowClauseWidths(idx, {headerWidth});
     }
@@ -41,7 +44,6 @@ document.registerElement(`query-builder-show`, class extends Component {
 
   updateStoredWidths(clauseBody, idx) {
     const showClauseWidths = this.state.showClauseWidths[idx] === undefined ? {} : this.state.showClauseWidths[idx];
-
     let newShowClauseWidths = extend({}, showClauseWidths);
 
     const numericProperty = clauseBody.querySelector(`builder-numeric-property-edit-control .control-container`);
@@ -49,12 +51,10 @@ document.registerElement(`query-builder-show`, class extends Component {
 
     newShowClauseWidths.clauseWidth = clauseBody.offsetWidth - offset;
     newShowClauseWidths.numericPropertyWidth = numericProperty ? numericProperty.offsetWidth - offset : null;
-    Object.keys(newShowClauseWidths).forEach(key => {
-      if (showClauseWidths[key] !== newShowClauseWidths[key]) {
-        this.app.updateShowClauseWidths(idx, newShowClauseWidths);
-        return;
-      }
-    });
+
+    if (!isEqual(newShowClauseWidths, showClauseWidths)) {
+      this.app.updateShowClauseWidths(idx, newShowClauseWidths);
+    }
 
     return;
   }
