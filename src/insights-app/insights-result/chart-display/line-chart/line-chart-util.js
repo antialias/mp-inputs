@@ -35,8 +35,6 @@ export function generateChangeId(attrs={}) {
     timeUnit,
     colorMapKey,
   ];
-  console.log(changeAttrs)
   const allAttributesExist = changeAttrs.every(attr => typeof attr !== `undefined` && attr !== null);
-  console.log(allAttributesExist)
   return allAttributesExist ? changeAttrs.join(`-`) : null;
 }
