@@ -81,7 +81,7 @@ export default class Report {
   // MP bookmarks
   static fromBookmarkData(bookmark) {
     const report = Report.deserialize(extend(pick(bookmark, BOOKMARK_ATTRS), JSON.parse(bookmark.params)));
-    // the bookmark name is a field in the bookmarks col but in insights it was convenient to store the report name
+    // the bookmark name is a field in the bookmarks table but in insights it was convenient to store the report name
     // in the bookmark.params as a property called `title` so let's ensure that we set the title from the name field
     report.title = bookmark.name;
     return report;
