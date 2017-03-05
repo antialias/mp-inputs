@@ -210,6 +210,8 @@ export default class SegmentationQuery extends BaseQuery {
         const extremaQuery = new ExtremaJQLQuery({
           apiHost: this.apiHost,
           apiSecret: this.apiSecret,
+          accessToken: this.accessToken,
+          projectId: this.projectId,
         });
         const builtExtremaQuery = extremaQuery.build(params);
         const cachedExtremaQuery = this.extremaCache.get(builtExtremaQuery.query);
