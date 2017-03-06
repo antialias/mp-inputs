@@ -108,7 +108,7 @@ insights-calendar .pika-mixpanel
       text-align center
       width 24px
 
-    td:not(.is-selected):not(.is-startrange):not(.is-endrange):not(.is-disabled):not(.is-outside-current-month):hover
+    td:not(.is-selected):not(.is-startrange):not(.is-endrange):not(.is-disabled):hover
       .pika-button
         background-color grey-100
         border-radius 15px
@@ -117,9 +117,9 @@ insights-calendar .pika-mixpanel
       &.is-inrange .pika-button
         background-color blue-900
 
-    td.is-selected:not(.is-outside-current-month),
-    td.is-startrange:not(.is-outside-current-month),
-    td.is-endrange:not(.is-outside-current-month)
+    td.is-selected,
+    td.is-startrange,
+    td.is-endrange
       .pika-button
         background-color blue-900
         border-radius 15px
@@ -130,7 +130,7 @@ insights-calendar .pika-mixpanel
     td.is-inrange .pika-button
       color white
 
-    td.is-disabled:not(.is-outside-current-month) 
+    td.is-disabled
       .pika-button
         opacity 0.5
       &:not(.has-event)
@@ -138,43 +138,52 @@ insights-calendar .pika-mixpanel
           color mp-purple
           opacity 1
 
-    td.is-outside-current-month .pika-button
-      color transparent
-
 /* --- highlight styles --- */
 
 .pika-mixpanel:not(.incomplete-range) table.pika-table
   td.is-startrange,
   td.is-endrange
-    &:not(.is-outside-current-month)
-      &::before
-        content ''
-        width 15px
-        height 100%
+    &::before
+      content ''
+      width 15px
+      height 100%
+      background-color mp-blue
+      top 0
+      position absolute
+
+    &.is-startrange
+      &:not(:last-child)::before
+        right 0
+      &:last-child
         background-color mp-blue
-        top 0
-        position absolute
-
-      &.is-startrange
-        &:not(:last-child)::before
-          right 0
-        &:last-child
-          background-color mp-blue
-          &::before
-            background-color white
-            left 0
-
-      &.is-endrange
-        &:not(:first-child)::before
+        &::before
+          background-color white
           left 0
-        &:first-child
-          background-color mp-blue
-          &::before
-            background-color white
-            right 0
+
+    &.is-endrange
+      &:not(:first-child)::before
+        left 0
+      &:first-child
+        background-color mp-blue
+        &::before
+          background-color white
+          right 0
 
   td.is-startrange.is-endrange::before
     display none
 
   td.is-inrange
     background-color mp-blue
+
+  // Handle edge cases around highlighting cells in the month grid where days are not shown because
+  // they are from previous or following months. We still want to highlight these cells according
+  // to the date range that is selected.
+  tr:first-child:not(.has-startrange)
+    &.has-inrange, &.has-endrange
+      td.is-empty
+        background-color mp-blue
+
+  tr:last-child:not(.has-endrange)
+    &.has-inrange, &.has-startrange
+      td.is-empty
+        background-color mp-blue

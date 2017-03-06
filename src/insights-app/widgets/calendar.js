@@ -50,7 +50,7 @@ class Calendar extends WebComponent {
       i18n: extend(Pikaday.prototype.config().i18n, {
         weekdaysShort: [`SU`, `MO`, `TU`, `WE`, `TH`, `FR`, `SA`],
       }),
-      showDaysInNextAndPreviousMonths: true,
+      showDaysInNextAndPreviousMonths: false,
       theme: `pika-mixpanel`,
       yearRange: 10,
       onSelect: date => this.selectDate(date),
@@ -98,6 +98,7 @@ class Calendar extends WebComponent {
       }
 
       this.picker.draw();
+      this.addPickerRowClasses();
     }
   }
 
@@ -169,6 +170,20 @@ class Calendar extends WebComponent {
 
   get isDoubleCalendar() {
     return this.isAttributeEnabled(`double-calendar`);
+  }
+
+  // For each tr, if it has a child td.is-(start|end|in)range give it the class .has-(start|end|in)range
+  // Used to handle edge cases around highlighting cells in the month grid where days are not shown
+  // because they are from previous or following months. We still want to highlight these cells
+  // according to the date range that is selected.
+  addPickerRowClasses() {
+    for (let row of this.picker.el.getElementsByTagName(`tr`)) {
+      for (let type of [`start`, `end`, `in`]) {
+        if (Array.prototype.some.call(row.childNodes, node => node.classList.contains(`is-${type}range`))) {
+          row.classList.add(`has-${type}range`);
+        }
+      }
+    }
   }
 }
 
