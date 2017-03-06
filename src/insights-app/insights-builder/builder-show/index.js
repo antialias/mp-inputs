@@ -29,34 +29,25 @@ document.registerElement(`query-builder-show`, class extends Component {
           this.state.report.sections.show.clauseResourceTypes() !== ShowClause.RESOURCE_TYPE_PEOPLE
         ),
         clauseUpdated: (el, idx) => this.updateStoredWidths(el, idx),
-        mouseEntered: (ev, idx) => this.updateHeaderWidth(ev.target, idx),
       },
     };
   }
 
-  updateHeaderWidth(clauseContainer, idx) {
-    let header = clauseContainer.querySelector(`.header-label`);
-    const headerWidth = header ? header.offsetWidth : 0;
-    if (headerWidth !== this.state.showClauseWidths[idx].headerWidth) {
-      this.app.updateShowClauseWidths(idx, {headerWidth});
-    }
-  }
-
-  updateStoredWidths(clauseBody, idx) {
+  updateStoredWidths(clauseContainer, idx) {
     const showClauseWidths = this.state.showClauseWidths[idx] === undefined ? {} : this.state.showClauseWidths[idx];
     let newShowClauseWidths = extend({}, showClauseWidths);
 
-    const numericProperty = clauseBody.querySelector(`builder-numeric-property-edit-control .control-container`);
+    const header = clauseContainer.querySelector(`.header-label`);
+    const numericProperty = clauseContainer.querySelector(`builder-numeric-property-edit-control .control-container`);
     const offset = 12;
 
-    newShowClauseWidths.clauseWidth = clauseBody.offsetWidth - offset;
+    newShowClauseWidths.headerWidth = header ? header.offsetWidth : 0;
+    newShowClauseWidths.clauseWidth = clauseContainer.offsetWidth - offset;
     newShowClauseWidths.numericPropertyWidth = numericProperty ? numericProperty.offsetWidth - offset : null;
 
     if (!isEqual(newShowClauseWidths, showClauseWidths)) {
       this.app.updateShowClauseWidths(idx, newShowClauseWidths);
     }
-
-    return;
   }
 });
 

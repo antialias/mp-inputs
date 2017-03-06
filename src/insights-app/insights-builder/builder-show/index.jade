@@ -16,12 +16,9 @@ include ../../insights-learn/tooltip.jade
     .clause-container(
       attrs=attrs
       hook={postpatch: vnode => $helpers.clauseUpdated(vnode.elm, clauseIdx)}
-      on={mouseenter: ev => $helpers.mouseEntered(ev, clauseIdx)}
     )
       .clause-header.insights-learn-disabled= $component.child('query-builder-show-header', {attrs})
-      .clause-body(
-        hook={postpatch: vnode => $helpers.clauseUpdated(vnode.elm, clauseIdx)}
-      )
+      .clause-body
         if clause.property && $helpers.showSourceForNumericProperties()
           .control-container= $component.child('builder-numeric-property-edit-control', {attrs})
           .clause-language.preposition on

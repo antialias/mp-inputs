@@ -9,7 +9,7 @@ document.registerElement(`query-builder-show-header`, class extends Component {
     return {
       template,
       helpers: {
-        hasNumericProperty: () => !!this.getAssociatedClause().property,
+        hasNumericProperty: () => !!(this.getAssociatedClause() || {}).property,
         buttonPosition: () => {
           const showClauseWidths = this.state.showClauseWidths;
           const relevantWidths = showClauseWidths[this.clauseIndex] || {};
