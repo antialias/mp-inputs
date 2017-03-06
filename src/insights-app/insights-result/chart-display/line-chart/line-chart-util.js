@@ -1,6 +1,27 @@
+/* global $ */
 import {
   sorted,
 } from '../../../../util';
+
+/**
+ * https://github.com/mixpanel/mixpanel-platform/blob/d171a3ec/js/ui/chart.js#L38-L54
+ * this function is a hack because highcharts insists on showing a
+ * gridline for the 0th label on the y-axis, which conflicts with
+ * the x-axis
+ */
+export function killLastGridline() {
+  const gridlines = $(`.highcharts-grid path`, this.container).show()
+    .map(function(gridline) {
+      const $gridline = $(gridline);
+      const offset = $gridline.offset();
+      return [$gridline, (offset && offset.top) || 0];
+    })
+    .sort((a, b) => a[1] - b[1]);
+  const line = gridlines[gridlines.length - 1];
+  if (line && line[0] && line[0].hide) {
+    line[0].hide();
+  }
+}
 
 /**
  * Convert a chart data object with timestamps and counts into a list of objects
@@ -25,15 +46,17 @@ export function dataObjectToSortedSeries(chartData) {
 export function generateChangeId(attrs={}) {
   const {analysis, plotStyle, value, timeUnit} = attrs.displayOptions || {};
   const colorMapKey = attrs.segmentColorMap ? !!attrs.segmentColorMap : attrs.segmentColorMap;
+  const headers = attrs.headers ? !!attrs.headers : attrs.headers;
   const changeAttrs = [
     attrs.dataId,
     attrs.utcOffset,
     analysis,
-    plotStyle,
-    value,
-    timeUnit,
     colorMapKey,
+    headers,
+    plotStyle,
+    timeUnit,
+    value,
   ];
-  const allAttributesExist = changeAttrs.every(attr => typeof attr !== `undefined` && attr !== null);
+  const allAttributesExist = changeAttrs.every(attr => typeof attr !== `undefined` || attr !== null);
   return allAttributesExist ? changeAttrs.join(`-`) : null;
 }

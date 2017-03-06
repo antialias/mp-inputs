@@ -4,66 +4,15 @@ import WebComponent from 'webcomponent';
 
 import * as util from '../../../../util';
 
+import {
+  dataObjectToSortedSeries,
+  generateChangeId,
+  killLastGridline,
+} from './line-chart-util';
+
 import commonCSS from '!!style!css?camelCase!stylus!../../../../stylesheets/common.styl';
 
 const LOGARITHMIC_CHART_ZERO_REMAPPING = 0.6;
-
-/**
- * https://github.com/mixpanel/mixpanel-platform/blob/d171a3ec/js/ui/chart.js#L38-L54
- * this function is a hack because highcharts insists on showing a
- * gridline for the 0th label on the y-axis, which conflicts with
- * the x-axis
- */
-function killLastGridline() {
-  const gridlines = $(`.highcharts-grid path`, this.container).show()
-    .map(function(gridline) {
-      const $gridline = $(gridline);
-      const offset = $gridline.offset();
-      return [$gridline, (offset && offset.top) || 0];
-    })
-    .sort((a, b) => a[1] - b[1]);
-  const line = gridlines[gridlines.length - 1];
-  if (line && line[0] && line[0].hide) {
-    line[0].hide();
-  }
-}
-
-/**
- * Convert a chart data object with timestamps and counts into a list of objects
- * with the timestamps sorted as arrays for Highcharts.
- * @param {Object} chartData - An object of the flattened segments.
- * The key of each segment value is an object of timestamps and counts for those timestamps
- * @returns {[{name: segmentName, data: [sortedSegmentData] }]} - a list of objects that contain the segmentName and sorted timestamps with counts.
- */
-function dataObjectToSortedSeries(chartData) {
-  return Object.keys(chartData).map(name => {
-    const counts = chartData[name];
-    const data = util.sorted(Object.keys(counts), {transform: Number})
-      .map(timestamp => [Number(timestamp), counts[timestamp]]);
-    return {data, name};
-  });
-}
-
-/**
- * creates a unique ID that determines if a chart render should happen.
- * Any attribute that should cuase a render should go through here.
- * Only renders if ALL attributes are not null or undefined (falsey values allowed)
- */
-function generateChangeId(attrs={}) {
-  const {analysis, plotStyle, value, timeUnit} = attrs.displayOptions || {};
-  const colorMapKey = attrs.segmentColorMap ? !!attrs.segmentColorMap : attrs.segmentColorMap;
-  const changeAttrs = [
-    attrs.dataId,
-    attrs.utcOffset,
-    analysis,
-    plotStyle,
-    value,
-    timeUnit,
-    colorMapKey,
-  ];
-  const allAttributesExist = changeAttrs.every(attr => typeof attr !== `undefined` || attr !== null);
-  return allAttributesExist ? changeAttrs.join(`-`) : null;
-}
 
 export class MPLineChart extends WebComponent {
   attachedCallback() {
@@ -393,6 +342,7 @@ export class MPLineChart extends WebComponent {
     const changeId = generateChangeId({
       dataId: this._dataId,
       displayOptions: this._displayOptions,
+      headers: this._headers,
       segmentColorMap: this._segmentColorMap,
       utcOffset: this.utcOffset,
     });

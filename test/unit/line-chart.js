@@ -64,6 +64,7 @@ describe(`generateChangeId`, () => {
     expect(generateChangeId({
       dataId: 17,
       displayOptions: {analysis: 'analysis', plotStyle: 'plotStyle', value: null, timeUnit: 'timeUnit'},
+      headers: ['$events'],
       segmentColorMap: {segment: 'color'},
       utcOffset: 38,
     })).to.be.null;
@@ -73,24 +74,27 @@ describe(`generateChangeId`, () => {
     expect(generateChangeId({
       dataId: 17,
       displayOptions: {analysis: 'analysis', plotStyle: 'plotStyle', value: 'value', timeUnit: 'timeUnit'},
+      headers: ['$events'],
       segmentColorMap: {segment: 'color'},
       utcOffset: 38,
-    })).to.eql(`17-38-analysis-plotStyle-value-timeUnit-true`);
+    })).to.eql(`17-38-analysis-true-true-plotStyle-timeUnit-value`);
   });
 
   it(`generates ID for falsey values as keys`, () => {
     expect(generateChangeId({
       dataId: 0,
       displayOptions: {analysis: false, plotStyle: 'false', value: '', timeUnit: []},
+      headers: [],
       segmentColorMap: {segment: 'color'},
       utcOffset: 38,
-    })).to.eql(`0-38-false-false---true`)
+    })).to.eql(`0-38-false-true-true-false--`)
   });
 
   it(`produces the same IDs for the unchanged objects`, () => {
     const chartObject = {
       dataId: 12,
       displayOptions: {analysis: 'linear', plotStyle: 'standard', value: 'absolute', timeUnit: 'hour'},
+      headers: ['$events'],
       segmentColorMap: {segment: 1},
       utcOffset: 90,
     };
@@ -101,6 +105,7 @@ describe(`generateChangeId`, () => {
     const chartObject = {
       dataId: 12,
       displayOptions: {analysis: 'linear', plotStyle: 'standard', value: 'absolute', timeUnit: 'hour'},
+      headers: ['$events'],
       segmentColorMap: {segment: 1},
       utcOffset: 90,
     };
