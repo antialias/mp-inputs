@@ -47,42 +47,67 @@ describe(`dataObjectToSortedSeries`, () => {
 });
 
 describe(`generateChangeId`, () => {
-  it(`does not generate a change ID until all attributes are present`, () => {
-    const id_one = generateChangeId({});
-    generateChangeId({
-      dataId: 17,
-      displayOptions: {},
-      utcOffset: 38,
-    });
-    const id_two = generateChangeId({
+  it(`does not generate ID for no params`, () => {
+    expect(generateChangeId({})).to.be.null;
+  });
+
+  it(`does not generate ID for missing params`, () => {
+    expect(generateChangeId({
       dataId: 17,
       displayOptions: {analysis: 'analysis', plotStyle: 'plotStyle'},
       segmentColorMap: {},
       utcOffset: 38,
-    });
-    const id_three = generateChangeId({
+    })).to.be.null;
+  });
+
+  it(`does not generate ID for a null value`, () => {
+    expect(generateChangeId({
       dataId: 17,
       displayOptions: {analysis: 'analysis', plotStyle: 'plotStyle', value: null, timeUnit: 'timeUnit'},
       segmentColorMap: {segment: 'color'},
       utcOffset: 38,
-    });
-    const id_four = generateChangeId({
+    })).to.be.null;
+  });
+
+  it(`generates ID when all params exist`, () => {
+    expect(generateChangeId({
       dataId: 17,
       displayOptions: {analysis: 'analysis', plotStyle: 'plotStyle', value: 'value', timeUnit: 'timeUnit'},
       segmentColorMap: {segment: 'color'},
       utcOffset: 38,
-    });
+    })).to.eql(`17-38-analysis-plotStyle-value-timeUnit-true`);
+  });
 
-    expect([id_one, id_two, id_three, id_four]).to.eql([null, null, null, `17-38-analysis-plotStyle-value-timeUnit-true`])
-  })
-
-  it(`allows falsey values as keys`, () => {
+  it(`generates ID for falsey values as keys`, () => {
     expect(generateChangeId({
       dataId: 0,
       displayOptions: {analysis: false, plotStyle: 'false', value: '', timeUnit: []},
       segmentColorMap: {segment: 'color'},
       utcOffset: 38,
     })).to.eql(`0-38-false-false---true`)
-  })
+  });
+
+  it(`produces the same IDs for the unchanged objects`, () => {
+    const chartObject = {
+      dataId: 12,
+      displayOptions: {analysis: 'linear', plotStyle: 'standard', value: 'absolute', timeUnit: 'hour'},
+      segmentColorMap: {segment: 1},
+      utcOffset: 90,
+    };
+    expect(generateChangeId(chartObject)).to.eql(generateChangeId(chartObject));
+  });
+
+  it(`produces the new IDs for changed objects`, () => {
+    const chartObject = {
+      dataId: 12,
+      displayOptions: {analysis: 'linear', plotStyle: 'standard', value: 'absolute', timeUnit: 'hour'},
+      segmentColorMap: {segment: 1},
+      utcOffset: 90,
+    };
+    const originalID = generateChangeId(chartObject);
+    chartObject.dataId++;
+    chartObject.displayOptions.plotStyle = 'stacked';
+    expect(originalID).to.not.eql(generateChangeId(chartObject));
+  });
 });
 
