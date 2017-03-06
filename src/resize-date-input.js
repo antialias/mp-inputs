@@ -15,7 +15,7 @@ export default class ResizeDateInput extends ResizeInput {
       template,
       helpers: extend(config.helpers, {
         // TODO: remove duplication of helpers between this and DateInput
-        formatDate: dateString => formatDate(parseDate(dateString)),
+        formatDate,
         focusedInput: () => {
           this.resize();
           this.emitFocus();
@@ -26,7 +26,7 @@ export default class ResizeDateInput extends ResizeInput {
         },
         changedInput: ev => {
           ev.stopPropagation();
-          const inputValue = this.inputEl.value.length ? parseDate(this.inputEl.value) : null;
+          const inputValue = this.inputEl.value.length ? formatDate(parseDate(this.inputEl.value)) : null;
           this.update({inputValue});
           this.emitChange();
         },
@@ -48,7 +48,7 @@ export default class ResizeDateInput extends ResizeInput {
   }
 
   emitChange() {
-    const detail = formatDate(this.value, {iso: true});
+    const detail = formatDate(parseDate(this.value), {iso: true});
     this.dispatchEvent(new CustomEvent(`change`, {detail}));
   }
 
