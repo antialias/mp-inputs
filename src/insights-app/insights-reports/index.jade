@@ -85,7 +85,7 @@ mixin user-filter-option(label, value)
                 .report-col.reportlist-field-user
                   .user-icon(class={[`color-${initials[0]}`]: true})
                     = initials
-                    insights-mp-tooltip= report.user
+                    insights-mp-tooltip(attrs={placement: `right`})= report.user
                 .report-col.reportlist-field-modified= report.modifiedStr
                 .report-col.delete
                   if $helpers.hasWritePermissions()
