@@ -10,8 +10,7 @@ import {
  * @returns {[{name: segmentName, data: [sortedSegmentData] }]} - a list of objects that contain the segmentName and sorted timestamps with counts.
  */
 export function dataObjectToSortedSeries(chartData) {
-  return Object.keys(chartData).map(name => {
-    const counts = chartData[name];
+  return Object.entries(chartData).map(([name, counts]) => {
     const data = sorted(Object.keys(counts), {transform: Number})
       .map(timestamp => [Number(timestamp), counts[timestamp]]);
     return {data, name};
@@ -20,7 +19,7 @@ export function dataObjectToSortedSeries(chartData) {
 
 /**
  * creates a unique ID that determines if a chart render should happen.
- * Any attribute that should cuase a render should go through here.
+ * Any attribute that should cause a render should go through here.
  * Only renders if ALL attributes are not null or undefined (falsey values allowed)
  */
 export function generateChangeId(attrs={}) {

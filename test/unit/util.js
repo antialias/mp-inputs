@@ -22,8 +22,6 @@ import {
   transposeColsToRows,
 } from '../../src/util/chart';
 
-
-
 describe(`filterObject`, () => {
   it(`filters one value at lowest depth`, () => {
     const arr = filterObject(d4Obj, (value, depth) => depth === 1 ? value !== `red` : `false`);
