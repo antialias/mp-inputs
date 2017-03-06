@@ -34,7 +34,7 @@
             }
             props={
               type: `text`,
-              value: from,
+              value: util.formatDate(util.parseDate(from)),
             }
             on={
               click: $helpers.clickedInput,
@@ -62,7 +62,7 @@
             }
             props={
               type: `text`,
-              value: to,
+              value: util.formatDate(util.parseDate(to)),
             }
             on={
               click: $helpers.clickedInput,

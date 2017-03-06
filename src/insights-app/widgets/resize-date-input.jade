@@ -2,7 +2,7 @@
   input(
     attrs={
       type: `text`,
-      placeholder: inputValue ? $helpers.formatDate(inputValue) : '',
+      placeholder: inputValue || '',
     }
     props={
       maxLength: 50,

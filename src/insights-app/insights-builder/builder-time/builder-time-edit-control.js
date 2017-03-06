@@ -57,18 +57,26 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
         changedFrom: ev => this.setDates({from: ev.detail}),
         changedTo: ev => this.setDates({to: ev.detail}),
         pressedKey: ev => {
-          switch (ev.keyCode) {
-            case KEY_CODES.tab:
-              if (this.state.builderPane.fromFocused) {
-                this.helpers.focusTo();
-              } else if (this.state.builderPane.toFocused) {
-                this.helpers.focusFrom();
-              }
-              break;
-            case KEY_CODES.enter:
+          const value = ev.target.value;
+          const enter = KEY_CODES.enter;
+          const tab = KEY_CODES.tab;
+          const key = ev.keyCode;
+
+          if (key === tab || (key === enter && !value.length)) {
+            if (this.state.builderPane.fromFocused) {
+              this.helpers.focusTo();
+            } else if (this.state.builderPane.toFocused) {
+              this.helpers.focusFrom();
+            }
+          }
+
+          if (key === enter && value.length) {
+            if (this.state.builderPane.fromFocused) {
+              this.helpers.focusTo();
+            } else if (this.state.builderPane.toFocused) {
               // use RAF so we don't stop editing while a setDates call is happening
               requestAnimationFrame(() => this.app.stopEditingClause());
-              break;
+            }
           }
         },
       }),
@@ -84,7 +92,7 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
     this.app.updateStageClause({
       value: [from, to],
       unit: dateRangeToUnit(parseDate(from), parseDate(to)),
-    }, {shouldCommit: true});
+    }, {shouldCommit: true, shouldStopEditing: false});
   }
 
   get section() {
