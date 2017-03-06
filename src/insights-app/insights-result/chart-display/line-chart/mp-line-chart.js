@@ -1,4 +1,4 @@
-/* global $, Highcharts */
+/* global Highcharts */
 import partition from 'lodash/partition';
 import WebComponent from 'webcomponent';
 
@@ -30,7 +30,7 @@ export class MPLineChart extends WebComponent {
   }
 
   convertDateForOffset(timestamp) {
-    return Number(timestamp) - (this.utcOffset * 60 * 1000);
+    return Number(timestamp) - (-(new Date).getTimezoneOffset() * 60 * 1000);
   }
 
   timestampToTimeUnitFunction({displayRangeIfWeek=true}={}) {
