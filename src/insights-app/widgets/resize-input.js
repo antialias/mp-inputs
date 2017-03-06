@@ -100,12 +100,15 @@ export default class ResizeInput extends Component {
       text = `&nbsp;${text.slice(0, text.length - 1)}`;
     }
     this.sizer.innerHTML = text.replace(` `, `&nbsp;`);
-    return Math.round(this.sizer.getBoundingClientRect().width);
+
+    // allow 1 decimal precision - some text values will be X.5px wide and will jitter if the .5 is rounded off
+    return Math.round(this.sizer.getBoundingClientRect().width * 10) / 10;
   }
 
   resize() {
-    const newWidth = Math.ceil(Math.max(this.minimumWidth, this.getTextWidth(this.state.inputValue)));
-    this.update({inputWidth: newWidth});
+    this.update({
+      inputWidth: Math.max(this.minimumWidth, this.getTextWidth(this.state.inputValue)),
+    });
   }
 
   setMinimumWidth(newMin) {
