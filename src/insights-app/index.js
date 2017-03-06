@@ -500,14 +500,18 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     const hasExistingScreens = !!this.state.builderPane.screens.length;
     const currScreen = extend({componentName}, screenAttrs);
     const prevScreens = previousScreens.map(componentName => ({componentName}));
-    const screens = [...prevScreens, currScreen];
+    const update = {
+      screens: [...prevScreens, currScreen],
+      activeIndex: prevScreens.length,
+    };
 
     this.resetBuilder();
     this.stopEditingClause();
+
     if (hasExistingScreens) {
-      this.updateBuilder({inTransition: true}, {screens});
+      this.updateBuilder({inTransition: true}, update);
     } else {
-      this.updateBuilder({screens});
+      this.updateBuilder(extend(update, {noAnimate: true}), {noAnimate: false});
     }
   }
 
@@ -591,11 +595,11 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.updateBuilder(this.defaultBuilderState);
   }
 
-  updateBuilder(attrs, postTransitionAttrs={}) {
+  updateBuilder(attrs, postTransitionAttrs) {
     this.update({builderPane: extend(this.state.builderPane, attrs)});
-    if (attrs.inTransition) {
+    if (attrs.inTransition || postTransitionAttrs) {
       setTimeout(() => {
-        this.updateBuilder(extend(postTransitionAttrs, {inTransition: false}));
+        this.updateBuilder(extend(postTransitionAttrs || {}, {inTransition: false}));
       }, 250);
     }
   }

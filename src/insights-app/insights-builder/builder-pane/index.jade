@@ -1,5 +1,8 @@
 .builder-pane(style=builderPane.sizeStyle)
   if $component.isAttributeEnabled(`open`)
-    .builder-pane-offset(style=builderPane.offsetStyle class={remove: {delayRemove: 400}})
+    .builder-pane-offset(style=builderPane.offsetStyle class={
+      remove: {delayRemove: 400},
+      'animate-offset': !builderPane.noAnimate,
+    })
       each screen, screenIdx in builderPane.screens
         = $component.child(screen.componentName, {attrs: $helpers.screenAttrs(screenIdx)})

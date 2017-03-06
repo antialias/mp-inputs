@@ -107,11 +107,10 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
   }
 
   openPane() {
-    this.app.startBuilderOnScreen(SCREENS.preset);
-
-    if (!this.getClause().range) {
-      // need timeout to avoid app.resetBuilder call that happens shortly after this
-      setTimeout(() => this.showCustomScreen(), 250);
+    if (this.getClause().range) {
+      this.app.startBuilderOnScreen(SCREENS.preset);
+    } else {
+      this.app.startBuilderOnScreen(SCREENS.custom, {previousScreens: [SCREENS.preset]});
     }
   }
 
