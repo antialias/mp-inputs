@@ -50,18 +50,11 @@
         on={change: ev => $helpers.closeUpsell(ev, `saveReport`)}
       )
     if $helpers.showAddToDash()
-      if $helpers.addToDashEnabled()
-        add-to-dash(
-          attrs=$helpers.dashboardAttrs(),
-          on={'report-added': $helpers.dashboardReportAdded}
-        )
-      else
-        .add-to-dash
-          add-to-dash(attrs={
-            disabled: true,
-            'report-type': 'insights',
-          })
-          mp-tooltip(attrs={placement: `bottom`})
-            div(style={display: 'block'})
-              div Please save the report before
-              div adding it to your dashboard
+      add-to-dash(
+        props={saveBookmark: $helpers.saveBookmark}
+        attrs=$helpers.dashboardAttrs(),
+        on={
+          'report-added': $helpers.dashboardReportAdded,
+          'tags-saved': $helpers.dashboardReportTagsSaved,
+        }
+      )

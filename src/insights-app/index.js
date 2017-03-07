@@ -78,7 +78,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
           return this.navigate(``);
         } else {
           if (!stateUpdate.report) {
-            stateUpdate = extend(stateUpdate, this.loadReport(report, {trackLoading: true}));
+            stateUpdate = extend(stateUpdate, this.loadReport(report, {trackLoading: true}), {unsavedChanges: false});
           }
           return stateUpdate;
         }
@@ -195,6 +195,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       topPeopleProperties: [],
       topPropertyValues: [],
       upsellModal: null,
+      unsavedChanges: true,
     };
   }
 
@@ -456,7 +457,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return this.mpContext.saveBookmark(this.state.report.toBookmarkData({saveAsNew, newReportData}))
       .then(bookmark => {
         const report = Report.fromBookmarkData(bookmark);
-        this.update({savedReports: extend(this.state.savedReports, {[report.id]: report})});
+        this.update({
+          savedReports: extend(this.state.savedReports, {[report.id]: report}),
+          unsavedChanges: false,
+        });
         this.navigate(this.urlForReportId(report.id), {report});
         Object.assign(reportTrackingData, {
           'new report': !this.state.savedReports.hasOwnProperty(report.id),
@@ -786,6 +790,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       this.transitionLearn();
     } else if (!isEqual(oldUrlData, newUrlData)) {
       history.replaceState(null, null, `#${JSURL.stringify(newUrlData)}`);
+      this.update({unsavedChanges: true});
     }
   }
 
