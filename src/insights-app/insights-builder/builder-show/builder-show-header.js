@@ -10,7 +10,7 @@ document.registerElement(`query-builder-show-header`, class extends Component {
       template,
       helpers: {
         hasNumericProperty: () => {
-          const clause = this.getAssociatedClause()
+          const clause = this.getAssociatedClause();
           return clause && !!clause.property;
         },
         buttonPositionStyle: () => {
