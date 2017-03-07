@@ -177,9 +177,9 @@ class Calendar extends WebComponent {
   // because they are from previous or following months. We still want to highlight these cells
   // according to the date range that is selected.
   addPickerRowClasses() {
-    for (let row of this.picker.el.getElementsByTagName(`tr`)) {
-      for (let type of [`start`, `end`, `in`]) {
-        if (Array.prototype.some.call(row.childNodes, node => node.classList.contains(`is-${type}range`))) {
+    for (const row of Array.from(this.picker.el.getElementsByTagName(`tr`))) {
+      for (const type of [`start`, `end`, `in`]) {
+        if (Array.from(row.childNodes).some(node => node.classList.contains(`is-${type}range`))) {
           row.classList.add(`has-${type}range`);
         }
       }
