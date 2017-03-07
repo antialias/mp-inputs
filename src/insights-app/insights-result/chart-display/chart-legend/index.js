@@ -65,6 +65,8 @@ document.registerElement(`chart-legend`, class extends Component {
               let matches = null;
               let label = null;
               const value = series.combinedResults[originalValue];
+              const selected = seriesValues[originalValue];
+
               if (isFlattenedData) {
                 let dataPath = legend.data[0].flattenedDataPaths[originalValue];
                 if (Object.keys(this.state.result.series).length === 1) {
@@ -83,7 +85,7 @@ document.registerElement(`chart-legend`, class extends Component {
                   label, legend.search
                 );
               }
-              return matches ? {label, matches, originalValue, value} : null;
+              return matches ? {label, matches, originalValue, value, selected} : null;
             }).filter(Boolean);
 
             const isLine = isFlattenedData;
