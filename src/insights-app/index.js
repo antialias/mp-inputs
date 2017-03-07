@@ -458,10 +458,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       .then(bookmark => {
         const report = Report.fromBookmarkData(bookmark);
         this.update({
-          savedReports: extend(this.state.savedReports, {[report.id]: report}),
+          savedReports: extend(this.state.savedReports, {[report.id]: new Report(report)}),
           unsavedChanges: false,
         });
-        this.navigate(this.urlForReportId(report.id), {report});
+        this.navigate(this.urlForReportId(report.id), {report: new Report(report)});
         Object.assign(reportTrackingData, {
           'new report': !this.state.savedReports.hasOwnProperty(report.id),
           'report title': report.title,
