@@ -25,6 +25,7 @@ document.registerElement(`insights-header`, class extends Component {
             'report-name': this.state.report.title,
             'report-type': `insights`,
             'show-tutorial-tooltip': this.app.getFlag(`VIEWED_REPORT_COUNT`) >= 30 && !this.app.getFlag(`DASHBOARD_ADDED_REPORT_OR_SEEN_TOOLTIP`),
+            'tooltip-placement': `top`,
             'user-id': this.app.userID,
           };
           if (existingBookmark && !this.state.unsavedChanges) {
