@@ -15,7 +15,7 @@ include ../../mixins.jade
           svg-icon.math-caret(attrs={icon: 'caret-down'})
     if $helpers.isRemovable() || hasProperty
       button.remove(
-        style={left: $helpers.buttonPosition()}
+        style={left: $helpers.buttonPositionStyle()}
         on={click: hasProperty ? ev => $helpers.removeProperty(ev) : ev => $helpers.removeClause(ev)}
       )
         svg-icon(attrs={icon: 'x'})

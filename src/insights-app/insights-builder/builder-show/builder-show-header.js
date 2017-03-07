@@ -9,8 +9,11 @@ document.registerElement(`query-builder-show-header`, class extends Component {
     return {
       template,
       helpers: {
-        hasNumericProperty: () => !!(this.getAssociatedClause() || {}).property,
-        buttonPosition: () => {
+        hasNumericProperty: () => {
+          const clause = this.getAssociatedClause()
+          return clause && !!clause.property;
+        },
+        buttonPositionStyle: () => {
           const showClauseWidths = this.state.showClauseWidths;
           const relevantWidths = showClauseWidths[this.clauseIndex] || {};
           const clauseOffset = (relevantWidths.numericPropertyWidth || relevantWidths.clauseWidth || 0);

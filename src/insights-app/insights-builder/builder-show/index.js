@@ -1,6 +1,5 @@
-import { Component } from 'panel';
-
 import isEqual from 'lodash/isEqual';
+import { Component } from 'panel';
 
 import {
   extend,
