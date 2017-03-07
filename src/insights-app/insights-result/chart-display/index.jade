@@ -35,7 +35,6 @@
               'segment-color-map': report.legend.colorMap,
               'chart-label': $helpers.getChartLabel(),
               'display-options': $helpers.getDisplayOptions(),
-              'function-label': $helpers.getFunctionLabel(),
               'sorting': report.sorting.bar,
               'legend-change-id': report.legend.changeID,
               'sticky-header': util.pick(stickyHeader, [`isSticky`,`chartWidth`, `windowScrollLeft`, `chartOffsetLeft`]),
@@ -63,8 +62,7 @@
             })
           )
         when 'table'
-          - const functionLabel = $helpers.getFunctionLabel();
-          - const resourceDescription = $helpers.getChartLabel() + (functionLabel ? ` ${functionLabel}` : '');
+          - const resourceDescription = $helpers.getChartLabel();
           table-chart(
             props={
               chartData: util.extend($helpers.processResult(result), {resourceDescription}),

@@ -2,7 +2,6 @@ import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 import throttle from 'lodash/throttle';
 import { Component } from 'panel';
-import { capitalize } from 'mixpanel-common/util';
 
 import {
   extend,
@@ -40,23 +39,37 @@ document.registerElement(`chart-display`, class extends Component {
     return {
       helpers: {
         getChartLabel: () => {
+          let chartLabel = [];
           if (this.state.report.displayOptions.value === `relative`) {
-            return `Percent of the group`;
+            chartLabel.push(`Percent of the group`);
           }
 
-          let chartLabel = [`number of`];
-          const mathTypes = Array.from(new Set(this.state.report.sections.show.clauses.map(clause => clause.math)));
-          if (mathTypes && mathTypes.length === 1) {
-            chartLabel.unshift(mathTypes[0]);
+          let analysisType = ``;
+          switch (this.helpers.getDisplayOptions().analysis) {
+            case `linear`:
+              analysisType = `Linear`;
+              break;
+            case `logarithmic`:
+              analysisType = `Logarithmic - base 10`;
+              break;
+            case `cumulative`:
+              analysisType = `Cumulative`;
+              break;
+            case `rolling`: {
+              const unit = this.state.report.sections.time.clauses[0].unit;
+              analysisType = `Rolling - ${ROLLING_WINDOWS_BY_UNIT[unit]} ${unit}s`;
+              break;
+            }
+            default:
+              return chartLabel[0];
           }
 
-          const showValueNames = this.helpers.getShowValueNames();
-          const headers = this.state.result.headers;
-          if (headers.length === 1 && ![`$event`, `$people`].includes(headers[0]) && showValueNames.length === 1) {
-            chartLabel.push(showValueNames[0]);
+          if (chartLabel.length) {
+            analysisType = `(` + analysisType + `)`;
           }
+          chartLabel.push(analysisType);
 
-          return capitalize(chartLabel.join(` `));
+          return chartLabel.join(` `);
         },
         getLegendStyle: () => {
           const style = {};
@@ -76,20 +89,6 @@ document.registerElement(`chart-display`, class extends Component {
             options.timeUnit = this.state.report.sections.time.clauses[0].unit;
           }
           return options;
-        },
-        getFunctionLabel: () => {
-          switch (this.helpers.getDisplayOptions().analysis) {
-            case `logarithmic`:
-              return `(Logarithmic - base 10)`;
-            case `cumulative`:
-              return `(Cumulative)`;
-            case `rolling`: {
-              const unit = this.state.report.sections.time.clauses[0].unit;
-              return `(Rolling - ${ROLLING_WINDOWS_BY_UNIT[unit]} ${unit})s`;
-            }
-          }
-          // nothing for 'linear'
-          return null;
         },
         getShowValueNames: () => this.state.report.sections.show.clauses.map(clause => {
           if (clause.type === Clause.RESOURCE_TYPE_EVENTS) {

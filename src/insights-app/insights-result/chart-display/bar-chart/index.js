@@ -24,7 +24,6 @@ document.registerElement(`bar-chart`, class extends Component {
         chartMax: 0,
         chartLabel: ``,
         displayOptions: {},
-        functionLabel: ``,
         hoverTooltip: {rowIdx: null, cellIdx: null, mouseXPos: null},
         headers: [],
         headersStyle: [],
@@ -155,16 +154,11 @@ document.registerElement(`bar-chart`, class extends Component {
     let chartLabel = this.getJSONAttribute(`chart-label`) || ``;
     const legendChangeID = this.getJSONAttribute(`legend-change-id`);
     const displayOptions = this.getJSONAttribute(`display-options`) || {};
-    const functionLabel = this.getJSONAttribute(`function-label`) || ``;
     let sortConfig = this.getJSONAttribute(`sorting`);
     let stickyHeader = this.getJSONAttribute(`sticky-header`);
 
     if (!this.validSortConfig(headers, sortConfig)) {
       return;
-    }
-
-    if (functionLabel) {
-      chartLabel = `${chartLabel} ${functionLabel}`;
     }
 
     series = util.nestedObjectSum(series);
@@ -193,7 +187,6 @@ document.registerElement(`bar-chart`, class extends Component {
       chartMax,
       chartPercentMax,
       displayOptions,
-      functionLabel,
       headers,
       headersStyle,
       legendChangeID,
