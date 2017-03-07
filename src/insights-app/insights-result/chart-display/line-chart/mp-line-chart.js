@@ -38,7 +38,7 @@ export class MPLineChart extends WebComponent {
 
   timestampToTimeUnitFunction({displayRangeIfWeek=true}={}) {
     const unit = this._displayOptions.timeUnit;
-    const customFormatting = {'day': `MMM D`};
+    const customFormatting = {'day': `ddd, MMM D`};
     return timestamp => {
       // Highcharts is too old to let us set a timezone so we need to add the offset to the date.
       timestamp = this.convertDateForOffset(timestamp);

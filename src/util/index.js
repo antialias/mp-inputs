@@ -7,10 +7,7 @@ import { GroupClause, ShowClause } from '../models/clause';
 export * from 'mixpanel-common/report/util';
 export * from 'mixpanel-common/util';
 export * from 'mixpanel-common/util/string';
-
-// TODO switch date utils to mixpanel-common once they are merged there
-//export * from 'mixpanel-common/util/date';
-export * from './date';
+export * from 'mixpanel-common/util/date';
 
 export {
   isIncompleteInterval,
