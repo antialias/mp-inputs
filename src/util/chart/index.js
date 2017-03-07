@@ -61,7 +61,10 @@ export function sortComparator({order=`asc`, transform=identity}) {
  */
 export function multiPartSortComparator(parts, {order=`asc`, transform=identity}={}) {
   return lexicalCompose(...parts.map((part, i) =>
-    sortComparator({order, transform: item => transform(item)[i]})
+    sortComparator({
+      order: part === `$date` ? `desc` : order,
+      transform: item => transform(item)[i],
+    })
   ));
 }
 
