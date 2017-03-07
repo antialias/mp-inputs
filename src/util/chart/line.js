@@ -1,5 +1,5 @@
 /* global $ */
-import { sorted } from '../util';
+import { numericComparator } from 'mixpanel-common/util/array';
 
 /**
  * https://github.com/mixpanel/mixpanel-platform/blob/d171a3ec/js/ui/chart.js#L38-L54
@@ -30,7 +30,8 @@ export function killLastGridline() {
  */
 export function dataObjectToSortedSeries(chartData) {
   return Object.entries(chartData).map(([name, counts]) => {
-    const data = sorted(Object.keys(counts), {transform: Number})
+    const data = Object.keys(counts)
+      .sort(numericComparator())
       .map(timestamp => [Number(timestamp), counts[timestamp]]);
     return {data, name};
   });

@@ -1,6 +1,13 @@
-import { nestedObjectDepth, sum } from 'mixpanel-common/util';
-
-import { parseDate } from '../../util/date';
+import {
+  numDateAlphaComparator,
+  nestedObjectDepth,
+  mapValues,
+  sum,
+} from 'mixpanel-common/util';
+import {
+  identity,
+  lexicalCompose,
+} from 'mixpanel-common/util/function';
 
 const CHART_OPTIONS = {
   bar: {
@@ -24,6 +31,39 @@ export function styleChoicesForChartType(type) {
   return Object.keys(CHART_OPTIONS[type]);
 }
 
+const WEEK_DATE_RANGE_REGEX = new RegExp(/[a-z]{3} \d+ - [a-z]{3} \d+/i);
+
+/**
+ * Construct a sort comparator function that will attempt to parse and sort header
+ * values as number, date, or string (converts string values to lowercase).
+ * Treats date strings like "Jun 10 - Jun 16" as "Jun 10".
+ */
+export function sortComparator({order=`asc`, transform=identity}) {
+  return numDateAlphaComparator({
+    order,
+    transform: item => {
+      item = transform(item);
+      if (item && item.toLowerCase) {
+        item = item.toLowerCase();
+      }
+      if (WEEK_DATE_RANGE_REGEX.test(item)) {
+        item = item.split(` - `)[0]; // allow "week" date format ("Jun 10 - Jun 17") to be sorted correctly
+      }
+      return item;
+    },
+  });
+}
+
+/**
+ * Construct a sort comparator function that will attempt to parse and sort multiple header values in turn
+ * in turn as number, date, or string (converts string values to lowercase).
+ * Treats date strings like "Jun 10 - Jun 16" as "Jun 10".
+ */
+export function multiPartSortComparator(parts, {order=`asc`, transform=identity}={}) {
+  return lexicalCompose(...parts.map((part, i) =>
+    sortComparator({order, transform: item => transform(item)[i]})
+  ));
+}
 
 /**
  * Transpose a 2-dimensional array:
@@ -47,33 +87,6 @@ export function countRun(row, start) {
   let i;
   for (i = start; row[i] === row[start]; i++);
   return i - start;
-}
-
-function compareNumDateAlpha(a, b, sortOrder) {
-  a = a.toLowerCase ? a.toLowerCase() : a;
-  b = b.toLowerCase ? b.toLowerCase() : b;
-
-  const aNumber = Number(a);
-  const bNumber = Number(b);
-
-  if (!isNaN(aNumber) && !isNaN(bNumber)) {
-    a = aNumber;
-    b = bNumber;
-  } else {
-    const aDate = parseDate(a, {iso: true});
-    const bDate = parseDate(b, {iso: true});
-
-    if (aDate && bDate) {
-      a = aDate.getTime();
-      b = bDate.getTime();
-    }
-  }
-
-  let result = 0;
-  result = a > b ? 1 : result;
-  result = a < b ? -1 : result;
-  result = sortOrder === `desc` ? -1 * result : result;
-  return result;
 }
 
 /**
@@ -149,8 +162,10 @@ function sortTableColumns(arr, colSortAttrs) {
       return [child[0], sortTableColumns(child[1], childSortAttrs)];
     });
   }
-  const sortOrder = colSortAttrs[0].sortOrder;
-  return arr.sort((a, b) => compareNumDateAlpha(a[0].value, b[0].value, sortOrder));
+  return arr.sort(sortComparator({
+    order: colSortAttrs[0].sortOrder,
+    transform: item => item[0].value,
+  }));
 }
 
 /**
@@ -176,11 +191,11 @@ export function nestedObjectToTableData(obj, sortConfig) {
       arr = expandTableHeaderRows(arr, objDepth);
       break;
     case `value`:
-      arr = expandTableHeaderRows(arr, objDepth, false);
-      arr = arr.sort((a, b) => {
-        [a, b] = [a, b].map(entry => entry[entry.length - 1][sortConfig.sortColumn] || 0);
-        return (a > b ? 1 : (a < b ? -1 : 0)) * (sortConfig.sortOrder === `desc` ? -1 : 1);
-      });
+      arr = expandTableHeaderRows(arr, objDepth, false)
+        .sort(sortComparator({
+          order: sortConfig.sortOrder,
+          transform: item => item[item.length - 1][sortConfig.sortColumn] || 0,
+        }));
       break;
   }
   return arr;
@@ -273,17 +288,6 @@ function flattenNestedObjectToArray(obj) {
   }
 }
 
-export const NESTED_ARRAY_SORT_FUNCS = {
-  label: {
-    asc:  (a, b) => compareNumDateAlpha(a.label, b.label),
-    desc: (a, b) => compareNumDateAlpha(a.label, b.label, `desc`),
-  },
-  value: {
-    asc:  (a, b) => compareNumDateAlpha(a.value, b.value),
-    desc: (a, b) => compareNumDateAlpha(a.value, b.value, `desc`),
-  },
-};
-
 /**
  * Helper for nestedObjectToBarChartData. Turns a nested object with numeric leaves
  * into a nested array with rows sorted according to given multi-level config.
@@ -309,13 +313,19 @@ export function nestedObjectToNestedArray(obj, sortConfig) {
           }
           return entry;
         })
-        .sort(NESTED_ARRAY_SORT_FUNCS[colSortAttrs.sortBy][colSortAttrs.sortOrder]);
+        .sort(sortComparator({
+          order: colSortAttrs.sortOrder,
+          transform: item => item[colSortAttrs.sortBy],
+        }));
       break;
     }
 
     case `value`:
       arr = flattenNestedObjectToArray(obj)
-        .sort(NESTED_ARRAY_SORT_FUNCS.value[sortConfig.sortOrder]);
+        .sort(sortComparator({
+          order: sortConfig.sortOrder,
+          transform: item => item.value,
+        }));
       break;
 
     default:
@@ -348,4 +358,118 @@ export function nestedObjectToBarChartData(obj, sortConfig) {
   } else {
     return [];
   }
+}
+
+// From media/js/charts/chart.js.
+
+// TODO
+// Note that this just mirrors the existing segmentation logic, which both
+// requires a customized version of Highcharts and fails to account for
+// incomplete data in the past (e.g., 2016-12-01 through 2017-01-01 with
+// monthly time unit will show data for only one day of January but a solid
+// line).
+
+// For future reference, IMO the right way to handle this is for
+// isIncomplete to take a "to" date and a unit, and determine whether that
+// "to" date is at the end of a unit boundary. There's also now a duplicate
+// copy in mp-common, which is where these changes should happen.
+
+// For avoiding a customized Highcharts, we could remove the last data
+// point from an incomplete segment, and create a new segment with just the
+// last two data points, linked to the prior segment and with different
+// styling. This works right now in line chart, but fails in stacked line
+// (though of course it seems to work in stacked line in the latest
+// Highcharts).
+
+/**
+  * isIncompleteInterval -- Returns true if the last time-period has not been completed
+  *
+  * @param {Hash} series A single series, in highcharts format
+  * @param {Hash} an options hash.
+  *      * (required) 'unit' interval in milliseconds
+  *        OR A string describing the interval ('hour', 'day', 'week', 'month')
+  *      * (required) 'utcOffset' timezone offset in minutes
+  *        OR A string describing the interval ('hour', 'day', 'week', 'month')
+  *      * "adjust_for_local_time" This adjusts the estimation for local time.
+  * @return {Boolean} true/false
+  */
+export function isIncompleteInterval(data, options) {
+  options = options || {};
+  var unit = options.unit;
+  if (data && data.length > 0 && unit !== undefined) {
+    var timeInterval;
+    var lastPoint = data[data.length - 1];
+    var lastDate = Array.isArray(lastPoint) ? lastPoint[0] : lastPoint.x;
+    var date = new Date();
+    var currentDate = date.getTime();
+    var timezoneOffset = options.utcOffset || 0;
+    if (options.adjust_for_local_time) {
+      // many dates passed in are in the local time of the browser.
+      timezoneOffset += date.getTimezoneOffset();
+    }
+    currentDate = currentDate + 60000 * timezoneOffset;
+
+    var currentInterval = (currentDate - lastDate);
+
+    if (Number.isInteger(unit)) {
+      timeInterval = unit;
+    } else {
+      var hour = 60 * 60 * 1000;  // milliseconds in an hour
+
+      switch (unit.toLowerCase()) {
+        case `hour`:
+          timeInterval = hour;
+          break;
+        case `day`:
+          timeInterval = 24 * hour;
+          break;
+        case `week`:
+          timeInterval = 7 * 24 * hour;
+          break;
+        case `month`:
+          date = new Date(currentDate); // change date to account for offset
+          var start = new Date(date.getYear(), date.getMonth());
+          var end = new Date(date.getYear(), date.getMonth() + 1);
+          timeInterval = (end.getTime() - start.getTime());
+          break;
+        case `quarter`:
+          var now = new Date(currentDate);
+          var last = new Date(lastDate);
+          var nowMonths = now.getUTCFullYear() * 12 + now.getUTCMonth();
+          var lastMonths = last.getUTCFullYear() * 12 + last.getUTCMonth();
+          return nowMonths - lastMonths < 3;
+        default:
+          console.error(`Unknown interval: "${timeInterval}"`);
+          return false;
+      }
+    }
+
+    return currentInterval < timeInterval;
+  } else {
+    return false;
+  }
+}
+
+/**
+ * Transpose rows to columns like an extra group by clause does
+ * It is assumed that series has only 2 dimensions
+ * @param {string[]} headers - Names for the different series in order of group by
+ * @param {any} series - object with rowNames as properties and colNames as subProperties
+ * @param {string} leafHeader - e.g 'Total number of'
+ * @param {boolean} addLeafHeader - Whether to append leafHeader to headers
+ * @returns {{headers: string[], series: any}} - Tuple of header and series with cols transposed
+ */
+export function transposeColsToRows(headers, series, leafHeader, addLeafHeader=true) {
+  if (headers.length !== 2) {
+    throw new Error(`Expecting ${headers} to be of length 2`);
+  }
+
+  const newHeaders = addLeafHeader ? [...headers, leafHeader] : headers;
+  const newSeries = mapValues(series, row => (
+    mapValues(row, col => (
+      {[leafHeader]: col}
+    ))
+  ));
+
+  return {headers: newHeaders, series: newSeries};
 }

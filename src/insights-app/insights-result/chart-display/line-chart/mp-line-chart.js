@@ -5,10 +5,13 @@ import WebComponent from 'webcomponent';
 import * as util from '../../../../util';
 
 import {
+  multiPartSortComparator,
+} from '../../../../util/chart';
+import {
   dataObjectToSortedSeries,
   generateChangeId,
   killLastGridline,
-} from '../../../../util/line-chart';
+} from '../../../../util/chart/line';
 
 import commonCSS from '!!style!css?camelCase!stylus!../../../../stylesheets/common.styl';
 
@@ -81,6 +84,12 @@ export class MPLineChart extends WebComponent {
         const last = this.series.data[index - 1];
         delta = last.y > 0 ? (this.y - last.y) / last.y : null;
       }
+      const percentHtml = this.percentage ? `<div class="percent">${util.formatPercent(this.percentage * .01)}</div>` : ``;
+      const deltaCls = delta < 0 ? `delta-neg` : (delta > 0 ? `delta-pos` : ``);
+      const deltaSign = delta > 0 ? `+` : ``;
+      const deltaPercent = util.formatPercent(delta);
+      const deltaHtml = delta !== null ? `<div class="delta ${deltaCls}">${deltaSign}${deltaPercent}</div>` : ``;
+      const footerHtml = isIncomplete ? `<div class="footer">Incomplete ${unit}</div>` : ``;
       return `
         <div class="title" style="background-color: ${this.series.color};">${util.truncateMiddle(seriesName, 45)}</div>
         <div class="results">
@@ -88,10 +97,10 @@ export class MPLineChart extends WebComponent {
             <span class="date">${timeFormatter(this.key)}: </span>
             <span class="count">${util.commaizeNumber(this.y)}</span>
           </div>
-          ${this.percentage ? `<div class="percent">${util.formatPercent(this.percentage * .01)}</div>` : ``}
-          ${delta !== null ? `<div class="delta ${delta < 0 ? `delta-neg` : (delta > 0 ? `delta-pos` : ``)}">${delta > 0 ? `+` : ``}${util.formatPercent(delta)}</div>` : ``}
+          ${percentHtml}
+          ${deltaHtml}
         </div>
-        ${isIncomplete ? `<div class="footer">Incomplete ${unit}</div>` : ``}
+        ${footerHtml}
       `;
     };
   }
@@ -273,16 +282,20 @@ export class MPLineChart extends WebComponent {
     ));
 
     let chartSeries = dataObjectToSortedSeries(this.chartData);
-    chartSeries = chartSeries.map(series => Object.assign(series, {
-      color: this.colorForSegment(series.name),
-      isIncompletePath: util.isIncompleteInterval(series.data, {
-        unit: this._displayOptions.timeUnit,
-        utcOffset: this.utcOffset,
-      }),
-      type: highchartsOptions.chart.type,
-      visible: this.isSegmentShowing(series.name),
-      headerPath: this.chartDataPaths[series.name],
-    }));
+    chartSeries = chartSeries
+      .map(series => Object.assign(series, {
+        color: this.colorForSegment(series.name),
+        isIncompletePath: util.isIncompleteInterval(series.data, {
+          unit: this._displayOptions.timeUnit,
+          utcOffset: this.utcOffset,
+        }),
+        type: highchartsOptions.chart.type,
+        visible: this.isSegmentShowing(series.name),
+        headerPath: this.chartDataPaths[series.name],
+      }))
+      .sort(multiPartSortComparator(this._headers, {
+        transform: series => series.headerPath,
+      }));
 
     const [showingSeries, hiddenSeries] = partition(chartSeries, s => s.visible);
 

@@ -6,7 +6,10 @@ import {
   stringFilterMatches,
   pick,
 } from '../../../../util';
-import { sortComparator } from '../../../../util/chart';
+import {
+  multiPartSortComparator,
+  sortComparator,
+} from '../../../../util/chart';
 import '../../../widgets/sticky-scroll';
 
 import template from './index.jade';
@@ -38,6 +41,7 @@ document.registerElement(`chart-legend`, class extends Component {
         },
         isAnySeriesLargeSearch: legendData => legendData.some(series => this.helpers.isSeriesLargeSearchResult(series)),
         isFlattenedData: () => this.state.report.displayOptions.chartType === `line`,
+        isStackedLine: () => this.helpers.isFlattenedData() && this.state.report.displayOptions.plotStyle === `stacked`,
         isSeriesLargeSearchResult: series => this.helpers.isSearchActive() && series.seriesValues.length > 12,
         isSeriesValueShowing: (seriesIdx, name) => {
           return this.state.report.legend.data[seriesIdx][this.legendDataType][name];
@@ -82,19 +86,29 @@ document.registerElement(`chart-legend`, class extends Component {
               return matches ? {label, matches, originalValue, value} : null;
             }).filter(Boolean);
 
-            if (!isFlattenedData && sortConfig.colSortAttrs) {
+            const isLine = isFlattenedData;
+            const isStackedLine = this.helpers.isStackedLine();
+            if ((!isLine || isStackedLine) && sortConfig.colSortAttrs) {
               let configForSeries = sortConfig;
               if (sortConfig.sortBy !== `value` || !sortConfig.sortOrder) {
                 configForSeries = sortConfig.colSortAttrs[sortConfig.colSortAttrs.length - 1 - idx];
               }
-              seriesValues.sort(sortComparator({
-                order: configForSeries.sortOrder,
-                transform: item => item[configForSeries.sortBy],
-              }));
+              if (isStackedLine) {
+                seriesValues.sort(multiPartSortComparator(this.state.result.headers.slice(1), {
+                  transform: item => item.label,
+                }));
+              } else {
+                seriesValues.sort(sortComparator({
+                  order: configForSeries.sortOrder,
+                  transform: item => item[configForSeries.sortBy],
+                }));
+              }
             }
+
             if (legend.getSeriesDisplayAtIndex(idx) === `minimized`) {
               seriesValues.splice(12);
             }
+
             return {seriesName: series.seriesName, seriesValues};
           });
           return seriesData.some(series => series.seriesValues.length) ? seriesData : [];

@@ -8,7 +8,7 @@ import { flattenNestedObjectToPath } from '../../src/util';
 import {
   dataObjectToSortedSeries,
   generateChangeId,
-} from '../../src/insights-app/insights-result/chart-display/line-chart/line-chart-util.js';
+} from '../../src/util/chart/line';
 
 describe(`dataObjectToSortedSeries`, () => {
   it(`convert flat series to time sorted data for Highcharts`, () => {
