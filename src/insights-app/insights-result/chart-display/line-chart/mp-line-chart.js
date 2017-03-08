@@ -34,7 +34,7 @@ export class MPLineChart extends WebComponent {
 
   timestampToTimeUnitFunction({displayRangeIfWeek=true}={}) {
     const unit = this._displayOptions.timeUnit;
-    const customFormatting = {'day': `ddd, MMM D`};
+    const customFormatting = {day: `ddd, MMM D`};
     return timestamp => util.formatDate(timestamp, {unit, displayRangeIfWeek, customFormatting});
   }
 

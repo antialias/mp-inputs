@@ -9,6 +9,7 @@ import main from './segmentation.jql.js';
 import QueryCache from './query-cache';
 
 import {
+  MS_BY_UNIT,
   abbreviateNumber,
   capitalize,
   extend,
@@ -21,6 +22,7 @@ import {
   renameEvent,
   renameProperty,
 } from '../../util';
+import { cacheParsedDate } from '../../util/chart';
 
 class JQLQuery {
   constructor(showClause, state, options={}) {
@@ -136,6 +138,7 @@ export default class SegmentationQuery extends BaseQuery {
   constructor() {
     super(...arguments);
     this.extremaCache = new QueryCache();
+    this.timestampToDateStringCache = {};
   }
 
   get valid() {
@@ -155,7 +158,6 @@ export default class SegmentationQuery extends BaseQuery {
     const segments = sections.group.clauses
       .map(clause => pick(clause, [`value`, `propertyType`, `resourceType`, `typeCast`, `unit`]))
       .map(clause => clause.value === GroupClause.EVENT_DATE.name ? extend(clause, {isEventDate: true}) : clause);
-
 
     const conjunction = sections.filter.determiner === FilterSection.DETERMINER_ANY ? `or` : `and`;
     const filterArbSelectors = sections.filter.clauses
@@ -366,21 +368,6 @@ export default class SegmentationQuery extends BaseQuery {
     const isPeopleOnlyQuery = this.query.jqlQueries.every(query => query.resourceType === `people`);
     const needsPeopleTimeSeries = isPeopleOnlyQuery && querySegments.length && querySegments[querySegments.length - 1].propertyType === `datetime`;
 
-    //  epoch dates of properties come back in seconds. 10^3 is needed to bring it to ms for moment.
-    const formattedDateCache = {};
-    const getFormattedDate = (timestamp, {unit=`day`, timestampMultiplier=1000}={}) => {
-      const timestampInMS = timestamp * timestampMultiplier;
-      formattedDateCache[unit] = formattedDateCache[unit] || {};
-      if (!formattedDateCache[unit][timestampInMS]) {
-        formattedDateCache[unit][timestampInMS] = formatDate(timestampInMS, {
-          unit,
-          utc: true,
-          customFormatting: {day: `MMM D 'YY`},
-        });
-      }
-      return formattedDateCache[unit][timestampInMS];
-    };
-
     // we get data back in project epoch offset localtime to preserve that when forming it to dates
     // TODO: Jordan account for DST times
     const offsetTimestamp = timestamp => timestamp + (new Date().getTimezoneOffset() * 60 * 1000);
@@ -419,10 +406,11 @@ export default class SegmentationQuery extends BaseQuery {
             // conditional key formatting
             const segIdx = si - 1;
             if (si && Number.isInteger(key) && isSegDatetime(segIdx)) {
-              key = getFormattedDate(key, unitsForDatetimeSet(segIdx));
+              key = this.formattedKeyForDateSegment(key, unitsForDatetimeSet(segIdx));
             } else if (si && this.isBucketedAtSegmentIdx(segIdx)) {
               key = this.formattedKeyForBucketedSegment(segIdx, key);
             }
+
 
             // If it is the second to last key it must be the object holding the date values.
             // If it does not yet exist fill this with the zeroed-out base dates.
@@ -460,6 +448,23 @@ export default class SegmentationQuery extends BaseQuery {
     return this.query.jqlQueries.reduce((total, query) => (query.events ? total.concat(query.events) : total), []);
   }
 
+  // date timestamps of properties come back in seconds. 10^3 is needed to bring it to ms for moment.
+  formattedKeyForDateSegment(timestamp, {unit=`day`, timestampMultiplier=1000}={}) {
+    this.timestampToDateStringCache[unit] = this.timestampToDateStringCache[unit] || {};
+
+    const timestampInMS = timestamp * timestampMultiplier;
+    const dateString = this.timestampToDateStringCache[unit][timestampInMS] || formatDate(timestampInMS, {
+      unit,
+      utc: true,
+      customFormatting: {day: `MMM D 'YY`},
+    });
+
+    this.timestampToDateStringCache[unit][timestampInMS] = dateString;
+    cacheParsedDate(dateString, timestampInMS);
+
+    return dateString;
+  }
+
   // bucketed segment helpers
 
   formattedKeyForBucketedSegment(segmentIdx, key) {
@@ -469,7 +474,6 @@ export default class SegmentationQuery extends BaseQuery {
     } else {
       return key;
     }
-
   }
 
   isBucketedAtSegmentIdx(idx) {

@@ -34,7 +34,18 @@ export function styleChoicesForChartType(type) {
   return Object.keys(CHART_OPTIONS[type]);
 }
 
-const WEEK_DATE_RANGE_REGEX = new RegExp(/[a-z]{3} \d+ - [a-z]{3} \d+/i);
+function lowercase(item) {
+  return item && item.toLowerCase ? item.toLowerCase() : item;
+}
+
+let parseDateCache = {};
+export function cacheParsedDate(dateString, timestamp) {
+  if (dateString && dateString.length) {
+    return parseDateCache[lowercase(dateString)] = timestamp;
+  } else {
+    return null;
+  }
+}
 
 /**
  * Construct a sort comparator function that will attempt to parse and sort header
@@ -43,31 +54,24 @@ const WEEK_DATE_RANGE_REGEX = new RegExp(/[a-z]{3} \d+ - [a-z]{3} \d+/i);
  */
 export function sortComparator({order=`asc`, transform=identity}) {
   return numDateAlphaComparator({
-    order,
-    transform: item => {
-      item = transform(item);
-      if (item && item.toLowerCase) {
-        item = item.toLowerCase();
-      }
-      if (WEEK_DATE_RANGE_REGEX.test(item)) {
-        item = item.split(` - `)[0]; // allow "week" date format ("Jun 10 - Jun 17") to be sorted correctly
-      }
-      return item;
+    order: {
+      base: order,
+      number: order,
+      date: order === `asc` ? `desc` : `asc`,
     },
+    transform: item => lowercase(transform(item)),
+    parseDateCache,
   });
 }
 
 /**
- * Construct a sort comparator function that will attempt to parse and sort multiple header values in turn
+ * Construct a sort comparator function that will attempt to parse and sort multiple header values
  * in turn as number, date, or string (converts string values to lowercase).
  * Treats date strings like "Jun 10 - Jun 16" as "Jun 10".
  */
 export function multiPartSortComparator(parts, {order=`asc`, transform=identity}={}) {
   return lexicalCompose(...parts.map((part, i) =>
-    sortComparator({
-      order: part === `$date` ? `desc` : order,
-      transform: item => transform(item)[i],
-    })
+    sortComparator({order, transform: item => transform(item)[i]})
   ));
 }
 
