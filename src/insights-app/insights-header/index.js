@@ -58,6 +58,10 @@ document.registerElement(`insights-header`, class extends Component {
           this.update();
         },
 
+        addToDashTutorialTooltipClosed: () => {
+          this.app.mpContext.setFlag(`DASHBOARD_ADDED_REPORT_OR_SEEN_TOOLTIP`);
+        },
+
         // override for the add-to-dash method "saveBookmark"
         saveBookmark: () => {
           if (!this.state.report.title) {
