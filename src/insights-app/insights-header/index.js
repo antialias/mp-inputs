@@ -13,7 +13,7 @@ document.registerElement(`insights-header`, class extends Component {
   get config() {
     return {
       helpers: {
-        showAddToDash: () => this.app.hasWhitelist(`webdash-v2`),
+        showAddToDash: () => this.app.hasWhitelist(`webdash-v2`) && this.app.hasWritePermissions,
         addToDashEnabled: () => !this.app.standalone,
         dashboardAttrs: () => {
           const existingBookmark = this.app.getBookmark(this.state.report);
