@@ -295,9 +295,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.updateCanAddBookmark = () => {
       new Promise(resolve => {
         if (this.mpContext.canAddBookmark) {
-            return resolve(this.mpContext.canAddBookmark());
+          return resolve(this.mpContext.canAddBookmark());
         } else {
-            return resolve(true);
+          return resolve(true);
         }
       }).then(canAddBookmark => this.update({canAddBookmark}));
     };
