@@ -125,7 +125,7 @@ export class MPLineChart extends WebComponent {
 
     const displayOptions = this._displayOptions || {};
     const axisOptions = {
-      endOnTick: true,
+      endOnTick: false,
       lineWidth: 1,
       lineColor: commonCSS.grey150,
       minPadding: 0,
@@ -174,20 +174,23 @@ export class MPLineChart extends WebComponent {
           incompleteStyle: {
             'stroke-dasharray': `3,5`,
           },
-          lineWidth: 3,
+          lineWidth: 2,
           marker: {
-            hover: {
-              enabled: true,
+            enabled: false,
+            states: {
+              hover: {
+                enabled: true,
+              },
             },
             lineColor: `#fff`,
-            lineWidth: 2,
-            radius: 5,
+            lineWidth: 0,
+            radius: 3,
             symbol: `circle`,
           },
           shadow: false,
           states: {
             hover: {
-              lineWidth: 4,
+              lineWidth: 3,
               lineWidthPlus: 0,
             },
           },
@@ -200,11 +203,13 @@ export class MPLineChart extends WebComponent {
           cursor: `pointer`,
           fillOpacity: 1,
           marker: {
-            enabled: null,
-            hover: {
-              enabled: true,
+            enabled: false,
+            states: {
+              hover: {
+                enabled: true,
+              },
             },
-            lineWidth: 2,
+            lineWidth: 1,
             symbol: `circle`,
           },
           shadow: false,
@@ -225,7 +230,7 @@ export class MPLineChart extends WebComponent {
       },
 
       xAxis: util.extend(axisOptions, {
-        endOnTick: false,
+        crosshair: true,
         labels: {
           formatter: this.xAxisFormatter(),
           style: {
@@ -233,9 +238,11 @@ export class MPLineChart extends WebComponent {
           },
           y: 18,
         },
-        maxPadding: 0.017,
-        minPadding: 0.017,
+        maxPadding: 0.01,
+        minPadding: 0,
         minTickInterval: util.MS_BY_UNIT[this._displayOptions.timeUnit],
+        showFirstLabel: false,
+        showLastLabel: false,
         startOnTick: false,
         tickmarkPlacement: `on`,
         tickPosition: `outside`,
@@ -255,6 +262,7 @@ export class MPLineChart extends WebComponent {
           x: -20,
         },
         min: 0,
+        maxPadding: 0.1,
         minPadding: 0,
         title: {
           text: null,
