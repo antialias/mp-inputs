@@ -291,9 +291,15 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.accessToken = this.mpContext.accessToken;
     this.dashboardTags = this.mpContext.dashboardTags || [];
     this.bookmarks = this.mpContext.bookmarks || [];
-    this.checkCanAddBookmark = () => {
-      const checkCanAddBookmark = this.mpContext.canAddBookmark || function() { Promise.resolve(true); };
-      checkCanAddBookmark().then(canAddBookmark => this.update({canAddBookmark}));
+
+    this.updateCanAddBookmark = () => {
+      new Promise(resolve => {
+        if (this.mpContext.canAddBookmark) {
+            return resolve(this.mpContext.canAddBookmark());
+        } else {
+            return resolve(true);
+        }
+      }).then(canAddBookmark => this.update({canAddBookmark}));
     };
 
     if (!this.standalone) {
@@ -330,7 +336,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       };
     }
 
-    this.checkCanAddBookmark();
+    this.updateCanAddBookmark();
 
     super.attachedCallback(...arguments);
 
@@ -464,7 +470,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return this.mpContext.saveBookmark(this.state.report.toBookmarkData({saveAsNew, newReportData}))
       .then(bookmark => {
         const report = Report.fromBookmarkData(bookmark);
-        this.checkCanAddBookmark();
+        this.updateCanAddBookmark();
         this.update({
           savedReports: extend(this.state.savedReports, {[report.id]: report}),
           unsavedChanges: false,
