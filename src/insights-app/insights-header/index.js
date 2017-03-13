@@ -21,6 +21,7 @@ document.registerElement(`insights-header`, class extends Component {
             'access-token': this.app.accessToken,
             'all-tags': JSON.stringify(this.app.dashboardTags),
             'mixpanel-host': this.app.apiHost,
+            'over-free-limit': !this.state.canAddBookmark,
             'project-id': this.app.projectID,
             'report-name': this.state.report.title,
             'report-type': `insights`,

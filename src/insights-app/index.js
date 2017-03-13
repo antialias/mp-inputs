@@ -39,6 +39,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         this.resettableState,
         {
           // The following states should persist through reset.
+          canAddBookmark: true,
           features: {},
           savedReports: {},
           recentEvents: [],
@@ -290,6 +291,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.accessToken = this.mpContext.accessToken;
     this.dashboardTags = this.mpContext.dashboardTags || [];
     this.bookmarks = this.mpContext.bookmarks || [];
+    this.checkCanAddBookmark = () => {
+      const checkCanAddBookmark = this.mpContext.canAddBookmark || function() { Promise.resolve(true); };
+      checkCanAddBookmark().then(canAddBookmark => this.update({canAddBookmark}));
+    };
 
     if (!this.standalone) {
       this.projectHasEvents = !!this.mpContext.hasIntegratedArb;
@@ -324,6 +329,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         segmentationCache: new QueryCache(),
       };
     }
+
+    this.checkCanAddBookmark();
 
     super.attachedCallback(...arguments);
 
@@ -457,6 +464,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return this.mpContext.saveBookmark(this.state.report.toBookmarkData({saveAsNew, newReportData}))
       .then(bookmark => {
         const report = Report.fromBookmarkData(bookmark);
+        this.checkCanAddBookmark();
         this.update({
           savedReports: extend(this.state.savedReports, {[report.id]: report}),
           unsavedChanges: false,

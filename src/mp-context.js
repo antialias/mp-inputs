@@ -45,6 +45,7 @@ export default class MPContext {
       this.apiSecret = mp.report.globals.api_secret;
       this.bmURL = `${this.apiHost}/report/${this.projectID}/bookmarks/${this.appName}`;
       this.bookmarkCountUrl = `${this.apiHost}/report/${this.projectID}/bookmarks/limited_count`;
+      this.canAddBookmark = mp.utility.can_add_bookmark;
     } else {
       this.utcOffset = -480;
     }
