@@ -18,6 +18,7 @@ class DatePicker extends Component {
         to: null,
         fromFocused: false,
         toFocused: false,
+        utcOffset: 0,
       },
       helpers: {
         isRange: () => this.isRange,
@@ -94,6 +95,14 @@ class DatePicker extends Component {
 
   get preposition() {
     return this.getAttribute(`preposition`);
+  }
+
+  get utcOffset() {
+    return this.state.utcOffset;
+  }
+
+  set utcOffset(utcOffset) {
+    this.update({utcOffset});
   }
 }
 
