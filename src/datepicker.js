@@ -29,10 +29,10 @@ class DatePicker extends Component {
         changedDates: ev => {
           if (this.isRange) {
             let {from=this.state.from, to=this.state.to} = ev.detail;
-            [from=null, to=null] = normalizeDateStrings(from, to);
+            [from=null, to=null] = normalizeDateStrings([from, to], {utcOffset: this.utcOffset});
             this.update({from, to, date: null});
           } else {
-            let [date=null] = normalizeDateStrings(ev.detail || this.state.date);
+            let [date=null] = normalizeDateStrings([ev.detail || this.state.date], {utcOffset: this.utcOffset});
             this.update({date, from: null, to: null});
           }
           this.emitChange();
