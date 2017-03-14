@@ -239,7 +239,7 @@ export class MPLineChart extends WebComponent {
           y: 18,
         },
         maxPadding: 0.01,
-        minPadding: 0,
+        minPadding: 0.01,
         minTickInterval: util.MS_BY_UNIT[this._displayOptions.timeUnit],
         showFirstLabel: false,
         showLastLabel: false,
