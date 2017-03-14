@@ -163,7 +163,10 @@ mixin filter-number-input(value, oninput, options)
                   range: isBetween,
                   preposition: `and`,
                 }
-                props={value: isBetween ? {from, to} : clause.filterValue}
+                props={
+                  value: isBetween ? {from, to} : clause.filterValue,
+                  utcOffset: $helpers.getUtcOffset(),
+                }
                 on={change: ev => $helpers.updateFilterValue(isBetween ? [ev.detail.from, ev.detail.to] : ev.detail)}
               )
           when `was in the`

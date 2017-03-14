@@ -26,6 +26,7 @@ include ../mixins.jade
       }
       props={
         value: {from, to},
+        utcOffset: $helpers.getUtcOffset(),
       }
       on={
         change: $helpers.changedDates,

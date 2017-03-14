@@ -46,6 +46,7 @@
       }
       props={
         value: isRange ? {from, to} : date,
+        utcOffset,
       }
       on={
         change: $helpers.changedDates,

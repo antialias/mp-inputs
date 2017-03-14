@@ -273,6 +273,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return this.mpContext && this.mpContext.whitelists && this.mpContext.flags[name];
   }
 
+  getUtcOffset() {
+    return this.mpContext ? this.mpContext.utcOffset : 0;
+  }
+
 
   /**
    * initialize app with data/settings from mixpanel.com if available

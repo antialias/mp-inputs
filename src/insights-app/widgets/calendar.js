@@ -172,6 +172,14 @@ class Calendar extends WebComponent {
     return this.isAttributeEnabled(`double-calendar`);
   }
 
+  get utcOffset() {
+    return this._utcOffset || 0;
+  }
+
+  set utcOffset(utcOffset) {
+    this._utcOffset = utcOffset;
+  }
+
   // For each tr, if it has a child td.is-(start|end|in)range give it the class .has-(start|end|in)range
   // Used to handle edge cases around highlighting cells in the month grid where days are not shown
   // because they are from previous or following months. We still want to highlight these cells
