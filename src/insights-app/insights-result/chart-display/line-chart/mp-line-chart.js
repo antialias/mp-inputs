@@ -171,6 +171,11 @@ export class MPLineChart extends WebComponent {
       },
       plotOptions: {
         line: {
+          events: {
+            mouseOver() {
+              this.group.toFront();
+            },
+          },
           incompleteStyle: {
             'stroke-dasharray': `3,5`,
           },
