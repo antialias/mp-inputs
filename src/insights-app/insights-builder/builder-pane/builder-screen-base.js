@@ -147,13 +147,15 @@ export class BuilderScreenBase extends Component {
       let el;
       for (
         el = this.parentNode;
-        el && el.classList && !el.classList.contains(`pane-open`);
+        el && el.classList && !el.classList.contains(`pane-open`) && el.nodeName.toLowerCase() !== `builder-pane`;
         el = el.parentNode
-      )
-        ;
-      const input = el && el.querySelector(`resize-input,input.control-label`);
+      );
+
+      const input = el.querySelector(`resize-input,input.control-label,.date-input input`);
       if (input) {
-        input.focus();
+        // a short timeout allows animation to complete smoothly - not a long-term solution but 
+        // requestAnimationFrame does not produce desired behavior
+        setTimeout(() => input.focus(), 250);
       }
     });
   }
