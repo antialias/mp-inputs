@@ -11,10 +11,11 @@ import QueryCache from './query-cache';
 import {
   abbreviateNumber,
   capitalize,
-  formatDate,
   extend,
   filterToArbSelectorString,
+  formatDate,
   isFilterValid,
+  localizedDate,
   MS_BY_UNIT,
   pick,
   renameEvent,
@@ -171,7 +172,7 @@ export default class SegmentationQuery extends BaseQuery {
     if (Array.isArray(time.value)) {
       [from, to] = time.value.map(ts => Number(moment.utc(ts)));
     } else {
-      to = Number(moment.utc());
+      to = Number(localizedDate(this.utcOffset));
       from = to - MS_BY_UNIT[unit] * time.value;
     }
 
@@ -380,6 +381,10 @@ export default class SegmentationQuery extends BaseQuery {
       return formattedDateCache[unit][timestampInMS];
     };
 
+    // we get data back in project epoch offset localtime to preserve that when forming it to dates
+    // TODO: Jordan account for DST times
+    const offsetTimestamp = timestamp => timestamp + (new Date().getTimezoneOffset() * 60 * 1000);
+
     if (!isPeopleOnlyQuery || needsPeopleTimeSeries) {
       // create base values for all known dates if anything but non-time people query.
       // TODO jordan: use to/from + units to create a true 0 base date obj.
@@ -387,7 +392,7 @@ export default class SegmentationQuery extends BaseQuery {
         let timestamp = r.key[r.key.length - 1];
         timestamp = isPeopleOnlyQuery ? timestamp * 1000 : timestamp;
         if (timestamp && Number.isInteger(Number(timestamp))) {
-          baseDateResults[timestamp] = 0;
+          baseDateResults[offsetTimestamp(timestamp)] = 0;
         }
       });
     }
@@ -433,7 +438,7 @@ export default class SegmentationQuery extends BaseQuery {
           if (isTimeSeries) {
             if (Number.isInteger(label)) {
               label = label * timestampMultiplier;
-              obj[label] = item.value;
+              obj[offsetTimestamp(label)] = item.value;
             }
           } else {
             obj[label] = item.value;

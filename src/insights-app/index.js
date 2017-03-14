@@ -335,7 +335,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         topPeopleProperties: new TopPeoplePropertiesQuery(apiAttrs),
         topPeoplePropertyValues: new TopPeoplePropertyValuesQuery(apiAttrs),
         topPropertyValuesCache: new QueryCache(),
-        segmentation: new SegmentationQuery(apiAttrs, {customEvents: this.customEvents}),
+        segmentation: new SegmentationQuery(apiAttrs, {
+          customEvents: this.customEvents,
+          utcOffset: this.getUtcOffset(),
+        }),
         segmentationCache: new QueryCache(),
       };
     }
@@ -725,8 +728,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     let to = null;
 
     if (Number.isInteger(value)) {
-      from = util.formatDate(util.relativeToAbsoluteDate(value, unit), {iso: true});
-      to = util.formatDate(util.relativeToAbsoluteDate(0, unit), {iso: true});
+      const utcOffset = this.getUtcOffset();
+      from = util.formatDate(util.relativeToAbsoluteDate(value, unit, {utcOffset}), {iso: true});
+      to = util.formatDate(util.relativeToAbsoluteDate(0, unit, {utcOffset}), {iso: true});
     } else if (Array.isArray(value)) {
       [from, to] = value;
       if (Number.isInteger(from)) {

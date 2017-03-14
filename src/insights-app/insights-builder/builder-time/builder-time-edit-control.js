@@ -86,8 +86,7 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
   setDates(dates={}) {
     const old = this.app.getTimeClauseValue();
     let {from=old.from, to=old.to} = dates;
-
-    [from, to] = normalizeDateStrings(from, to);
+    [from, to] = normalizeDateStrings([from, to], {utcOffset: this.app.getUtcOffset()});
 
     this.app.updateStageClause({
       value: [from, to],

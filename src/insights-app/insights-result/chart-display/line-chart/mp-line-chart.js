@@ -32,18 +32,10 @@ export class MPLineChart extends WebComponent {
     }
   }
 
-  convertDateForOffset(timestamp) {
-    return Number(timestamp) - (-(new Date).getTimezoneOffset() * 60 * 1000);
-  }
-
   timestampToTimeUnitFunction({displayRangeIfWeek=true}={}) {
     const unit = this._displayOptions.timeUnit;
     const customFormatting = {'day': `ddd, MMM D`};
-    return timestamp => {
-      // Highcharts is too old to let us set a timezone so we need to add the offset to the date.
-      timestamp = this.convertDateForOffset(timestamp);
-      return util.formatDate(timestamp, {unit, displayRangeIfWeek, customFormatting});
-    };
+    return timestamp => util.formatDate(timestamp, {unit, displayRangeIfWeek, customFormatting});
   }
 
   getTickPositions() {
@@ -51,7 +43,7 @@ export class MPLineChart extends WebComponent {
     if ([`week`, `quarter`].includes(this._displayOptions.timeUnit)) {
       const uniqueDates = new Set();
       Object.keys(this.chartData).forEach(segment => {
-        Object.keys(this.chartData[segment]).forEach(date => uniqueDates.add(this.convertDateForOffset(date)));
+        Object.keys(this.chartData[segment]).forEach(date => uniqueDates.add(date));
       });
       let ticks = [...uniqueDates].sort();
       const MAX_TICKS = 20;
@@ -171,11 +163,6 @@ export class MPLineChart extends WebComponent {
       },
       plotOptions: {
         line: {
-          events: {
-            mouseOver() {
-              this.group.toFront();
-            },
-          },
           incompleteStyle: {
             'stroke-dasharray': `3,5`,
           },
@@ -205,7 +192,11 @@ export class MPLineChart extends WebComponent {
           animation: {
             duration: 300,
           },
-          cursor: `pointer`,
+          events: {
+            mouseOver() {
+              this.group.toFront();
+            },
+          },
           fillOpacity: 1,
           marker: {
             enabled: false,
@@ -214,7 +205,7 @@ export class MPLineChart extends WebComponent {
                 enabled: true,
               },
             },
-            lineWidth: 1,
+            lineWidth: 1, // TODO: bring marker above line. issue from toFront()
             symbol: `circle`,
           },
           shadow: false,

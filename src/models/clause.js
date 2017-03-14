@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 import { extend, pick } from 'mixpanel-common/util';
 import { debug } from 'mixpanel-common/report/util';
 
@@ -287,21 +285,19 @@ export class TimeClause extends Clause {
      * - value must be either a single entry OR an array of entries
      * - entries in value must be numbers OR Dates
      * - numbers in value must be greater than 0
-     * - Dates in value must occur before now
      */
     return (
       this.TIME_UNIT_LIST.indexOf(this.unit) !== -1 &&
       this.value &&
       (
         (typeof this.value === `number` && this.value > 0) ||
-        (this.value instanceof Date && this.value < new Date()) ||
+        (this.value instanceof Date) ||
         (
           Array.isArray(this.value) &&
           this.value.length === 2 &&
           (
             (
-              (typeof this.value[0] === `string` && moment.utc(this.value[0]).isBefore(moment.utc())) &&
-              (typeof this.value[1] === `string` && moment.utc(this.value[1]).isBefore(moment.utc()))
+              (typeof this.value[0] === `string` && typeof this.value[1] === `string`)
             )
             ||
             (
@@ -310,8 +306,7 @@ export class TimeClause extends Clause {
             )
             ||
             (
-              (this.value instanceof Date && this.value < new Date()) &&
-              (this.value instanceof Date && this.value < new Date())
+              (this.value[0] instanceof Date && this.value[1] instanceof Date)
             )
           )
         )
