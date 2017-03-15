@@ -45,7 +45,7 @@ class Calendar extends WebComponent {
       container: document.getElementsByClassName(`calendar-hook`)[0],
       events: this.getFutureDates(),
       mainCalendar: `right`,
-      maxDate: localizedDate(this.utcOffset),
+      maxDate: localizedDate({utcOffset: this.utcOffset}),
       minDate: this.getMinDate(),
       numberOfMonths: this.isDoubleCalendar ? 2 : 1,
       i18n: extend(Pikaday.prototype.config().i18n, {
@@ -67,13 +67,13 @@ class Calendar extends WebComponent {
 
   getMinDate() {
     const historyLength = this.historyLengthInDays;
-    const today = localizedDate(this.utcOffset).setHours(0, 0, 0, 0);
+    const today = localizedDate({utcOffset: this.utcOffset}).setHours(0, 0, 0, 0);
     return new Date(today - (historyLength * MS_PER_DAY));
   }
 
   getFutureDates() {
     let futureDates = [];
-    const today = localizedDate(this.utcOffset);
+    const today = localizedDate({utcOffset: this.utcOffset});
     let date = today.getDate();
     const thisMonth = today.getMonth();
     const thisYear = today.getFullYear();
