@@ -19,7 +19,7 @@ document.registerElement(`insights-title-input`, class extends Component {
         blur: () => {
           if (this.state.active) {
             this.update({active: false, saveFocused: false, saveNewFocused: false});
-            this.inputEl.value = this.state.reportTitle || ``;
+            this.inputEl.value = this.state.reportTitle;
           }
         },
         focus: () => this.update({active: true, isDirty: false}),
@@ -60,7 +60,6 @@ document.registerElement(`insights-title-input`, class extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
     this.closeOnEscape = e => e.keyCode === 27 && this.inputEl.blur();
-    this.state.update({reportTitle: this.inputEl.value});
     document.body.addEventListener(`keydown`, this.closeOnEscape);
   }
 
