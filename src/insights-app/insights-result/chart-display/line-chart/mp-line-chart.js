@@ -59,6 +59,7 @@ export class MPLineChart extends WebComponent {
   tooltipFormatter() {
     const timeFormatter = this.timestampToTimeUnitFunction();
     const unit = this._displayOptions.timeUnit;
+    const utcOffset = this.utcOffset;
 
     const formatSeriesName = segments => {
       return segments.map((segment, idx) => {
@@ -68,7 +69,7 @@ export class MPLineChart extends WebComponent {
 
     return function() {
       const seriesName = formatSeriesName(this.point.series.options.headerPath);
-      const isIncomplete = util.isIncompleteInterval([this], {unit});
+      const isIncomplete = util.isIncompleteInterval([this], {unit, utcOffset});
       const index = this.series.data.indexOf(this.point);
       let delta = null;
       // TODO: revisit design for stacked chart, which already shows proportional percentage

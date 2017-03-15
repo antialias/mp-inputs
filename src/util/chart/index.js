@@ -4,10 +4,13 @@ import {
   mapValues,
   sum,
 } from 'mixpanel-common/util';
+
 import {
   identity,
   lexicalCompose,
 } from 'mixpanel-common/util/function';
+
+import { localizedDate } from 'mixpanel-common/util/date';
 
 const CHART_OPTIONS = {
   bar: {
@@ -404,14 +407,7 @@ export function isIncompleteInterval(data, options) {
     var lastPoint = data[data.length - 1];
     var lastDate = Array.isArray(lastPoint) ? lastPoint[0] : lastPoint.x;
     var date = new Date();
-    var currentDate = date.getTime();
-    var timezoneOffset = options.utcOffset || 0;
-    if (options.adjust_for_local_time) {
-      // many dates passed in are in the local time of the browser.
-      timezoneOffset += date.getTimezoneOffset();
-    }
-    currentDate = currentDate + 60000 * timezoneOffset;
-
+    var currentDate = localizedDate(options.utcOffset);
     var currentInterval = (currentDate - lastDate);
 
     if (Number.isInteger(unit)) {
