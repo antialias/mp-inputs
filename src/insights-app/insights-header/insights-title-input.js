@@ -22,7 +22,7 @@ document.registerElement(`insights-title-input`, class extends Component {
             this.inputEl.value = this.state.reportTitle;
           }
         },
-        focus: () => this.update({active: true, isDirty: false}),
+        focus: () => this.update({active: true, isDirty: false, inputValue: this.state.reportTitle}),
         inputChange: () => {
           this.update({inputValue: this.value, isDirty: true, saveFocused: false, saveNewFocused: false});
         },
