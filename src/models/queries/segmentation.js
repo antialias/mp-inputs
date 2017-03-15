@@ -182,6 +182,11 @@ export default class SegmentationQuery extends BaseQuery {
     return `api/2.0/jql`;
   }
 
+  escapeDots(property) {
+    // escape '.' to '\.'
+    return property && property.replace(`\.`, `\\.`);
+  }
+
   buildGroups() {
     this.resetBucketRanges();
     let eventsToQuery = this.allEventsInAllQueries();
@@ -218,10 +223,11 @@ export default class SegmentationQuery extends BaseQuery {
         builtExtremaQuery.run(cachedExtremaQuery).then(result => {
           this.extremaCache.set(builtExtremaQuery.query, result, 120);
           this.storeBucketRange(idx, result.bucketRanges);
-          return resolve(extend(segment, {buckets: result.buckets}));
+          // escape after the extrema query
+          return resolve(extend(segment, {buckets: result.buckets, value: this.escapeDots(segment.value)}));
         });
       } else {
-        return resolve(segment);
+        return resolve(extend(segment, {value: this.escapeDots(segment.value)}));
       }
     })));
   }
@@ -237,6 +243,10 @@ export default class SegmentationQuery extends BaseQuery {
         type: jqlQuery.type,
         property: jqlQuery.property,
       };
+
+      if (scriptParams.property) {
+        scriptParams.property.name = this.escapeDots(scriptParams.property.name);
+      }
 
       if (jqlQuery.events) {
         scriptParams.dates = {

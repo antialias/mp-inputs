@@ -44,8 +44,7 @@ function main() {
     if (params.resourceTypeNeeded === 'all') {
       paths.push(propertyResourceType === 'people' ? 'user' : 'event');
     }
-    // escape '.' to '\.'
-    propertyName = propertyName.replace('\.', '\\.');
+
     return paths.concat('properties', propertyName);
   };
 
