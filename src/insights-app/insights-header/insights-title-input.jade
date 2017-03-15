@@ -3,7 +3,7 @@
     .title-input-enabled(class={'input-focused': active})
       resize-input.title-input(
         attrs={
-          placeholder: `Untitled report`,
+          placeholder: active ? `` : `Untitled report`,
         }
         props={
           maxLength: 80,

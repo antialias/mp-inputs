@@ -11,6 +11,7 @@ document.registerElement(`insights-title-input`, class extends Component {
         active: false,
         inputValue: ``,
         isDirty: false,
+        reportTitle: ``,
         saveFocused: false,
         saveNewFocused: false,
       },
@@ -18,7 +19,7 @@ document.registerElement(`insights-title-input`, class extends Component {
         blur: () => {
           if (this.state.active) {
             this.update({active: false, saveFocused: false, saveNewFocused: false});
-            this.dispatchChange();
+            this.inputEl.value = this.state.reportTitle || ``;
           }
         },
         focus: () => this.update({active: true, isDirty: false}),
@@ -59,6 +60,7 @@ document.registerElement(`insights-title-input`, class extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
     this.closeOnEscape = e => e.keyCode === 27 && this.inputEl.blur();
+    this.state.update({reportTitle: this.inputEl.value});
     document.body.addEventListener(`keydown`, this.closeOnEscape);
   }
 
@@ -80,7 +82,7 @@ document.registerElement(`insights-title-input`, class extends Component {
     ev.stopPropagation();
     if (this.state.active) {
       this.dispatchChange({save: true, saveAsNew});
-      this.update({active: false, saveFocused: false, saveNewFocused: false});
+      this.update({active: false, reportTitle: this.state.inputValue, saveFocused: false, saveNewFocused: false});
       this.inputEl.blur();
     } else {
       this.inputEl.focus();
@@ -97,6 +99,6 @@ document.registerElement(`insights-title-input`, class extends Component {
   }
 
   set value(val) {
-    this.update({inputValue: val});
+    this.update({inputValue: val, reportTitle: val});
   }
 });
