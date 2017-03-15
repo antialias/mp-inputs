@@ -6,6 +6,9 @@ import {
 } from 'mixpanel-common/util';
 
 import {
+  SortCache,
+} from 'mixpanel-common/util/array';
+import {
   identity,
   lexicalCompose,
 } from 'mixpanel-common/util/function';
@@ -34,18 +37,11 @@ export function styleChoicesForChartType(type) {
   return Object.keys(CHART_OPTIONS[type]);
 }
 
-function lowercase(item) {
+export function lowercase(item) {
   return item && item.toLowerCase ? item.toLowerCase() : item;
 }
 
-let parseDateCache = {};
-export function cacheParsedDate(dateString, timestamp) {
-  if (dateString && dateString.length) {
-    return parseDateCache[lowercase(dateString)] = timestamp;
-  } else {
-    return null;
-  }
-}
+export const parseDateCache = new SortCache({transform: lowercase});
 
 /**
  * Construct a sort comparator function that will attempt to parse and sort header
@@ -57,7 +53,7 @@ export function sortComparator({order=`asc`, transform=identity}) {
     order: {
       base: order,
       number: order,
-      date: order === `asc` ? `desc` : `asc`,
+      date: order === `asc` ? `desc` : `asc`, // sort date properties in reverse order
     },
     transform: item => lowercase(transform(item)),
     parseDateCache,

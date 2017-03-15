@@ -22,7 +22,9 @@ import {
   renameEvent,
   renameProperty,
 } from '../../util';
-import { cacheParsedDate } from '../../util/chart';
+import {
+  parseDateCache,
+} from '../../util/chart';
 
 class JQLQuery {
   constructor(showClause, state, options={}) {
@@ -460,7 +462,7 @@ export default class SegmentationQuery extends BaseQuery {
     });
 
     this.timestampToDateStringCache[unit][timestampInMS] = dateString;
-    cacheParsedDate(dateString, timestampInMS);
+    parseDateCache.add(dateString, timestampInMS);
 
     return dateString;
   }
