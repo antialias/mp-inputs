@@ -406,7 +406,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   _updateRecentList(type, value) {
     // remove any match data from view object
-    value = util.pick(value, [`name`, `type`, `resourceType`]);
+    value = util.pick(value, [`name`, `type`, `resourceType`, `custom`, `id`, `alternatives`]);
 
     const stateKey = type === `events` ? `recentEvents` : `recentProperties`;
     this.update({[stateKey]: [
@@ -771,10 +771,13 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   fetchTopPropertiesForEvent(mpEvent) {
-    if (!this.state.topEventPropertiesByEvent[mpEvent]) {
-      this.updateTopPropertiesForEvent(mpEvent, TopEventPropertiesQuery.LOADING);
-      this.queries.topEventProperties.build({event: mpEvent}).run()
-        .then(properties => this.updateTopPropertiesForEvent(mpEvent, properties));
+    const eventName = mpEvent.name;
+    if (!this.state.topEventPropertiesByEvent[eventName]) {
+      this.updateTopPropertiesForEvent(eventName, TopEventPropertiesQuery.LOADING);
+      // Custom events need to be queried with their id rather than their name
+      const event = mpEvent.custom ? `$custom_event:${mpEvent.id}` : eventName;
+      this.queries.topEventProperties.build({event}).run()
+        .then(properties => this.updateTopPropertiesForEvent(eventName, properties));
     }
   }
 

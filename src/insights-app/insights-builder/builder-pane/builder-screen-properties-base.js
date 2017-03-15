@@ -119,7 +119,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       if ([ShowClause.TOP_EVENTS.name, ShowClause.ALL_EVENTS.name].includes(mpEvent.name)) {
         return props.concat(this.state.topEventProperties);
       } else if (!eventProps) {
-        this.app.fetchTopPropertiesForEvent(mpEvent.name);
+        this.app.fetchTopPropertiesForEvent(mpEvent);
       } else if (eventProps !== BaseQuery.LOADING) {
         return props.concat(eventProps);
       }
