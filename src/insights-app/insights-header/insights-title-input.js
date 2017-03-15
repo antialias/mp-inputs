@@ -18,13 +18,25 @@ document.registerElement(`insights-title-input`, class extends Component {
       helpers: {
         blur: () => {
           if (this.state.active) {
-            this.update({active: false, saveFocused: false, saveNewFocused: false});
+            this.update({
+              active: false,
+              saveFocused: false,
+              saveNewFocused: false,
+            });
             this.inputEl.value = this.state.reportTitle;
           }
         },
-        focus: () => this.update({active: true, isDirty: false, inputValue: this.state.reportTitle}),
+        focus: () => this.update({
+          active: true,
+          isDirty: false,
+          inputValue: this.state.reportTitle,
+        }),
         inputChange: () => {
-          this.update({inputValue: this.value, isDirty: true, saveFocused: false, saveNewFocused: false});
+          this.update({inputValue: this.value,
+            isDirty: true,
+            saveFocused: false,
+            saveNewFocused: false,
+          });
         },
         keydownHandler: ev => {
           const saveFocused = this.state.saveFocused;
@@ -81,7 +93,12 @@ document.registerElement(`insights-title-input`, class extends Component {
     ev.stopPropagation();
     if (this.state.active) {
       this.dispatchChange({save: true, saveAsNew});
-      this.update({active: false, reportTitle: this.state.inputValue, saveFocused: false, saveNewFocused: false});
+      this.update({
+        active: false, 
+        reportTitle: this.state.inputValue, 
+        saveFocused: false, 
+        saveNewFocused: false,
+      });
       this.inputEl.blur();
     } else {
       this.inputEl.focus();
@@ -97,7 +114,7 @@ document.registerElement(`insights-title-input`, class extends Component {
     return inputEl ? inputEl.value : ``;
   }
 
-  set value(val) {
-    this.update({inputValue: val, reportTitle: val});
+  set value(inputValue) {
+    this.update({inputValue, reportTitle: inputValue});
   }
 });
