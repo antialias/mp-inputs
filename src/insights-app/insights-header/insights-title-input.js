@@ -32,7 +32,8 @@ document.registerElement(`insights-title-input`, class extends Component {
           inputValue: this.state.reportTitle,
         }),
         inputChange: () => {
-          this.update({inputValue: this.value,
+          this.update({
+            inputValue: this.value,
             isDirty: true,
             saveFocused: false,
             saveNewFocused: false,
