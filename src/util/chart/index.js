@@ -407,7 +407,7 @@ export function isIncompleteInterval(data, options) {
     var lastPoint = data[data.length - 1];
     var lastDate = Array.isArray(lastPoint) ? lastPoint[0] : lastPoint.x;
     var date = new Date();
-    var currentDate = localizedDate(options.utcOffset);
+    var currentDate = localizedDate({utcOffset: options.utcOffset});
     var currentInterval = (currentDate - lastDate);
 
     if (Number.isInteger(unit)) {

@@ -172,7 +172,7 @@ export default class SegmentationQuery extends BaseQuery {
     if (Array.isArray(time.value)) {
       [from, to] = time.value.map(ts => Number(moment.utc(ts)));
     } else {
-      to = Number(localizedDate(this.utcOffset));
+      to = Number(localizedDate({utcOffset: this.utcOffset}));
       from = to - MS_BY_UNIT[unit] * time.value;
     }
 
