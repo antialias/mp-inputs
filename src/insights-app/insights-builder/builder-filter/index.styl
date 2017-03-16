@@ -12,6 +12,10 @@ control-font()
   text-transform uppercase
 
 query-builder-filter
+  .search-icon-wrapper
+    position absolute
+    svg-icon-style(grey-700, size:16px)
+
   .filter-determiner-container
     display flex
     height 0
@@ -63,7 +67,7 @@ builder-filter-add-control
     .builder-search-input
       border none
       font-size 14px
-      padding 0
+      padding 0 0 0 20px
       width 0
       transition width 0.25s
       &.search-active

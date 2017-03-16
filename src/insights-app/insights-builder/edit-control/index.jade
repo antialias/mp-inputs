@@ -4,6 +4,8 @@
   .insights-new-control.new-query-builder(class={'pane-open': open})
     .control-buttons.edit-control.control-button-text.insights-learn-emphasize
       if open
+        .search-icon-wrapper
+          svg-icon(attrs={icon: 'search'})
         resize-input.control-label(
           attrs={
             autofocus: true,

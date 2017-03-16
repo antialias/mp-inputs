@@ -106,13 +106,17 @@ header-button-transition-duration = 150ms
   .contextual-menu
     .add-control
       display flex
+      svg-icon-style(grey-700, size: 18px)
+
+      svg-icon
+        position absolute
 
       input.control-label
         border none
         border-bottom 1px dotted mp-blue
         border-radius 0
         order 1
-        padding 0
+        padding 0 0 0 20px
         transition width input-animation-time, transform input-animation-time
         width 0px
 

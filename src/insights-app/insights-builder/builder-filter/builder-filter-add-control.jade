@@ -6,6 +6,8 @@
   .insights-new-control.new-query-builder(class={'pane-open': open})
     .control-buttons.add-filter-control
       if open
+        .search-icon-wrapper
+          svg-icon(attrs={icon: 'search'})
         input.control-label.builder-search-input(
           class={'search-active': open}
           hook={insert: $helpers.insertedInput}

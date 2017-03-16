@@ -33,6 +33,7 @@ include ../insights-learn/tooltip.jade
             on={change: $helpers.closeUpsellModal}
           )
       if open
+        svg-icon(attrs={icon: 'search'})
         input.control-label(
           hook={
             insert: $helpers.insertedInput,
@@ -44,6 +45,7 @@ include ../insights-learn/tooltip.jade
           }
           props={
             autoFocus: true,
+            placeholder: `Search`,
             type: `text`,
             value: contextFilter,
           }
