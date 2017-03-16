@@ -406,7 +406,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   _updateRecentList(type, value) {
     // remove any match data from view object
-    value = util.pick(value, [`name`, `type`, `resourceType`, `custom`, `id`, `alternatives`]);
+    // custom, id, alternatives are needed to get custom events to correctly work
+    // is_collect_everything_event is needed to show correct icon in recent events list
+    value = util.pick(value, [`name`, `type`, `resourceType`, `custom`, `id`, `alternatives`, `is_collect_everything_event`]);
 
     const stateKey = type === `events` ? `recentEvents` : `recentProperties`;
     this.update({[stateKey]: [
