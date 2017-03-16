@@ -28,7 +28,7 @@ export class MPLineChart extends WebComponent {
   attributeChangedCallback(attrName, oldVal, newVal) {
     if (attrName === `seg-filters`) {
       this._segFilters = JSON.parse(newVal);
-      this.updateShowHideSegments();
+      this.updateShowHideSeries();
     }
   }
 
@@ -282,77 +282,69 @@ export class MPLineChart extends WebComponent {
       highchartsOptions.yAxis.min = LOGARITHMIC_CHART_ZERO_REMAPPING;
     }
 
-    highchartsOptions.plotOptions.series.marker.enabled = Object.keys(this.chartData).every(segmentName => (
-      Object.keys(this.chartData[segmentName]).length <= 1
+    highchartsOptions.plotOptions.series.marker.enabled = Object.keys(this.chartData).every(seriesName => (
+      Object.keys(this.chartData[seriesName]).length <= 1
     ));
 
     let chartSeries = dataObjectToSortedSeries(this.chartData);
     chartSeries = chartSeries
       .map(series => Object.assign(series, {
-        color: this.colorForSegment(series.name),
+        color: this.colorForSeries(series.name),
         isIncompletePath: util.isIncompleteInterval(series.data, {
           unit: this._displayOptions.timeUnit,
           utcOffset: this.utcOffset,
         }),
         type: highchartsOptions.chart.type,
-        visible: this.isSegmentShowing(series.name),
+        visible: this.isSeriesShowing(series.name),
         headerPath: this.chartDataPaths[series.name],
       }))
-      .sort(multiPartSortComparator(this._headers, {
-        transform: series => series.headerPath,
-      }));
+      .sort(multiPartSortComparator(this._headers, {transform: series => series.headerPath}))
+      .map((series, index) => Object.assign(series, {index})); // add sorted index
 
     const [showingSeries, hiddenSeries] = partition(chartSeries, s => s.visible);
 
-    // Rendering is EXPENSIVE. Start the Chart with only visible segments. updateShowHideSegments adds segments to the Chart as needed.
+    // Rendering is EXPENSIVE. Start the Chart with only visible series. updateShowHideSeries adds series to the Chart as needed.
     highchartsOptions.series = showingSeries;
-
-    // highchartSegmentIdxMap is the living map of segments rendered to the Chart.
-    this.highchartSegmentIdxMap = highchartsOptions.series.reduce((obj, seg, idx) =>
-      Object.assign(obj, {[seg.name]: idx})
-    , {});
+    this.showingSeriesNames = new Set(showingSeries.map(series => series.name));
 
     this.hiddenSeries = hiddenSeries.reduce((obj, series) => Object.assign(obj, {[series.name]: series}), {});
     this.highchart = new Highcharts.Chart(highchartsOptions);
 
   }
 
-  isSegmentShowing(segmentName) {
+  isSeriesShowing(seriesName) {
     return (this._segFilters &&
-      this._segFilters.hasOwnProperty(segmentName) &&
-      this._segFilters[segmentName]);
+      this._segFilters.hasOwnProperty(seriesName) &&
+      this._segFilters[seriesName]);
   }
 
-  updateShowHideSegments() {
-    if (!this.initialized || !this.highchart || !this._segFilters || !this.highchartSegmentIdxMap) {
+  updateShowHideSeries() {
+    if (!this.initialized || !this.highchart || !this._segFilters || !this.showingSeriesNames) {
       return;
     }
 
-    Object.keys(this._segFilters).forEach(segmentName => {
-      const isVisible = this.isSegmentShowing(segmentName);
-      const visibleSegIdx = this.highchartSegmentIdxMap[segmentName];
-      if (Number.isInteger(visibleSegIdx)) {
-        // this segment already exists in the Chart. Make it visible
-        if (this.highchart.series[visibleSegIdx]) {
-          this.highchart.series[visibleSegIdx].setVisible(isVisible, false);
-        }
-      } else if (isVisible) {
-        // this segment does NOT exists in the Chart. Add it to the series as visible and update highchartSegmentIdxMap.
-        const hiddenSegment = util.extend(this.hiddenSeries[segmentName], {visible: true});
-        this.highchart.addSeries(hiddenSegment, false, false);
-        this.highchartSegmentIdxMap[segmentName] = this.highchart.series.length - 1;
+    Object.keys(this._segFilters).forEach(seriesName => {
+      if (!this.showingSeriesNames.has(seriesName) && this.isSeriesShowing(seriesName)) {
+        // this series does NOT exists in the Chart. Add it to the chart series as visible
+        const series = util.extend(this.hiddenSeries[seriesName], {visible: true});
+        this.highchart.addSeries(util.extend(series, {index: series.index}), false, false);
+        this.showingSeriesNames.add(seriesName);
       }
     });
-    this.highchart.redraw();
 
+    this.highchart.series.forEach(series =>
+      series.setVisible(this.isSeriesShowing(series.name), false)
+    );
+
+    this.highchart.redraw();
   }
 
   get chartData() {
     return this._chartData;
   }
 
-  colorForSegment(segmentName) {
-    const colorIdx = this._segmentColorMap[segmentName] || 1;
+  colorForSeries(seriesName) {
+    const colorIdx = this._segmentColorMap[seriesName] || 1;
     return commonCSS[`segmentColor${colorIdx}`];
   }
 
