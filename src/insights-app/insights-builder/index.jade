@@ -3,7 +3,10 @@
     .query
       .section-container= $component.child('query-builder-show')
       .section-container= $component.child('query-builder-group')
-      .section-container= $component.child('query-builder-contextual-add')
+      .section-container(class={
+        'contextual-add-control': true,
+        'contextual-pane-open': $helpers.isContextualPaneOpen(),
+      })= $component.child('query-builder-contextual-add')
       if $helpers.shouldShowTimeBuilder()
         .section-container= $component.child('query-builder-time')
     .filters= $component.child('query-builder-filter')

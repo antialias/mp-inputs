@@ -691,6 +691,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     );
   }
 
+  isContextualPaneOpen() {
+    return this.state.builderPane.screens.length && this.state.builderPane.isContextualMenuOpen && this.state.stageClauseIndex === null;
+  }
+
   trackEvent(eventName, properties) {
     if (this.state.learnActive) {
       const step = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);

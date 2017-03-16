@@ -27,6 +27,7 @@ document.registerElement(`insights-builder`, class extends Component {
         shouldShowTimeBuilder: () => (
           this.state.report.sections.show.clauseResourceTypes() !== ShowClause.RESOURCE_TYPE_PEOPLE
         ),
+        isContextualPaneOpen: () => this.app.isContextualPaneOpen(),
       },
     };
   }

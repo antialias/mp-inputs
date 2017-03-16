@@ -1,0 +1,95 @@
+@import "../../stylesheets/common"
+
+.insights-builder .section-container.contextual-add-control
+
+  .contextual-menu
+    .add-control
+      display flex
+
+      input.control-label
+        border none
+        border-bottom 1px dotted mp-blue
+        border-radius 0
+        order 1
+        padding 0 0 0 20px
+
+        .label-preposition
+          color grey-300
+          visibility hidden
+
+      .upsell-icon
+        position absolute
+        right -10px
+        top -8px
+        svg-icon-style(mp-purple)
+
+      .add-button-container
+        align-items center
+        display flex
+        justify-content center
+        order 2
+
+      button.add-button
+        align-items center
+        background-image linear-gradient(0deg, grey-50 0, white 100%)
+        border 1px solid grey-300
+        border-radius 50%
+        box-shadow 0 1px 1px 0 alpha(black, 0.2)
+        display flex
+        height 28px
+        justify-content center
+        margin-left 2px
+        padding 0
+        width 28px
+        svg-icon-style(grey-700, size: 22px)
+        svg-icon svg
+          transform rotateZ(-45deg)
+
+        &:hover:not(.disable-add-button)
+          background-image linear-gradient(0deg, white 0, white 100%)
+          box-shadow 0 1px 2px 0 alpha(black, 0.23)
+          svg-icon-style(mp-blue, size: 22px)
+
+        &:active, &.active
+          border-color grey-200
+          box-shadow 0 1px 0 0 grey-150, inset 0 2px 3px 0 grey-200
+          svg-icon-style(rgba(110, 133, 157, 0.8), size: 22px)
+
+      .upsell-wrapper
+        position absolute
+        top -70px
+
+    .pane-open
+      input.control-label
+        text-align left
+
+        .label-preposition
+          visibility visible
+
+      .add-control
+        button.add-button
+          svg-icon svg
+            transform rotateZ(0deg)
+
+  // Input animation
+
+  .add-button-container, ~ .section-container
+    background white
+    transform translateX(-190px)
+    transition transform input-animation-time
+    z-index 10 // correct stacking-context issue caused by transform
+
+  // fully cover input underline when contextual pane is closed
+  .add-button-container
+    height 100%
+    margin-right -16px
+    padding-right 16px
+    width auto
+
+  &:not(.contextual-pane-open)
+    input.control-label
+      pointer-events none
+
+  &.contextual-pane-open
+    .add-button-container, ~ .section-container
+      transform translateX(0)

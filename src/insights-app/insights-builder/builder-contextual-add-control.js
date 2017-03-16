@@ -4,6 +4,7 @@ import throttle from 'lodash/throttle';
 import { GroupClause, ShowClause } from '../../models/clause';
 
 import template from './builder-contextual-add-control.jade';
+import './builder-contextual-add-control.styl';
 
 document.registerElement(`query-builder-contextual-add`, class extends Component {
   attachedCallback() {
@@ -49,7 +50,7 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
   }
 
   isPaneOpen() {
-    return this.state.builderPane.screens.length && this.state.builderPane.isContextualMenuOpen && this.state.stageClauseIndex === null;
+    return this.app.isContextualPaneOpen();
   }
 
   openPane() {
