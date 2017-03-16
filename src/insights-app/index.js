@@ -274,9 +274,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   getUtcOffset() {
-    return this.mpContext ? this.mpContext.utcOffset : 0;
+    return this.mpContext.utcOffset || -(new Date().getTimezoneOffset());
   }
-
 
   /**
    * initialize app with data/settings from mixpanel.com if available
