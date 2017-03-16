@@ -70,7 +70,6 @@ mixin user-filter-option(label, value)
             +header-col(`Last modified`, `modified`)
           .report-results
             each report in $helpers.reportsForDisplay()
-              - const initials = report.user.split(' ').map(s => s[0]).join('').toUpperCase()
               - const icon = report.displayOptions.chartType
               .report-row.body-row(
                 class={[`icon-${icon}`]: !!icon}
@@ -83,6 +82,7 @@ mixin user-filter-option(label, value)
                   else
                     = report.title
                 .report-col.reportlist-field-user
+                  - const initials = $helpers.nameToInitials(report.user)
                   .user-icon(class={[`color-${initials[0]}`]: true})
                     = initials
                     insights-mp-tooltip(attrs={placement: `right`})= report.user

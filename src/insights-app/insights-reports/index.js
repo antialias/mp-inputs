@@ -4,6 +4,7 @@ import {
   lexicalCompose,
   mapArguments,
 } from 'mixpanel-common/util/function';
+import { nameToInitials } from 'mixpanel-common/util/string';
 import moment from 'moment';
 import { Component } from 'panel';
 
@@ -115,6 +116,7 @@ document.registerElement(`insights-reports`, class extends Component {
           }
         },
         hasWritePermissions: () => this.app.hasWritePermissions,
+        nameToInitials: name => nameToInitials(name),
         reportsForDisplay: () => {
           const drawer = this.state.reportsDrawer;
           let reports = Object.values(this.state.savedReports);
