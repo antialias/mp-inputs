@@ -130,11 +130,15 @@ builder-filter-add-control
         left 0
         position absolute
         top 0
+        transform scaleX(1)
+        transform-origin left center
+        transition transform input-animation-time
         width 166px // width of input
         z-index -1 // don't overlap button
 
     &:not(.pane-open)
-      .builder-search-input
+      .builder-search-input,
+      .add-filter-button-container::after
         pointer-events none
         visibility hidden
 
@@ -144,6 +148,9 @@ builder-filter-add-control
 
       .add-filter-button-container
         transform translateX(0)
+
+        &::after
+          transform scaleX(0)
 
 builder-filter-edit-control
   .insights-control button.modify
