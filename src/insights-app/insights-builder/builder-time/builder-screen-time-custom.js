@@ -45,19 +45,17 @@ document.registerElement(`builder-screen-time-custom`, class extends BuilderScre
 
           const {from, to} = ev.detail;
           const unit = dateRangeToUnit(from, to);
-          const old = this.app.getTimeClauseValue(this.app.activeStageClause);
-          const fromChanged = from !== old.from;
-          const toChanged = to !== old.to;
-          const unitChanged = unit !== old.unit;
 
-          if (fromChanged || toChanged || unitChanged) {
-            this.setDates(from, to, unit, {
-              shouldStopEditing: toChanged && !this.helpers.isUnitRelevant(),
-            });
-          }
+          this.setDates(from, to, unit, {
+            shouldStopEditing: this.state.builderPane.toFocused && !this.helpers.isUnitRelevant(),
+          });
 
-          if (fromChanged) {
+          if (this.state.builderPane.fromFocused) {
             this.app.updateBuilder({fromFocused: false, toFocused: true});
+          } else if (this.state.builderPane.toFocused) {
+            if (!this.helpers.isUnitRelevant()) {
+              this.app.updateBuilder({fromFocused: false, toFocused: false});
+            }
           }
         },
         resizedCalendar: () => this.updateRenderedSize({

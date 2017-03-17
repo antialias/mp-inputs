@@ -32,24 +32,23 @@
             value: date,
           }
           on={
-            change: $helpers.changedDates,
+            change: ev => $helpers.selectDate({date: ev.detail}),
           }
         )
   .calendar
-    insights-calendar(
+    mp-calendar(
       attrs={
-        'max-days': $helpers.maxDataHistory(),
-        range: isRange,
-        'double-calendar': isDoubleCalendar,
-        'from-focused': fromFocused,
-        'to-focused': toFocused,
-      }
-      props={
-        value: isRange ? {from, to} : date,
-        utcOffset,
+        'is-range': isRange,
+        'is-double-calendar': isDoubleCalendar,
+        'min-date': $helpers.getMinDate(),
+        'selected-date': date ? date : ``,
+        'selected-from-date': from ? from : ``,
+        'selected-to-date': to ? to : ``,
+        'is-from-date-focused': fromFocused,
+        'is-to-date-focused': toFocused,
       }
       on={
-        change: $helpers.changedDates,
-        resize: $helpers.resizedCalendar,
+        selectDate: ev => $helpers.selectDate(ev.detail),
+        draw: $helpers.resizedCalendar,
       }
     )

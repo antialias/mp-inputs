@@ -1,12 +1,13 @@
 import { Component } from 'panel';
 
-import { normalizeDateStrings } from '../../util';
+import { formatDate, localizedDate, normalizeDateRange, normalizeDateStrings } from '../../util';
 
 import template from './datepicker.jade';
 import './datepicker.styl';
 
 import './date-input';
-import './calendar';
+
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 class DatePicker extends Component {
   get config() {
@@ -25,20 +26,41 @@ class DatePicker extends Component {
         isDoubleCalendar: () => this.isDoubleCalendar,
         getPreposition: () => this.preposition,
         hideTextInputs: () => this.hideTextInputs,
-        maxDataHistory: () => this.maxDataHistory,
-        changedDates: ev => {
+        getMinDate: () => {
+          // Use a reasonable threshold for maxDataHistory, beyond which we do not have a min-date
+          if (this.maxDataHistory < 1000000) {
+            const today = localizedDate({utcOffset: this.utcOffset}).setHours(0, 0, 0, 0);
+            const date = new Date(today - (this.maxDataHistory * MS_PER_DAY));
+            return formatDate(date, {iso: true});
+          }
+          return ``;
+        },
+        getMaxDate: () => {
+          return formatDate(localizedDate({utcOffset: this.utcOffset}));
+        },
+        selectDate: detail => {
           if (this.isRange) {
-            let {from=this.state.from, to=this.state.to} = ev.detail;
+            let {from=this.state.from, to=this.state.to} = detail;
             [from=null, to=null] = normalizeDateStrings([from, to], {utcOffset: this.utcOffset});
             this.update({from, to, date: null});
           } else {
-            let [date=null] = normalizeDateStrings([ev.detail || this.state.date], {utcOffset: this.utcOffset});
+            let [date=null] = normalizeDateStrings([detail.date || this.state.date], {utcOffset: this.utcOffset});
             this.update({date, from: null, to: null});
           }
           this.emitChange();
         },
-        changedFrom: ev => this.helpers.changedDates({detail: {from: ev.detail}}),
-        changedTo: ev => this.helpers.changedDates({detail: {to: ev.detail}}),
+        changedFrom: ev => {
+          let from = ev.detail;
+          let to = this.state.to;
+          [from, to] = normalizeDateRange([from, to], `from`);
+          this.helpers.selectDate({from, to});
+        },
+        changedTo: ev => {
+          let from = this.state.from;
+          let to = ev.detail;
+          [from, to] = normalizeDateRange([from, to], `to`);
+          this.helpers.selectDate({from, to});
+        },
         focusedFrom: () => this.update({fromFocused: true}),
         blurredFrom: () => this.update({fromFocused: false}),
         focusedTo: () => this.update({toFocused: true}),
@@ -90,7 +112,8 @@ class DatePicker extends Component {
   }
 
   get maxDataHistory() {
-    return this.getAttribute(`max-data-history`);
+    const maxDataHistory = this.getAttribute(`max-data-history`);
+    return maxDataHistory !== null ? Number(maxDataHistory) : null;
   }
 
   get preposition() {

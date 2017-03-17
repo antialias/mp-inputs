@@ -3,6 +3,7 @@ import {
   dateRangeToUnit,
   extend,
   normalizeDateStrings,
+  normalizeDateRange,
   parseDate,
   stringFilterMatches,
 } from '../../../util';
@@ -94,6 +95,13 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
   setDates(dates={}) {
     const old = this.app.getTimeClauseValue();
     let {from=old.from, to=old.to} = dates;
+
+    if (dates.from) {
+      [from, to] = normalizeDateRange([from, to], `from`);
+    } else if (dates.to) {
+      [from, to] = normalizeDateRange([from, to], `to`);
+    }
+
     [from, to] = normalizeDateStrings([from, to], {utcOffset: this.app.getUtcOffset()});
 
     this.app.updateStageClause({
