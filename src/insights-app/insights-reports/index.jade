@@ -82,7 +82,7 @@ mixin user-filter-option(label, value)
                   else
                     = report.title
                 .report-col.reportlist-field-user
-                  - const initials = $helpers.nameToInitials(report.user)
+                  - const initials = util.nameToInitials(report.user)
                   .user-icon(class={[`color-${initials[0]}`]: true})
                     = initials
                     insights-mp-tooltip(attrs={placement: `right`})= report.user
