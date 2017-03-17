@@ -33,13 +33,21 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
         },
         updatedFrom: ev => this.updateScreen(ev.target.value, {fromFocused: true}),
         updatedTo: ev => this.updateScreen(ev.target.value, {toFocused: true}),
-        clickedFromLabel: () => {
+        clickedFromLabel: ev => {
           this.helpers.focusFrom();
-          this.helpers.clickedLabel();
+          if (this.helpers.isPaneOpen()) {
+            ev.stopPropagation();
+          } else {
+            this.helpers.clickedLabel();
+          }
         },
-        clickedToLabel: () => {
+        clickedToLabel: ev => {
           this.helpers.focusTo();
-          this.helpers.clickedLabel();
+          if (this.helpers.isPaneOpen()) {
+            ev.stopPropagation();
+          } else {
+            this.helpers.clickedLabel();
+          }
         },
         focus: vnode => requestAnimationFrame(() => vnode.elm.focus()),
         focusFrom: () => this.app.updateBuilder({fromFocused: true, toFocused: false}),
