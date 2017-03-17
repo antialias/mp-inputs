@@ -63,81 +63,87 @@ query-builder-filter
     margin 2px 8px 0 0
 
 builder-filter-add-control
-  .insights-new-control.new-query-builder .add-filter-control
-    display flex
+  .insights-new-control.new-query-builder
 
-    // TODO extract/consolidate search input styles
-    .builder-search-input
-      border none
-      font-size 14px
-      padding 0 0 0 20px
-      width 0
-      transition width 0.25s
-      &.search-active
-        border-bottom 1px solid mp-blue
-        margin-right 10px
-        width 200px
-        &:hover
-          border-bottom 1px solid mp-blue
-
-    .upsell-icon
-      position absolute
-      right -10px
-      top -5px
-      svg-icon-style(mp-purple)
-
-    .add-filter-button
-      background-image linear-gradient(0deg, grey-50 0, white 100%)
-      border 1px solid grey-300
-      border-radius 3px
-      box-shadow 0 1px 1px 0 alpha(black, 0.2)
-      color grey-700
-      font-size 12px
-      font-weight 500
-      padding 0
-      &:hover
-        background-image linear-gradient(0deg, white 0, white 100%)
-        box-shadow 0 1px 2px 0 alpha(black, 0.23)
-        color blue-300
-      &:active
-        border-color grey-200
-        box-shadow 0 1px 0 0 grey-150, inset 0 2px 3px 0 grey-200
-        color rgba(grey-700, 0.8)
-    .button-flex-wrapper
-      align-items center
+    .add-filter-control
       display flex
-      padding 3px 11px 5px 4px
-      svg-icon-style(grey-700, blue-300, pos-top: 1px)
+      height 38px
+
+      // TODO extract/consolidate search input styles
+      .builder-search-input
+        border-bottom 1px solid mp-blue
+        font-size 14px
+        padding 0 0 0 20px
+
+        &.search-active
+          margin-right 10px
+
+      .upsell-icon
+        position absolute
+        right -10px
+        top -5px
+        svg-icon-style(mp-purple)
+
+      .add-filter-button
+        background-image linear-gradient(0deg, grey-50 0, white 100%)
+        border 1px solid grey-300
+        border-radius 3px
+        box-shadow 0 1px 1px 0 alpha(black, 0.2)
+        color grey-700
+        font-size 12px
+        font-weight 500
+        padding 0
+
+        &:hover
+          background-image linear-gradient(0deg, white 0, white 100%)
+          box-shadow 0 1px 2px 0 alpha(black, 0.23)
+          color blue-300
+        &:active
+          border-color grey-200
+          box-shadow 0 1px 0 0 grey-150, inset 0 2px 3px 0 grey-200
+          color rgba(grey-700, 0.8)
+
+      .button-flex-wrapper
+        align-items center
+        display flex
+        padding 3px 11px 5px 4px
+        svg-icon-style(grey-700, blue-300, pos-top: 1px)
+
+      .upsell-wrapper
+        left 100px
+        position absolute
+        top 8px
+
+    /**
+     * Input animation
+     */
+
+    .add-filter-button-container
+      transform translateX(-166px)
+      transition transform input-animation-time
+
+      // partially cover input underline through animation
+      &::after
+        background white
+        content ''
+        height calc(100% + 3px)
+        left 0
+        position absolute
+        top 0
+        width 166px // width of input
+        z-index -1 // don't overlap button
+
+    &:not(.pane-open)
+      .builder-search-input
+        pointer-events none
+        visibility hidden
 
     &.pane-open
       .button-flex-wrapper svg-icon
         transform rotateZ(45deg)
 
-    .add-filter-control
-      display flex
-
-      // TODO extract/consolidate search input styles
-      .builder-search-input
-        border none
-        font-size 14px
-        padding 0
-        width 0
-        transition width 0.25s
-        &.search-active
-          border-bottom 1px solid mp-blue
-          margin-right 10px
-          width 200px
-          &:hover
-            border-bottom 1px solid mp-blue
-
-      &.filter-button-disabled
-        color grey-700
-        svg-icon-style(grey-700)
-
-    .upsell-wrapper
-      left 100px
-      position absolute
-      top 8px
+      .add-filter-button-container
+        transform translateX(0)
 
 builder-filter-edit-control
   .insights-control button.modify

@@ -5,33 +5,28 @@
 .control-container
   .insights-new-control.new-query-builder(class={'pane-open': open})
     .control-buttons.add-filter-control
-      if open
-        .search-icon-wrapper
-          svg-icon(attrs={icon: 'search'})
-        input.control-label.builder-search-input(
-          class={'search-active': open}
-          hook={insert: $helpers.insertedInput}
-          props={
-            autoFocus: true,
-            placeholder: 'Search',
-            type: `text`,
-            value: contextFilter,
-          }
-          on={
-            click: $helpers.clickedInput,
-            input: $helpers.changedSearch,
-            keydown: $helpers.handleKeydown,
-          }
-          style={
-            width: 0,
-            delayed: {width: ''},
-            remove: {width: '0'},
-          }
-        )
-      button.add-filter-button(on={click: $helpers.clickedAdd})
-        span.button-flex-wrapper(class={'filter-button-disabled': showUpsellIcon})
-          svg-icon(attrs={icon: 'plus'})
-          span.add-filter-label Filter
+      .search-icon-wrapper
+        svg-icon(attrs={icon: 'search'})
+      input.control-label.builder-search-input(
+        class={'search-active': open}
+        hook={insert: $helpers.insertedInput}
+        props={
+          autoFocus: true,
+          placeholder: 'Search',
+          type: `text`,
+          value: contextFilter,
+        }
+        on={
+          click: $helpers.clickedInput,
+          input: $helpers.changedSearch,
+          keydown: $helpers.handleKeydown,
+        }
+      )
+      .add-filter-button-container
+        button.add-filter-button(on={click: $helpers.clickedAdd})
+          span.button-flex-wrapper(class={'filter-button-disabled': showUpsellIcon})
+            svg-icon(attrs={icon: 'plus'})
+            span.add-filter-label Filter
       if showUpsellIcon
         .upsell-icon
           svg-icon(attrs={icon: 'lighting-bolt'})
