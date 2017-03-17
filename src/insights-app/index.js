@@ -418,7 +418,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
     const stateKey = type === `events` ? `recentEvents` : `recentProperties`;
     this.update({[stateKey]: [
-      value, ...this.state[stateKey].filter(oldValue => !isEqual(value, oldValue)),
+      // JSON.stringify removes prop:undefined when stringifying. Since we stringify for persistence,
+      // filter needs to account for the quirky behaviour and use a stringify comparison
+      value, ...this.state[stateKey].filter(oldValue => JSON.stringify(value) !== JSON.stringify(oldValue)),
     ].slice(0, 10)});
     this.persistence.set(this._getRecentPersistenceKey(type), JSON.stringify(this.state[stateKey]));
   }

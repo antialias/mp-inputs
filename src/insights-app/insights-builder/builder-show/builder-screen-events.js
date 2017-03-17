@@ -31,7 +31,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
 
   getRecentEvents() {
     return this.matchingItems(this.state.recentEvents.slice(0, 3), renameEvent)
-      .map(mpEvent => Object.assign(mpEvent, {section: `recent`}));
+      .map(mpEvent => extend(mpEvent, {section: `recent`}));
   }
 
   buildList() {
