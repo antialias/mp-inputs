@@ -27,6 +27,11 @@ header-button-transition-duration = 150ms
     margin-bottom 18px
     margin-right 12px
 
+  .clause-container, .add-control
+    .search-icon-wrapper
+      position absolute
+      svg-icon-style(grey-700, size: 18px)
+
   .clause-container
     position relative
     &:hover
@@ -106,10 +111,6 @@ header-button-transition-duration = 150ms
   .contextual-menu
     .add-control
       display flex
-      svg-icon-style(grey-700, size: 18px)
-
-      svg-icon
-        position absolute
 
       input.control-label
         border none
