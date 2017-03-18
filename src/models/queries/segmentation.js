@@ -9,7 +9,6 @@ import main from './segmentation.jql.js';
 import QueryCache from './query-cache';
 
 import {
-  MS_BY_UNIT,
   abbreviateNumber,
   capitalize,
   extend,
@@ -23,7 +22,7 @@ import {
   renameProperty,
 } from '../../util';
 import {
-  parseDateCache,
+  cacheParsedDate,
 } from '../../util/chart';
 
 class JQLQuery {
@@ -462,7 +461,7 @@ export default class SegmentationQuery extends BaseQuery {
     });
 
     this.timestampToDateStringCache[unit][timestampInMS] = dateString;
-    parseDateCache.add(dateString, timestampInMS);
+    cacheParsedDate(dateString, timestampInMS);
 
     return dateString;
   }
