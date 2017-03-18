@@ -155,6 +155,7 @@ export default class SegmentationQuery extends BaseQuery {
       showClause => new JQLQuery(showClause, state, extend(options, pick(this, [`customEvents`])))
     );
 
+
     // data global to all JQL queries.
     const segments = sections.group.clauses
       .map(clause => pick(clause, [`value`, `propertyType`, `resourceType`, `typeCast`, `unit`]))
@@ -168,8 +169,12 @@ export default class SegmentationQuery extends BaseQuery {
       .join(` ${conjunction} `);
 
     // TODO (jordan): handle resetting dates when building params
+    const isPeopleOnly = jqlQueries.every(query => query.resourceType === `people`);
+    const lastPeopleSegment = isPeopleOnly && segments.length && segments[segments.length - 1];
+    const isPeopleTimeSeries = lastPeopleSegment && lastPeopleSegment.propertyType === `datetime`;
+
     const time = sections.time.clauses[0];
-    const unit = time.unit;
+    const unit = isPeopleTimeSeries ? lastPeopleSegment.unit : time.unit;
 
     let from, to;
     if (Array.isArray(time.value)) {
@@ -179,7 +184,16 @@ export default class SegmentationQuery extends BaseQuery {
       from = to - MS_BY_UNIT[unit] * time.value;
     }
 
-    return {jqlQueries, segments, filterArbSelectors, from, to};
+    return {
+      filterArbSelectors,
+      from,
+      isPeopleOnly,
+      isPeopleTimeSeries,
+      jqlQueries,
+      segments,
+      to,
+      unit,
+    };
   }
 
   buildUrl() {
@@ -378,8 +392,6 @@ export default class SegmentationQuery extends BaseQuery {
 
     // create an object of zero values for all possible dates
     let baseDateResults = {};
-    const isPeopleOnlyQuery = this.query.jqlQueries.every(query => query.resourceType === `people`);
-    const needsPeopleTimeSeries = isPeopleOnlyQuery && querySegments.length && querySegments[querySegments.length - 1].propertyType === `datetime`;
 
     // we get data back in project epoch time. offset for local tz and account for DST.
     const localTZOffset = new Date().getTimezoneOffset();
@@ -389,16 +401,33 @@ export default class SegmentationQuery extends BaseQuery {
       return localizedTimestamp + (dstOffset * 60 * 1000);
     };
 
-    if (!isPeopleOnlyQuery || needsPeopleTimeSeries) {
+
+    if (!this.query.isPeopleOnly || this.query.isPeopleTimeSeries) {
       // create base values for all known dates if anything but non-time people query.
-      // TODO jordan: use to/from + units to create a true 0 base date obj.
       results.forEach(r => {
         let timestamp = r.key[r.key.length - 1];
-        timestamp = isPeopleOnlyQuery ? timestamp * 1000 : timestamp;
-        if (timestamp && Number.isInteger(Number(timestamp))) {
+        if (timestamp !== null && Number.isInteger(Number(timestamp))) {
+          timestamp = this.query.isPeopleOnly ? Number(timestamp) * 1000 : Number(timestamp);
           baseDateResults[offsetTimestamp(timestamp)] = 0;
         }
       });
+
+      const sortedTimestamps = Object.keys(baseDateResults).map(Number).sort();
+      const minTimestamp = sortedTimestamps[0];
+      const maxTimestamp = sortedTimestamps[sortedTimestamps.length - 1];
+
+      // Make sure we have data for dates between from/to.
+      // If it is a people query there is no date range so we must use the data min/max.
+      const min = this.query.isPeopleTimeSeries ? minTimestamp : this.query.from;
+      const max = this.query.isPeopleTimeSeries ? maxTimestamp : this.query.to;
+
+      for (let cursor = moment(minTimestamp); cursor > moment(min); cursor.subtract(1, `${this.query.unit}s`)) {
+        baseDateResults[Number(cursor)] = 0;
+      }
+      for (let cursor = moment(minTimestamp); cursor < moment(max); cursor.add(1, `${this.query.unit}s`)) {
+        baseDateResults[Number(cursor)] = 0;
+      }
+
     }
 
     if (results) {
@@ -452,11 +481,11 @@ export default class SegmentationQuery extends BaseQuery {
         };
       };
 
-      series = results.reduce(createSeriesReducerFunc({isTimeSeries: !isPeopleOnlyQuery}), {});
-      peopleTimeSeries = needsPeopleTimeSeries ? results.reduce(createSeriesReducerFunc({timestampMultiplier: 1000}), {}) : null;
+      series = results.reduce(createSeriesReducerFunc({isTimeSeries: !this.query.isPeopleOnly}), {});
+      peopleTimeSeries = this.query.isPeopleTimeSeries ? results.reduce(createSeriesReducerFunc({timestampMultiplier: 1000}), {}) : null;
     }
 
-    headers = [isPeopleOnlyQuery ? `$people` : `$event`].concat(headers);
+    headers = [this.query.isPeopleOnly ? `$people` : `$event`].concat(headers);
 
     return new Result({series, headers, peopleTimeSeries});
   }
