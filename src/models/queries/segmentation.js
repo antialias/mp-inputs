@@ -339,21 +339,13 @@ export default class SegmentationQuery extends BaseQuery {
   executeQuery() {
     return Promise.all(this.runJQLQueries()).then(resultSets => {
       return resultSets.reduce((acc, results, index) => {
-        const jqlQuery = this.query.jqlQueries[index];
         // resolve name conflicts
-        const outputName = jqlQuery.outputName;
+        const outputName = this.query.jqlQueries[index].outputName;
         results.forEach(result => {
-          const displayName = jqlQuery.displayNames[result.key[0]];
+          const displayName = this.query.jqlQueries[index].displayNames[result.key[0]];
           if (displayName) {
             result.key[0] = displayName;
           }
-
-          // When filtering segmentation query by property,
-          // `event/people - property` should be used
-          if (jqlQuery.property && jqlQuery.property.name) {
-            result.key[0] = `${renameEvent(result.key[0])} - ${renameProperty(jqlQuery.property.name)}`;
-          }
-
           if (outputName) {
             result.key.unshift(outputName);
           }
