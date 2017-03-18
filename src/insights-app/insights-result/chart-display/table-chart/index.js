@@ -151,10 +151,13 @@ document.registerElement(`table-chart`, class extends Component {
       return false;
     }
 
+    // handle special table layout cases for 1 and 2 columns
+    const expectedNumSortCols = headers.length > 2 ? headers.length - 1 : headers.length;
+
     if (sortConfig.sortBy === `value`) {
       return !!sortConfig.sortColumn;
     } else {
-      return sortConfig.colSortAttrs.length === Math.max(1, headers.length - 1);
+      return sortConfig.colSortAttrs.length === expectedNumSortCols;
     }
   }
 

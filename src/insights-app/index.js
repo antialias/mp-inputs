@@ -855,7 +855,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
     if (result) {
       let numTableHeaders = result.headers.length;
-      if (numTableHeaders > 1) {
+      if (numTableHeaders > 2) { // handle special table layout cases for 1 and 2 columns
         numTableHeaders--;
       }
 
@@ -892,7 +892,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         for (let i = sortConfig.table.colSortAttrs.length; i < numTableHeaders; i++) {
           sortConfig.table.colSortAttrs.push({sortBy: `label`, sortOrder: `asc`});
         }
-
       }
     }
 

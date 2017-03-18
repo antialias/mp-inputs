@@ -165,11 +165,8 @@ function expandTableHeaderRows(arr, depth, allowNullHeaders=true) {
  * Sorts table rows according to header names, maintaining header groupings.
  */
 function sortTableColumns(arr, colSortAttrs) {
-  let childSortAttrs = colSortAttrs.slice(1);
-  if (childSortAttrs.length) {
-    arr = arr.map(child => {
-      return [child[0], sortTableColumns(child[1], childSortAttrs)];
-    });
+  if (colSortAttrs.length > 2) { // handle special table layout cases for 1 or 2 columns
+    arr = arr.map(child => [child[0], sortTableColumns(child[1], colSortAttrs.slice(1))]);
   }
   return arr.sort(sortComparator({
     order: colSortAttrs[0].sortOrder,
