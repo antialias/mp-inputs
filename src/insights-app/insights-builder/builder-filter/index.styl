@@ -14,10 +14,6 @@ control-font()
 query-builder-filter
   .search-icon-wrapper
     svg-icon-style(grey-700, size: 16px)
-    position absolute
-    svg-icon
-      bottom -8px
-      position absolute
 
   .filter-determiner-container
     display flex
@@ -70,13 +66,17 @@ builder-filter-add-control
       height 38px
 
       // TODO extract/consolidate search input styles
-      .builder-search-input
-        border-bottom 1px solid mp-blue
+      input.builder-search-input
+        border-bottom 1px dotted mp-blue
         font-size 14px
-        padding 0 0 0 20px
+        text-indent 20px
+        width input-width
 
         &.search-active
           margin-right 10px
+
+        &:focus
+          border-bottom-style solid
 
       .upsell-icon
         position absolute
@@ -119,8 +119,8 @@ builder-filter-add-control
      */
 
     .add-filter-button-container
-      transform translateX(-166px)
-      transition transform input-animation-time
+      transform translateX(-(input-width))
+      transition transform input-animation-time ease-out-quart
 
       // partially cover input underline through animation
       &::after
@@ -132,7 +132,7 @@ builder-filter-add-control
         top 0
         transform scaleX(1)
         transform-origin left center
-        transition transform input-animation-time
+        transition transform input-animation-time ease-in-quart
         width 166px // width of input
         z-index -1 // don't overlap button
 
@@ -150,7 +150,7 @@ builder-filter-add-control
         transform translateX(0)
 
         &::after
-          transform scaleX(0)
+          transform scaleX(.5)
 
 builder-filter-edit-control
   .insights-control button.modify

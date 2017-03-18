@@ -692,7 +692,11 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   isContextualPaneOpen() {
-    return this.state.builderPane.screens.length && this.state.builderPane.isContextualMenuOpen && this.state.stageClauseIndex === null;
+    return (
+      this.state.builderPane.screens.length &&
+      this.state.builderPane.isContextualMenuOpen &&
+      this.state.stageClauseIndex === null
+    );
   }
 
   trackEvent(eventName, properties) {

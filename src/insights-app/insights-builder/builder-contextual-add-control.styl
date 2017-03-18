@@ -11,7 +11,8 @@
         border-bottom 1px dotted mp-blue
         border-radius 0
         order 1
-        padding 0 0 0 20px
+        text-indent 22px
+        width input-width
 
         .label-preposition
           color grey-300
@@ -75,8 +76,8 @@
 
   .add-button-container, ~ .section-container
     background white
-    transform translateX(-190px)
-    transition transform input-animation-time
+    transform translateX(-(input-width))
+    transition transform input-animation-time ease-out-quart
     z-index 10 // correct stacking-context issue caused by transform
 
   // fully cover input underline when contextual pane is closed

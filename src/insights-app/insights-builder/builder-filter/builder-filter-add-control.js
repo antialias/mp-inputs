@@ -22,6 +22,7 @@ document.registerElement(`builder-filter-add-control`, class extends Component {
           }
           if (!this.isPaneOpen()) {
             this.openPane();
+            this.app.updateBuilder({searchFocused: true});
           } else {
             this.app.stopBuildingQuery(this.tagName);
           }
@@ -31,6 +32,12 @@ document.registerElement(`builder-filter-add-control`, class extends Component {
         insertedInput: vnode => vnode.elm.focus(),
         isPaneOpen: () => this.isPaneOpen(),
         changedSearch: ev => this.update({contextFilter: ev.target.value}),
+        blurredSearch: () => this.app.updateBuilder({searchFocused: false}),
+        updateFocus: vnode => {
+          if (this.state.builderPane.searchFocused) {
+            vnode.elm.focus();
+          }
+        },
         shouldShowUpsellIcon: () => (!this.app.canAddFilterClause()),
         shouldShowUpsellModal: () => this.state.upsellModal === `filterClause`,
         closeUpsellModal: ev => this.app.maybeCloseUpsellModal(ev, `filterClause`),

@@ -37,18 +37,19 @@ include ../insights-learn/tooltip.jade
         svg-icon(attrs={icon: 'search'})
       input.control-label(
         hook={
-          insert: $helpers.insertedInput,
-        }
-        on={
-          click: $helpers.clickedInput,
-          input: $helpers.changedSearch,
-          keydown: $helpers.handleKeydown,
+          postpatch: $helpers.updateFocus,
         }
         props={
           autoFocus: true,
           placeholder: `Search`,
           type: `text`,
           value: contextFilter,
+        }
+        on={
+          click: $helpers.clickedInput,
+          input: $helpers.changedSearch,
+          keydown: $helpers.handleKeydown,
+          blur: $helpers.blurredSearch,
         }
       )
         span.label-preposition= $helpers.getPreposition()

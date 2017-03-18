@@ -24,6 +24,7 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
           }
           if (!this.isPaneOpen()) {
             this.openPane();
+            this.app.updateBuilder({searchFocused: true});
           } else {
             this.app.stopBuildingQuery();
           }
@@ -36,13 +37,18 @@ document.registerElement(`query-builder-contextual-add`, class extends Component
           [ShowClause.TYPE]: `and`,
           [GroupClause.TYPE]: `by`,
         }[this.app.originStageClauseType()] || ``),
-        insertedInput: vnode => vnode.elm.focus(),
         isPaneOpen: () => this.isPaneOpen(),
         changedSearch: throttle(ev => {
           this.update({contextFilter: ev.target.value});
           this.app.updateBuilder({activeIndex: 0});
           this.app.updateBuilderCurrentScreen({progressiveListSize: null});
         }, 200, {leading: true, maxWait: 200}),
+        blurredSearch: () => this.app.updateBuilder({searchFocused: false}),
+        updateFocus: vnode => {
+          if (this.state.builderPane.searchFocused) {
+            vnode.elm.focus();
+          }
+        },
         shouldShowUpsellModal: () => (this.state.upsellModal === `builderClause`),
         closeUpsellModal: ev => this.app.maybeCloseUpsellModal(ev, `builderClause`),
       },

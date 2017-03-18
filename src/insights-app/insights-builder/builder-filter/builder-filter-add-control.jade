@@ -8,8 +8,12 @@
       .search-icon-wrapper
         svg-icon(attrs={icon: 'search'})
       input.control-label.builder-search-input(
-        class={'search-active': open}
-        hook={insert: $helpers.insertedInput}
+        class={
+          'search-active': open,
+        }
+        hook={
+          postpatch: $helpers.updateFocus,
+        }
         props={
           autoFocus: true,
           placeholder: 'Search',
@@ -20,6 +24,7 @@
           click: $helpers.clickedInput,
           input: $helpers.changedSearch,
           keydown: $helpers.handleKeydown,
+          blur: $helpers.blurredSearch,
         }
       )
       .add-filter-button-container

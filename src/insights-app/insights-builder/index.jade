@@ -1,9 +1,8 @@
 .insights-builder.insights-learn-manipulate-data-disabled
   if projectHasEvents
     .query
-      .sections
-        .section-container= $component.child('query-builder-show')
-        .section-container= $component.child('query-builder-group')
+      .section-container= $component.child('query-builder-show')
+      .section-container= $component.child('query-builder-group')
       .sections
         .section-container(class={
           'contextual-add-control': true,

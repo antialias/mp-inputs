@@ -36,7 +36,7 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
         clickedFromLabel: ev => {
           this.helpers.focusFrom();
           if (this.helpers.isPaneOpen()) {
-            ev.stopPropagation();
+            ev.stopPropagation(); // prevent click outside of datepicker pane from from closing it
           } else {
             this.helpers.clickedLabel();
           }
@@ -44,7 +44,7 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
         clickedToLabel: ev => {
           this.helpers.focusTo();
           if (this.helpers.isPaneOpen()) {
-            ev.stopPropagation();
+            ev.stopPropagation(); // prevent click outside of datepicker pane from from closing it
           } else {
             this.helpers.clickedLabel();
           }
