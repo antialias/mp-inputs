@@ -7,15 +7,14 @@ include ../insights-learn/tooltip.jade
 .builder-container.contextual-menu(
   class=util.learnClasses({
     disabledSteps: [`choose-event`],
-    tooltipContainer: true,
     transitioning: learnTransitioningIn && [`compare-event`, `group-by`].includes(learnStep.name),
   })
 )
-  +insights-learn-tooltip(`compare-event`, `group-by`)
   .insights-new-control.new-query-builder(class={'pane-open': open})
-    .control-buttons.add-control.insights-learn-emphasize
-      .add-button-container
-        button.add-button(
+    .control-buttons.add-control
+      .add-button-container.insights-learn-tooltip-container
+        +insights-learn-tooltip(`compare-event`, `group-by`)
+        button.add-button.insights-learn-emphasize(
           class={'disable-add-button': showUpsellIcon}
           on={click: $helpers.clickedAdd}
         )

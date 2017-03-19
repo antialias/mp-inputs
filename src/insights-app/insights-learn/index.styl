@@ -38,6 +38,14 @@ body insights-mp-modal.insights-learn
 
 .insights-app.insights-learn-active
 
+  // bugfix: layering issues between contextual control and time clause
+  &.insights-learn-choose-event,
+  &.insights-learn-compare-event,
+  &.insights-learn-group-by,
+  &.insights-learn-manipulate-data
+    .section-container.time-control
+      display none
+
   // Learn tooltips
 
   .insights-learn-tooltip-container

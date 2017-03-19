@@ -810,6 +810,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   updateReport(attrs) {
+    // need to get the previous step BEFORE we update the report data
+    const prevLearnStep = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
+
     const oldUrlData = this.state.report.toUrlData();
     const report = Object.assign(this.state.report, attrs);
     const newUrlData = report.toUrlData();
@@ -821,7 +824,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.update({report});
 
     const nextLearnStep = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
-    const prevLearnStep = util.getLearnStep(this.state.report, this.state.learnModalStepIndex);
     if (this.state.learnActive && prevLearnStep.name !== nextLearnStep.name) {
       this.transitionLearn();
     } else if (!isEqual(oldUrlData, newUrlData)) {

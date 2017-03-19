@@ -103,7 +103,7 @@ export default class MPContext {
   }
 
   setFlag(flag) {
-    if (!this.flags[flag]) {
+    if (this.flags && !this.flags[flag]) {
       this.flags[flag] = mp.report.globals.flags[flag] = 1;
       this.post(`${this.apiHost}/set_flag/`, {flag});
     }

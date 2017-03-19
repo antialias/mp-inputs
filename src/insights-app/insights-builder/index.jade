@@ -1,15 +1,14 @@
 .insights-builder.insights-learn-manipulate-data-disabled
   if projectHasEvents
     .query
-      .section-container= $component.child('query-builder-show')
-      .section-container= $component.child('query-builder-group')
+      .section-container.show-control= $component.child('query-builder-show')
+      .section-container.group-control= $component.child('query-builder-group')
       .sections
-        .section-container(class={
-          'contextual-add-control': true,
+        .section-container.contextual-add-control(class={
           'contextual-pane-open': $helpers.isContextualPaneOpen(),
         })= $component.child('query-builder-contextual-add')
         if $helpers.shouldShowTimeBuilder()
-          .section-container= $component.child('query-builder-time')
+          .section-container.time-control= $component.child('query-builder-time')
     .filters= $component.child('query-builder-filter')
     .reset-query.insights-learn-disabled(on={click: $helpers.reset})
       svg-icon(attrs={icon: 'x'})
