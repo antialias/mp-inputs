@@ -342,13 +342,21 @@ export default class SegmentationQuery extends BaseQuery {
   executeQuery() {
     return Promise.all(this.runJQLQueries()).then(resultSets => {
       return resultSets.reduce((acc, results, index) => {
+        const jqlQuery = this.query.jqlQueries[index];
         // resolve name conflicts
-        const outputName = this.query.jqlQueries[index].outputName;
+        const outputName = jqlQuery.outputName;
         results.forEach(result => {
-          const displayName = this.query.jqlQueries[index].displayNames[result.key[0]];
+          const displayName = jqlQuery.displayNames[result.key[0]];
           if (displayName) {
             result.key[0] = displayName;
           }
+
+          // When filtering segmentation query by property,
+          // `event - property` should be used so user can see meaningful names in charts
+          if (this.isEventPropertyQuery(jqlQuery) && result.key.length > 1) {
+            result.key[0] = `${renameEvent(result.key[0])} - ${renameProperty(jqlQuery.property.name)}`;
+          }
+
           if (outputName) {
             result.key.unshift(outputName);
           }
@@ -356,6 +364,10 @@ export default class SegmentationQuery extends BaseQuery {
         return acc.concat(results);
       }, []);
     });
+  }
+
+  isEventPropertyQuery(jqlQuery) {
+    return jqlQuery.property && jqlQuery.property.name && jqlQuery.resourceType === `events`;
   }
 
   processResults(results) {
