@@ -114,6 +114,7 @@ document.registerElement(`chart-display`, class extends Component {
 
           return shouldShow;
         },
+        isEmptyResult: result => !Object.keys(result.series).length,
         processResult: (result, {flattenedData=false}={}) => {
           result = result.transformed({
             analysis: this.state.report.displayOptions.analysis,
