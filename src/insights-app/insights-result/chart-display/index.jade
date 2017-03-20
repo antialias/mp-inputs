@@ -23,7 +23,7 @@
         .chart-graph
           .chart-error-data-image
           .chart-error-no-data-text We don't have any data for your project.
-    else if $helpers.isEmptyResult(result)
+    else if result.isEmptyResult()
       .error-no-data
         .chart-graph
           .chart-error-data-image

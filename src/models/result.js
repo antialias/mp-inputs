@@ -18,6 +18,10 @@ export default class Result {
     return isEqual(this.headers, result.headers) && isEqual(this.series, result.series);
   }
 
+  isEmptyResult() {
+    return !Object.keys(this.series).length;
+  }
+
   transformed(options) {
     // for 'logarithmic', no transformation on the result is needed, we use 'linear' here and leave
     // it to 'line' and 'bar' to display correctly.
