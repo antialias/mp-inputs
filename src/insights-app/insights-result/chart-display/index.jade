@@ -23,6 +23,11 @@
         .chart-graph
           .chart-error-data-image
           .chart-error-no-data-text We don't have any data for your project.
+    else if !Object.keys($helpers.processResult(result).series).length
+      .error-no-data
+        .chart-graph
+          .chart-error-data-image
+          .chart-error-no-data-text We couldn't find any data for your query.
     else
       case report.displayOptions.chartType
         when 'bar'
