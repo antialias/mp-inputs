@@ -16,7 +16,7 @@
         .chart-graph
           mp-spinner
     else if !projectHasEvents
-      .chart-loader.error-no-data
+      .chart-loader.error-no-project-data
         .chart-header-container
           .header-text-container
           .header-icon
@@ -24,7 +24,7 @@
           .chart-error-data-image
           .chart-error-no-data-text We don't have any data for your project.
     else if result.isEmptyResult()
-      .error-no-data
+      .error-no-query-data
         .chart-graph
           .chart-error-data-image
           .chart-error-no-data-text We couldn't find any data for your query.

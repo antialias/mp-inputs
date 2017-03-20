@@ -1,6 +1,10 @@
 import isEqual from 'lodash/isEqual';
 
+<<<<<<< HEAD
 import { nestedObjectCumulative, nestedObjectRolling, pick } from '../util';
+=======
+import { flattenNestedObjectToPath, nestedObjectCumulative, nestedObjectRolling, pick } from '../util';
+>>>>>>> 824f12f... new way, using old utils
 
 let resultID = 0;
 
@@ -19,7 +23,8 @@ export default class Result {
   }
 
   isEmptyResult() {
-    return !Object.keys(this.series).length;
+    let flattenedSeries = flattenNestedObjectToPath(this.series, {flattenValues: true});
+    return !Object.keys(flattenedSeries.values).length;
   }
 
   transformed(options) {

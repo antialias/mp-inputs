@@ -121,7 +121,7 @@ function _filterIntoObject(obj, filter, parentKeys=[]) {
     }
   });
   Object.keys(obj).forEach(key => {
-    if (typeof obj[key] === `object`) {
+    if (typeof obj[key] === `object` && obj[key] !== null) {
       _filterIntoObject(obj[key], filter, parentKeys.concat(key));
       if (!Object.keys(obj[key]).length) {
         delete obj[key];
