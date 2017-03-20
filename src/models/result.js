@@ -1,10 +1,5 @@
 import isEqual from 'lodash/isEqual';
-
-<<<<<<< HEAD
-import { nestedObjectCumulative, nestedObjectRolling, pick } from '../util';
-=======
 import { flattenNestedObjectToPath, nestedObjectCumulative, nestedObjectRolling, pick } from '../util';
->>>>>>> 824f12f... new way, using old utils
 
 let resultID = 0;
 
