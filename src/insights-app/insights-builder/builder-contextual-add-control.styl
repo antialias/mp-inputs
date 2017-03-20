@@ -79,7 +79,7 @@
 
   .add-button-container, ~ .section-container
     background white
-    transform translateX(-(input-width))
+    transform translate3d(-(input-width), 0, 0)
     transition transform input-animation-time ease-out-quart
     z-index 10 // correct stacking-context issue caused by transform
 
@@ -97,4 +97,4 @@
 
   &.contextual-pane-open
     .add-button-container, ~ .section-container
-      transform translateX(0)
+      transform translate3d(0, 0, 0)

@@ -109,21 +109,21 @@ body insights-mp-modal.insights-learn
 
   @keyframes wiggle
     15%
-      transform translateX(-1px)
+      transform translate3d(-1px, 0, 0)
     30%
-      transform translateX(2px)
+      transform translate3d(2px, 0, 0)
     45%
-      transform translateX(-4px)
+      transform translate3d(-4px, 0, 0)
     60%
-      transform translateX(4px)
+      transform translate3d(4px, 0, 0)
     75%
-      transform translateX(-2px)
+      transform translate3d(-2px, 0, 0)
     90%
-      transform translateX(1px)
+      transform translate3d(1px, 0, 0)
 
   .insights-learn-transitioning .insights-learn-emphasize,
   .insights-learn-transitioning.insights-learn-emphasize > :not(mp-tutorial-tooltip),
   .insights-learn-reminding .insights-learn-emphasize,
   mp-tutorial-tooltip.insights-learn-reminding
     animation wiggle 1s cubic-bezier(.36,.07,.19,.97) 200ms both
-    transform translateX(0)
+    transform translate3d(0, 0, 0)

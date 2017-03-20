@@ -119,7 +119,7 @@ builder-filter-add-control
      */
 
     .add-filter-button-container
-      transform translateX(-(input-width))
+      transform translate3d(-(input-width), 0, 0)
       transition transform input-animation-time ease-out-quart
 
       // partially cover input underline through animation
@@ -147,7 +147,7 @@ builder-filter-add-control
         transform rotateZ(45deg)
 
       .add-filter-button-container
-        transform translateX(0)
+        transform translate3d(0, 0, 0)
 
         &::after
           transform scaleX(.5)
@@ -216,7 +216,7 @@ builder-screen-filter-property
       text-align left
       text-transform none
       top 42px
-      transform translateX(-50%)
+      transform translate3d(-50%, 0, 0)
       width $type-menu-width
       z-index 10
 
