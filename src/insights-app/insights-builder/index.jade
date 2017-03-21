@@ -1,5 +1,5 @@
 .insights-builder.insights-learn-manipulate-data-disabled
-  if projectHasEvents
+  if projectHasEvents || projectHasPeople
     .query
       .section-container.show-control= $component.child('query-builder-show')
       .section-container.group-control= $component.child('query-builder-group')

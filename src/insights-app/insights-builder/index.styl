@@ -201,6 +201,18 @@ header-button-transition-duration = 150ms
     &:last-child
       margin-bottom 10px
 
+    &.list-option-upsell, $.list-option-alert
+      .option-label
+        color grey-500
+
+    &.list-option-alert
+      .upsell-icon
+        svg-icon-style(blue-900)
+
+    &.list-option-upsell
+      .upsell-icon
+        svg-icon-style(mp-purple)
+
     &.list-option-active
       background-color grey-100
       color mp-blue
@@ -224,8 +236,21 @@ header-button-transition-duration = 150ms
     border-bottom 1px solid grey-150
     flex-shrink 0
     padding 10px 15px
+    position relative
     mp-toggle
       width 100%
+
+    svg-icon-wrapper
+      position absolute
+      top 2px
+      &.events
+        right 101px;
+      &.people
+        right 5px
+      &.integrate
+        svg-icon-style(blue-900)
+      &.upsell
+        svg-icon-style(mp-purple)
 
   // screen-footer-button
   button.screen-footer
@@ -372,3 +397,60 @@ header-button-transition-duration = 150ms
     mp-spinner
       width 30px
       height 30px
+
+.upsell-pane-content
+  align-items center
+  display flex
+  flex-direction column
+  justify-content center
+  padding 55px 36px
+
+  .upsell-image
+    position relative
+    svg-icon
+      position absolute
+
+    &.people
+      svg-icon
+        bottom 0
+        right 0
+      bg-img('~assets/images/pricing-people.svg', 98px, 60px);
+
+    &.events
+      svg-icon
+        right 0
+        top 0
+      bg-img('~assets/images/pricing-events.svg', 98px, 60px);
+
+    &.integrate
+      svg-icon-style(blue-900, size: 28px)
+
+    &.upsell
+      svg-icon-style(mp-purple, size: 28px)
+
+  .upsell-message
+    display inline-block
+    padding 20px 0
+    text-align center
+    
+    .title
+      color grey-900
+      font-family proxima-nova
+      font-size 18px
+      font-weight 700
+      padding-bottom 16px
+
+    .upsell-text
+      color grey-700
+      font-size 14px
+      font-weight 400
+      line-height 18px
+
+      &.upsell-link
+        color blue-900
+        cursor pointer
+        font-weight 700
+        text-decoration none
+        &:hover
+          border-bottom 1px mp-blue
+          color mp-blue

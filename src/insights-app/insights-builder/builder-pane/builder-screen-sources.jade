@@ -14,5 +14,7 @@ include ../mixins.jade
           class: `source-menu-option`,
           index: source.index,
           isActive: source.index === builderPane.activeIndex,
+          shouldShowSourceUpsell: $helpers.shouldShowSourceUpsell(source),
+          shouldShowSourceAlert: $helpers.shouldShowSourceAlert(source),
           onclick: () => $helpers.clickedSource(source),
         })

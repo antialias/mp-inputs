@@ -5,25 +5,27 @@ include ../mixins.jade
 
 .builder-screen.properties
   +screen-title(`People`, {backButton: !!$helpers.screenIdx()})
-  .screen-list-container(
-    class=util.learnClasses({disabledExceptChildren: [`first`]})
-    hook={postpatch: $helpers.updateRenderedSize}
-    on={scroll: $helpers.scrolledList}
-  )
-    each section, idx in allPeople
-      if section.list.length
-        if idx
-          .builder-divider
-        +property-list(section.list, {
-          clickedProperty: section.clickedPropertyFunction || $helpers.clickedProperty,
-          selected: $component.getAttribute(`selected`),
-          source: $component.getAttribute(`source`),
-          loading: section.showLoading && loading
-        })
-        - hasResults = true
-    if !allPeople.length
-      li.list-option.list-empty Your search returned no results
-  if !loading
-    +screen-footer-button(($component.isShowingNonNumericProperties() ? `Hide` : `View all`) + ` non-numeric properties`, {
-      onclick: $helpers.toggleNonNumericProperties,
-    })
+  if !projectHasPeople || blocking.isBlockedPeople
+    +upsell-pane('people', projectHasPeople)
+  else
+    .screen-list-container(
+      class=util.learnClasses({disabledExceptChildren: [`first`]})
+      hook={postpatch: $helpers.updateRenderedSize}
+      on={scroll: $helpers.scrolledList}
+    )
+      each section, idx in allPeople
+        if section.list.length
+          if idx
+            .builder-divider
+          +property-list(section.list, {
+            clickedProperty: section.clickedPropertyFunction || $helpers.clickedProperty,
+            selected: $component.getAttribute(`selected`),
+            source: $component.getAttribute(`source`),
+            loading: section.showLoading && loading
+          })
+      if !allPeople.length
+        li.list-option.list-empty Your search returned no results
+    if !loading
+      +screen-footer-button(($component.isShowingNonNumericProperties() ? `Hide` : `View all`) + ` non-numeric properties`, {
+        onclick: $helpers.toggleNonNumericProperties,
+      })

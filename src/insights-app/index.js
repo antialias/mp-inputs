@@ -30,6 +30,7 @@ import template from './index.jade';
 import './index.styl';
 
 const MINUTE_MS = 1000 * 60;
+const FEATURE_GATES_UNLIMITED = 9223372036854776000; //python max int, aka featureGates.unlimited
 
 document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   get config() {
@@ -114,7 +115,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
           }
         }
         if (parsedURL) {
-          const report = Report.deserialize(extend(this.defaultReportState, parsedURL));
+          const report = Report.deserialize(extend(this.defaultReportState(!this.projectHasEvents || this.eventsBlocked), parsedURL));
           if (report && report.valid) {
             return extend(stateUpdate, this.loadReport(report));
           }
@@ -160,7 +161,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   // The following states should be reset.
   get resettableState() {
     return {
-      report: this.defaultReportState,
+      report: this.defaultReportState(!this.projectHasEvents || this.eventsBlocked),
       builderPane: this.defaultBuilderState,
       chartToggle: {
         editingType: null,
@@ -201,7 +202,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     };
   }
 
-  get defaultReportState() {
+  defaultReportState(eventsBlocked=false) {
+    const defaultShowClause = eventsBlocked ? ShowClause.ALL_PEOPLE : ShowClause.TOP_EVENTS;
+
     return new Report({
       displayOptions: {
         chartType: `bar`,
@@ -210,7 +213,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         value: `absolute`,
       },
       sections: new BuilderSections({
-        show: new ShowSection(new ShowClause({value: ShowClause.TOP_EVENTS})),
+        show: new ShowSection(new ShowClause({value: defaultShowClause})),
         time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
       }),
       legend: new Legend({
@@ -229,7 +232,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     if (gates && gates[feature] !== undefined) {
       return gates[feature];
     }
-    return feature === `can_export_csv` ? true :  9223372036854776000; //python max int, aka featureGates.unlimited
+    return feature === `can_export_csv` ? true :  FEATURE_GATES_UNLIMITED;
   }
 
   canAddFilterClause() {
@@ -266,6 +269,38 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     }
   }
 
+  shouldUpsellForSource(source) {
+    let shouldUpsell = false;
+    switch(source) {
+      case `events`:
+        shouldUpsell = this.blocking.isBlockedEvents && this.projectHasEvents;
+        break;
+      case `people`:
+        shouldUpsell =  this.blocking.isBlockedPeople && this.projectHasPeople;
+    }
+    return shouldUpsell;
+  }
+
+  shouldAlertForSource(source) {
+    let shouldAlert = false;
+    switch(source) {
+      case `events`:
+        shouldAlert = !this.projectHasEvents;
+        break;
+      case `people`:
+        shouldAlert = !this.projectHasPeople;
+    }
+    return shouldAlert;
+  }
+
+  upsellTextOptions(resourceType, projectHasResource) {
+    const isPayingCustomer = [`billing_error_blocked_owner`, `billing_error_blocked_member`].includes(this.mpContext.blocking.label);
+    const customerType = isPayingCustomer ? `converted` : `free`;
+    const upsellType = projectHasResource ? `upsell` : `integrate`;
+    const cap = this.mpContext[`${resourceType}Plan`].cap;
+    return util.upsellOptions({resourceType, upsellType, customerType, cap});
+  }
+
   hasWhitelist(name) {
     return this.mpContext && this.mpContext.whitelists && this.mpContext.whitelists.includes(name);
   }
@@ -290,6 +325,14 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.customEvents = this.mpContext.customEvents || [];
     this.hasWritePermissions = !this.mpContext.hasPermissions || this.mpContext.permissions.includes(`write_insights`);
     this.projectHasEvents = true;
+    this.projectHasPeople = true;
+    this.blocking = {
+      isBlockedEvents: false, 
+      isBlockedPeople: false, 
+      label: ``,
+    };
+    this.eventsPlan = {cap: FEATURE_GATES_UNLIMITED};
+    this.peoplePlan = {cap: FEATURE_GATES_UNLIMITED};
     this.userID = this.mpContext.userID;
     this.projectID = this.mpContext.projectID;
     this.accessToken = this.mpContext.accessToken;
@@ -308,6 +351,13 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
     if (!this.standalone) {
       this.projectHasEvents = !!this.mpContext.hasIntegratedArb;
+      this.projectHasPeople = !!this.mpContext.hasIntegratedEngage;
+      let {
+        is_blocked_events: isBlockedEvents, 
+        is_blocked_people: isBlockedPeople, 
+        label,
+      } = this.mpContext.blocking;
+      this.blocking = {isBlockedEvents, isBlockedPeople, label};
       Object.assign(this.state, {
         savedReports: this.mpContext.bookmarks.reduce(
           (reports, bm) => extend(reports, {[bm.id]: Report.fromBookmarkData(bm)}),
@@ -318,7 +368,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   attachedCallback() {
-    this.state.projectHasEvents = this.projectHasEvents;
+    this.state = extend(this.state, util.pick(this, [`projectHasEvents`, `projectHasPeople`, `blocking`]));
     this.state.recentEvents = this._getRecentList(`events`);
     this.state.recentProperties = this._getRecentList(`properties`);
 
@@ -720,7 +770,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   canMakeQueries() {
-    return this.state.projectHasEvents;
+    return this.projectHasEvents || this.projectHasPeople;
   }
 
   getClausesForType(type) {

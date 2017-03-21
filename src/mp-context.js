@@ -17,13 +17,17 @@ export default class MPContext {
       // global garbage
       this.accessToken = mp.report.globals.access_token;
       this.appName = mp.report.globals.app_name;
+      this.blocking = mp.report.globals.blocking;
       this.bookmarks = mp.report.globals.bookmarks;
       this.customEvents = mp.report.globals.custom_events;
       this.dashboardTags = mp.report.globals.dashboard_tags;
+      this.eventsPlan = mp.report.globals.events_plan;
       this.featureGates = mp.report.globals.feature_gates;
       this.flags = mp.report.globals.flags;
       this.hasIntegratedArb = mp.report.globals.has_integrated_arb;
+      this.hasIntegratedEngage = mp.report.globals.has_integrated_engage;
       this.hasPermissions = mp.report.globals.project_featureflags.includes(`permissions`);
+      this.peoplePlan = mp.report.globals.people_plan;
       this.permissions = mp.report.globals.permissions;
       this.projectID = mp.report.globals.project_id;
       this.setupURL = mp.report.globals.setup_mixpanel_url;

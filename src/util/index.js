@@ -28,6 +28,10 @@ export {
   toArbSelectorPropertyToken,
 } from './queries';
 
+export {
+  upsellOptions,
+} from './upsell';
+
 
 export const KEY_CODES = {
   tab: 9,

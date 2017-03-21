@@ -1,12 +1,12 @@
 - const hasLegend = $helpers.showLegend();
-
+- const projectHasData = projectHasEvents || projectHasPeople
 .chart(class={
   [`${report.displayOptions.chartType}-chart-type`]: !result.isEmptyResult,
   'has-legend': hasLegend,
   'sticky-chart-headers': stickyHeader.isSticky,
 })
   .main-chart
-    if resultLoading && projectHasEvents
+    if resultLoading && projectHasData
       .chart-loader
         .chart-header-container
           .header-text-container
@@ -15,7 +15,7 @@
             svg-icon(attrs={icon: 'ellipsis'})
         .chart-graph
           mp-spinner
-    else if !projectHasEvents
+    else if !projectHasData
       .chart-loader.error-no-data
         .chart-header-container
           .header-text-container

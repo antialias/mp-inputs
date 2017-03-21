@@ -8,12 +8,20 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     return {
       helpers: extend(super.config.helpers, {
         RESOURCE_TYPES: Clause.RESOURCE_TYPES,
+        shouldShowSourceAlert: source => this.app.shouldAlertForSource(source),
         clickedResourceType: resourceType => this.app.updateBuilderCurrentScreen({resourceType}),
-        getSelectedResourceType: () => this.getSelectedResourceType(),
         getProperties: () => this.getProperties(),
+        shouldShowPropertySections: () => this.shouldShowPropertySections(),
         getPropertySections: () => this.getPropertySections(),
+        getSelectedResourceType: () => this.getSelectedResourceType(),
+        getUpsellOptions: (resourceType, projectHasResource) => this.app.upsellTextOptions(resourceType, projectHasResource),
+        shouldShowSourceUpsell: source => this.app.shouldUpsellForSource(source),
       }),
     };
+  }
+
+  shouldShowPropertySections(resourceType=this.getSelectedResourceType()) {
+    return !(this.app.shouldUpsellForSource(resourceType) || this.app.shouldAlertForSource(resourceType));
   }
 
   filterToResourceType(type) {
@@ -71,25 +79,31 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   }
 
   getPropertySections() {
+    const showEvents = this.shouldShowPropertySections(ShowClause.RESOURCE_TYPE_EVENTS);
+    const showPeople = this.shouldShowPropertySections(ShowClause.RESOURCE_TYPE_PEOPLE);
+
     const resourceType = this.getSelectedResourceType();
     const eventPropertiesLoaded = this.numEventProperties >= this.getEventPropertyCount();
     const isPeopleQuery = this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE;
-    const showPeople =  eventPropertiesLoaded || isPeopleQuery || ShowClause.RESOURCE_TYPE_PEOPLE === resourceType;
+    const includePeople =  !showEvents || eventPropertiesLoaded || isPeopleQuery || ShowClause.RESOURCE_TYPE_PEOPLE === resourceType;
 
     let sections = [];
 
-    sections.push({
-      label: `Recent Properties`,
-      list: this.getMatchedRecentProperties(),
-    });
+    const recentProperties = this.getMatchedRecentProperties();
+    if (recentProperties.length) {
+      sections.push({
+        label: `Recent Properties`,
+        list: recentProperties,
+      });
+    }
 
-    if ([ShowClause.RESOURCE_TYPE_EVENTS, ShowClause.RESOURCE_TYPE_ALL].includes(resourceType) && !isPeopleQuery) {
+    if (showEvents && [ShowClause.RESOURCE_TYPE_EVENTS, ShowClause.RESOURCE_TYPE_ALL].includes(resourceType) && !isPeopleQuery) {
       sections.push({
         label: `Event properties`,
         list: this.getProperties(ShowClause.RESOURCE_TYPE_EVENTS),
       });
     }
-    if (showPeople && ([ShowClause.RESOURCE_TYPE_PEOPLE, ShowClause.RESOURCE_TYPE_ALL].includes(resourceType) || isPeopleQuery)) {
+    if (showPeople && includePeople && ([ShowClause.RESOURCE_TYPE_PEOPLE, ShowClause.RESOURCE_TYPE_ALL].includes(resourceType) || isPeopleQuery)) {
       sections.push({
         label: `People properties`,
         list: this.getProperties(ShowClause.RESOURCE_TYPE_PEOPLE),

@@ -26,7 +26,9 @@ mixin generic-options-list-item(label, options)
   li.list-option.generic-list(
     class={
       [options.class]: true,
-      'list-option-active': options.isActive,
+      'list-option-active': !!options.isActive,
+      'list-option-alert': !!options.shouldShowSourceAlert,
+      'list-option-upsell': !!options.shouldShowSourceUpsell,
     }
     on={
       click: options.onclick,
@@ -34,6 +36,12 @@ mixin generic-options-list-item(label, options)
     }
   )
     +screen-option(label, {noIcon: true})
+    if options.shouldShowSourceUpsell
+      .upsell-icon
+        svg-icon(attrs={icon: 'lighting-bolt'})
+    if options.shouldShowSourceAlert
+      .upsell-icon
+        svg-icon(attrs={icon: 'alert'})
     +small-caret-icon()
 
 mixin secondary-action-pill(label, options)
@@ -124,17 +132,32 @@ mixin property-screen-body(options)
       )
         each type in options.resourceTypes
           mp-toggle-option(attrs={value: type})= util.formatResourceType(type)
+      each type, index in options.resourceTypes
+        - const upsell_type = $helpers.shouldShowSourceUpsell(type) ? `upsell` : `integrate`;
+        svg-icon-wrapper(
+          class={
+            [type]: true,
+            [upsell_type]: true, 
+          }
+        )
+          if $helpers.shouldShowSourceUpsell(type)
+            svg-icon(attrs={ icon: 'lighting-bolt' })
+          if $helpers.shouldShowSourceAlert(type)
+            svg-icon(attrs={ icon: 'alert' })
 
   .screen-list-container.arrow-key-scrollable(on={scroll: options.scrolledList})
     - const propertySections = options.propertySections
-    each section, idx in propertySections
-      if section.list.length
-        if idx
-          .builder-divider
-        .builder-label= section.label
-        +property-list(section.list, options)
-    if !propertySections.length
-      li.list-option.list-empty Your search returned no results
+    if !$helpers.shouldShowPropertySections()
+      +upsell-pane(options.selectedResourceType, $helpers.shouldShowSourceUpsell(options.selectedResourceType))
+    else
+      each section, idx in propertySections
+        if section.list.length
+          if idx
+            .builder-divider
+          .builder-label= section.label
+          +property-list(section.list, options)
+      if !propertySections.length
+        li.list-option.list-empty Your search returned no results
 
 mixin screen-footer-button(label, options)
   - options = options || {}
@@ -179,3 +202,23 @@ mixin small-caret-icon(options)
 mixin pane-loader()
   .loading-properties
     mp-spinner
+
+mixin upsell-pane(resource_type, project_has_resource)
+  - const options = $helpers.getUpsellOptions(resource_type, project_has_resource)
+  - const upsell_type = project_has_resource ? `upsell` : `integrate`;
+
+  .upsell-pane-content
+    .upsell-image(class={
+      [resource_type]: true,
+      [upsell_type]: true,
+    })
+      svg-icon(attrs={ icon: (project_has_resource ? 'lighting-bolt' : 'alert') })
+
+    .upsell-message
+      .title=options.upsellTitle
+      a.upsell-text.upsell-link(
+        attrs={ href: options.upsellLink, target: '_blank' }
+        class={ [upsell_type]: true }
+      )=options.upsellText.linkText
+      span.upsell-text=options.upsellText.closingText
+

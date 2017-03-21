@@ -11,16 +11,18 @@ include ../mixins.jade
 
 .builder-screen.events
   +screen-title('All Events', {backButton: true})
-  .screen-list-container.arrow-key-scrollable(
-    hook={postpatch: $helpers.updateRenderedSize}
-    on={scroll: $helpers.scrolledList}
-  )
-    each section, idx in allEvents
-      if section.list.length
-        if idx
-          .builder-divider
-        .builder-label= section.label
-        +event-list(section.list, eventListOptions)
-        - hasResults = true
-    if !allEvents.length
-      li.list-option.list-empty Your search returned no results
+  if !projectHasEvents || blocking.isBlockedEvents
+    +upsell-pane('events', projectHasEvents)
+  else
+    .screen-list-container.arrow-key-scrollable(
+      hook={postpatch: $helpers.updateRenderedSize}
+      on={scroll: $helpers.scrolledList}
+    )
+      each section, idx in allEvents
+        if section.list.length
+          if idx
+            .builder-divider
+          .builder-label= section.label
+          +event-list(section.list, eventListOptions)
+      if !allEvents.length
+        li.list-option.list-empty Your search returned no results

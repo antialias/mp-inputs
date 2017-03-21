@@ -65,6 +65,7 @@ export class BuilderScreenBase extends Component {
         },
         getStageClauseAttr: attr =>
           this.app.activeStageClause && this.app.activeStageClause[attr],
+        getUpsellOptions: (resource, hasResource) => this.app.upsellTextOptions(resource, hasResource),
         getUtcOffset: () => this.app.getUtcOffset(),
         isLoading: () => this.isLoading(),
         updateRenderedSize: throttle(() => this.updateRenderedSize(), 200, {leading: true}),

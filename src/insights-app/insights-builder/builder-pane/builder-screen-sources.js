@@ -20,7 +20,6 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
           let indexedSources = SOURCES.slice();
           return indexedSources.map((source, index) => extend(source, {index}));
         },
-
         clickedSource: source => {
           const {resourceType} = source;
           this.updateStageClause({resourceType, value: {}});
@@ -30,6 +29,8 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
           this.updateRenderedSizeOnNextFrame();
           return this.buildProgressiveList();
         },
+        shouldShowSourceUpsell: source => this.app.shouldUpsellForSource(source.resourceType),
+        shouldShowSourceAlert: source => this.app.shouldAlertForSource(source.resourceType),
       }),
     };
   }
