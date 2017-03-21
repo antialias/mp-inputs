@@ -44,24 +44,6 @@ export class MPLineChart extends WebComponent {
     return timestamp => util.formatDate(timestamp, {unit, displayRangeIfWeek, customFormatting});
   }
 
-  getTickPositions() {
-     // TODO (Jordan): Pass in buckets from query. Handle short date ranges.
-    if ([`week`, `quarter`].includes(this._displayOptions.timeUnit)) {
-      const uniqueDates = new Set();
-      Object.keys(this.chartData).forEach(segment => {
-        Object.keys(this.chartData[segment]).forEach(date => uniqueDates.add(date));
-      });
-      let ticks = [...uniqueDates].sort();
-      const MAX_TICKS = 20;
-      if (ticks.length > MAX_TICKS) {
-        const tickDivisor = 1 + Math.floor(ticks.length / MAX_TICKS); // preserve 1 of every n ticks
-        ticks = ticks.filter((_, idx) => !(idx % tickDivisor));
-      }
-      return ticks;
-    }
-    return null; // giving null in highcharts means "use default"
-  }
-
   tooltipFormatter() {
     const timeFormatter = this.timestampToTimeUnitFunction();
     const unit = this._displayOptions.timeUnit;
@@ -107,7 +89,7 @@ export class MPLineChart extends WebComponent {
   xAxisFormatter() {
     var timeFormatter = this.timestampToTimeUnitFunction({displayRangeIfWeek: false});
     return function() {
-      return timeFormatter(this.value);
+      return timeFormatter(Number(this.value));
     };
   }
 
@@ -249,7 +231,6 @@ export class MPLineChart extends WebComponent {
         startOnTick: false,
         tickmarkPlacement: `on`,
         tickPosition: `outside`,
-        tickPositions: this.getTickPositions(),
         type: `datetime`,
       }),
       yAxis: util.extend(axisOptions, {
