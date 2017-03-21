@@ -381,9 +381,13 @@ export default class SegmentationQuery extends BaseQuery {
     const isPeopleOnlyQuery = this.query.jqlQueries.every(query => query.resourceType === `people`);
     const needsPeopleTimeSeries = isPeopleOnlyQuery && querySegments.length && querySegments[querySegments.length - 1].propertyType === `datetime`;
 
-    // we get data back in project epoch offset localtime to preserve that when forming it to dates
-    // TODO: Jordan account for DST times
-    const offsetTimestamp = timestamp => timestamp + (new Date().getTimezoneOffset() * 60 * 1000);
+    // we get data back in project epoch time. offset for local tz and account for DST.
+    const localTZOffset = new Date().getTimezoneOffset();
+    const offsetTimestamp = timestamp => {
+      const localizedTimestamp = timestamp + (localTZOffset * 60 * 1000);
+      const dstOffset = new Date(localizedTimestamp).getTimezoneOffset() - localTZOffset;
+      return localizedTimestamp + (dstOffset * 60 * 1000);
+    };
 
     if (!isPeopleOnlyQuery || needsPeopleTimeSeries) {
       // create base values for all known dates if anything but non-time people query.
