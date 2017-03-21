@@ -274,7 +274,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   getUtcOffset() {
-    return this.mpContext.utcOffset || -(new Date().getTimezoneOffset());
+    return this.mpContext.utcOffset;
   }
 
   /**
