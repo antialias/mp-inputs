@@ -1,7 +1,7 @@
 - const hasLegend = $helpers.showLegend();
 
 .chart(class={
-  [`${report.displayOptions.chartType}-chart-type`]: true,
+  [`${report.displayOptions.chartType}-chart-type`]: !result.isEmptyResult,
   'has-legend': hasLegend,
   'sticky-chart-headers': stickyHeader.isSticky,
 })
@@ -23,7 +23,7 @@
         .chart-graph
           .chart-error-data-image
           .chart-error-no-data-text We don't have any data for your project.
-    else if result.isEmptyResult()
+    else if result.isEmptyResult
       .error-no-data
         .chart-graph
           .chart-error-data-image

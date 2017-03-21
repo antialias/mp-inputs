@@ -1,11 +1,18 @@
 import isEqual from 'lodash/isEqual';
-import { flattenNestedObjectToPath, nestedObjectCumulative, nestedObjectRolling, pick } from '../util';
+import {
+  flattenNestedObjectToPath,
+  nestedObjectCumulative,
+  nestedObjectRolling,
+  pick,
+} from '../util';
 
 let resultID = 0;
 
 export default class Result {
   constructor(attrs) {
     Object.assign(this, pick(attrs, [`headers`, `series`, `peopleTimeSeries`]));
+    let flattenedSeries = flattenNestedObjectToPath(this.series, {flattenValues: true});
+    this._isEmptyResult = !Object.keys(flattenedSeries.values).length;
     this.id = resultID++;
   }
 
@@ -15,11 +22,6 @@ export default class Result {
 
   isEqual(result) {
     return isEqual(this.headers, result.headers) && isEqual(this.series, result.series);
-  }
-
-  isEmptyResult() {
-    let flattenedSeries = flattenNestedObjectToPath(this.series, {flattenValues: true});
-    return !Object.keys(flattenedSeries.values).length;
   }
 
   transformed(options) {
@@ -48,5 +50,9 @@ export default class Result {
       peopleTimeSeries: newpeopleTimeSeries,
       id: [this.id, options.analysis, options.windowSize].join(`-`),
     };
+  }
+
+  get isEmptyResult() {
+    return this._isEmptyResult;
   }
 }
