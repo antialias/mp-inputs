@@ -17,6 +17,12 @@ import commonCSS from '!!style!css?camelCase!stylus!../../../../stylesheets/comm
 
 const LOGARITHMIC_CHART_ZERO_REMAPPING = 0.6;
 
+Highcharts.setOptions({
+  global: {
+    useUTC: false,
+  },
+});
+
 export class MPLineChart extends WebComponent {
   attachedCallback() {
     this.initialized = true;
