@@ -355,8 +355,6 @@ export function offsetTimestampWithDst(timestamp) {
   return localizedTimestamp + (dstOffset * MS_IN_MINUTE);
 }
 
-// Make sure we have data for dates between from/to.
-
 /**
  * Provide base results object for all timestamps between toDate and fromDate. from / to falls back to the results min and max.
  * @param {Array} results - jql result object to get dates from. This assumes that the last item in the result is the timestamp/
@@ -377,13 +375,11 @@ export function offsetTimestampWithDst(timestamp) {
  * // }
  */
 export function createBaseResults(results, {toDate=null, fromDate=null, timestampIsSeconds=false, unit=null}={}) {
-  let sortedTimestamps = results.map(result => {
-    let timestamp = result.key[result.key.length - 1];
-    if (timestamp !== null && Number.isInteger(Number(timestamp))) {
-      return offsetTimestampWithDst(timestampIsSeconds ? Number(timestamp) * 1000 : Number(timestamp));
-    }
-    return null;
-  }).filter(t => t !== null).sort();
+  let sortedTimestamps = results
+    .map(result => result.key[result.key.length - 1])
+    .filter(timestamp => timestamp !== null && Number.isInteger(Number(timestamp)))
+    .map(timestamp => offsetTimestampWithDst(timestampIsSeconds ? Number(timestamp) * 1000 : Number(timestamp)))
+    .sort();
 
   const minTimestamp = sortedTimestamps[0];
   const maxTimestamp = sortedTimestamps[sortedTimestamps.length - 1];
@@ -394,17 +390,16 @@ export function createBaseResults(results, {toDate=null, fromDate=null, timestam
     toDate = toDate || maxTimestamp;
 
     for (let cursor = moment(minTimestamp); cursor > moment(fromDate); cursor.subtract(1, `${unit}s`)) {
-      timestampsForRange.push(Number(cursor));
+      timestampsForRange.push(cursor.valueOf());
     }
     for (let cursor = moment(minTimestamp); cursor < moment(toDate); cursor.add(1, `${unit}s`)) {
-      timestampsForRange.push(Number(cursor));
+      timestampsForRange.push(cursor.valueOf());
     }
   }
 
   return sortedTimestamps
     .concat(timestampsForRange)
     .reduce((obj, timestamp) => Object.assign(obj, {[timestamp]: 0}), {});
-
 }
 
 
