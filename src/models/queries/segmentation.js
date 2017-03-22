@@ -11,12 +11,14 @@ import QueryCache from './query-cache';
 import {
   abbreviateNumber,
   capitalize,
+  createBaseResults,
   extend,
   filterToArbSelectorString,
   formatDate,
   isFilterValid,
   localizedDate,
   MS_BY_UNIT,
+  offsetTimestampWithDst,
   pick,
   renameEvent,
   renameProperty,
@@ -154,7 +156,6 @@ export default class SegmentationQuery extends BaseQuery {
     let jqlQueries = sections.show.clauses.map(
       showClause => new JQLQuery(showClause, state, extend(options, pick(this, [`customEvents`])))
     );
-
 
     // data global to all JQL queries.
     const segments = sections.group.clauses
@@ -389,48 +390,20 @@ export default class SegmentationQuery extends BaseQuery {
     let headers = querySegments.map(segment => segment.value);
     let series = {};
     let peopleTimeSeries = null;
-
-    // create an object of zero values for all possible dates
-    let baseDateResults = {};
-
-    // we get data back in project epoch time. offset for local tz and account for DST.
-    const localTZOffset = new Date().getTimezoneOffset();
-    const offsetTimestamp = timestamp => {
-      const localizedTimestamp = timestamp + (localTZOffset * 60 * 1000);
-      const dstOffset = new Date(localizedTimestamp).getTimezoneOffset() - localTZOffset;
-      return localizedTimestamp + (dstOffset * 60 * 1000);
-    };
-
-
-    if (!this.query.isPeopleOnly || this.query.isPeopleTimeSeries) {
-      // create base values for all known dates if anything but non-time people query.
-      results.forEach(r => {
-        let timestamp = r.key[r.key.length - 1];
-        if (timestamp !== null && Number.isInteger(Number(timestamp))) {
-          timestamp = this.query.isPeopleOnly ? Number(timestamp) * 1000 : Number(timestamp);
-          baseDateResults[offsetTimestamp(timestamp)] = 0;
-        }
-      });
-
-      const sortedTimestamps = Object.keys(baseDateResults).map(Number).sort();
-      const minTimestamp = sortedTimestamps[0];
-      const maxTimestamp = sortedTimestamps[sortedTimestamps.length - 1];
-
-      // Make sure we have data for dates between from/to.
-      // If it is a people query there is no date range so we must use the data min/max.
-      const min = this.query.isPeopleTimeSeries ? minTimestamp : this.query.from;
-      const max = this.query.isPeopleTimeSeries ? maxTimestamp : this.query.to;
-
-      for (let cursor = moment(minTimestamp); cursor > moment(min); cursor.subtract(1, `${this.query.unit}s`)) {
-        baseDateResults[Number(cursor)] = 0;
-      }
-      for (let cursor = moment(minTimestamp); cursor < moment(max); cursor.add(1, `${this.query.unit}s`)) {
-        baseDateResults[Number(cursor)] = 0;
-      }
-
-    }
+    const isEventsQuery = !this.query.isPeopleOnly;
 
     if (results) {
+      // create base date values for all known dates if anything but non-time people query.
+      let baseDateResults = {};
+      if (isEventsQuery || this.query.isPeopleTimeSeries) {
+        baseDateResults = createBaseResults(results, {
+          toDate: isEventsQuery && this.query.to,
+          fromDate: isEventsQuery && this.query.from,
+          timestampIsSeconds: this.query.isPeopleTimeSeries, // People time series queries are returned in seconds.
+          unit: this.query.unit,
+        });
+      }
+
       const isSegDatetime = idx => querySegments[idx].propertyType === `datetime`;
       const unitsForDatetimeSet = idx => ({
         unit: querySegments[idx].unit,
@@ -472,7 +445,7 @@ export default class SegmentationQuery extends BaseQuery {
           if (isTimeSeries) {
             if (Number.isInteger(label)) {
               label = label * timestampMultiplier;
-              obj[offsetTimestamp(label)] = item.value;
+              obj[offsetTimestampWithDst(label)] = item.value;
             }
           } else {
             obj[label] = item.value;

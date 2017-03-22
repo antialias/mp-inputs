@@ -1,6 +1,7 @@
 // Insights-specific utils
 import cloneDeep from 'lodash/cloneDeep';
 import { extend, nestedObjectDepth, objectFromPairs } from 'mixpanel-common/util';
+import moment from 'moment';
 
 import { GroupClause, ShowClause } from '../models/clause';
 
@@ -335,3 +336,75 @@ export function reachableNodesOfKey({series={}, keysToMatch=[], depth=1}={}) {
 
   return REACHABLE_NODES;
 }
+
+// TODO Jordan: move offsetTimestampWithDst + createBaseResults to DATE UTILS in common and add tests
+
+/**
+ * Turn a project based timestamp into local time accounting for DST
+ * @param {Number} timestamp - the timestamp in project time to be converted
+ * @returns {Number} converted time
+ * @example
+ * offsetTimestampWithDst(1490140800000); // Done in PST timezone
+ * // 1490166000000
+ */
+const localTZOffset = new Date().getTimezoneOffset();
+const MS_IN_MINUTE = 60 * 1000;
+export function offsetTimestampWithDst(timestamp) {
+  const localizedTimestamp = timestamp + (localTZOffset * MS_IN_MINUTE);
+  const dstOffset = new Date(localizedTimestamp).getTimezoneOffset() - localTZOffset;
+  return localizedTimestamp + (dstOffset * MS_IN_MINUTE);
+}
+
+// Make sure we have data for dates between from/to.
+
+/**
+ * Provide base results object for all timestamps between toDate and fromDate. from / to falls back to the results min and max.
+ * @param {Array} results - jql result object to get dates from. This assumes that the last item in the result is the timestamp/
+ * @param {Number} options.toDate - starting date for zeroing range. only applies if unit is provided.
+ * @param {Number} options.fromDate - ending date for zeroing range. only applies if unit is provided.
+ * @param {Boolean} options.timestampIsSeconds - Convertes result timestamps to MS by multiplying 1000 if this is set to true.
+ * @param {String} options.unit - if unit is provided dates for  fromDate -> toDate are included in the results
+ * @returns {object} with all nested keys seperated by spaces
+ * @example
+ * flattenNestedObjectToPath([
+    {"key":["Run query",1489968000000],"value":922},
+    {"key":["Run query",1490140800000],"value":505}
+  ], {toDate=1490140800000, fromDate=1489968000000, timestampIsSeconds=false, unit='day'});
+ * // {
+ * //   1489993200000: 0,
+ * //   1490079600000: 0,
+ * //   1490166000000: 0,
+ * // }
+ */
+export function createBaseResults(results, {toDate=null, fromDate=null, timestampIsSeconds=false, unit=null}={}) {
+  let sortedTimestamps = results.map(result => {
+    let timestamp = result.key[result.key.length - 1];
+    if (timestamp !== null && Number.isInteger(Number(timestamp))) {
+      return offsetTimestampWithDst(timestampIsSeconds ? Number(timestamp) * 1000 : Number(timestamp));
+    }
+    return null;
+  }).filter(t => t !== null).sort();
+
+  const minTimestamp = sortedTimestamps[0];
+  const maxTimestamp = sortedTimestamps[sortedTimestamps.length - 1];
+
+  const timestampsForRange = [];
+  if (unit) {
+    fromDate = fromDate || minTimestamp;
+    toDate = toDate || maxTimestamp;
+
+    for (let cursor = moment(minTimestamp); cursor > moment(fromDate); cursor.subtract(1, `${unit}s`)) {
+      timestampsForRange.push(Number(cursor));
+    }
+    for (let cursor = moment(minTimestamp); cursor < moment(toDate); cursor.add(1, `${unit}s`)) {
+      timestampsForRange.push(Number(cursor));
+    }
+  }
+
+  return sortedTimestamps
+    .concat(timestampsForRange)
+    .reduce((obj, timestamp) => Object.assign(obj, {[timestamp]: 0}), {});
+
+}
+
+
