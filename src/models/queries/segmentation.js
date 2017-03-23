@@ -443,8 +443,8 @@ export default class SegmentationQuery extends BaseQuery {
 
           let label = item.key[item.key.length - 1];
           if (isTimeSeries) {
-            if (Number.isInteger(label)) {
-              label = label * timestampMultiplier;
+            if (Number.isInteger(Number(label))) {
+              label = Number(label) * timestampMultiplier;
               obj[offsetTimestampWithDst(label)] = item.value;
             }
           } else {

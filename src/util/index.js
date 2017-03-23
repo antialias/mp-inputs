@@ -347,12 +347,14 @@ export function reachableNodesOfKey({series={}, keysToMatch=[], depth=1}={}) {
  * offsetTimestampWithDst(1490140800000); // Done in PST timezone
  * // 1490166000000
  */
+const isLocalInDST = moment().isDST();
 const localTZOffset = new Date().getTimezoneOffset();
-const MS_IN_MINUTE = 60 * 1000;
 export function offsetTimestampWithDst(timestamp) {
-  const localizedTimestamp = timestamp + (localTZOffset * MS_IN_MINUTE);
-  const dstOffset = new Date(localizedTimestamp).getTimezoneOffset() - localTZOffset;
-  return localizedTimestamp + (dstOffset * MS_IN_MINUTE);
+  let localizedTimestamp = timestamp + (localTZOffset * 60 * 1000);
+  if (isLocalInDST && !moment(localizedTimestamp).isDST()) {
+    localizedTimestamp += 60 * 60 * 1000;
+  }
+  return localizedTimestamp;
 }
 
 /**
@@ -386,14 +388,14 @@ export function createBaseResults(results, {toDate=null, fromDate=null, timestam
 
   const timestampsForRange = [];
   if (unit) {
-    fromDate = fromDate || minTimestamp;
-    toDate = toDate || maxTimestamp;
+    const fromMoment = moment(fromDate || minTimestamp);
+    const toMoment = moment(toDate || maxTimestamp);
 
-    for (let cursor = moment(minTimestamp); cursor > moment(fromDate); cursor.subtract(1, `${unit}s`)) {
-      timestampsForRange.push(cursor.valueOf());
+    for (let cursor = moment(minTimestamp); cursor.isAfter(fromMoment); cursor.subtract(1, `${unit}s`)) {
+      timestampsForRange.push(Number(cursor));
     }
-    for (let cursor = moment(minTimestamp); cursor < moment(toDate); cursor.add(1, `${unit}s`)) {
-      timestampsForRange.push(cursor.valueOf());
+    for (let cursor = moment(minTimestamp); cursor.isBefore(toMoment); cursor.add(1, `${unit}s`)) {
+      timestampsForRange.push(Number(cursor));
     }
   }
 
