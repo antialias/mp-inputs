@@ -30,7 +30,8 @@ document.registerElement(`query-builder-show`, class extends Component {
         clauseUpdated: (el, idx) => this.updateStoredWidths(el, idx),
         isTitleLonger: idx => {
           const widths = this.state.showClauseWidths[idx];
-          return !!widths && widths.headerWidth > widths.clauseWidth;
+          const offset = 12;
+          return !!widths && widths.headerWidth >= widths.clauseBodyWidth + offset;
         },
       },
     };
@@ -42,10 +43,18 @@ document.registerElement(`query-builder-show`, class extends Component {
 
     const header = clauseContainer.querySelector(`.header-label`);
     const numericProperty = clauseContainer.querySelector(`builder-numeric-property-edit-control .control-container`);
+
+    let clauseBodyWidth = clauseContainer.querySelector(`.control-container:first-of-type`).offsetWidth;
+    if (numericProperty) {
+      clauseBodyWidth += clauseContainer.querySelector(`.preposition`).offsetWidth;
+      clauseBodyWidth += clauseContainer.querySelector(`.control-container:last-of-type`).offsetWidth;
+    }
+
     const offset = 12;
 
     newShowClauseWidths.headerWidth = header ? header.offsetWidth : 0;
     newShowClauseWidths.clauseWidth = clauseContainer.offsetWidth - offset;
+    newShowClauseWidths.clauseBodyWidth = clauseBodyWidth;
     newShowClauseWidths.numericPropertyWidth = numericProperty ? numericProperty.offsetWidth - offset : null;
 
     if (!isEqual(newShowClauseWidths, showClauseWidths)) {
