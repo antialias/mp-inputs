@@ -28,6 +28,10 @@ document.registerElement(`query-builder-show`, class extends Component {
           this.state.report.sections.show.clauseResourceTypes() !== ShowClause.RESOURCE_TYPE_PEOPLE
         ),
         clauseUpdated: (el, idx) => this.updateStoredWidths(el, idx),
+        isTitleLonger: idx => {
+          const widths = this.state.showClauseWidths[idx];
+          return !!widths && widths.headerWidth > widths.clauseWidth;
+        },
       },
     };
   }

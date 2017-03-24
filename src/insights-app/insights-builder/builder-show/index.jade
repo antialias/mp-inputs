@@ -15,6 +15,7 @@ include ../../insights-learn/tooltip.jade
         .clause-language.preposition and
     .clause-container(
       attrs=attrs
+      class={ 'remove-right-margin': $helpers.isTitleLonger(clauseIdx) }
       hook={postpatch: vnode => $helpers.clauseUpdated(vnode.elm, clauseIdx)}
     )
       .clause-header.insights-learn-disabled= $component.child('query-builder-show-header', {attrs})
