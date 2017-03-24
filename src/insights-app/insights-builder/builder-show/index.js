@@ -28,7 +28,7 @@ document.registerElement(`query-builder-show`, class extends Component {
           this.state.report.sections.show.clauseResourceTypes() !== ShowClause.RESOURCE_TYPE_PEOPLE
         ),
         clauseUpdated: (el, idx) => this.updateStoredWidths(el, idx),
-        isTitleLonger: idx => {
+        hasLongHeader: idx => {
           const widths = this.state.showClauseWidths[idx];
           const offset = 12;
           return !!widths && widths.headerWidth >= widths.clauseBodyWidth + offset;

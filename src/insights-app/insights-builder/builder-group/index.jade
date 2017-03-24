@@ -9,7 +9,7 @@ include ../mixins.jade
     .clause-container
       .clause-language.preposition= clauseIdx ? 'and' : 'by'
     .clause-container(
-      class={ 'remove-right-margin': $helpers.isTitleLonger(clauseIdx) }
+      class={'remove-right-margin': $helpers.hasLongHeader(clauseIdx)}
       hook={postpatch: vnode => $helpers.clauseUpdated(vnode.elm, clauseIdx)}
     )
       .clause-header.group(

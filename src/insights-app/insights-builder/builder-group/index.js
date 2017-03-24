@@ -1,16 +1,13 @@
-import { Component } from 'panel';
-
-import { renameProperty } from '../../../util';
-
-import { EditControl } from '../edit-control';
-import { GroupClause, ShowClause } from '../../../models/clause';
-
 import isEqual from 'lodash/isEqual';
-
+import { Component } from 'panel';
 
 import {
   extend,
+  renameProperty,
 } from '../../../util';
+
+import { EditControl } from '../edit-control';
+import { GroupClause, ShowClause } from '../../../models/clause';
 
 import './builder-screen-group-datetime-options';
 import './builder-screen-group-properties';
@@ -27,7 +24,7 @@ document.registerElement(`query-builder-group`, class extends Component {
         moveClause: (clauseIndex, offset) => this.app.moveClause(`group`, clauseIndex, offset),
         removeClause: index => this.app.removeClause(`group`, index),
         clauseUpdated: (el, idx) => this.updateStoredWidths(el, idx),
-        isTitleLonger: idx => {
+        hasLongHeader: idx => {
           const widths = this.state.groupClauseWidths[idx];
           const offset = 12;
           return !!widths && widths.headerWidth > widths.propertyWidth + offset;
@@ -42,7 +39,6 @@ document.registerElement(`query-builder-group`, class extends Component {
 
     const header = clauseContainer.querySelector(`.header-label`);
     const property = clauseContainer.querySelector(`.control-label`);
-
     const offset = 12;
 
     newGroupClauseWidths.headerWidth = header ? header.offsetWidth : 0;
