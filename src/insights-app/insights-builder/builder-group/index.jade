@@ -8,7 +8,10 @@ include ../mixins.jade
     - const reorderRight = clauseIdx < lenGroupClauses - 1
     .clause-container
       .clause-language.preposition= clauseIdx ? 'and' : 'by'
-    .clause-container
+    .clause-container(
+      class={ 'remove-right-margin': $helpers.isTitleLonger(clauseIdx) }
+      hook={postpatch: vnode => $helpers.clauseUpdated(vnode.elm, clauseIdx)}
+    )
       .clause-header.group(
         class={hasRightCaret: reorderRight}
       )

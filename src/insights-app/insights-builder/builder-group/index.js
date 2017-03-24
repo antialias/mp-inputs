@@ -5,6 +5,13 @@ import { renameProperty } from '../../../util';
 import { EditControl } from '../edit-control';
 import { GroupClause, ShowClause } from '../../../models/clause';
 
+import isEqual from 'lodash/isEqual';
+
+
+import {
+  extend,
+} from '../../../util';
+
 import './builder-screen-group-datetime-options';
 import './builder-screen-group-properties';
 import './property-type-prefix';
@@ -19,8 +26,31 @@ document.registerElement(`query-builder-group`, class extends Component {
       helpers: {
         moveClause: (clauseIndex, offset) => this.app.moveClause(`group`, clauseIndex, offset),
         removeClause: index => this.app.removeClause(`group`, index),
+        clauseUpdated: (el, idx) => this.updateStoredWidths(el, idx),
+        isTitleLonger: idx => {
+          const widths = this.state.groupClauseWidths[idx];
+          const offset = 12;
+          return !!widths && widths.headerWidth > widths.propertyWidth + offset;
+        },
       },
     };
+  }
+
+  updateStoredWidths(clauseContainer, idx) {
+    const groupClauseWidths = this.state.groupClauseWidths[idx] === undefined ? {} : this.state.groupClauseWidths[idx];
+    let newGroupClauseWidths = extend({}, groupClauseWidths);
+
+    const header = clauseContainer.querySelector(`.header-label`);
+    const property = clauseContainer.querySelector(`.control-label`);
+
+    const offset = 12;
+
+    newGroupClauseWidths.headerWidth = header ? header.offsetWidth : 0;
+    newGroupClauseWidths.propertyWidth = property ? (property.offsetWidth - offset) : 0;
+
+    if (!isEqual(newGroupClauseWidths, groupClauseWidths)) {
+      this.app.updateGroupClauseWidths(idx, newGroupClauseWidths);
+    }
   }
 });
 

@@ -176,6 +176,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       },
       activeMathMenuIndex: null,
       showClauseWidths: {},
+      groupClauseWidths: {},
       contextFilter: ``,
       isEditingExtrasMenu: false,
       isEditingNumericProperty: false,
@@ -1110,6 +1111,12 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     let showClauseWidths = this.state.showClauseWidths;
     showClauseWidths[idx] = attrs;
     this.update({showClauseWidths});
+  }
+
+  updateGroupClauseWidths(idx, attrs={}) {
+    let groupClauseWidths = this.state.groupClauseWidths;
+    groupClauseWidths[idx] = attrs;
+    this.update({groupClauseWidths});
   }
 
   updateLegendState(newState) {
