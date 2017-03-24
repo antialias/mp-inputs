@@ -97,9 +97,9 @@ document.registerElement(`builder-time-edit-control`, class extends EditControl 
     let {from=old.from, to=old.to} = dates;
 
     if (dates.from) {
-      [from, to] = normalizeDateRange([from, to], `from`);
+      [from, to] = normalizeDateRange(from, to, `from`);
     } else if (dates.to) {
-      [from, to] = normalizeDateRange([from, to], `to`);
+      [from, to] = normalizeDateRange(from, to, `to`);
     }
 
     [from, to] = normalizeDateStrings([from, to], {utcOffset: this.app.getUtcOffset()});
