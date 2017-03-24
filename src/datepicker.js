@@ -52,13 +52,13 @@ class DatePicker extends Component {
         changedFrom: ev => {
           let from = ev.detail;
           let to = this.state.to;
-          [from, to] = normalizeDateRange([from, to], `from`);
+          [from, to] = normalizeDateRange(from, to, `from`);
           this.helpers.selectDate({from, to});
         },
         changedTo: ev => {
           let from = this.state.from;
           let to = ev.detail;
-          [from, to] = normalizeDateRange([from, to], `to`);
+          [from, to] = normalizeDateRange(from, to, `to`);
           this.helpers.selectDate({from, to});
         },
         focusedFrom: () => this.update({fromFocused: true}),
