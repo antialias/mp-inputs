@@ -177,12 +177,15 @@ export default class SegmentationQuery extends BaseQuery {
     const time = sections.time.clauses[0];
     const unit = isPeopleTimeSeries ? lastPeopleSegment.unit : time.unit;
 
-    let from, to;
+    let from, to, localFrom, localTo;
     if (Array.isArray(time.value)) {
-      [from, to] = time.value.map(ts => Number(moment.utc(ts)));
+      [from, to] = time.value.map(ts => moment.utc(ts).valueOf());
+      [localFrom, localTo] = time.value.map(ts => moment(ts).valueOf());
     } else {
       to = Number(localizedDate({utcOffset: this.utcOffset}));
-      from = to - MS_BY_UNIT[unit] * time.value;
+      from = moment(to).subtract(time.value, `${unit}s`).valueOf();
+      localTo = to;
+      localFrom = from;
     }
 
     return {
@@ -191,6 +194,8 @@ export default class SegmentationQuery extends BaseQuery {
       isPeopleOnly,
       isPeopleTimeSeries,
       jqlQueries,
+      localFrom,
+      localTo,
       segments,
       to,
       unit,
@@ -397,8 +402,8 @@ export default class SegmentationQuery extends BaseQuery {
       let baseDateResults = {};
       if (isEventsQuery || this.query.isPeopleTimeSeries) {
         baseDateResults = createBaseResults(results, {
-          toDate: isEventsQuery && this.query.to,
-          fromDate: isEventsQuery && this.query.from,
+          toDate: isEventsQuery && this.query.localTo,
+          fromDate: isEventsQuery && this.query.localFrom,
           timestampIsSeconds: this.query.isPeopleTimeSeries, // People time series queries are returned in seconds.
           unit: this.query.unit,
         });

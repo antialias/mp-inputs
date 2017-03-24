@@ -388,7 +388,8 @@ export function createBaseResults(results, {toDate=null, fromDate=null, timestam
 
   const timestampsForRange = [];
   if (unit) {
-    const fromMoment = moment(fromDate || minTimestamp);
+    // results should always start at the beginning of that day
+    const fromMoment = moment(fromDate || minTimestamp).startOf('day');
     const toMoment = moment(toDate || maxTimestamp);
 
     for (let cursor = moment(minTimestamp); cursor.isAfter(fromMoment); cursor.subtract(1, `${unit}s`)) {
