@@ -437,6 +437,8 @@ export function isIncompleteInterval(data, options) {
           var nowMonths = now.getUTCFullYear() * 12 + now.getUTCMonth();
           var lastMonths = last.getUTCFullYear() * 12 + last.getUTCMonth();
           return nowMonths - lastMonths < 3;
+        case `year`:
+          return new Date(currentDate).getUTCFullYear() === new Date(lastDate).getUTCFullYear();
         default:
           console.error(`Unknown interval: "${timeInterval}"`);
           return false;
