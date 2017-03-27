@@ -19,6 +19,8 @@ import './builder-show-header';
 import template from './index.jade';
 import './index.styl';
 
+const PADDING_OFFSET = 12;
+
 document.registerElement(`query-builder-show`, class extends Component {
   get config() {
     return {
@@ -30,8 +32,7 @@ document.registerElement(`query-builder-show`, class extends Component {
         clauseUpdated: (el, idx) => this.updateStoredWidths(el, idx),
         hasLongHeader: idx => {
           const widths = this.state.showClauseWidths[idx];
-          const offset = 12;
-          return !!widths && widths.headerWidth >= widths.clauseBodyWidth + offset;
+          return !!widths && widths.headerWidth >= widths.clauseBodyWidth + PADDING_OFFSET;
         },
       },
     };
@@ -50,12 +51,10 @@ document.registerElement(`query-builder-show`, class extends Component {
       clauseBodyWidth += clauseContainer.querySelector(`.control-container:last-of-type`).offsetWidth;
     }
 
-    const offset = 12;
-
     newShowClauseWidths.headerWidth = header ? header.offsetWidth : 0;
-    newShowClauseWidths.clauseWidth = clauseContainer.offsetWidth - offset;
+    newShowClauseWidths.clauseWidth = clauseContainer.offsetWidth - PADDING_OFFSET;
     newShowClauseWidths.clauseBodyWidth = clauseBodyWidth;
-    newShowClauseWidths.numericPropertyWidth = numericProperty ? numericProperty.offsetWidth - offset : null;
+    newShowClauseWidths.numericPropertyWidth = numericProperty ? numericProperty.offsetWidth - PADDING_OFFSET : null;
 
     if (!isEqual(newShowClauseWidths, showClauseWidths)) {
       this.app.updateShowClauseWidths(idx, newShowClauseWidths);

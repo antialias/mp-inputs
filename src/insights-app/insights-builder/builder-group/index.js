@@ -16,6 +16,8 @@ import './property-type-prefix';
 import template from './index.jade';
 import './index.styl';
 
+const PADDING_OFFSET = 12;
+
 document.registerElement(`query-builder-group`, class extends Component {
   get config() {
     return {
@@ -26,8 +28,7 @@ document.registerElement(`query-builder-group`, class extends Component {
         clauseUpdated: (el, idx) => this.updateStoredWidths(el, idx),
         hasLongHeader: idx => {
           const widths = this.state.groupClauseWidths[idx];
-          const offset = 12;
-          return !!widths && widths.headerWidth > widths.propertyWidth + offset;
+          return !!widths && widths.headerWidth > (widths.propertyWidth + PADDING_OFFSET);
         },
       },
     };
@@ -39,10 +40,9 @@ document.registerElement(`query-builder-group`, class extends Component {
 
     const header = clauseContainer.querySelector(`.header-label`);
     const property = clauseContainer.querySelector(`.control-label`);
-    const offset = 12;
 
     newGroupClauseWidths.headerWidth = header ? header.offsetWidth : 0;
-    newGroupClauseWidths.propertyWidth = property ? (property.offsetWidth - offset) : 0;
+    newGroupClauseWidths.propertyWidth = property ? (property.offsetWidth - PADDING_OFFSET) : 0;
 
     if (!isEqual(newGroupClauseWidths, groupClauseWidths)) {
       this.app.updateGroupClauseWidths(idx, newGroupClauseWidths);
