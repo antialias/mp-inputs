@@ -347,14 +347,13 @@ export function reachableNodesOfKey({series={}, keysToMatch=[], depth=1}={}) {
  * offsetTimestampWithDst(1490140800000); // Done in PST timezone
  * // 1490166000000
  */
-const isLocalInDST = moment().isDST();
-const localTZOffset = new Date().getTimezoneOffset();
 export function offsetTimestampWithDst(timestamp) {
-  let localizedTimestamp = timestamp + (localTZOffset * 60 * 1000);
-  if (isLocalInDST && !moment(localizedTimestamp).isDST()) {
-    localizedTimestamp += 60 * 60 * 1000;
+  // If we are currently in DST and the timestamp in local time is NOT in DST add an hour to offset it.
+  let date = moment(timestamp);
+  if (moment().isDST() && !date.isDST()) {
+    date.add(1, `hours`);
   }
-  return localizedTimestamp;
+  return date.valueOf();
 }
 
 /**
@@ -380,7 +379,7 @@ export function createBaseResults(results, {toDate=null, fromDate=null, timestam
   let sortedTimestamps = results
     .map(result => result.key[result.key.length - 1])
     .filter(timestamp => timestamp !== null && Number.isInteger(Number(timestamp)))
-    .map(timestamp => offsetTimestampWithDst(timestampIsSeconds ? Number(timestamp) * 1000 : Number(timestamp)))
+    .map(timestamp => timestampIsSeconds ? Number(timestamp) * 1000 : Number(timestamp))
     .sort();
 
   const minTimestamp = sortedTimestamps[0];
@@ -389,8 +388,11 @@ export function createBaseResults(results, {toDate=null, fromDate=null, timestam
   const timestampsForRange = [];
   if (unit) {
     // if using fromDate the results should always start at the beginning of the unit of time with the smallest being day.
-    const remapFromUnit = {'hour': 'day'};
-    const fromMoment = fromDate ? moment(fromDate).startOf(remapFromUnit[unit] || unit) : moment(minTimestamp);
+    const remapStartOfUnit = {
+      hour: `day`,
+      week: `isoweek`,
+    };
+    const fromMoment = fromDate ? moment(fromDate).startOf(remapStartOfUnit[unit] || unit) : moment(minTimestamp);
     const toMoment = moment(toDate || maxTimestamp);
 
     for (let cursor = fromMoment; cursor.isBefore(toMoment); cursor.add(1, `${unit}s`)) {

@@ -17,7 +17,6 @@ import {
   formatDate,
   isFilterValid,
   localizedDate,
-  MS_BY_UNIT,
   offsetTimestampWithDst,
   pick,
   renameEvent,
@@ -179,9 +178,11 @@ export default class SegmentationQuery extends BaseQuery {
 
     let from, to, localFrom, localTo;
     if (Array.isArray(time.value)) {
+      // Defined dates
       [from, to] = time.value.map(ts => moment.utc(ts).valueOf());
       [localFrom, localTo] = time.value.map(ts => moment(ts).valueOf());
     } else {
+      // Relative date: Last X days are relative to local time as if you were in the projects time zone
       to = Number(localizedDate({utcOffset: this.utcOffset}));
       from = moment(to).subtract(time.value, `${unit}s`).valueOf();
       localTo = to;
@@ -401,10 +402,36 @@ export default class SegmentationQuery extends BaseQuery {
       // create base date values for all known dates if anything but non-time people query.
       let baseDateResults = {};
       if (isEventsQuery || this.query.isPeopleTimeSeries) {
+
+        // LOCALIZING RESULTS
+        // TODO move to util + add tests
+        // Results are returned as a timestamp with no timezone but in the date + time of the project timezone. For example,
+        // if an event happened on Mar 27 2017 14:00:00 GMT-0700 (PDT) the event is returned from the query with a
+        // datetime of Mar 27 2017 14:00:00 GMT+00 (UTC). We want to display the results as if the local machine is in UTC.
+        // To accomplish this, we subtract the local utcOffset.
+        results = results.map(({key, value}) => {
+          let originalTimestamp = key[key.length - 1];
+          if (!originalTimestamp) {
+            return null;
+          }
+
+          if (this.query.isPeopleTimeSeries) {
+            // Datetime properties are returned in seconds.
+            // Since people time series queries are just groupBys on a date property we need to convert to MS.
+            originalTimestamp = originalTimestamp * 1000;
+          }
+
+          // subtract the local utcOffset to that we maintain the exact date + time regardless of the default UTC timezone
+          const localizedTimestamp = moment(originalTimestamp).subtract(moment().utcOffset(), `minutes`).valueOf();
+          return {
+            key: key.slice(0, -1).concat(offsetTimestampWithDst(localizedTimestamp)), // account for DST if applicable
+            value,
+          };
+        }).filter(Boolean);
+
         baseDateResults = createBaseResults(results, {
           toDate: isEventsQuery && this.query.localTo,
           fromDate: isEventsQuery && this.query.localFrom,
-          timestampIsSeconds: this.query.isPeopleTimeSeries, // People time series queries are returned in seconds.
           unit: this.query.unit,
         });
       }
@@ -415,7 +442,7 @@ export default class SegmentationQuery extends BaseQuery {
         timestampMultiplier: querySegments[idx].isEventDate ? 1 : 1000,
       });
 
-      const createSeriesReducerFunc = ({isTimeSeries=true, timestampMultiplier=1}={}) => {
+      const createSeriesReducerFunc = ({isTimeSeries=true}={}) => {
         return (seriesObj, item) => {
           // transform item.key array into nested obj,
           // with item.value at the deepest level
@@ -449,8 +476,7 @@ export default class SegmentationQuery extends BaseQuery {
           let label = item.key[item.key.length - 1];
           if (isTimeSeries) {
             if (Number.isInteger(Number(label))) {
-              label = Number(label) * timestampMultiplier;
-              obj[offsetTimestampWithDst(label)] = item.value;
+              obj[label] = item.value;
             }
           } else {
             obj[label] = item.value;
@@ -460,7 +486,7 @@ export default class SegmentationQuery extends BaseQuery {
       };
 
       series = results.reduce(createSeriesReducerFunc({isTimeSeries: !this.query.isPeopleOnly}), {});
-      peopleTimeSeries = this.query.isPeopleTimeSeries ? results.reduce(createSeriesReducerFunc({timestampMultiplier: 1000}), {}) : null;
+      peopleTimeSeries = this.query.isPeopleTimeSeries ? results.reduce(createSeriesReducerFunc(), {}) : null;
     }
 
     headers = [this.query.isPeopleOnly ? `$people` : `$event`].concat(headers);
