@@ -122,7 +122,6 @@ document.registerElement(`chart-display`, class extends Component {
           const processed = pick(result, [`series`, `headers`]);
           if (flattenedData) {
             processed.series = result.peopleTimeSeries || result.series;
-            processed.hasSingleSeriesTopLevel = Object.keys(processed.series).length === 1 && result.headers.length > 1;
             processed.dataId = result.id;
           } else if (this.helpers.showLegend()) {
             const legend = this.state.report.legend;

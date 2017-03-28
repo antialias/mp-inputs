@@ -38,15 +38,15 @@ document.registerElement(`line-chart`, class extends Component {
       return;
     }
 
-    let {headers, series, hasSingleSeriesTopLevel, dataId} = this.chartData;
+    let {headers, series, dataId} = this.chartData;
 
     if (headers && series) {
       const newState = {
         chartLabel: this.getJSONAttribute(`chart-label`),
         dataId,
         displayOptions: this.getJSONAttribute(`display-options`),
+        hasSingleSeriesTopLevel: headers.length > 1 && Object.keys(series).length === 1,
         headers,
-        hasSingleSeriesTopLevel,
         segmentColorMap: this.getJSONAttribute(`segment-color-map`),
         utcOffset: this.utcOffset,
       };

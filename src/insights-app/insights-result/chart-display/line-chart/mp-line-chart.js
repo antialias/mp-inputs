@@ -359,10 +359,10 @@ export class MPLineChart extends WebComponent {
     this.renderChartIfChange();
 
     if (chartData.hasSingleSeriesTopLevel) {
-      Object.keys(this.chartDataPaths).forEach(key => {
+      for (const key in this.chartDataPaths) {
         let value = this.chartDataPaths[key];
         this.chartDataPaths[key] = value.slice(1);
-      })
+      }
     }
   }
 
