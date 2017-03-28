@@ -324,13 +324,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.standalone = this.mpContext.standalone;
     this.customEvents = this.mpContext.customEvents || [];
     this.hasWritePermissions = !this.mpContext.hasPermissions || this.mpContext.permissions.includes(`write_insights`);
-    this.projectHasEvents = true;
-    this.projectHasPeople = true;
-    this.blocking = {
-      isBlockedEvents: false, 
-      isBlockedPeople: false, 
-      label: ``,
-    };
     this.eventsPlan = {cap: FEATURE_GATES_UNLIMITED};
     this.peoplePlan = {cap: FEATURE_GATES_UNLIMITED};
     this.userID = this.mpContext.userID;
@@ -350,14 +343,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     };
 
     if (!this.standalone) {
-      this.projectHasEvents = !!this.mpContext.hasIntegratedArb;
-      this.projectHasPeople = !!this.mpContext.hasIntegratedEngage;
-      let {
-        is_blocked_events: isBlockedEvents, 
-        is_blocked_people: isBlockedPeople, 
-        label,
-      } = this.mpContext.blocking;
-      this.blocking = {isBlockedEvents, isBlockedPeople, label};
       Object.assign(this.state, {
         savedReports: this.mpContext.bookmarks.reduce(
           (reports, bm) => extend(reports, {[bm.id]: Report.fromBookmarkData(bm)}),
@@ -368,7 +353,16 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   attachedCallback() {
-    this.state = extend(this.state, util.pick(this, [`projectHasEvents`, `projectHasPeople`, `blocking`]));
+    this.state.projectHasEvents = this.mpContext ? !!this.mpContext.hasIntegratedArb : true;
+    this.state.projectHasPeople = this.mpContext ? !!this.mpContext.hasIntegratedEngage : true;
+    if (this.mpContext.blocking) {
+      let {
+        is_blocked_events: isBlockedEvents = false,
+        is_blocked_people: isBlockedPeople = false,
+        label = ``,
+      } = this.mpContext.blocking;
+      this.state.blocking = {isBlockedEvents, isBlockedPeople, label};
+    }
     this.state.recentEvents = this._getRecentList(`events`);
     this.state.recentProperties = this._getRecentList(`properties`);
 

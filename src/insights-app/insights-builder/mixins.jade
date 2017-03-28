@@ -134,7 +134,7 @@ mixin property-screen-body(options)
           mp-toggle-option(attrs={value: type})= util.formatResourceType(type)
       each type, index in options.resourceTypes
         - const upsell_type = $helpers.shouldShowSourceUpsell(type) ? `upsell` : `integrate`;
-        svg-icon-wrapper(
+        .svg-icon-wrapper(
           class={
             [type]: true,
             [upsell_type]: true, 
