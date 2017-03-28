@@ -357,6 +357,13 @@ export class MPLineChart extends WebComponent {
     this._headers = chartData.headers;
     this._segmentColorMap = chartData.segmentColorMap;
     this.renderChartIfChange();
+
+    if (chartData.isSingleSeries) {
+      Object.keys(this.chartDataPaths).forEach(key => {
+        let value = this.chartDataPaths[key];
+        this.chartDataPaths[key] = value.slice(1);
+      })
+    }
   }
 
   get utcOffset() {

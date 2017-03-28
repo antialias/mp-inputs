@@ -38,7 +38,7 @@ document.registerElement(`line-chart`, class extends Component {
       return;
     }
 
-    let {headers, series, dataId} = this.chartData;
+    let {headers, series, isSingleSeries, dataId} = this.chartData;
 
     if (headers && series) {
       const newState = {
@@ -46,6 +46,7 @@ document.registerElement(`line-chart`, class extends Component {
         dataId,
         displayOptions: this.getJSONAttribute(`display-options`),
         headers,
+        isSingleSeries,
         segmentColorMap: this.getJSONAttribute(`segment-color-map`),
         utcOffset: this.utcOffset,
       };
