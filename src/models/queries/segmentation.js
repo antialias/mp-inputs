@@ -176,17 +176,15 @@ export default class SegmentationQuery extends BaseQuery {
     const time = sections.time.clauses[0];
     const unit = isPeopleTimeSeries ? lastPeopleSegment.unit : time.unit;
 
-    let from, to, localFrom, localTo;
+    let from, to, localTo;
     if (Array.isArray(time.value)) {
       // Defined dates
       [from, to] = time.value.map(ts => moment.utc(ts).valueOf());
-      [localFrom, localTo] = time.value.map(ts => moment(ts).valueOf());
     } else {
       // Relative date: Last X days are relative to local time as if you were in the projects time zone
       to = Number(localizedDate({utcOffset: this.utcOffset}));
       from = moment(to).subtract(time.value, `${unit}s`).valueOf();
-      localTo = to;
-      localFrom = from;
+      localTo = to //to is already localized as a relative date
     }
 
     return {
@@ -195,7 +193,6 @@ export default class SegmentationQuery extends BaseQuery {
       isPeopleOnly,
       isPeopleTimeSeries,
       jqlQueries,
-      localFrom,
       localTo,
       segments,
       to,
@@ -409,6 +406,7 @@ export default class SegmentationQuery extends BaseQuery {
         // if an event happened on Mar 27 2017 14:00:00 GMT-0700 (PDT) the event is returned from the query with a
         // datetime of Mar 27 2017 14:00:00 GMT+00 (UTC). We want to display the results as if the local machine is in UTC.
         // To accomplish this, we subtract the local utcOffset.
+        const localizeTimestamp = timestamp => moment(timestamp).subtract(moment().utcOffset(), `minutes`).valueOf();
         results = results.map(({key, value}) => {
           let originalTimestamp = key[key.length - 1];
           if (!originalTimestamp) {
@@ -422,7 +420,7 @@ export default class SegmentationQuery extends BaseQuery {
           }
 
           // subtract the local utcOffset to that we maintain the exact date + time regardless of the default UTC timezone
-          const localizedTimestamp = moment(originalTimestamp).subtract(moment().utcOffset(), `minutes`).valueOf();
+          const localizedTimestamp = localizeTimestamp(originalTimestamp)
           return {
             key: key.slice(0, -1).concat(offsetTimestampWithDst(localizedTimestamp)), // account for DST if applicable
             value,
@@ -430,8 +428,8 @@ export default class SegmentationQuery extends BaseQuery {
         }).filter(Boolean);
 
         baseDateResults = createBaseResults(results, {
-          toDate: isEventsQuery && this.query.localTo,
-          fromDate: isEventsQuery && this.query.localFrom,
+          toDate: isEventsQuery && (this.query.localTo || localizeTimestamp(this.query.to)),
+          fromDate: isEventsQuery && localizeTimestamp(this.query.from),
           unit: this.query.unit,
         });
       }
