@@ -359,10 +359,10 @@ export function offsetTimestampWithDst(timestamp) {
 /**
  * Provide base results object for all timestamps between toDate and fromDate. from / to falls back to the results min and max.
  * @param {Array} results - jql result object to get dates from. This assumes that the last item in the result is the timestamp/
- * @param {Number} options.toDate - starting date for zeroing range. only applies if unit is provided.
- * @param {Number} options.fromDate - ending date for zeroing range. only applies if unit is provided.
- * @param {Boolean} options.timestampIsSeconds - Convertes result timestamps to MS by multiplying 1000 if this is set to true.
- * @param {String} options.unit - if unit is provided dates for  fromDate -> toDate are included in the results
+ * @param {Number} [toDate] - starting date for zeroing range. only applies if unit is provided.
+ * @param {Number} [fromDate] - ending date for zeroing range. only applies if unit is provided.
+ * @param {Boolean} [timestampIsSeconds] - Converts result timestamps to MS by multiplying 1000 if this is set to true.
+ * @param {String} [unit] - if unit is provided dates for  fromDate -> toDate are included in the results
  * @returns {object} with all nested keys seperated by spaces
  * @example
  * flattenNestedObjectToPath([

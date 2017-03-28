@@ -182,7 +182,7 @@ export default class SegmentationQuery extends BaseQuery {
     } else {
       // Relative dates -- Last X days are relative to local time (as if you were in the project time)
       toMoment = moment(localizedDate({utcOffset: this.utcOffset}));
-      fromMoment = moment(to).subtract(time.value - 1, `${unit}s`);
+      fromMoment = moment(toMoment).subtract(time.value - 1, `${unit}s`);
     }
 
     // from day should start at the beginning of the unit chosen (with the smallest being day)
@@ -191,17 +191,15 @@ export default class SegmentationQuery extends BaseQuery {
       week: `isoweek`, // Monday first weeks
     };
 
-    const from = fromMoment.startOf(remapStartDateByUnit[unit] || unit).valueOf();
-    const to = toMoment.valueOf();
     return {
       filterArbSelectors,
-      from,
       isPeopleOnly,
       isPeopleTimeSeries,
       jqlQueries,
       segments,
-      to,
       unit,
+      from: fromMoment.startOf(remapStartDateByUnit[unit] || unit).valueOf(),
+      to: toMoment.valueOf(),
     };
   }
 
@@ -425,14 +423,14 @@ export default class SegmentationQuery extends BaseQuery {
           }
 
           // subtract the local utcOffset to that we maintain the exact date + time regardless of the default UTC timezone
-          const localizedTimestamp = localizeTimestamp(originalTimestamp)
+          const localizedTimestamp = localizeTimestamp(originalTimestamp);
           return {
             key: key.slice(0, -1).concat(offsetTimestampWithDst(localizedTimestamp)), // account for DST if applicable
             value,
           };
         }).filter(Boolean);
 
-        const baseDateParams = {unit: this.query.unit}
+        const baseDateParams = {unit: this.query.unit};
         if (isEventsQuery) {
           // from dates always start at the beginning of the day
           baseDateParams.fromDate = moment(localizeTimestamp(this.query.from)).startOf(`day`).valueOf();
