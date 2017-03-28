@@ -32,9 +32,9 @@
           span.button-flex-wrapper(class={'filter-button-disabled': showUpsellIcon})
             svg-icon(attrs={icon: 'plus'})
             span.add-filter-label Filter
-      if showUpsellIcon
-        .upsell-icon
-          svg-icon(attrs={icon: 'lighting-bolt'})
+        if showUpsellIcon
+          .upsell-icon
+            svg-icon(attrs={icon: 'lighting-bolt'})
       if showModal
         .upsell-wrapper
           mp-upsell-popup(

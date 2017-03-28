@@ -19,9 +19,9 @@ include ../insights-learn/tooltip.jade
           on={click: $helpers.clickedAdd}
         )
           svg-icon(attrs={icon: 'x'})
-      if showUpsellIcon
-        .upsell-icon
-          svg-icon(attrs={icon: 'lighting-bolt'})
+        if showUpsellIcon
+          .upsell-icon
+            svg-icon(attrs={icon: 'lighting-bolt'})
       if $helpers.shouldShowUpsellModal()
         .upsell-wrapper
           mp-upsell-popup(
