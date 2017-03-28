@@ -387,12 +387,7 @@ export function createBaseResults(results, {toDate=null, fromDate=null, timestam
 
   const timestampsForRange = [];
   if (unit) {
-    // if using fromDate the results should always start at the beginning of the unit of time with the smallest being day.
-    const remapStartOfUnit = {
-      hour: `day`,
-      week: `isoweek`,
-    };
-    const fromMoment = fromDate ? moment(fromDate).startOf(remapStartOfUnit[unit] || unit) : moment(minTimestamp);
+    const fromMoment = moment(fromDate || minTimestamp);
     const toMoment = moment(toDate || maxTimestamp);
 
     for (let cursor = fromMoment; cursor.isBefore(toMoment); cursor.add(1, `${unit}s`)) {

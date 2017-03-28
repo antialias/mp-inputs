@@ -168,7 +168,6 @@ export default class SegmentationQuery extends BaseQuery {
       .map(filter => filterToArbSelectorString(filter))
       .join(` ${conjunction} `);
 
-    // TODO (jordan): handle resetting dates when building params
     const isPeopleOnly = jqlQueries.every(query => query.resourceType === `people`);
     const lastPeopleSegment = isPeopleOnly && segments.length && segments[segments.length - 1];
     const isPeopleTimeSeries = lastPeopleSegment && lastPeopleSegment.propertyType === `datetime`;
@@ -176,24 +175,30 @@ export default class SegmentationQuery extends BaseQuery {
     const time = sections.time.clauses[0];
     const unit = isPeopleTimeSeries ? lastPeopleSegment.unit : time.unit;
 
-    let from, to, localTo;
+    let fromMoment, toMoment;
     if (Array.isArray(time.value)) {
-      // Defined dates
-      [from, to] = time.value.map(ts => moment.utc(ts).valueOf());
+      // Defined dates -- Selected calendar days in project time
+      [fromMoment, toMoment] = time.value.map(datestring => moment.utc(datestring));
     } else {
-      // Relative date: Last X days are relative to local time as if you were in the projects time zone
-      to = Number(localizedDate({utcOffset: this.utcOffset}));
-      from = moment(to).subtract(time.value, `${unit}s`).valueOf();
-      localTo = to //to is already localized as a relative date
+      // Relative dates -- Last X days are relative to local time (as if you were in the project time)
+      toMoment = moment(localizedDate({utcOffset: this.utcOffset}));
+      fromMoment = moment(to).subtract(time.value - 1, `${unit}s`);
     }
 
+    // from day should start at the beginning of the unit chosen (with the smallest being day)
+    const remapStartDateByUnit = {
+      hour: `day`,
+      week: `isoweek`, // Monday first weeks
+    };
+
+    const from = fromMoment.startOf(remapStartDateByUnit[unit] || unit).valueOf();
+    const to = toMoment.valueOf();
     return {
       filterArbSelectors,
       from,
       isPeopleOnly,
       isPeopleTimeSeries,
       jqlQueries,
-      localTo,
       segments,
       to,
       unit,
@@ -427,11 +432,23 @@ export default class SegmentationQuery extends BaseQuery {
           };
         }).filter(Boolean);
 
-        baseDateResults = createBaseResults(results, {
-          toDate: isEventsQuery && (this.query.localTo || localizeTimestamp(this.query.to)),
-          fromDate: isEventsQuery && localizeTimestamp(this.query.from),
-          unit: this.query.unit,
-        });
+        const baseDateParams = {unit: this.query.unit}
+        if (isEventsQuery) {
+          // from dates always start at the beginning of the day
+          baseDateParams.fromDate = moment(localizeTimestamp(this.query.from)).startOf(`day`).valueOf();
+
+          let toDate = moment(localizeTimestamp(this.query.to));
+          const projectTimeNow = moment(localizedDate({utcOffset: this.utcOffset}));
+          if (toDate.diff(projectTimeNow, `days`) === 0) {
+            // if the to date is the same day as the project times current day only go up until the project timezone time
+            toDate = projectTimeNow;
+          } else {
+            // if it is not the same day, go until the end of the selected day
+            toDate = toDate.endOf(`day`);
+          }
+          baseDateParams.toDate = toDate.valueOf();
+        }
+        baseDateResults = createBaseResults(results, baseDateParams);
       }
 
       const isSegDatetime = idx => querySegments[idx].propertyType === `datetime`;
