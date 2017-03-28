@@ -359,8 +359,7 @@ export class MPLineChart extends WebComponent {
     this.renderChartIfChange();
 
     if (chartData.hasSingleSeriesTopLevel) {
-      for (const key in this.chartDataPaths) {
-        let value = this.chartDataPaths[key];
+      for (const [key, value] of Object.entries(this.chartDataPaths)) {
         this.chartDataPaths[key] = value.slice(1);
       }
     }
