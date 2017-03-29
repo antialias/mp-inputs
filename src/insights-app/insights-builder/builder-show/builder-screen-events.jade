@@ -12,7 +12,7 @@ include ../mixins.jade
 .builder-screen.events
   +screen-title('All Events', {backButton: true})
   if !projectHasEvents || blocking.isBlockedEvents
-    +upsell-pane('events', projectHasEvents)
+    +upsell-pane('events')
   else
     .screen-list-container.arrow-key-scrollable(
       hook={postpatch: $helpers.updateRenderedSize}

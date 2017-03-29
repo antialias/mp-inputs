@@ -133,7 +133,7 @@ mixin property-screen-body(options)
         each type in options.resourceTypes
           mp-toggle-option(attrs={value: type})= util.formatResourceType(type)
       each type, index in options.resourceTypes
-        - const upsell_type = $helpers.shouldShowSourceUpsell(type) ? `upsell` : `integrate`;
+        - const upsell_type = $helpers.shouldShowSourceUpsell(type) ? `upsell` : `alert`;
         .svg-icon-wrapper(
           class={
             [type]: true,
@@ -148,7 +148,7 @@ mixin property-screen-body(options)
   .screen-list-container.arrow-key-scrollable(on={scroll: options.scrolledList})
     - const propertySections = options.propertySections
     if !$helpers.shouldShowPropertySections()
-      +upsell-pane(options.selectedResourceType, $helpers.shouldShowSourceUpsell(options.selectedResourceType))
+      +upsell-pane(options.selectedResourceType)
     else
       each section, idx in propertySections
         if section.list.length
@@ -203,16 +203,16 @@ mixin pane-loader()
   .loading-properties
     mp-spinner
 
-mixin upsell-pane(resource_type, project_has_resource)
-  - const options = $helpers.getUpsellOptions(resource_type, project_has_resource)
-  - const upsell_type = project_has_resource ? `upsell` : `integrate`;
+mixin upsell-pane(resource_type)
+  - const options = $helpers.getUpsellOptions(resource_type)
+  - const upsell_type = options.upsellType;
 
   .upsell-pane-content
     .upsell-image(class={
       [resource_type]: true,
       [upsell_type]: true,
     })
-      svg-icon(attrs={ icon: (project_has_resource ? 'lighting-bolt' : 'alert') })
+      svg-icon(attrs={ icon: upsell_type === `upsell` ? `lighting-bolt` : `alert` })
 
     .upsell-message
       .title=options.upsellTitle

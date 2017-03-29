@@ -3,7 +3,7 @@ import isEqual from 'lodash/isEqual';
 import kebabCase from 'lodash/kebabCase';
 import MPApp from 'mixpanel-common/report/mp-app';
 import Persistence from 'mixpanel-common/report/persistence';
-import { extend } from 'mixpanel-common/util';
+import { commaizeNumber, extend } from 'mixpanel-common/util';
 import * as util from '../util';
 
 import { mixpanel, rollbar } from '../tracking';
@@ -115,7 +115,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
           }
         }
         if (parsedURL) {
-          const report = Report.deserialize(extend(this.defaultReportState(!this.projectHasEvents || this.eventsBlocked), parsedURL));
+          const report = Report.deserialize(extend(this.defaultReportState(!this.projectHasEvents || this.state.blocked.isBlockedEvents), parsedURL));
           if (report && report.valid) {
             return extend(stateUpdate, this.loadReport(report));
           }
@@ -270,35 +270,44 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   shouldUpsellForSource(source) {
-    let shouldUpsell = false;
+    let overFreeQuota = false;
     switch(source) {
       case `events`:
-        shouldUpsell = this.blocking.isBlockedEvents && this.projectHasEvents;
+        overFreeQuota = !this.state.isPayingCustomer && this.state.blocking.isBlockedEvents;
         break;
       case `people`:
-        shouldUpsell =  this.blocking.isBlockedPeople && this.projectHasPeople;
+        overFreeQuota = !this.state.isPayingCustomer && this.state.blocking.isBlockedPeople;
     }
-    return shouldUpsell;
+    return overFreeQuota;
   }
 
   shouldAlertForSource(source) {
     let shouldAlert = false;
+    let notIntegrated, missedPayment;
     switch(source) {
       case `events`:
-        shouldAlert = !this.projectHasEvents;
+        notIntegrated = !this.state.projectHasEvents;
+        missedPayment = this.state.isPayingCustomer && this.state.blocking.isBlockedEvents;
+        shouldAlert = notIntegrated || missedPayment;
         break;
       case `people`:
-        shouldAlert = !this.projectHasPeople;
+        notIntegrated = !this.state.projectHasPeople;
+        missedPayment = this.state.isPayingCustomer && this.state.blocking.isBlockedEvents;
+        shouldAlert = notIntegrated || missedPayment;
     }
     return shouldAlert;
   }
 
-  upsellTextOptions(resourceType, projectHasResource) {
-    const isPayingCustomer = [`billing_error_blocked_owner`, `billing_error_blocked_member`].includes(this.mpContext.blocking.label);
-    const customerType = isPayingCustomer ? `converted` : `free`;
-    const upsellType = projectHasResource ? `upsell` : `integrate`;
-    const cap = this.mpContext[`${resourceType}Plan`].cap;
-    return util.upsellOptions({resourceType, upsellType, customerType, cap});
+  upsellTextOptions(resourceType) {
+    const cap = commaizeNumber(this.mpContext[`${resourceType}Plan`].cap);
+    const customerType = this.state.isPayingCustomer ? `converted` : `free`;
+    const upsellType = this.shouldUpsellForSource(resourceType) ? `upsell` : `alert`;
+    return util.upsellOptions({
+      cap,
+      customerType,
+      resourceType,
+      upsellType,
+    });
   }
 
   hasWhitelist(name) {
@@ -355,16 +364,15 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   attachedCallback() {
     this.state.projectHasEvents = this.mpContext ? !!this.mpContext.hasIntegratedArb : true;
     this.state.projectHasPeople = this.mpContext ? !!this.mpContext.hasIntegratedEngage : true;
-    if (this.mpContext.blocking) {
-      let {
-        is_blocked_events: isBlockedEvents = false,
-        is_blocked_people: isBlockedPeople = false,
-        label = ``,
-      } = this.mpContext.blocking;
-      this.state.blocking = {isBlockedEvents, isBlockedPeople, label};
-    }
+    const {
+      is_blocked_events: isBlockedEvents = false,
+      is_blocked_people: isBlockedPeople = false,
+      label = ``,
+    } = this.mpContext.blocking || {};
+    this.state.blocking = {isBlockedEvents, isBlockedPeople, label};
     this.state.recentEvents = this._getRecentList(`events`);
     this.state.recentProperties = this._getRecentList(`properties`);
+    this.state.isPayingCustomer = [`billing_error_blocked_owner`, `billing_error_blocked_member`].includes(this.state.blocking.label);
 
     this.queries = {};
     if (this.canMakeQueries()) {
@@ -764,7 +772,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   canMakeQueries() {
-    return this.projectHasEvents || this.projectHasPeople;
+    return this.state.projectHasEvents || this.state.projectHasPeople;
   }
 
   getClausesForType(type) {

@@ -6,7 +6,7 @@ include ../mixins.jade
 .builder-screen.properties
   +screen-title(`People`, {backButton: !!$helpers.screenIdx()})
   if !projectHasPeople || blocking.isBlockedPeople
-    +upsell-pane('people', projectHasPeople)
+    +upsell-pane('people')
   else
     .screen-list-container(
       class=util.learnClasses({disabledExceptChildren: [`first`]})

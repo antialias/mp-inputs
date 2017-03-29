@@ -1,15 +1,15 @@
 export function upsellOptions({resourceType=null, upsellType=null, customerType=null, cap=null}={}) {
   const UPSELL_OPTIONS = {
     events: {
-      integrate: {
-        upsellTitle: `We haven\'t recieved any events from you.`,
-        upsellText: {
-          linkText: `Integrate`,
-          closingText: ` events to start tracking your users\' actions.`,
+      alert: {
+        free: {
+          upsellTitle: `We haven\'t received any events from you.`,
+          upsellText: {
+            linkText: `Integrate Events`,
+            closingText: ` to start tracking your users\' actions.`,
+          },
+          upsellLink: `/report/setup/quick`,
         },
-        upsellLink: `/report/setup/quick`,
-      },
-      upsell: {
         converted: {
           upsellTitle: `We haven\'t received payment for your latest invoice.`,
           upsellText: {
@@ -18,26 +18,26 @@ export function upsellOptions({resourceType=null, upsellType=null, customerType=
           },
           upsellLink: `mailto:support@mixpanel.com`,
         },
-        free: {
-          upsellTitle: `You\'ve exceeded your limit of ` + cap + ` free monthly data points.`,
-          upsellText: {
-            linkText: `Upgrade`,
-            closingText: ` your plan to regain access to your event data.`,
-          },
-          upsellLink: `/pricing/#engagement`,
+      },
+      upsell: {
+        upsellTitle: `You\'ve exceeded your limit of ` + cap + ` free monthly data points.`,
+        upsellText: {
+          linkText: `Upgrade your plan`,
+          closingText: ` to regain access to your event data.`,
         },
+        upsellLink: `/pricing/#engagement`,
       },
     },
     people: {
-      integrate: {
-        upsellTitle: `You don\'t have any People profiles.`,
-        upsellText: {
-          linkText: `Integrate`,
-          closingText: ` People to learn more about your users.`,
+      alert: {
+        free: {
+          upsellTitle: `You don\'t have any People profiles.`,
+          upsellText: {
+            linkText: `Integrate People`,
+            closingText: ` to learn more about your users.`,
+          },
+          upsellLink: `/report/setup/people`,
         },
-        upsellLink: `/report/setup/people`,
-      },
-      upsell: {
         converted: {
           upsellTitle: `We haven\'t received payment for your latest invoice.`,
           upsellText: {
@@ -46,21 +46,22 @@ export function upsellOptions({resourceType=null, upsellType=null, customerType=
           },
           upsellLink: `mailto:support@mixpanel.com`,
         },
-        free: {
-          upsellTitle: `You\'ve exceeded your limit of ` + cap + ` free People profiles.`,
-          upsellText: {
-            linkText: `Upgrade`,
-            closingText: ` your plan to regain access to your data.`,
-          },
-          upsellLink: `/pricing/#people`,
+      },
+      upsell: {
+        upsellTitle: `You\'ve exceeded your limit of ` + cap + ` free People profiles.`,
+        upsellText: {
+          linkText: `Upgrade your plan`,
+          closingText: ` to regain access to your data.`,
         },
+        upsellLink: `/pricing/#people`,
       },
     },
   };
 
   let options = UPSELL_OPTIONS[resourceType][upsellType];
-  if (upsellType === `upsell`) {
+  if (upsellType === `alert`) {
     options = options[customerType];
   }
+  options.upsellType = upsellType;
   return options;
 }
