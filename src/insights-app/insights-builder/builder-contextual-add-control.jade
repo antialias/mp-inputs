@@ -12,16 +12,6 @@ include ../insights-learn/tooltip.jade
 )
   .insights-new-control.new-query-builder(class={'pane-open': open})
     .control-buttons.add-control
-      .add-button-container.insights-learn-tooltip-container
-        +insights-learn-tooltip(`compare-event`, `group-by`)
-        button.add-button.insights-learn-emphasize(
-          class={'disable-add-button': showUpsellIcon}
-          on={click: $helpers.clickedAdd}
-        )
-          svg-icon(attrs={icon: 'x'})
-        if showUpsellIcon
-          .upsell-icon
-            svg-icon(attrs={icon: 'lighting-bolt'})
       if $helpers.shouldShowUpsellModal()
         .upsell-wrapper
           mp-upsell-popup(
@@ -52,6 +42,16 @@ include ../insights-learn/tooltip.jade
         }
       )
         span.label-preposition= $helpers.getPreposition()
+      .add-button-container.insights-learn-tooltip-container
+        +insights-learn-tooltip(`compare-event`, `group-by`)
+        button.add-button.insights-learn-emphasize(
+          class={'disable-add-button': showUpsellIcon}
+          on={click: $helpers.clickedAdd}
+        )
+          svg-icon(attrs={icon: 'x'})
+        if showUpsellIcon
+          .upsell-icon
+            svg-icon(attrs={icon: 'lighting-bolt'})
     .drop-menu
       mp-drop-menu(attrs={open} on={change: $helpers.menuChange})
         .new-pane-content(attrs={'slot-body': true})
