@@ -487,13 +487,8 @@ export default class SegmentationQuery extends BaseQuery {
           }
 
           let label = item.key[item.key.length - 1];
-          if (isTimeSeries) {
-            if (Number.isInteger(Number(label))) {
-              obj[label] = item.value;
-            }
-          } else {
-            obj[label] = item.value;
-          }
+          label = Number.isInteger(Number(label)) ? label : `value`;
+          obj[label] = item.value;
           return seriesObj;
         };
       };
