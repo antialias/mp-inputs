@@ -409,7 +409,7 @@ export default class SegmentationQuery extends BaseQuery {
         // if an event happened on Mar 27 2017 14:00:00 GMT-0700 (PDT) the event is returned from the query with a
         // datetime of Mar 27 2017 14:00:00 GMT+00 (UTC). We want to display the results as if the local machine is in UTC.
         // To accomplish this, we subtract the local utcOffset.
-        const localizeTimestamp = timestamp => moment(timestamp).subtract(moment().utcOffset(), `minutes`).valueOf();
+        const localizeTimestamp = timestamp => offsetTimestampWithDst(moment(timestamp).subtract(moment().utcOffset(), `minutes`).valueOf());
         results = results.map(({key, value}) => {
           let originalTimestamp = key[key.length - 1];
           if (!originalTimestamp) {
@@ -425,7 +425,7 @@ export default class SegmentationQuery extends BaseQuery {
           // subtract the local utcOffset to that we maintain the exact date + time regardless of the default UTC timezone
           const localizedTimestamp = localizeTimestamp(originalTimestamp);
           return {
-            key: key.slice(0, -1).concat(offsetTimestampWithDst(localizedTimestamp)), // account for DST if applicable
+            key: key.slice(0, -1).concat(localizedTimestamp), // account for DST if applicable
             value,
           };
         }).filter(Boolean);
