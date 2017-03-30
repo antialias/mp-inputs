@@ -87,7 +87,7 @@ document.registerElement(`insights-header`, class extends Component {
           }
         },
 
-        titleInputEnabled: () => this.app.hasWritePermissions && this.state.projectHasEvents,
+        titleInputEnabled: () => this.app.hasWritePermissions && (this.state.projectHasEvents || this.state.projectHasPeople),
 
         updateTitle: ev => {
           if (ev.detail) {

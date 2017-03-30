@@ -115,7 +115,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
           }
         }
         if (parsedURL) {
-          const report = Report.deserialize(extend(this.defaultReportState(!this.projectHasEvents || this.state.blocked.isBlockedEvents), parsedURL));
+          const report = Report.deserialize(extend(this.defaultReportState(), parsedURL));
           if (report && report.valid) {
             return extend(stateUpdate, this.loadReport(report));
           }
@@ -161,7 +161,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   // The following states should be reset.
   get resettableState() {
     return {
-      report: this.defaultReportState(!this.projectHasEvents || this.eventsBlocked),
+      report: this.defaultReportState(),
       builderPane: this.defaultBuilderState,
       chartToggle: {
         editingType: null,
@@ -202,8 +202,13 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     };
   }
 
-  defaultReportState(eventsBlocked=false) {
-    const defaultShowClause = eventsBlocked ? ShowClause.ALL_PEOPLE : ShowClause.TOP_EVENTS;
+  defaultReportState() {
+    const eventsBlocked = this.state && this.state.blocking && this.state.blocking.isBlockedEvents;
+    const eventsIntegrated = this.state && this.state.projectHasEvents;
+    const defaultQueryPeople = eventsBlocked || !eventsIntegrated;
+
+    const defaultShowClause = defaultQueryPeople ? ShowClause.ALL_PEOPLE : ShowClause.TOP_EVENTS;
+    const resourceType = defaultQueryPeople ? Clause.RESOURCE_TYPE_PEOPLE : Clause.RESOURCE_TYPE_ALL;
 
     return new Report({
       displayOptions: {
@@ -213,7 +218,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         value: `absolute`,
       },
       sections: new BuilderSections({
-        show: new ShowSection(new ShowClause({value: defaultShowClause})),
+        show: new ShowSection(new ShowClause({value: defaultShowClause, resourceType})),
         time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
       }),
       legend: new Legend({
