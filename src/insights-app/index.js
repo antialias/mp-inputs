@@ -362,13 +362,16 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   attachedCallback() {
-    this.state.projectHasEvents = this.mpContext ? !!this.mpContext.hasIntegratedArb : true;
-    this.state.projectHasPeople = this.mpContext ? !!this.mpContext.hasIntegratedEngage : true;
+    this.state.projectHasEvents = this.mpContext.hasOwnProperty(`hasIntegratedArb`) ? this.mpContext.hasIntegratedArb : true;
+    this.state.projectHasPeople = this.mpContext.hasOwnProperty(`hasIntegratedEngage`) ? this.mpContext.hasIntegratedEngage : true;
+    debugger
+
+    const blocking = this.mpContext.blocking || {};
     const {
       is_blocked_events: isBlockedEvents = false,
       is_blocked_people: isBlockedPeople = false,
       label = ``,
-    } = this.mpContext.blocking || {};
+    } = blocking;
     this.state.blocking = {isBlockedEvents, isBlockedPeople, label};
     this.state.recentEvents = this._getRecentList(`events`);
     this.state.recentProperties = this._getRecentList(`properties`);
