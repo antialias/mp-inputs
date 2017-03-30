@@ -417,9 +417,10 @@ header-button-transition-duration = 150ms
       svg-icon
         bottom 0
         right 0
-      svg #circle, svg #alert-shape
-        stroke white
-        stroke-width 2px
+      &.upsell #circle, &.alert #alert-shape
+          stroke white
+          stroke-width 2px
+
       bg-img('~assets/images/pricing-people.svg', 98px, 60px);
 
     &.events
