@@ -364,8 +364,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   attachedCallback() {
     this.state.projectHasEvents = this.mpContext.hasOwnProperty(`hasIntegratedArb`) ? this.mpContext.hasIntegratedArb : true;
     this.state.projectHasPeople = this.mpContext.hasOwnProperty(`hasIntegratedEngage`) ? this.mpContext.hasIntegratedEngage : true;
-    debugger
-
     const blocking = this.mpContext.blocking || {};
     const {
       is_blocked_events: isBlockedEvents = false,
