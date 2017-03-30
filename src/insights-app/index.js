@@ -205,7 +205,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   defaultReportState() {
     const eventsBlocked = this.state && this.state.blocking && this.state.blocking.isBlockedEvents;
     const eventsIntegrated = this.state && this.state.projectHasEvents;
-    const defaultQueryPeople = eventsBlocked || !eventsIntegrated;
+    const peopleBlocked = this.state && this.state.blocking && this.state.blocking.isBlockedPeople;
+    const peopleIntegrated = this.state && this.state.projectHasPeople;
+    // no access to events, but has access to people
+    const defaultQueryPeople = (eventsBlocked || !eventsIntegrated) && (peopleIntegrated && !peopleBlocked);
 
     const defaultShowClause = defaultQueryPeople ? ShowClause.ALL_PEOPLE : ShowClause.TOP_EVENTS;
     const resourceType = defaultQueryPeople ? Clause.RESOURCE_TYPE_PEOPLE : Clause.RESOURCE_TYPE_ALL;
