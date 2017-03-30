@@ -1,3 +1,4 @@
+import 'mixpanel-common/components';
 import initInsights from './init';
 
 initInsights().then(app => {
