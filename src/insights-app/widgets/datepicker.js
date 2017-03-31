@@ -28,12 +28,13 @@ class DatePicker extends Component {
         hideTextInputs: () => this.hideTextInputs,
         getMinDate: () => {
           // Use a reasonable threshold for maxDataHistory, beyond which we do not have a min-date
-          if (this.maxDataHistory < 1000000) {
+          const maxDataHistory = this.maxDataHistory;
+          if (maxDataHistory < 1000000) {
             const today = localizedDate({utcOffset: this.utcOffset}).setHours(0, 0, 0, 0);
-            const date = new Date(today - (this.maxDataHistory * MS_PER_DAY));
+            const date = new Date(today - (maxDataHistory * MS_PER_DAY));
             return formatDate(date, {iso: true});
           }
-          return ``;
+          return null;
         },
         getMaxDate: () => {
           return formatDate(localizedDate({utcOffset: this.utcOffset}));
@@ -112,8 +113,8 @@ class DatePicker extends Component {
   }
 
   get maxDataHistory() {
-    const maxDataHistory = this.getAttribute(`max-data-history`);
-    return maxDataHistory !== null ? Number(maxDataHistory) : null;
+    const maxDataHistory = parseInt(this.getAttribute(`max-data-history`));
+    return Number.isNaN(maxDataHistory) ? null : maxDataHistory;
   }
 
   get preposition() {

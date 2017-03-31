@@ -40,10 +40,10 @@
       attrs={
         'is-range': isRange,
         'is-double-calendar': isDoubleCalendar,
-        'min-date': $helpers.getMinDate(),
-        'selected-date': date ? date : ``,
-        'selected-from-date': from ? from : ``,
-        'selected-to-date': to ? to : ``,
+        'min-date': $helpers.getMinDate() || ``,
+        'selected-date': date || ``,
+        'selected-from-date': from || ``,
+        'selected-to-date': to || ``,
         'is-from-date-focused': fromFocused,
         'is-to-date-focused': toFocused,
       }
