@@ -1,7 +1,7 @@
 import { Component } from 'panel';
 
 
-import { renameEvent, renameProperty } from '../../util';
+import { downloadLocalCSVData, renameEvent, renameProperty } from '../../util';
 import { dataToCSV } from '../../util/csv';
 
 import './insights-title-input';
@@ -110,7 +110,7 @@ document.registerElement(`insights-header`, class extends Component {
           if (this.app.getFeatureGateValue(`can_export_csv`)) {
             if (!this.state.resultLoading && this.state.projectHasEvents) {
               const report = this.state.report;
-              this.downloadData(report.title, dataToCSV(this.state.result, {
+              downloadLocalCSVData(`${report.title}.csv`, dataToCSV(this.state.result, {
                 timeUnit: report.timeUnit(),
               }));
             }
@@ -131,23 +131,4 @@ document.registerElement(`insights-header`, class extends Component {
   resetSaveFeedback() {
     this.update({saved: false, saveFailed: false});
   }
-
-  downloadData(filename, dataStr) {
-    // prepare blob
-    const blob = new Blob([dataStr], {type: `octet/stream`});
-    const blobURL = URL.createObjectURL(blob);
-
-    // launch named download via hidden link
-    const link = document.createElement(`a`);
-    link.style.display = `none`;
-    link.href = blobURL;
-    link.download = `${filename}.csv`;
-    document.body.appendChild(link);
-    link.click();
-
-    // clean up
-    URL.revokeObjectURL(blobURL);
-    link.remove();
-  }
-
 });
