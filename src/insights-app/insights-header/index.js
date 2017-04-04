@@ -110,7 +110,7 @@ document.registerElement(`insights-header`, class extends Component {
           if (this.app.getFeatureGateValue(`can_export_csv`)) {
             if (!this.state.resultLoading && this.state.projectHasEvents) {
               const report = this.state.report;
-              downloadLocalCSVData(`${report.title}.csv`, dataToCSV(this.state.result, {
+              downloadLocalCSVData(`${report.title || `Untitled Report`}.csv`, dataToCSV(this.state.result, {
                 timeUnit: report.timeUnit(),
               }));
             }
