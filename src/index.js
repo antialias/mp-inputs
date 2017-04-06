@@ -1,7 +1,3 @@
-import 'mixpanel-common/components';
-import 'mixpanel-common/widgets/add-to-dash';
-import 'mixpanel-common/widgets/tag-selector';
-
 import initInsights from './init';
 
 initInsights().then(app => {
