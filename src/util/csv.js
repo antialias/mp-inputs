@@ -9,7 +9,6 @@ import {
   nestedObjectKeys,
 } from 'mixpanel-common/util';
 
-import {parseDate} from './index';
 import {transposeColsToRows} from './chart';
 
 const CSV_TIME_FORMAT = {
@@ -21,7 +20,11 @@ const CSV_TIME_FORMAT = {
   year:    `YYYY`,
 };
 function formatCSVDate(dateStr, timeUnit) {
-  return moment.utc(parseDate(dateStr, {iso: true})).format(CSV_TIME_FORMAT[timeUnit]);
+  let date = dateStr;
+  if (parseInt(dateStr, 10).toString() === dateStr) {
+    date = new Date(parseInt(dateStr, 10));
+  }
+  return moment.utc(date).format(CSV_TIME_FORMAT[timeUnit]);
 }
 
 const SPECIAL_NAMES = {
