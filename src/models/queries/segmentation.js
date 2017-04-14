@@ -381,6 +381,10 @@ export default class SegmentationQuery extends BaseQuery {
           if (outputName) {
             result.key.unshift(outputName);
           }
+
+          if (typeof result.value === `number` && isFinite(result.value)) {
+            result.value = Math.round(result.value);
+          }
         });
         return acc.concat(results);
       }, []);
