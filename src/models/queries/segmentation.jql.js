@@ -150,8 +150,7 @@ function main() {
     query = query.groupBy(groups, countReducer);
   } else if (params.type === 'unique') {
     query = query.groupByUser(groups, mixpanel.reducer.min_by('sampling_factor'))
-      .groupBy([mixpanel.slice('key', 1)], mixpanel.reducer.count({account_for_sampling: true}))
-      .map(result => ({key: result.key, value: Math.round(result.value)}));
+      .groupBy([mixpanel.slice('key', 1)], mixpanel.reducer.count({account_for_sampling: true}));
   } else {
     query = query.groupByUser(groups, countReducer)
       .groupBy([mixpanel.slice('key', 1)], getReducerFunc(params.type));
