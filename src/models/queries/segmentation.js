@@ -383,7 +383,7 @@ export default class SegmentationQuery extends BaseQuery {
           }
 
           if (typeof result.value === `number` && isFinite(result.value)) {
-            // toFixed(2) returns a string which
+            // toFixed(2) returns a string which needs to be parsed again.  We need value to be number
             result.value = Math.round(result.value * 100)/100; // two decimal places.
           }
         });
