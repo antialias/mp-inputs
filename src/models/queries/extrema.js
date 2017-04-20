@@ -36,18 +36,15 @@ export default class ExtremaJQLQuery extends BaseQuery {
     params.from = formatDate(this.query.from, {iso: true});
     params.to = formatDate(this.query.to, {iso: true});
     params.propertyPath = `properties.${params.property}`;
-    if (this.query.isPeopleProperty) {
-      params.queryResourceType = Clause.RESOURCE_TYPE_PEOPLE;
-    } else {
-      const hasPeopleSelectors = params.selectors.some(sel => sel.selector && sel.selector.includes(`user[`));
-      if (hasPeopleSelectors) {
-        // is a query on an event property but we need people data
-        params.queryResourceType = Clause.RESOURCE_TYPE_ALL;
-        params.propertyPath = `event.${params.propertyPath}`;
-      } else {
-        params.queryResourceType = Clause.RESOURCE_TYPE_EVENTS;
-      }
+    params.queryResourceType = this.query.isPeopleProperty ? Clause.RESOURCE_TYPE_PEOPLE : Clause.RESOURCE_TYPE_EVENTS;
+
+    if (this.query.isPeopleProperty && params.selectors.some(sel => sel.event || (sel.selector && sel.selector.includes(`user[`)))
+        || (!this.query.isPeopleProperty && params.selectors.some(sel => sel.selector && sel.selector.includes(`properties[`)))) {
+      const pathPrefix = this.query.isPeopleProperty ? 'user' : 'event';
+      params.propertyPath = `${pathPrefix}.${params.propertyPath}`;
+      params.queryResourceType = Clause.RESOURCE_TYPE_ALL;
     }
+
     return {
       script: String(main),
       params: JSON.stringify(params),
