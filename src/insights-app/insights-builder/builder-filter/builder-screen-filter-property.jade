@@ -167,7 +167,10 @@ mixin filter-number-input(value, oninput, options)
                   value: isBetween ? {from, to} : clause.filterValue,
                   utcOffset: $helpers.getUtcOffset(),
                 }
-                on={change: ev => $helpers.updateFilterValue(isBetween ? [ev.detail.from, ev.detail.to] : ev.detail)}
+                on={
+                  change: ev => $helpers.updateFilterValue(isBetween ? [ev.detail.from, ev.detail.to] : ev.detail),
+                  resize: $helpers.resizedCalendar,
+                }
               )
           when `was in the`
             ul.screen-options-list

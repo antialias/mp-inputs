@@ -135,6 +135,9 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
         commitFilter: () => {
           this.updateAndCommitStageClause();
         },
+        resizedCalendar: () => this.updateRenderedSize({
+          cancelDuringTransition: true,
+        }),
       }),
     };
   }

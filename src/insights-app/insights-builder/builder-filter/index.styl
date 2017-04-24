@@ -270,7 +270,6 @@ builder-screen-filter-property
     .filter-chooser
       display flex
       flex-direction column
-      max-height 358px
       min-height 125px
 
       &.filter-type-number
@@ -354,6 +353,7 @@ builder-screen-filter-property
         padding 0 15px
         padding-bottom 15px
         width 100%
+        z-index 0 // fix z-index issue between operator dropdown and calendar
 
         &.filter-numdate-between
           align-items center
