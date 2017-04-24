@@ -10,7 +10,7 @@ import { mixpanel, rollbar } from '../tracking';
 
 import BuilderSections from '../models/builder-sections';
 import { FilterSection, GroupSection, ShowSection, TimeSection } from '../models/section';
-import { Clause, ShowClause, TimeClause } from '../models/clause';
+import { Clause, GroupClause, ShowClause, TimeClause } from '../models/clause';
 import Legend from '../models/legend';
 import TopEventsQuery from '../models/queries/top-events';
 import { TopEventPropertiesQuery, TopPeoplePropertiesQuery } from '../models/queries/top-properties';
@@ -468,8 +468,27 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return `recent-${type}`;
   }
 
+  _filterRecentList(type, list) {
+    const specialEventsAndProps = [
+      ...ShowClause.SPECIAL_EVENTS,
+      ...GroupClause.SPECIAL_PROPERTIES,
+    ];
+    return list.filter(eventOrProperty => !specialEventsAndProps.find(special =>
+      eventOrProperty.name === special.name &&
+      eventOrProperty.type === special.type &&
+      eventOrProperty.resourceType === special.resourceType
+    ));
+  }
+
   _getRecentList(type) {
-    return JSON.parse(this.persistence.get(this._getRecentPersistenceKey(type))) || [];
+    let recentList;
+    let recentString = this.persistence.get(this._getRecentPersistenceKey(type));
+
+    try {
+      recentList = JSON.parse(recentString);
+    } catch (e) {}
+
+    return this._filterRecentList(type, recentList || []);
   }
 
   _updateRecentList(type, value) {
@@ -479,11 +498,16 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     value = util.pick(value, [`name`, `type`, `resourceType`, `custom`, `id`, `alternatives`, `is_collect_everything_event`]);
 
     const stateKey = type === `events` ? `recentEvents` : `recentProperties`;
-    this.update({[stateKey]: [
+    const recentList = [
+      value,
       // JSON.stringify removes prop:undefined when stringifying. Since we stringify for persistence,
       // filter needs to account for the quirky behaviour and use a stringify comparison
-      value, ...this.state[stateKey].filter(oldValue => JSON.stringify(value) !== JSON.stringify(oldValue)),
-    ].slice(0, 10)});
+      ...this.state[stateKey].filter(oldValue =>
+        JSON.stringify(value) !== JSON.stringify(oldValue)
+      ),
+    ];
+
+    this.update({[stateKey]: this._filterRecentList(type, recentList).slice(0, 10)});
     this.persistence.set(this._getRecentPersistenceKey(type), JSON.stringify(this.state[stateKey]));
   }
 

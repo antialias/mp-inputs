@@ -147,6 +147,11 @@ ShowClause.ALL_PEOPLE = ShowClause.prototype.ALL_PEOPLE = {
   name: `$all_people`,
   resourceType: `people`,
 };
+ShowClause.SPECIAL_EVENTS = ShowClause.prototype.SPECIAL_EVENTS = [
+  ShowClause.TOP_EVENTS,
+  ShowClause.ALL_EVENTS,
+  ShowClause.ALL_PEOPLE,
+];
 ShowClause.MATH_TYPE_TOTAL = ShowClause.prototype.MATH_TYPE_TOTAL = `total`;
 ShowClause.MATH_TYPE_UNIQUE = ShowClause.prototype.MATH_TYPE_UNIQUE = `unique`;
 ShowClause.MATH_TYPE_AVERAGE = ShowClause.prototype.MATH_TYPE_AVERAGE = `average`;
@@ -212,14 +217,17 @@ export class GroupClause extends EventsPropertiesClause {
   }
 }
 GroupClause.TYPE = GroupClause.prototype.TYPE = `group`;
-GroupClause.FILTER_TYPES = GroupClause.prototype.FILTER_TYPES = PROPERTY_TYPES;
-GroupClause.PROPERTY_TYPES = GroupClause.prototype.PROPERTY_TYPES = PROPERTY_TYPES;
-GroupClause.PROPERTY_TYPECASTS = GroupClause.prototype.PROPERTY_TYPECASTS = [`string`, `number`, `boolean`];
 GroupClause.EVENT_DATE = GroupClause.prototype.EVENT_DATE = {
   name: `$date`,
   type: `datetime`,
   resourceType: `events`,
 };
+GroupClause.SPECIAL_PROPERTIES = GroupClause.prototype.SPECIAL_PROPERTIES = [
+  GroupClause.EVENT_DATE,
+];
+GroupClause.FILTER_TYPES = GroupClause.prototype.FILTER_TYPES = PROPERTY_TYPES;
+GroupClause.PROPERTY_TYPES = GroupClause.prototype.PROPERTY_TYPES = PROPERTY_TYPES;
+GroupClause.PROPERTY_TYPECASTS = GroupClause.prototype.PROPERTY_TYPECASTS = [`string`, `number`, `boolean`];
 
 // Time constants
 const RANGES = {
