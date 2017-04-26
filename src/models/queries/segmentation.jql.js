@@ -149,8 +149,16 @@ function main() {
   } else if (params.type === 'total') {
     query = query.groupBy(groups, countReducer);
   } else if (params.type === 'unique') {
-    query = query.groupByUser(groups, mixpanel.reducer.min_by('sampling_factor'))
-      .groupBy([mixpanel.slice('key', 1)], mixpanel.reducer.count({account_for_sampling: true}));
+    var uniqueGrouper = mixpanel.reducer.null();
+    var uniqueCounter = mixpanel.reducer.count();
+
+    // Temp fix: Sampling only works for events. See https://mixpanel.atlassian.net/browse/SYS-2070
+    if (params.resourceTypeNeeded === 'events') {
+      uniqueGrouper = mixpanel.reducer.min_by('sampling_factor');
+      uniqueCounter = mixpanel.reducer.count({ account_for_sampling: true });
+    }
+    query = query.groupByUser(groups, uniqueGrouper)
+      .groupBy([mixpanel.slice('key', 1)], uniqueCounter);
   } else {
     query = query.groupByUser(groups, countReducer)
       .groupBy([mixpanel.slice('key', 1)], getReducerFunc(params.type));
