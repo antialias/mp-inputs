@@ -127,7 +127,7 @@ function main() {
 
   switch (params.resourceTypeNeeded) {
     case 'all':
-      query = join(Events(queryParams), People(), { selectors: params.selectors, type: 'left' });
+      query = join(Events(queryParams), People(), {selectors: params.selectors, type: 'left'});
       countReducer = mixpanel.reducer.count({account_for_sampling: true});
       samplingReducer = mixpanel.reducer.min_by('event.sampling_factor');
       break;
@@ -138,7 +138,7 @@ function main() {
       samplingReducer = mixpanel.reducer.min_by('sampling_factor');
       break;
     case 'people':
-      query = People({ user_selectors: params.selectors });
+      query = People({user_selectors: params.selectors});
       countReducer = mixpanel.reducer.count();
       samplingReducer = mixpanel.reducer.null();
       break;
