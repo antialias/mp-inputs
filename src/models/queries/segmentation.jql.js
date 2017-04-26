@@ -152,10 +152,10 @@ function main() {
     var uniqueGrouper = mixpanel.reducer.null();
     var uniqueCounter = mixpanel.reducer.count();
 
-    // Temp fix: Sampling only works for events. See https://mixpanel.atlassian.net/browse/SYS-2070
+    // TODO: Temp fix: Sampling only works for events. See https://mixpanel.atlassian.net/browse/SYS-2070
     if (params.resourceTypeNeeded === 'events') {
       uniqueGrouper = mixpanel.reducer.min_by('sampling_factor');
-      uniqueCounter = mixpanel.reducer.count({ account_for_sampling: true });
+      uniqueCounter = mixpanel.reducer.count({account_for_sampling: true});
     }
     query = query.groupByUser(groups, uniqueGrouper)
       .groupBy([mixpanel.slice('key', 1)], uniqueCounter);
