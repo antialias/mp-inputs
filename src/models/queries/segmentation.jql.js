@@ -117,6 +117,9 @@ function main() {
   };
 
   var query;
+  var countReducer;
+  var samplingReducer;
+
   var queryParams = {
     from_date: params.dates && params.dates.from,
     to_date: params.dates && params.dates.to,
@@ -124,19 +127,24 @@ function main() {
 
   switch (params.resourceTypeNeeded) {
     case 'all':
-      query = join(Events(queryParams), People(), {selectors: params.selectors, type: 'left'});
+      query = join(Events(queryParams), People(), { selectors: params.selectors, type: 'left' });
+      countReducer = mixpanel.reducer.count({account_for_sampling: true});
+      samplingReducer = mixpanel.reducer.min_by('event.sampling_factor');
       break;
     case 'events':
       queryParams.event_selectors = params.selectors;
       query = Events(queryParams);
+      countReducer = mixpanel.reducer.count({account_for_sampling: true});
+      samplingReducer = mixpanel.reducer.min_by('sampling_factor');
       break;
     case 'people':
-      query = People({user_selectors: params.selectors});
+      query = People({ user_selectors: params.selectors });
+      countReducer = mixpanel.reducer.count();
+      samplingReducer = mixpanel.reducer.null();
       break;
   }
 
   var propertyPaths = ['value'];
-  var countReducer = usesEventData ? mixpanel.reducer.count({account_for_sampling: true}) :  mixpanel.reducer.count();
   if (params.property) {
     var groupByKeys = groups;
     propertyPaths = getPropertyPaths(params.property.name, params.property.resourceType);
@@ -149,16 +157,8 @@ function main() {
   } else if (params.type === 'total') {
     query = query.groupBy(groups, countReducer);
   } else if (params.type === 'unique') {
-    var uniqueGrouper = mixpanel.reducer.null();
-    var uniqueCounter = mixpanel.reducer.count();
-
-    // TODO: Temp fix: Sampling only works for events. See https://mixpanel.atlassian.net/browse/SYS-2070
-    if (params.resourceTypeNeeded === 'events') {
-      uniqueGrouper = mixpanel.reducer.min_by('sampling_factor');
-      uniqueCounter = mixpanel.reducer.count({account_for_sampling: true});
-    }
-    query = query.groupByUser(groups, uniqueGrouper)
-      .groupBy([mixpanel.slice('key', 1)], uniqueCounter);
+    query = query.groupByUser(groups, samplingReducer)
+      .groupBy([mixpanel.slice('key', 1)], countReducer);
   } else {
     query = query.groupByUser(groups, countReducer)
       .groupBy([mixpanel.slice('key', 1)], getReducerFunc(params.type));
