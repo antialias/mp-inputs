@@ -488,7 +488,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       recentList = JSON.parse(recentString);
     } catch (err) {
       console.error(`Error parsing recent ${type} from persistence: ${err}`);
-      reportTrackingData.error = err;
     }
 
     return this._filterRecentList(type, recentList || []);
