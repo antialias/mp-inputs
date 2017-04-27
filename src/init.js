@@ -15,6 +15,8 @@ const initInsights = () => new Promise(resolve => {
 
   const mpContext = new MPContext();
   app.apiHost = mpContext.apiHost;
+  app.useNewApi = mpContext.useNewApi;
+  app.compareOldJql = mpContext.compareOldJql;
 
   if (mpContext.standalone) {
 

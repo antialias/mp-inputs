@@ -15,7 +15,8 @@ import Legend from '../models/legend';
 import TopEventsQuery from '../models/queries/top-events';
 import { TopEventPropertiesQuery, TopPeoplePropertiesQuery } from '../models/queries/top-properties';
 import { TopEventPropertyValuesQuery, TopPeoplePropertyValuesQuery } from '../models/queries/top-property-values';
-import SegmentationQuery from '../models/queries/segmentation';
+import SegmentationQueryOldJql from '../models/queries/segmentation';
+import SegmentationQueryNewApi from '../models/queries/segmentation-new-api';
 import QueryCache from '../models/queries/query-cache';
 import Report from '../models/report';
 import Result from '../models/result';
@@ -396,12 +397,22 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         topPeopleProperties: new TopPeoplePropertiesQuery(apiAttrs),
         topPeoplePropertyValues: new TopPeoplePropertyValuesQuery(apiAttrs),
         topPropertyValuesCache: new QueryCache(),
-        segmentation: new SegmentationQuery(apiAttrs, {
+        segmentation: new SegmentationQueryOldJql(apiAttrs, {
           customEvents: this.customEvents,
           utcOffset: this.getUtcOffset(),
         }),
         segmentationCache: new QueryCache(),
       };
+
+      // TODO DEBUG CODE - remove when we switch fully to new Insights API
+      if (this.compareOldJql) {
+        this.queries.oldSegmentation = this.queries.segmentation;
+      }
+      // END DEBUG CODE
+
+      if (this.useNewApi) {
+        this.queries.segmentation = new SegmentationQueryNewApi(apiAttrs);
+      }
     }
 
     this.updateCanAddBookmark();
@@ -1307,8 +1318,24 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
       this.trackEvent(`Query Start`, extend(reportTrackingData, queryEventProperties));
 
+      // TODO DEBUG CODE - remove when we switch fully to new Insights API
+      if (this.compareOldJql) {
+        this.queries.oldSegmentation.build(this.state, options).run().then(result => {
+          console.info('Old JQL query result:');
+          console.info(result);
+        });
+      }
+      // END DEBUG CODE
+
       return this.queries.segmentation.run(cachedResult)
         .then(result => {
+          // TODO DEBUG CODE - remove when we switch fully to new Insights API
+          if (this.compareOldJql && this.useNewApi) {
+            console.info('New API query result:');
+            console.info(result);
+          }
+          // END DEBUG CODE
+
           if (!cachedResult) {
             this.queries.segmentationCache.set(query, result, cacheExpiry);
             queryEventProperties[`latency ms`] = Math.round(window.performance.now() - queryStartTime);
