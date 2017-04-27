@@ -1321,7 +1321,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       // TODO DEBUG CODE - remove when we switch fully to new Insights API
       if (this.compareOldJql) {
         this.queries.oldSegmentation.build(this.state, options).run().then(result => {
-          console.info('Old JQL query result:');
+          console.info(`Old JQL query result:`);
           console.info(result);
         });
       }
@@ -1331,7 +1331,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         .then(result => {
           // TODO DEBUG CODE - remove when we switch fully to new Insights API
           if (this.compareOldJql && this.useNewApi) {
-            console.info('New API query result:');
+            console.info(`New API query result:`);
             console.info(result);
           }
           // END DEBUG CODE

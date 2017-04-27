@@ -1,16 +1,16 @@
 import BaseQuery from './base';
-import QueryCache from './query-cache';
+import Result from '../result';
 
 export default class SegmentationQuery extends BaseQuery {
   buildUrl() {
     return `api/2.0/insights`;
   }
 
-  buildQuery(state, options) {
+  buildQuery(state) {
     return state.report.toBookmarkData();
   }
 
-  buildParams(params) {
+  buildParams() {
     return {
       params: JSON.stringify(this.query),
     };
@@ -21,6 +21,7 @@ export default class SegmentationQuery extends BaseQuery {
     //        format differences here. Updates to chart render code will be made
     //        in a separate refactor.
 
+    results = new Result(results);
     // TODO: transform results into suitable format for current chart code
     // TODO: transform all ISO date strings in results back to unix timestamps
 
