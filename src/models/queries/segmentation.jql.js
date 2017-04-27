@@ -125,6 +125,9 @@ function main() {
     to_date: params.dates && params.dates.to,
   };
 
+  // TODO: account_for_sampling only works if event data is present.
+  // See https://mixpanel.atlassian.net/browse/SYS-2070
+  // There for we switch reducers based on resourceTypeNeeded
   switch (params.resourceTypeNeeded) {
     case 'all':
       query = join(Events(queryParams), People(), {selectors: params.selectors, type: 'left'});
