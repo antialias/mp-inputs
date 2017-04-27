@@ -15,4 +15,15 @@ export default class SegmentationQuery extends BaseQuery {
       params: JSON.stringify(this.query),
     };
   }
+
+  processResults(results) {
+    // TEMP - While we support both old jql and new api backends, reconcile results
+    //        format differences here. Updates to chart render code will be made
+    //        in a separate refactor.
+
+    // TODO: transform results into suitable format for current chart code
+    // TODO: transform all ISO date strings in results back to unix timestamps
+
+    return results;
+  }
 }
