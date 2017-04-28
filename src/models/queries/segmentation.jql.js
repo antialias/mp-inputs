@@ -1,3 +1,7 @@
+// NOTE: If you make a change to this file, run JQL linter and ensure it passes
+// make -C backend/arb/custom/query_v1 -j8 all
+// tools/irb/jql_lint.py < ~/insights/src/models/queries/segmentation.jql.js
+
 /* global Events, People, join, mixpanel, module, params */
 /* eslint camelcase:0, quotes:0 */
 
