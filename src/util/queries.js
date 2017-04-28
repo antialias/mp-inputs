@@ -1,6 +1,7 @@
 import {
   parseDate,
   MS_BY_UNIT,
+  hasDefinedValue,
 } from './index';
 
 export function toArbSelectorPropertyToken(resourceType, property) {
@@ -8,7 +9,7 @@ export function toArbSelectorPropertyToken(resourceType, property) {
 }
 
 export function isFilterValid(filter) {
-  if (!filter.value) {
+  if (!hasDefinedValue(filter.value)) {
     return false;
   }
 
@@ -18,7 +19,7 @@ export function isFilterValid(filter) {
     [`was more than`, `was less than`, `was in`].includes(filter.filterOperator);
 
   // filter must have a value UNLESS it is set or boolean
-  if (!isSetOrBoolean && !filter.filterValue) {
+  if (!isSetOrBoolean && !hasDefinedValue(filter.filterValue)) {
     return false;
   }
 

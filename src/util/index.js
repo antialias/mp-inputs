@@ -404,4 +404,15 @@ export function createBaseResults(results, {toDate=null, fromDate=null, timestam
     .reduce((obj, timestamp) => Object.assign(obj, {[timestamp]: 0}), {});
 }
 
-
+/**
+ * Returns false if `val` is undefined, null or NaN, otherwise true
+ * NOTE: Returns true for 0 and ''(empty string)
+ * @param val {any}
+ * @returns {boolean}
+ */
+export function hasDefinedValue(val) {
+  if (typeof val === `number`) {
+    return !isNaN(val);
+  }
+  return (val !== undefined && val !== null);
+}
