@@ -2,8 +2,6 @@
 import expect from 'expect.js';
 
 import {
-  d2Obj,
-  d3Obj,
   d4Obj,
   timeseriesResultObj,
   d2ResultsObj,
@@ -16,6 +14,7 @@ import {
   nestedObjectCumulative,
   reachableNodesOfKey,
   uniqueObjKeysAtDepth,
+  hasDefinedValue,
 } from '../../src/util';
 
 import {
@@ -89,13 +88,13 @@ describe(`flattenNestedObjectToPath`, () => {
     const obj = flattenNestedObjectToPath(d2ResultsObj.series);
     expect(obj).to.eql({
       paths:{
-        'Mac OS X Chrome':['Mac OS X', 'Chrome'],
-        'Mac OS X Firefox':['Mac OS X', 'Firefox'],
-        'Mac OS X Opera':['Mac OS X', 'Opera'],
-        'Mac OS X Safari':['Mac OS X', 'Safari'],
-        'Windows Chrome':['Windows', 'Chrome'],
-        'Windows Firefox':['Windows', 'Firefox'],
-        'Windows Opera':['Windows', 'Opera'],
+        'Mac OS X Chrome':[`Mac OS X`, `Chrome`],
+        'Mac OS X Firefox':[`Mac OS X`, `Firefox`],
+        'Mac OS X Opera':[`Mac OS X`, `Opera`],
+        'Mac OS X Safari':[`Mac OS X`, `Safari`],
+        'Windows Chrome':[`Windows`, `Chrome`],
+        'Windows Firefox':[`Windows`, `Firefox`],
+        'Windows Opera':[`Windows`, `Opera`],
       },
       values:{
         'Mac OS X Chrome':{
@@ -132,8 +131,8 @@ describe(`flattenNestedObjectToPath`, () => {
           '1472626800000':1,
           '1472630400000':1,
           '1472634000000':3,
-        }
-      }
+        },
+      },
     });
   });
 
@@ -141,13 +140,13 @@ describe(`flattenNestedObjectToPath`, () => {
     const obj = flattenNestedObjectToPath(d2ResultsObj.series, {flattenValues: true});
     expect(obj).to.eql({
       paths:{
-        'Mac OS X Chrome':['Mac OS X', 'Chrome'],
-        'Mac OS X Firefox':['Mac OS X', 'Firefox'],
-        'Mac OS X Opera':['Mac OS X', 'Opera'],
-        'Mac OS X Safari':['Mac OS X', 'Safari'],
-        'Windows Chrome':['Windows', 'Chrome'],
-        'Windows Firefox':['Windows', 'Firefox'],
-        'Windows Opera':['Windows', 'Opera'],
+        'Mac OS X Chrome':[`Mac OS X`, `Chrome`],
+        'Mac OS X Firefox':[`Mac OS X`, `Firefox`],
+        'Mac OS X Opera':[`Mac OS X`, `Opera`],
+        'Mac OS X Safari':[`Mac OS X`, `Safari`],
+        'Windows Chrome':[`Windows`, `Chrome`],
+        'Windows Firefox':[`Windows`, `Firefox`],
+        'Windows Opera':[`Windows`, `Opera`],
       },
       values:{
         'Mac OS X Chrome': 6147,
@@ -156,7 +155,7 @@ describe(`flattenNestedObjectToPath`, () => {
         'Windows Chrome': 3674,
         'Windows Firefox': 369,
         'Windows Opera': 5,
-      }
+      },
     });
   });
 
@@ -164,15 +163,15 @@ describe(`flattenNestedObjectToPath`, () => {
     const obj = flattenNestedObjectToPath(d3ResultsObj.series);
     expect(obj).to.eql({
       'paths':{
-        'Viewed Report Mac OS X Chrome':['Viewed Report', 'Mac OS X', 'Chrome'],
-        'Viewed Report Mac OS X Safari': ['Viewed Report', 'Mac OS X', 'Safari'],
-        'Viewed Report Windows Chrome': ['Viewed Report', 'Windows', 'Chrome'],
-        'Viewed Report Windows Firefox': ['Viewed Report', 'Windows', 'Firefox'],
-        'Viewed Report Windows Opera': ['Viewed Report', 'Windows', 'Opera'],
-        'Viewed Signup Linux Firefox': ['Viewed Signup', 'Linux', 'Firefox'],
-        'Viewed Signup Linux Safari': ['Viewed Signup', 'Linux', 'Safari'],
-        'Viewed Signup Windows Chrome': ['Viewed Signup', 'Windows', 'Chrome'],
-        'Viewed Signup Windows Firefox': ['Viewed Signup', 'Windows', 'Firefox'],
+        'Viewed Report Mac OS X Chrome':[`Viewed Report`, `Mac OS X`, `Chrome`],
+        'Viewed Report Mac OS X Safari': [`Viewed Report`, `Mac OS X`, `Safari`],
+        'Viewed Report Windows Chrome': [`Viewed Report`, `Windows`, `Chrome`],
+        'Viewed Report Windows Firefox': [`Viewed Report`, `Windows`, `Firefox`],
+        'Viewed Report Windows Opera': [`Viewed Report`, `Windows`, `Opera`],
+        'Viewed Signup Linux Firefox': [`Viewed Signup`, `Linux`, `Firefox`],
+        'Viewed Signup Linux Safari': [`Viewed Signup`, `Linux`, `Safari`],
+        'Viewed Signup Windows Chrome': [`Viewed Signup`, `Windows`, `Chrome`],
+        'Viewed Signup Windows Firefox': [`Viewed Signup`, `Windows`, `Firefox`],
       },
       'values':{
         'Viewed Report Mac OS X Chrome':{
@@ -219,8 +218,8 @@ describe(`flattenNestedObjectToPath`, () => {
           '1472626800000':100,
           '1472630400000':131,
           '1472634000000':138,
-        }
-      }
+        },
+      },
     });
   });
 
@@ -228,15 +227,15 @@ describe(`flattenNestedObjectToPath`, () => {
     const obj = flattenNestedObjectToPath(d3ResultsObj.series, {flattenValues: true});
     expect(obj).to.eql({
       'paths':{
-        'Viewed Report Mac OS X Chrome':['Viewed Report', 'Mac OS X', 'Chrome'],
-        'Viewed Report Mac OS X Safari': ['Viewed Report', 'Mac OS X', 'Safari'],
-        'Viewed Report Windows Chrome': ['Viewed Report', 'Windows', 'Chrome'],
-        'Viewed Report Windows Firefox': ['Viewed Report', 'Windows', 'Firefox'],
-        'Viewed Report Windows Opera': ['Viewed Report', 'Windows', 'Opera'],
-        'Viewed Signup Linux Firefox': ['Viewed Signup', 'Linux', 'Firefox'],
-        'Viewed Signup Linux Safari': ['Viewed Signup', 'Linux', 'Safari'],
-        'Viewed Signup Windows Chrome': ['Viewed Signup', 'Windows', 'Chrome'],
-        'Viewed Signup Windows Firefox': ['Viewed Signup', 'Windows', 'Firefox'],
+        'Viewed Report Mac OS X Chrome':[`Viewed Report`, `Mac OS X`, `Chrome`],
+        'Viewed Report Mac OS X Safari': [`Viewed Report`, `Mac OS X`, `Safari`],
+        'Viewed Report Windows Chrome': [`Viewed Report`, `Windows`, `Chrome`],
+        'Viewed Report Windows Firefox': [`Viewed Report`, `Windows`, `Firefox`],
+        'Viewed Report Windows Opera': [`Viewed Report`, `Windows`, `Opera`],
+        'Viewed Signup Linux Firefox': [`Viewed Signup`, `Linux`, `Firefox`],
+        'Viewed Signup Linux Safari': [`Viewed Signup`, `Linux`, `Safari`],
+        'Viewed Signup Windows Chrome': [`Viewed Signup`, `Windows`, `Chrome`],
+        'Viewed Signup Windows Firefox': [`Viewed Signup`, `Windows`, `Firefox`],
       },
       'values':{
         'Viewed Report Mac OS X Chrome': 6147,
@@ -247,7 +246,7 @@ describe(`flattenNestedObjectToPath`, () => {
         'Viewed Signup Linux Firefox': 231,
         'Viewed Signup Windows Chrome': 3674,
         'Viewed Signup Windows Firefox': 369,
-      }
+      },
     });
   });
 
@@ -259,13 +258,13 @@ describe(`flattenNestedObjectToPath`, () => {
     });
     expect(obj).to.eql({
       paths: {
-        '1) Mac OS X, 2) Chrome': [ 'Mac OS X', 'Chrome' ],
-        '1) Mac OS X, 2) Firefox': [ 'Mac OS X', 'Firefox' ],
-        '1) Mac OS X, 2) Opera': [ 'Mac OS X', 'Opera' ],
-        '1) Mac OS X, 2) Safari': [ 'Mac OS X', 'Safari' ],
-        '1) Windows, 2) Chrome': [ 'Windows', 'Chrome' ],
-        '1) Windows, 2) Firefox': [ 'Windows', 'Firefox' ],
-        '1) Windows, 2) Opera': [ 'Windows', 'Opera' ],
+        '1) Mac OS X, 2) Chrome': [ `Mac OS X`, `Chrome` ],
+        '1) Mac OS X, 2) Firefox': [ `Mac OS X`, `Firefox` ],
+        '1) Mac OS X, 2) Opera': [ `Mac OS X`, `Opera` ],
+        '1) Mac OS X, 2) Safari': [ `Mac OS X`, `Safari` ],
+        '1) Windows, 2) Chrome': [ `Windows`, `Chrome` ],
+        '1) Windows, 2) Firefox': [ `Windows`, `Firefox` ],
+        '1) Windows, 2) Opera': [ `Windows`, `Opera` ],
       },
       values: {
         '1) Mac OS X, 2) Chrome': 6147,
@@ -275,7 +274,7 @@ describe(`flattenNestedObjectToPath`, () => {
         '1) Windows, 2) Firefox': 369,
         '1) Windows, 2) Opera': 5,
       },
-    })
+    });
   });
 });
 
@@ -402,5 +401,28 @@ describe(`transposeColsToRows`, () => {
         },
       },
     });
+  });
+});
+
+describe(`hasDefinedValue`, () => {
+  it(`returns false for undefined, null and NaN`, () => {
+    expect(hasDefinedValue(undefined)).to.be(false);
+    expect(hasDefinedValue(null)).to.be(false);
+    expect(hasDefinedValue(NaN)).to.be(false);
+  });
+
+  it(`returns true for 0, false and empty strings`, () => {
+    expect(hasDefinedValue(0)).to.be(true);
+    expect(hasDefinedValue(``)).to.be(true);
+    expect(hasDefinedValue(false)).to.be(true);
+  });
+
+  it(`returns true for truthy values`, () => {
+    expect(hasDefinedValue(true)).to.be(true);
+    expect(hasDefinedValue(`☕`)).to.be(true);
+    expect(hasDefinedValue(-1)).to.be(true);
+    expect(hasDefinedValue(Number.POSITIVE_INFINITY)).to.be(true);
+    expect(hasDefinedValue({})).to.be(true);
+    expect(hasDefinedValue(Object.create(null))).to.be(true);
   });
 });
