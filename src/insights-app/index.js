@@ -1263,10 +1263,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     const chartType = displayOptions.chartType;
     Promise.resolve()
       .then(() => {
-        const isNotTotal = this.state.report.sections.show.clauses.some(clause => [`min`, `max`, `unique`, `average`, `median`].includes(clause.math));
         const isChangingToLineChart = chartType === `line` && [`bar`, `table`].includes(this.state.report.displayOptions.chartType);
         const isChangingFromLineChart = [`bar`, `table`].includes(chartType) && this.state.report.displayOptions.chartType === `line`;
-        return isNotTotal && (isChangingToLineChart || isChangingFromLineChart) && this.query(displayOptions);
+        return (isChangingToLineChart || isChangingFromLineChart) && this.query(displayOptions);
       })
       .then(() => {
         const shouldResetSorting = chartType === `bar` && displayOptions.plotStyle === `stacked` && this.state.report.sorting.bar.sortBy === `value`;
@@ -1299,12 +1298,13 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.update({toastTimer: null});
   }
 
-  query(options={}) {
+  // TOOD epurcer - confusing how/why we pass display options in here, refactor when we refactor query code for new api
+  query(displayOptions={}) {
     if (this.canMakeQueries()) {
       const reportTrackingData = this.state.report.toTrackingData();
-      options = Object.assign({useCache: true}, options);
-      const query = this.queries.segmentation.build(this.state, options).query;
-      const cachedResult = options.useCache && this.queries.segmentationCache.get(query);
+      displayOptions = extend({useCache: true}, displayOptions);
+      const query = this.queries.segmentation.build(this.state, displayOptions).query;
+      const cachedResult = displayOptions.useCache && this.queries.segmentationCache.get(query);
       const cacheExpiry = 10; // seconds
 
       if (!cachedResult) {
@@ -1320,7 +1320,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
       // TODO DEBUG CODE - remove when we switch fully to new Insights API
       if (this.compareOldJql) {
-        this.queries.oldSegmentation.build(this.state, options).run().then(result => {
+        this.queries.oldSegmentation.build(this.state, displayOptions).run().then(result => {
           console.info(`Old JQL query result:`);
           console.info(result);
         });
