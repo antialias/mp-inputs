@@ -474,3 +474,21 @@ export function transposeColsToRows(headers, series, leafHeader, addLeafHeader=t
 
   return {headers: newHeaders, series: newSeries};
 }
+
+/**
+ * Apply a transformation to leaves of a nested object and return the resulting object
+ * Does not modify the original
+ * @param {object} object - object to be transformed
+ * @param {function} transform - transform function that accepts (key, val) args and returns a [key, val] array
+ * @returns {object} - a copy of the original object with leaves transformed
+ */
+export function transformLeaves(object, transform) {
+  return Object.assign(...Object.entries(object).map(([key, val]) => {
+    if (val && typeof val === `object`) {
+      return {[key]: transformLeaves(val, transform)};
+    } else {
+      [key, val] = transform(key, val);
+      return {[key]: val};
+    }
+  }));
+}
