@@ -4,6 +4,7 @@ import kebabCase from 'lodash/kebabCase';
 import MPApp from 'mixpanel-common/report/mp-app';
 import Persistence from 'mixpanel-common/report/persistence';
 import {commaizeNumber, extend} from 'mixpanel-common/util';
+import ItemsMenu from 'mixpanel-common/widgets/items-menu';
 import * as util from '../util';
 
 import {mixpanel, rollbar} from '../tracking';
@@ -711,43 +712,57 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   handleKeydown(e) {
-    const activeIdx = this.state.builderPane.activeIndex;
-    const items = this.el.querySelectorAll(this.buildScreenSpecificSelector(`.list-option`));
-    const itemCount = items.length;
+    const itemsMenuEl = this.el.querySelector(this.buildScreenSpecificSelector(`mp-items-menu`));
+    if (itemsMenuEl) {
+      if (Object.values(ItemsMenu.NAVIGATION_KEY_CODES).indexOf(e.keyCode) !== -1) {
+        e.preventDefault();
+        e.stopPropagation();
 
-    const pill = this.el.querySelector(this.buildScreenSpecificSelector(`.list-option-active .pill`));
-    const activePillClass = `pill-active`;
+        // There's a bug in chrome where it's not possible to set keyCode on KeyboardEvent,
+        // so use a CustomEvent instead
+        const clonedEvent = new Event(e.type, e);
+        clonedEvent.keyCode = e.keyCode;
+        itemsMenuEl.dispatchEvent(clonedEvent);
+      }
+    } else {
+      const activeIdx = this.state.builderPane.activeIndex;
+      const items = this.el.querySelectorAll(this.buildScreenSpecificSelector(`.list-option`));
+      const itemCount = items.length;
 
-    switch(e.keyCode) { // tab
-      case util.KEY_CODES.tab: {
-        e.preventDefault();
-        if (pill) {
-          pill.classList.toggle(activePillClass);
-        } else {
-          items[activeIdx].click();
+      const pill = this.el.querySelector(this.buildScreenSpecificSelector(`.list-option-active .pill`));
+      const activePillClass = `pill-active`;
+
+      switch(e.keyCode) { // tab
+        case util.KEY_CODES.tab: {
+          e.preventDefault();
+          if (pill) {
+            pill.classList.toggle(activePillClass);
+          } else {
+            items[activeIdx].click();
+          }
+          break;
         }
-        break;
-      }
-      case util.KEY_CODES.enter: // enter
-        if (pill && pill.classList.contains(activePillClass)) {
-          pill.click();
-        } else {
-          items[activeIdx].click();
+        case util.KEY_CODES.enter: // enter
+          if (pill && pill.classList.contains(activePillClass)) {
+            pill.click();
+          } else {
+            items[activeIdx].click();
+          }
+          break;
+        case util.KEY_CODES.upArrow: { // up arrow
+          e.preventDefault();
+          if (activeIdx !== 0) {
+            this.setActiveIndex(activeIdx - 1);
+          }
+          break;
         }
-        break;
-      case util.KEY_CODES.upArrow: { // up arrow
-        e.preventDefault();
-        if (activeIdx !== 0) {
-          this.setActiveIndex(activeIdx - 1);
+        case util.KEY_CODES.downArrow: { // down arrow
+          e.preventDefault();
+          if (activeIdx < itemCount - 1) {
+            this.setActiveIndex(activeIdx + 1);
+          }
+          break;
         }
-        break;
-      }
-      case util.KEY_CODES.downArrow: { // down arrow
-        e.preventDefault();
-        if (activeIdx < itemCount - 1) {
-          this.setActiveIndex(activeIdx + 1);
-        }
-        break;
       }
     }
   }

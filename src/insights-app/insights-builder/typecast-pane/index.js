@@ -20,15 +20,15 @@ document.registerElement(`typecast-pane`, class extends Component {
       helpers: {
         availableTypes: () => {
           const availableTypes = Array.from(new Set(GroupClause.PROPERTY_TYPECASTS.concat(this.getClausePropertyType())));
-          return availableTypes.map((type, index) => ({
-            icon: getIconForPropertyType(type),
-            index,
-            name: TYPE_FORMAT_MAP[type],
-            type,
-          }));
+          return availableTypes.map(type => {
+            return {
+              icon: getIconForPropertyType(type),
+              label: TYPE_FORMAT_MAP[type],
+              type,
+            };
+          });
         },
-        clickedType: (ev, item) => {
-          ev.stopPropagation();
+        clickedType: item => {
           const typeCast = this.getClausePropertyType() === item.type ? null : item.type;
           this.app.updateStageClause({typeCast, unit: null});
           this.app.commitStageClause();
@@ -43,7 +43,6 @@ document.registerElement(`typecast-pane`, class extends Component {
             }
           }
         },
-        updateActiveIndex: idx => this.app.updateBuilder({activeIndex: idx}),
       },
       template,
     };

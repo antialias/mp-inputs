@@ -1,9 +1,9 @@
 // Insights-specific utils
 import cloneDeep from 'lodash/cloneDeep';
-import {extend, nestedObjectDepth, objectFromPairs} from 'mixpanel-common/util';
+import {nestedObjectDepth, objectFromPairs} from 'mixpanel-common/util';
 import moment from 'moment';
 
-import {GroupClause, ShowClause} from '../models/clause';
+import {ShowClause} from '../models/clause';
 
 export * from 'mixpanel-common/report/util';
 export * from 'mixpanel-common/util';
@@ -62,51 +62,6 @@ export function formatResourceType(type) {
 
 export function isSpecialEvent(mpEvent) {
   return [ShowClause.TOP_EVENTS.name, ShowClause.ALL_EVENTS.name].includes(mpEvent.name);
-}
-
-export function getIconForEvent(mpEvent) {
-  if (isSpecialEvent(mpEvent)) {
-    return `star-top-events`;
-  } else if (mpEvent.is_collect_everything_event) {
-    return `autotrack`;
-  } else if (mpEvent.custom) {
-    return `custom-events`;
-  } else if (mpEvent.name.substring(0, 4) === `$ae_`) {
-    return `pretrack`;
-  } else {
-    return `event`;
-  }
-}
-
-export function indexSectionLists(sections) {
-  let index = 0;
-  return sections.map(section =>
-    extend(section, {list: section.list.map(option =>
-      extend(option, {index: index++})
-    )})
-  );
-}
-
-const PROPERTY_TYPE_ICON_MAP = {
-  boolean:  `type-boolean`,
-  datetime: `type-date`,
-  list:     `type-list`,
-  number:   `type-number`,
-  string:   `type-text`,
-};
-export function getIconForPropertyType(propType) {
-  return PROPERTY_TYPE_ICON_MAP[propType];
-}
-export function getIconForProperty(property) {
-  if (!property) {
-    return null;
-  } else if (property.name === ShowClause.ALL_PEOPLE.name) {
-    return `profile`;
-  } else if (property.name === GroupClause.EVENT_DATE.name) {
-    return `star-top-events`;
-  } else {
-    return getIconForPropertyType(property.type);
-  }
 }
 
 // TODO(chi): move to mixpanel-common

@@ -1,7 +1,7 @@
 import {BuilderScreenBase} from './builder-screen-base';
 import {Clause} from '../../../models/clause';
 
-import {extend, indexSectionLists} from '../../../util';
+import {extend} from '../../../util';
 
 import template from './builder-screen-sources.jade';
 
@@ -25,9 +25,16 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
           this.updateStageClause({resourceType, value: {}});
           this.nextScreen(`builder-screen-${resourceType}`);
         },
-        getFilteredLists: () => {
-          this.updateRenderedSizeOnNextFrame();
-          return this.buildProgressiveList();
+        getSections: () => {
+          return this.buildList();
+        },
+        updateRenderedSizeOnNextFrame: () => this.updateRenderedSizeOnNextFrame(),
+        clickedItem: (ev, item) => {
+          if (item.itemType === `event`) {
+            this.helpers.clickedEvent(item);
+          } else if (item.itemType === `property`) {
+            this.helpers.clickedProperty(ev, item);
+          }
         },
         shouldShowSourceUpsell: source => this.app.shouldUpsellForSource(source.resourceType),
         shouldShowSourceAlert: source => this.app.shouldAlertForSource(source.resourceType),
@@ -36,40 +43,22 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
   }
 
   buildList() {
-    let sections = [
+    return [
       {
         label: `Events`,
-        list: this.allMatchingEvents(),
-        resourceType: `event`,
-        itemOptions: {
-          clickedEvent: this.config.helpers.clickedEvent,
-          clickedEventProperties: this.config.helpers.clickedEventProperties,
-          showPill: true,
-        },
+        items: this.allEvents().map(event => {
+          return extend(event, {
+            hasPropertiesPill: true,
+            isPropertiesPillDisabled: this.state.learnActive,
+          });
+        }),
       },
       {
         label: `People properties`,
-        list: this.allMatchingProperties(Clause.RESOURCE_TYPE_PEOPLE),
-        resourceType: `property`,
+        items: this.allProperties(Clause.RESOURCE_TYPE_PEOPLE).map(property => {
+          return extend(property, {isDisabled: this.state.learnActive});
+        }),
       },
     ];
-
-    return indexSectionLists(sections);
-  }
-
-  buildProgressiveList() {
-    let listSize = this.progressiveListSize;
-    const fullList = this.buildList();
-    const outList = [];
-    while (listSize > 0 && fullList.length) {
-      let source = fullList.shift();
-      outList.push(extend(source, {list: source.list.slice(0, listSize)}));
-      listSize -= source.list.length;
-    }
-    return outList;
-  }
-
-  progressiveListLength() {
-    return this.buildList().reduce((sum, source) => sum + source.list.length, 0);
   }
 });

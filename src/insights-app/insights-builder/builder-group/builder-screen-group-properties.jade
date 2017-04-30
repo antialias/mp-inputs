@@ -1,7 +1,6 @@
 include ../mixins.jade
 
 - const isEventsOnlyQuery = $helpers.isEventsOnlyQuery()
-- const resourceType = $helpers.getSelectedResourceType()
 
 .builder-screen.properties(hook={postpatch: $helpers.updateRenderedSize})
   +screen-title(`Group by a ${isEventsOnlyQuery ? `` : `people`} property`, {backButton: $helpers.screenIdx() >= 1})
@@ -10,11 +9,7 @@ include ../mixins.jade
     selectedResourceType: $helpers.getSelectedResourceType(),
     clickedResourceType: $helpers.clickedResourceType,
     shouldShowPropertySections: $helpers.shouldShowPropertySections(),
+    searchFilter: contextFilter,
     propertySections: $helpers.getPropertySections(),
     clickedProperty: $helpers.clickedProperty,
-    scrolledList: $helpers.scrolledList,
-    loading: $helpers.isLoading(),
-    selected: $component.getAttribute(`selected`),
-    source: $component.getAttribute(`source`),
-    conditionalCaret: $helpers.conditionalCaret,
   })

@@ -1,7 +1,9 @@
 import {BuilderScreenBase} from '../builder-pane/builder-screen-base';
+import {ShowClause} from '../../../models/clause';
+import TopEventsQuery from '../../../models/queries/top-events';
 import {
   extend,
-  indexSectionLists,
+  getIconForEvent,
   renameEvent,
 } from '../../../util';
 
@@ -12,29 +14,35 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
     return {
       template,
       helpers: extend(super.config.helpers, {
-        getEventSections: () => this.getAllEvents().filter(section => section.list.length),
+        getSections: () => {
+          let topEvents = [];
+          if (this.state.topEvents !== TopEventsQuery.LOADING) {
+            topEvents = [
+              extend(ShowClause.TOP_EVENTS, {isDisabled: this.state.learnActive}),
+              extend(ShowClause.ALL_EVENTS, {isDisabled: this.state.learnActive}),
+            ].concat(this.state.topEvents);
+          }
+
+          return [{
+            label: `Recently Viewed`,
+            items: this.processItems(this.state.recentEvents.slice(0, 3)),
+          }, {
+            label: `Events`,
+            items: this.processItems(topEvents),
+          }];
+        },
       }),
     };
   }
 
-  getAllEvents() {
-    let sections = [{
-      label: `Recently Viewed`,
-      list: this.getRecentEvents(),
-    }, {
-      label: `Events`,
-      list: this.buildProgressiveList(),
-    }];
-
-    return indexSectionLists(sections);
-  }
-
-  getRecentEvents() {
-    return this.matchingItems(this.state.recentEvents.slice(0, 3), renameEvent)
-      .map(mpEvent => extend(mpEvent, {section: `recent`}));
-  }
-
-  buildList() {
-    return this.allMatchingEvents();
+  processItems(items) {
+    const selected = this.getAttribute(`selected`);
+    return items.map(item => extend({
+      label: renameEvent(item.name),
+      icon: getIconForEvent(item),
+      hasPropertiesPill: true,
+      isPropertiesPillDisabled: this.state.learnActive,
+      isSelected: item.name === selected,
+    }, item));
   }
 });

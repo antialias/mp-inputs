@@ -4,6 +4,9 @@ mp-drop-menu(
   attrs={open: $helpers.isPaneOpen()}
   on={change: $helpers.menuChange}
 )
-  +property-list($helpers.availableTypes(), {
-    clickedProperty: $helpers.clickedType,
-  })
+  mp-items-menu(
+    attrs={
+      sections: JSON.stringify([{items: $helpers.availableTypes()}]),
+    }
+    on={clickItem: e => $helpers.clickedType(e.detail.item)}
+  )

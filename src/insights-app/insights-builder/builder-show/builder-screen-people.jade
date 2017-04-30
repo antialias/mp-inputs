@@ -1,30 +1,23 @@
 include ../mixins.jade
 
 - const loading = $helpers.isLoading()
-- const allPeople = $helpers.getAllPeopleProperties()
 
 .builder-screen.properties
   +screen-title(`People`, {backButton: !!$helpers.screenIdx()})
   if !projectHasPeople || blocking.isBlockedPeople
     +upsell-pane('people')
   else
-    .screen-list-container(
-      class=util.learnClasses({disabledExceptChildren: [`first`]})
-      hook={postpatch: $helpers.updateRenderedSize}
-      on={scroll: $helpers.scrolledList}
+    mp-items-menu(
+      attrs={
+        'search-filter': contextFilter,
+        'sections': JSON.stringify($helpers.getPropertySections()),
+        'empty-message': $component.isShowingNonNumericProperties() ? `No properties available` : `No non-numeric properties available`,
+      }
+      on={
+        clickItem: ev => $helpers.clickedProperty(ev, ev.detail.item),
+        draw: $helpers.updateRenderedSize,
+      }
     )
-      each section, idx in allPeople
-        if section.list.length
-          if idx
-            .builder-divider
-          +property-list(section.list, {
-            clickedProperty: section.clickedPropertyFunction || $helpers.clickedProperty,
-            selected: $component.getAttribute(`selected`),
-            source: $component.getAttribute(`source`),
-            loading: section.showLoading && loading
-          })
-      if !allPeople.length
-        li.list-option.list-empty Your search returned no results
     if !loading
       +screen-footer-button(($component.isShowingNonNumericProperties() ? `Hide` : `View all`) + ` non-numeric properties`, {
         onclick: $helpers.toggleNonNumericProperties,

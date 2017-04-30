@@ -10,6 +10,9 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
     return {
       template,
       helpers: extend(super.config.helpers, {
+        getPropertySections: () => {
+          return this.processSections(this.getPropertySections());
+        },
         clickedProperty: (ev, property) => {
           this.app.updateRecentProperties(property);
           const newClause = {
@@ -28,11 +31,18 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
             this.updateAndCommitStageClause(newClause);
           }
         },
-        conditionalCaret: (property, isSelected) => isSelected && property.type === `datetime`,
         isEventsOnlyQuery: () => (
           this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_EVENTS
         ),
       }),
     };
+  }
+
+  processSections(sections) {
+    return sections.map(section => extend(section, {
+      items: section.items.map(item => extend(item, {
+        hasCaret: item.type === `datetime`,
+      })),
+    }));
   }
 });

@@ -1,7 +1,7 @@
 import {BuilderScreenBase} from './builder-screen-base';
 import {Clause, GroupClause, ShowClause} from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
-import {extend, indexSectionLists, sorted, renameProperty, unique} from '../../../util';
+import {extend, getIconForPropertyType, renameProperty, sorted, unique} from '../../../util';
 
 export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   get config() {
@@ -30,21 +30,31 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     };
   }
 
-  getMatchedRecentProperties() {
-    // TODO: cassie match then filter
+  getRecentProperties() {
     const resourceType = this.getSelectedResourceType();
     const recentProperties = this.state.recentProperties
       .filter(property => resourceType === Clause.RESOURCE_TYPE_ALL || property.resourceType === resourceType)
       .slice(0, 3)
       .map(prop => extend(prop, {section: `recent`}));
 
-    return this.matchingItems(recentProperties, renameProperty);
+    const selected = this.getAttribute(`selected`);
+    return recentProperties.map(prop => extend({
+      label: renameProperty(prop.name),
+      icon: getIconForPropertyType(prop.type),
+      isSelected: prop.name === selected,
+    }, prop));
   }
 
   getProperties(resourceType=ShowClause.RESOURCE_TYPE_ALL) {
     const isLoading = this.isLoading();
-    const properties = sorted(this.buildProgressiveList().filter(this.filterToResourceType(resourceType)), {
-      transform: prop => (renameProperty(prop.name) || String(prop.name)).toLowerCase(),
+    let properties = this.buildList()
+      .filter(this.filterToResourceType(resourceType))
+      .map(property => extend({
+        label: renameProperty(property.name),
+        icon: getIconForPropertyType(property.type),
+      }, property));
+    properties = sorted(properties, {
+      transform: prop => prop.label.toLowerCase(),
     });
 
     if (this.prevIsLoading !== isLoading ||
@@ -64,10 +74,10 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       specialProps = specialProps.concat(GroupClause.EVENT_DATE);
     }
 
-    return [
-      ...this.matchingItems(specialProps, renameProperty),
-      ...properties,
-    ].map((prop, index) => extend(prop, {index}));
+    const selected = this.getAttribute(`selected`);
+    return [...specialProps, ...properties].map(prop => extend({
+      isSelected: prop.name === selected,
+    }, prop));
   }
 
   getEventPropertyCount() {
@@ -89,28 +99,30 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
 
     let sections = [];
 
-    const recentProperties = this.getMatchedRecentProperties();
+    const recentProperties = this.getRecentProperties();
     if (recentProperties.length) {
       sections.push({
         label: `Recent Properties`,
-        list: recentProperties,
+        items: recentProperties,
       });
     }
 
     if (showEvents && [ShowClause.RESOURCE_TYPE_EVENTS, ShowClause.RESOURCE_TYPE_ALL].includes(resourceType) && !isPeopleQuery) {
       sections.push({
+        isLoading: this.isLoading(),
         label: `Event properties`,
-        list: this.getProperties(ShowClause.RESOURCE_TYPE_EVENTS),
+        items: this.getProperties(ShowClause.RESOURCE_TYPE_EVENTS),
       });
     }
     if (showPeople && includePeople && ([ShowClause.RESOURCE_TYPE_PEOPLE, ShowClause.RESOURCE_TYPE_ALL].includes(resourceType) || isPeopleQuery)) {
       sections.push({
+        isLoading: this.isLoading(),
         label: `People properties`,
-        list: this.getProperties(ShowClause.RESOURCE_TYPE_PEOPLE),
+        items: this.getProperties(ShowClause.RESOURCE_TYPE_PEOPLE),
       });
     }
 
-    return indexSectionLists(sections);
+    return sections;
   }
 
   getSelectedResourceType() {
@@ -168,6 +180,6 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       properties = properties.concat(this.getPeopleProperties());
     }
 
-    return this.matchingItems(properties, renameProperty);
+    return properties;
   }
 }

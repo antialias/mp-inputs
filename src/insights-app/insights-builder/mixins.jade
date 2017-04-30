@@ -1,27 +1,5 @@
 include ../mixins.jade
 
-//- apply context filter to one or more resource types in
-//- a single pane
-mixin filtered-options-lists(lists)
-  - let hasResults = false
-  each listOptions in lists
-    if listOptions.list.length
-      - hasResults += true
-      .builder-label= listOptions.label
-      case listOptions.resourceType
-        when `event`
-          +event-list(listOptions.list, listOptions.itemOptions || {
-            clickedEvent: $helpers.clickedEvent,
-            hideLoader: true,
-          })
-        when `property`
-          +property-list(listOptions.list, listOptions.itemOptions || {
-            clickedProperty: $helpers.clickedProperty,
-            hideLoader: true,
-          })
-  if !hasResults
-    li.list-option.list-empty Your search returned no results
-
 mixin generic-options-list-item(label, options)
   li.list-option.generic-list(
     class={
@@ -49,80 +27,6 @@ mixin secondary-action-pill(label, options)
     span.secondary-label= label
     +small-caret-icon()
 
-mixin event-list(events, options)
-  ul.screen-options-list(
-    class=util.extend({
-      'show-loader': !options.hideLoader,
-    }, util.learnClasses({
-      disabledSteps: [`group-by`],
-    }))
-    on={scroll: $helpers.scrolledList}
-  )
-    - const selected = options.selected
-    - const eventsSource = options.source === `events`
-    each mpEvent in events
-      - const renamedMpEvent = util.renameEvent(mpEvent.name)
-      - const isSelected = eventsSource && mpEvent.name === selected
-      li.list-option(
-        attrs={title: mpEvent.name}
-        class={
-          'list-option-active': mpEvent.index == builderPane.activeIndex,
-          'list-option-selected': isSelected,
-          'insights-learn-disabled': util.isSpecialEvent(mpEvent),
-        }
-        on={
-          click: isSelected ? null : () => options.clickedEvent(mpEvent),
-          mouseenter: () => $helpers.updateActiveIndex(mpEvent.index),
-        }
-      )
-        +screen-option(renamedMpEvent, {
-          icon: util.getIconForEvent(mpEvent),
-          matches: mpEvent.matches,
-        })
-        if options.showPill
-          +secondary-action-pill('Properties', {
-            onclick: ev => options.clickedEventProperties(ev, mpEvent),
-          })
-
-mixin property-list(properties, options)
-  ul.screen-options-list(
-    class=util.extend({
-      'show-loader': !options.hideLoader,
-    }, util.learnClasses({
-      disabledSteps: [`choose-event`, `compare-event`],
-    }))
-    on={scroll: options.scrolledList}
-  )
-    - const selected = options.selected
-    - const source = options.source
-    if properties.length
-      each property in properties
-        - const label = util.renameProperty(property.name) || property.name
-        - const isSelected = property.resourceType === source && property.name === selected
-        li.list-option(
-          class={
-            'list-option-active': property.index == builderPane.activeIndex,
-            'list-option-selected': isSelected,
-            [property.type]: true,
-          }
-          on={
-          click: (isSelected && property.type !== `datetime`) ? null : ev => options.clickedProperty(ev, property),
-          mouseenter: () => $helpers.updateActiveIndex(property.index),
-
-          }
-        )
-          +screen-option(label, {
-            icon: property.icon || util.getIconForProperty(property),
-            matches: property.matches,
-          })
-          if options.caret || (options.conditionalCaret && options.conditionalCaret(property, isSelected))
-            +small-caret-icon()
-    else
-      if options.loading
-        +pane-loader
-      else
-        li.list-option.list-empty= options.listEmptyMessage || `No properties available`
-
 mixin property-screen-body(options)
   if options.resourceTypes
     .resource-type-control
@@ -145,19 +49,19 @@ mixin property-screen-body(options)
           if $helpers.shouldShowSourceAlert(type)
             svg-icon(attrs={ icon: 'alert' })
 
-  .screen-list-container.arrow-key-scrollable(on={scroll: options.scrolledList})
-    - const propertySections = options.propertySections
-    if !$helpers.shouldShowPropertySections()
-      +upsell-pane(options.selectedResourceType)
-    else
-      each section, idx in propertySections
-        if section.list.length
-          if idx
-            .builder-divider
-          .builder-label= section.label
-          +property-list(section.list, options)
-      if !propertySections.length
-        li.list-option.list-empty Your search returned no results
+  if !$helpers.shouldShowPropertySections()
+    +upsell-pane(options.selectedResourceType)
+  else
+    mp-items-menu(
+      attrs={
+        'search-filter': options.searchFilter,
+        'sections': JSON.stringify(options.propertySections),
+      }
+      on={
+        clickItem: ev => options.clickedProperty(ev, ev.detail.item),
+        draw: $helpers.updateRenderedSize,
+      }
+    )
 
 mixin screen-footer-button(label, options)
   - options = options || {}

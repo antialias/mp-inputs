@@ -1,28 +1,18 @@
 include ../mixins.jade
 
-- const allEvents = $helpers.getEventSections()
-- const eventListOptions = {
--   clickedEvent: $helpers.clickedEvent,
--   clickedEventProperties: $helpers.clickedEventProperties,
--   selected: $component.getAttribute(`selected`),
--   source: $component.getAttribute(`source`),
--   showPill: true,
-- }
-
 .builder-screen.events
   +screen-title('All Events', {backButton: true})
   if !projectHasEvents || blocking.isBlockedEvents
     +upsell-pane('events')
   else
-    .screen-list-container.arrow-key-scrollable(
-      hook={postpatch: $helpers.updateRenderedSize}
-      on={scroll: $helpers.scrolledList}
+    mp-items-menu(
+      attrs={
+        'search-filter': contextFilter,
+        'sections': JSON.stringify($helpers.getSections()),
+      }
+      on={
+        clickItem: ev => $helpers.clickedEvent(ev.detail.item),
+        clickPropertiesPill: ev => $helpers.clickedEventProperties(ev, ev.detail.item),
+        draw: $helpers.updateRenderedSize,
+      }
     )
-      each section, idx in allEvents
-        if section.list.length
-          if idx
-            .builder-divider
-          .builder-label= section.label
-          +event-list(section.list, eventListOptions)
-      if !allEvents.length
-        li.list-option.list-empty Your search returned no results

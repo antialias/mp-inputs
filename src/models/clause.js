@@ -140,16 +140,22 @@ export class ShowClause extends EventsPropertiesClause {
 ShowClause.TYPE = ShowClause.prototype.TYPE = `show`;
 ShowClause.TOP_EVENTS = ShowClause.prototype.TOP_EVENTS = {
   name: `$top_events`,
+  label: `Top Events`,
+  icon: `star-top-events`,
   custom: false,
   resourceType: `events`,
 };
 ShowClause.ALL_EVENTS = ShowClause.prototype.ALL_EVENTS = {
   name: `$all_events`,
+  label: `All Events`,
+  icon: `star-top-events`,
   custom: false,
   resourceType: `events`,
 };
 ShowClause.ALL_PEOPLE = ShowClause.prototype.ALL_PEOPLE = {
   name: `$all_people`,
+  label: `All People`,
+  icon: `profile`,
   resourceType: `people`,
 };
 ShowClause.SPECIAL_EVENTS = ShowClause.prototype.SPECIAL_EVENTS = [
@@ -223,6 +229,8 @@ export class GroupClause extends EventsPropertiesClause {
 }
 GroupClause.TYPE = GroupClause.prototype.TYPE = `group`;
 GroupClause.EVENT_DATE = GroupClause.prototype.EVENT_DATE = {
+  label: `Date`,
+  icon: `star-top-events`,
   name: `$date`,
   type: `datetime`,
   resourceType: `events`,

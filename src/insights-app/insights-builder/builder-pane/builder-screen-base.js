@@ -10,9 +10,12 @@ import {Clause, GroupClause, ShowClause} from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
 import {
   extend,
+  getIconForEvent,
+  getIconForPropertyType,
   renameEvent,
   renameProperty,
   replaceByIndex,
+  sorted,
   stringFilterMatches,
 } from '../../../util';
 
@@ -116,18 +119,18 @@ export class BuilderScreenBase extends Component {
     return items;
   }
 
-  allMatchingEvents() {
+  allEvents() {
     const mpEvents = this.state.topEvents === BaseQuery.LOADING ? [] : this.state.topEvents;
     return [
-      ...this.matchingItems([
-        ShowClause.TOP_EVENTS,
-        ShowClause.ALL_EVENTS,
-      ], renameEvent),
-      ...this.matchingItems(mpEvents, renameEvent),
+      ...[ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS],
+      ...sorted(mpEvents.map(event => extend({
+        label: renameEvent(event.name),
+        icon: getIconForEvent(event),
+      }, event)), {transform: event => event.label.toLowerCase()}),
     ];
   }
 
-  allMatchingProperties(propType) {
+  allProperties(propType) {
     const isPeople = propType === Clause.RESOURCE_TYPE_PEOPLE;
     let properties = isPeople ? this.state.topPeopleProperties : this.state.topEventProperties;
     properties = properties === BaseQuery.LOADING ? [] : properties;
@@ -138,8 +141,11 @@ export class BuilderScreenBase extends Component {
     }
 
     return [
-      ...this.matchingItems(specialProps, renameProperty),
-      ...this.matchingItems(properties, renameProperty),
+      ...specialProps,
+      ...sorted(properties.map(property => extend({
+        label: renameProperty(property.name),
+        icon: getIconForPropertyType(property.type),
+      })), {transform: property => property.label.toLowerCase()}),
     ];
   }
 

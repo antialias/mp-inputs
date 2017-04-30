@@ -1,21 +1,20 @@
 include ../mixins.jade
 
 - const loading = $helpers.isLoading()
-- const properties = $helpers.getProperties()
 
 .builder-screen.properties
-  +screen-title(`Properties of ${$helpers.getEventName()}`, {backButton: $helpers.screenIdx() > 1})
-  .screen-list-container.arrow-key-scrollable(
-    hook={postpatch: $helpers.updateRenderedSize}
-    on={scroll: $helpers.scrolledList}
+  +screen-title(`Properties of ${$helpers.getEventLabel()}`, {backButton: $helpers.screenIdx() > 1})
+  mp-items-menu(
+    attrs={
+      'search-filter': contextFilter,
+      'sections': JSON.stringify($helpers.getPropertySections()),
+      'empty-message': $component.isShowingNonNumericProperties() ? `No properties available` : `No non-numeric properties available`,
+    }
+    on={
+      clickItem: ev => $helpers.clickedProperty(ev, ev.detail.item),
+      draw: $helpers.updateRenderedSize,
+    }
   )
-    +property-list(properties, {
-      clickedProperty: $helpers.clickedProperty,
-      listEmptyMessage: `No non-numeric properties available`,
-      selected: $component.getAttribute(`selected`),
-      source: $component.getAttribute(`source`),
-      loading,
-    })
   if !loading
     +screen-footer-button(($component.isShowingNonNumericProperties() ? `Hide` : `View all`) + ` non-numeric properties`, {
       onclick: $helpers.toggleNonNumericProperties,

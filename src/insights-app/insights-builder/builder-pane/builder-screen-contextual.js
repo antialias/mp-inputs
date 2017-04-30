@@ -1,6 +1,6 @@
 import {BuilderScreenBase} from './builder-screen-base';
 import {Clause, GroupClause, ShowClause} from '../../../models/clause';
-import {extend, indexSectionLists} from '../../../util';
+import {extend, getLearnStep} from '../../../util';
 
 import template from './builder-screen-contextual.jade';
 
@@ -46,79 +46,79 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
           return (CONTEXT_OPTIONS[this.state.report.sections.show.clauseResourceTypes()] || [])
             .map((option, index) => extend(option, {index}));
         },
-        getContextLists: () => this.buildProgressiveList(),
-        clickedProperty: (ev, property) => {
-          this.app.startAddingClause(`group`);
-          const newClause = {
-            propertyType: property.type,
-            resourceType: property.resourceType,
-            value: property.name,
-          };
-          if (property.type === `datetime`) {
-            newClause.editing = true;
-            this.updateStageClause(newClause);
-            this.nextScreen(`builder-screen-group-datetime-options`);
-          } else {
-            this.updateAndCommitStageClause(newClause);
+        getSections: () => this.buildList(),
+        clickedItem: ev => {
+          const item = ev.detail.item;
+          if (item.itemType === `event`) {
+            this.clickedEvent(item);
+          } else if (item.itemType === `property`) {
+            this.clickedProperty(null, item);
           }
-        },
-        clickedEvent: value => {
-          this.app.startAddingClause(`show`);
-          this.updateStageClause({value}, {shouldCommit: true, shouldStopEditing: true});
         },
       }),
     };
   }
 
   buildList() {
-    let sections = [];
-    switch(this.state.report.sections.show.clauseResourceTypes()) {
-      case ShowClause.RESOURCE_TYPE_EVENTS:
-        sections = [
-          {
-            label: `Group by an event property`,
-            list: this.allMatchingProperties(Clause.RESOURCE_TYPE_EVENTS),
-            resourceType: `property`,
-          },
-          {
-            label: `Group by a people property`,
-            list: this.allMatchingProperties(Clause.RESOURCE_TYPE_PEOPLE),
-            resourceType: `property`,
-          },
-          {
-            label: `Compare to an event`,
-            list: this.allMatchingEvents(),
-            resourceType: `event`,
-          },
-        ];
-        break;
-      case ShowClause.RESOURCE_TYPE_PEOPLE:
-        sections = [
-          {
-            label: `Group by a people property`,
-            list: this.allMatchingProperties(Clause.RESOURCE_TYPE_PEOPLE),
-            resourceType: `property`,
-          },
-        ];
-        break;
-    }
+    const resourceTypes = this.state.report.sections.show.clauseResourceTypes();
+    if (resourceTypes === ShowClause.RESOURCE_TYPE_EVENTS) {
+      const currLearnStep = getLearnStep(this.state.report, this.state.learnModalStepIndex);
+      const isGroupByDisabled = !!currLearnStep && currLearnStep.name !== `group-by`;
+      const isEventsDisabled = !!currLearnStep && currLearnStep.name !== `compare-event`;
 
-    return indexSectionLists(sections);
+      return [
+        {
+          label: `Group by an event property`,
+          items: this.allProperties(Clause.RESOURCE_TYPE_EVENTS).map(item => extend(item, {
+            isDisabled: isGroupByDisabled,
+            itemType: `property`,
+          })),
+        },
+        {
+          label: `Group by a people property`,
+          items: this.allProperties(Clause.RESOURCE_TYPE_PEOPLE).map(item => extend(item, {
+            isDisabled: isGroupByDisabled,
+            itemType: `property`,
+          })),
+        },
+        {
+          label: `Compare to an event`,
+          items: this.allEvents().map(item => extend(item, {
+            isDisabled: isEventsDisabled,
+            itemType: `event`,
+          })),
+        },
+      ];
+    } else if (resourceTypes === ShowClause.RESOURCE_TYPE_PEOPLE) {
+      return [
+        {
+          label: `Group by a people property`,
+          items: this.allProperties(Clause.RESOURCE_TYPE_PEOPLE).map(item => extend(item, {
+            itemType: `property`,
+          })),
+        },
+      ];
+    }
   }
 
-  buildProgressiveList() {
-    let listSize = this.progressiveListSize;
-    const fullList = this.buildList();
-    const outList = [];
-    while (listSize > 0 && fullList.length) {
-      let source = fullList.shift();
-      outList.push(extend(source, {list: source.list.slice(0, listSize)}));
-      listSize -= source.list.length;
+  clickedProperty(ev, property) {
+    this.app.startAddingClause(`group`);
+    const newClause = {
+      propertyType: property.type,
+      resourceType: property.resourceType,
+      value: property.name,
+    };
+    if (property.type === `datetime`) {
+      newClause.editing = true;
+      this.updateStageClause(newClause);
+      this.nextScreen(`builder-screen-group-datetime-options`);
+    } else {
+      this.updateAndCommitStageClause(newClause);
     }
-    return outList;
   }
 
-  progressiveListLength() {
-    return this.buildList().reduce((sum, source) => sum + source.list.length, 0);
+  clickedEvent(value) {
+    this.app.startAddingClause(`show`);
+    this.updateStageClause({value}, {shouldCommit: true, shouldStopEditing: true});
   }
 });

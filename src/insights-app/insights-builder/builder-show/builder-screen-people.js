@@ -1,7 +1,7 @@
 import {BuilderScreenNumericPropertiesBase} from '../builder-pane/builder-screen-numeric-properties-base';
 import BaseQuery from '../../../models/queries/base';
 import {ShowClause} from '../../../models/clause';
-import {extend, indexSectionLists} from '../../../util';
+import {extend, getIconForPropertyType, renameProperty} from '../../../util';
 
 import template from './builder-screen-people.jade';
 
@@ -10,35 +10,32 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenNum
     return {
       template,
       helpers: extend(super.config.helpers, {
-        getAllPeopleProperties: () => this.getAllPeopleProperties().filter(section => section.list.length),
+        getPropertySections: () => {
+          return [{
+            items: this.processItems([ShowClause.ALL_PEOPLE]),
+          }, {
+            items: this.processItems(this.buildList()),
+            isLoading: this.state.topPeopleProperties === BaseQuery.LOADING,
+          }];
+        },
+        clickedItem: (ev, item) => {
+          if (item.name === ShowClause.ALL_PEOPLE.name) {
+            this.updateAndCommitStageClause({value: item, property: null});
+          } else {
+            this.helpers.clickedProperty(ev, item);
+          }
+        },
       }),
     };
   }
 
-  clickedSpecialOptions(ev, value) {
-    this.updateAndCommitStageClause({value, property: null});
-  }
-  
-  getSpecialOptions() {
-    return [extend(ShowClause.ALL_PEOPLE, {icon: `profile`})];
-  }
-
-  getAllPeopleProperties() {
-    let sections = [{
-      clickedPropertyFunction: (ev, value) => this.clickedSpecialOptions(ev, value),
-      list: this.getSpecialOptions(),
-      showLoading: false,
-    }, {
-      clickedPropertyFunction: null,
-      list: this.buildProgressiveList(),
-      showLoading: true,
-    }];
-
-    return indexSectionLists(sections);
-  }
-
-  isLoading() {
-    return this.state.topPeopleProperties === BaseQuery.LOADING;
+  processItems(items) {
+    const selected = this.getAttribute(`selected`);
+    return items.map(item => extend({
+      label: item.label || renameProperty(item.name),
+      icon: item.icon || getIconForPropertyType(item.type),
+      isSelected: item.name === selected,
+    }, item));
   }
 
   buildList() {

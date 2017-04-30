@@ -1,14 +1,23 @@
 include ../mixins.jade
 
 .builder-screen.sources(style={width: (contextFilter ? `320px` : `260px`)})
-  ul.screen-options-list.arrow-key-scrollable(
-    class=util.learnClasses({disabledExceptChildren: [`first`]})
-    hook={postpatch: $helpers.updateRenderedSize}
-    on={scroll: $helpers.scrolledList}
-  )
-    if contextFilter
-      +filtered-options-lists($helpers.getFilteredLists())
-    else
+  if contextFilter
+    mp-items-menu(
+      attrs={
+        'search-filter': contextFilter,
+        'sections': JSON.stringify($helpers.getSections()),
+      }
+      on={
+        draw: $helpers.updateRenderedSizeOnNextFrame,
+        clickItem: ev => $helpers.clickedItem(ev, ev.detail.item),
+        clickPropertiesPill: ev => $helpers.clickedEventProperties(ev, ev.detail.item),
+      }
+    )
+  else
+    ul.screen-options-list.arrow-key-scrollable(
+      class=util.learnClasses({disabledExceptChildren: [`first`]})
+      hook={postpatch: $helpers.updateRenderedSize}
+    )
       each source in $helpers.getSources()
         +generic-options-list-item(source.name, {
           class: `source-menu-option`,
