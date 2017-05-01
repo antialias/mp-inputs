@@ -499,5 +499,6 @@ export function transformLeaves(object, transform) {
   }
 }
 _hasChildren = val => val && typeof val === `object` && Object.keys(val).length;
-_transformKeyVal = (key, val, transform) =>
-  _hasChildren(val) ? [key, transformLeaves(val, transform)] : transform(key, val);
+_transformKeyVal = (key, val, transform) => (
+  _hasChildren(val) ? [key, transformLeaves(val, transform)] : transform(key, val)
+);

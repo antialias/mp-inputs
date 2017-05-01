@@ -12,8 +12,8 @@ export default class MPContext {
   constructor() {
     this.standalone = typeof mp === `undefined`;
     this.apiHost = `https://mixpanel.com`;
-    this.useNewApi = window.location.href.includes(`new_api=true`);
-    this.compareOldJql = window.location.href.includes(`compare_jql=true`);
+    this.useNewApi = window.location.href.includes(`new_api`);
+    this.compareApis = window.location.href.includes(`compare_apis`);
 
     if (!this.standalone) {
       // global garbage

@@ -15,7 +15,7 @@ import Legend from '../models/legend';
 import TopEventsQuery from '../models/queries/top-events';
 import { TopEventPropertiesQuery, TopPeoplePropertiesQuery } from '../models/queries/top-properties';
 import { TopEventPropertyValuesQuery, TopPeoplePropertyValuesQuery } from '../models/queries/top-property-values';
-import SegmentationQueryOldJql from '../models/queries/segmentation';
+import SegmentationQueryOldApi from '../models/queries/segmentation';
 import SegmentationQueryNewApi from '../models/queries/segmentation-new-api';
 import QueryCache from '../models/queries/query-cache';
 import Report from '../models/report';
@@ -397,7 +397,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         topPeopleProperties: new TopPeoplePropertiesQuery(apiAttrs),
         topPeoplePropertyValues: new TopPeoplePropertyValuesQuery(apiAttrs),
         topPropertyValuesCache: new QueryCache(),
-        segmentation: new SegmentationQueryOldJql(apiAttrs, {
+        segmentation: new SegmentationQueryOldApi(apiAttrs, {
           customEvents: this.customEvents,
           utcOffset: this.getUtcOffset(),
         }),
@@ -405,8 +405,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       };
 
       // TODO DEBUG CODE - remove when we switch fully to new Insights API
-      if (this.useNewApi || this.compareOldJql) {
-        this.queries.oldJqlSegmentation = this.queries.segmentation;
+      if (this.useNewApi || this.compareApis) {
+        this.queries.oldApiSegmentation = this.queries.segmentation;
         this.queries.segmentation = new SegmentationQueryNewApi(apiAttrs);
       }
       // END DEBUG CODE
@@ -1317,20 +1317,20 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
       // TODO DEBUG CODE - remove when we switch fully to new Insights API
       const timer = new Date().getTime();
-      if (this.compareOldJql) {
+      if (this.compareApis) {
         this.update({
-          oldJqlResult: null,
-          oldJqlQueryTimeMs: null,
+          oldApiResult: null,
+          oldApiQueryTimeMs: null,
           newApiResult: null,
           newApiQueryTimeMs: null,
         });
-        this.queries.oldJqlSegmentation.build(this.state, displayOptions).run().then(result => {
+        this.queries.oldApiSegmentation.build(this.state, displayOptions).run().then(result => {
           console.info(`Old JQL query result:`);
           console.info(result);
           this.update({
-            oldJqlResult: result,
-            oldJqlQueryTimeMs: new Date().getTime() - timer,
-            result: this.state.showingOldJqlResult ? result : this.state.newApiResult,
+            oldApiResult: result,
+            oldApiQueryTimeMs: new Date().getTime() - timer,
+            result: this.state.showingOldApiResult ? result : this.state.newApiResult,
           });
         });
       }
@@ -1354,13 +1354,13 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
           });
 
           // TODO DEBUG CODE - remove when we switch fully to new Insights API
-          if (this.compareOldJql) {
+          if (this.compareApis) {
             console.info(`New API query result:`);
             console.info(result);
             this.update({
               newApiResult: result,
               newApiQueryTimeMs: new Date().getTime() - timer,
-              result: this.state.showingOldJqlResult ? this.state.oldJqlResult : result,
+              result: this.state.showingOldApiResult ? this.state.oldApiResult : result,
             });
           }
           // END DEBUG CODE
@@ -1377,10 +1377,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   // TODO DEBUG CODE - remove when we switch fully to new Insights API
   toggleResult() {
-    if (this.compareOldJql) {
+    if (this.compareApis) {
       this.update({
-        showingOldJqlResult: !this.state.showingOldJqlResult,
-        result: this.state.showingOldJqlResult ? this.state.newApiResult : this.state.oldJqlResult,
+        showingOldApiResult: !this.state.showingOldApiResult,
+        result: this.state.showingOldApiResult ? this.state.newApiResult : this.state.oldApiResult,
       });
     }
   }
