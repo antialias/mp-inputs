@@ -1,2 +1,30 @@
+include ../../mixins.jade
+
 .chart-controls-container
   .chart-toggle.chart-control= $component.child('chart-toggle')
+
+  // TODO DEBUG CODE - remove when we switch fully to new Insights API
+  if $component.app.compareOldJql
+    - const faster = newApiQueryTimeMS < oldJqlQueryTimeMs ? `Insights API` : `JQL API`;
+    - const percent = Math.round(Math.abs(newApiQueryTimeMs - oldJqlQueryTimeMs) / Math.max(newApiQueryTimeMs, oldJqlQueryTimeMs) * 100);
+    - const title = `${faster} ${percent}% faster\nInsights API took ${newApiQueryTimeMs}ms\nJQL API took ${oldJqlQueryTimeMs}ms`;
+    mp-toggle(
+      attrs={
+        title,
+        selected: showingOldJqlResult ? `jql` : `api`,
+        square: true,
+        style: `width: 220px`,
+      }
+      on={
+        select: $helpers.toggleResult,
+      }
+    )
+      mp-toggle-option(attrs={value: `api`})
+        | API
+        if newApiQueryTimeMs
+          | #{` `}(#{util.commaizeNumber(newApiQueryTimeMs)} ms)
+      mp-toggle-option(attrs={value: `jql`})
+        | JQL
+        if oldJqlQueryTimeMs
+          | #{` `}(#{util.commaizeNumber(oldJqlQueryTimeMs)} ms)
+  // END DEBUG CODE

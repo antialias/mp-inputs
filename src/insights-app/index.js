@@ -405,14 +405,11 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       };
 
       // TODO DEBUG CODE - remove when we switch fully to new Insights API
-      if (this.compareOldJql) {
-        this.queries.oldSegmentation = this.queries.segmentation;
-      }
-      // END DEBUG CODE
-
-      if (this.useNewApi) {
+      if (this.useNewApi || this.compareOldJql) {
+        this.queries.oldJqlSegmentation = this.queries.segmentation;
         this.queries.segmentation = new SegmentationQueryNewApi(apiAttrs);
       }
+      // END DEBUG CODE
     }
 
     this.updateCanAddBookmark();
@@ -1319,23 +1316,28 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       this.trackEvent(`Query Start`, extend(reportTrackingData, queryEventProperties));
 
       // TODO DEBUG CODE - remove when we switch fully to new Insights API
+      const timer = new Date().getTime();
       if (this.compareOldJql) {
-        this.queries.oldSegmentation.build(this.state, displayOptions).run().then(result => {
+        this.update({
+          oldJqlResult: null,
+          oldJqlQueryTimeMs: null,
+          newApiResult: null,
+          newApiQueryTimeMs: null,
+        });
+        this.queries.oldJqlSegmentation.build(this.state, displayOptions).run().then(result => {
           console.info(`Old JQL query result:`);
           console.info(result);
+          this.update({
+            oldJqlResult: result,
+            oldJqlQueryTimeMs: new Date().getTime() - timer,
+            result: this.state.showingOldJqlResult ? result : this.state.newApiResult,
+          });
         });
       }
       // END DEBUG CODE
 
       return this.queries.segmentation.run(cachedResult)
         .then(result => {
-          // TODO DEBUG CODE - remove when we switch fully to new Insights API
-          if (this.compareOldJql && this.useNewApi) {
-            console.info(`New API query result:`);
-            console.info(result);
-          }
-          // END DEBUG CODE
-
           if (!cachedResult) {
             this.queries.segmentationCache.set(query, result, cacheExpiry);
             queryEventProperties[`latency ms`] = Math.round(window.performance.now() - queryStartTime);
@@ -1350,6 +1352,18 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
               legend: this.state.report.legend.updateLegendData(result),
             }),
           });
+
+          // TODO DEBUG CODE - remove when we switch fully to new Insights API
+          if (this.compareOldJql) {
+            console.info(`New API query result:`);
+            console.info(result);
+            this.update({
+              newApiResult: result,
+              newApiQueryTimeMs: new Date().getTime() - timer,
+              result: this.state.showingOldJqlResult ? this.state.oldJqlResult : result,
+            });
+          }
+          // END DEBUG CODE
         })
         .catch(err => {
           console.error(err);
@@ -1360,4 +1374,15 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         });
     }
   }
+
+  // TODO DEBUG CODE - remove when we switch fully to new Insights API
+  toggleResult() {
+    if (this.compareOldJql) {
+      this.update({
+        showingOldJqlResult: !this.state.showingOldJqlResult,
+        result: this.state.showingOldJqlResult ? this.state.newApiResult : this.state.oldJqlResult,
+      });
+    }
+  }
+  // END DEBUG CODE
 });
