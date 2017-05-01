@@ -482,9 +482,9 @@ export function transposeColsToRows(headers, series, leafHeader, addLeafHeader=t
  * @param {function} transform - transform function that accepts (key, val) args and returns a [key, val] array
  * @returns {object} - a copy of the original object with leaves transformed
  */
-let _hasChildren, _transformKeyVal; // predefine helpers
+let _isObject, _transformKeyVal; // predefine helpers to avoid circular dependency
 export function transformLeaves(object, transform) {
-  if (!_hasChildren(object)) {
+  if (!_isObject(object) || !Object.keys(object).length) {
     return object;
   } else if (Array.isArray(object)) {
     return object.map((item, index) => {
@@ -498,7 +498,7 @@ export function transformLeaves(object, transform) {
     }));
   }
 }
-_hasChildren = val => val && typeof val === `object` && Object.keys(val).length;
+_isObject = val => val && typeof val === `object`;
 _transformKeyVal = (key, val, transform) => (
-  _hasChildren(val) ? [key, transformLeaves(val, transform)] : transform(key, val)
+  _isObject(val) ? [key, transformLeaves(val, transform)] : transform(key, val)
 );

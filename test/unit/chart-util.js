@@ -10,6 +10,7 @@ import {
   nestedObjectToNestedArray,
   nestedObjectToBarChartData,
   nestedObjectToTableData,
+  transformLeaves,
 } from '../../src/util/chart';
 
 describe('nestedObjectToTableData', function() {
@@ -693,6 +694,94 @@ describe('nestedObjectToNestedArray', function() {
         {label: 'Canada', value: 13, children: [{label: 'llama',    value: 13}]},
         {label: 'Mexico', value: 35, children: [{label: 'llama',    value: 35}]},
       ]);
+    });
+  });
+});
+
+describe('transformLeaves', function() {
+  const testLeafTransform = (key, val) => [key + key, val + val];
+
+  it('transforms leaves in a simple (depth 1) object', function() {
+    const input = {
+      llama: 5,
+      aardvark: 8,
+    };
+
+    expect(transformLeaves(input, testLeafTransform)).to.eql({
+      llamallama: 10,
+      aardvarkaardvark: 16,
+    });
+  });
+
+  it('transforms leaves in a nested (depth 2) object', function() {
+    const input = {
+      llama: {
+        platypus: 7,
+        wallaby: 1,
+      },
+      aardvark: 8,
+    };
+
+    expect(transformLeaves(input, testLeafTransform)).to.eql({
+      llama: {
+        platypusplatypus: 14,
+        wallabywallaby: 2,
+      },
+      aardvarkaardvark: 16,
+    });
+  });
+
+  it('does not modify the original object', function() {
+    const input = {
+      llama: 5,
+      aardvark: 8,
+    };
+
+    transformLeaves(input, testLeafTransform);
+
+    expect(input).to.eql({
+      llama: 5,
+      aardvark: 8,
+    });
+  });
+
+  it('transforms leaves in an array of objects', function() {
+    const input = [
+      {
+        llama: 5,
+        aardvark: 8,
+      },
+      {},
+      {
+        platypus: 7,
+        wallaby: 1,
+      },
+    ];
+
+    expect(transformLeaves(input, testLeafTransform)).to.eql([
+      {
+        llamallama: 10,
+        aardvarkaardvark: 16,
+      },
+      {},
+      {
+        platypusplatypus: 14,
+        wallabywallaby: 2,
+      },
+    ]);
+  });
+
+  it('transforms leaves in an object of arrays', function() {
+    const input = {
+      llama: [1, 2, 3],
+      aardvark: [4, 5, 6],
+      emu: [],
+    };
+
+    expect(transformLeaves(input, testLeafTransform)).to.eql({
+      llama: [2, 4, 6],
+      aardvark: [8, 10, 12],
+      emu: [],
     });
   });
 });
