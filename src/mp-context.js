@@ -12,8 +12,21 @@ export default class MPContext {
   constructor() {
     this.standalone = typeof mp === `undefined`;
     this.apiHost = `https://mixpanel.com`;
-    this.useNewApi = window.location.href.includes(`new_api`);
-    this.compareApis = window.location.href.includes(`compare_apis`);
+
+    // TODO DEBUG CODE - remove when we switch fully to new Insights API
+    if (this.standalone) {
+      this.useNewApi = !window.location.href.includes(`old_api`);
+      this.compareApis = window.location.href.includes(`compare_apis`);
+    } else {
+      const staffPermissions = mp.globals.staff_permissions;
+      if (!staffPermissions || staffPermissions.contains(`auth.excluded_from_new_insights_api`)) {
+        this.useNewApi = window.location.href.includes(`new_api`);
+      } else {
+        this.useNewApi = !window.location.href.includes(`old_api`);
+      }
+      this.compareApis = window.location.href.includes(`compare_apis`);
+    }
+    // END DEBUG CODE
 
     if (!this.standalone) {
       // global garbage
