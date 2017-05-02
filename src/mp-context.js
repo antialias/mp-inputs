@@ -14,17 +14,21 @@ export default class MPContext {
     this.apiHost = `https://mixpanel.com`;
 
     // TODO DEBUG CODE - remove when we switch fully to new Insights API
+    const hasOldApiParam = window.location.href.includes(`old_api`);
+    const hasNewApiParam = window.location.href.includes(`new_api`);
+    const hasCompareApisParam = window.location.href.includes(`compare_apis`);
+
     if (this.standalone) {
-      this.useNewApi = !window.location.href.includes(`old_api`);
-      this.compareApis = window.location.href.includes(`compare_apis`);
+      this.useNewApi = !hasOldApiParam;
+      this.compareApis = hasCompareApisParam;
     } else {
       const staffPermissions = mp.globals.staff_permissions;
-      if (!staffPermissions || staffPermissions.contains(`auth.excluded_from_new_insights_api`)) {
-        this.useNewApi = window.location.href.includes(`new_api`);
+      if (!staffPermissions || staffPermissions.includes(`auth.excluded_from_new_insights_api`)) {
+        this.useNewApi = hasNewApiParam;
       } else {
-        this.useNewApi = !window.location.href.includes(`old_api`);
+        this.useNewApi = !hasOldApiParam;
       }
-      this.compareApis = window.location.href.includes(`compare_apis`);
+      this.compareApis = hasCompareApisParam;
     }
     // END DEBUG CODE
 
