@@ -1319,9 +1319,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       const timer = new Date().getTime();
       if (this.compareApis) {
         this.update({
-          oldApiResult: null,
+          oldApiResult: new Result({headers: [], series: {}}),
           oldApiQueryTimeMs: null,
-          newApiResult: null,
+          newApiResult: new Result({headers: [], series: {}}),
           newApiQueryTimeMs: null,
         });
         this.queries.oldApiSegmentation.build(this.state, displayOptions).run().then(result => {
