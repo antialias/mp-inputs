@@ -71,6 +71,8 @@ export function getIconForEvent(mpEvent) {
     return `autotrack`;
   } else if (mpEvent.custom) {
     return `custom-events`;
+  } else if (mpEvent.name.substring(0, 4) === `$ae_`) {
+    return `pretrack`;
   } else {
     return `event`;
   }
