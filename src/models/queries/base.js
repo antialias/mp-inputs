@@ -90,13 +90,18 @@ export default class BaseQuery {
       body: objToQueryString(params),
     }, queryOptions))
       .then(response => {
-        if (response.status < 400 || response.body) {
+        if (response.ok || response.body) {
           return response.json();
         } else {
+          this.handleFetchError(response.statusText);
           return {error: response.statusText};
         }
       })
-      .catch(e => console.error(`Error fetching ${url}`, e));
+      .catch(err => this.handleFetchError(err, url, params));
+  }
+
+  handleFetchError(error, url, params) {
+    console.error(`Error fetching ${url}`, error);
   }
 
   // expected args: results, query (optional)

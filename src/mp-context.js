@@ -17,10 +17,12 @@ export default class MPContext {
     const hasOldApiParam = window.location.href.includes(`old_api`);
     const hasNewApiParam = window.location.href.includes(`new_api`);
     const hasCompareApisParam = window.location.href.includes(`compare_apis`);
+    const hasNewApiBackgroundParam = window.location.href.includes(`new_api_background`);
 
     if (this.standalone) {
       this.useNewApi = !hasOldApiParam;
       this.compareApis = hasCompareApisParam;
+      this.newApiBackground = hasNewApiBackgroundParam;
     } else {
       const staffPermissions = mp.globals.staff_permissions;
       if (!staffPermissions || staffPermissions.includes(`auth.excluded_from_new_insights_api`)) {
@@ -29,6 +31,7 @@ export default class MPContext {
         this.useNewApi = !hasOldApiParam;
       }
       this.compareApis = hasCompareApisParam;
+      this.newApiBackground = hasNewApiBackgroundParam;
     }
     // END DEBUG CODE
 

@@ -409,6 +409,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         this.queries.oldApiSegmentation = this.queries.segmentation;
         this.queries.segmentation = new SegmentationQueryNewApi(apiAttrs);
       }
+
+      if (this.newApiBackground) {
+        this.queries.newApiSegmentation = new SegmentationQueryNewApi(apiAttrs);
+      }
       // END DEBUG CODE
     }
 
@@ -1317,6 +1321,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
       // TODO DEBUG CODE - remove when we switch fully to new Insights API
       const timer = new Date().getTime();
+
       if (this.compareApis) {
         this.update({
           oldApiResult: new Result({headers: [], series: {}}),
@@ -1333,6 +1338,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
             result: this.state.showingOldApiResult ? result : this.state.newApiResult,
           });
         });
+      }
+
+      if (this.newApiBackground) {
+        this.queries.newApiSegmentation.build(this.state, displayOptions).run();
       }
       // END DEBUG CODE
 

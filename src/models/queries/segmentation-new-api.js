@@ -2,8 +2,9 @@ import { extend } from 'mixpanel-common/util';
 import moment from 'moment';
 
 import BaseQuery from './base';
-import Result from '../result';
 import { Clause } from '../clause';
+import Result from '../result';
+import { rollbar } from '../../tracking';
 import { transformLeaves } from '../../util/chart';
 
 export default class SegmentationQuery extends BaseQuery {
@@ -45,5 +46,10 @@ export default class SegmentationQuery extends BaseQuery {
     results.peopleTimeSeries = this.query.isPeopleTimeSeries ? results.series : null;
 
     return new Result(results);
+  }
+
+  handleFetchError(error, url, params) {
+    super.handleFetchError(...arguments);
+    rollbar.error(`New Insights API RequestError`, {error, url, params});
   }
 }

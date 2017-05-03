@@ -26,6 +26,7 @@ const initInsights = () => new Promise(resolve => {
     // TODO DEBUG CODE - remove when we switch fully to new Insights API
     app.useNewApi = mpContext.useNewApi;
     app.compareApis = mpContext.compareApis;
+    app.newApiBackground = mpContext.newApiBackground;
     // END DEBUG CODE
 
     resolve(app);
@@ -40,6 +41,10 @@ const initInsights = () => new Promise(resolve => {
     if (app.hasWhitelist(`dev`)) {
       app.useNewApi = mpContext.useNewApi;
       app.compareApis = mpContext.compareApis;
+      app.newApiBackground = mpContext.newApiBackground;
+    } else {
+      // make background requests to new api for all non-staff users for load test purposes
+      app.newApiBackground = true;
     }
     // END DEBUG CODE
 
