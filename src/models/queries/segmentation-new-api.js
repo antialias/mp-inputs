@@ -39,8 +39,13 @@ export default class SegmentationQuery extends BaseQuery {
     //        in a separate refactor.
 
     results.series = transformLeaves(results.series, (key, val) => {
-      const momentKey = moment(key, moment.ISO_8601, true);
+      // round numeric values to two decimal places
+      if (typeof val === `number` && isFinite(val)) {
+        val = Math.round(val * 100) / 100; // can't use toFixed because it returns string
+      }
 
+      // convert ISO-formatted time strings keys into unix timestamps
+      const momentKey = moment(key, moment.ISO_8601, true);
       if (momentKey.isValid()) {
         const localOffset = momentKey.utcOffset();
         const projectOffset = mp.report.globals.utc_offset;
