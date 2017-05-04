@@ -30,12 +30,6 @@ document.registerElement(`query-builder-show-header`, class extends Component {
           return associatedClause && associatedClause.math;
         },
         headerClicked: ev => {
-          if (this.helpers.isEditingShowClause()) {
-            // consider it part of the show clause, don't close the
-            // menu
-            return ev.stopPropagation();
-          }
-
           if (this.isPaneOpen()) {
             this.app.stopEditingClause();
           } else {
@@ -46,10 +40,6 @@ document.registerElement(`query-builder-show-header`, class extends Component {
             this.app.startEditingClause(ShowClause.TYPE, activeMathMenuIndex);
           }
         },
-        isEditingShowClause: () =>
-          !!this.state.builderPane.screens.length &&
-          this.app.isEditingClause(ShowClause.TYPE, this.clauseIndex) &&
-          this.state.activeMathMenuIndex === null,
         isOpen: () => this.isPaneOpen(),
         isRemovable: () => this.app.getClausesForType(`show`).length > 1,
         removeClause: ev => {

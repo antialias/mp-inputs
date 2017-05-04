@@ -5,7 +5,7 @@ include ../../mixins.jade
 
 .query-builder-show-header
   .visible-header-content
-    .header-label(class={'header-disabled': $helpers.isEditingShowClause()})
+    .header-label
       if $helpers.isStaticHeader()
         | Show total
       else
