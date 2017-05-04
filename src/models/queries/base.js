@@ -100,7 +100,7 @@ export default class BaseQuery {
       .catch(err => this.handleFetchError(err, url, params));
   }
 
-  handleFetchError(error, url, params) {
+  handleFetchError(error, url) {
     console.error(`Error fetching ${url}`, error);
   }
 

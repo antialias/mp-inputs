@@ -40,9 +40,22 @@ export default class SegmentationQuery extends BaseQuery {
 
     results.series = transformLeaves(results.series, (key, val) => {
       const momentKey = moment(key, moment.ISO_8601, true);
-      const timestampKey = momentKey.isValid() ? momentKey.valueOf() : null;
-      return [timestampKey || key, val];
+
+      if (momentKey.isValid()) {
+        const localOffset = momentKey.utcOffset();
+        const projectOffset = mp.report.globals.utc_offset;
+
+        // offset times by the diff between project and local timezone
+        // to trick Highcharts into displaying data in project time
+        momentKey.add(projectOffset - localOffset , 'minutes');
+
+        const timestampKey = momentKey.valueOf();
+        return [timestampKey, val];
+      } else {
+        return [key, val];
+      }
     });
+
     results.peopleTimeSeries = this.query.isPeopleTimeSeries ? results.series : null;
 
     return new Result(results);
