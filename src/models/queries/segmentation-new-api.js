@@ -1,5 +1,3 @@
-/* global mp */
-
 import { extend } from 'mixpanel-common/util';
 import moment from 'moment';
 
@@ -14,7 +12,7 @@ export default class SegmentationQuery extends BaseQuery {
     return `api/2.0/insights`;
   }
 
-  buildQuery(state, displayOptions) {
+  buildQuery(state, {displayOptions, projectUtcOffset}) {
     const sections = state.report.sections;
     const isPeopleOnly = sections.show.clauses.every(clause =>
       clause.value.resourceType === Clause.RESOURCE_TYPE_PEOPLE
@@ -25,6 +23,7 @@ export default class SegmentationQuery extends BaseQuery {
 
     query.displayOptions = extend(query.displayOptions, displayOptions);
     query.isPeopleTimeSeries = isPeopleTimeSeries;
+    query.projectUtcOffset = projectUtcOffset;
 
     return query;
   }
@@ -49,12 +48,9 @@ export default class SegmentationQuery extends BaseQuery {
       // convert ISO-formatted time strings keys into unix timestamps
       const momentKey = moment(key, moment.ISO_8601, true);
       if (momentKey.isValid()) {
-        const localOffset = momentKey.utcOffset();
-        const projectOffset = mp.report.globals.utc_offset;
-
         // offset times by the diff between project and local timezone
         // to trick Highcharts into displaying data in project time
-        momentKey.add(projectOffset - localOffset, `minutes`);
+        momentKey.add(this.query.projectUtcOffset - momentKey.utcOffset(), `minutes`);
 
         const timestampKey = momentKey.valueOf();
         return [timestampKey, val];

@@ -1303,8 +1303,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   query(displayOptions={}) {
     if (this.canMakeQueries()) {
       const reportTrackingData = this.state.report.toTrackingData();
-      displayOptions = extend({useCache: true}, displayOptions);
-      const query = this.queries.segmentation.build(this.state, displayOptions).query;
+      const query = this.queries.segmentation.build(this.state, {
+        displayOptions: extend({useCache: true}, displayOptions),
+        projectUtcOffset: this.getUtcOffset(),
+      }).query;
       const cachedResult = displayOptions.useCache && this.queries.segmentationCache.get(query);
       const cacheExpiry = 10; // seconds
 
