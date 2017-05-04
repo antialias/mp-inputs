@@ -1,3 +1,5 @@
+/* global mp */
+
 import { extend } from 'mixpanel-common/util';
 import moment from 'moment';
 
@@ -52,7 +54,7 @@ export default class SegmentationQuery extends BaseQuery {
 
         // offset times by the diff between project and local timezone
         // to trick Highcharts into displaying data in project time
-        momentKey.add(projectOffset - localOffset , 'minutes');
+        momentKey.add(projectOffset - localOffset, `minutes`);
 
         const timestampKey = momentKey.valueOf();
         return [timestampKey, val];
