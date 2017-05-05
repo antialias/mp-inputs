@@ -21,4 +21,10 @@ document.registerElement(`builder-screen-filter-properties-list`, class extends 
       }),
     };
   }
+
+  getPropertySections() {
+    return super.getPropertySections().map(section => extend(section, {
+      items: section.items.map(item => extend(item, {hasCaret: true})),
+    }));
+  }
 });
