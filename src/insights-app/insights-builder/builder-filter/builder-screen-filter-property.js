@@ -56,6 +56,11 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           }
         },
 
+        clickedBackButton: () => {
+          this.app.updateStageClause({filterValue: null});
+          this.previousScreen();
+        },
+
         getActiveClause: () => this.app.hasStageClause() ? this.app.activeStageClause : {},
         getMaxDataHistoryDays: () => this.app.maxDataHistoryDays(),
         // dropdowns

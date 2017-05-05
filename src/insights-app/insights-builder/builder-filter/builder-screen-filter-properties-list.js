@@ -14,6 +14,7 @@ document.registerElement(`builder-screen-filter-properties-list`, class extends 
           this.app.updateRecentProperties(property);
           this.updateStageClause({
             filterType: property.type,
+            filterValue: null,
             resourceType: property.resourceType,
             value: property.name,
           });
