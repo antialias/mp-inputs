@@ -116,7 +116,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
           }
         }
         if (parsedURL) {
-          const report = Report.deserialize(extend(this.defaultReportState(), parsedURL));
+          const report = Report.deserialize(extend(this.defaultReportState(), parsedURL), this.customEventsMap);
           if (report && report.valid) {
             return extend(stateUpdate, this.loadReport(report));
           }
@@ -340,7 +340,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
     this.shouldViewOnboarding = this.mpContext.flags && !this.mpContext.flags.VIEWED_INSIGHTS_INTRO;
     this.standalone = this.mpContext.standalone;
-    this.customEvents = this.mpContext.customEvents || [];
+    this.customEventsList = this.mpContext.customEvents || [];
+    this.customEventsMap = this.customEventsList.length ? Object.assign(...this.customEventsList.map(ce => ({[ce.id]: ce}))) : {};
     this.hasWritePermissions = !this.mpContext.hasPermissions || this.mpContext.permissions.includes(`write_insights`);
     this.eventsPlan = {cap: FEATURE_GATES_UNLIMITED};
     this.peoplePlan = {cap: FEATURE_GATES_UNLIMITED};
@@ -398,7 +399,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         topPeoplePropertyValues: new TopPeoplePropertyValuesQuery(apiAttrs),
         topPropertyValuesCache: new QueryCache(),
         segmentation: new SegmentationQueryOldApi(apiAttrs, {
-          customEvents: this.customEvents,
+          customEvents: this.customEventsList,
           utcOffset: this.getUtcOffset(),
         }),
         segmentationCache: new QueryCache(),
@@ -566,7 +567,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   loadReport(report, {trackLoading=false}={}) {
-    const stateUpdate = extend(this.resettableState, report ? {report: report.clone()} : {});
+    const stateUpdate = extend(this.resettableState, report ? {report: report.clone(this.customEventsMap)} : {});
     this.update(stateUpdate);
     this.resetTopQueries();
     if (trackLoading) {
@@ -877,7 +878,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         this.update({
           topEvents: topEvents
             .map(ev => ({name: ev, custom: false}))
-            .concat(this.customEvents.map(ce => Object.assign(ce, {custom: true}))),
+            .concat(this.customEventsList.map(ce => Object.assign(ce, {custom: true}))),
         });
       });
 

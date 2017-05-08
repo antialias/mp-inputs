@@ -33,13 +33,13 @@ export default class Report {
     }
   }
 
-  clone() {
-    return Report.deserialize(this.serialize());
+  clone(customEvents={}) {
+    return Report.deserialize(this.serialize(), customEvents);
   }
 
-  static deserialize(data) {
+  static deserialize(data, customEvents={}) {
     return new Report(extend(data, {
-      sections: BuilderSections.deserialize(data.sections),
+      sections: BuilderSections.deserialize(data.sections, customEvents),
       legend: new Legend(data.legend),
     }));
   }

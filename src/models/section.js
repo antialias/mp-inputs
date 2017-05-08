@@ -39,15 +39,15 @@ export class Section {
     }
   }
 
-  static deserialize(sectionType, clauseAttrs) {
+  static deserialize(sectionType, clauseAttrs, customEvents={}) {
     let section = {clauses: []};
     if (Array.isArray(clauseAttrs)) {
       section = Section.create(sectionType, {
-        clauses: clauseAttrs.map(c => Clause.create(sectionType, c)),
+        clauses: clauseAttrs.map(clause => Clause.create(sectionType, clause, customEvents)),
       });
     } else if (typeof clauseAttrs === `object` && Array.isArray(clauseAttrs.clauses)) {
       section = Section.create(sectionType, extend(clauseAttrs, {
-        clauses: clauseAttrs.clauses.map(c => Clause.create(sectionType, c)),
+        clauses: clauseAttrs.clauses.map(clause => Clause.create(sectionType, clause, customEvents)),
       }));
     }
     return section;

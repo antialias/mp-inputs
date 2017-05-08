@@ -22,9 +22,9 @@ const TIME_UNIT_LIST = [
 ];
 
 export class Clause {
-  static create(sectionType, attrs) {
+  static create(sectionType, attrs, customEvents={}) {
     switch (sectionType) {
-      case `show`: return new ShowClause(attrs);
+      case `show`: return new ShowClause(attrs, customEvents);
       case `group`: return new GroupClause(attrs);
       case `filter`: return new FilterClause(attrs);
       case `time`: return new TimeClause(attrs);
@@ -102,11 +102,18 @@ export class EventsPropertiesClause extends Clause {
 }
 
 export class ShowClause extends EventsPropertiesClause {
-  constructor(attrs={}) {
+  constructor(attrs={}, customEvents={}) {
     super(...arguments);
     this.math = attrs.math || `total`;
     this.property = attrs.property || null;
-    this.value = this.value || null;
+
+    if (this.resourceType === Clause.RESOURCE_TYPE_EVENTS) {
+      if (this.value && this.value.custom) {
+        // If this is a custom event, pull latest data from the custom events cache
+        // in case it has been modified since the last time the report was saved.
+        this.value = extend(this.value, customEvents[this.value.id]);
+      }
+    }
   }
 
   get attrs() {
