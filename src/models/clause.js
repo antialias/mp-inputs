@@ -102,7 +102,7 @@ export class EventsPropertiesClause extends Clause {
 }
 
 export class ShowClause extends EventsPropertiesClause {
-  constructor(attrs={}, customEvents={}) {
+  constructor(attrs={}, customEventsIdMap={}) {
     super(...arguments);
     this.math = attrs.math || `total`;
     this.property = attrs.property || null;
@@ -111,7 +111,7 @@ export class ShowClause extends EventsPropertiesClause {
       if (this.value && this.value.custom) {
         // If this is a custom event, pull latest data from the custom events cache
         // in case it has been modified since the last time the report was saved.
-        this.value = extend(this.value, customEvents[this.value.id]);
+        this.value = extend(this.value, customEventsIdMap[this.value.id]);
       }
     }
   }

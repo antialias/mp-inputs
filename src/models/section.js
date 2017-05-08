@@ -39,18 +39,23 @@ export class Section {
     }
   }
 
-  static deserialize(sectionType, clauseAttrs, customEvents={}) {
-    let section = {clauses: []};
+  static deserialize(sectionType, clauseAttrs, customEventsIdMap={}) {
+    let clauses;
+
     if (Array.isArray(clauseAttrs)) {
-      section = Section.create(sectionType, {
-        clauses: clauseAttrs.map(clause => Clause.create(sectionType, clause, customEvents)),
-      });
+      clauses = clauseAttrs;
     } else if (typeof clauseAttrs === `object` && Array.isArray(clauseAttrs.clauses)) {
-      section = Section.create(sectionType, extend(clauseAttrs, {
-        clauses: clauseAttrs.clauses.map(clause => Clause.create(sectionType, clause, customEvents)),
-      }));
+      clauses = clauseAttrs.clauses;
     }
-    return section;
+
+    if (clauses) {
+      return Section.create(sectionType, extend(clauseAttrs, {
+        // pass down custom events data so clauses can get the latest version of each custom event
+        clauses: clauses.map(clause => Clause.create(sectionType, clause, customEventsIdMap)),
+      }));
+    } else {
+      return {clauses: []};
+    }
   }
 
   create() {

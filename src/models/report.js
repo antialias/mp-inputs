@@ -33,8 +33,9 @@ export default class Report {
     }
   }
 
-  clone(customEvents={}) {
-    return Report.deserialize(this.serialize(), customEvents);
+  clone(customEventsIdMap={}) {
+    // pass down custom events data so clauses can get the latest version of each custom event
+    return Report.deserialize(this.serialize(), customEventsIdMap);
   }
 
   static deserialize(data, customEvents={}) {

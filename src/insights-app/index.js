@@ -116,7 +116,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
           }
         }
         if (parsedURL) {
-          const report = Report.deserialize(extend(this.defaultReportState(), parsedURL), this.customEventsMap);
+          // pass down custom events data so clauses can get the latest version of each custom event
+          const report = Report.deserialize(extend(this.defaultReportState(), parsedURL), this.customEventsIdMap);
           if (report && report.valid) {
             return extend(stateUpdate, this.loadReport(report));
           }
@@ -341,7 +342,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.shouldViewOnboarding = this.mpContext.flags && !this.mpContext.flags.VIEWED_INSIGHTS_INTRO;
     this.standalone = this.mpContext.standalone;
     this.customEventsList = this.mpContext.customEvents || [];
-    this.customEventsMap = this.customEventsList.length ? Object.assign(...this.customEventsList.map(ce => ({[ce.id]: ce}))) : {};
+    this.customEventsIdMap = this.customEventsList.length ? Object.assign(...this.customEventsList.map(ce => ({[ce.id]: ce}))) : {};
     this.hasWritePermissions = !this.mpContext.hasPermissions || this.mpContext.permissions.includes(`write_insights`);
     this.eventsPlan = {cap: FEATURE_GATES_UNLIMITED};
     this.peoplePlan = {cap: FEATURE_GATES_UNLIMITED};
@@ -567,12 +568,20 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   loadReport(report, {trackLoading=false}={}) {
-    const stateUpdate = extend(this.resettableState, report ? {report: report.clone(this.customEventsMap)} : {});
+    let stateUpdate = this.resettableState;
+
+    if (report) {
+      // pass down custom events data so clauses can get the latest version of each custom event
+      stateUpdate = extend(stateUpdate, {report: report.clone(this.customEventsIdMap)});
+    }
+
     this.update(stateUpdate);
     this.resetTopQueries();
+
     if (trackLoading) {
       this.trackEvent(`Load Report`, report ? report.toTrackingData() : {});
     }
+
     return stateUpdate;
   }
 
