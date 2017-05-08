@@ -399,21 +399,20 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         topPeopleProperties: new TopPeoplePropertiesQuery(apiAttrs),
         topPeoplePropertyValues: new TopPeoplePropertyValuesQuery(apiAttrs),
         topPropertyValuesCache: new QueryCache(),
-        segmentation: new SegmentationQueryOldApi(apiAttrs, {
-          customEvents: this.customEventsList,
-          utcOffset: this.getUtcOffset(),
-        }),
+        segmentation: new SegmentationQueryNewApi(apiAttrs, {utcOffset: this.getUtcOffset()}),
         segmentationCache: new QueryCache(),
       };
 
       // TODO DEBUG CODE - remove when we switch fully to new Insights API
-      if (this.useNewApi || this.compareApis) {
-        this.queries.oldApiSegmentation = this.queries.segmentation;
-        this.queries.segmentation = new SegmentationQueryNewApi(apiAttrs);
+      if (this.useOldApi || this.compareApis) {
+        this.queries.oldApiSegmentation = new SegmentationQueryOldApi(apiAttrs, {
+          customEvents: this.customEvents,
+          utcOffset: this.getUtcOffset(),
+        });
       }
 
-      if (this.newApiBackground) {
-        this.queries.newApiSegmentation = new SegmentationQueryNewApi(apiAttrs);
+      if (this.useOldApi) {
+        this.queries.segmentation = this.queries.oldApiSegmentation;
       }
       // END DEBUG CODE
     }
@@ -1276,7 +1275,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       .then(() => {
         const isChangingToLineChart = chartType === `line` && [`bar`, `table`].includes(this.state.report.displayOptions.chartType);
         const isChangingFromLineChart = [`bar`, `table`].includes(chartType) && this.state.report.displayOptions.chartType === `line`;
-        return (isChangingToLineChart || isChangingFromLineChart) && this.query(displayOptions);
+        return (isChangingToLineChart || isChangingFromLineChart) && this.query({displayOptions, useCache: displayOptions.useCache});
       })
       .then(() => {
         const shouldResetSorting = chartType === `bar` && displayOptions.plotStyle === `stacked` && this.state.report.sorting.bar.sortBy === `value`;
@@ -1309,15 +1308,11 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.update({toastTimer: null});
   }
 
-  // TOOD epurcer - confusing how/why we pass display options in here, refactor when we refactor query code for new api
-  query(displayOptions={}) {
+  query({useCache=false, displayOptions={}}={}) {
     if (this.canMakeQueries()) {
       const reportTrackingData = this.state.report.toTrackingData();
-      const query = this.queries.segmentation.build(this.state, {
-        displayOptions: extend({useCache: true}, displayOptions),
-        projectUtcOffset: this.getUtcOffset(),
-      }).query;
-      const cachedResult = displayOptions.useCache && this.queries.segmentationCache.get(query);
+      const query = this.queries.segmentation.build(this.state, {displayOptions}).query;
+      const cachedResult = useCache && this.queries.segmentationCache.get(query);
       const cacheExpiry = 10; // seconds
 
       if (!cachedResult) {
@@ -1341,7 +1336,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
           newApiResult: new Result({headers: [], series: {}}),
           newApiQueryTimeMs: null,
         });
-        this.queries.oldApiSegmentation.build(this.state, displayOptions).run().then(result => {
+        this.queries.oldApiSegmentation.build(this.state, {displayOptions}).run().then(result => {
           console.info(`Old JQL query result:`);
           console.info(result);
           this.update({
@@ -1350,10 +1345,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
             result: this.state.showingOldApiResult ? result : this.state.newApiResult,
           });
         });
-      }
-
-      if (this.newApiBackground) {
-        this.queries.newApiSegmentation.build(this.state, displayOptions).run();
       }
       // END DEBUG CODE
 

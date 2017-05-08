@@ -12,7 +12,7 @@ export default class SegmentationQuery extends BaseQuery {
     return `api/2.0/insights`;
   }
 
-  buildQuery(state, {displayOptions, projectUtcOffset}) {
+  buildQuery(state, {displayOptions={}}={}) {
     const sections = state.report.sections;
     const isPeopleOnly = sections.show.clauses.every(clause =>
       clause.value.resourceType === Clause.RESOURCE_TYPE_PEOPLE
@@ -23,7 +23,6 @@ export default class SegmentationQuery extends BaseQuery {
 
     query.displayOptions = extend(query.displayOptions, displayOptions);
     query.isPeopleTimeSeries = isPeopleTimeSeries;
-    query.projectUtcOffset = projectUtcOffset;
 
     return query;
   }
@@ -50,7 +49,9 @@ export default class SegmentationQuery extends BaseQuery {
       if (momentKey.isValid()) {
         // offset times by the diff between project and local timezone
         // to trick Highcharts into displaying data in project time
-        momentKey.add(this.query.projectUtcOffset - momentKey.utcOffset(), `minutes`);
+        const projectOffset = this.query.utcOffset;
+        const localOffset = momentKey.utcOffset();
+        momentKey.add(projectOffset - localOffset, `minutes`);
 
         const timestampKey = momentKey.valueOf();
         return [timestampKey, val];
