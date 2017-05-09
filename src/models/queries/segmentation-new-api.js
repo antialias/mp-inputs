@@ -38,6 +38,8 @@ export default class SegmentationQuery extends BaseQuery {
     //        format differences here. Updates to chart render code will be made
     //        in a separate refactor.
 
+    results = results || {};
+
     results.series = transformLeaves(results.series, (key, val) => {
       // round numeric values to two decimal places
       if (typeof val === `number` && isFinite(val)) {
@@ -67,6 +69,6 @@ export default class SegmentationQuery extends BaseQuery {
 
   handleFetchError(error, url, params) {
     super.handleFetchError(...arguments);
-    rollbar.error(`New Insights API RequestError`, {error, url, params});
+    rollbar.error(`New Insights API RequestError`, {error, url, params: this.buildParams()});
   }
 }
