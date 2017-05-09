@@ -358,7 +358,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         customEventsIdMap[ce.id] = ce;
       }
       if (ce.name) {
-        customEventsIdMap[ce.name] = name;
+        customEventsNameMap[ce.name] = ce;
       }
     });
     // provide method of pulling latest custom event data in case a custom event was modified since the last time the report was saved
