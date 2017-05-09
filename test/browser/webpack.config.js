@@ -17,6 +17,8 @@ var webpackConfig = {
     filename: 'bundle.js',
     pathinfo: true,
   },
+  debug: true,
+  devtool: !!process.env.NO_SOURCE_MAP ? null : 'source-map',
   module: {
     loaders: [
       {
