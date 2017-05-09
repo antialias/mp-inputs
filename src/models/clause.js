@@ -22,9 +22,9 @@ const TIME_UNIT_LIST = [
 ];
 
 export class Clause {
-  static create(sectionType, attrs, customEvents={}) {
+  static create(sectionType, attrs, syncCustomEvent=null) {
     switch (sectionType) {
-      case `show`: return new ShowClause(attrs, customEvents);
+      case `show`: return new ShowClause(attrs, syncCustomEvent);
       case `group`: return new GroupClause(attrs);
       case `filter`: return new FilterClause(attrs);
       case `time`: return new TimeClause(attrs);
