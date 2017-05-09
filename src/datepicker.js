@@ -1,6 +1,6 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 
-import { formatDate, localizedDate, normalizeDateRange, normalizeDateStrings } from '../../util';
+import {formatDate, localizedDate, normalizeDateRange, normalizeDateStrings} from '../../util';
 
 import template from './datepicker.jade';
 import './datepicker.styl';

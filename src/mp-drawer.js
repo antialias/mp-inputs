@@ -1,4 +1,4 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 
 import css from './mp-drawer.styl';
 import template from './mp-drawer.jade';
