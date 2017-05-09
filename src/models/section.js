@@ -39,7 +39,7 @@ export class Section {
     }
   }
 
-  static deserialize(sectionType, clauseAttrs, customEventsIdMap={}) {
+  static deserialize(sectionType, clauseAttrs, syncCustomEvent=null) {
     let clauses;
 
     if (Array.isArray(clauseAttrs)) {
@@ -50,8 +50,8 @@ export class Section {
 
     if (clauses) {
       return Section.create(sectionType, extend(clauseAttrs, {
-        // pass down custom events data so clauses can get the latest version of each custom event
-        clauses: clauses.map(clause => Clause.create(sectionType, clause, customEventsIdMap)),
+        // pass down custom event sync function so clauses can get the latest version of each custom event
+        clauses: clauses.map(clause => Clause.create(sectionType, clause, syncCustomEvent)),
       }));
     } else {
       return {clauses: []};

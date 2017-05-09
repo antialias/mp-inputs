@@ -102,17 +102,15 @@ export class EventsPropertiesClause extends Clause {
 }
 
 export class ShowClause extends EventsPropertiesClause {
-  constructor(attrs={}, customEventsIdMap={}) {
+  constructor(attrs={}, syncCustomEvent=null) {
     super(...arguments);
     this.math = attrs.math || `total`;
     this.property = attrs.property || null;
 
-    if (this.resourceType === Clause.RESOURCE_TYPE_EVENTS) {
-      if (this.value && this.value.custom) {
-        // If this is a custom event, pull latest data from the custom events cache
-        // in case it has been modified since the last time the report was saved.
-        this.value = extend(this.value, customEventsIdMap[this.value.id]);
-      }
+    if (this.value && this.value.custom && syncCustomEvent) {
+      // If this is a custom event, pull latest data from the custom events list
+      // in case it has been modified since the last time the report was saved.
+      this.value = syncCustomEvent(this.value);
     }
   }
 

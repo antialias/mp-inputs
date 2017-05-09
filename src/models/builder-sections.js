@@ -17,11 +17,11 @@ export default class BuilderSections {
     this.time = attrs.time || new TimeSection();
   }
 
-  static deserialize(attrs, customEventsIdMap={}) {
+  static deserialize(attrs, syncCustomEvent=null) {
     return new BuilderSections(
       mapValues(attrs, (clauseAttrs, sectionType) =>
-        // pass down custom events data so clauses can get the latest version of each custom event
-        Section.deserialize(sectionType, clauseAttrs, customEventsIdMap)
+        // pass down custom event sync function so clauses can get the latest version of each custom event
+        Section.deserialize(sectionType, clauseAttrs, syncCustomEvent)
       )
     );
   }

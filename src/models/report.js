@@ -33,14 +33,14 @@ export default class Report {
     }
   }
 
-  clone(customEventsIdMap={}) {
-    // pass down custom events data so clauses can get the latest version of each custom event
-    return Report.deserialize(this.serialize(), customEventsIdMap);
+  clone(syncCustomEvent=null) {
+    // pass down custom event sync function so clauses can get the latest version of each custom event
+    return Report.deserialize(this.serialize(), syncCustomEvent);
   }
 
-  static deserialize(data, customEvents={}) {
+  static deserialize(data, syncCustomEvent=null) {
     return new Report(extend(data, {
-      sections: BuilderSections.deserialize(data.sections, customEvents),
+      sections: BuilderSections.deserialize(data.sections, syncCustomEvent),
       legend: new Legend(data.legend),
     }));
   }

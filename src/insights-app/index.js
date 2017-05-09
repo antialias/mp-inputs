@@ -116,8 +116,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
           }
         }
         if (parsedURL) {
-          // pass down custom events data so clauses can get the latest version of each custom event
-          const report = Report.deserialize(extend(this.defaultReportState(), parsedURL), this.customEventsIdMap);
+          // pass down custom event sync function so clauses can get the latest version of each custom event
+          const report = Report.deserialize(extend(this.defaultReportState(), parsedURL), this.syncCustomEvent);
           if (report && report.valid) {
             return extend(stateUpdate, this.loadReport(report));
           }
@@ -341,8 +341,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
     this.shouldViewOnboarding = this.mpContext.flags && !this.mpContext.flags.VIEWED_INSIGHTS_INTRO;
     this.standalone = this.mpContext.standalone;
-    this.customEventsList = this.mpContext.customEvents || [];
-    this.customEventsIdMap = this.customEventsList.length ? Object.assign(...this.customEventsList.map(ce => ({[ce.id]: ce}))) : {};
     this.hasWritePermissions = !this.mpContext.hasPermissions || this.mpContext.permissions.includes(`write_insights`);
     this.eventsPlan = {cap: FEATURE_GATES_UNLIMITED};
     this.peoplePlan = {cap: FEATURE_GATES_UNLIMITED};
@@ -351,6 +349,20 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.accessToken = this.mpContext.accessToken;
     this.dashboardTags = this.mpContext.dashboardTags || [];
     this.bookmarks = this.mpContext.bookmarks || [];
+
+    this.customEvents = this.mpContext.customEvents || [];
+    const customEventsIdMap = {};
+    const customEventsNameMap = {};
+    this.customEvents.forEach(ce => {
+      if (ce.id) {
+        customEventsIdMap[ce.id] = ce;
+      }
+      if (ce.name) {
+        customEventsIdMap[ce.name] = name;
+      }
+    });
+    // provide method of pulling latest custom event data in case a custom event was modified since the last time the report was saved
+    this.syncCustomEvent = ce => extend(ce, customEventsIdMap[ce.id] || customEventsNameMap[ce.name]);
 
     this.updateCanAddBookmark = () => {
       new Promise(resolve => {
@@ -570,8 +582,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     let stateUpdate = this.resettableState;
 
     if (report) {
-      // pass down custom events data so clauses can get the latest version of each custom event
-      stateUpdate = extend(stateUpdate, {report: report.clone(this.customEventsIdMap)});
+      // pass down custom event sync function so clauses can get the latest version of each custom event
+      stateUpdate = extend(stateUpdate, {report: report.clone(this.syncCustomEvent)});
     }
 
     this.update(stateUpdate);
@@ -886,7 +898,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         this.update({
           topEvents: topEvents
             .map(ev => ({name: ev, custom: false}))
-            .concat(this.customEventsList.map(ce => Object.assign(ce, {custom: true}))),
+            .concat(this.customEvents.map(ce => Object.assign(ce, {custom: true}))),
         });
       });
 
