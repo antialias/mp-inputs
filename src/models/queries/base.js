@@ -97,7 +97,7 @@ export default class BaseQuery {
           return {error: response.statusText};
         }
       })
-      .catch(err => this.handleFetchError(err, url, params));
+      .catch(err => this.handleFetchError(err, url));
   }
 
   handleFetchError(error, url) {

@@ -67,7 +67,7 @@ export default class SegmentationQuery extends BaseQuery {
     return new Result(results);
   }
 
-  handleFetchError(error, url, params) {
+  handleFetchError(error, url) {
     super.handleFetchError(...arguments);
     rollbar.error(`New Insights API RequestError`, {error, url, params: this.buildParams()});
   }
