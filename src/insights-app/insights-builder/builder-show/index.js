@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { Component } from 'panel';
+import {Component} from 'panel';
 
 import {
   extend,
@@ -7,8 +7,8 @@ import {
   renameProperty,
 } from '../../../util';
 
-import { EditControl } from '../edit-control';
-import { Clause, ShowClause } from '../../../models/clause';
+import {EditControl} from '../edit-control';
+import {Clause, ShowClause} from '../../../models/clause';
 
 import './builder-screen-people';
 import './builder-screen-event-operator';

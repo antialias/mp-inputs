@@ -1,4 +1,4 @@
-import { BuilderScreenBase } from '../builder-pane/builder-screen-base';
+import {BuilderScreenBase} from '../builder-pane/builder-screen-base';
 import {
   extend,
   indexSectionLists,

@@ -13,7 +13,7 @@ import {
   lexicalCompose,
 } from 'mixpanel-common/util/function';
 
-import { localizedDate } from 'mixpanel-common/util/date';
+import {localizedDate} from 'mixpanel-common/util/date';
 
 const CHART_OPTIONS = {
   bar: {

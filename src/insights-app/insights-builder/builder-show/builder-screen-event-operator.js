@@ -1,6 +1,6 @@
-import { BuilderScreenBase } from '../builder-pane/builder-screen-base';
-import { ShowClause } from '../../../models/clause';
-import { extend } from '../../../util';
+import {BuilderScreenBase} from '../builder-pane/builder-screen-base';
+import {ShowClause} from '../../../models/clause';
+import {extend} from '../../../util';
 
 import template from './builder-screen-event-operator.jade';
 

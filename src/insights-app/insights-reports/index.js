@@ -5,9 +5,9 @@ import {
   mapArguments,
 } from 'mixpanel-common/util/function';
 import moment from 'moment';
-import { Component } from 'panel';
+import {Component} from 'panel';
 
-import { extend, stringFilterMatches } from '../../util';
+import {extend, stringFilterMatches} from '../../util';
 
 import '../widgets/mp-drawer';
 

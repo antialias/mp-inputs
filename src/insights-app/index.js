@@ -3,18 +3,18 @@ import isEqual from 'lodash/isEqual';
 import kebabCase from 'lodash/kebabCase';
 import MPApp from 'mixpanel-common/report/mp-app';
 import Persistence from 'mixpanel-common/report/persistence';
-import { commaizeNumber, extend } from 'mixpanel-common/util';
+import {commaizeNumber, extend} from 'mixpanel-common/util';
 import * as util from '../util';
 
-import { mixpanel, rollbar } from '../tracking';
+import {mixpanel, rollbar} from '../tracking';
 
 import BuilderSections from '../models/builder-sections';
-import { FilterSection, GroupSection, ShowSection, TimeSection } from '../models/section';
-import { Clause, GroupClause, ShowClause, TimeClause } from '../models/clause';
+import {FilterSection, GroupSection, ShowSection, TimeSection} from '../models/section';
+import {Clause, GroupClause, ShowClause, TimeClause} from '../models/clause';
 import Legend from '../models/legend';
 import TopEventsQuery from '../models/queries/top-events';
-import { TopEventPropertiesQuery, TopPeoplePropertiesQuery } from '../models/queries/top-properties';
-import { TopEventPropertyValuesQuery, TopPeoplePropertyValuesQuery } from '../models/queries/top-property-values';
+import {TopEventPropertiesQuery, TopPeoplePropertiesQuery} from '../models/queries/top-properties';
+import {TopEventPropertyValuesQuery, TopPeoplePropertyValuesQuery} from '../models/queries/top-property-values';
 import SegmentationQueryOldApi from '../models/queries/segmentation';
 import SegmentationQueryNewApi from '../models/queries/segmentation-new-api';
 import QueryCache from '../models/queries/query-cache';

@@ -1,6 +1,6 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 
-import { extend } from '../../../util';
+import {extend} from '../../../util';
 
 import template from './index.jade';
 import './index.styl';

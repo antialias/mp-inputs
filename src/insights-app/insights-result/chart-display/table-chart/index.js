@@ -1,10 +1,10 @@
 /* global $ */
 
-import { Component } from 'panel';
+import {Component} from 'panel';
 import WebComponent from 'webcomponent';
 
 import * as util from '../../../../util';
-import { nestedObjectToTableData } from '../../../../util/chart';
+import {nestedObjectToTableData} from '../../../../util/chart';
 
 import template from './index.jade';
 import './index.styl';

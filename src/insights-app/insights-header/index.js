@@ -1,8 +1,8 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 
 
-import { downloadLocalCSVData, renameEvent, renameProperty } from '../../util';
-import { dataToCSV } from '../../util/csv';
+import {downloadLocalCSVData, renameEvent, renameProperty} from '../../util';
+import {dataToCSV} from '../../util/csv';
 
 import './insights-title-input';
 

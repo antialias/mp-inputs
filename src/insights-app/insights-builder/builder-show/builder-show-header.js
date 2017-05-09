@@ -1,6 +1,6 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 
-import { ShowClause } from '../../../models/clause';
+import {ShowClause} from '../../../models/clause';
 
 import template from './builder-show-header.jade';
 

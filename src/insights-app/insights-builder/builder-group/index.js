@@ -1,13 +1,13 @@
 import isEqual from 'lodash/isEqual';
-import { Component } from 'panel';
+import {Component} from 'panel';
 
 import {
   extend,
   renameProperty,
 } from '../../../util';
 
-import { EditControl } from '../edit-control';
-import { GroupClause, ShowClause } from '../../../models/clause';
+import {EditControl} from '../edit-control';
+import {GroupClause, ShowClause} from '../../../models/clause';
 
 import './builder-screen-group-datetime-options';
 import './builder-screen-group-properties';

@@ -1,6 +1,6 @@
-import { BuilderScreenBase } from '../builder-pane/builder-screen-base';
-import { TimeClause } from '../../../models/clause';
-import { extend, MS_BY_UNIT } from '../../../util';
+import {BuilderScreenBase} from '../builder-pane/builder-screen-base';
+import {TimeClause} from '../../../models/clause';
+import {extend, MS_BY_UNIT} from '../../../util';
 
 import template from './builder-screen-time.jade';
 import './builder-screen-time.styl';

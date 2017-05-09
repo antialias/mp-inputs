@@ -3,7 +3,7 @@ import {
   replaceByIndex,
   removeByIndex,
 } from 'mixpanel-common/util';
-import { debug } from 'mixpanel-common/report/util';
+import {debug} from 'mixpanel-common/report/util';
 
 import {
   Clause,
@@ -12,7 +12,7 @@ import {
   FilterClause,
   TimeClause,
 } from './clause';
-import { extend } from '../util';
+import {extend} from '../util';
 
 export class Section {
   constructor(attrs={}) {
@@ -22,7 +22,7 @@ export class Section {
   }
 
   get attrs() {
-    const { clauses } = this;
+    const {clauses} = this;
     return {clauses};
   }
 

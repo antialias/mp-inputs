@@ -1,5 +1,5 @@
-import { extend, pick } from 'mixpanel-common/util';
-import { debug } from 'mixpanel-common/report/util';
+import {extend, pick} from 'mixpanel-common/util';
+import {debug} from 'mixpanel-common/report/util';
 
 const TYPE_FORMAT_NAME = {
   'show': `Compare`,
@@ -83,7 +83,7 @@ export class EventsPropertiesClause extends Clause {
   }
 
   get attrs() {
-    const { value, resourceType, search } = this;
+    const {value, resourceType, search} = this;
     return extend(super.attrs, {value, resourceType, search});
   }
 
@@ -276,7 +276,7 @@ export class TimeClause extends Clause {
     super(...arguments);
 
     if (attrs.range) {
-      let { unit, value } = TimeClause.rangeToUnitValue(attrs.range);
+      let {unit, value} = TimeClause.rangeToUnitValue(attrs.range);
 
       this.unit = unit;
       this.value = value;
@@ -287,7 +287,7 @@ export class TimeClause extends Clause {
   }
 
   get attrs() {
-    const { unit, value } = this;
+    const {unit, value} = this;
     return {unit, value};
   }
 

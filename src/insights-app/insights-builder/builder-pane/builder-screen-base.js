@@ -1,4 +1,4 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 import throttle from 'lodash/throttle';
 import {
   defaultOrdering,
@@ -6,7 +6,7 @@ import {
   mapArguments,
 } from 'mixpanel-common/util/function';
 
-import { Clause, GroupClause, ShowClause } from '../../../models/clause';
+import {Clause, GroupClause, ShowClause} from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
 import {
   extend,

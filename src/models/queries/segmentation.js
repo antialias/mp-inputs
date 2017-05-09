@@ -1,8 +1,8 @@
 import moment from 'moment';
 
 import BaseQuery from './base';
-import { GroupClause, ShowClause } from '../clause';
-import { FilterSection } from '../section';
+import {GroupClause, ShowClause} from '../clause';
+import {FilterSection} from '../section';
 import ExtremaJQLQuery from './extrema';
 import Result from '../result';
 import main from './segmentation.jql.js';

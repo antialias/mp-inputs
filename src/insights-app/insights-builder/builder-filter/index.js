@@ -1,7 +1,7 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 
-import { FilterClause } from '../../../models/clause';
-import { FilterSection } from '../../../models/section';
+import {FilterClause} from '../../../models/clause';
+import {FilterSection} from '../../../models/section';
 
 import './builder-filter-add-control';
 import './builder-filter-edit-control';

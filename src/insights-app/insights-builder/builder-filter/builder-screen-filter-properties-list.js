@@ -1,5 +1,5 @@
-import { BuilderScreenPropertiesBase } from '../builder-pane/builder-screen-properties-base';
-import { extend } from '../../../util';
+import {BuilderScreenPropertiesBase} from '../builder-pane/builder-screen-properties-base';
+import {extend} from '../../../util';
 
 import template from './builder-screen-filter-properties-list.jade';
 

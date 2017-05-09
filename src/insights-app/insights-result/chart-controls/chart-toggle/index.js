@@ -1,7 +1,7 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 
-import { Clause } from '../../../../models/clause';
-import { extend, pick } from '../../../../util';
+import {Clause} from '../../../../models/clause';
+import {extend, pick} from '../../../../util';
 import {
   formattedChartName,
   styleChoicesForChartType,

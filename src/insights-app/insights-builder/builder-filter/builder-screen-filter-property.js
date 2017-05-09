@@ -1,8 +1,8 @@
 // filter choices for one property
 // (screen 2 of filter)
 
-import { BuilderScreenBase } from '../builder-pane/builder-screen-base';
-import { FilterClause, TimeClause } from '../../../models/clause';
+import {BuilderScreenBase} from '../builder-pane/builder-screen-base';
+import {FilterClause, TimeClause} from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
 import {
   extend,

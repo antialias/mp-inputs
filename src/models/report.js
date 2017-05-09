@@ -2,7 +2,7 @@ import moment from 'moment';
 
 import BuilderSections from './builder-sections';
 import Legend from './legend';
-import { extend, pick } from '../util';
+import {extend, pick} from '../util';
 
 const BOOKMARK_ATTRS = [
   `id`,

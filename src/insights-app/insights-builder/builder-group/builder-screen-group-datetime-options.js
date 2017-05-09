@@ -1,6 +1,6 @@
-import { BuilderScreenBase } from '../builder-pane/builder-screen-base';
-import { TimeClause } from '../../../models/clause';
-import { capitalize, extend } from '../../../util';
+import {BuilderScreenBase} from '../builder-pane/builder-screen-base';
+import {TimeClause} from '../../../models/clause';
+import {capitalize, extend} from '../../../util';
 
 import template from './builder-screen-group-datetime-options.jade';
 

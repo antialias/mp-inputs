@@ -1,11 +1,11 @@
-import { extend } from 'mixpanel-common/util';
+import {extend} from 'mixpanel-common/util';
 import moment from 'moment';
 
 import BaseQuery from './base';
-import { Clause } from '../clause';
+import {Clause} from '../clause';
 import Result from '../result';
-import { rollbar } from '../../tracking';
-import { transformLeaves } from '../../util/chart';
+import {rollbar} from '../../tracking';
+import {transformLeaves} from '../../util/chart';
 
 export default class SegmentationQuery extends BaseQuery {
   buildUrl() {
@@ -51,7 +51,7 @@ export default class SegmentationQuery extends BaseQuery {
       if (momentKey.isValid()) {
         // offset times by the diff between project and local timezone
         // to trick Highcharts into displaying data in project time
-        const projectOffset = this.query.utcOffset;
+        const projectOffset = this.utcOffset;
         const localOffset = momentKey.utcOffset();
         momentKey.add(projectOffset - localOffset, `minutes`);
 

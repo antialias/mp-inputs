@@ -1,5 +1,5 @@
-import { BuilderScreenPropertiesBase } from './builder-screen-properties-base';
-import { extend } from '../../../util';
+import {BuilderScreenPropertiesBase} from './builder-screen-properties-base';
+import {extend} from '../../../util';
 
 export class BuilderScreenNumericPropertiesBase extends BuilderScreenPropertiesBase {
   get config() {

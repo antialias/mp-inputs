@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 import throttle from 'lodash/throttle';
-import { Component } from 'panel';
+import {Component} from 'panel';
 
 import {
   extend,
@@ -12,7 +12,7 @@ import {
   renameProperty,
 } from '../../../util';
 
-import { Clause, TimeClause } from '../../../models/clause';
+import {Clause, TimeClause} from '../../../models/clause';
 
 import './chart-legend';
 import './bar-chart';

@@ -1,4 +1,4 @@
-import { objToQueryString } from 'mixpanel-common/util';
+import {objToQueryString} from 'mixpanel-common/util';
 
 export default class BaseQuery {
   constructor(apiAttrs, options={}) {

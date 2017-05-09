@@ -1,6 +1,6 @@
 /* global requestAnimationFrame */
 
-import { Component } from 'panel';
+import {Component} from 'panel';
 
 import './builder-screen-contextual';
 import './builder-screen-sources';

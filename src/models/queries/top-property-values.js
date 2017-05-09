@@ -1,4 +1,4 @@
-import { sorted } from 'mixpanel-common/util';
+import {sorted} from 'mixpanel-common/util';
 
 import BaseQuery from './base';
 

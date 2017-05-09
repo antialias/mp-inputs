@@ -1,7 +1,7 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 import throttle from 'lodash/throttle';
 
-import { extend } from '../../../util';
+import {extend} from '../../../util';
 
 import '../../widgets/resize-input';
 

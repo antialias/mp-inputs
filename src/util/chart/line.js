@@ -1,5 +1,5 @@
 /* global $ */
-import { numericComparator } from 'mixpanel-common/util/array';
+import {numericComparator} from 'mixpanel-common/util/array';
 
 /**
  * https://github.com/mixpanel/mixpanel-platform/blob/d171a3ec/js/ui/chart.js#L38-L54

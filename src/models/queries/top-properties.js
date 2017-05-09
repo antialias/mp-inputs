@@ -1,8 +1,8 @@
-import { extend, sorted } from 'mixpanel-common/util';
-import { renameProperty } from 'mixpanel-common/report/util';
+import {extend, sorted} from 'mixpanel-common/util';
+import {renameProperty} from 'mixpanel-common/report/util';
 
 import BaseQuery from './base';
-import { PROPERTY_TYPES } from '../clause.js';
+import {PROPERTY_TYPES} from '../clause.js';
 
 const BLACKLISTED_PROPERTIES = [
   `$transactions`, // transactions a special obj property used only for the Revenue report
@@ -15,7 +15,7 @@ class BaseTopPropertiesQuery extends BaseQuery {
 
   processResults(results) {
     const properties = Object.keys(results).map(name => {
-      const { count, type } = results[name];
+      const {count, type} = results[name];
       return {count, type, name, resourceType: this.resourceType};
     }).filter(prop => (
         PROPERTY_TYPES.includes(prop.type) &&

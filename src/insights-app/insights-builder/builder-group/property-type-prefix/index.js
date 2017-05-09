@@ -1,7 +1,7 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 
-import { getIconForPropertyType } from '../../../../util';
-import { GroupClause } from '../../../../models/clause';
+import {getIconForPropertyType} from '../../../../util';
+import {GroupClause} from '../../../../models/clause';
 
 import template from './index.jade';
 import './index.styl';

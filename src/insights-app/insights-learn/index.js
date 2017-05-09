@@ -1,4 +1,4 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 import 'mixpanel-common/widgets/tutorial-tooltip';
 
 import template from './index.jade';

@@ -1,7 +1,7 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 import throttle from 'lodash/throttle';
 
-import { GroupClause, ShowClause } from '../../models/clause';
+import {GroupClause, ShowClause} from '../../models/clause';
 
 import template from './builder-contextual-add-control.jade';
 import './builder-contextual-add-control.styl';

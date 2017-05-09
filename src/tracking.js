@@ -1,6 +1,6 @@
 /* global MIXPANEL_TOKEN, ROLLBAR_TOKEN */
 
-import { initMixpanel, initRollbar } from 'mixpanel-common/report/tracking-setup';
+import {initMixpanel, initRollbar} from 'mixpanel-common/report/tracking-setup';
 
 export const mixpanel = initMixpanel(MIXPANEL_TOKEN);
 export const rollbar = initRollbar(ROLLBAR_TOKEN);

@@ -1,7 +1,7 @@
-import { BuilderScreenBase } from './builder-screen-base';
-import { Clause } from '../../../models/clause';
+import {BuilderScreenBase} from './builder-screen-base';
+import {Clause} from '../../../models/clause';
 
-import { extend, indexSectionLists } from '../../../util';
+import {extend, indexSectionLists} from '../../../util';
 
 import template from './builder-screen-sources.jade';
 

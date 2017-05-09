@@ -1,9 +1,9 @@
 // Insights-specific utils
 import cloneDeep from 'lodash/cloneDeep';
-import { extend, nestedObjectDepth, objectFromPairs } from 'mixpanel-common/util';
+import {extend, nestedObjectDepth, objectFromPairs} from 'mixpanel-common/util';
 import moment from 'moment';
 
-import { GroupClause, ShowClause } from '../models/clause';
+import {GroupClause, ShowClause} from '../models/clause';
 
 export * from 'mixpanel-common/report/util';
 export * from 'mixpanel-common/util';

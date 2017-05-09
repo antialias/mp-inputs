@@ -1,6 +1,6 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 
-import { FilterClause } from '../../../models/clause';
+import {FilterClause} from '../../../models/clause';
 
 import template from './builder-filter-add-control.jade';
 

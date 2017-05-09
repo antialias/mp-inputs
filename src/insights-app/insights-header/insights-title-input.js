@@ -1,4 +1,4 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 
 import template from './insights-title-input.jade';
 import './insights-title-input.styl';

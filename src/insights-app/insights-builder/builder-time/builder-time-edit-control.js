@@ -8,8 +8,8 @@ import {
   stringFilterMatches,
 } from '../../../util';
 
-import { EditControl } from '../edit-control';
-import { TimeClause } from '../../../models/clause';
+import {EditControl} from '../edit-control';
+import {TimeClause} from '../../../models/clause';
 
 import '../../widgets/resize-date-input';
 

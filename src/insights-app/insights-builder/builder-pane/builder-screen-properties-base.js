@@ -1,7 +1,7 @@
-import { BuilderScreenBase } from './builder-screen-base';
-import { Clause, GroupClause, ShowClause } from '../../../models/clause';
+import {BuilderScreenBase} from './builder-screen-base';
+import {Clause, GroupClause, ShowClause} from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
-import { extend, indexSectionLists, sorted, renameProperty, unique } from '../../../util';
+import {extend, indexSectionLists, sorted, renameProperty, unique} from '../../../util';
 
 export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   get config() {

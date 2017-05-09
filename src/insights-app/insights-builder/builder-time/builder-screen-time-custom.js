@@ -1,5 +1,5 @@
-import { BuilderScreenBase } from '../builder-pane/builder-screen-base';
-import { TimeClause } from '../../../models/clause';
+import {BuilderScreenBase} from '../builder-pane/builder-screen-base';
+import {TimeClause} from '../../../models/clause';
 import {
   extend,
   formatDate,

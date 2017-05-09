@@ -1,7 +1,7 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 
-import { formattedChartName } from '../../util/chart';
-import { extend } from '../../util';
+import {formattedChartName} from '../../util/chart';
+import {extend} from '../../util';
 
 import './chart-controls';
 import './chart-display';

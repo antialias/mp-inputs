@@ -1,7 +1,7 @@
-import { BuilderScreenPropertiesBase } from '../builder-pane/builder-screen-properties-base';
-import { extend } from '../../../util';
+import {BuilderScreenPropertiesBase} from '../builder-pane/builder-screen-properties-base';
+import {extend} from '../../../util';
 
-import { Clause } from '../../../models/clause';
+import {Clause} from '../../../models/clause';
 
 import template from './builder-screen-group-properties.jade';
 

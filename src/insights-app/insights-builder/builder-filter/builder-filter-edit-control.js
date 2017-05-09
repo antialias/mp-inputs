@@ -1,7 +1,7 @@
-import { EditControl } from '../edit-control';
+import {EditControl} from '../edit-control';
 
-import { FilterClause, TimeClause } from '../../../models/clause';
-import { capitalize, renameProperty, parseDate, formatDate } from '../../../util';
+import {FilterClause, TimeClause} from '../../../models/clause';
+import {capitalize, renameProperty, parseDate, formatDate} from '../../../util';
 
 import './builder-filter-edit-control.styl';
 

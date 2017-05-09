@@ -1,6 +1,6 @@
-import { BuilderScreenBase } from './builder-screen-base';
-import { Clause, GroupClause, ShowClause } from '../../../models/clause';
-import { extend, indexSectionLists } from '../../../util';
+import {BuilderScreenBase} from './builder-screen-base';
+import {Clause, GroupClause, ShowClause} from '../../../models/clause';
+import {extend, indexSectionLists} from '../../../util';
 
 import template from './builder-screen-contextual.jade';
 

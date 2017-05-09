@@ -2,8 +2,8 @@ import 'mixpanel-common/components';
 import 'mixpanel-common/widgets';
 
 import MPContext from './mp-context';
-import { mixpanel, rollbar } from './tracking';
-import { parseURLQueryParams } from './util';
+import {mixpanel, rollbar} from './tracking';
+import {parseURLQueryParams} from './util';
 
 import './insights-app';
 

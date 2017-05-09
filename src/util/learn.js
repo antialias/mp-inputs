@@ -1,5 +1,5 @@
-import { ShowClause, GroupClause } from '../models/clause';
-import { extend } from '.';
+import {ShowClause, GroupClause} from '../models/clause';
+import {extend} from '.';
 
 function getShowClauseEvents(report) {
   return report.sections[ShowClause.TYPE].clauses

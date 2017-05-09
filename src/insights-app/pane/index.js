@@ -1,7 +1,7 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 
-import { ShowClause } from '../../models/clause';
-import { renameEvent, sorted, stringFilterMatches } from '../../util';
+import {ShowClause} from '../../models/clause';
+import {renameEvent, sorted, stringFilterMatches} from '../../util';
 
 import './focus-input';
 

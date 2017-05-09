@@ -1,6 +1,6 @@
 import BaseQuery from './base';
-import { Clause } from '../clause';
-import { extend, formatDate, pick } from '../../util';
+import {Clause} from '../clause';
+import {extend, formatDate, pick} from '../../util';
 
 import main from './extrema.jql.js';
 

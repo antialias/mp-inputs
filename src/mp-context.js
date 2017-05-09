@@ -1,6 +1,6 @@
 /* global API_LOCAL, mp */
 
-import { objToQueryString } from 'mixpanel-common/util';
+import {objToQueryString} from 'mixpanel-common/util';
 
 // TODO
 // clean up and consolidate this garbage with the OAuth API

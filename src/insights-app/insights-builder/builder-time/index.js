@@ -1,4 +1,4 @@
-import { Component } from 'panel';
+import {Component} from 'panel';
 
 import './builder-time-edit-control';
 import './builder-screen-time';
