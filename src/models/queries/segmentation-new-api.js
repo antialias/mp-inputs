@@ -21,6 +21,11 @@ export default class SegmentationQuery extends BaseQuery {
     const isPeopleTimeSeries = isPeopleOnly && propTypes[propTypes.length - 1] === `datetime`;
     const query = state.report.toBookmarkData();
 
+    // insights API takes determiner ("all" or "any") from the first filter clause
+    if (sections.filter.determiner && query.sections.filter.length) {
+      query.sections.filter[0].determiner = sections.filter.determiner;
+    }
+
     query.displayOptions = extend(query.displayOptions, displayOptions);
     query.isPeopleTimeSeries = isPeopleTimeSeries;
 
