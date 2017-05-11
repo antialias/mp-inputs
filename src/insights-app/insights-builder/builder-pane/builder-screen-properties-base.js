@@ -1,7 +1,9 @@
+import {defaultOrdering, mapArguments} from 'mixpanel-common/util/function';
+
 import {BuilderScreenBase} from './builder-screen-base';
 import {Clause, GroupClause, ShowClause} from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
-import {extend, getIconForPropertyType, renameProperty, sorted, unique} from '../../../util';
+import {extend, getIconForPropertyType, renameProperty, unique} from '../../../util';
 
 export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   get config() {
@@ -52,10 +54,8 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       .map(property => extend({
         label: renameProperty(property.name),
         icon: getIconForPropertyType(property.type),
-      }, property));
-    properties = sorted(properties, {
-      transform: prop => prop.label.toLowerCase(),
-    });
+      }, property))
+      .sort(mapArguments(defaultOrdering, prop => prop.label.toLowerCase()));
 
     if (this.prevIsLoading !== isLoading ||
         this.numProperties !== properties.length

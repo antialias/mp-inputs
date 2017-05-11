@@ -10,10 +10,9 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
     return {
       template,
       helpers: extend(super.config.helpers, {
-        getPropertySections: () => {
-          return this.processSections(this.getPropertySections());
-        },
-        clickedProperty: (ev, property) => {
+        getPropertySections: () => this.processSections(this.getPropertySections()),
+        clickedProperty: ev => {
+          const property = ev.detail.item;
           this.app.updateRecentProperties(property);
           const newClause = {
             propertyType: property.type,

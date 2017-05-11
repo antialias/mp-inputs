@@ -18,11 +18,12 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenNum
             isLoading: this.state.topPeopleProperties === BaseQuery.LOADING,
           }];
         },
-        clickedItem: (ev, item) => {
+        clickedItem: ev => {
+          const item = ev.detail.item;
           if (item.name === ShowClause.ALL_PEOPLE.name) {
             this.updateAndCommitStageClause({value: item, property: null});
           } else {
-            this.helpers.clickedProperty(ev, item);
+            this.helpers.clickedProperty(ev);
           }
         },
       }),

@@ -14,7 +14,7 @@ include ../mixins.jade
         'empty-message': $component.isShowingNonNumericProperties() ? `No properties available` : `No non-numeric properties available`,
       }
       on={
-        clickItem: ev => $helpers.clickedProperty(ev, ev.detail.item),
+        clickItem: $helpers.clickedProperty,
         draw: $helpers.updateRenderedSize,
       }
     )

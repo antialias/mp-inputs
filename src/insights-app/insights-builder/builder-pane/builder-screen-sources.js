@@ -29,11 +29,12 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
           return this.buildList();
         },
         updateRenderedSizeOnNextFrame: () => this.updateRenderedSizeOnNextFrame(),
-        clickedItem: (ev, item) => {
+        clickedItem: ev => {
+          const item = ev.detail.item;
           if (item.itemType === `event`) {
-            this.helpers.clickedEvent(item);
+            this.helpers.clickedEvent(ev);
           } else if (item.itemType === `property`) {
-            this.helpers.clickedProperty(ev, item);
+            this.helpers.clickedProperty(ev);
           }
         },
         shouldShowSourceUpsell: source => this.app.shouldUpsellForSource(source.resourceType),

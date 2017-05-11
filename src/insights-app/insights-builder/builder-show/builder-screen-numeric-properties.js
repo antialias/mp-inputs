@@ -23,7 +23,8 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
           return eventName ? renameEvent(eventName) : null;
         },
 
-        clickedProperty: (ev, property) => {
+        clickedProperty: ev => {
+          const property = ev.detail.item;
           this.updateAndCommitStageClause({property});
           this.app.updateBuilder({isContextualMenuOpen: false});
         },

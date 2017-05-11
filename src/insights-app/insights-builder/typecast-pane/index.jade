@@ -8,5 +8,5 @@ mp-drop-menu(
     attrs={
       sections: JSON.stringify([{items: $helpers.availableTypes()}]),
     }
-    on={clickItem: e => $helpers.clickedType(e.detail.item)}
+    on={clickItem: $helpers.clickedType}
   )

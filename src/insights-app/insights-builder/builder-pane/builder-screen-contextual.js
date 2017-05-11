@@ -50,9 +50,9 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
         clickedItem: ev => {
           const item = ev.detail.item;
           if (item.itemType === `event`) {
-            this.clickedEvent(item);
+            this.clickedEvent(ev);
           } else if (item.itemType === `property`) {
-            this.clickedProperty(null, item);
+            this.clickedProperty(ev);
           }
         },
       }),
@@ -101,7 +101,8 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
     }
   }
 
-  clickedProperty(ev, property) {
+  clickedProperty(ev) {
+    const property = ev.detail.item;
     this.app.startAddingClause(`group`);
     const newClause = {
       propertyType: property.type,
@@ -117,7 +118,8 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
     }
   }
 
-  clickedEvent(value) {
+  clickedEvent(ev) {
+    const value = ev.detail.item;
     this.app.startAddingClause(`show`);
     this.updateStageClause({value}, {shouldCommit: true, shouldStopEditing: true});
   }

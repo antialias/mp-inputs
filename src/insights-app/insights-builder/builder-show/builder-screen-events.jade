@@ -11,8 +11,8 @@ include ../mixins.jade
         'sections': JSON.stringify($helpers.getSections()),
       }
       on={
-        clickItem: ev => $helpers.clickedEvent(ev.detail.item),
-        clickPropertiesPill: ev => $helpers.clickedEventProperties(ev, ev.detail.item),
+        clickItem: $helpers.clickedEvent,
+        clickPropertiesPill: $helpers.clickedEventProperties,
         draw: $helpers.updateRenderedSize,
       }
     )

@@ -8,8 +8,9 @@ document.registerElement(`builder-screen-filter-properties-list`, class extends 
     return {
       template,
       helpers: extend(super.config.helpers, {
-        clickedProperty: (ev, property) => {
+        clickedProperty: ev => {
           ev.stopPropagation();
+          const property = ev.detail.item;
           this.app.updateRecentProperties(property);
           this.updateStageClause({
             filterType: property.type,

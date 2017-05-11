@@ -58,7 +58,7 @@ mixin property-screen-body(options)
         'sections': JSON.stringify(options.propertySections),
       }
       on={
-        clickItem: ev => options.clickedProperty(ev, ev.detail.item),
+        clickItem: options.clickedProperty,
         draw: $helpers.updateRenderedSize,
       }
     )

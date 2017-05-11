@@ -9,8 +9,8 @@ include ../mixins.jade
       }
       on={
         draw: $helpers.updateRenderedSizeOnNextFrame,
-        clickItem: ev => $helpers.clickedItem(ev, ev.detail.item),
-        clickPropertiesPill: ev => $helpers.clickedEventProperties(ev, ev.detail.item),
+        clickItem: $helpers.clickedItem,
+        clickPropertiesPill: $helpers.clickedEventProperties,
       }
     )
   else

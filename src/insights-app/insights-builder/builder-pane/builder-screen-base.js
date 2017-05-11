@@ -33,19 +33,22 @@ export class BuilderScreenBase extends Component {
   get config() {
     return {
       helpers: {
-        clickedEvent: value => {
+        clickedEvent: ev => {
+          const value = ev.detail.item;
           this.app.updateRecentEvents(value);
           this.updateAndCommitStageClause({value, property: null});
         },
-        clickedEventProperties: (ev, value) => {
+        clickedEventProperties: ev => {
           ev.stopPropagation();
+          const value = ev.detail.item;
           const isInContextualMenu = !!this.state.builderPane.isContextualMenuOpen;
           this.updateStageClause({value, property: null}, {shouldCommit: !isInContextualMenu});
           this.nextScreen(`builder-screen-numeric-properties`, {
             previousScreens: [`builder-screen-events`],
           });
         },
-        clickedProperty: (ev, property) => {
+        clickedProperty: ev => {
+          const property = ev.detail.item;
           const clauseAttrs = {
             property,
             value: ShowClause.ALL_PEOPLE,
