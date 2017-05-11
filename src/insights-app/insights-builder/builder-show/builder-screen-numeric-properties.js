@@ -11,7 +11,6 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
       template,
       helpers: extend(super.config.helpers, {
         getPropertySections: () => {
-          const selected = this.getAttribute(`selected`);
           return [{
             isLoading: this.isLoading(),
             items: this.getProperties(),
