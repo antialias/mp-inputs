@@ -8,6 +8,10 @@ export default class BaseQuery {
     this.accessToken = apiAttrs.accessToken;
     this.projectId = apiAttrs.projectId;
 
+    // TODO @evnp 5/16/17: TEMP SST DEMO CODE - pass dataset param if project feature flag "sst" is active
+    this.datasetName = apiAttrs.datasetName;
+    // END SST DEMO CODE
+
     if (!this.apiHost) {
       throw new Error(`apiHost required for Query!`);
     }
@@ -74,6 +78,12 @@ export default class BaseQuery {
   }
 
   fetch(endpoint, params, queryOptions) {
+    // TODO @evnp 5/16/17: TEMP SST DEMO CODE - pass dataset param if project feature flag "sst" is active
+    if (this.datasetName) {
+      params[`dataset_name`] = this.datasetName;
+    }
+    // END SST DEMO CODE
+
     let authHeader, url;
     if (this.apiSecret) {
       authHeader = `Basic ${btoa(this.apiSecret + `:`)}`;

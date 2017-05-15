@@ -321,11 +321,22 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   hasWhitelist(name) {
-    return this.mpContext && this.mpContext.whitelists && this.mpContext.whitelists.includes(name);
+    const whitelists = this.mpContext && this.mpContext.whitelists;
+    return whitelists && whitelists.includes(name);
+  }
+
+  hasProjectFeatureFlag(name) {
+    const flags = this.mpContext && this.mpContext.projectFeatureFlags;
+    return flags && flags.includes(name);
+  }
+
+  hasPermission(name) {
+    const permissions = this.hasProjectFeatureFlag(`permissions`) && this.mpContext.permissions;
+    return permissions && permissions.includes(name);
   }
 
   getFlag(name) {
-    return this.mpContext && this.mpContext.whitelists && this.mpContext.flags[name];
+    return this.mpContext && this.mpContext.flags && this.mpContext.flags[name];
   }
 
   getUtcOffset() {
@@ -339,9 +350,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   setMPContext(mpContext) {
     this.mpContext = mpContext;
 
-    this.shouldViewOnboarding = this.mpContext.flags && !this.mpContext.flags.VIEWED_INSIGHTS_INTRO;
+    this.shouldViewOnboarding = this.mpContext.flags && !this.getFlag(`VIEWED_INSIGHTS_INTRO`);
     this.standalone = this.mpContext.standalone;
-    this.hasWritePermissions = !this.mpContext.hasPermissions || this.mpContext.permissions.includes(`write_insights`);
+    this.hasWritePermissions = !this.hasProjectFeatureFlag(`permissions`) || this.hasPermission(`write_insights`);
     this.eventsPlan = {cap: FEATURE_GATES_UNLIMITED};
     this.peoplePlan = {cap: FEATURE_GATES_UNLIMITED};
     this.userID = this.mpContext.userID;
@@ -404,6 +415,14 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         apiHost: this.apiHost,
         apiSecret: this.apiSecret,
       };
+
+
+      // TODO @evnp 5/16/17: TEMP SST DEMO CODE - pass dataset param if project feature flag "sst" is active
+      if (this.hasProjectFeatureFlag(`sst`)) {
+        apiAttrs.datasetName = `salesforce`;
+      }
+      // END SST DEMO CODE
+
       this.queries = {
         topEvents: new TopEventsQuery(apiAttrs),
         topEventProperties: new TopEventPropertiesQuery(apiAttrs),
@@ -415,7 +434,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         segmentationCache: new QueryCache(),
       };
 
-      // TODO DEBUG CODE - remove when we switch fully to new Insights API
+      // TODO @evnp 5/16/17: TEMP DEBUG CODE - remove when we switch fully to new Insights API
       if (this.useOldApi || this.compareApis) {
         this.queries.oldApiSegmentation = new SegmentationQueryOldApi(apiAttrs, {
           customEvents: this.customEvents,
@@ -1338,7 +1357,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
       this.trackEvent(`Query Start`, extend(reportTrackingData, queryEventProperties));
 
-      // TODO DEBUG CODE - remove when we switch fully to new Insights API
+      // TODO @evnp 5/16/17: TEMP DEBUG CODE - remove when we switch fully to new Insights API
       const timer = new Date().getTime();
 
       if (this.compareApis) {
@@ -1377,7 +1396,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
             }),
           });
 
-          // TODO DEBUG CODE - remove when we switch fully to new Insights API
+          // TODO @evnp 5/16/17: TEMP DEBUG CODE - remove when we switch fully to new Insights API
           if (this.compareApis) {
             console.info(`New API query result:`);
             console.info(result);
@@ -1399,7 +1418,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     }
   }
 
-  // TODO DEBUG CODE - remove when we switch fully to new Insights API
+  // TODO @evnp 5/16/17: TEMP DEBUG CODE - remove when we switch fully to new Insights API
   toggleResult() {
     if (this.compareApis) {
       this.update({
