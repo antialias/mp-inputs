@@ -80,7 +80,7 @@ export default class BaseQuery {
   fetch(endpoint, params, queryOptions) {
     // TODO @evnp 5/16/17: TEMP SST DEMO CODE - pass dataset param if project feature flag "sst" is active
     if (this.datasetName) {
-      params[`dataset_name`] = this.datasetName;
+      params[`use_gcp`] = this.datasetName;
     }
     // END SST DEMO CODE
 
