@@ -16,7 +16,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
       helpers: extend(super.config.helpers, {
         getSections: () => {
           let topEvents = [];
-          if (this.state.topEvents !== TopEventsQuery.LOADING) {
+          if (this.state.topEvents && this.state.topEvents !== TopEventsQuery.LOADING) {
             topEvents = [
               extend(ShowClause.TOP_EVENTS, {isDisabled: this.state.learnActive}),
               extend(ShowClause.ALL_EVENTS, {isDisabled: this.state.learnActive}),

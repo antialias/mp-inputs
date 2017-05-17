@@ -5,7 +5,15 @@ import moment from 'moment';
 
 import {ShowClause} from '../models/clause';
 
+// TODO(mack): Explicitly import what's needed and remove * imports
 export * from 'mixpanel-common/report/util';
+export {
+  getIconForEvent,
+  getIconForPropertyType,
+  renameEvent,
+  renameProperty,
+  renamePropertyValue,
+} from 'mixpanel-common/report/util';
 export * from 'mixpanel-common/util';
 export * from 'mixpanel-common/util/string';
 export * from 'mixpanel-common/util/date';

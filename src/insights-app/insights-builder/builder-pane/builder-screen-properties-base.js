@@ -1,4 +1,4 @@
-import {defaultOrdering, mapArguments} from 'mixpanel-common/util/function';
+import {baseComparator} from 'mixpanel-common/util/array';
 
 import {BuilderScreenBase} from './builder-screen-base';
 import {Clause, GroupClause, ShowClause} from '../../../models/clause';
@@ -55,7 +55,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
         label: renameProperty(property.name),
         icon: getIconForPropertyType(property.type),
       }, property))
-      .sort(mapArguments(defaultOrdering, prop => prop.label.toLowerCase()));
+      .sort(baseComparator({transform: prop => prop.label.toLowerCase()}));
 
     if (this.prevIsLoading !== isLoading ||
         this.numProperties !== properties.length

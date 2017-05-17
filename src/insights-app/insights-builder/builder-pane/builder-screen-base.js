@@ -125,7 +125,8 @@ export class BuilderScreenBase extends Component {
   allEvents() {
     const mpEvents = this.state.topEvents === BaseQuery.LOADING ? [] : this.state.topEvents;
     return [
-      ...[ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS],
+      ShowClause.TOP_EVENTS,
+      ShowClause.ALL_EVENTS,
       ...sorted(mpEvents.map(event => extend({
         label: renameEvent(event.name),
         icon: getIconForEvent(event),

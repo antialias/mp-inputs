@@ -25,9 +25,7 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
           this.updateStageClause({resourceType, value: {}});
           this.nextScreen(`builder-screen-${resourceType}`);
         },
-        getSections: () => {
-          return this.buildList();
-        },
+        getSections: () => this.buildList(),
         updateRenderedSizeOnNextFrame: () => this.updateRenderedSizeOnNextFrame(),
         clickedItem: ev => {
           const item = ev.detail.item;

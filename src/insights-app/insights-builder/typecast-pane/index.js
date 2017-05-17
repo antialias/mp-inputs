@@ -20,13 +20,11 @@ document.registerElement(`typecast-pane`, class extends Component {
       helpers: {
         availableTypes: () => {
           const availableTypes = Array.from(new Set(GroupClause.PROPERTY_TYPECASTS.concat(this.getClausePropertyType())));
-          return availableTypes.map(type => {
-            return {
-              icon: getIconForPropertyType(type),
-              label: TYPE_FORMAT_MAP[type],
-              type,
-            };
-          });
+          return availableTypes.map(type => ({
+            icon: getIconForPropertyType(type),
+            label: TYPE_FORMAT_MAP[type],
+            type,
+          }));
         },
         clickedType: ev => {
           const item = ev.detail.item;
