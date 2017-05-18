@@ -419,7 +419,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
       // TODO @evnp 5/16/17: TEMP SST DEMO CODE - pass dataset param if project feature flag "sst" is active
       if (this.hasProjectFeatureFlag(`sst`)) {
-        apiAttrs.datasetName = `arb3:salesforce`;
+        apiAttrs.datasetName = this.mpContext.datasetName;
       }
       // END SST DEMO CODE
 

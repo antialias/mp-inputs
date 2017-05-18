@@ -42,6 +42,13 @@ export default class MPContext {
       this.utcOffset = mp.report.globals.utc_offset;
       this.whitelists = mp.report.globals.whitelists;
 
+      // TODO @evnp 5/16/17: TEMP SST DEMO CODE - pass dataset param if project feature flag "sst" is active
+      if (this.projectFeatureFlags.includes(`sst`)) {
+        const datasetMatch = window.location.href.match(`dataset_name=([^&]+)`);
+        this.datasetName = datasetMatch ? datasetMatch[1] : `salesforce`;
+      }
+      // END SST DEMO CODE
+
       // API access
       if (API_LOCAL) {
         this.apiHost = window.location.origin;
