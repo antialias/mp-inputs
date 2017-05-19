@@ -44,7 +44,7 @@ export default class MPContext {
 
       // TODO @evnp 5/16/17: TEMP SST DEMO CODE - pass dataset param if project feature flag "sst" is active
       if (this.projectFeatureFlags.includes(`sst`)) {
-        const datasetMatch = window.location.href.match(`dataset_name=([^&]+)`);
+        const datasetMatch = window.location.href.match(/dataset_name=(\w+)/);
         this.datasetName = datasetMatch ? datasetMatch[1] : `salesforce`;
       }
       // END SST DEMO CODE
