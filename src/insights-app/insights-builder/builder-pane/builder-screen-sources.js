@@ -47,6 +47,7 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
         label: `Events`,
         items: this.allEvents().map(event => {
           return extend(event, {
+            itemType: `event`,
             hasPropertiesPill: true,
             isPropertiesPillDisabled: this.state.learnActive,
           });
@@ -55,7 +56,10 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
       {
         label: `People properties`,
         items: this.allProperties(Clause.RESOURCE_TYPE_PEOPLE).map(property => {
-          return extend(property, {isDisabled: this.state.learnActive});
+          return extend(property, {
+            itemType: `property`,
+            isDisabled: this.state.learnActive,
+          });
         }),
       },
     ];

@@ -62,9 +62,15 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
   buildList() {
     const resourceTypes = this.state.report.sections.show.clauseResourceTypes();
     if (resourceTypes === ShowClause.RESOURCE_TYPE_EVENTS) {
-      const currLearnStep = getLearnStep(this.state.report, this.state.learnModalStepIndex);
-      const isGroupByDisabled = !!currLearnStep && currLearnStep.name !== `group-by`;
-      const isEventsDisabled = !!currLearnStep && currLearnStep.name !== `compare-event`;
+      let isGroupByDisabled = false;
+      let isEventsDisabled = false;
+      if (this.state.learnActive) {
+        const currLearnStep = getLearnStep(this.state.report, this.state.learnModalStepIndex);
+        if (currLearnStep) {
+          isGroupByDisabled = currLearnStep.name !== `group-by`;
+          isEventsDisabled = currLearnStep.name !== `compare-event`;
+        }
+      }
 
       return [
         {

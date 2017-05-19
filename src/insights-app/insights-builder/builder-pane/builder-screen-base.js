@@ -149,7 +149,7 @@ export class BuilderScreenBase extends Component {
       ...sorted(properties.map(property => extend({
         label: renameProperty(property.name),
         icon: getIconForPropertyType(property.type),
-      })), {transform: property => property.label.toLowerCase()}),
+      }, property)), {transform: property => property.label.toLowerCase()}),
     ];
   }
 
