@@ -11,6 +11,7 @@ import './builder-group';
 import './builder-pane';
 import './builder-show';
 import './builder-time';
+import './builder-dataset';
 import './typecast-pane';
 
 document.registerElement(`insights-builder`, class extends Component {

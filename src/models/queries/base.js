@@ -1,17 +1,19 @@
+/* global mp */
+
 import {objToQueryString} from 'mixpanel-common/util';
 
 export default class BaseQuery {
   constructor(apiAttrs, options={}) {
+    this.requestMethod = `POST`;
+    this.includeCredentials = false;
+
     this.query = null; // used to check for obsolete queries
+    this.datasetName = null; // use default mixpanel dataset
+
     this.apiHost = apiAttrs.apiHost;
     this.apiSecret = apiAttrs.apiSecret;
     this.accessToken = apiAttrs.accessToken;
     this.projectId = apiAttrs.projectId;
-
-    // TODO @evnp 5/16/17: TEMP SST DEMO CODE - pass dataset param if project feature flag "sst" is active
-    this.datasetName = apiAttrs.datasetName;
-    // END SST DEMO CODE
-
     if (!this.apiHost) {
       throw new Error(`apiHost required for Query!`);
     }
@@ -28,6 +30,10 @@ export default class BaseQuery {
 
   build(state, options) {
     this.query = this.buildQuery(state, options);
+
+    if (state && state.selectedDataset) {
+      this.datasetName = state.selectedDataset.datasetName;
+    }
     return this;
   }
 
@@ -78,11 +84,9 @@ export default class BaseQuery {
   }
 
   fetch(endpoint, params, queryOptions) {
-    // TODO @evnp 5/16/17: TEMP SST DEMO CODE - pass dataset param if project feature flag "sst" is active
     if (this.datasetName) {
       params[`dataset_name`] = this.datasetName;
     }
-    // END SST DEMO CODE
 
     let authHeader, url;
     if (this.apiSecret) {
@@ -92,22 +96,33 @@ export default class BaseQuery {
       authHeader = `Bearer ${this.accessToken}`;
       url = `${this.apiHost}/${endpoint}?project_id=${this.projectId}`;
     }
-    return fetch(url, Object.assign({
+
+    const fetchOptions = {
       headers: {
         Authorization: authHeader,
       },
-      method: `POST`,
-      body: objToQueryString(params),
-    }, queryOptions))
-      .then(response => {
-        if (response.ok || response.body) {
-          return response.json();
-        } else {
-          this.handleFetchError(response.statusText);
-          return {error: response.statusText};
-        }
-      })
-      .catch(err => this.handleFetchError(err, url));
+      method: this.requestMethod,
+    };
+
+    if (this.requestMethod === `POST`) {
+      fetchOptions.body = objToQueryString(params);
+    }
+
+    if (this.includeCredentials) {
+      fetchOptions.credentials = `include`;
+      fetchOptions.headers[`X-CSRFToken`] = mp.cookie.get(`csrftoken`);
+    }
+
+    return fetch(url, Object.assign(fetchOptions, queryOptions))
+    .then(response => {
+      if (response.ok || response.body) {
+        return response.json();
+      } else {
+        this.handleFetchError(response.statusText);
+        return {error: response.statusText};
+      }
+    })
+    .catch(err => this.handleFetchError(err, url));
   }
 
   handleFetchError(error, url) {

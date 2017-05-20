@@ -19,6 +19,7 @@ import {TopEventPropertyValuesQuery, TopPeoplePropertyValuesQuery} from '../mode
 import SegmentationQueryOldApi from '../models/queries/segmentation';
 import SegmentationQueryNewApi from '../models/queries/segmentation-new-api';
 import QueryCache from '../models/queries/query-cache';
+import DatasetsQuery from '../models/queries/datasets';
 import Report from '../models/report';
 import Result from '../models/result';
 
@@ -202,6 +203,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       topPropertyValues: [],
       upsellModal: null,
       unsavedChanges: true,
+      datasets: [],
+      selectedDataset: null,
     };
   }
 
@@ -415,13 +418,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       const apiAttrs = {
         apiHost: this.apiHost,
         apiSecret: this.apiSecret,
+        projectId: this.projectID,
       };
-
-      // TODO @evnp 5/16/17: TEMP SST DEMO CODE - pass dataset param if project feature flag "sst" is active
-      if (this.hasProjectFeatureFlag(`sst`)) {
-        apiAttrs.datasetName = this.mpContext.datasetName;
-      }
-      // END SST DEMO CODE
 
       this.queries = {
         topEvents: new TopEventsQuery(apiAttrs),
@@ -432,6 +430,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         topPropertyValuesCache: new QueryCache(),
         segmentation: new SegmentationQueryNewApi(apiAttrs, {utcOffset: this.getUtcOffset()}),
         segmentationCache: new QueryCache(),
+        datasets: new DatasetsQuery(apiAttrs),
       };
 
       // TODO @evnp 5/16/17: TEMP DEBUG CODE - remove when we switch fully to new Insights API
@@ -446,6 +445,13 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         this.queries.segmentation = this.queries.oldApiSegmentation;
       }
       // END DEBUG CODE
+    }
+
+    if (this.hasProjectFeatureFlag(`sst`)) {
+      // Fetch list of datasets on page load
+      this.queries.datasets.build(this.state).run().then(datasets => {
+        this.update({datasets, selectedDataset: datasets.length ? datasets[0] : null});
+      });
     }
 
     this.updateCanAddBookmark();
@@ -807,6 +813,18 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return screen && screen[attr];
   }
 
+  updateSelectedDataset(selectedDataset) {
+    // Reset state and switch to new dataset mode
+    this.update(extend(this.resettableState, {
+      selectedDataset,
+      datasets: this.state.datasets,
+      recentEvents: [],
+      recentProperties: [],
+    }));
+
+    this.resetTopQueries();
+  }
+
   // State helpers
 
   hasStageClause(state=this.state) {
@@ -940,6 +958,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         showClause.value.name === ShowClause.TOP_EVENTS.name
       );
       (needsTopEvents ? topEventsQuery : Promise.resolve()).then(() => this.query());
+
     }
   }
 
@@ -949,7 +968,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       this.updateTopPropertiesForEvent(eventName, TopEventPropertiesQuery.LOADING);
       // Custom events need to be queried with their id rather than their name
       const event = mpEvent.custom ? `$custom_event:${mpEvent.id}` : eventName;
-      this.queries.topEventProperties.build({event}).run()
+      this.queries.topEventProperties.build({event, selectedDataset: this.state.selectedDataset}).run()
         .then(properties => this.updateTopPropertiesForEvent(eventName, properties));
     }
   }

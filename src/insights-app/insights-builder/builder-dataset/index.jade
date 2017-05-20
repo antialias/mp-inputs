@@ -1,0 +1,17 @@
+.builder-dataset
+  .clause-header Dataset
+  - const menuName = 'dataset'
+  .drop-menu-button(on={click: (e) => $helpers.openMenu(e, menuName)})
+    a.label= selectedDataset.displayName
+  .drop-menu-container
+    mp-drop-menu(
+      attrs={open: $helpers.isMenuOpen(menuName)}
+      on={change: e => $helpers.menuChange(e, menuName)}
+    )
+      ul.screen-options-list
+        each dataset in datasets
+          li.list-option(
+            class={'list-option-selected': selectedDataset.datasetName === dataset.datasetName}
+            on={click: () => $helpers.updateSelectedDataset(dataset)}
+          )
+            .option-label= dataset.displayName

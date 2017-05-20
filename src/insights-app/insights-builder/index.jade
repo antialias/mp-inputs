@@ -1,6 +1,8 @@
 .insights-builder.insights-learn-manipulate-data-disabled
   if projectHasEvents || projectHasPeople
     .query
+      if datasets.length > 0
+        .section-container.datasets-control= $component.child('query-builder-dataset')
       .section-container.show-control= $component.child('query-builder-show')
       .section-container.group-control= $component.child('query-builder-group')
       .sections
