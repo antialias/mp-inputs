@@ -822,6 +822,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       recentProperties: [],
     }));
 
+    // Ignore mixpanel custom events in non-mixpanel datasets
+    this.customEvents = selectedDataset.datasetName ? [] : this.mpContext.customEvents || [];
     this.resetTopQueries();
   }
 
