@@ -960,7 +960,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         showClause.value.name === ShowClause.TOP_EVENTS.name
       );
       (needsTopEvents ? topEventsQuery : Promise.resolve()).then(() => this.query());
-
     }
   }
 
