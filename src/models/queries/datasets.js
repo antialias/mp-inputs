@@ -29,8 +29,8 @@ export default class DatasetsQuery extends BaseQuery {
 
       datasets = datasets.concat(data.map(dataset => ({
         displayName: capitalize(dataset),
-        datasetName: dataset}
-      )));
+        datasetName: dataset,
+      })));
 
       return datasets;
     }
