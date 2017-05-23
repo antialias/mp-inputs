@@ -13,6 +13,7 @@ import BuilderSections from '../models/builder-sections';
 import {FilterSection, GroupSection, ShowSection, TimeSection} from '../models/section';
 import {Clause, GroupClause, ShowClause, TimeClause} from '../models/clause';
 import Legend from '../models/legend';
+import BaseQuery from '../models/queries/base';
 import TopEventsQuery from '../models/queries/top-events';
 import {TopEventPropertiesQuery, TopPeoplePropertiesQuery} from '../models/queries/top-properties';
 import {TopEventPropertyValuesQuery, TopPeoplePropertyValuesQuery} from '../models/queries/top-property-values';
@@ -34,6 +35,20 @@ import './index.styl';
 
 const MINUTE_MS = 1000 * 60;
 const FEATURE_GATES_UNLIMITED = 9223372036854776000; //python max int, aka featureGates.unlimited
+
+const TOP_EVENTS = `topEvents`;
+const TOP = {
+  PROPERTY_VALUES: `topPropertyValues`,
+  EVENTS: {
+    PROPERTIES: `topEventsProperties`,
+    PROPERTY_VALUES: `topEventsPropertyValues`,
+    PROPERTIES_BY_EVENT: `topEventsPropertiesByEvent`,
+  },
+  PEOPLE: {
+    PROPERTIES: `topPeopleProperties`,
+    PROPERTY_VALUES: `topPeoplePropertyValues`,
+  },
+};
 
 document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   get config() {
@@ -92,8 +107,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       index: (stateUpdate={}) => {
         if (this.state.report.id) {
           stateUpdate = extend(stateUpdate, this.resetQuery());
-        } else if (!stateUpdate.report) {
-          this.resetTopQueries();
+        } else if (!stateUpdate.report && this.canMakeQueries()) {
+          this.fetchTopEventsProperties();
         }
         return stateUpdate;
       },
@@ -196,15 +211,14 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       resultLoading: true,
       stageClauses: [],
       stickyHeader: {},
-      topEvents: [],
-      topEventProperties: [],
-      topEventPropertiesByEvent: {},
-      topPeopleProperties: [],
-      topPropertyValues: [],
+      datasets: [],
+      [TOP_EVENTS]: {},
+      [TOP.EVENTS.PROPERTIES]: {},
+      [TOP.EVENTS.PROPERTIES_BY_EVENT]: {},
+      [TOP.PEOPLE.PROPERTIES]: {},
+      [TOP.PROPERTY_VALUES]: {},
       upsellModal: null,
       unsavedChanges: true,
-      datasets: [],
-      selectedDataset: null,
     };
   }
 
@@ -369,6 +383,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     const customEventsIdMap = {};
     const customEventsNameMap = {};
     this.customEvents.forEach(ce => {
+      ce.custom = true;
       if (ce.id) {
         customEventsIdMap[ce.id] = ce;
       }
@@ -422,15 +437,22 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       };
 
       this.queries = {
-        topEvents: new TopEventsQuery(apiAttrs),
-        topEventProperties: new TopEventPropertiesQuery(apiAttrs),
-        topEventPropertyValues: new TopEventPropertyValuesQuery(apiAttrs),
-        topPeopleProperties: new TopPeoplePropertiesQuery(apiAttrs),
-        topPeoplePropertyValues: new TopPeoplePropertyValuesQuery(apiAttrs),
-        topPropertyValuesCache: new QueryCache(),
-        segmentation: new SegmentationQueryNewApi(apiAttrs, {utcOffset: this.getUtcOffset()}),
-        segmentationCache: new QueryCache(),
         datasets: new DatasetsQuery(apiAttrs),
+        segmentation: new SegmentationQueryNewApi(apiAttrs, {utcOffset: this.getUtcOffset()}),
+        [TOP_EVENTS]: new TopEventsQuery(apiAttrs),
+        [TOP.EVENTS.PROPERTIES]: new TopEventPropertiesQuery(apiAttrs),
+        [TOP.PEOPLE.PROPERTIES]: new TopPeoplePropertiesQuery(apiAttrs),
+        [TOP.EVENTS.PROPERTY_VALUES]: new TopEventPropertyValuesQuery(apiAttrs),
+        [TOP.PEOPLE.PROPERTY_VALUES]: new TopPeoplePropertyValuesQuery(apiAttrs),
+      };
+
+      this.caches = {
+        segmentation: new QueryCache(),
+        [TOP_EVENTS]: new QueryCache(),
+        [TOP.EVENTS.PROPERTIES]: new QueryCache(),
+        [TOP.PEOPLE.PROPERTIES]: new QueryCache(),
+        [TOP.EVENTS.PROPERTY_VALUES]: new QueryCache(),
+        [TOP.PEOPLE.PROPERTY_VALUES]: new QueryCache(),
       };
 
       // TODO @evnp 5/16/17: TEMP DEBUG CODE - remove when we switch fully to new Insights API
@@ -450,7 +472,11 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     if (this.hasProjectFeatureFlag(`sst`)) {
       // Fetch list of datasets on page load
       this.queries.datasets.build(this.state).run().then(datasets => {
-        this.update({datasets, selectedDataset: datasets.length ? datasets[0] : null});
+        this.update({datasets});
+
+        if (this.canMakeQueries()) {
+          this.fetchTopEventsProperties();
+        }
       });
     }
 
@@ -514,11 +540,11 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this._updateRecentList(`properties`, property);
   }
 
-  _getRecentPersistenceKey(type) {
-    return `recent-${type}`;
+  _getRecentPersistenceKey(resourceType) {
+    return `recent-${resourceType}`;
   }
 
-  _filterRecentList(type, list) {
+  _filterRecentList(list) {
     const specialEventsAndProps = [
       ...ShowClause.SPECIAL_EVENTS,
       ...GroupClause.SPECIAL_PROPERTIES,
@@ -530,26 +556,37 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     ));
   }
 
-  _getRecentList(type) {
+  _getRecentList(resourceType) {
+    const dataset = this.getDataset();
+    const recentString = this.persistence.get(this._getRecentPersistenceKey(resourceType));
     let recentList;
-    let recentString = this.persistence.get(this._getRecentPersistenceKey(type));
 
     try {
       recentList = JSON.parse(recentString);
     } catch (err) {
-      console.error(`Error parsing recent ${type} from persistence: ${err}`);
+      console.error(`Error parsing recent ${resourceType} from persistence: ${err}`);
     }
 
-    return this._filterRecentList(type, recentList || []);
+    recentList = recentList || [];
+    recentList = this._filterRecentList(recentList);
+
+    // LEGACY - support persisted recent data from pre-datasets world
+    recentList = recentList.map(item => extend({dataset: Clause.DATASETS.MIXPANEL}, item));
+
+    if (dataset) {
+      recentList = recentList.filter(item => item.dataset === dataset);
+    }
+
+    return recentList;
   }
 
-  _updateRecentList(type, value) {
+  _updateRecentList(resourceType, value) {
     // remove any match data from view object
     // custom, id, alternatives are needed to get custom events to correctly work
     // is_collect_everything_event is needed to show correct icon in recent events list
-    value = util.pick(value, [`name`, `type`, `resourceType`, `custom`, `id`, `alternatives`, `is_collect_everything_event`]);
+    value = util.pick(value, [`name`, `type`, `resourceType`, `dataset`, `custom`, `id`, `alternatives`, `is_collect_everything_event`]);
 
-    const stateKey = type === `events` ? `recentEvents` : `recentProperties`;
+    const stateKey = resourceType === `events` ? `recentEvents` : `recentProperties`;
     const recentList = [
       value,
       // JSON.stringify removes prop:undefined when stringifying. Since we stringify for persistence,
@@ -559,8 +596,11 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       ),
     ];
 
-    this.update({[stateKey]: this._filterRecentList(type, recentList).slice(0, 10)});
-    this.persistence.set(this._getRecentPersistenceKey(type), JSON.stringify(this.state[stateKey]));
+    this.update({
+      [stateKey]: this._filterRecentList(recentList).slice(0, 10),
+    });
+
+    this.persistence.set(this._getRecentPersistenceKey(resourceType), JSON.stringify(this.state[stateKey]));
   }
 
   getBookmark(report) {
@@ -612,7 +652,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     }
 
     this.update(stateUpdate);
-    this.resetTopQueries();
+
+    if (this.canMakeQueries()) {
+      this.fetchTopEventsProperties();
+    }
 
     if (trackLoading) {
       this.trackEvent(`Load Report`, report ? report.toTrackingData() : {});
@@ -813,18 +856,16 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return screen && screen[attr];
   }
 
-  updateSelectedDataset(selectedDataset) {
-    // Reset state and switch to new dataset mode
-    this.update(extend(this.resettableState, {
-      selectedDataset,
-      datasets: this.state.datasets,
-      recentEvents: [],
-      recentProperties: [],
-    }));
+  updateSelectedDataset(dataset) {
+    const prevTimeClauseValue = this.getTimeClauseValue();
 
-    // Ignore mixpanel custom events in non-mixpanel datasets
-    this.customEvents = selectedDataset.datasetName ? [] : this.mpContext.customEvents || [];
-    this.resetTopQueries();
+    this.update(extend(this.resettableState, {datasets: this.state.datasets}));
+    this.updateClause(TimeClause.TYPE, 0, prevTimeClauseValue); // Restore previous time clause
+    this.updateClause(ShowClause.TYPE, 0, {dataset}); // Change dataset
+
+    if (this.canMakeQueries()) {
+      this.fetchTopEventsProperties();
+    }
   }
 
   // State helpers
@@ -897,7 +938,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   getClausesForType(type) {
-    return this.state.report.sections[type].clauses;
+    return (this.state.report && this.state.report.sections[type].clauses) || [];
   }
 
   getClauseValuesForType(type) {
@@ -932,56 +973,149 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return screen && currentScreen === `builder-screen-time-custom`;
   }
 
-  // State modifiers
+  // Top events/properties management
 
-  resetTopQueries() {
-    if (this.canMakeQueries()) {
-      this.update({topEventProperties: TopEventPropertiesQuery.LOADING});
-      this.queries.topEventProperties.build(this.state).run().then(topEventProperties => {
-        this.update({topEventProperties});
+  getDataset() {
+    const clause = this.getClausesForType(ShowClause.TYPE)[0];
+    return (clause && clause.dataset) || null;
+  }
+
+  getTopEvents() {
+    return this._constructTopList(TOP_EVENTS, this.getDataset());
+  }
+
+  getTopEventProperties(mpEvent=null) {
+    const dataset = this.getDataset();
+
+    if (mpEvent) {
+      const properties = this.state[TOP.EVENTS.PROPERTIES_BY_EVENT][dataset];
+      return (properties && properties[mpEvent.name]) || null;
+    } else {
+      return this._constructTopList(TOP.EVENTS.PROPERTIES, dataset);
+    }
+  }
+
+  getTopPeopleProperties() {
+    return this._constructTopList(TOP.PEOPLE.PROPERTIES, this.getDataset());
+  }
+
+  getTopPropertyValues() {
+    return this._constructTopList(TOP.PROPERTY_VALUES, this.getDataset());
+  }
+
+  _constructTopList(topKey, dataset=null) {
+    const topState = this.state[topKey];
+
+    if (dataset) {
+      return topState[dataset] || null;
+    } else {
+      const topLists = Object.values(topState);
+      const loadingLists = topLists.filter(list => list === BaseQuery.LOADING);
+      const loadedItems = [].concat(...topLists.filter(list => list && list !== BaseQuery.LOADING));
+
+      if (loadedItems.length) {
+        return loadedItems;
+      } else if (loadingLists.length) {
+        return BaseQuery.LOADING;
+      } else {
+        return null;
+      }
+    }
+  }
+
+  _fetchTopList(topKey, dataset, state=null) {
+    const query = this.queries[topKey];
+    const cache = this.caches[topKey];
+
+    query.build(state || this.state, {dataset});
+
+    const cachedResult = cache.get(query.query);
+
+    if (cachedResult) {
+      return Promise.resolve(cachedResult);
+    } else {
+      return query.run().then(topList => {
+        topList = topList.map(item => extend(item, {dataset}));
+        cache.set(query.query, topList);
+        return topList;
       });
+    }
+  }
 
-      this.update({topPeopleProperties: TopPeoplePropertiesQuery.LOADING});
-      this.queries.topPeopleProperties.build(this.state).run().then(topPeopleProperties => {
-        this.update({topPeopleProperties});
-      });
+  _updateTopList(topKey, dataset, topValue) {
+    this.update({
+      [topKey]: extend(this.state[topKey] || {}, {
+        [dataset]: topValue,
+      }),
+    });
+  }
 
-      this.update({topEvents: TopEventsQuery.LOADING});
-      const topEventsQuery = this.queries.topEvents.build(this.state).run().then(topEvents => {
-        this.update({
-          topEvents: topEvents
-            .map(ev => ({name: ev, custom: false}))
-            .concat(this.customEvents.map(ce => Object.assign(ce, {custom: true}))),
-        });
-      });
+  fetchTopEventsProperties() {
+    const dataset = this.getDataset();
 
-      // check whether we need to wait for Top Events query before launching the main query
-      const needsTopEvents = this.state.report.sections.show.clauses.some(showClause =>
-        showClause.value.name === ShowClause.TOP_EVENTS.name
+    // eagerly query top events/properties for other datasets so their results will be cached
+    this.state.datasets.filter(altDataset => altDataset !== dataset).forEach(dataset =>
+      [ TOP_EVENTS,
+        TOP.EVENTS.PROPERTIES,
+        TOP.PEOPLE.PROPERTIES,
+      ].forEach(topKey => this._fetchTopList(topKey, dataset))
+    );
+
+    [ TOP.EVENTS.PROPERTIES,
+      TOP.PEOPLE.PROPERTIES,
+    ].forEach(topKey => {
+      this._updateTopList(topKey, dataset, BaseQuery.LOADING);
+      this._fetchTopList(topKey, dataset).then(topList =>
+        this._updateTopList(topKey, dataset, topList)
       );
-      (needsTopEvents ? topEventsQuery : Promise.resolve()).then(() => this.query());
+    });
+
+    this._updateTopList(TOP_EVENTS, dataset, BaseQuery.LOADING);
+    const topEventsQuery = this._fetchTopList(TOP_EVENTS, dataset).then(topEvents => {
+      // TODO @evnp: We currently only support custom events in Mixpanel dataset; revisit later
+      if (dataset === Clause.DATASETS.MIXPANEL) {
+        topEvents = topEvents.concat(this.customEvents);
+      }
+      this._updateTopList(TOP_EVENTS, dataset, topEvents);
+    });
+
+    // check whether we need to wait for Top Events query before launching the main query
+    const showClauses = this.getClauseValuesForType(ShowClause.TYPE);
+    if (showClauses.map(clause => clause.name).includes(ShowClause.TOP_EVENTS.name)) {
+      topEventsQuery.then(() => this.query());
+    } else {
+      this.query();
     }
   }
 
   fetchTopPropertiesForEvent(mpEvent) {
-    const eventName = mpEvent.name;
-    if (!this.state.topEventPropertiesByEvent[eventName]) {
-      this.updateTopPropertiesForEvent(eventName, TopEventPropertiesQuery.LOADING);
-      // Custom events need to be queried with their id rather than their name
-      const event = mpEvent.custom ? `$custom_event:${mpEvent.id}` : eventName;
-      this.queries.topEventProperties.build({event, selectedDataset: this.state.selectedDataset}).run()
-        .then(properties => this.updateTopPropertiesForEvent(eventName, properties));
+    const dataset = this.getDataset();
+    const topState = this.state[TOP.EVENTS.PROPERTIES_BY_EVENT][dataset] || {};
+    const eventName = mpEvent.custom ? `$custom_event:${mpEvent.id}` : mpEvent.name;
+
+    if (!topState[eventName]) {
+      this._updateTopList(TOP.EVENTS.PROPERTIES_BY_EVENT, dataset, extend(topState, {
+        [eventName]: BaseQuery.LOADING,
+      }));
+      this._fetchTopList(TOP.EVENTS.PROPERTIES, dataset, {event: eventName}).then(topProperties => {
+        this._updateTopList(TOP.EVENTS.PROPERTIES_BY_EVENT, dataset, extend(topState, {
+          [eventName]: topProperties,
+        }));
+      });
     }
   }
 
-  updateTopPropertiesForEvent(mpEvent, properties) {
-    this.update({
-      topEventPropertiesByEvent: extend(
-        this.state.topEventPropertiesByEvent,
-        {[mpEvent]: properties}
-      ),
-    });
+  fetchTopPropertyValues(resourceType) {
+    const dataset = this.getDataset();
+    const topKey = resourceType === `events` ? TOP.EVENTS.PROPERTY_VALUES : TOP.PEOPLE.PROPERTY_VALUES;
+
+    this._updateTopList(TOP.PROPERTY_VALUES, dataset, BaseQuery.LOADING);
+    this._fetchTopList(topKey, dataset).then(topPropertyValues =>
+      this._updateTopList(TOP.PROPERTY_VALUES, dataset, topPropertyValues)
+    );
   }
+
+  // State modifiers
 
   updateReport(attrs) {
     // need to get the previous step BEFORE we update the report data
@@ -1139,27 +1273,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     // query new property values if we're setting a new filter property
     const activeStageClause = this.activeStageClause;
     if (activeStageClause && activeStageClause.TYPE === `filter` && clauseData.value) {
-      let topPropertyValues = null;
-      switch (clauseData.resourceType) {
-        case `people`:
-          topPropertyValues = this.queries.topPeoplePropertyValues;
-          break;
-        case `events`:
-          topPropertyValues = this.queries.topEventPropertyValues;
-          break;
-      }
-      this.update({topPropertyValues: TopEventsQuery.LOADING});
-      const query = topPropertyValues.build(newState).query;
-      const cachedResult = this.queries.topPropertyValuesCache.get(query);
-
-      if (cachedResult) {
-        newState.topPropertyValues = cachedResult;
-      } else {
-        topPropertyValues.run().then(topPropertyValues => {
-          this.queries.topPropertyValuesCache.set(query, topPropertyValues);
-          this.update({topPropertyValues});
-        });
-      }
+      this.fetchTopPropertyValues(clauseData.resourceType);
     }
 
     this.update(newState);
@@ -1361,7 +1475,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       .then(result=> {
         if (!this.state.result.isEqual(result)) {
           this.update({newCachedData: true});
-          this.queries.segmentationCache.set(
+          this.caches.segmentation.set(
             this.queries.segmentation.build(this.state).query,
             result,
             60
@@ -1377,7 +1491,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     if (this.canMakeQueries()) {
       const reportTrackingData = this.state.report.toTrackingData();
       const query = this.queries.segmentation.build(this.state, {displayOptions}).query;
-      const cachedResult = useCache && this.queries.segmentationCache.get(query);
+      const cachedResult = useCache && this.caches.segmentation.get(query);
       const cacheExpiry = 10; // seconds
 
       if (!cachedResult) {
@@ -1416,7 +1530,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       return this.queries.segmentation.run(cachedResult)
         .then(result => {
           if (!cachedResult) {
-            this.queries.segmentationCache.set(query, result, cacheExpiry);
+            this.caches.segmentation.set(query, result, cacheExpiry);
             queryEventProperties[`latency ms`] = Math.round(window.performance.now() - queryStartTime);
           }
 

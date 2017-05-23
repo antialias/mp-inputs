@@ -89,7 +89,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           if (typeof string !== `string`) {
             string = ``;
           }
-          let list = this.state.topPropertyValues;
+          let list = this.app.getTopPropertyValues();
           if (string) {
             list = list.filter(value =>
               renamePropertyValue(value).toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert
@@ -143,7 +143,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
   }
 
   isLoading() {
-    return this.state.topPropertyValues === BaseQuery.LOADING;
+    return this.app.getTopPropertyValues() === BaseQuery.LOADING;
   }
 
   progressiveListLength() {

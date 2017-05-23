@@ -15,7 +15,7 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenNum
             items: this.processItems([ShowClause.ALL_PEOPLE]),
           }, {
             items: this.processItems(this.buildList()),
-            isLoading: this.state.topPeopleProperties === BaseQuery.LOADING,
+            isLoading: this.app.getTopPeopleProperties() === BaseQuery.LOADING,
           }];
         },
         clickedItem: ev => {

@@ -135,20 +135,22 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
 
   isLoading() {
     return this.getRelevantBuilderEvents().every(mpEvent =>
-      this.state.topEventPropertiesByEvent[mpEvent.name] === BaseQuery.LOADING
+      this.app.getTopEventProperties(mpEvent) === BaseQuery.LOADING
     );
   }
 
   getEventProperties() {
     const properties = this.getRelevantBuilderEvents().reduce((props, mpEvent) => {
-      const eventProps = this.state.topEventPropertiesByEvent[mpEvent.name];
+      const eventProps = this.app.getTopEventProperties(mpEvent);
+
       if ([ShowClause.TOP_EVENTS.name, ShowClause.ALL_EVENTS.name].includes(mpEvent.name)) {
-        return props.concat(this.state.topEventProperties);
+        return props.concat(this.app.getTopEventProperties());
       } else if (!eventProps) {
         this.app.fetchTopPropertiesForEvent(mpEvent);
       } else if (eventProps !== BaseQuery.LOADING) {
         return props.concat(eventProps);
       }
+
       return props;
     }, []);
 
@@ -158,7 +160,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   }
 
   getPeopleProperties() {
-    return this.state.topPeopleProperties;
+    return this.app.getTopPeopleProperties();
   }
 
   buildList(resourceType) {

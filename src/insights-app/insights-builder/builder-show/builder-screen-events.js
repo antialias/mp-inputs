@@ -16,11 +16,11 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
       helpers: extend(super.config.helpers, {
         getSections: () => {
           let topEvents = [];
-          if (this.state.topEvents && this.state.topEvents !== TopEventsQuery.LOADING) {
+          if (this.app.getTopEvents() && this.app.getTopEvents() !== TopEventsQuery.LOADING) {
             topEvents = [
               extend(ShowClause.TOP_EVENTS, {isDisabled: this.state.learnActive}),
               extend(ShowClause.ALL_EVENTS, {isDisabled: this.state.learnActive}),
-            ].concat(this.state.topEvents);
+            ].concat(this.app.getTopEvents());
           }
 
           return [{

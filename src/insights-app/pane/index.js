@@ -67,7 +67,7 @@ export class PaneContent extends Component {
   }
 
   get eventChoices() {
-    const topEvents = sorted(this.state.topEvents, {
+    const topEvents = sorted(this.app.getTopEvents(), {
       transform: ev => renameEvent(ev.name).toLowerCase(),
     });
     const specialEvents = [ShowClause.TOP_EVENTS, ShowClause.ALL_EVENTS];

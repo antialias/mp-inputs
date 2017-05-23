@@ -123,7 +123,7 @@ export class BuilderScreenBase extends Component {
   }
 
   allEvents() {
-    const mpEvents = this.state.topEvents === BaseQuery.LOADING ? [] : this.state.topEvents;
+    const mpEvents = this.app.getTopEvents() === BaseQuery.LOADING ? [] : this.app.getTopEvents();
     return [
       ShowClause.TOP_EVENTS,
       ShowClause.ALL_EVENTS,
@@ -136,7 +136,7 @@ export class BuilderScreenBase extends Component {
 
   allProperties(propType) {
     const isPeople = propType === Clause.RESOURCE_TYPE_PEOPLE;
-    let properties = isPeople ? this.state.topPeopleProperties : this.state.topEventProperties;
+    let properties = isPeople ? this.app.getTopPeopleProperties() : this.app.getTopEventProperties();
     properties = properties === BaseQuery.LOADING ? [] : properties;
     // TODO: ShowClause.ALL_PEOPLE should  only be show for show clause
     let specialProps = [ShowClause.ALL_PEOPLE];
@@ -165,7 +165,7 @@ export class BuilderScreenBase extends Component {
 
       const input = el.querySelector(`resize-input,input.control-label,.date-input input`);
       if (input) {
-        // a short timeout allows animation to complete smoothly - not a long-term solution but 
+        // a short timeout allows animation to complete smoothly - not a long-term solution but
         // requestAnimationFrame does not produce desired behavior
         setTimeout(() => input.focus(), 250);
       }

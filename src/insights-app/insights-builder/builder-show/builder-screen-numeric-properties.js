@@ -36,13 +36,17 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
     return stageClause && stageClause.value ? [stageClause.value] : [];
   }
 
+  getEvent() {
+    return this.getRelevantBuilderEvents()[0] || null;
+  }
+
   getEventName() {
-    const mpEvent = this.getRelevantBuilderEvents()[0];
+    const mpEvent = this.getEvent();
     return mpEvent ? mpEvent.name : null;
   }
 
   isLoading() {
-    return this.state.topEventPropertiesByEvent[this.getEventName()] === BaseQuery.LOADING;
+    return this.app.getTopEventProperties(this.getEvent()) === BaseQuery.LOADING;
   }
 
   buildList() {

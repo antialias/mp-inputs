@@ -1,5 +1,4 @@
 import BaseQuery from './base';
-import {capitalize} from '../../util';
 
 export default class DatasetsQuery extends BaseQuery {
   constructor(apiAttrs, options = {}) {
@@ -22,16 +21,8 @@ export default class DatasetsQuery extends BaseQuery {
     const data = results.data;
     if (data.length) {
       // Implicitly include mixpanel dataset
-      let datasets = [{
-        displayName: `Mixpanel`,
-        datasetName: ``,
-      }];
-
-      datasets = datasets.concat(data.map(dataset => ({
-        displayName: capitalize(dataset),
-        datasetName: dataset,
-      })));
-
+      let datasets = [`mixpanel`];
+      datasets = datasets.concat(data);
       return datasets;
     }
   }

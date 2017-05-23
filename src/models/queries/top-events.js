@@ -12,4 +12,8 @@ export default class TopEventsQuery extends BaseQuery {
       limit: 1500,
     };
   }
+
+  processResults(topEvents) {
+    return topEvents.map(ev => ({name: ev, custom: false}));
+  }
 }

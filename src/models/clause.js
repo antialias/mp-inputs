@@ -22,6 +22,10 @@ const TIME_UNIT_LIST = [
 ];
 
 export class Clause {
+  constructor(attrs={}) {
+    this.dataset = attrs.dataset || this.DATASETS.MIXPANEL;
+  }
+
   static create(sectionType, attrs, syncCustomEvent=null) {
     switch (sectionType) {
       case `show`: return new ShowClause(attrs, syncCustomEvent);
@@ -32,7 +36,7 @@ export class Clause {
   }
 
   get attrs() {
-    return {};
+    return pick(this, [`dataset`]);
   }
 
   extend(attrs) {
@@ -48,11 +52,11 @@ export class Clause {
   }
 
   toUrlData() {
-    return this.attrs;
+    return pick(this.attrs, [`dataset`]);
   }
 
   get valid() {
-    return true;
+    return Object.values(this.DATASETS).includes(this.dataset);
   }
 
   validate(newClause) {
@@ -65,6 +69,10 @@ export class Clause {
     return newClause;
   }
 }
+Clause.DATASETS = Clause.prototype.DATASETS = {
+  MIXPANEL: `mixpanel`,
+  SALESFORCE: `salesforce`,
+};
 Clause.RESOURCE_TYPE_ALL = Clause.prototype.RESOURCE_TYPES = `all`;
 Clause.RESOURCE_TYPE_EVENTS = Clause.prototype.RESOURCE_TYPES = `events`;
 Clause.RESOURCE_TYPE_PEOPLE = Clause.prototype.RESOURCE_TYPES = `people`;
@@ -97,7 +105,7 @@ export class EventsPropertiesClause extends Clause {
   }
 
   toUrlData() {
-    return pick(this.attrs, [`value`, `resourceType`]);
+    return extend(super.toUrlData(), pick(this.attrs, [`value`, `resourceType`]));
   }
 }
 

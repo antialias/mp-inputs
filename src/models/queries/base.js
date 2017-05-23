@@ -1,6 +1,7 @@
 /* global mp */
 
 import {objToQueryString} from 'mixpanel-common/util';
+import {Clause} from '../clause';
 
 export default class BaseQuery {
   constructor(apiAttrs, options={}) {
@@ -8,7 +9,6 @@ export default class BaseQuery {
     this.includeCredentials = false;
 
     this.query = null; // used to check for obsolete queries
-    this.datasetName = null; // use default mixpanel dataset
 
     this.apiHost = apiAttrs.apiHost;
     this.apiSecret = apiAttrs.apiSecret;
@@ -28,12 +28,10 @@ export default class BaseQuery {
     }
   }
 
-  build(state, options) {
+  build(state, options={}) {
     this.query = this.buildQuery(state, options);
+    this.query.dataset = options.dataset;
 
-    if (state && state.selectedDataset) {
-      this.datasetName = state.selectedDataset.datasetName;
-    }
     return this;
   }
 
@@ -84,8 +82,8 @@ export default class BaseQuery {
   }
 
   fetch(endpoint, params, queryOptions) {
-    if (this.datasetName) {
-      params[`dataset_name`] = this.datasetName;
+    if (this.query.dataset && this.query.dataset !== Clause.DATASETS.MIXPANEL) {
+      params[`dataset_name`] = this.query.dataset;
     }
 
     let authHeader, url;
