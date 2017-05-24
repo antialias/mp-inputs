@@ -11,7 +11,7 @@ import {mixpanel, rollbar} from '../tracking';
 
 import BuilderSections from '../models/builder-sections';
 import {Clause, GroupClause, ShowClause, TimeClause} from '../models/clause';
-import {DATASET_MIXPANEL} from '../models/constants';
+import {DATASETS, DATASET_MIXPANEL} from '../models/constants';
 import {FilterSection, GroupSection, ShowSection, TimeSection} from '../models/section';
 import Legend from '../models/legend';
 import BaseQuery from '../models/queries/base';
@@ -216,7 +216,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       resultLoading: true,
       stageClauses: [],
       stickyHeader: {},
-      datasets: [],
+      datasets: { // every project has at least a Mixpanel dataset
+        [DATASET_MIXPANEL]: DATASETS[DATASET_MIXPANEL],
+      },
       [TOP_EVENTS]: {},
       [TOP.EVENTS.PROPERTIES]: {},
       [TOP.EVENTS.PROPERTIES_BY_EVENT]: {},
@@ -227,7 +229,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     };
   }
 
-  defaultReportState() {
+  defaultReportState(dataset=null) {
     const eventsBlocked = this.state && this.state.blocking && this.state.blocking.isBlockedEvents;
     const eventsIntegrated = this.state && this.state.projectHasEvents;
     const peopleBlocked = this.state && this.state.blocking && this.state.blocking.isBlockedPeople;
@@ -246,8 +248,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         value: `absolute`,
       },
       sections: new BuilderSections({
-        show: new ShowSection(new ShowClause({value: defaultShowClause, resourceType})),
-        time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS})),
+        show: new ShowSection(new ShowClause({value: defaultShowClause, resourceType, dataset})),
+        time: new TimeSection(new TimeClause({range: TimeClause.RANGES.HOURS, dataset})),
       }),
       legend: new Legend({
         data: [],
@@ -256,6 +258,11 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       sorting: this.sortConfigFor(null),
       title: ``,
     });
+  }
+
+  getDataset() {
+    const clause = this.getClausesForType(ShowClause.TYPE)[0];
+    return (clause && clause.dataset) || null;
   }
 
   /* feature gate fcns */
@@ -477,7 +484,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     if (this.hasProjectFeatureFlag(`sst`)) {
       // Fetch list of datasets on page load
       this.queries.datasets.build(this.state).run().then(datasets => {
-        this.update({datasets});
+        this.update({datasets: extend(this.state.datasets, datasets)});
 
         if (this.canMakeQueries()) {
           this.fetchTopEventsProperties();
@@ -872,11 +879,13 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   updateSelectedDataset(dataset) {
-    const prevTimeClauseValue = this.getTimeClauseValue();
+    let sections = this.defaultReportState(dataset).sections;
+    const oldTimeClause = this.getClausesForType(TimeClause.TYPE)[0];
+    const newTimeSection = new TimeSection(oldTimeClause);
 
-    this.update(extend(this.resettableState, {datasets: this.state.datasets}));
-    this.updateClause(TimeClause.TYPE, 0, prevTimeClauseValue); // Restore previous time clause
-    this.updateClause(ShowClause.TYPE, 0, {dataset}); // Change dataset
+    this.updateReport({
+      sections: sections.replaceSection(newTimeSection), // retain previous time clause
+    });
 
     if (this.canMakeQueries()) {
       this.fetchTopEventsProperties();
@@ -989,11 +998,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   // Top events/properties management
-
-  getDataset() {
-    const clause = this.getClausesForType(ShowClause.TYPE)[0];
-    return (clause && clause.dataset) || null;
-  }
 
   getTopEvents() {
     return this._constructTopList(TOP_EVENTS, this.getDataset());
@@ -1462,16 +1466,15 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   updateDisplayOptions(displayOptions) {
-    // for 'min', 'max', 'unique', 'average' and 'median', 'bar' and 'table' require a different query than
-    // 'line'.
     const chartType = displayOptions.chartType;
+
     Promise.resolve()
-      .then(() => {
+      .then(() => { // bar and table require a different query than line for these math types: min, max, unique, average, median
         const isChangingToLineChart = chartType === `line` && [`bar`, `table`].includes(this.state.report.displayOptions.chartType);
         const isChangingFromLineChart = [`bar`, `table`].includes(chartType) && this.state.report.displayOptions.chartType === `line`;
         return (isChangingToLineChart || isChangingFromLineChart) && this.query({displayOptions, useCache: displayOptions.useCache});
       })
-      .then(() => {
+      .then(() => { // stacked bar requires different sorting from other chart types
         const shouldResetSorting = chartType === `bar` && displayOptions.plotStyle === `stacked` && this.state.report.sorting.bar.sortBy === `value`;
         const sorting = shouldResetSorting ? this.sortConfigFor(this.state.result) : this.state.report.sorting;
         this.updateReport({displayOptions, sorting});
@@ -1486,26 +1489,26 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   _checkForNewResults() {
-    this.queries.segmentation.run()
-      .then(result=> {
-        if (!this.state.result.isEqual(result)) {
-          this.update({newCachedData: true});
-          this.caches.segmentation.set(
-            this.queries.segmentation.build(this.state).query,
-            result,
-            60
-          );
-        } else {
-          this.resetToastTimer();
-        }
-      });
+    const dataset = this.getDataset();
+    const query = this.queries.segmentation.build(this.state, {dataset}).query;
+
+    this.queries.segmentation.run().then(result=> {
+      if (!this.state.result.isEqual(result)) {
+        this.update({newCachedData: true});
+        this.caches.segmentation.set(query, result, 60);
+      } else {
+        this.resetToastTimer();
+      }
+    });
+
     this.update({toastTimer: null});
   }
 
   query({useCache=false, displayOptions={}}={}) {
     if (this.canMakeQueries()) {
+      const dataset = this.getDataset();
       const reportTrackingData = this.state.report.toTrackingData();
-      const query = this.queries.segmentation.build(this.state, {displayOptions}).query;
+      const query = this.queries.segmentation.build(this.state, {dataset, displayOptions}).query;
       const cachedResult = useCache && this.caches.segmentation.get(query);
       const cacheExpiry = 10; // seconds
 
@@ -1530,7 +1533,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
           newApiResult: new Result({headers: [], series: {}}),
           newApiQueryTimeMs: null,
         });
-        this.queries.oldApiSegmentation.build(this.state, {displayOptions}).run().then(result => {
+        this.queries.oldApiSegmentation.build(this.state, {dataset, displayOptions}).run().then(result => {
           console.info(`Old JQL query result:`);
           console.info(result);
           this.update({

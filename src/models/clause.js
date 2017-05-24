@@ -1,7 +1,7 @@
 import {extend, pick} from 'mixpanel-common/util';
 import {debug} from 'mixpanel-common/report/util';
 
-import {DATASETS, DATASET_MIXPANEL} from './constants';
+import {DATASET_MIXPANEL} from './constants';
 
 const TYPE_FORMAT_NAME = {
   'show': `Compare`,
@@ -58,7 +58,7 @@ export class Clause {
   }
 
   get valid() {
-    return Object.keys(DATASETS).includes(this.dataset);
+    return true;
   }
 
   validate(newClause) {
