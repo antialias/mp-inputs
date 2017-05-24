@@ -10,6 +10,7 @@ export * from 'mixpanel-common/report/util';
 export {
   getIconForEvent,
   getIconForPropertyType,
+  getDescriptionForEvent,
   renameEvent,
   renameProperty,
   renamePropertyValue,

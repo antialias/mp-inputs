@@ -4,6 +4,7 @@ import TopEventsQuery from '../../../models/queries/top-events';
 import {
   extend,
   getIconForEvent,
+  getDescriptionForEvent,
   renameEvent,
 } from '../../../util';
 
@@ -43,6 +44,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
       hasPropertiesPill: true,
       isPropertiesPillDisabled: this.state.learnActive,
       isSelected: item.name === selected,
+      description: getDescriptionForEvent(item, this.state.eventDefinitions),
     }, item));
   }
 });

@@ -19,6 +19,7 @@ import BaseQuery from '../models/queries/base';
 import TopEventsQuery from '../models/queries/top-events';
 import {TopEventPropertiesQuery, TopPeoplePropertiesQuery} from '../models/queries/top-properties';
 import {TopEventPropertyValuesQuery, TopPeoplePropertyValuesQuery} from '../models/queries/top-property-values';
+import {EventDefinitionsQuery} from '../models/queries/event-definitions';
 import SegmentationQueryOldApi from '../models/queries/segmentation';
 import SegmentationQueryNewApi from '../models/queries/segmentation-new-api';
 import QueryCache from '../models/queries/query-cache';
@@ -67,6 +68,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
           canAddBookmark: true,
           features: {},
           savedReports: {},
+          eventDefinitions: {},
           [RECENT.EVENTS]: [],
           [RECENT.PROPERTIES]: [],
           util,
@@ -448,6 +450,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       this.queries = {
         datasets: new DatasetsQuery(apiAttrs),
         segmentation: new SegmentationQueryNewApi(apiAttrs, {utcOffset: this.getUtcOffset()}),
+        eventDefinitions: new EventDefinitionsQuery(apiAttrs),
         [TOP_EVENTS]: new TopEventsQuery(apiAttrs),
         [TOP.EVENTS.PROPERTIES]: new TopEventPropertiesQuery(apiAttrs),
         [TOP.PEOPLE.PROPERTIES]: new TopPeoplePropertiesQuery(apiAttrs),
@@ -478,6 +481,18 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       // END DEBUG CODE
     }
 
+    if (this.hasProjectFeatureFlag(`sst`)) {
+      // Fetch list of datasets on page load
+      this.queries.datasets.build(this.state).run().then(datasets => {
+        this.update({datasets: extend(this.state.datasets, datasets)});
+
+        if (this.canMakeQueries()) {
+          this.fetchTopEventsProperties();
+        }
+      });
+    }
+
+    this._getEventDefinitions();
     this.updateCanAddBookmark();
 
     super.attachedCallback(...arguments);
@@ -597,6 +612,12 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.persistence.set(this._getRecentPersistenceKey(type), JSON.stringify(list));
 
     return list;
+  }
+
+  _getEventDefinitions() {
+    this.queries.eventDefinitions.executeQuery().then(response => {
+      this.update({eventDefinitions: response.results});
+    });
   }
 
   _updateRecentList(type, value) {
