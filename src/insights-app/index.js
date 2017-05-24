@@ -450,7 +450,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       this.queries = {
         datasets: new DatasetsQuery(apiAttrs),
         segmentation: new SegmentationQueryNewApi(apiAttrs, {utcOffset: this.getUtcOffset()}),
-        eventDefinitions: new EventDefinitionsQuery(apiAttrs),
+        eventDefinitions: new EventDefinitionsQuery({apiHost: this.apiHost, accessToken: this.accessToken, projectId: this.projectID}),
         [TOP_EVENTS]: new TopEventsQuery(apiAttrs),
         [TOP.EVENTS.PROPERTIES]: new TopEventPropertiesQuery(apiAttrs),
         [TOP.PEOPLE.PROPERTIES]: new TopPeoplePropertiesQuery(apiAttrs),
