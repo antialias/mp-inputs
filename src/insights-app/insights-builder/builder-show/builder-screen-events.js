@@ -14,6 +14,9 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
   get config() {
     return {
       template,
+      defaultState: {
+        lexiconUrl: `${window.location.protocol}//${window.location.hostname}${window.location.pathname.replace(`insights`, `lexicon`)}`,
+      },
       helpers: extend(super.config.helpers, {
         getSections: () => {
           let topEvents = [];
@@ -31,6 +34,25 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
             label: `Events`,
             items: this.processItems(topEvents),
           }];
+        },
+        showTooltipForItem: item => {
+          if (item.description) {
+            this.helpers.showEventDefinitionTooltip();
+            this.update({eventDefinition: {name: item.label, description: item.description}});
+          }
+        },
+        hideEventDefinitionTooltip: () => {
+          if (this.state.eventDefinition) {
+            this.hideEventDefinitionTooltipTimeout = setTimeout(() => {
+              this.hideEventDefinitionTooltipTimeout = null;
+              this.update({eventDefinition: null});
+            }, 250);
+          }
+        },
+        showEventDefinitionTooltip: () => {
+          if (this.hideEventDefinitionTooltipTimeout) {
+            clearTimeout(this.hideEventDefinitionTooltipTimeout);
+          }
         },
       }),
     };

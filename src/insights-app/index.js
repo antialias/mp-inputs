@@ -615,7 +615,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   _getEventDefinitions() {
-    this.queries.eventDefinitions.executeQuery().then(response => {
+    this.queries.eventDefinitions.build(this.state).executeQuery().then(response => {
       this.update({eventDefinitions: response.results});
     });
   }

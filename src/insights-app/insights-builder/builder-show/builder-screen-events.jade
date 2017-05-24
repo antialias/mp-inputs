@@ -14,5 +14,20 @@ include ../mixins.jade
         clickItem: $helpers.clickedEvent,
         clickPropertiesPill: $helpers.clickedEventProperties,
         draw: $helpers.updateRenderedSize,
+        focusItem: ev => ev.detail.item.description ? $helpers.showTooltipForItem(ev.detail.item) : $helpers.hideEventDefinitionTooltip(),
+        mouseenterItem: ev => $helpers.showTooltipForItem(ev.detail.item),
+        mouseleaveItem: ev => $helpers.hideEventDefinitionTooltip(),
       }
     )
+      mp-event-definition-tooltip(
+        on={
+          mouseenterTooltip: $helpers.showEventDefinitionTooltip,
+          mouseleaveTooltip: $helpers.hideEventDefinitionTooltip,
+        }
+        attrs={
+          lexiconUrl,
+          show: !!eventDefinition,
+          eventName: eventDefinition ? eventDefinition.name : ``,
+          eventDescription: eventDefinition ? eventDefinition.description : ``,
+        }
+      )
