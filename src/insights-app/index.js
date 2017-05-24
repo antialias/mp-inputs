@@ -36,18 +36,22 @@ import './index.styl';
 const MINUTE_MS = 1000 * 60;
 const FEATURE_GATES_UNLIMITED = 9223372036854776000; //python max int, aka featureGates.unlimited
 
-const TOP_EVENTS = `topEvents`;
+const TOP_EVENTS = `_topEvents`;
 const TOP = {
-  PROPERTY_VALUES: `topPropertyValues`,
+  PROPERTY_VALUES: `_topPropertyValues`,
   EVENTS: {
-    PROPERTIES: `topEventsProperties`,
-    PROPERTY_VALUES: `topEventsPropertyValues`,
-    PROPERTIES_BY_EVENT: `topEventsPropertiesByEvent`,
+    PROPERTIES: `_topEventsProperties`,
+    PROPERTY_VALUES: `_topEventsPropertyValues`,
+    PROPERTIES_BY_EVENT: `_topEventsPropertiesByEvent`,
   },
   PEOPLE: {
-    PROPERTIES: `topPeopleProperties`,
-    PROPERTY_VALUES: `topPeoplePropertyValues`,
+    PROPERTIES: `_topPeopleProperties`,
+    PROPERTY_VALUES: `_topPeoplePropertyValues`,
   },
+};
+const RECENT = {
+  EVENTS: `_recentEvents`,
+  PROPERTIES: `_recentProperties`,
 };
 
 document.registerElement(`insights-app`, class InsightsApp extends MPApp {
@@ -61,8 +65,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
           canAddBookmark: true,
           features: {},
           savedReports: {},
-          recentEvents: [],
-          recentProperties: [],
+          [RECENT.EVENTS]: [],
+          [RECENT.PROPERTIES]: [],
           util,
         }
       ),
@@ -424,8 +428,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       label = ``,
     } = blocking;
     this.state.blocking = {isBlockedEvents, isBlockedPeople, label};
-    this.state.recentEvents = this._getRecentList(`events`);
-    this.state.recentProperties = this._getRecentList(`properties`);
+    this.state[RECENT.EVENTS] = this.getRecentEvents();
+    this.state[RECENT.PROPERTIES] = this.getRecentProperties();
     this.state.isPayingCustomer = [`billing_error_blocked_owner`, `billing_error_blocked_member`].includes(this.state.blocking.label);
 
     this.queries = {};
@@ -532,6 +536,14 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return attrs.sections ? {report: Report.deserialize(attrs)} : {};
   }
 
+  getRecentEvents() {
+    return this._getRecentList(`events`);
+  }
+
+  getRecentProperties() {
+    return this._getRecentList(`properties`);
+  }
+
   updateRecentEvents(mpEvent) {
     this._updateRecentList(`events`, mpEvent);
   }
@@ -540,8 +552,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this._updateRecentList(`properties`, property);
   }
 
-  _getRecentPersistenceKey(resourceType) {
-    return `recent-${resourceType}`;
+  _getRecentPersistenceKey(type) {
+    return `recent-${type}`;
   }
 
   _filterRecentList(list) {
@@ -556,15 +568,16 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     ));
   }
 
-  _getRecentList(resourceType) {
-    const dataset = this.getDataset();
-    const recentString = this.persistence.get(this._getRecentPersistenceKey(resourceType));
-    let recentList;
+  _getRecentList(type) {
+    let recentList = this.state[type === `events` ? RECENT.EVENTS : RECENT.PROPERTIES];
 
-    try {
-      recentList = JSON.parse(recentString);
-    } catch (err) {
-      console.error(`Error parsing recent ${resourceType} from persistence: ${err}`);
+    if (!recentList) {
+      const recentString = this.persistence.get(this._getRecentPersistenceKey(type));
+      try {
+        recentList = JSON.parse(recentString);
+      } catch (err) {
+        console.error(`Error parsing recent ${type} from persistence: ${err}`);
+      }
     }
 
     recentList = recentList || [];
@@ -573,6 +586,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     // LEGACY - support persisted recent data from pre-datasets world
     recentList = recentList.map(item => extend({dataset: Clause.DATASETS.MIXPANEL}, item));
 
+    const dataset = this.getDataset();
     if (dataset) {
       recentList = recentList.filter(item => item.dataset === dataset);
     }
@@ -580,13 +594,13 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return recentList;
   }
 
-  _updateRecentList(resourceType, value) {
+  _updateRecentList(type, value) {
     // remove any match data from view object
     // custom, id, alternatives are needed to get custom events to correctly work
     // is_collect_everything_event is needed to show correct icon in recent events list
     value = util.pick(value, [`name`, `type`, `resourceType`, `dataset`, `custom`, `id`, `alternatives`, `is_collect_everything_event`]);
 
-    const stateKey = resourceType === `events` ? `recentEvents` : `recentProperties`;
+    const stateKey = type === `events` ? RECENT.EVENTS : RECENT.PROPERTIES;
     const recentList = [
       value,
       // JSON.stringify removes prop:undefined when stringifying. Since we stringify for persistence,
@@ -600,7 +614,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       [stateKey]: this._filterRecentList(recentList).slice(0, 10),
     });
 
-    this.persistence.set(this._getRecentPersistenceKey(resourceType), JSON.stringify(this.state[stateKey]));
+    this.persistence.set(this._getRecentPersistenceKey(type), JSON.stringify(this.state[stateKey]));
   }
 
   getBookmark(report) {

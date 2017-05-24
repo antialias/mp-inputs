@@ -1,6 +1,8 @@
 import {extend, pick} from 'mixpanel-common/util';
 import {debug} from 'mixpanel-common/report/util';
 
+import {DATASET_MIXPANEL, DATASET_SALESFORCE} from './constants';
+
 const TYPE_FORMAT_NAME = {
   'show': `Compare`,
   'group': `Group by`,
@@ -70,8 +72,8 @@ export class Clause {
   }
 }
 Clause.DATASETS = Clause.prototype.DATASETS = {
-  MIXPANEL: `mixpanel`,
-  SALESFORCE: `salesforce`,
+  MIXPANEL: DATASET_MIXPANEL.datasetName,
+  SALESFORCE: DATASET_SALESFORCE.datasetName,
 };
 Clause.RESOURCE_TYPE_ALL = Clause.prototype.RESOURCE_TYPES = `all`;
 Clause.RESOURCE_TYPE_EVENTS = Clause.prototype.RESOURCE_TYPES = `events`;

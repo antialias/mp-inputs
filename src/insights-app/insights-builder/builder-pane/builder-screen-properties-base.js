@@ -34,7 +34,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
 
   getRecentProperties() {
     const resourceType = this.getSelectedResourceType();
-    const recentProperties = this.state.recentProperties
+    const recentProperties = this.app.getRecentProperties()
       .filter(property => resourceType === Clause.RESOURCE_TYPE_ALL || property.resourceType === resourceType)
       .slice(0, 3)
       .map(prop => extend(prop, {section: `recent`}));

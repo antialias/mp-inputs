@@ -1,7 +1,7 @@
 /* global mp */
 
 import {objToQueryString} from 'mixpanel-common/util';
-import {Clause} from '../clause';
+import {DATASET_MIXPANEL} from '../constants';
 
 export default class BaseQuery {
   constructor(apiAttrs, options={}) {
@@ -82,7 +82,7 @@ export default class BaseQuery {
   }
 
   fetch(endpoint, params, queryOptions) {
-    if (this.query.dataset && this.query.dataset !== Clause.DATASETS.MIXPANEL) {
+    if (this.query.dataset && this.query.dataset !== DATASET_MIXPANEL.datasetName) {
       params[`dataset_name`] = this.query.dataset;
     }
 

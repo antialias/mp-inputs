@@ -25,7 +25,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
 
           return [{
             label: `Recently Viewed`,
-            items: this.processItems(this.state.recentEvents.slice(0, 3)),
+            items: this.processItems(this.app.getRecentEvents().slice(0, 3)),
           }, {
             label: `Events`,
             items: this.processItems(topEvents),
