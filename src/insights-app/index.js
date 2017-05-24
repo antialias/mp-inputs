@@ -10,8 +10,9 @@ import * as util from '../util';
 import {mixpanel, rollbar} from '../tracking';
 
 import BuilderSections from '../models/builder-sections';
-import {FilterSection, GroupSection, ShowSection, TimeSection} from '../models/section';
 import {Clause, GroupClause, ShowClause, TimeClause} from '../models/clause';
+import {DATASET_MIXPANEL} from '../models/constants';
+import {FilterSection, GroupSection, ShowSection, TimeSection} from '../models/section';
 import Legend from '../models/legend';
 import BaseQuery from '../models/queries/base';
 import TopEventsQuery from '../models/queries/top-events';
@@ -584,7 +585,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     recentList = this._filterRecentList(recentList);
 
     // LEGACY - support persisted recent data from pre-datasets world
-    recentList = recentList.map(item => extend({dataset: Clause.DATASETS.MIXPANEL}, item));
+    recentList = recentList.map(item => extend({dataset: DATASET_MIXPANEL}, item));
 
     const dataset = this.getDataset();
     if (dataset) {
@@ -1068,7 +1069,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     const dataset = this.getDataset();
 
     // eagerly query top events/properties for other datasets so their results will be cached
-    this.state.datasets.filter(altDataset => altDataset !== dataset).forEach(dataset =>
+    Object.keys(this.state.datasets).filter(altDataset => altDataset !== dataset).forEach(dataset =>
       [ TOP_EVENTS,
         TOP.EVENTS.PROPERTIES,
         TOP.PEOPLE.PROPERTIES,
@@ -1087,7 +1088,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this._updateTopList(TOP_EVENTS, dataset, BaseQuery.LOADING);
     const topEventsQuery = this._fetchTopList(TOP_EVENTS, dataset).then(topEvents => {
       // TODO @evnp: We currently only support custom events in Mixpanel dataset; revisit later
-      if (dataset === Clause.DATASETS.MIXPANEL) {
+      if (dataset === DATASET_MIXPANEL) {
         topEvents = topEvents.concat(this.customEvents);
       }
       this._updateTopList(TOP_EVENTS, dataset, topEvents);

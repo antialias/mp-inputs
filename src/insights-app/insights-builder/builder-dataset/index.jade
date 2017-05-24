@@ -1,19 +1,22 @@
 - const selectedDataset = $component.app.getDataset();
+- const selectedDatasetDisplayName = datasets[selectedDataset] ? datasets[selectedDataset].displayName : ``;
 
 .builder-dataset
   .clause-header Dataset
   - const menuName = 'dataset'
   .drop-menu-button(on={click: (e) => $helpers.openMenu(e, menuName)})
-    a.label= util.capitalize(selectedDataset)
+    a.label= selectedDatasetDisplayName
   .drop-menu-container
     mp-drop-menu(
       attrs={open: $helpers.isMenuOpen(menuName)}
       on={change: e => $helpers.menuChange(e, menuName)}
     )
       ul.screen-options-list
-        each dataset in datasets
+        each dataset in Object.keys(datasets)
+          - const datasetDetails = datasets[dataset];
           li.list-option(
             class={'list-option-selected': selectedDataset === dataset}
             on={click: () => $helpers.updateSelectedDataset(dataset)}
           )
-            .option-label= util.capitalize(dataset)
+            .option-label= datasetDetails.displayName
+

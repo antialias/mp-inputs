@@ -82,7 +82,7 @@ export default class BaseQuery {
   }
 
   fetch(endpoint, params, queryOptions) {
-    if (this.query.dataset && this.query.dataset !== DATASET_MIXPANEL.datasetName) {
+    if (this.query.dataset && this.query.dataset !== DATASET_MIXPANEL) {
       params[`dataset_name`] = this.query.dataset;
     }
 

@@ -1,8 +1,7 @@
-const DATASET_MIXPANEL = {
-  datasetName: `mixpanel`,
-  displayName: `Mixpanel`,
+export const DATASET_MIXPANEL = `mixpanel`;
+export const DATASETS = {
+  [DATASET_MIXPANEL]: {
+    displayName: `Mixpanel`,
+    description: `Product usage, customers, etc.`,
+  },
 };
-const DATASET_SALESFORCE = {
-  datasetName: `salesforce`,
-  displayName: `Salesforce`,
-}

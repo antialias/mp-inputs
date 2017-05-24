@@ -1,5 +1,6 @@
 import BaseQuery from './base';
-import {capitalize} from '../../util';
+import {capitalize, extend} from '../../util';
+import {DATASETS, DATASET_MIXPANEL} from '../constants';
 
 export default class DatasetsQuery extends BaseQuery {
   constructor(apiAttrs, options = {}) {
@@ -19,15 +20,17 @@ export default class DatasetsQuery extends BaseQuery {
       return [];
     }
 
-    const data = results.data;
-    if (data.length) {
-      // Implicitly include mixpanel dataset
-      let datasets = [DATASET_MIXPANEL];
-
-      datasets = datasets.concat(data.map(dataset => ({
-        displayName: capitalize(dataset),
-        datasetName: dataset,
+    if (results.data.length) {
+      let datasets = Object.assign(...results.data.map(dataset => ({
+        [dataset]: DATASETS[dataset] || {
+          displayName: capitalize(dataset),
+        },
       })));
+
+      // Implicitly include mixpanel dataset
+      datasets = extend(datasets, {
+        [DATASET_MIXPANEL]: DATASETS[DATASET_MIXPANEL],
+      });
 
       return datasets;
     }
