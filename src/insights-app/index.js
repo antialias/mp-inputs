@@ -3,7 +3,8 @@ import isEqual from 'lodash/isEqual';
 import kebabCase from 'lodash/kebabCase';
 import MPApp from 'mixpanel-common/report/mp-app';
 import Persistence from 'mixpanel-common/report/persistence';
-import {commaizeNumber, extend} from 'mixpanel-common/util';
+import {commaizeNumber, extend, pick} from 'mixpanel-common/util';
+import {unique} from 'mixpanel-common/util/array';
 import ItemsMenu from 'mixpanel-common/widgets/items-menu';
 import * as util from '../util';
 
@@ -436,8 +437,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       label = ``,
     } = blocking;
     this.state.blocking = {isBlockedEvents, isBlockedPeople, label};
-    this.state[RECENT.EVENTS] = this.getRecentEvents();
-    this.state[RECENT.PROPERTIES] = this.getRecentProperties();
+    this.state[RECENT.EVENTS] = this._loadRecentListFromPersistence(`events`);
+    this.state[RECENT.PROPERTIES] = this._loadRecentListFromPersistence(`properties`);
     this.state.isPayingCustomer = [`billing_error_blocked_owner`, `billing_error_blocked_member`].includes(this.state.blocking.label);
 
     this.queries = {};
@@ -545,11 +546,11 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   getRecentEvents() {
-    return this._getRecentList(`events`);
+    return this._getRecentList(`events`, this.getDataset());
   }
 
   getRecentProperties() {
-    return this._getRecentList(`properties`);
+    return this._getRecentList(`properties`, this.getDataset());
   }
 
   updateRecentEvents(mpEvent) {
@@ -564,65 +565,61 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return `recent-${type}`;
   }
 
-  _filterRecentList(list) {
-    const specialEventsAndProps = [
-      ...ShowClause.SPECIAL_EVENTS,
-      ...GroupClause.SPECIAL_PROPERTIES,
-    ];
-    return list.filter(eventOrProperty => !specialEventsAndProps.find(special =>
+  _sanitizeRecentList(list) {
+    // LEGACY - support persisted recent data from pre-datasets world
+    list = list.map(item => extend({dataset: DATASET_MIXPANEL}, item));
+
+    // remove any match data from value object
+    // custom, id, alternatives are needed to get custom events to correctly work
+    // is_collect_everything_event is needed to show correct icon in recent events list
+    const recentItemFields = [`name`, `type`, `resourceType`, `dataset`, `custom`, `id`, `alternatives`, `is_collect_everything_event`];
+    list = list.map(item => pick(item, recentItemFields));
+
+    // remove special events and properties from recent item list
+    const specialEventsAndProps = [...ShowClause.SPECIAL_EVENTS, ...GroupClause.SPECIAL_PROPERTIES];
+    list = list.filter(eventOrProperty => !specialEventsAndProps.find(special =>
       eventOrProperty.name === special.name &&
       eventOrProperty.type === special.type &&
       eventOrProperty.resourceType === special.resourceType
     ));
+
+    // ensure recent item list is unique
+    const hash = value => recentItemFields.map(field => value[field]).join(`:`);
+    list = unique(list, {hash});
+
+    return list;
   }
 
-  _getRecentList(type) {
-    let recentList = this.state[type === `events` ? RECENT.EVENTS : RECENT.PROPERTIES];
+  _loadRecentListFromPersistence(type) {
+    let list;
 
-    if (!recentList) {
-      const recentString = this.persistence.get(this._getRecentPersistenceKey(type));
-      try {
-        recentList = JSON.parse(recentString);
-      } catch (err) {
-        console.error(`Error parsing recent ${type} from persistence: ${err}`);
-      }
+    try {
+      list = JSON.parse(this.persistence.get(this._getRecentPersistenceKey(type)));
+    } catch (err) {
+      console.error(`Error parsing recent ${type} from persistence: ${err}`);
     }
 
-    recentList = recentList || [];
-    recentList = this._filterRecentList(recentList);
+    return this._sanitizeRecentList(list || []);
+  }
 
-    // LEGACY - support persisted recent data from pre-datasets world
-    recentList = recentList.map(item => extend({dataset: DATASET_MIXPANEL}, item));
+  _getRecentList(type, dataset=null) {
+    let list = this.state[type === `events` ? RECENT.EVENTS : RECENT.PROPERTIES];
 
-    const dataset = this.getDataset();
     if (dataset) {
-      recentList = recentList.filter(item => item.dataset === dataset);
+      list = list.filter(item => item.dataset === dataset);
     }
 
-    return recentList;
+    this.persistence.set(this._getRecentPersistenceKey(type), JSON.stringify(list));
+
+    return list;
   }
 
   _updateRecentList(type, value) {
-    // remove any match data from view object
-    // custom, id, alternatives are needed to get custom events to correctly work
-    // is_collect_everything_event is needed to show correct icon in recent events list
-    value = util.pick(value, [`name`, `type`, `resourceType`, `dataset`, `custom`, `id`, `alternatives`, `is_collect_everything_event`]);
-
     const stateKey = type === `events` ? RECENT.EVENTS : RECENT.PROPERTIES;
-    const recentList = [
-      value,
-      // JSON.stringify removes prop:undefined when stringifying. Since we stringify for persistence,
-      // filter needs to account for the quirky behaviour and use a stringify comparison
-      ...this.state[stateKey].filter(oldValue =>
-        JSON.stringify(value) !== JSON.stringify(oldValue)
-      ),
-    ];
 
     this.update({
-      [stateKey]: this._filterRecentList(recentList).slice(0, 10),
+      [stateKey]: this._sanitizeRecentList([value, ...this.state[stateKey]]),
     });
-
-    this.persistence.set(this._getRecentPersistenceKey(type), JSON.stringify(this.state[stateKey]));
   }
 
   getBookmark(report) {
