@@ -38,7 +38,8 @@ export class Clause {
   }
 
   get attrs() {
-    return pick(this, [`dataset`]);
+    const {dataset} = this;
+    return {dataset};
   }
 
   extend(attrs) {
@@ -54,7 +55,7 @@ export class Clause {
   }
 
   toUrlData() {
-    return pick(this.attrs, [`dataset`]);
+    return this.attrs;
   }
 
   get valid() {
@@ -103,7 +104,8 @@ export class EventsPropertiesClause extends Clause {
   }
 
   toUrlData() {
-    return extend(super.toUrlData(), pick(this.attrs, [`value`, `resourceType`]));
+    const {value, resourceType} = this.attrs;
+    return extend(super.toUrlData(), {value, resourceType});
   }
 }
 
@@ -302,7 +304,7 @@ export class TimeClause extends Clause {
 
   get attrs() {
     const {unit, value} = this;
-    return {unit, value};
+    return extend(super.attrs, {unit, value});
   }
 
   get valid() {

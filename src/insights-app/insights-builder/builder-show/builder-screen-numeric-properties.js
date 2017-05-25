@@ -36,10 +36,12 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
     return stageClause && stageClause.value ? [stageClause.value] : [];
   }
 
+  // get the event this property screen is currently showing properties for
   getEvent() {
     return this.getRelevantBuilderEvents()[0] || null;
   }
 
+  // get the name of the event this property screen is currently showing properties for
   getEventName() {
     const mpEvent = this.getEvent();
     return mpEvent ? mpEvent.name : null;
