@@ -4,6 +4,7 @@ import {Clause} from '../../../models/clause';
 import {extend} from '../../../util';
 
 import template from './builder-screen-sources.jade';
+import './builder-screen-sources.styl';
 
 const SOURCES = [
   {name: `Events`, resourceType: `events`},
@@ -20,10 +21,13 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
           let indexedSources = SOURCES.slice();
           return indexedSources.map((source, index) => extend(source, {index}));
         },
-        clickedSource: source => {
-          const {resourceType} = source;
+        getSelectedResourceType: () => {
+          const stageClauses = this.app.state.stageClauses;
+          return (stageClauses && stageClauses.length && stageClauses[0].resourceType) || SOURCES[0].resourceType;
+        },
+        clickedSource: ev => {
+          const resourceType = ev.detail.selected;
           this.updateStageClause({resourceType, value: {}});
-          this.nextScreen(`builder-screen-${resourceType}`);
         },
         getSections: () => this.buildList(),
         updateRenderedSizeOnNextFrame: () => this.updateRenderedSizeOnNextFrame(),
@@ -37,6 +41,11 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
         },
         shouldShowSourceUpsell: source => this.app.shouldUpsellForSource(source.resourceType),
         shouldShowSourceAlert: source => this.app.shouldAlertForSource(source.resourceType),
+        getResourceScreenAttrs: () => ({
+          attrs: {
+            'is-embedded': true,
+          },
+        }),
       }),
     };
   }

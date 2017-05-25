@@ -236,10 +236,10 @@ header-button-transition-duration = 150ms
 
   // resource-type-control
   .resource-type-control
-    border-bottom 1px solid grey-150
     flex-shrink 0
-    padding 10px 15px
     position relative
+    box-shadow 0 1px 0 0 grey-150, 0 1px 3px 0 rgba(156, 172, 187, 0.37)
+
     mp-toggle
       width 100%
 
@@ -306,6 +306,10 @@ header-button-transition-duration = 150ms
     font-weight 900
     height 48px
     position relative
+
+    &.theme-lite
+      box-shadow: none
+      border-bottom: 1px solid grey-100
 
     .upsell-header
       border 1px solid grey-150
@@ -439,7 +443,7 @@ header-button-transition-duration = 150ms
     display inline-block
     padding 20px 0
     text-align center
-    
+
     .title
       color grey-900
       font-family proxima-nova

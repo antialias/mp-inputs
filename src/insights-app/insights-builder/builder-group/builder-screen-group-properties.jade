@@ -3,7 +3,7 @@ include ../mixins.jade
 - const isEventsOnlyQuery = $helpers.isEventsOnlyQuery()
 
 .builder-screen.properties(hook={postpatch: $helpers.updateRenderedSize})
-  +screen-title(`Group by a ${isEventsOnlyQuery ? `` : `people`} property`, {backButton: $helpers.screenIdx() >= 1})
+  +screen-title(`Group by a ${isEventsOnlyQuery ? `` : `people`} property`, {backButton: !!$helpers.screenIdx()})
   +property-screen-body({
     resourceTypes: isEventsOnlyQuery && $helpers.RESOURCE_TYPES,
     selectedResourceType: $helpers.getSelectedResourceType(),

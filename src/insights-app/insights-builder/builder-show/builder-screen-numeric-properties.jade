@@ -3,7 +3,7 @@ include ../mixins.jade
 - const loading = $helpers.isLoading()
 
 .builder-screen.properties
-  +screen-title(`Properties of ${$helpers.getEventLabel()}`, {backButton: $helpers.screenIdx() > 1})
+  +screen-title(`Properties of ${$helpers.getEventLabel()}`, {backButton: !!$helpers.screenIdx()})
   mp-items-menu(
     attrs={
       progressive: true,

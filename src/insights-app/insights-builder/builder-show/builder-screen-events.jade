@@ -1,7 +1,8 @@
 include ../mixins.jade
 
 .builder-screen.events
-  +screen-title('All Events', {backButton: true})
+  if !$helpers.isEmbedded()
+    +screen-title('All Events', {backButton: true})
   if !projectHasEvents || blocking.isBlockedEvents
     +upsell-pane('events')
   else

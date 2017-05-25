@@ -44,7 +44,7 @@ export class BuilderScreenBase extends Component {
           const isInContextualMenu = !!this.state.builderPane.isContextualMenuOpen;
           this.updateStageClause({value, property: null}, {shouldCommit: !isInContextualMenu});
           this.nextScreen(`builder-screen-numeric-properties`, {
-            previousScreens: [`builder-screen-events`],
+            previousScreens: [`builder-screen-sources`],
           });
         },
         clickedProperty: ev => {
@@ -184,10 +184,19 @@ export class BuilderScreenBase extends Component {
 
   nextScreen(componentName, {previousScreens=[], screenAttrs={}}={}) {
     if (!this.state.builderPane.inTransition) {
+      const builderScreens = this.state.builderPane.screens;
       const currScreen = extend({componentName}, screenAttrs);
       const prevScreens = previousScreens.map(componentName => ({componentName}));
-      const screens = [...this.state.builderPane.screens, ...prevScreens, currScreen];
 
+      // If prevScreen is last screen in builderScreen then don't add it
+      if (
+        builderScreens.length > 0 && prevScreens.length > 0 &&
+        builderScreens[builderScreens.length - 1].componentName === prevScreens[0].componentName
+      ) {
+        prevScreens.shift();
+      }
+
+      const screens = [...this.state.builderPane.screens, ...prevScreens, currScreen];
       this.app.update({contextFilter: ``});
       this.app.updateBuilder({
         activeIndex: 0,

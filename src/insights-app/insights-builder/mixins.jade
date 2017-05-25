@@ -30,8 +30,11 @@ mixin secondary-action-pill(label, options)
 mixin property-screen-body(options)
   if options.resourceTypes
     .resource-type-control
-      mp-toggle(
-        attrs={square: true, small: true, selected: options.selectedResourceType}
+      mp-toggle.sources-toggle(
+        attrs={
+          theme: 'lite',
+          selected: options.selectedResourceType,
+        }
         on={select: ev => options.clickedResourceType(ev.detail.selected)}
       )
         each type in options.resourceTypes
@@ -82,7 +85,7 @@ mixin screen-option(label, options)
 
 mixin screen-title(title, options)
   - options = options || {}
-  .screen-title
+  .screen-title(class={lite: options.theme === 'lite'})
     if options.upsell
       .upsell-header
         svg-icon(attrs={icon: 'lighting-bolt'})

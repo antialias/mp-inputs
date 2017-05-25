@@ -46,6 +46,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
             }
           }
         },
+        isEmbedded: () => !!this.getAttribute(`is-embedded`),
       }),
     };
   }
