@@ -10,6 +10,12 @@ class BasePropertyValuesQuery extends BaseQuery {
     }
     return {property};
   }
+
+  processResults(results) {
+    return sorted(results, {
+      transform: value => value.toLowerCase(),
+    });
+  }
 }
 
 export class TopEventPropertyValuesQuery extends BasePropertyValuesQuery {
@@ -20,12 +26,6 @@ export class TopEventPropertyValuesQuery extends BasePropertyValuesQuery {
   buildParams() {
     return {name: this.query.property};
   }
-
-  processResults(results) {
-    return sorted(results, {
-      transform: value => value.toLowerCase(),
-    });
-  }
 }
 
 export class TopPeoplePropertyValuesQuery extends BasePropertyValuesQuery {
@@ -35,11 +35,5 @@ export class TopPeoplePropertyValuesQuery extends BasePropertyValuesQuery {
 
   buildParams() {
     return {property: this.query.property};
-  }
-
-  processResults(results) {
-    return sorted(results.results, {
-      transform: value => value.toLowerCase(),
-    });
   }
 }

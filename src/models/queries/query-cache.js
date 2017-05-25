@@ -20,6 +20,8 @@ export default class QueryCache {
 
     this.results[key] = results;
     this.expiries[key] = expireSeconds ? Date.now() + expireSeconds * 1000 : null;
+
+    return results;
   }
 
   hash(query) {

@@ -114,7 +114,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         if (this.state.report.id) {
           stateUpdate = extend(stateUpdate, this.resetQuery());
         } else if (!stateUpdate.report && this.canMakeQueries()) {
-          this.fetchTopEventsProperties();
+          this._fetchDatasets();
+          this._fetchTopEventsProperties();
         }
         return stateUpdate;
       },
@@ -259,11 +260,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       sorting: this.sortConfigFor(null),
       title: ``,
     });
-  }
-
-  getDataset() {
-    const clause = this.getClausesForType(ShowClause.TYPE)[0];
-    return (clause && clause.dataset) || null;
   }
 
   /* feature gate fcns */
@@ -482,17 +478,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       // END DEBUG CODE
     }
 
-    if (this.hasProjectFeatureFlag(`sst`)) {
-      // Fetch list of datasets on page load
-      this.queries.datasets.build(this.state).run().then(datasets => {
-        this.update({datasets: extend(this.state.datasets, datasets)});
-
-        if (this.canMakeQueries()) {
-          this.fetchTopEventsProperties();
-        }
-      });
-    }
-
     this.updateCanAddBookmark();
 
     super.attachedCallback(...arguments);
@@ -673,7 +658,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.update(stateUpdate);
 
     if (this.canMakeQueries()) {
-      this.fetchTopEventsProperties();
+      this._fetchDatasets();
+      this._fetchTopEventsProperties();
     }
 
     if (trackLoading) {
@@ -885,7 +871,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     });
 
     if (this.canMakeQueries()) {
-      this.fetchTopEventsProperties();
+      this._fetchTopEventsProperties();
     }
   }
 
@@ -994,6 +980,22 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return screen && currentScreen === `builder-screen-time-custom`;
   }
 
+  // Datasets management
+
+  getDataset() {
+    const clause = this.getClausesForType(ShowClause.TYPE)[0];
+    return (clause && clause.dataset) || null;
+  }
+
+  _fetchDatasets() {
+    if (this.hasProjectFeatureFlag(`sst`)) {
+      this.queries.datasets.build(this.state).run().then(datasets => {
+        this.update({datasets: extend(this.state.datasets, datasets)});
+        this._fetchTopEventsProperties();
+      });
+    }
+  }
+
   // Top events/properties management
 
   getTopEvents() {
@@ -1045,17 +1047,11 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
     query.build(state || this.state, {dataset});
 
-    const cachedResult = cache.get(query.query);
-
-    if (cachedResult) {
-      return Promise.resolve(cachedResult);
-    } else {
-      return query.run().then(topList => {
-        topList = topList.map(item => extend(item, {dataset}));
-        cache.set(query.query, topList);
-        return topList;
-      });
-    }
+    return Promise.resolve(cache.get(query.query)).then(cachedResult =>
+      cachedResult || query.run().then(topList =>
+        cache.set(query.query, topList)
+      )
+    );
   }
 
   _updateTopList(topKey, dataset, topValue) {
@@ -1066,7 +1062,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     });
   }
 
-  fetchTopEventsProperties() {
+  // query top events/properties for the current dataset and load into state
+  // pre-query top events/properties for all other datasets so results will be cached
+  _fetchTopEventsProperties() {
     const dataset = this.getDataset();
 
     // eagerly query top events/properties for other datasets so their results will be cached
@@ -1082,7 +1080,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     ].forEach(topKey => {
       this._updateTopList(topKey, dataset, BaseQuery.LOADING);
       this._fetchTopList(topKey, dataset).then(topList =>
-        this._updateTopList(topKey, dataset, topList)
+        this._updateTopList(topKey, dataset, topList.map(item => extend(item, {dataset})))
       );
     });
 
@@ -1092,7 +1090,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       if (dataset === DATASET_MIXPANEL) {
         topEvents = topEvents.concat(this.customEvents);
       }
-      this._updateTopList(TOP_EVENTS, dataset, topEvents);
+      this._updateTopList(TOP_EVENTS, dataset, topEvents.map(item => extend(item, {dataset})));
     });
 
     // check whether we need to wait for Top Events query before launching the main query
@@ -1115,13 +1113,13 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       }));
       this._fetchTopList(TOP.EVENTS.PROPERTIES, dataset, {event: eventName}).then(topProperties => {
         this._updateTopList(TOP.EVENTS.PROPERTIES_BY_EVENT, dataset, extend(topState, {
-          [eventName]: topProperties,
+          [eventName]: topProperties.map(item => extend(item, {dataset})),
         }));
       });
     }
   }
 
-  fetchTopPropertyValues(resourceType) {
+  _fetchTopPropertyValues(resourceType) {
     const dataset = this.getDataset();
     const topKey = resourceType === `events` ? TOP.EVENTS.PROPERTY_VALUES : TOP.PEOPLE.PROPERTY_VALUES;
 
@@ -1286,13 +1284,13 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     }
     let newState = {stageClauses};
 
+    this.update(newState);
+
     // query new property values if we're setting a new filter property
     const activeStageClause = this.activeStageClause;
     if (activeStageClause && activeStageClause.TYPE === `filter` && clauseData.value) {
-      this.fetchTopPropertyValues(clauseData.resourceType);
+      this._fetchTopPropertyValues(clauseData.resourceType);
     }
-
-    this.update(newState);
 
     if (shouldCommit) {
       this.commitStageClause({shouldStopEditing});
