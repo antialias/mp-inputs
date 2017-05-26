@@ -1,6 +1,6 @@
 include ../mixins.jade
 
-.builder-screen.sources(style={width: `320px`})
+.builder-screen.sources
   +screen-title(`Mixpanel Dataset`, {
     backButton: !!$helpers.screenIdx(),
     theme: 'lite',
@@ -32,4 +32,4 @@ include ../mixins.jade
         each source in $helpers.getSources()
           mp-toggle-option(attrs={value: source.resourceType})= source.name
 
-    = $component.child(`builder-screen-${$helpers.getSelectedResourceType()}`, $helpers.getResourceScreenAttrs())
+    = $component.child($helpers.getSelectedResourceType() === `events` ? `builder-screen-events` : `builder-screen-people`, {attrs: {'is-embedded': true}})

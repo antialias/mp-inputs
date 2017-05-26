@@ -16,8 +16,13 @@
             "type": "chrome",
             "request": "attach",
             "port": 9222,
-            "url": "http://localhost:8080/index-dev.html*",
-            "webRoot": "${workspaceRoot}"
-        }  
+            "url": "http://localhost:8080/index-dev.html/*",
+            "trace": true,
+            "webRoot": "${workspaceRoot}",
+            "sourceMapPathOverrides": {
+                "webpack:///./~/*": "${workspaceRoot}/node_modules/*",
+                "webpack:///*": "${workspaceRoot}/*"
+            }
+        }
     ]
 }

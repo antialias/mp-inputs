@@ -85,7 +85,7 @@ mixin screen-option(label, options)
 
 mixin screen-title(title, options)
   - options = options || {}
-  .screen-title(class={lite: options.theme === 'lite'})
+  .screen-title(class={'theme-lite': options.theme === 'lite'})
     if options.upsell
       .upsell-header
         svg-icon(attrs={icon: 'lighting-bolt'})

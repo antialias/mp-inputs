@@ -186,14 +186,13 @@ export class BuilderScreenBase extends Component {
     if (!this.state.builderPane.inTransition) {
       const builderScreens = this.state.builderPane.screens;
       const currScreen = extend({componentName}, screenAttrs);
-      const prevScreens = previousScreens.map(componentName => ({componentName}));
+      let prevScreens = previousScreens.map(componentName => ({componentName}));
+      const lastScreenName = builderScreens.length && builderScreens[builderScreens.length - 1].componentName;
+      const firstPrevScreenName = prevScreens.length && prevScreens[prevScreens.length - 1].componentName;
 
-      // If prevScreen is last screen in builderScreen then don't add it
-      if (
-        builderScreens.length > 0 && prevScreens.length > 0 &&
-        builderScreens[builderScreens.length - 1].componentName === prevScreens[0].componentName
-      ) {
-        prevScreens.shift();
+      // If prevScreen is same as last screen in builderScreen then don't add a duplicate
+      if (lastScreenName && firstPrevScreenName && lastScreenName !== firstPrevScreenName) {
+        prevScreens = prevScreens.slice(1);
       }
 
       const screens = [...this.state.builderPane.screens, ...prevScreens, currScreen];

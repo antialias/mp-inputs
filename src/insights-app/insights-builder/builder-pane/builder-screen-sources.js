@@ -41,11 +41,6 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
         },
         shouldShowSourceUpsell: source => this.app.shouldUpsellForSource(source.resourceType),
         shouldShowSourceAlert: source => this.app.shouldAlertForSource(source.resourceType),
-        getResourceScreenAttrs: () => ({
-          attrs: {
-            'is-embedded': true,
-          },
-        }),
       }),
     };
   }
