@@ -3,7 +3,7 @@ include ../mixins.jade
 .builder-screen.properties(hook={postpatch: $helpers.updateRenderedSize})
   +screen-title(`Filter by a property`, {
     backButton: !!$helpers.screenIdx(),
-    theme: 'lite',
+    theme: `lite`,
   })
   +property-screen-body({
     resourceTypes: $helpers.RESOURCE_TYPES,

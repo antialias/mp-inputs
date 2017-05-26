@@ -3,7 +3,7 @@ include ../mixins.jade
 .builder-screen.sources
   +screen-title(`Mixpanel Dataset`, {
     backButton: !!$helpers.screenIdx(),
-    theme: 'lite',
+    theme: `lite`,
   })
   if contextFilter
     mp-items-menu(
@@ -23,7 +23,7 @@ include ../mixins.jade
       mp-toggle.sources-toggle(
         attrs={
           selected: $helpers.getSelectedResourceType(),
-          theme: 'lite',
+          theme: `lite`,
         }
         on={
           select: $helpers.clickedSource,
