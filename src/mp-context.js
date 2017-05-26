@@ -13,11 +13,6 @@ export default class MPContext {
     this.standalone = typeof mp === `undefined`;
     this.apiHost = `https://mixpanel.com`;
 
-    // TODO DEBUG CODE - remove when we switch fully to new Insights API
-    this.useOldApi = window.location.href.includes(`old_api`);
-    this.compareApis = window.location.href.includes(`compare_apis`);
-    // END DEBUG CODE
-
     if (!this.standalone) {
       // global garbage
       this.accessToken = mp.report.globals.access_token;
@@ -41,13 +36,6 @@ export default class MPContext {
       this.userName = mp.report.globals.user_name;
       this.utcOffset = mp.report.globals.utc_offset;
       this.whitelists = mp.report.globals.whitelists;
-
-      // TODO @evnp 5/16/17: TEMP SST DEMO CODE - pass dataset param if project feature flag "sst" is active
-      if (this.projectFeatureFlags.includes(`sst`)) {
-        const datasetMatch = window.location.href.match(/dataset_name=(\w+)/);
-        this.datasetName = datasetMatch ? datasetMatch[1] : `salesforce`;
-      }
-      // END SST DEMO CODE
 
       // API access
       if (API_LOCAL) {
