@@ -19,7 +19,8 @@ import BaseQuery from '../models/queries/base';
 import TopEventsQuery from '../models/queries/top-events';
 import {TopEventPropertiesQuery, TopPeoplePropertiesQuery} from '../models/queries/top-properties';
 import {TopEventPropertyValuesQuery, TopPeoplePropertyValuesQuery} from '../models/queries/top-property-values';
-import SegmentationQuery from '../models/queries/segmentation';
+import SegmentationQueryOldApi from '../models/queries/segmentation';
+import SegmentationQueryNewApi from '../models/queries/segmentation-new-api';
 import QueryCache from '../models/queries/query-cache';
 import DatasetsQuery from '../models/queries/datasets';
 import Report from '../models/report';
@@ -446,7 +447,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
       this.queries = {
         datasets: new DatasetsQuery(apiAttrs),
-        segmentation: new SegmentationQuery(apiAttrs, {utcOffset: this.getUtcOffset()}),
+        segmentation: new SegmentationQueryNewApi(apiAttrs, {utcOffset: this.getUtcOffset()}),
         [TOP_EVENTS]: new TopEventsQuery(apiAttrs),
         [TOP.EVENTS.PROPERTIES]: new TopEventPropertiesQuery(apiAttrs),
         [TOP.PEOPLE.PROPERTIES]: new TopPeoplePropertiesQuery(apiAttrs),
@@ -462,6 +463,19 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         [TOP.EVENTS.PROPERTY_VALUES]: new QueryCache(),
         [TOP.PEOPLE.PROPERTY_VALUES]: new QueryCache(),
       };
+
+      // TODO @evnp 5/16/17: TEMP DEBUG CODE - remove when we switch fully to new Insights API
+      if (this.useOldApi || this.compareApis) {
+        this.queries.oldApiSegmentation = new SegmentationQueryOldApi(apiAttrs, {
+          customEvents: this.customEvents,
+          utcOffset: this.getUtcOffset(),
+        });
+      }
+
+      if (this.useOldApi) {
+        this.queries.segmentation = this.queries.oldApiSegmentation;
+      }
+      // END DEBUG CODE
     }
 
     this.updateCanAddBookmark();
@@ -1504,6 +1518,28 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
       this.trackEvent(`Query Start`, extend(reportTrackingData, queryEventProperties));
 
+      // TODO @evnp 5/16/17: TEMP DEBUG CODE - remove when we switch fully to new Insights API
+      const timer = new Date().getTime();
+
+      if (this.compareApis) {
+        this.update({
+          oldApiResult: new Result({headers: [], series: {}}),
+          oldApiQueryTimeMs: null,
+          newApiResult: new Result({headers: [], series: {}}),
+          newApiQueryTimeMs: null,
+        });
+        this.queries.oldApiSegmentation.build(this.state, {dataset, displayOptions}).run().then(result => {
+          console.info(`Old JQL query result:`);
+          console.info(result);
+          this.update({
+            oldApiResult: result,
+            oldApiQueryTimeMs: new Date().getTime() - timer,
+            result: this.state.showingOldApiResult ? result : this.state.newApiResult,
+          });
+        });
+      }
+      // END DEBUG CODE
+
       return this.queries.segmentation.run(cachedResult)
         .then(result => {
           if (!cachedResult) {
@@ -1520,6 +1556,18 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
               legend: this.state.report.legend.updateLegendData(result),
             }),
           });
+
+          // TODO @evnp 5/16/17: TEMP DEBUG CODE - remove when we switch fully to new Insights API
+          if (this.compareApis) {
+            console.info(`New API query result:`);
+            console.info(result);
+            this.update({
+              newApiResult: result,
+              newApiQueryTimeMs: new Date().getTime() - timer,
+              result: this.state.showingOldApiResult ? this.state.oldApiResult : result,
+            });
+          }
+          // END DEBUG CODE
         })
         .catch(err => {
           console.error(err);
@@ -1530,4 +1578,15 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         });
     }
   }
+
+  // TODO @evnp 5/16/17: TEMP DEBUG CODE - remove when we switch fully to new Insights API
+  toggleResult() {
+    if (this.compareApis) {
+      this.update({
+        showingOldApiResult: !this.state.showingOldApiResult,
+        result: this.state.showingOldApiResult ? this.state.newApiResult : this.state.oldApiResult,
+      });
+    }
+  }
+  // END DEBUG CODE
 });

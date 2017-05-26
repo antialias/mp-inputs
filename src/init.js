@@ -23,6 +23,11 @@ const initInsights = () => new Promise(resolve => {
     app.apiSecret = queryParams.api_secret;
     app.setMPContext(mpContext);
 
+    // TODO DEBUG CODE - remove when we switch fully to new Insights API
+    app.useOldApi = mpContext.useOldApi;
+    app.compareApis = mpContext.compareApis;
+    // END DEBUG CODE
+
     resolve(app);
 
   } else {
@@ -30,6 +35,13 @@ const initInsights = () => new Promise(resolve => {
     app.apiKey = mpContext.apiKey;
     app.apiSecret = mpContext.apiSecret;
     app.setMPContext(mpContext);
+
+    // TODO DEBUG CODE - remove when we switch fully to new Insights API
+    if (app.hasWhitelist(`dev`)) {
+      app.useOldApi = mpContext.useOldApi;
+      app.compareApis = mpContext.compareApis;
+    }
+    // END DEBUG CODE
 
     mixpanel.identify(mpContext.userID);
     mixpanel.register({
