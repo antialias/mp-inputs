@@ -22,8 +22,7 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
           return indexedSources.map((source, index) => extend(source, {index}));
         },
         getSelectedResourceType: () => {
-          const stageClauses = this.app.state.stageClauses;
-          return (stageClauses && stageClauses.length && stageClauses[0].resourceType) || SOURCES[0].resourceType;
+          return this.app.originStageClauseIsPeopleProperty() ? `people` : `events`;
         },
         clickedSource: ev => {
           const resourceType = ev.detail.selected;
