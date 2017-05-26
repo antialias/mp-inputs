@@ -19,12 +19,6 @@ mixin header-col(text, field)
       .caret.caret-down
         svg-icon(attrs={icon: `triangle-down`})
 
-mixin user-filter-option(label, value)
-  .user-filter-option(
-    class={'user-filter-selected': value === reportsDrawer.userFilter}
-    on={click: () => $helpers.changeUserFilter(value)}
-  )= label
-
 .reports-list-wrapper
   mp-drawer(
     attrs={hide: !reportsDrawerOpen}
@@ -38,11 +32,18 @@ mixin user-filter-option(label, value)
           p You haven't saved any reports yet.
       else
         .user-filter
-          .user-filter-border-spacer.border-spacer-left
-          +user-filter-option(`All`,          `all`  )
-          .user-filter-border-spacer.border-spacer-left
-          +user-filter-option(`Your reports`, `yours`)
-          .user-filter-border-spacer.border-spacer-right
+          mp-toggle.user-filter-toggle(
+            attrs={
+              selected: `all`,
+              theme: `lite`,
+            }
+            on={
+              select: $helpers.changeUserFilter,
+            }
+          )
+            mp-toggle-option(attrs={value: `all`}) All
+            mp-toggle-option(attrs={value: `yours`}) Your reports
+
 
         .reportlist-search
           .reportlist-search-icon

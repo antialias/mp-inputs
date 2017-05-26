@@ -81,7 +81,7 @@ document.registerElement(`insights-reports`, class extends Component {
 
       helpers: {
         changeNameFilter: ev => this.updateDrawer({nameFilter: ev.target.value}),
-        changeUserFilter: userFilter => this.updateDrawer({userFilter}),
+        changeUserFilter: ev => this.updateDrawer({userFilter: ev.detail.selected}),
         clickDelete: (ev, report) => {
           ev.stopPropagation();
           this.updateDrawer({confirmDelete: report});
