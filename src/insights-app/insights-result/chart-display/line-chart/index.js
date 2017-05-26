@@ -10,7 +10,43 @@ document.registerElement(`line-chart`, class extends Component {
   get config() {
     return {
       template,
+      helpers: {
+        handleClickedAnomaly: ev => {
+          const anomalyAlert = ev.detail.anomalyAlert;
+          if (this.state.focusedAnomaly && this.state.focusedAnomaly.anomalyAlert.alertId === anomalyAlert.alertId) {
+            // Clicking the anomaly icon for an open anomaly alert will close the anomaly alert.
+            this.removeFocusedAnomaly();
+          } else {
+            const focusedAnomaly = {anomalyAlert};
+
+            const offsetElRect = ev.detail.offsetEl.getBoundingClientRect();
+            focusedAnomaly.offsetLeft = document.body.scrollLeft + offsetElRect.left + offsetElRect.width/2;
+            const anomalyDirection = anomalyAlert.anomaly.direction;
+            if (anomalyDirection === `NEGATIVE`) {
+              focusedAnomaly.placement = `bottom`;
+              focusedAnomaly.offsetTop = document.body.scrollTop + offsetElRect.top + offsetElRect.height;
+            } else {
+              focusedAnomaly.placement = `top`;
+              focusedAnomaly.offsetTop = document.body.scrollTop + offsetElRect.top;
+            }
+            this.update({focusedAnomaly});
+          }
+        },
+        handleRemovedAnomalyAlert: () => {
+          this.removeFocusedAnomaly();
+        },
+        handleClickAnomalyAlert: ev => {
+          // Prevent clicks on the alert from closing the alert.
+          ev.stopPropagation();
+        },
+        handleClickChart: () => {
+          if (this.state.focusedAnomaly) {
+            this.update({focusedAnomaly: false});
+          }
+        },
+      },
       defaultState: {
+        focusedAnomaly: null,
         chartLabel: null,
         data: {},
         util,
@@ -23,6 +59,16 @@ document.registerElement(`line-chart`, class extends Component {
     // TODO: research why attributeChangedCallback is not called before component
     // is attached only in full webcomponents polyfill (and not lite version)
     this.updateChartState();
+
+    this.removeFocusedAnomaly = () => {
+      this.update({focusedAnomaly: null});
+    };
+    document.addEventListener(`click`, this.removeFocusedAnomaly);
+  }
+
+  detachedCallback() {
+    document.removeEventListener(`click`, this.removeFocusedAnomaly);
+    super.detachedCallback(...arguments);
   }
 
   attributeChangedCallback(attrName, oldVal, newVal) {
@@ -38,10 +84,11 @@ document.registerElement(`line-chart`, class extends Component {
       return;
     }
 
-    let {headers, series, dataId} = this.chartData;
+    let {anomalyAlerts, headers, series, dataId} = this.chartData;
 
     if (headers && series) {
       const newState = {
+        anomalyAlerts,
         chartLabel: this.getJSONAttribute(`chart-label`),
         dataId,
         displayOptions: this.getJSONAttribute(`display-options`),

@@ -20,6 +20,7 @@ export default class Report {
       `title`,
 
       // visualization params
+      `alertContentIds`,
       `displayOptions`,
       `sections`,
       `legend`,
@@ -49,6 +50,7 @@ export default class Report {
     const serialized = extend({
       sections: this.sections.serialize(),
     }, pick(this, [
+      `alertContentIds`,
       `displayOptions`,
       `legend`,
       `sorting`,

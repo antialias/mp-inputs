@@ -3,6 +3,9 @@ import partition from 'lodash/partition';
 import WebComponent from 'webcomponent';
 
 import * as util from '../../../../util';
+// TODO(mack): Expose the icons on the mp-smart-hub-alerts component
+import anomalyUpIcon from 'mixpanel-common/lib/widgets/smart-hub-alert/smart-hub-assets/anomaly-up.svg';
+import anomalyDownIcon from 'mixpanel-common/lib/widgets/smart-hub-alert/smart-hub-assets/anomaly-down.svg';
 
 import {
   multiPartSortComparator,
@@ -35,6 +38,9 @@ export class MPLineChart extends WebComponent {
     if (attrName === `seg-filters`) {
       this._segFilters = JSON.parse(newVal);
       this.updateShowHideSeries();
+    } else if (attrName === `disable-chart-interactions`) {
+      this._disableChartInteractions = this.getJSONAttribute(attrName);
+      this.updateChartInteractions();
     }
   }
 
@@ -99,12 +105,7 @@ export class MPLineChart extends WebComponent {
     };
   }
 
-  renderChart() {
-    if (!this.chartData || !this.initialized || !this._displayOptions || !this._changeId) {
-      return;
-    }
-
-    const displayOptions = this._displayOptions || {};
+  defaultHighchartsOptions() {
     const axisOptions = {
       endOnTick: false,
       lineWidth: 1,
@@ -113,13 +114,17 @@ export class MPLineChart extends WebComponent {
       maxPadding: 0,
       startOnTick: true,
     };
-    const highchartsOptions = {
-
+    return {
       chart: {
         backgroundColor: `rgba(255,255,255,0)`,
         borderRadius: 0,
         events: {
           redraw: killLastGridline,
+          click: ev => {
+            // This is necessary to bubble the event to ancestors. I think it's because the original click
+            // event is triggered within svg element, and stops bubbling at the svg boundary.
+            this.dispatchEvent(new MouseEvent(ev.type, ev));
+          },
         },
         marginTop: 0,
         marginRight: 0,
@@ -183,7 +188,10 @@ export class MPLineChart extends WebComponent {
           },
           events: {
             mouseOver() {
+              // TODO(mack): this.group.toFront() doesn't seem to do anything. Is this necessary?
               this.group.toFront();
+              // Move the markers (dots) in front of the time series.
+              this.markerGroup.toFront();
             },
           },
           fillOpacity: 1,
@@ -255,6 +263,15 @@ export class MPLineChart extends WebComponent {
         showLastLabel: false,
       }),
     };
+  }
+
+  renderChart() {
+    if (!this.chartData || !this.initialized || !this._displayOptions || !this._changeId) {
+      return;
+    }
+
+    const displayOptions = this._displayOptions || {};
+    const highchartsOptions = this.defaultHighchartsOptions();
 
     if (displayOptions.plotStyle === `stacked`) {
       highchartsOptions.plotOptions.series.stacking = `normal`;
@@ -288,21 +305,82 @@ export class MPLineChart extends WebComponent {
       .sort(multiPartSortComparator(this._headers, {transform: series => series.headerPath}))
       .map((series, index) => Object.assign(series, {index})); // add sorted index
 
+
     const [showingSeries, hiddenSeries] = partition(chartSeries, s => s.visible);
 
-    // Rendering is EXPENSIVE. Start the Chart with only visible series. updateShowHideSeries adds series to the Chart as needed.
+    this.updateChartSeriesWithAnomalies(showingSeries);
+
     highchartsOptions.series = showingSeries;
     this.showingSeriesNames = new Set(showingSeries.map(series => series.name));
 
     this.hiddenSeries = hiddenSeries.reduce((obj, series) => Object.assign(obj, {[series.name]: series}), {});
     this.highchart = new Highcharts.Chart(highchartsOptions);
-
   }
 
   isSeriesShowing(seriesName) {
     return (this._segFilters &&
       this._segFilters.hasOwnProperty(seriesName) &&
       this._segFilters[seriesName]);
+  }
+
+  updateChartSeriesWithAnomalies(chartSeries) {
+    const component = this;
+
+    const anomalyAlerts = this._anomalyAlerts || [];
+    anomalyAlerts.forEach(anomalyAlert => {
+      const anomaly = anomalyAlert.anomaly;
+      chartSeries.find(series => {
+        if (!anomaly.insightsDetails || !anomaly.insightsDetails.propertyVals) {
+          return;
+        }
+
+        // The first entry in headerPath is show clause, which can be ignored because anomalies are only
+        // supported for single show clause.
+        const headerPathOffset = this._hasSingleSeriesTopLevel ? 0 : 1;
+        const propertyVals = anomaly.insightsDetails.propertyVals;
+        if (series.headerPath.length !== propertyVals.length + headerPathOffset) {
+          return;
+        }
+        const isMatchingSeries = propertyVals.every((propertyVal, index) => {
+          return propertyVal === series.headerPath[index + headerPathOffset];
+        });
+        if (!isMatchingSeries) {
+          return;
+        }
+
+        const matchingDataPointIndex = series.data.findIndex(dataPoint => {
+          return anomaly.anomalyTimestamp === dataPoint[0];
+        });
+        if (matchingDataPointIndex === -1) {
+          return;
+        }
+
+        const anomalyIcon = anomaly.direction === `NEGATIVE` ? anomalyDownIcon : anomalyUpIcon;
+        const dataPoint = series.data[matchingDataPointIndex];
+        series.data[matchingDataPointIndex] = {
+          cursor: `pointer`,
+          marker: {
+            enabled: true,
+            symbol: `url(${anomalyIcon})`,
+          },
+          x: dataPoint[0],
+          y: dataPoint[1],
+          events: {
+            click(ev) {
+              component.dispatchEvent(new CustomEvent(`clickedAnomaly`, {
+                detail: {
+                  offsetEl: ev.target,
+                  anomalyAlert,
+                },
+              }));
+            },
+            mouseOver() {
+              this.graphic.element.style.cursor = `pointer`;
+            },
+          },
+        };
+      });
+    });
   }
 
   updateShowHideSeries() {
@@ -324,6 +402,35 @@ export class MPLineChart extends WebComponent {
     );
 
     this.highchart.redraw();
+  }
+
+  updateChartInteractions() {
+    if (!this.highchart) {
+      return;
+    }
+
+    if (this._disableChartInteractions) {
+      // Before HighCharts 5.0, there's no way to dynamically update options. Create new HighCharts with
+      // modified options based on answer here: https://stackoverflow.com/a/18402973.
+      const options = this.highchart.options;
+      options.plotOptions.line.marker.states.hover.enabled = false;
+      options.plotOptions.series.marker.states.hover.enabled = false;
+      options.plotOptions.series.animation = false;
+      options.tooltip = {enabled: false};
+      options.xAxis[0].crosshair = false;
+      this.highchart = new Highcharts.Chart(options);
+    } else {
+      const options = this.highchart.options;
+      const defaultOptions = this.defaultHighchartsOptions();
+      options.plotOptions.line.marker.states.hover.enabled = defaultOptions.plotOptions.line.marker.states.hover.enabled;
+      options.plotOptions.series.marker.states.hover.enabled = defaultOptions.plotOptions.series.marker.states.hover.enabled;
+      options.tooltip = defaultOptions.tooltip;
+      options.xAxis[0].crosshair = defaultOptions.xAxis[0].crosshair;
+      this.highchart = new Highcharts.Chart(options);
+      // Wait until the highcharts is re-rendered before re-enabling animations. Otherwise, it will
+      // animate the re-render.
+      this.highchart.options.plotOptions.series.animation = defaultOptions.plotOptions.series.animation;
+    }
   }
 
   get chartData() {
@@ -350,19 +457,22 @@ export class MPLineChart extends WebComponent {
   }
 
   set chartData(chartData) {
+    this._anomalyAlerts = chartData.anomalyAlerts;
     this._dataId = chartData.dataId;
     this._displayOptions = chartData.displayOptions || {};
     this._chartData = chartData.data.values;
     this.chartDataPaths = chartData.data.paths;
     this._headers = chartData.headers;
     this._segmentColorMap = chartData.segmentColorMap;
-    this.renderChartIfChange();
+    this._hasSingleSeriesTopLevel = chartData.hasSingleSeriesTopLevel;
 
-    if (chartData.hasSingleSeriesTopLevel) {
+    if (this._hasSingleSeriesTopLevel) {
       for (const [key, value] of Object.entries(this.chartDataPaths)) {
         this.chartDataPaths[key] = value.slice(1);
       }
     }
+
+    this.renderChartIfChange();
   }
 
   get utcOffset() {

@@ -144,6 +144,9 @@ document.registerElement(`chart-display`, class extends Component {
               depth > 1 ? legend.data[depth - 2].seriesData[value] : true
             ));
           }
+
+          processed.anomalyAlerts = this.state.smartHubAlerts.filter(smartHubAlert => !!smartHubAlert.anomaly);
+
           return processed;
         },
         barChartChange: ev => {

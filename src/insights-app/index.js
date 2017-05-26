@@ -22,6 +22,7 @@ import {TopEventPropertyValuesQuery, TopPeoplePropertyValuesQuery} from '../mode
 import {EventDefinitionsQuery} from '../models/queries/event-definitions';
 import SegmentationQueryOldApi from '../models/queries/segmentation';
 import SegmentationQueryNewApi from '../models/queries/segmentation-new-api';
+import {SmartHubGetAlertsByContentIdsQuery} from '../models/queries/smart-hub';
 import QueryCache from '../models/queries/query-cache';
 import DatasetsQuery from '../models/queries/datasets';
 import Report from '../models/report';
@@ -55,6 +56,9 @@ const TOP = {
 const RECENT = {
   EVENTS: `_recentEvents`,
   PROPERTIES: `_recentProperties`,
+};
+const SMART_HUB = {
+  GET_ALERTS_BY_CONTENT_IDS: `_getAlertsByContentIds`,
 };
 
 document.registerElement(`insights-app`, class InsightsApp extends MPApp {
@@ -220,6 +224,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         series: {},
       }),
       resultLoading: true,
+      smartHubAlerts: [],
       stageClauses: [],
       stickyHeader: {},
       [TOP_EVENTS]: {},
@@ -244,6 +249,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     const resourceType = defaultQueryPeople ? Clause.RESOURCE_TYPE_PEOPLE : Clause.RESOURCE_TYPE_EVENTS;
 
     return new Report({
+      alertContentIds: [],
       displayOptions: {
         chartType: `bar`,
         plotStyle: `standard`,
@@ -445,11 +451,17 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         apiSecret: this.apiSecret,
         projectId: this.projectID,
       };
+      const appApiAttrs = {
+        apiHost: this.apiHost,
+        accessToken: this.accessToken,
+        projectId: this.projectID,
+      };
 
       this.queries = {
         datasets: new DatasetsQuery(apiAttrs),
         segmentation: new SegmentationQueryNewApi(apiAttrs, {utcOffset: this.getUtcOffset()}),
-        eventDefinitions: new EventDefinitionsQuery({apiHost: this.apiHost, accessToken: this.accessToken, projectId: this.projectID}),
+        eventDefinitions: new EventDefinitionsQuery(appApiAttrs),
+        [SMART_HUB.GET_ALERTS_BY_CONTENT_IDS]: new SmartHubGetAlertsByContentIdsQuery(appApiAttrs),
         [TOP_EVENTS]: new TopEventsQuery(apiAttrs),
         [TOP.EVENTS.PROPERTIES]: new TopEventPropertiesQuery(apiAttrs),
         [TOP.PEOPLE.PROPERTIES]: new TopPeoplePropertiesQuery(apiAttrs),
@@ -530,7 +542,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   fromSerializationAttrs(attrs) {
-    return attrs.sections ? {report: Report.deserialize(attrs)} : {};
+    return attrs.sections ? {report: Report.deserialize(extend(this.defaultReportState(), attrs))} : {};
   }
 
   getRecentEvents() {
@@ -1622,6 +1634,15 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.update({toastTimer: null});
   }
 
+  _fetchSmartHubAlerts() {
+    const alertContentIds = this.state.report.alertContentIds;
+    if (!this.hasWhitelist(`smart-hub`) || !alertContentIds || !alertContentIds.length) {
+      return Promise.resolve([]);
+    } else {
+      return this.queries[SMART_HUB.GET_ALERTS_BY_CONTENT_IDS].build(this.state).run();
+    }
+  }
+
   query({useCache=false, displayOptions={}}={}) {
     if (this.canMakeQueries()) {
       const dataset = this.getDataset();
@@ -1663,14 +1684,18 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       }
       // END DEBUG CODE
 
-      return this.queries.segmentation.run(cachedResult)
-        .then(result => {
+      const insightsQuery = this.queries.segmentation.run(cachedResult);
+      const fetchSmartHubAlertsQuery = this._fetchSmartHubAlerts();
+      Promise.all([insightsQuery, fetchSmartHubAlertsQuery])
+        .then(values => {
+          const [result, smartHubAlerts] = values;
           if (!cachedResult) {
             this.caches.segmentation.set(query, result, cacheExpiry);
             queryEventProperties[`latency ms`] = Math.round(window.performance.now() - queryStartTime);
           }
 
           this.update({
+            smartHubAlerts,
             result,
             newCachedData: false,
             resultLoading: false,

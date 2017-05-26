@@ -1,9 +1,12 @@
 .line-chart-container
   .chart-header-container= chartLabel
-  .line-chart
+  .line-chart(
+    on={click: $helpers.handleClickChart}
+  )
     mp-line-chart(
       props={
         chartData: {
+          anomalyAlerts,
           data,
           dataId,
           displayOptions,
@@ -15,5 +18,22 @@
       }
       attrs={
         'seg-filters': JSON.stringify(segFilters),
+        'disable-chart-interactions': !!focusedAnomaly,
+      }
+      on={
+        clickedAnomaly: $helpers.handleClickedAnomaly
       }
     )
+    if focusedAnomaly
+      mp-smart-hub-tooltip(
+        attrs={
+          'placement': focusedAnomaly.placement,
+          'offset-left': focusedAnomaly.offsetLeft,
+          'offset-top': focusedAnomaly.offsetTop,
+          'alert': JSON.stringify(focusedAnomaly.anomalyAlert),
+        }
+        on={
+          click: $helpers.handleClickAnomalyAlert,
+          removedAlert: $helpers.handleRemovedAnomalyAlert,
+        }
+      )
