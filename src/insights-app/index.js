@@ -481,17 +481,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       // END DEBUG CODE
     }
 
-    if (this.hasProjectFeatureFlag(`sst`)) {
-      // Fetch list of datasets on page load
-      this.queries.datasets.build(this.state).run().then(datasets => {
-        this.update({datasets: extend(this.state.datasets, datasets)});
-
-        if (this.canMakeQueries()) {
-          this.fetchTopEventsProperties();
-        }
-      });
-    }
-
     this._getEventDefinitions();
     this.updateCanAddBookmark();
 
