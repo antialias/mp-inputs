@@ -1,10 +1,6 @@
 include ../mixins.jade
 
 .builder-screen.sources
-  +screen-title(`Select Source`, {
-    backButton: !!$helpers.screenIdx(),
-    theme: `lite`,
-  })
   if contextFilter
     mp-items-menu(
       attrs={
@@ -19,6 +15,10 @@ include ../mixins.jade
       }
     )
   else
+    +screen-title(`Select Source`, {
+      backButton: !!$helpers.screenIdx(),
+      theme: `lite`,
+    })
     .resource-type-control
       mp-toggle.sources-toggle(
         attrs={
@@ -31,5 +31,18 @@ include ../mixins.jade
       )
         each source in $helpers.getSources()
           mp-toggle-option(attrs={value: source.resourceType})= source.name
+      each source in $helpers.getSources()
+        - const resourceType = source.resourceType
+        - const upsellType = $helpers.shouldShowSourceUpsell(resourceType) ? `upsell` : `alert`;
+        .svg-icon-wrapper.sources(
+          class={
+            [resourceType]: true,
+            [upsellType]: true,
+          }
+        )
+          if $helpers.shouldShowSourceUpsell(resourceType)
+            svg-icon(attrs={ icon: 'lighting-bolt' })
+          if $helpers.shouldShowSourceAlert(resourceType)
+            svg-icon(attrs={ icon: 'alert' })
 
     = $component.child($helpers.getSelectedResourceType() === `events` ? `builder-screen-events` : `builder-screen-people`, {attrs: {'is-embedded': true}})

@@ -245,15 +245,25 @@ header-button-transition-duration = 150ms
 
     .svg-icon-wrapper
       position absolute
-      top 2px
-      &.events
-        right 101px
-      &.people
-        right 5px
+      top 9px
+
       &.alert
         svg-icon-style(blue-900)
       &.upsell
         svg-icon-style(mp-purple)
+
+      // TODO @nojvek: This should be really part of mp-toggle with an icon attribute
+      &.sources
+        &.events
+          right 191px
+        &.people
+          right 35px
+
+      &.properties
+        &.events
+          right 129px
+        &.people
+          right 14px
 
   // screen-footer-button
   button.screen-footer

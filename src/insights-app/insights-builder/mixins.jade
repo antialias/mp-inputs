@@ -41,7 +41,7 @@ mixin property-screen-body(options)
           mp-toggle-option(attrs={value: type})= util.formatResourceType(type)
       each type, index in options.resourceTypes
         - const upsell_type = $helpers.shouldShowSourceUpsell(type) ? `upsell` : `alert`;
-        .svg-icon-wrapper(
+        .svg-icon-wrapper.properties(
           class={
             [type]: true,
             [upsell_type]: true,

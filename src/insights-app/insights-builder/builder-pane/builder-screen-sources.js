@@ -36,8 +36,8 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
             this.helpers.clickedProperty(ev);
           }
         },
-        shouldShowSourceUpsell: source => this.app.shouldUpsellForSource(source.resourceType),
-        shouldShowSourceAlert: source => this.app.shouldAlertForSource(source.resourceType),
+        shouldShowSourceUpsell: resourceType => this.app.shouldUpsellForSource(resourceType),
+        shouldShowSourceAlert: resourceType => this.app.shouldAlertForSource(resourceType),
       }),
     };
   }
