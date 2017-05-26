@@ -1,10 +1,8 @@
 import {BuilderScreenBase} from './builder-screen-base';
 import {Clause} from '../../../models/clause';
-
 import {extend} from '../../../util';
 
 import template from './builder-screen-sources.jade';
-import './builder-screen-sources.styl';
 
 const SOURCES = [
   {name: `Events`, resourceType: `events`},

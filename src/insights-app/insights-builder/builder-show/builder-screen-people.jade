@@ -2,7 +2,7 @@ include ../mixins.jade
 
 - const loading = $helpers.isLoading()
 
-.builder-screen.properties
+.builder-screen.properties(class={'embedded': $helpers.isEmbedded()})
   if !$helpers.isEmbedded()
     +screen-title(`People`, {backButton: !!$helpers.screenIdx()})
   if !projectHasPeople || blocking.isBlockedPeople
