@@ -26,7 +26,7 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenNum
             this.helpers.clickedProperty(ev);
           }
         },
-        isEmbedded: () => !!this.getAttribute(`is-embedded`),
+        isEmbedded: () => this.isEmbedded(),
       }),
     };
   }

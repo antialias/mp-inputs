@@ -207,7 +207,7 @@ export class BuilderScreenBase extends Component {
   }
 
   setPaneSizeAndPosition(width, height) {
-    if (width || height) {
+    if ((width || height) && !this.isEmbedded()) {
       let screens = this.app.state.builderPane.screens;
       let screen = screens[this.screenIdx];
 
@@ -278,5 +278,9 @@ export class BuilderScreenBase extends Component {
 
   resetProgressiveList() {
     this.app.updateBuilderCurrentScreen({progressiveListSize: null});
+  }
+
+  isEmbedded() {
+    return !!this.getAttribute(`is-embedded`);
   }
 }
