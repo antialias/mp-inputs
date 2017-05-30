@@ -604,9 +604,11 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   _getEventDefinitions() {
-    this.queries.eventDefinitions.build(this.state).executeQuery().then(response => {
-      this.update({eventDefinitions: response.results});
-    });
+    if (this.hasProjectFeatureFlag(`data_definitions`)) {
+      this.queries.eventDefinitions.build(this.state).executeQuery().then(response => {
+        this.update({eventDefinitions: response.results});
+      });
+    }
   }
 
   _updateRecentList(type, value) {

@@ -21,13 +21,13 @@ include ../mixins.jade
     )
       mp-event-definition-tooltip(
         on={
-          mouseenterTooltip: $helpers.showEventDefinitionTooltip,
-          mouseleaveTooltip: $helpers.hideEventDefinitionTooltip,
+          mouseenterTooltip: $helpers.clearEventDefinitionTimeout,
+          mouseleaveTooltip: $helpers.startEventDefinitionTimeout,
         }
         attrs={
-          lexiconUrl,
+          'event-description': eventDefinition ? eventDefinition.description : ``,
+          'event-name': eventDefinition ? eventDefinition.name : ``,
+          'lexicon-url': lexiconUrl,
           show: !!eventDefinition,
-          eventName: eventDefinition ? eventDefinition.name : ``,
-          eventDescription: eventDefinition ? eventDefinition.description : ``,
         }
       )
