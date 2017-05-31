@@ -1,7 +1,6 @@
 import {extend, pick} from 'mixpanel-common/util';
 import {debug} from 'mixpanel-common/report/util';
 
-import {DATASET_MIXPANEL} from './constants';
 
 const TYPE_FORMAT_NAME = {
   'show': `Compare`,
@@ -25,7 +24,7 @@ const TIME_UNIT_LIST = [
 
 export class Clause {
   constructor(attrs={}) {
-    this.dataset = attrs.dataset || DATASET_MIXPANEL;
+    this.dataset = attrs.dataset;
   }
 
   static create(sectionType, attrs, syncCustomEvent=null) {

@@ -4,7 +4,7 @@ import {Clause} from '../../../models/clause';
 import template from './builder-screen-datasets.jade';
 
 const DATASETS = [
-  {displayName: `Mixpanel`, datasetName: ``, description: `Product usage, customers e.t.c`},
+  {displayName: `Mixpanel`, datasetName: `mixpanel`, description: `Product usage, customers e.t.c`},
   {displayName: `Salesforce`, datasetName: `salesforce`, description: `Customer relations, sales e.t.c`},
 ];
 
