@@ -3,7 +3,7 @@ import isEqual from 'lodash/isEqual';
 import kebabCase from 'lodash/kebabCase';
 import MPApp from 'mixpanel-common/report/mp-app';
 import Persistence from 'mixpanel-common/report/persistence';
-import {commaizeNumber, extend, pick} from 'mixpanel-common/util';
+import {capitalize, commaizeNumber, extend, pick} from 'mixpanel-common/util';
 import {unique} from 'mixpanel-common/util/array';
 import ItemsMenu from 'mixpanel-common/widgets/items-menu';
 import * as util from '../util';
@@ -1047,6 +1047,25 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     }
   }
 
+  // Sources managment (Mixpanel: [events, people], Salesforce: [events, accounts, contacts, leads], etc.)
+
+  getSources() {
+    const dataset = DATASETS[this.getDataset()];
+    const profileTypes = (dataset && dataset.profileTypes) || [`people`];
+
+    return [
+      {
+        name: `Events`,
+        resourceType: `events`,
+      },
+      ...profileTypes.map(profileType => ({
+        name: capitalize(profileType),
+        resourceType: `people`,
+        profileType,
+      })),
+    ];
+  }
+
   // Top events/properties management
 
   getTopEvents() {
@@ -1101,14 +1120,14 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   _fetchTopList(topKey, dataset, state=null) {
     const query = this.queries[topKey];
     const cache = this.caches[topKey];
+    const cacheKey = query.build(state || this.state, {dataset}).query;
+    const cachedResult = cache.get(cacheKey);
 
-    query.build(state || this.state, {dataset});
-
-    return Promise.resolve(cache.get(query.query)).then(cachedResult =>
-      cachedResult || query.run().then(topList =>
-        cache.set(query.query, topList)
-      )
-    );
+    if (cachedResult) {
+      return Promise.resolve(cachedResult);
+    } else {
+      return query.run().then(topList => cache.set(cacheKey, topList));
+    }
   }
 
   _updateTopList(topKey, dataset, topValue) {

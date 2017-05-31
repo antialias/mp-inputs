@@ -4,11 +4,6 @@ import {extend} from '../../../util';
 
 import template from './builder-screen-sources.jade';
 
-const SOURCES = [
-  {name: `Events`, resourceType: `events`},
-  {name: `People`, resourceType: `people`},
-];
-
 document.registerElement(`builder-screen-sources`, class extends BuilderScreenBase {
   get config() {
     return {
@@ -16,8 +11,7 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
       helpers: extend(super.config.helpers, {
         getSources: () => {
           this.updateRenderedSizeOnNextFrame();
-          let indexedSources = SOURCES.slice();
-          return indexedSources.map((source, index) => extend(source, {index}));
+          return this.app.getSources().map((source, index) => extend(source, {index}));
         },
         getSelectedResourceType: () => {
           return this.app.originStageClauseIsPeopleProperty() ? `people` : `events`;

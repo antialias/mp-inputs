@@ -30,7 +30,10 @@ export default class BaseQuery {
 
   build(state, options={}) {
     this.query = this.buildQuery(state, options);
-    this.query.dataset = options.dataset;
+
+    if (options.dataset !== DATASET_MIXPANEL) {
+      this.query.dataset = options.dataset;
+    }
 
     return this;
   }
@@ -82,7 +85,7 @@ export default class BaseQuery {
   }
 
   fetch(endpoint, params, queryOptions) {
-    if (this.query.dataset && this.query.dataset !== DATASET_MIXPANEL) {
+    if (this.query.dataset) {
       params[`dataset_name`] = this.query.dataset;
     }
 
