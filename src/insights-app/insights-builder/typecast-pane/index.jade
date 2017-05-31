@@ -6,6 +6,7 @@ mp-drop-menu(
 )
   mp-items-menu(
     attrs={
+      progressive: true,
       sections: JSON.stringify([{items: $helpers.availableTypes()}]),
     }
     on={clickItem: $helpers.clickedType}

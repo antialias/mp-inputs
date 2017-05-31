@@ -7,6 +7,7 @@ include ../mixins.jade
   else
     mp-items-menu(
       attrs={
+        progressive: true,
         'search-filter': contextFilter,
         'sections': JSON.stringify($helpers.getSections()),
       }
@@ -14,20 +15,12 @@ include ../mixins.jade
         clickItem: $helpers.clickedEvent,
         clickPropertiesPill: $helpers.clickedEventProperties,
         draw: $helpers.updateRenderedSize,
-        focusItem: ev => ev.detail.item.description ? $helpers.showTooltipForItem(ev.detail.item) : $helpers.hideEventDefinitionTooltip(),
-        mouseenterItem: ev => $helpers.showTooltipForItem(ev.detail.item),
-        mouseleaveItem: ev => $helpers.hideEventDefinitionTooltip(),
+        focusItem: $helpers.handleItemFocus,
       }
     )
-      mp-event-definition-tooltip(
-        on={
-          mouseenterTooltip: $helpers.clearEventDefinitionTimeout,
-          mouseleaveTooltip: $helpers.startEventDefinitionTimeout,
-        }
-        attrs={
-          'event-description': eventDefinition ? eventDefinition.description : ``,
-          'event-name': eventDefinition ? eventDefinition.name : ``,
-          'lexicon-url': lexiconUrl,
-          show: !!eventDefinition,
-        }
-      )
+    mp-event-definition-tooltip(
+      attrs={
+        'event-definition': JSON.stringify(eventDefinition),
+        'lexicon-url': lexiconUrl,
+      }
+    )

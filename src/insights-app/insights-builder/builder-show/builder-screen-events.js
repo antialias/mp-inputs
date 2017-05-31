@@ -35,23 +35,14 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
             items: this.processItems(topEvents),
           }];
         },
-        showTooltipForItem: item => {
+        handleItemFocus: ev => {
+          const item = ev.detail.item;
           if (item.description) {
-            this.helpers.showEventDefinitionTooltip();
             this.update({eventDefinition: {name: item.label, description: item.description}});
-          }
-        },
-        hideEventDefinitionTooltip: () => {
-          if (this.state.eventDefinition) {
-            this.hideEventDefinitionTooltipTimeout = setTimeout(() => {
-              this.hideEventDefinitionTooltipTimeout = null;
+          } else {
+            if (this.state.eventDefinition) {
               this.update({eventDefinition: null});
-            }, 250);
-          }
-        },
-        showEventDefinitionTooltip: () => {
-          if (this.hideEventDefinitionTooltipTimeout) {
-            clearTimeout(this.hideEventDefinitionTooltipTimeout);
+            }
           }
         },
       }),

@@ -4,6 +4,7 @@ include ../mixins.jade
   if contextFilter
     mp-items-menu(
       attrs={
+        progressive: true,
         'search-filter': contextFilter,
         'sections': JSON.stringify($helpers.getSections()),
       }

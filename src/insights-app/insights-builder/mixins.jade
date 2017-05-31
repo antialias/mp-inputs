@@ -41,7 +41,7 @@ mixin property-screen-body(options)
         .svg-icon-wrapper(
           class={
             [type]: true,
-            [upsell_type]: true, 
+            [upsell_type]: true,
           }
         )
           if $helpers.shouldShowSourceUpsell(type)
@@ -54,6 +54,7 @@ mixin property-screen-body(options)
   else
     mp-items-menu(
       attrs={
+        progressive: true,
         'search-filter': options.searchFilter,
         'sections': JSON.stringify(options.propertySections),
       }
