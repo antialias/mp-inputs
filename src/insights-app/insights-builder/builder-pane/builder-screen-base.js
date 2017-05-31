@@ -191,7 +191,7 @@ export class BuilderScreenBase extends Component {
       const firstPrevScreenName = prevScreens.length && prevScreens[prevScreens.length - 1].componentName;
 
       // If prevScreen is same as last screen in builderScreen then don't add a duplicate
-      if (lastScreenName && firstPrevScreenName && lastScreenName !== firstPrevScreenName) {
+      if (lastScreenName && firstPrevScreenName && lastScreenName === firstPrevScreenName) {
         prevScreens = prevScreens.slice(1);
       }
 

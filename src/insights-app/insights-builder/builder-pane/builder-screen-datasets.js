@@ -51,7 +51,7 @@ document.registerElement(`builder-screen-datasets`, class extends BuilderScreenB
           return extend(dataset, {
             itemType: `dataset`,
             label: dataset.displayName,
-            icon: `dashboard2`,
+            icon: `dataset`,
           });
         }),
       },
