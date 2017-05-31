@@ -13,7 +13,7 @@ mixin generic-options-list-item(label, options)
       mouseenter: () => $helpers.updateActiveIndex(options.index),
     }
   )
-    +screen-option(label, {noIcon: true})
+    +screen-option(label, {noIcon: true, description: options.description})
     if options.shouldShowSourceUpsell
       .upsell-icon
         svg-icon(attrs={icon: 'lighting-bolt'})
@@ -81,7 +81,9 @@ mixin screen-option(label, options)
     if options.matches
       +highlight-matches(options.matches)
     else
-      span.label= label
+      .label= label
+    if options.description
+      .description= options.description
 
 mixin screen-title(title, options)
   - options = options || {}

@@ -1,0 +1,25 @@
+include ../mixins.jade
+
+.builder-screen.sources.datasets(style={width: (contextFilter ? `320px` : `260px`)})
+  if contextFilter
+    mp-items-menu(
+      attrs={
+        'search-filter': contextFilter,
+        'sections': JSON.stringify($helpers.getFilterSections()),
+      }
+      on={
+        draw: $helpers.updateRenderedSizeOnNextFrame,
+        clickItem: $helpers.clickedItem,
+        clickPropertiesPill: $helpers.clickedEventProperties,
+      }
+    )
+  else
+    ul.screen-options-list.arrow-key-scrollable
+      each dataset in $helpers.getDatasets()
+        +generic-options-list-item(dataset.displayName, {
+          class: `list-item-dataset`,
+          index: dataset.index,
+          description: dataset.description,
+          isActive: dataset.index === builderPane.activeIndex,
+          onclick: () => $helpers.selectDataset(dataset),
+        })

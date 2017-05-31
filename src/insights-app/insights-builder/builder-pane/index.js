@@ -4,6 +4,7 @@ import {Component} from 'panel';
 
 import './builder-screen-contextual';
 import './builder-screen-sources';
+import './builder-screen-datasets';
 
 import template from './index.jade';
 
