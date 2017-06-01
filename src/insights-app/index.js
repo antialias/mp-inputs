@@ -1000,7 +1000,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   hasDatasets() {
-    return Object.keys(this.state.datasets).length > 1;
+    return this.state.datasets && Object.keys(this.state.datasets).length > 1;
   }
 
   _fetchDatasets() {
