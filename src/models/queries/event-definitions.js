@@ -7,6 +7,6 @@ export class EventDefinitionsQuery extends BaseQuery {
   }
 
   buildUrl() {
-    return `api/app/data_definitions/${this.projectId}/event-definitions/`;
+    return `api/app/projects/${this.projectId}/event-definitions/`;
   }
 }
