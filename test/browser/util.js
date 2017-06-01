@@ -1,49 +1,33 @@
-export const Async = {
-  nextAnimationFrame() {
-    return new Promise(requestAnimationFrame);
-  },
+export function nextAnimationFrameAsync() {
+  return new Promise(requestAnimationFrame);
+}
 
-  sleep(durationMs) {
-    return new Promise(resolve => setTimeout(resolve, durationMs));
-  },
+export function sleepAsync(durationMs) {
+  return new Promise(resolve => setTimeout(resolve, durationMs));
+}
 
-  async condition(predicate) {
-    let val = predicate();
-    while (!val) {
-      await this.sleep(50);
-      val = predicate();
-    }
-    return val;
-  },
+export async function conditionAsync(predicate) {
+  let val = predicate();
+  while (!val) {
+    await sleepAsync(50);
+    val = predicate();
+  }
+  return val;
+}
 
-  async currentScreen(container, screenName) {
-    let currentScreen = null;
-    await this.condition(() => {
-      const screens = container.querySelectorAll(`[screen-index]`);
-      currentScreen = screens.length ? screens[screens.length - 1] : null;
-      return !!(currentScreen && currentScreen.tagName.toLowerCase() === screenName.toLowerCase());
-    });
-    return currentScreen;
-  },
+export async function elementIsVisibleAsync(element) {
+  return await conditionAsync(() => {
+    // Based on http://stackoverflow.com/a/21696585
+    return !!(element && element.offsetParent) ? element : null;
+  });
+}
 
-  async elementIsVisible(element) {
-    await this.condition(() => {
-      // Based on http://stackoverflow.com/a/21696585
-      return !!(element && element.offsetParent);
-    });
-    return element;
-  },
-
-  async elementFnIsVisible(elementFn) {
-    let element = null;
-    await this.condition(() => {
-      element = elementFn();
-      return !!(element && element.offsetParent);
-    });
-    return element;
-  },
-
-};
+export async function elementFnIsVisibleAsync(elementFn) {
+  return await conditionAsync(() => {
+    const element = elementFn();
+    return !!(element && element.offsetParent) ? element : null;
+  });
+}
 
 export function queryShadowSelectors(rootEl, selectors) {
   let currEl = rootEl;

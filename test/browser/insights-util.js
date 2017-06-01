@@ -2,7 +2,7 @@ import queryString from 'query-string';
 import * as sinon from 'sinon';
 
 import initInsights from '../../src/init';
-import {Async} from './util';
+import {conditionAsync, nextAnimationFrameAsync} from './util';
 
 function validResponse(response) {
   return Promise.resolve(new Response(JSON.stringify(response), {
@@ -26,10 +26,21 @@ function invalidResponse(url) {
   }));
 }
 
-export async function setupApp({
+export async function currentScreenAsync(container, screenName) {
+  let currentScreen = null;
+  await conditionAsync(() => {
+    const screens = container.querySelectorAll(`[screen-index]`);
+    currentScreen = screens.length ? screens[screens.length - 1] : null;
+    return !!(currentScreen && currentScreen.tagName.toLowerCase() === screenName.toLowerCase());
+  });
+  return currentScreen;
+}
+
+
+export async function setupAppAsync({
   apiOverrides=(url, params) => null,
 }={}) {
-  await teardownAppIfNecessary();
+  await teardownAppIfNecessaryAsync();
 
   sinon.stub(window, `fetch`, (url, options) => {
     const params = queryString.parse(options.body);
@@ -62,15 +73,15 @@ export async function setupApp({
   app.projectID = 3;
   document.body.innerHTML = ``;
   document.body.appendChild(app);
-  await Async.nextAnimationFrame();
+  await nextAnimationFrameAsync();
 
   return app;
 }
 
-async function teardownAppIfNecessary() {
+async function teardownAppIfNecessaryAsync() {
   if (window.fetch.hasOwnProperty(`restore`)) {
     window.fetch.restore();
   }
   document.body.innerHTML = ``;
-  await Async.nextAnimationFrame();
+  await nextAnimationFrameAsync();
 }
