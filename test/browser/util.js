@@ -34,15 +34,46 @@ export const Async = {
     return element;
   },
 
-  async selectorIsVisible(selector) {
+  async elementFnIsVisible(elementFn) {
     let element = null;
     await this.condition(() => {
-      element = selector();
+      element = elementFn();
       return !!(element && element.offsetParent);
     });
     return element;
   },
+
 };
+
+export function queryShadowSelectors(rootEl, selectors) {
+  let currEl = rootEl;
+  selectors.forEach((selector, idx) => {
+    currEl = currEl.querySelector(selector);
+    if (idx !== selectors.length - 1) {
+      if (!currEl) {
+        return;
+      }
+      currEl = currEl.shadowRoot;
+    }
+  });
+  return currEl;
+}
+
+export function queryShadowSelectorsAll(rootEl, selectors) {
+  let currEl = rootEl;
+  selectors.forEach((selector, idx) => {
+    if (idx !== selectors.length - 1) {
+      currEl = currEl.querySelector(selector);
+      if (!currEl) {
+        return;
+      }
+      currEl = currEl.shadowRoot;
+    } else {
+      currEl = currEl.querySelectorAll(selector);
+    }
+  });
+  return currEl;
+}
 
 export function sendInput(inputEl, value) {
   inputEl.value = value;

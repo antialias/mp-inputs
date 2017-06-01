@@ -1,7 +1,7 @@
 /* global afterEach, beforeEach, describe, it */
 
 import {setupApp} from '../../../insights-util';
-import {Async, sendInput} from '../../../util';
+import {Async, queryShadowSelectors, queryShadowSelectorsAll, sendInput} from '../../../util';
 
 describe(`filter menu`, function() {
   beforeEach(async function() {
@@ -24,7 +24,10 @@ describe(`filter menu`, function() {
 
     this.filterMenu = this.filterControl.querySelector(`mp-drop-menu`);
     // Need to wait for the various mocked api requests to complete before the menu is populated.
-    await Async.selectorIsVisible(() => this.filterMenu.querySelector(`.list-option .option-label`));
+    await Async.elementFnIsVisible(() => queryShadowSelectors(
+      this.filterMenu,
+      [`mp-items-menu`, `.list-option .option-label`]
+    ));
   });
 
   it(`clears values when changing property`, async function() {
@@ -32,7 +35,7 @@ describe(`filter menu`, function() {
 
     // Click on 'City' property
     currScreen = await Async.currentScreen(this.filterMenu, `builder-screen-filter-properties-list`);
-    const listOption1 = Array.from(currScreen.querySelectorAll(`.list-option .option-label`))
+    const listOption1 = Array.from(queryShadowSelectorsAll(currScreen, [`mp-items-menu`, `.list-option .option-label`]))
         .find(optionLabel => optionLabel.textContent.includes(`City`));
     listOption1.click();
     currScreen = await Async.currentScreen(this.filterMenu, `builder-screen-filter-property`);
@@ -48,7 +51,7 @@ describe(`filter menu`, function() {
     currScreen = await Async.currentScreen(this.filterMenu, `builder-screen-filter-properties-list`);
 
     // Click on 'Rating' property
-    const listOption2 = Array.from(currScreen.querySelectorAll(`.list-option .option-label`))
+    const listOption2 = Array.from(queryShadowSelectorsAll(currScreen, [`mp-items-menu`, `.list-option .option-label`]))
       .find(optionLabel => optionLabel.textContent.includes(`Rating`));
     listOption2.click();
     currScreen = await Async.currentScreen(this.filterMenu, `builder-screen-filter-property`);
