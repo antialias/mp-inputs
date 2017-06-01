@@ -35,6 +35,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
             items: this.processItems(topEvents),
           }];
         },
+        isPaneOpen: () => !!this.app.state.builderPane.screens.length,
         handleItemFocus: ev => {
           const item = ev.detail.item;
           if (item.description) {

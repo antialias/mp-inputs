@@ -8,6 +8,8 @@ describe(`fully integrated insights-app`, function() {
   beforeEach(async function() {
     app = await initInsights();
     app.apiSecret = `test_secret`;
+    app.accessToken = `test_token`;
+    app.projectID = 3;
     document.body.innerHTML = ``;
     document.body.appendChild(app);
     await raf();

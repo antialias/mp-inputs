@@ -68,7 +68,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
           canAddBookmark: true,
           features: {},
           savedReports: {},
-          eventDefinitions: {},
+          eventDefinitions: [],
           [RECENT.EVENTS]: [],
           [RECENT.PROPERTIES]: [],
           util,
