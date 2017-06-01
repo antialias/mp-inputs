@@ -426,6 +426,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   attachedCallback() {
+    window.state = this.state;
+    window.app = this;
+
     this.state.projectHasEvents = this.mpContext.hasOwnProperty(`hasIntegratedArb`) ? this.mpContext.hasIntegratedArb : true;
     this.state.projectHasPeople = this.mpContext.hasOwnProperty(`hasIntegratedEngage`) ? this.mpContext.hasIntegratedEngage : true;
     const blocking = this.mpContext.blocking || {};
@@ -873,20 +876,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return screen && screen[attr];
   }
 
-  updateSelectedDataset(dataset) {
-    let sections = this.defaultReportState(dataset).sections;
-    const oldTimeClause = this.getClausesForType(TimeClause.TYPE)[0];
-    const newTimeSection = new TimeSection(oldTimeClause);
-
-    this.updateReport({
-      sections: sections.replaceSection(newTimeSection), // retain previous time clause
-    });
-
-    if (this.canMakeQueries()) {
-      this._fetchTopEventsProperties();
-    }
-  }
-
   // State helpers
 
   hasStageClause(state=this.state) {
@@ -999,12 +988,41 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return (clause && clause.dataset) || null;
   }
 
+  getDatasetName() {
+    if (this.hasDatasets()) {
+      const dataset = this.getDataset();
+      if (dataset) {
+        return this.state.datasets[dataset].displayName;
+      }
+    }
+
+    return ``;
+  }
+
+  hasDatasets() {
+    return Object.keys(this.state.datasets).length > 1;
+  }
+
   _fetchDatasets() {
     if (this.hasProjectFeatureFlag(`sst`)) {
       this.queries.datasets.build(this.state).run().then(datasets => {
         this.update({datasets: extend(this.state.datasets, datasets)});
         this._fetchTopEventsProperties();
       });
+    }
+  }
+
+  updateSelectedDataset(dataset) {
+    let sections = this.defaultReportState(dataset).sections;
+    const oldTimeClause = this.getClausesForType(TimeClause.TYPE)[0];
+    const newTimeSection = new TimeSection(oldTimeClause);
+
+    this.updateReport({
+      sections: sections.replaceSection(newTimeSection), // retain previous time clause
+    });
+
+    if (this.canMakeQueries()) {
+      this._fetchTopEventsProperties();
     }
   }
 

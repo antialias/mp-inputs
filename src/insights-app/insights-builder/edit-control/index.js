@@ -42,6 +42,7 @@ export class EditControl extends Component {
         isPaneOpen: () => this.isPaneOpen(),
         isRemovable: () => this.isRemovable(),
         removeClause: () => this.remove(),
+        getDatasetName: () => this.app.getDatasetName(),
       }),
     };
   }

@@ -6,6 +6,9 @@
       if open
         .search-icon-wrapper
           svg-icon(attrs={icon: 'search'})
+        if $helpers.getDatasetName()
+          span.dataset-label-wrapper
+            span.dataset-label= `${$helpers.getDatasetName()}:`
         resize-input.control-label(
           attrs={
             autofocus: true,
@@ -27,6 +30,8 @@
           if prefix && prefix.componentName
             .control-label-prefix= $component.child(prefix.componentName, {attrs: prefix.attrs})
           .control-label-text(on={click: $helpers.clickedLabel})
+            if $helpers.getDatasetName()
+              span.control-label-dataset= `${$helpers.getDatasetName()}: `
             - const label = $helpers.getLabel()
             if typeof label === 'string'
               = label
