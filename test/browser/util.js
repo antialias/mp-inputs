@@ -1,15 +1,15 @@
-export function nextAnimationFrameAsync() {
+export function nextAnimationFrame() {
   return new Promise(requestAnimationFrame);
 }
 
-export function sleepAsync(durationMs) {
+export function sleep(durationMs) {
   return new Promise(resolve => setTimeout(resolve, durationMs));
 }
 
 export async function conditionAsync(predicate) {
   let val = predicate();
   while (!val) {
-    await sleepAsync(50);
+    await sleep(50);
     val = predicate();
   }
   return val;

@@ -2,7 +2,7 @@ import queryString from 'query-string';
 import * as sinon from 'sinon';
 
 import initInsights from '../../src/init';
-import {conditionAsync, nextAnimationFrameAsync} from './util';
+import {conditionAsync, nextAnimationFrame} from './util';
 
 function validResponse(response) {
   return Promise.resolve(new Response(JSON.stringify(response), {
@@ -73,7 +73,7 @@ export async function setupAppAsync({
   app.projectID = 3;
   document.body.innerHTML = ``;
   document.body.appendChild(app);
-  await nextAnimationFrameAsync();
+  await nextAnimationFrame();
 
   return app;
 }
@@ -83,5 +83,5 @@ async function teardownAppIfNecessaryAsync() {
     window.fetch.restore();
   }
   document.body.innerHTML = ``;
-  await nextAnimationFrameAsync();
+  await nextAnimationFrame();
 }

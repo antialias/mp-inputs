@@ -3,7 +3,7 @@
 import {currentScreenAsync, setupAppAsync} from '../../../insights-util';
 import {
   elementFnIsVisibleAsync,
-  nextAnimationFrameAsync,
+  nextAnimationFrame,
   queryShadowSelectors,
   queryShadowSelectorsAll,
   sendInput
@@ -26,7 +26,7 @@ describe(`filter menu`, function() {
 
     this.filterControl = app.querySelector(`builder-filter-add-control`);
     this.filterControl.querySelector(`.add-filter-button`).click();
-    await nextAnimationFrameAsync();
+    await nextAnimationFrame();
 
     this.filterMenu = this.filterControl.querySelector(`mp-drop-menu`);
     // Need to wait for the various mocked api requests to complete before the menu is populated.
@@ -49,7 +49,7 @@ describe(`filter menu`, function() {
     // Type some input on filter screen
     const valueInput = currScreen.querySelector(`.filter-string-input`);
     sendInput(valueInput, `placeholder`);
-    await nextAnimationFrameAsync();
+    await nextAnimationFrame();
 
     // Navigate back to properties list
     const backButton = currScreen.querySelector(`.screen-title .back-button`);
