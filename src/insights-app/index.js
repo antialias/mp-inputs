@@ -327,12 +327,12 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       case `events`:
         notIntegrated = !this.state.projectHasEvents;
         missedPayment = this.state.isPayingCustomer && this.state.blocking.isBlockedEvents;
-        shouldAlert = notIntegrated || missedPayment;
+        shouldAlert = !this.shouldUpsellForSource(source) && (notIntegrated || missedPayment);
         break;
       case `people`:
         notIntegrated = !this.state.projectHasPeople;
-        missedPayment = this.state.isPayingCustomer && this.state.blocking.isBlockedEvents;
-        shouldAlert = notIntegrated || missedPayment;
+        missedPayment = this.state.isPayingCustomer && this.state.blocking.isBlockedPeople;
+        shouldAlert = !this.shouldUpsellForSource(source) && (notIntegrated || missedPayment);
     }
     return shouldAlert;
   }
