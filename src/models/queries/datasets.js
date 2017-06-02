@@ -23,6 +23,7 @@ export default class DatasetsQuery extends BaseQuery {
       return Object.assign(...results.data.map(dataset => ({
         [dataset]: DATASETS[dataset] || {
           displayName: capitalize(dataset),
+          description: ``,
         },
       })));
     }

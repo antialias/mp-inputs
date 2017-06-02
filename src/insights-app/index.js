@@ -988,6 +988,12 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return (clause && clause.dataset) || null;
   }
 
+  getDatasets() {
+    const datasets = this.state.datasets;
+    return Object.keys(datasets).map(
+      datasetName => extend(datasets[datasetName], {datasetName}));
+  }
+
   getDatasetName() {
     if (this.hasDatasets()) {
       const dataset = this.getDataset();

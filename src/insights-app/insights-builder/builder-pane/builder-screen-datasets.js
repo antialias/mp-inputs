@@ -3,11 +3,6 @@ import {extend} from '../../../util';
 import {Clause} from '../../../models/clause';
 import template from './builder-screen-datasets.jade';
 
-const DATASETS = [
-  {displayName: `Mixpanel`, datasetName: `mixpanel`, description: `Product usage, customers e.t.c`},
-  {displayName: `Salesforce`, datasetName: `salesforce`, description: `Customer relations, sales e.t.c`},
-];
-
 document.registerElement(`builder-screen-datasets`, class extends BuilderScreenBase {
   get config() {
     return {
@@ -15,14 +10,10 @@ document.registerElement(`builder-screen-datasets`, class extends BuilderScreenB
       helpers: extend(super.config.helpers, {
         getDatasets: () => {
           this.updateRenderedSizeOnNextFrame();
-          let indexedDatasets = DATASETS.slice();
-          return indexedDatasets.map((source, index) => extend(source, {index}));
+          return this.app.getDatasets().map((dataset, index) => extend(dataset, {index}));
         },
-        getSelectedDataset: () => {
-          return this.app.getDataset();
-        },
-        selectDataset: dataset => {
-          this.app.updateSelectedDataset(dataset.datasetName);
+        selectDataset: datasetName => {
+          this.app.updateSelectedDataset(datasetName);
           this.nextScreen(`builder-screen-sources`);
         },
         updateRenderedSizeOnNextFrame: () => this.updateRenderedSizeOnNextFrame(),
@@ -47,30 +38,24 @@ document.registerElement(`builder-screen-datasets`, class extends BuilderScreenB
     return [
       {
         label: `Datasets`,
-        items: DATASETS.map(dataset => {
-          return extend(dataset, {
-            itemType: `dataset`,
-            label: dataset.displayName,
-            icon: `dataset`,
-          });
-        }),
+        items: this.app.getDatasets().map(dataset => extend(dataset, {
+          itemType: `dataset`,
+          label: dataset.displayName,
+          icon: `dataset`,
+        })),
       },
       {
         label: `Events`,
-        items: this.allEvents().map(event => {
-          return extend(event, {
-            itemType: `event`,
-            hasPropertiesPill: true,
-          });
-        }),
+        items: this.allEvents().map(event => extend(event, {
+          itemType: `event`,
+          hasPropertiesPill: true,
+        })),
       },
       {
         label: `People properties`,
-        items: this.allProperties(Clause.RESOURCE_TYPE_PEOPLE).map(property => {
-          return extend(property, {
-            itemType: `property`,
-          });
-        }),
+        items: this.allProperties(Clause.RESOURCE_TYPE_PEOPLE).map(property => extend(property, {
+          itemType: `property`,
+        })),
       },
     ];
   }
