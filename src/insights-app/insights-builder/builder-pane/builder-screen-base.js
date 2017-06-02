@@ -228,7 +228,7 @@ export class BuilderScreenBase extends Component {
   }
 
   setPaneSizeAndPosition(width, height) {
-    if ((width || height) && !this.isEmbedded()) {
+    if (width || height) {
       let screens = this.app.state.builderPane.screens;
       let screen = screens[this.screenIdx];
 
@@ -246,7 +246,9 @@ export class BuilderScreenBase extends Component {
   }
 
   updateRenderedSize({cancelDuringTransition=true}={}) {
-    if (!(cancelDuringTransition && this.state.builderPane.inTransition) && this.firstChild) {
+    if (this.isEmbedded()) {
+      this.$panelParent.updateRenderedSize({cancelDuringTransition}); // proxy size update call to parent
+    } else if (!(cancelDuringTransition && this.state.builderPane.inTransition) && this.firstChild) {
       const {width, height} = this.firstChild.getBoundingClientRect();
       this.setPaneSizeAndPosition(width, height);
     }

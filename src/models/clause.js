@@ -85,12 +85,13 @@ export class EventsPropertiesClause extends Clause {
     super(...arguments);
     this.value = attrs.value || null;
     this.resourceType = attrs.resourceType || Clause.RESOURCE_TYPES[0];
+    this.profileType = attrs.profileType || null;
     this.search = attrs.search || ``;
   }
 
   get attrs() {
-    const {value, resourceType, search} = this;
-    return extend(super.attrs, {value, resourceType, search});
+    const {value, resourceType, profileType, search} = this;
+    return extend(super.attrs, {value, resourceType, profileType, search});
   }
 
   get valid() {
@@ -103,8 +104,8 @@ export class EventsPropertiesClause extends Clause {
   }
 
   toUrlData() {
-    const {value, resourceType} = this.attrs;
-    return extend(super.toUrlData(), {value, resourceType});
+    const {value, resourceType, profileType} = this.attrs;
+    return extend(super.toUrlData(), {value, resourceType, profileType});
   }
 }
 

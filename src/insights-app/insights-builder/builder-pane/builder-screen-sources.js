@@ -13,12 +13,30 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
           this.updateRenderedSizeOnNextFrame();
           return this.app.getSources().map((source, index) => extend(source, {index}));
         },
+        getSelectedSource: () => {
+          const profileType = this.app.originStageClauseValue(`profileType`);
+          const resourceType = this.app.originStageClauseValue(`resourceType`);
+          return profileType || resourceType;
+        },
         getSelectedResourceType: () => {
-          return this.app.originStageClauseIsPeopleProperty() ? `people` : `events`;
+          const isPeopleProperty = this.app.originStageClauseIsPeopleProperty();
+          return isPeopleProperty ? Clause.RESOURCE_TYPE_PEOPLE : Clause.RESOURCE_TYPE_EVENTS;
         },
         clickedSource: ev => {
           const resourceType = ev.detail.selected;
-          this.updateStageClause({resourceType, value: {}});
+          const stageClauseUpdate = {resourceType, value: {}};
+
+          // TODO @evnp - remove once we have multiple people tables on backend
+          if (resourceType === Clause.RESOURCE_TYPE_EVENTS) {
+            stageClauseUpdate.profileType = null;
+          } else {
+            stageClauseUpdate.profileType = resourceType;
+            stageClauseUpdate.resourceType = Clause.RESOURCE_TYPE_PEOPLE;
+          }
+          // TODO @evnp END
+
+          this.updateStageClause(stageClauseUpdate);
+          this.updateRenderedSizeOnNextFrame();
         },
         getSections: () => this.buildList(),
         updateRenderedSizeOnNextFrame: () => this.updateRenderedSizeOnNextFrame(),

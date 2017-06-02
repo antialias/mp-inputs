@@ -30,7 +30,7 @@ include ../mixins.jade
     .resource-type-control
       mp-toggle.sources-toggle(
         attrs={
-          selected: $helpers.getSelectedResourceType(),
+          selected: $helpers.getSelectedSource(),
           theme: `lite`,
         }
         on={
@@ -38,12 +38,13 @@ include ../mixins.jade
         }
       )
         each source in $helpers.getSources()
+          // TODO @evnp - remove profileType below once we have multiple people tables on backend
           mp-toggle-option(attrs={
-            value: source.resourceType,
+            value: source.profileType || source.resourceType,
             disabled: learnActive && source.resourceType !== `events`,
           })= source.name
       each source in $helpers.getSources()
-        - const resourceType = source.resourceType
+        - const resourceType = source.resourceType;
         - const upsellType = $helpers.shouldShowSourceUpsell(resourceType) ? `upsell` : `alert`;
         .svg-icon-wrapper.sources(
           class={
@@ -56,4 +57,5 @@ include ../mixins.jade
           if $helpers.shouldShowSourceAlert(resourceType)
             svg-icon(attrs={ icon: 'alert' })
 
-    = $component.child($helpers.getSelectedResourceType() === `events` ? `builder-screen-events` : `builder-screen-people`, {attrs: {'is-embedded': true}})
+    - const subScreenName = $helpers.getSelectedResourceType() === `events` ? `builder-screen-events` : `builder-screen-people`;
+    = $component.child(subScreenName, {attrs: {'is-embedded': true}})

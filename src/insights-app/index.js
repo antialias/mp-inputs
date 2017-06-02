@@ -887,14 +887,18 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return this.getActiveStageClause();
   }
 
+  originStageClauseValue(valueKey) {
+    return this.hasStageClause()
+      && this.state.stageClauses[0]
+      && this.state.stageClauses[0][valueKey];
+  }
+
   originStageClauseType() {
-    return this.hasStageClause() && this.state.stageClauses[0].TYPE;
+    return this.originStageClauseValue(`TYPE`);
   }
 
   originStageClauseIsPeopleProperty() {
-    return this.hasStageClause()
-      && this.state.stageClauses[0]
-      && this.state.stageClauses[0].resourceType === `people`;
+    return this.originStageClauseValue(`resourceType`) === Clause.RESOURCE_TYPE_PEOPLE;
   }
 
   isAddingClause(sectionType) {

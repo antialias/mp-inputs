@@ -149,9 +149,14 @@ export class ProfileTypePropertiesQuery extends BaseQuery {
   }
 
   buildParams() {
+    const profileTypesToTableValues = {
+      accounts: `Account`,
+      contacts: `Contact`,
+      leads: `Lead`,
+    };
     return {
       limit: 1,
-      where: `properties["Table"] == "${this.query.profileType}"`,
+      where: `properties["Table"] == "${profileTypesToTableValues[this.query.profileType]}"`,
     };
   }
 

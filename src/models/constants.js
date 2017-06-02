@@ -12,9 +12,9 @@ export const DATASETS = {
   [DATASET_SALESFORCE]: {
     displayName: `Salesforce`,
     profileTypes: [
-      `Account`,
-      `Contact`,
-      `Lead`,
+      `accounts`,
+      `contacts`,
+      `leads`,
     ],
   },
 };
