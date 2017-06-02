@@ -1021,6 +1021,10 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       sections: sections.replaceSection(newTimeSection), // retain previous time clause
     });
 
+    // Reset staging clause so it picks up new dataset
+    this.stopEditingClause();
+    this.startEditingClause(ShowClause.TYPE, 0);
+
     if (this.canMakeQueries()) {
       this._fetchTopEventsProperties();
     }
