@@ -51,7 +51,6 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
             itemType: `event`,
             hasPropertiesPill: true,
             isPropertiesPillDisabled: this.state.learnActive,
-            label: `${event.dataset}:${event.label}`,
           });
         }),
       },
@@ -61,7 +60,6 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
           return extend(property, {
             itemType: `property`,
             isDisabled: this.state.learnActive,
-            label: `${property.dataset}:${property.label}`,
           });
         }),
       },
