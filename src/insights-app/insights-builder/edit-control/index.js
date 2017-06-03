@@ -1,8 +1,6 @@
 import {Component} from 'panel';
 import throttle from 'lodash/throttle';
-
 import {extend} from '../../../util';
-
 import '../../widgets/resize-input';
 
 import template from './index.jade';
@@ -42,7 +40,14 @@ export class EditControl extends Component {
         isPaneOpen: () => this.isPaneOpen(),
         isRemovable: () => this.isRemovable(),
         removeClause: () => this.remove(),
-        getDatasetDisplayName: () => this.app.getDatasetDisplayName(),
+        getDatasetDisplayName: () => {
+          // Only show dataset displayName if in first show clause
+          if (this.section === `show` && this.clauseIndex === 0) {
+            return this.app.getDatasetDisplayName();
+          }
+
+          return null;
+        },
       }),
     };
   }
