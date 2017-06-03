@@ -2,7 +2,7 @@ include ../mixins.jade
 
 - const activeIdx = builderPane.activeIndex
 
-.builder-screen.sources(
+.builder-screen.sources.contextual(
   hook={postpatch: $helpers.updateRenderedSize}
   style={width: (contextFilter ? `320px` : `260px`)}
 )
@@ -19,6 +19,8 @@ include ../mixins.jade
       }
     )
   else
+    if $helpers.getDatasetDisplayName()
+      .dataset-info= `${$helpers.getDatasetDisplayName()} data only`
     ul.screen-options-list.arrow-key-scrollable(
       class=util.learnClasses({
         disabledSteps: [`compare-event`, `group-by`],

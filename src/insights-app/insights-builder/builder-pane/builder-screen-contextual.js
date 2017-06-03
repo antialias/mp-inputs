@@ -55,6 +55,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
             this.clickedProperty(ev);
           }
         },
+        getDatasetDisplayName: () => this.app.getDatasetDisplayName(),
       }),
     };
   }
