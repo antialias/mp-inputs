@@ -994,7 +994,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       datasetName => extend(datasets[datasetName], {datasetName}));
   }
 
-  getDatasetName() {
+  getDatasetDisplayName() {
     if (this.hasDatasets()) {
       const dataset = this.getDataset();
       if (dataset) {
@@ -1002,7 +1002,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       }
     }
 
-    return ``;
+    return null;
   }
 
   hasDatasets() {

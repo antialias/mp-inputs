@@ -20,14 +20,16 @@ document.registerElement(`builder-screen-datasets`, class extends BuilderScreenB
         getFilterSections: () => this.buildList(),
         clickedItem: ev => {
           const item = ev.detail.item;
-          if (item.itemType === `dataset`) {
-            this.helpers.selectDataset(item);
-          }
-          else if (item.itemType === `event`) {
-            this.helpers.clickedEvent(ev);
-          }
-          else if (item.itemType === `property`) {
-            this.helpers.clickedProperty(ev);
+          switch(item.itemType) {
+            case `dataset`:
+              this.helpers.selectDataset(item);
+              break;
+            case `event`:
+              this.helpers.clickedEvent(ev);
+              break;
+            case `property`:
+              this.helpers.clickedProperty(ev);
+              break;
           }
         },
       }),
