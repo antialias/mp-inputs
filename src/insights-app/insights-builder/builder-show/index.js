@@ -107,12 +107,13 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
     let startScreen = `builder-screen-sources`;
     let previousScreens = [];
 
-    // More than one show clause, go directly to events/properties view (no back)
-    if (showClauses.length >= 2) {
+    // More than one show clause, i.e user has already selected a resource type
+    // Only show options for that resource type
+    if (showClauses.length > 1) {
       startScreen = `builder-screen-${screenForResourceType}`;
     }
     else if (this.app.hasDatasets()) {
-      // If multiple datasets and a dataset selected,
+      // If multiple datasets and a dataset is selected,
       // go to sources view and add back button for dataset selection
       if (this.app.getDataset() !== null) {
         previousScreens = [`builder-screen-datasets`];
