@@ -1019,7 +1019,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
     if (mpEvent) {
       const properties = this.state[TOP.EVENTS.PROPERTIES_BY_EVENT][dataset];
-      return (properties && properties[mpEvent.name]) || null;
+      return (properties && properties[util.formatEventName(mpEvent)]) || null;
     } else {
       return this._constructTopList(TOP.EVENTS.PROPERTIES, dataset);
     }
@@ -1117,7 +1117,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   fetchTopPropertiesForEvent(mpEvent) {
     const dataset = this.getDataset();
     const topState = this.state[TOP.EVENTS.PROPERTIES_BY_EVENT][dataset] || {};
-    const eventName = mpEvent.custom ? `$custom_event:${mpEvent.id}` : mpEvent.name;
+    const eventName = util.formatEventName(mpEvent);
 
     if (!topState[eventName]) {
       this._updateTopList(TOP.EVENTS.PROPERTIES_BY_EVENT, dataset, extend(topState, {

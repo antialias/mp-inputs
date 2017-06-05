@@ -69,6 +69,10 @@ export function formatResourceType(type) {
   return type === `events` ? `event` : type;
 }
 
+export function formatEventName(mpEvent) {
+  return mpEvent.custom ? `$custom_event:${mpEvent.id}` : mpEvent.name;
+}
+
 export function isSpecialEvent(mpEvent) {
   return [ShowClause.TOP_EVENTS.name, ShowClause.ALL_EVENTS.name].includes(mpEvent.name);
 }
