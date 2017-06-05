@@ -2,10 +2,10 @@ export const DATASET_MIXPANEL = `mixpanel`;
 export const DATASETS = {
   [DATASET_MIXPANEL]: {
     displayName: `Mixpanel`,
-    description: `Product usage, customers e.t.c`,
+    description: `Product usage, customers, etc.`,
   },
   salesforce: {
     displayName: `Salesforce`,
-    description: `Customer relations, sales e.t.c`,
+    description: `Customer relations, sales, etc.`,
   },
 };

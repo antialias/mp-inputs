@@ -7,7 +7,7 @@ mixin generic-options-list-item(label, options)
       'list-option-active': !!options.isActive,
       'list-option-alert': !!options.shouldShowSourceAlert,
       'list-option-upsell': !!options.shouldShowSourceUpsell,
-      'has-description': !!options.description
+      'has-description': !!options.description,
     }
     on={
       click: options.onclick,
