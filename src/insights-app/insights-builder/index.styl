@@ -261,6 +261,32 @@ header-button-transition-duration = 150ms
         &.people
           right 14px
 
+  // sources-lists
+  .sources-lists
+    &.sources-all
+      // dividers between sections
+      builder-screen-people .builder-screen
+        position relative
+
+        &::before
+          content ''
+          border-top 1px solid #e5eaef
+          margin 0 10px
+          width calc(100% - 20px)
+          position absolute
+
+      // in the "All" case, scrolling is managed by the parent instead of embedded lists
+      overflow auto
+      width 320px
+      .builder-screen
+        max-height none
+        width auto
+
+      // hide all but the last "show all properties" button
+      builder-screen-events, builder-screen-people
+        &:not(:last-child) .screen-footer
+          display none
+
   // screen-footer-button
   button.screen-footer
     background none

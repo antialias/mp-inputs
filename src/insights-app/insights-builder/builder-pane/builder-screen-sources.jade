@@ -23,6 +23,9 @@ include ../mixins.jade
       }
     )
   else
+    - const sources = $helpers.getSources();
+    - const selectedSource = $helpers.getSelectedSource();
+
     +screen-title(`Select Source`, {
       backButton: !!$helpers.screenIdx(),
       theme: `lite`,
@@ -30,20 +33,19 @@ include ../mixins.jade
     .sources-control
       mp-toggle.sources-toggle(
         attrs={
-          selected: $helpers.getSelectedSource(),
+          selected: selectedSource,
           theme: `lite`,
         }
         on={
           select: $helpers.clickedSource,
         }
       )
-        each source in $helpers.getSources()
-          // TODO @evnp - remove profileType below once we have multiple people tables on backend
+        each source in sources
           mp-toggle-option(attrs={
             value: source.profileType || source.resourceType,
             disabled: learnActive && source.resourceType !== `events`,
           })= source.name
-      each source in $helpers.getSources()
+      each source in sources
         - const resourceType = source.resourceType;
         - const upsellType = $helpers.shouldShowSourceUpsell(resourceType) ? `upsell` : `alert`;
         .svg-icon-wrapper.sources(
@@ -57,5 +59,13 @@ include ../mixins.jade
           if $helpers.shouldShowSourceAlert(resourceType)
             svg-icon(attrs={ icon: 'alert' })
 
-    - const subScreenName = $helpers.getSelectedResourceType() === `events` ? `builder-screen-events` : `builder-screen-people`;
-    = $component.child(subScreenName, {attrs: {'is-embedded': true}})
+    - const isAllSelected = selectedSource === $helpers.RESOURCE_TYPE_ALL;
+    .sources-lists(class={'sources-all': isAllSelected})
+      each sourceObject in sources
+        - const resourceType  = sourceObject.resourceType;
+        - const source = sourceObject.profileType || sourceObject.resourceType;
+
+        if isAllSelected ? source !== `all` : source === selectedSource
+          - const subScreenName = resourceType === `events` ? `builder-screen-events` : `builder-screen-people`;
+          - const label = isAllSelected ? source : ``;
+          = $component.child(subScreenName, {attrs: {source, label, 'is-embedded': true}})

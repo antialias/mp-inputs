@@ -9,6 +9,7 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
     return {
       template,
       helpers: extend(super.config.helpers, {
+        RESOURCE_TYPE_ALL: Clause.RESOURCE_TYPE_ALL,
         getSources: () => {
           this.updateRenderedSizeOnNextFrame();
           return this.app.getSources().map((source, index) => extend(source, {index}));

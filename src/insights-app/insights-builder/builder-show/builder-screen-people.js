@@ -1,7 +1,12 @@
 import {BuilderScreenNumericPropertiesBase} from '../builder-pane/builder-screen-numeric-properties-base';
 import BaseQuery from '../../../models/queries/base';
 import {ShowClause} from '../../../models/clause';
-import {extend, getIconForPropertyType, renameProperty} from '../../../util';
+import {
+  capitalize,
+  extend,
+  getIconForPropertyType,
+  renameProperty,
+} from '../../../util';
 
 import template from './builder-screen-people.jade';
 
@@ -11,9 +16,14 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenNum
       template,
       helpers: extend(super.config.helpers, {
         getPropertySections: () => {
+          const source = this.getAttribute(`source`);
           return [{
-            items: this.processItems([ShowClause.ALL_PEOPLE]),
+            label: this.getAttribute(`label`),
+            items: this.processItems([extend(ShowClause.ALL_PEOPLE, {
+              label: `All ${capitalize(source)}`,
+            })]),
           }, {
+            label: `Properties apply to all ${source}`,
             items: this.processItems(this.buildList()),
             isLoading: this.app.getTopPeopleProperties() === BaseQuery.LOADING,
           }];
@@ -44,11 +54,12 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenNum
     let properties = super.buildList(ShowClause.RESOURCE_TYPE_PEOPLE);
 
     // TODO @evnp - remove once we have multiple people tables on backend
-    const stageClause = this.app.activeStageClause;
-    const profileType = stageClause && stageClause.profileType;
-    if (profileType && Array.isArray(properties)) {
-      properties = properties.filter(property =>
-        property && (!property.profileTypes || property.profileTypes.includes(profileType))
+    const source = this.getAttribute(`source`);
+    if (source && Array.isArray(properties)) {
+      properties = properties.filter(Boolean).filter(property =>
+        property.resourceType === source || (
+          property.profileTypes && property.profileTypes.includes(source)
+        )
       );
     }
     // TODO @evnp END
