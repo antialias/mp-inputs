@@ -561,7 +561,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     // remove any match data from value object
     // custom, id, alternatives are needed to get custom events to correctly work
     // is_collect_everything_event is needed to show correct icon in recent events list
-    const recentItemFields = [`name`, `type`, `resourceType`, `dataset`, `custom`, `id`, `alternatives`, `is_collect_everything_event`];
+    const recentItemFields = [`name`, `type`, `resourceType`, `profileTypes`, `dataset`, `custom`, `id`, `alternatives`, `is_collect_everything_event`];
     list = list.map(item => pick(item, recentItemFields));
 
     // remove special events and properties from recent item list
@@ -1055,16 +1055,20 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   getSources() {
     const dataset = DATASETS[this.getDataset()];
-    const profileTypes = (dataset && dataset.profileTypes) || [`people`];
+    const profileTypes = (dataset && dataset.profileTypes) || [Clause.RESOURCE_TYPE_PEOPLE];
 
     return [
       {
+        name: `All`,
+        resourceType: Clause.RESOURCE_TYPE_ALL,
+      },
+      {
         name: `Events`,
-        resourceType: `events`,
+        resourceType: Clause.RESOURCE_TYPE_EVENTS,
       },
       ...profileTypes.map(profileType => ({
         name: capitalize(profileType),
-        resourceType: `people`,
+        resourceType: Clause.RESOURCE_TYPE_PEOPLE,
         profileType,
       })),
     ];

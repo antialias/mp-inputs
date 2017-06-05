@@ -6,9 +6,9 @@ include ../mixins.jade
     theme: `lite`,
   })
   +property-screen-body({
-    resourceTypes: $helpers.RESOURCE_TYPES,
-    selectedResourceType: $helpers.getSelectedResourceType(),
-    clickedResourceType: $helpers.clickedResourceType,
+    sources: $helpers.getSources(),
+    selectedSource: $helpers.getSelectedSource(),
+    clickedSource: $helpers.clickedSource,
     propertySections: $helpers.getPropertySections(),
     searchFilter: contextFilter,
     clickedProperty: $helpers.clickedProperty,

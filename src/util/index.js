@@ -1,6 +1,10 @@
 // Insights-specific utils
 import cloneDeep from 'lodash/cloneDeep';
-import {nestedObjectDepth, objectFromPairs} from 'mixpanel-common/util';
+import {
+  capitalize,
+  nestedObjectDepth,
+  objectFromPairs,
+} from 'mixpanel-common/util';
 import moment from 'moment';
 
 import {ShowClause} from '../models/clause';
@@ -65,8 +69,11 @@ export function getTextWidth(text, font) {
   return context.measureText(text).width;
 }
 
-export function formatResourceType(type) {
-  return type === `events` ? `event` : type;
+export function formatSource(source) {
+  if (source[source.length - 1] === `s`) {
+    source = source.slice(0, -1);
+  }
+  return capitalize(source);
 }
 
 export function formatEventName(mpEvent) {

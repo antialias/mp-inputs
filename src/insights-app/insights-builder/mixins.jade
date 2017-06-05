@@ -29,32 +29,36 @@ mixin secondary-action-pill(label, options)
     +small-caret-icon()
 
 mixin property-screen-body(options)
-  if options.resourceTypes
-    .resource-type-control
+  if options.sources
+    .sources-control
       mp-toggle.sources-toggle(
         attrs={
           theme: 'lite',
-          selected: options.selectedResourceType,
+          selected: options.selectedSource,
         }
-        on={select: ev => options.clickedResourceType(ev.detail.selected)}
+        on={select: ev => options.clickedSource(ev.detail.selected)}
       )
-        each type in options.resourceTypes
-          mp-toggle-option(attrs={value: type})= util.formatResourceType(type)
-      each type, index in options.resourceTypes
-        - const upsell_type = $helpers.shouldShowSourceUpsell(type) ? `upsell` : `alert`;
+        each source in options.sources
+          mp-toggle-option(
+            attrs={
+              value: source.profileType || source.resourceType,
+            }
+          )= util.formatSource(source.profileType || source.resourceType)
+      each source, index in options.sources
+        - const upsellType = $helpers.shouldShowSourceUpsell(source.resourceType) ? `upsell` : `alert`;
         .svg-icon-wrapper.properties(
           class={
-            [type]: true,
-            [upsell_type]: true,
+            [source.resourceType]: true,
+            [upsellType]: true,
           }
         )
-          if $helpers.shouldShowSourceUpsell(type)
+          if $helpers.shouldShowSourceUpsell(source.resourceType)
             svg-icon(attrs={ icon: 'lighting-bolt' })
-          if $helpers.shouldShowSourceAlert(type)
+          if $helpers.shouldShowSourceAlert(source.resourceType)
             svg-icon(attrs={ icon: 'alert' })
 
   if !$helpers.shouldShowPropertySections()
-    +upsell-pane(options.selectedResourceType)
+    +upsell-pane(options.selectedSource)
   else
     mp-items-menu(
       attrs={

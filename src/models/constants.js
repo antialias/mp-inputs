@@ -8,9 +8,13 @@ export const DATASETS = {
   salesforce: {
     displayName: `Salesforce`,
     description: `Customer relations, sales, etc.`,
+    profileTypes: [
+      `people`,
+    ],
   },
   [DATASET_SALESFORCE]: {
     displayName: `Salesforce`,
+    description: `Customer relations, sales e.t.c`,
     profileTypes: [
       `accounts`,
       `contacts`,

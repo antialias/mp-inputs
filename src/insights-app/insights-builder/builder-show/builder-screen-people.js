@@ -41,7 +41,7 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenNum
   }
 
   buildList() {
-    let properties = super.buildList(ShowClause.RESOURCE_TYPE_PEOPLE)
+    let properties = super.buildList(ShowClause.RESOURCE_TYPE_PEOPLE);
 
     // TODO @evnp - remove once we have multiple people tables on backend
     const stageClause = this.app.activeStageClause;
