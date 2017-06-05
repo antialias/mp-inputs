@@ -7,6 +7,8 @@ import './insights-builder';
 describe(`fully integrated insights-app`, function() {
   beforeEach(async function() {
     this.app = await setupAppAsync();
+    // TODO: Remove this
+    console.error(this.app);
   });
 
   it(`renders main sections`, function() {
