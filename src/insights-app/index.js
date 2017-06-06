@@ -1044,7 +1044,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
     if (mpEvent) {
       const properties = this.state[TOP.EVENTS.PROPERTIES_BY_EVENT][dataset];
-      return (properties && properties[util.formatEventName(mpEvent)]) || null;
+      return (properties && properties[util.formatEventName(mpEvent)]) || [];
     } else {
       return this._constructTopList(TOP.EVENTS.PROPERTIES, dataset);
     }
@@ -1062,7 +1062,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     const topState = this.state[topKey];
 
     if (dataset) {
-      return topState[dataset] || null;
+      return topState[dataset] || [];
     } else {
       const topLists = Object.values(topState);
       const loadingLists = topLists.filter(list => list === BaseQuery.LOADING);
@@ -1073,7 +1073,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       } else if (loadingLists.length) {
         return BaseQuery.LOADING;
       } else {
-        return null;
+        return [];
       }
     }
   }
