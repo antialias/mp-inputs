@@ -11,7 +11,6 @@ describe(`fully integrated insights-app`, function() {
 
   it(`renders main sections`, function() {
     for (const section of [`insights-header`, `insights-builder`, `insights-result`, `insights-reports`]) {
-      console.log(this.app);
       expect(this.app.querySelector(section)).to.be.ok;
     }
   });
