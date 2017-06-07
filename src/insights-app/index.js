@@ -65,6 +65,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         this.resettableState,
         {
           // The following states should persist through reset.
+          datasets: { // every project has at least a Mixpanel dataset
+            [DATASET_MIXPANEL]: DATASETS[DATASET_MIXPANEL],
+          },
           canAddBookmark: true,
           features: {},
           savedReports: {},
@@ -220,9 +223,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       resultLoading: true,
       stageClauses: [],
       stickyHeader: {},
-      datasets: { // every project has at least a Mixpanel dataset
-        [DATASET_MIXPANEL]: DATASETS[DATASET_MIXPANEL],
-      },
       [TOP_EVENTS]: {},
       [TOP.EVENTS.PROPERTIES]: {},
       [TOP.EVENTS.PROPERTIES_BY_EVENT]: {},
@@ -1395,6 +1395,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   updateStageClause(clauseData={}, {shouldCommit=false, shouldStopEditing=true}={}) {
+    clauseData.dataset = clauseData.dataset || this.getDataset();
+
     const stageClauses = this.state.stageClauses.concat();
     let currentClause = stageClauses.pop();
     if (currentClause) {
