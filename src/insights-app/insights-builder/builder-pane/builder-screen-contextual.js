@@ -118,6 +118,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
       propertyType: property.type,
       resourceType: property.resourceType,
       profileType: property.profileType,
+      dataset: property.dataset,
     };
 
     if (property.type === `datetime`) {
@@ -136,6 +137,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
     this.updateAndCommitStageClause({
       value: event,
       resourceType: Clause.RESOURCE_TYPE_EVENTS,
+      dataset: event.dataset,
     });
   }
 

@@ -40,10 +40,10 @@ export class BuilderScreenBase extends Component {
           const event = ev.detail.item;
           this.app.updateRecentEvents(event);
           this.updateAndCommitStageClause({
-            dataset: event.dataset,
             value: event,
             property: null,
             resourceType: Clause.RESOURCE_TYPE_EVENTS,
+            dataset: event.dataset,
           });
         },
         clickedEventProperties: ev => {
@@ -57,13 +57,13 @@ export class BuilderScreenBase extends Component {
         },
         clickedProperty: ev => {
           const property = ev.detail.item;
-          this.app.updateRecentEvents(property);
+          this.app.updateRecentProperties(property);
           this.updateAndCommitStageClause({
-            dataset: property.dataset,
             value: ShowClause.ALL_PEOPLE,
             property: property.name === ShowClause.ALL_PEOPLE.name ? null : property,
             resourceType: Clause.RESOURCE_TYPE_PEOPLE,
             profileType: property.profileType,
+            dataset: property.dataset,
           });
         },
         clickedBackButton: () => this.previousScreen(),

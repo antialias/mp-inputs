@@ -27,6 +27,7 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
             propertyType: property.type,
             resourceType: property.resourceType,
             profileType: property.profileType,
+            dataset: property.dataset,
           };
 
           if (property.type === `datetime`) {

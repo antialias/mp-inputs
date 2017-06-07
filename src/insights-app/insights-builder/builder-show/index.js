@@ -87,17 +87,18 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
 
   getSelectionAttrs() {
     const clause = this.getClause();
+    let selected;
+
     if (clause.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE) {
-      return {
-        source: `people`,
-        selected: clause.property ? clause.property.name : clause.value.name,
-      };
+      selected = clause.property ? clause.property.name : clause.value.name;
     } else {
-      return {
-        source: `events`,
-        selected: clause.value.name,
-      };
+      selected = clause.value.name;
     }
+
+    return {
+      selected,
+      source: clause.source,
+    };
   }
 
   isPaneOpen() {
@@ -109,18 +110,16 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
   }
 
   openPane() {
-    const resourceScreenMap = {
-      [Clause.RESOURCE_TYPE_ALL]: Clause.RESOURCE_TYPE_EVENTS,
-    };
-    const showClauses = this.app.getClausesForType(this.section);
-    const screenForResourceType = resourceScreenMap[showClauses[0].resourceType] || showClauses[0].resourceType;
-    let startScreen = `builder-screen-sources`;
+    const clauses = this.app.getClausesForType(this.section);
+    const resourceType = clauses[0].resourceType;
+    const isAllOrEvents = [Clause.RESOURCE_TYPE_ALL, Clause.RESOURCE_TYPE_EVENTS].includes(resourceType);
     let previousScreens = [];
 
-    // More than one show clause, i.e user has already selected a resource type
-    // Only show options for that resource type
-    if (showClauses.length > 1) {
-      startScreen = `builder-screen-${screenForResourceType}`;
+    let startScreen = `builder-screen-sources`;
+    if (clauses.length > 1) {
+      // More than one show clause, i.e user has already selected a resource type
+      // Only show options for that resource type
+      startScreen = isAllOrEvents ? `builder-screen-events` : `builder-screen-people`;
     }
     else if (this.app.hasDatasets()) {
       // If multiple datasets and a dataset is selected,
@@ -161,7 +160,7 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
   getSelectionAttrs() {
     const clause = this.getClause();
     return {
-      source: clause.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE ? `people` : `events`,
+      source: clause.source,
       selected: clause.property ? clause.property.name : null,
     };
   }

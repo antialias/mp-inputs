@@ -39,14 +39,16 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenNum
   }
 
   processItems(items) {
-    const source = this.getSelectedSource();
+    const dataset = this.app.getDataset();
+    const profileType = this.getSelectedSource();
     const selected = this.getAttribute(`selected`);
 
     return items.map(item => extend({
+      dataset,
+      profileType,
       label: item.label || renameProperty(item.name),
       icon: item.icon || getIconForPropertyType(item.type),
       isSelected: item.name === selected,
-      profileType: source,
     }, item));
   }
 

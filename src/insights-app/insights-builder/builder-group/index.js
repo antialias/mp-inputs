@@ -63,8 +63,8 @@ document.registerElement(`builder-group-edit-control`, class extends EditControl
   getSelectionAttrs() {
     const clause = this.getClause();
     return {
-      source: clause.resourceType === Clause.RESOURCE_TYPE_PEOPLE ? `people` : `events`,
       selected: clause.value,
+      source: clause.source,
     };
   }
 
