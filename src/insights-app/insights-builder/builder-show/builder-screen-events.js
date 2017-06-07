@@ -44,8 +44,8 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
             const eventDefinition = pick(definition, [`description`, `verified`, `isMixpanelDefinition`]);
             eventDefinition.name = item.label;
             if (definition.verified && !definition.isMixpanelDefinition) {
-              eventDefinition.verifiedBy = definition.verifiedBy.name || definition.verifiedBy.email;
-              eventDefinition.verifiedDate = new Date(definition.lastVerified);
+              eventDefinition.verifiedBy = definition.lastVerifiedBy.name || definition.lastVerifiedBy.email;
+              eventDefinition.verifiedDate = definition.lastVerified;
             }
             this.update({eventDefinition});
           } else {
