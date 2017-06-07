@@ -5,16 +5,9 @@ export const DATASETS = {
     displayName: `Mixpanel`,
     description: `Product usage, customers, etc.`,
   },
-  salesforce: {
-    displayName: `Salesforce`,
-    description: `Customer relations, sales, etc.`,
-    profileTypes: [
-      `people`,
-    ],
-  },
   [DATASET_SALESFORCE]: {
     displayName: `Salesforce`,
-    description: `Customer relations, sales e.t.c`,
+    description: `Customer relations, sales, etc.`,
     profileTypes: [
       `accounts`,
       `contacts`,

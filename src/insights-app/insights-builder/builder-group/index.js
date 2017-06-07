@@ -7,7 +7,7 @@ import {
 } from '../../../util';
 
 import {EditControl} from '../edit-control';
-import {Clause, GroupClause, ShowClause} from '../../../models/clause';
+import {GroupClause} from '../../../models/clause';
 
 import './builder-screen-group-datetime-options';
 import './builder-screen-group-properties';

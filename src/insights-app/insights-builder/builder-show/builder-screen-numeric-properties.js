@@ -1,6 +1,6 @@
 import {BuilderScreenNumericPropertiesBase} from '../builder-pane/builder-screen-numeric-properties-base';
 import BaseQuery from '../../../models/queries/base';
-import {Clause, ShowClause} from '../../../models/clause';
+import {Clause} from '../../../models/clause';
 import {extend, renameEvent} from '../../../util';
 
 import template from './builder-screen-numeric-properties.jade';

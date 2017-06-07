@@ -1,7 +1,6 @@
 // Insights-specific utils
 import cloneDeep from 'lodash/cloneDeep';
 import {
-  capitalize,
   nestedObjectDepth,
   objectFromPairs,
 } from 'mixpanel-common/util';
