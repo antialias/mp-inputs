@@ -44,7 +44,7 @@ include ../mixins.jade
           mp-toggle-option(attrs={
             value: source.profileType || source.resourceType,
             disabled: learnActive && source.resourceType !== `events`,
-          })= source.name
+          })= util.capitalize(source.name)
       each source in sources
         - const resourceType = source.resourceType;
         - const upsellType = $helpers.shouldShowSourceUpsell(resourceType) ? `upsell` : `alert`;

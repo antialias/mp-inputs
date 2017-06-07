@@ -1,19 +1,12 @@
 import {BuilderScreenBase} from './builder-screen-base';
 import {Clause, GroupClause, ShowClause} from '../../../models/clause';
-import {extend, getLearnStep} from '../../../util';
+import {
+  extend,
+  formatSource,
+  getLearnStep,
+} from '../../../util';
 
 import template from './builder-screen-contextual.jade';
-
-const CONTEXT_OPTIONS = {
-  [ShowClause.RESOURCE_TYPE_EVENTS]: [
-    {name: `Group by a property`, clauseType: GroupClause.TYPE},
-    {name: `Compare to an event`, clauseType: ShowClause.TYPE},
-  ],
-  [ShowClause.RESOURCE_TYPE_PEOPLE]: [
-    {name: `Group by a people property`,   clauseType: GroupClause.TYPE},
-    {name: `Compare to a people property`, clauseType: ShowClause.TYPE},
-  ],
-};
 
 document.registerElement(`builder-screen-contextual`, class extends BuilderScreenBase {
   get config() {
@@ -24,10 +17,15 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
           const {clauseType} = option;
           switch(clauseType) {
             case ShowClause.TYPE: {
-              const resourceType = this.state.report.sections.show.clauseResourceTypes();
               this.app.stopEditingClause();
-              this.app.startAddingClause(clauseType, {resourceType});
-              this.nextScreen(`builder-screen-${resourceType}`);
+
+              if (this.state.report.sections.show.isPeopleOnlyQuery()) {
+                this.app.startAddingClause(clauseType, {resourceType: Clause.RESOURCE_TYPE_PEOPLE});
+                this.nextScreen(`builder-screen-people`);
+              } else {
+                this.app.startAddingClause(clauseType, {resourceType: Clause.RESOURCE_TYPE_EVENTS});
+                this.nextScreen(`builder-screen-events`);
+              }
               break;
             }
             case GroupClause.TYPE: {
@@ -36,16 +34,14 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
               this.nextScreen(`builder-screen-group-properties`);
               const isPeopleOnlyQuery = this.state.report.sections.show.isPeopleOnlyQuery();
               this.app.updateBuilderCurrentScreen({
-                resourceType: isPeopleOnlyQuery ? ShowClause.RESOURCE_TYPE_PEOPLE : ShowClause.RESOURCE_TYPE_ALL,
+                resourceType: isPeopleOnlyQuery ? Clause.RESOURCE_TYPE_PEOPLE : Clause.RESOURCE_TYPE_ALL,
+                profileType: this.getSelectedSource(),
               });
               break;
             }
           }
         },
-        getContextOptions: () => {
-          return (CONTEXT_OPTIONS[this.state.report.sections.show.clauseResourceTypes()] || [])
-            .map((option, index) => extend(option, {index}));
-        },
+        getContextOptions: () => this.getContextOptions(),
         getSections: () => this.buildList(),
         clickedItem: ev => {
           const item = ev.detail.item;
@@ -60,20 +56,37 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
     };
   }
 
-  buildList() {
-    const resourceTypes = this.state.report.sections.show.clauseResourceTypes();
-    if (resourceTypes === ShowClause.RESOURCE_TYPE_EVENTS) {
-      let isGroupByDisabled = false;
-      let isEventsDisabled = false;
-      if (this.state.learnActive) {
-        const currLearnStep = getLearnStep(this.state.report, this.state.learnModalStepIndex);
-        if (currLearnStep) {
-          isGroupByDisabled = currLearnStep.name !== `group-by`;
-          isEventsDisabled = currLearnStep.name !== `compare-event`;
-        }
-      }
+  getSelectedSource() {
+    return this.app.getSelectedSource();
+  }
 
-      return [
+  buildList() {
+    let isGroupByDisabled = false;
+    let isEventsDisabled = false;
+    if (this.state.learnActive) {
+      const currLearnStep = getLearnStep(this.state.report, this.state.learnModalStepIndex);
+      if (currLearnStep) {
+        isGroupByDisabled = currLearnStep.name !== `group-by`;
+        isEventsDisabled = currLearnStep.name !== `compare-event`;
+      }
+    }
+
+    let sections = this.app.getSources(Clause.RESOURCE_TYPE_PEOPLE).map(source => {
+      const properties = this.allProperties(Clause.RESOURCE_TYPE_PEOPLE)
+        .filter(this.app.filterPropertiesBySource(source))
+        .map(item => extend(item, {
+          isDisabled: isGroupByDisabled,
+          itemType: `property`,
+        }));
+
+      return {
+        label: `Group by ${formatSource(source.profileType, `a property`)}`,
+        items: properties,
+      };
+    });
+
+    if (this.state.report.sections.show.isEventsOnlyQuery()) {
+      sections = [
         {
           label: `Group by an event property`,
           items: this.allProperties(Clause.RESOURCE_TYPE_EVENTS).map(item => extend(item, {
@@ -81,13 +94,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
             itemType: `property`,
           })),
         },
-        {
-          label: `Group by a people property`,
-          items: this.allProperties(Clause.RESOURCE_TYPE_PEOPLE).map(item => extend(item, {
-            isDisabled: isGroupByDisabled,
-            itemType: `property`,
-          })),
-        },
+        ...sections,
         {
           label: `Compare to an event`,
           items: this.allEvents().map(item => extend(item, {
@@ -96,38 +103,59 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
           })),
         },
       ];
-    } else if (resourceTypes === ShowClause.RESOURCE_TYPE_PEOPLE) {
-      return [
-        {
-          label: `Group by a people property`,
-          items: this.allProperties(Clause.RESOURCE_TYPE_PEOPLE).map(item => extend(item, {
-            itemType: `property`,
-          })),
-        },
-      ];
     }
+
+    return sections;
   }
 
   clickedProperty(ev) {
     const property = ev.detail.item;
+    this.app.updateRecentProperties(property);
     this.app.startAddingClause(`group`);
-    const newClause = {
+
+    const clauseAttrs = {
+      value: property.name,
       propertyType: property.type,
       resourceType: property.resourceType,
-      value: property.name,
+      profileType: property.profileType,
     };
+
     if (property.type === `datetime`) {
-      newClause.editing = true;
-      this.updateStageClause(newClause);
+      clauseAttrs.editing = true;
+      this.updateStageClause(clauseAttrs);
       this.nextScreen(`builder-screen-group-datetime-options`);
     } else {
-      this.updateAndCommitStageClause(newClause);
+      this.updateAndCommitStageClause(clauseAttrs);
     }
   }
 
   clickedEvent(ev) {
-    const value = ev.detail.item;
+    const event = ev.detail.item;
+    this.app.updateRecentEvents(event);
     this.app.startAddingClause(`show`);
-    this.updateStageClause({value}, {shouldCommit: true, shouldStopEditing: true});
+    this.updateAndCommitStageClause({
+      value: event,
+      resourceType: Clause.RESOURCE_TYPE_EVENTS,
+    });
+  }
+
+  getContextOptions() {
+    const source = this.getSelectedSource();
+    let options = [];
+
+    if (source === Clause.RESOURCE_TYPE_EVENTS) {
+      options = [
+        {name: `Group by a property`, clauseType: GroupClause.TYPE},
+        {name: `Compare to an event`, clauseType: ShowClause.TYPE},
+      ];
+    } else {
+      const sourceDescription = formatSource(source, `a property`);
+      options = [
+        {name: `Group by ${sourceDescription}`, clauseType: GroupClause.TYPE},
+        {name: `Compare to ${sourceDescription}`, clauseType: ShowClause.TYPE},
+      ];
+    }
+
+    return options.map((option, index) => extend(option, {index}));
   }
 });

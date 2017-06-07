@@ -1,7 +1,6 @@
 import {BuilderScreenPropertiesBase} from '../builder-pane/builder-screen-properties-base';
-import {extend} from '../../../util';
-
 import {Clause} from '../../../models/clause';
+import {extend, formatSource} from '../../../util';
 
 import template from './builder-screen-group-properties.jade';
 
@@ -10,29 +9,37 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
     return {
       template,
       helpers: extend(super.config.helpers, {
+        getScreenTitle: () => {
+          if (this.getSelectedResourceType() === Clause.RESOURCE_TYPE_PEOPLE) {
+            return `Group by ${formatSource(this.getSelectedSource(), `a property`)}`;
+          } else {
+            return `Group by a property`;
+          }
+        },
         getPropertySections: () => this.processSections(this.getPropertySections()),
         clickedProperty: ev => {
           const property = ev.detail.item;
           this.app.updateRecentProperties(property);
-          const newClause = {
-            propertyType: property.type,
-            resourceType: property.resourceType,
+
+          const clauseAttrs = {
             typeCast: null,
             value: property.name,
+            propertyType: property.type,
+            resourceType: property.resourceType,
+            profileType: property.profileType,
           };
+
           if (property.type === `datetime`) {
             const stagedClause = this.app.getActiveStageClause();
-            newClause.editing = true;
-            newClause.unit = stagedClause.value === property.name ? stagedClause.unit : null;
-            this.updateStageClause(newClause);
+            clauseAttrs.editing = true;
+            clauseAttrs.unit = stagedClause.value === property.name ? stagedClause.unit : null;
+            this.updateStageClause(clauseAttrs);
             this.nextScreen(`builder-screen-group-datetime-options`);
           } else {
-            this.updateAndCommitStageClause(newClause);
+            this.updateAndCommitStageClause(clauseAttrs);
           }
         },
-        isEventsOnlyQuery: () => (
-          this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_EVENTS
-        ),
+        isEventsOnlyQuery: () => this.state.report.sections.show.isEventsOnlyQuery(),
       }),
     };
   }

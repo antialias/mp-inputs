@@ -44,32 +44,10 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     return !(this.app.shouldUpsellForSource(source) || this.app.shouldAlertForSource(source));
   }
 
-  filterToSource(source) {
-    return property => {
-      if (property) {
-        if (source === ShowClause.RESOURCE_TYPE_ALL) {
-          return true;
-        }
-
-        if (property.resourceType === ShowClause.RESOURCE_TYPE_EVENTS) {
-          return property.resourceType === source;
-        }
-
-        if (property.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE) {
-          return property.resourceType === source || (
-            property.profileTypes && property.profileTypes.includes(source)
-          );
-        }
-      }
-
-      return false;
-    };
-  }
-
   getRecentProperties() {
     const source = this.getSelectedSource();
     const recentProperties = this.app.getRecentProperties()
-      .filter(this.filterToSource(source))
+      .filter(this.app.filterPropertiesBySource(source))
       .slice(0, 3)
       .map(prop => extend(prop, {section: `recent`}));
 
@@ -78,16 +56,18 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       label: renameProperty(prop.name),
       icon: getIconForPropertyType(prop.type),
       isSelected: prop.name === selected,
+      profileType: source,
     }, prop));
   }
 
-  getProperties(source=ShowClause.RESOURCE_TYPE_ALL) {
+  getProperties(source=Clause.RESOURCE_TYPE_ALL) {
     const isLoading = this.isLoading();
     let properties = this.buildList()
-      .filter(this.filterToSource(source))
+      .filter(this.app.filterPropertiesBySource(source))
       .map(property => extend({
         label: renameProperty(property.name),
         icon: getIconForPropertyType(property.type),
+        profileType: source,
       }, property))
       .sort(baseComparator({transform: prop => prop.label.toLowerCase()}));
 
@@ -96,7 +76,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     ) {
       this.prevIsLoading = isLoading;
       this.numProperties = properties.length;
-      if (source === ShowClause.RESOURCE_TYPE_EVENTS) {
+      if (source === Clause.RESOURCE_TYPE_EVENTS) {
         this.numEventProperties = properties.length;
       }
     }
@@ -118,19 +98,19 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     if (!this.eventPropertyCount) {
       this.eventPropertyCount = this.getEventProperties().length;
     }
-    const matchingItems = this.matchingItems(this.buildList(ShowClause.RESOURCE_TYPE_EVENTS), renameProperty).length;
+    const matchingItems = this.matchingItems(this.buildList(Clause.RESOURCE_TYPE_EVENTS), renameProperty).length;
     return Math.min(this.eventPropertyCount, matchingItems);
   }
 
   getPropertySections() {
-    const showEvents = this.shouldShowPropertySections(ShowClause.RESOURCE_TYPE_EVENTS);
-    const showPeople = this.shouldShowPropertySections(ShowClause.RESOURCE_TYPE_PEOPLE);
+    const showEvents = this.shouldShowPropertySections(Clause.RESOURCE_TYPE_EVENTS);
+    const showPeople = this.shouldShowPropertySections(Clause.RESOURCE_TYPE_PEOPLE);
 
-    const resourceType = this.getSelectedResourceType();
     const source = this.getSelectedSource();
+    const resourceType = this.getSelectedResourceType();
     const eventPropertiesLoaded = this.numEventProperties >= this.getEventPropertyCount();
-    const isPeopleQuery = this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE;
-    const includePeople =  !showEvents || eventPropertiesLoaded || isPeopleQuery || ShowClause.RESOURCE_TYPE_PEOPLE === resourceType;
+    const isPeopleQuery = this.state.report.sections.show.isPeopleOnlyQuery();
+    const includePeople =  !showEvents || eventPropertiesLoaded || isPeopleQuery || Clause.RESOURCE_TYPE_PEOPLE === resourceType;
 
     let sections = [];
 
@@ -142,27 +122,26 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       });
     }
 
-    const isResourceAll = resourceType === ShowClause.RESOURCE_TYPE_ALL;
-    const isResourceEvents = resourceType === ShowClause.RESOURCE_TYPE_EVENTS;
-    const isResourcePeople = resourceType === ShowClause.RESOURCE_TYPE_PEOPLE;
+    const isResourceAll = resourceType === Clause.RESOURCE_TYPE_ALL;
+    const isResourceEvents = resourceType === Clause.RESOURCE_TYPE_EVENTS;
+    const isResourcePeople = resourceType === Clause.RESOURCE_TYPE_PEOPLE;
 
     const getSection = source => ({
       isLoading: this.isLoading(),
-      label: `${formatSource(source)} properties`,
+      label: formatSource(source, `properties`),
       items: this.getProperties(source),
     });
 
     if (showEvents && !isPeopleQuery && (isResourceAll || isResourceEvents)) {
-      sections.push(getSection(ShowClause.RESOURCE_TYPE_EVENTS));
+      sections.push(getSection(Clause.RESOURCE_TYPE_EVENTS));
     }
 
     if (showPeople && includePeople && (isResourceAll || isResourcePeople || isPeopleQuery)) {
-      if (source === ShowClause.RESOURCE_TYPE_ALL) {
+      if (isResourceAll) {
         sections = sections.concat(
-          this.app.getSources()
-          .filter(source => source.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE)
-          .map(source => source.profileType)
-          .map(getSection)
+          this.app.getSources(Clause.RESOURCE_TYPE_PEOPLE)
+            .map(source => source.profileType)
+            .map(getSection)
         );
       } else {
         sections.push(getSection(source));
@@ -173,7 +152,10 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   }
 
   getSelectedSource() {
-    return this.app.getBuilderCurrentScreenAttr(`profileType`) || this.getSelectedResourceType();
+    return (
+      this.app.getBuilderCurrentScreenAttr(`profileType`) ||
+      this.app.getBuilderCurrentScreenAttr(`resourceType`)
+    );
   }
 
   getSelectedResourceType() {
@@ -219,7 +201,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     let properties = [];
 
     if (!resourceType) {
-      if (this.state.report.sections.show.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE) {
+      if (this.state.report.sections.show.isPeopleOnlyQuery()) {
         resourceType = Clause.RESOURCE_TYPE_PEOPLE;
       } else {
         resourceType = this.getSelectedResourceType();

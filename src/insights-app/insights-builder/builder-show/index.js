@@ -3,6 +3,7 @@ import {Component} from 'panel';
 
 import {
   extend,
+  formatSource,
   renameEvent,
   renameProperty,
 } from '../../../util';
@@ -26,9 +27,7 @@ document.registerElement(`query-builder-show`, class extends Component {
     return {
       template,
       helpers: {
-        showSourceForNumericProperties: () => (
-          this.state.report.sections.show.clauseResourceTypes() !== ShowClause.RESOURCE_TYPE_PEOPLE
-        ),
+        showSourceForNumericProperties: () => !this.state.report.sections.show.isPeopleOnlyQuery(),
         clauseUpdated: (el, idx) => this.updateStoredWidths(el, idx),
         hasLongHeader: idx => {
           const widths = this.state.showClauseWidths[idx];
@@ -69,10 +68,21 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
 
   getLabel() {
     const clause = this.getClause();
+    let label;
+
     if (clause.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE) {
-      return renameProperty(clause.property ? clause.property.name : clause.value.name) || ``;
+      let propertyName = clause.property ? clause.property.name : clause.value.name;
+
+      if (propertyName === ShowClause.ALL_PEOPLE.name && clause.profileType) {
+        propertyName = formatSource(clause.profileType, `all`);
+      }
+
+      label = renameProperty(propertyName);
+    } else {
+      label = renameEvent(clause.value.name);
     }
-    return renameEvent(clause.value.name);
+
+    return label || ``;
   }
 
   getSelectionAttrs() {
@@ -134,7 +144,18 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
 
   getLabel() {
     const clause = this.getClause();
-    return clause && clause.property ? renameProperty(clause.property.name) : ``;
+
+    if (clause && clause.property) {
+      let propertyName = clause.property.name;
+
+      if (propertyName === ShowClause.ALL_PEOPLE.name && clause.profileType) {
+        propertyName = formatSource(clause.profileType, `all`);
+      }
+
+      return renameProperty(propertyName);
+    }
+
+    return ``;
   }
 
   getSelectionAttrs() {

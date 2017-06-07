@@ -7,7 +7,7 @@ import {
 } from '../../../util';
 
 import {EditControl} from '../edit-control';
-import {GroupClause, ShowClause} from '../../../models/clause';
+import {Clause, GroupClause, ShowClause} from '../../../models/clause';
 
 import './builder-screen-group-datetime-options';
 import './builder-screen-group-properties';
@@ -63,7 +63,7 @@ document.registerElement(`builder-group-edit-control`, class extends EditControl
   getSelectionAttrs() {
     const clause = this.getClause();
     return {
-      source: clause.resourceType === ShowClause.RESOURCE_TYPE_PEOPLE ? `people` : `events`,
+      source: clause.resourceType === Clause.RESOURCE_TYPE_PEOPLE ? `people` : `events`,
       selected: clause.value,
     };
   }

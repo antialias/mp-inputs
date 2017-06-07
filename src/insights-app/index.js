@@ -3,7 +3,7 @@ import isEqual from 'lodash/isEqual';
 import kebabCase from 'lodash/kebabCase';
 import MPApp from 'mixpanel-common/report/mp-app';
 import Persistence from 'mixpanel-common/report/persistence';
-import {capitalize, commaizeNumber, extend, pick} from 'mixpanel-common/util';
+import {commaizeNumber, extend, pick} from 'mixpanel-common/util';
 import {unique} from 'mixpanel-common/util/array';
 import ItemsMenu from 'mixpanel-common/widgets/items-menu';
 import * as util from '../util';
@@ -887,10 +887,12 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return this.getActiveStageClause();
   }
 
+  get originStageClause() {
+    return this.hasStageClause() ? this.state.stageClauses[0] : null;
+  }
+
   originStageClauseValue(valueKey) {
-    return this.hasStageClause()
-      && this.state.stageClauses[0]
-      && this.state.stageClauses[0][valueKey];
+    return this.originStageClause && this.originStageClause[valueKey];
   }
 
   originStageClauseType() {
@@ -1053,25 +1055,57 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   // Sources managment (Mixpanel: [events, people], Salesforce: [events, accounts, contacts, leads], etc.)
 
-  getSources() {
+  getSources(resourceType=null) {
     const dataset = DATASETS[this.getDataset()];
     const profileTypes = (dataset && dataset.profileTypes) || [Clause.RESOURCE_TYPE_PEOPLE];
+    const allSource = {
+      name: `all`,
+      resourceType: Clause.RESOURCE_TYPE_ALL,
+    };
+    const eventsSource = {
+      name: `events`,
+      resourceType: Clause.RESOURCE_TYPE_EVENTS,
+    };
+    const peopleSources = profileTypes.map(profileType => ({
+      name: profileType,
+      resourceType: Clause.RESOURCE_TYPE_PEOPLE,
+      profileType,
+    }));
 
-    return [
-      {
-        name: `All`,
-        resourceType: Clause.RESOURCE_TYPE_ALL,
-      },
-      {
-        name: `Events`,
-        resourceType: Clause.RESOURCE_TYPE_EVENTS,
-      },
-      ...profileTypes.map(profileType => ({
-        name: capitalize(profileType),
-        resourceType: Clause.RESOURCE_TYPE_PEOPLE,
-        profileType,
-      })),
-    ];
+    if (resourceType === Clause.RESOURCE_TYPE_EVENTS) {
+      return [eventsSource];
+    } else if (resourceType === Clause.RESOURCE_TYPE_PEOPLE) {
+      return peopleSources;
+    } else {
+      return [allSource, eventsSource, ...peopleSources];
+    }
+  }
+
+  getSelectedSource(clause=null) {
+    clause = clause || this.state.report.sections.show.clauses[0];
+    return (clause && clause.source) || null;
+  }
+
+  filterPropertiesBySource(source) {
+    return property => {
+      if (property) {
+        if (source === Clause.RESOURCE_TYPE_ALL) {
+          return true;
+        }
+
+        if (property.resourceType === Clause.RESOURCE_TYPE_EVENTS) {
+          return property.resourceType === source;
+        }
+
+        if (property.resourceType === Clause.RESOURCE_TYPE_PEOPLE) {
+          return property.resourceType === source || (
+            property.profileTypes && property.profileTypes.includes(source)
+          );
+        }
+      }
+
+      return false;
+    };
   }
 
   // Top events/properties management

@@ -103,6 +103,10 @@ export class EventsPropertiesClause extends Clause {
     );
   }
 
+  get source() {
+    return this.profileType || this.resourceType;
+  }
+
   toUrlData() {
     const {value, resourceType, profileType} = this.attrs;
     return extend(super.toUrlData(), {value, resourceType, profileType});

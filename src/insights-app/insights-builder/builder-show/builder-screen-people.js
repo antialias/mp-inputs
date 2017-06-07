@@ -1,6 +1,6 @@
 import {BuilderScreenNumericPropertiesBase} from '../builder-pane/builder-screen-numeric-properties-base';
 import BaseQuery from '../../../models/queries/base';
-import {ShowClause} from '../../../models/clause';
+import {Clause, ShowClause} from '../../../models/clause';
 import {
   capitalize,
   extend,
@@ -15,8 +15,9 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenNum
     return {
       template,
       helpers: extend(super.config.helpers, {
+        getTitle: () => `${this.app.getDataset()} ${this.getSelectedSource()}`,
         getPropertySections: () => {
-          const source = this.getAttribute(`source`);
+          const source = this.getSelectedSource();
           return [{
             label: this.getAttribute(`label`),
             items: this.processItems([extend(ShowClause.ALL_PEOPLE, {
@@ -28,30 +29,29 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenNum
             isLoading: this.app.getTopPeopleProperties() === BaseQuery.LOADING,
           }];
         },
-        clickedItem: ev => {
-          const item = ev.detail.item;
-          if (item.name === ShowClause.ALL_PEOPLE.name) {
-            this.updateAndCommitStageClause({value: item, property: null});
-          } else {
-            this.helpers.clickedProperty(ev);
-          }
-        },
         isEmbedded: () => this.isEmbedded(),
       }),
     };
   }
 
+  getSelectedSource() {
+    return this.getAttribute(`source`) || this.app.getSelectedSource();
+  }
+
   processItems(items) {
+    const source = this.getSelectedSource();
     const selected = this.getAttribute(`selected`);
+
     return items.map(item => extend({
       label: item.label || renameProperty(item.name),
       icon: item.icon || getIconForPropertyType(item.type),
       isSelected: item.name === selected,
+      profileType: source,
     }, item));
   }
 
   buildList() {
-    let properties = super.buildList(ShowClause.RESOURCE_TYPE_PEOPLE);
+    let properties = super.buildList(Clause.RESOURCE_TYPE_PEOPLE);
 
     // TODO @evnp - remove once we have multiple people tables on backend
     const source = this.getAttribute(`source`);

@@ -1,11 +1,10 @@
 include ../mixins.jade
 
 - const loading = $helpers.isLoading();
-- const formattedSource = util.capitalize($component.getAttribute(`source`));
 
 .builder-screen.properties(class={'embedded': $helpers.isEmbedded()})
   if !$helpers.isEmbedded()
-    +screen-title(formattedSource, {backButton: !!$helpers.screenIdx()})
+    +screen-title($helpers.getTitle(), {backButton: !!$helpers.screenIdx()})
 
   if !projectHasPeople || blocking.isBlockedPeople
     +upsell-pane('people')

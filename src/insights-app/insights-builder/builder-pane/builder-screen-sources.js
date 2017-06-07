@@ -1,6 +1,6 @@
 import {BuilderScreenBase} from './builder-screen-base';
 import {Clause} from '../../../models/clause';
-import {extend} from '../../../util';
+import {extend, formatSource} from '../../../util';
 
 import template from './builder-screen-sources.jade';
 
@@ -14,29 +14,24 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
           this.updateRenderedSizeOnNextFrame();
           return this.app.getSources().map((source, index) => extend(source, {index}));
         },
-        getSelectedSource: () => {
-          const profileType = this.app.originStageClauseValue(`profileType`);
-          const resourceType = this.app.originStageClauseValue(`resourceType`);
-          return profileType || resourceType;
-        },
+        getSelectedSource: () => this.getSelectedSource(),
         getSelectedResourceType: () => {
           const isPeopleProperty = this.app.originStageClauseIsPeopleProperty();
           return isPeopleProperty ? Clause.RESOURCE_TYPE_PEOPLE : Clause.RESOURCE_TYPE_EVENTS;
         },
         clickedSource: ev => {
-          const resourceType = ev.detail.selected;
-          const stageClauseUpdate = {resourceType, value: {}};
+          const source = ev.detail.selected;
+          const clauseAttrs = {value: {}};
 
-          // TODO @evnp - remove once we have multiple people tables on backend
-          if (resourceType === Clause.RESOURCE_TYPE_EVENTS) {
-            stageClauseUpdate.profileType = null;
+          if ([Clause.RESOURCE_TYPE_EVENTS, Clause.RESOURCE_TYPE_ALL].includes(source)) {
+            clauseAttrs.resourceType = source;
+            clauseAttrs.profileType = null;
           } else {
-            stageClauseUpdate.profileType = resourceType;
-            stageClauseUpdate.resourceType = Clause.RESOURCE_TYPE_PEOPLE;
+            clauseAttrs.resourceType = Clause.RESOURCE_TYPE_PEOPLE;
+            clauseAttrs.profileType = source;
           }
-          // TODO @evnp END
 
-          this.updateStageClause(stageClauseUpdate);
+          this.updateStageClause(clauseAttrs);
           this.updateRenderedSizeOnNextFrame();
         },
         getSections: () => this.buildList(),
@@ -55,27 +50,31 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
     };
   }
 
+  getSelectedSource() {
+    return this.app.getSelectedSource(this.app.originStageClause);
+  }
+
   buildList() {
+    const properties = this.allProperties(Clause.RESOURCE_TYPE_PEOPLE);
     return [
       {
         label: `Events`,
-        items: this.allEvents().map(event => {
-          return extend(event, {
-            itemType: `event`,
-            hasPropertiesPill: true,
-            isPropertiesPillDisabled: this.state.learnActive,
-          });
-        }),
+        items: this.allEvents().map(event => extend(event, {
+          itemType: `event`,
+          hasPropertiesPill: true,
+          isPropertiesPillDisabled: this.state.learnActive,
+        })),
       },
-      {
-        label: `People properties`,
-        items: this.allProperties(Clause.RESOURCE_TYPE_PEOPLE).map(property => {
-          return extend(property, {
+      ...this.app.getSources(Clause.RESOURCE_TYPE_PEOPLE).map(source => ({
+        label: formatSource(source.profileType, `properties`),
+        items: properties
+          .filter(this.app.filterPropertiesBySource(source.profileType))
+          .map(item => extend(item, {
             itemType: `property`,
             isDisabled: this.state.learnActive,
-          });
-        }),
-      },
+            profileType: source.profileType,
+          })),
+      })),
     ];
   }
 });

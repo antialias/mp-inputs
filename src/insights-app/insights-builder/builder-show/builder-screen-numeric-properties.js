@@ -1,6 +1,6 @@
 import {BuilderScreenNumericPropertiesBase} from '../builder-pane/builder-screen-numeric-properties-base';
 import BaseQuery from '../../../models/queries/base';
-import {ShowClause} from '../../../models/clause';
+import {Clause, ShowClause} from '../../../models/clause';
 import {extend, renameEvent} from '../../../util';
 
 import template from './builder-screen-numeric-properties.jade';
@@ -52,6 +52,6 @@ document.registerElement(`builder-screen-numeric-properties`, class extends Buil
   }
 
   buildList() {
-    return this.filterNonNumericProperties(super.buildList(ShowClause.RESOURCE_TYPE_EVENTS));
+    return this.filterNonNumericProperties(super.buildList(Clause.RESOURCE_TYPE_EVENTS));
   }
 });

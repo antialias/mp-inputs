@@ -11,13 +11,15 @@ document.registerElement(`builder-screen-filter-properties-list`, class extends 
         clickedProperty: ev => {
           ev.stopPropagation();
           const property = ev.detail.item;
-          this.app.updateRecentProperties(property);
           this.updateStageClause({
+            dataset: property.dataset,
             filterType: property.type,
             filterValue: null,
             resourceType: property.resourceType,
+            profileType: property.profileType,
             value: property.name,
           });
+          this.app.updateRecentProperties(property);
           this.nextScreen(`builder-screen-filter-property`);
         },
       }),

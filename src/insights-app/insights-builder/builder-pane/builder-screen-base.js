@@ -37,9 +37,14 @@ export class BuilderScreenBase extends Component {
     return {
       helpers: {
         clickedEvent: ev => {
-          const value = ev.detail.item;
-          this.app.updateRecentEvents(value);
-          this.updateAndCommitStageClause({value, property: null});
+          const event = ev.detail.item;
+          this.app.updateRecentEvents(event);
+          this.updateAndCommitStageClause({
+            dataset: event.dataset,
+            value: event,
+            property: null,
+            resourceType: Clause.RESOURCE_TYPE_EVENTS,
+          });
         },
         clickedEventProperties: ev => {
           ev.stopPropagation();
@@ -52,15 +57,14 @@ export class BuilderScreenBase extends Component {
         },
         clickedProperty: ev => {
           const property = ev.detail.item;
-          const clauseAttrs = {
-            property,
+          this.app.updateRecentEvents(property);
+          this.updateAndCommitStageClause({
+            dataset: property.dataset,
             value: ShowClause.ALL_PEOPLE,
-          };
-          if (property.name === ShowClause.ALL_PEOPLE.name) {
-            clauseAttrs.resourceType = Clause.RESOURCE_TYPE_PEOPLE;
-            clauseAttrs.property = null;
-          }
-          this.updateAndCommitStageClause(clauseAttrs);
+            property: property.name === ShowClause.ALL_PEOPLE.name ? null : property,
+            resourceType: Clause.RESOURCE_TYPE_PEOPLE,
+            profileType: property.profileType,
+          });
         },
         clickedBackButton: () => this.previousScreen(),
         closePane: () => this.app.stopEditingClause(),

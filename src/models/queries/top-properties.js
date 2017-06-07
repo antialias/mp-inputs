@@ -3,7 +3,7 @@ import {renameProperty} from 'mixpanel-common/report/util';
 
 import BaseQuery from './base';
 import QueryCache from './query-cache';
-import {DATASETS} from '../constants';
+import {DATASETS, SOURCE_DETAILS} from '../constants';
 import {PROPERTY_TYPES} from '../clause.js';
 
 const BLACKLISTED_PROPERTIES = [
@@ -149,14 +149,10 @@ export class ProfileTypePropertiesQuery extends BaseQuery {
   }
 
   buildParams() {
-    const profileTypesToTableValues = {
-      accounts: `Account`,
-      contacts: `Contact`,
-      leads: `Lead`,
-    };
+    const table = SOURCE_DETAILS[this.query.profileType].table;
     return {
       limit: 1,
-      where: `properties["Table"] == "${profileTypesToTableValues[this.query.profileType]}"`,
+      where: `properties["Table"] == "${table}"`,
     };
   }
 

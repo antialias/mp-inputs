@@ -43,7 +43,7 @@ mixin property-screen-body(options)
             attrs={
               value: source.profileType || source.resourceType,
             }
-          )= util.formatSource(source.profileType || source.resourceType)
+          )= util.capitalize(source.profileType || source.resourceType)
       each source, index in options.sources
         - const upsellType = $helpers.shouldShowSourceUpsell(source.resourceType) ? `upsell` : `alert`;
         .svg-icon-wrapper.properties(

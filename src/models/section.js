@@ -2,6 +2,7 @@ import {
   insertAtIndex,
   replaceByIndex,
   removeByIndex,
+  unique,
 } from 'mixpanel-common/util';
 import {debug} from 'mixpanel-common/report/util';
 
@@ -115,19 +116,24 @@ export class ShowSection extends Section {
       this.clauses.every(clause => clause instanceof ShowClause);
   }
 
-  clauseResourceTypes() {
-    let uniqueShowTypes = this.clauses.reduce(
-      (types, clause) => types.add(
-        clause.resourceType === Clause.RESOURCE_TYPE_ALL ? Clause.RESOURCE_TYPE_EVENTS : clause.resourceType
-      ),
-      new Set()
+  _getResourceTypes() {
+    return unique(
+      this.clauses
+      .map(clause => clause.resourceType)
+      .map(resourceType =>
+        resourceType === Clause.RESOURCE_TYPE_ALL ? Clause.RESOURCE_TYPE_EVENTS : resourceType
+      )
     );
-    uniqueShowTypes = Array.from(uniqueShowTypes);
-    return uniqueShowTypes.length === 1 ? uniqueShowTypes[0] : uniqueShowTypes;
+  }
+
+  isEventsOnlyQuery() {
+    const resourceTypes = this._getResourceTypes();
+    return resourceTypes.length === 1 && resourceTypes[0] === Clause.RESOURCE_TYPE_EVENTS;
   }
 
   isPeopleOnlyQuery() {
-    return this.clauseResourceTypes() === Clause.RESOURCE_TYPE_PEOPLE;
+    const resourceTypes = this._getResourceTypes();
+    return resourceTypes.length === 1 && resourceTypes[0] === Clause.RESOURCE_TYPE_PEOPLE;
   }
 }
 ShowSection.TYPE = ShowSection.prototype.TYPE = `show`;

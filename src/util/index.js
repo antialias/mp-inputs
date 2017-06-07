@@ -7,6 +7,7 @@ import {
 } from 'mixpanel-common/util';
 import moment from 'moment';
 
+import {SOURCE_DETAILS} from '../models/constants';
 import {ShowClause} from '../models/clause';
 
 // TODO(mack): Explicitly import what's needed and remove * imports
@@ -69,11 +70,8 @@ export function getTextWidth(text, font) {
   return context.measureText(text).width;
 }
 
-export function formatSource(source) {
-  if (source[source.length - 1] === `s`) {
-    source = source.slice(0, -1);
-  }
-  return capitalize(source);
+export function formatSource(source, labelType) {
+  return SOURCE_DETAILS[source][labelType];
 }
 
 export function formatEventName(mpEvent) {
