@@ -4,7 +4,7 @@ import TopEventsQuery from '../../../models/queries/top-events';
 import {
   extend,
   getIconForEvent,
-  getDescriptionForEvent,
+  getDefinitionForEvent,
   renameEvent,
 } from '../../../util';
 
@@ -15,7 +15,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
     return {
       template,
       defaultState: {
-        lexiconUrl: `${window.location.protocol}//${window.location.hostname}${window.location.pathname.replace(`insights`, `lexicon`)}`,
+        lexiconUrl: `${window.location.protocol}//${window.location.hostname}${window.location.pathname.replace(`insights`, `lexicon`)}?from=definition`,
       },
       helpers: extend(super.config.helpers, {
         getSections: () => {
@@ -38,8 +38,9 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
         isPaneOpen: () => !!this.app.state.builderPane.screens.length,
         handleItemFocus: ev => {
           const item = ev.detail.item;
-          if (item.description) {
-            this.update({eventDefinition: {name: item.label, description: item.description}});
+          if (item.definition && item.definition.description) {
+            const eventDefinition = extend(item.definition, {name: item.label});
+            this.update({eventDefinition});
           } else {
             if (this.state.eventDefinition) {
               this.update({eventDefinition: null});
@@ -59,7 +60,7 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
       hasPropertiesPill: true,
       isPropertiesPillDisabled: this.state.learnActive,
       isSelected: item.name === selected,
-      description: getDescriptionForEvent(item, this.state.eventDefinitions),
+      definition: getDefinitionForEvent(item, this.state.eventDefinitions),
     }, item));
   }
 });
