@@ -6,6 +6,7 @@ import {
   getIconForEvent,
   getDefinitionForEvent,
   renameEvent,
+  pick,
 } from '../../../util';
 
 import template from './builder-screen-events.jade';
@@ -38,8 +39,14 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
         isPaneOpen: () => !!this.app.state.builderPane.screens.length,
         handleItemFocus: ev => {
           const item = ev.detail.item;
-          if (item.definition && item.definition.description) {
-            const eventDefinition = extend(item.definition, {name: item.label});
+          const definition = item.definition;
+          if (definition && definition.description) {
+            const eventDefinition = pick(definition, [`description`, `verified`, `isMixpanelDefinition`]);
+            eventDefinition.name = item.label;
+            if (definition.verified && !definition.isMixpanelDefinition) {
+              eventDefinition.verifiedBy = definition.verifiedBy.name || definition.verifiedBy.email;
+              eventDefinition.verifiedDate = new Date(definition.lastVerified);
+            }
             this.update({eventDefinition});
           } else {
             if (this.state.eventDefinition) {
