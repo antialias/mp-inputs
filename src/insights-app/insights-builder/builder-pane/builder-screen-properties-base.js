@@ -176,11 +176,11 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
     }
 
     if ([Clause.RESOURCE_TYPE_ALL, Clause.RESOURCE_TYPE_EVENTS].includes(resourceType)) {
-      properties = properties.concat(this.getEventProperties());
+      properties = properties.concat(this.getEventProperties() || []);
     }
 
     if ([Clause.RESOURCE_TYPE_ALL, Clause.RESOURCE_TYPE_PEOPLE].includes(resourceType)) {
-      properties = properties.concat(this.getPeopleProperties());
+      properties = properties.concat(this.getPeopleProperties() || []);
     }
 
     return properties;
