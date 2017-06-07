@@ -1044,7 +1044,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
     if (mpEvent) {
       const properties = this.state[TOP.EVENTS.PROPERTIES_BY_EVENT][dataset];
-      return (properties && properties[util.formatEventName(mpEvent)]) || [];
+      return (properties && properties[util.formatEventName(mpEvent)]) || null;
     } else {
       return this._constructTopList(TOP.EVENTS.PROPERTIES, dataset);
     }
@@ -1058,11 +1058,17 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return this._constructTopList(TOP.PROPERTY_VALUES, this.getDataset());
   }
 
+  /**
+   * Constructs top properties / event list
+   * @param {string} topKey - A key from TOP constant e.g TOP.PROPERTY_VALUE or TOP.PEOPLE.PROPERTIES
+   * @param {string | null} dataset - null means fetching the default 'mixpanel' dataset
+   * @returns {any[] | null} - null means the list isn't initialized and needs to be fetched from api
+   */
   _constructTopList(topKey, dataset=null) {
     const topState = this.state[topKey];
 
     if (dataset) {
-      return topState[dataset] || [];
+      return topState[dataset] || null;
     } else {
       const topLists = Object.values(topState);
       const loadingLists = topLists.filter(list => list === BaseQuery.LOADING);
@@ -1073,7 +1079,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       } else if (loadingLists.length) {
         return BaseQuery.LOADING;
       } else {
-        return [];
+        return null;
       }
     }
   }

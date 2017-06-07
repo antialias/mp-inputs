@@ -144,8 +144,8 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
       const eventProps = this.app.getTopEventProperties(mpEvent);
 
       if ([ShowClause.TOP_EVENTS.name, ShowClause.ALL_EVENTS.name].includes(mpEvent.name)) {
-        return props.concat(this.app.getTopEventProperties());
-      } else if (!eventProps) {
+        return props.concat(this.app.getTopEventProperties() || []);
+      } else if (!eventProps) { // No properties loaded yet, fetch from api
         this.app.fetchTopPropertiesForEvent(mpEvent);
       } else if (eventProps !== BaseQuery.LOADING) {
         return props.concat(eventProps);

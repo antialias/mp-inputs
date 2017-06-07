@@ -94,7 +94,7 @@ document.registerElement(`builder-screen-filter-property`, class extends Builder
           if (typeof string !== `string`) {
             string = ``;
           }
-          let list = this.app.getTopPropertyValues();
+          let list = this.app.getTopPropertyValues() || [];
           if (string) {
             list = list.filter(value =>
               renamePropertyValue(value).toLowerCase().indexOf(string.toLowerCase()) !== -1 ? !invert : !!invert
