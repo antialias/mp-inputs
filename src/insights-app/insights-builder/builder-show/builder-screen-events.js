@@ -61,13 +61,17 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
 
   processItems(items) {
     const selected = this.getAttribute(`selected`);
-    return items.map(item => extend({
-      label: renameEvent(item.name),
-      icon: getIconForEvent(item),
-      hasPropertiesPill: true,
-      isPropertiesPillDisabled: this.state.learnActive,
-      isSelected: item.name === selected,
-      definition: getDefinitionForEvent(item, this.state.eventDefinitions),
-    }, item));
+    return items.map(item => {
+      const definition = getDefinitionForEvent(item, this.state.eventDefinitions);
+      return extend({
+        label: renameEvent(item.name),
+        icon: getIconForEvent(item),
+        hasPropertiesPill: true,
+        isPropertiesPillDisabled: this.state.learnActive,
+        isSelected: item.name === selected,
+        verified: definition ? definition.verified : false,
+        definition,
+      }, item);
+    });
   }
 });
