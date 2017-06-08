@@ -72,6 +72,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
     }
 
     let sections = this.app.getSources(Clause.RESOURCE_TYPE_PEOPLE).map(source => {
+      const formattedSource = formatSource(source.profileType, {article: true});
       const properties = this.allProperties(Clause.RESOURCE_TYPE_PEOPLE)
         .filter(this.app.filterPropertiesBySource(source))
         .map(item => extend(item, {
@@ -80,7 +81,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
         }));
 
       return {
-        label: `Group by ${formatSource(source.profileType, `a property`)}`,
+        label: `Group by ${formattedSource} property`,
         items: properties,
       };
     });
@@ -151,10 +152,10 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
         {name: `Compare to an event`, clauseType: ShowClause.TYPE},
       ];
     } else {
-      const sourceDescription = formatSource(source, `a property`);
+      const formattedSource = formatSource(source, {article: true});
       options = [
-        {name: `Group by ${sourceDescription}`, clauseType: GroupClause.TYPE},
-        {name: `Compare to ${sourceDescription}`, clauseType: ShowClause.TYPE},
+        {name: `Group by ${formattedSource} property`, clauseType: GroupClause.TYPE},
+        {name: `Compare to ${formattedSource} property`, clauseType: ShowClause.TYPE},
       ];
     }
 

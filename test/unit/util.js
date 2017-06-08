@@ -11,6 +11,7 @@ import {
 import {
   filterObject,
   flattenNestedObjectToPath,
+  formatSource,
   nestedObjectCumulative,
   reachableNodesOfKey,
   uniqueObjKeysAtDepth,
@@ -424,5 +425,42 @@ describe(`hasDefinedValue`, () => {
     expect(hasDefinedValue(Number.POSITIVE_INFINITY)).to.be(true);
     expect(hasDefinedValue({})).to.be(true);
     expect(hasDefinedValue(Object.create(null))).to.be(true);
+  });
+});
+
+describe(`formatSource`, () => {
+  it(`works with various combinations of input params and sources`, () => {
+    expect(formatSource(`events`)).to.equal(`event`);
+    expect(formatSource(`events`, {})).to.equal(`event`);
+    expect(formatSource(`events`, {article: true})).to.equal(`an event`);
+
+    expect(formatSource(`people`)).to.equal(`people`);
+    expect(formatSource(`people`, {})).to.equal(`people`);
+    expect(formatSource(`people`, {article: true})).to.equal(`a people`);
+
+    expect(formatSource(`accounts`)).to.equal(`account`);
+    expect(formatSource(`accounts`, {})).to.equal(`account`);
+    expect(formatSource(`accounts`, {article: true})).to.equal(`an account`);
+
+    expect(formatSource(`contacts`)).to.equal(`contact`);
+    expect(formatSource(`contacts`, {})).to.equal(`contact`);
+    expect(formatSource(`contacts`, {article: true})).to.equal(`a contact`);
+
+    expect(formatSource(`leads`)).to.equal(`lead`);
+    expect(formatSource(`leads`, {})).to.equal(`lead`);
+    expect(formatSource(`leads`, {article: true})).to.equal(`a lead`);
+
+    expect(formatSource(`☕`)).to.equal(`☕`);
+    expect(formatSource(`☕`, {})).to.equal(`☕`);
+    expect(formatSource(`☕`, {article: true})).to.equal(`a ☕`);
+  });
+
+  it(`throws with empty strings or non-string input`, () => {
+    expect(() => formatSource()).to.throwError(`Invalid input: undefined`);
+    expect(() => formatSource(``)).to.throwError(`Invalid input: empty string`);
+    expect(() => formatSource(null)).to.throwError(`Invalid input: null`);
+    expect(() => formatSource(0)).to.throwError(`Invalid input: 0`);
+    expect(() => formatSource([])).to.throwError(`Invalid input: []`);
+    expect(() => formatSource({})).to.throwError(`Invalid input: {}`);
   });
 });

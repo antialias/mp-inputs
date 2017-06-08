@@ -6,7 +6,6 @@ import {
 } from 'mixpanel-common/util';
 import moment from 'moment';
 
-import {SOURCE_DETAILS} from '../models/constants';
 import {ShowClause} from '../models/clause';
 
 // TODO(mack): Explicitly import what's needed and remove * imports
@@ -69,8 +68,33 @@ export function getTextWidth(text, font) {
   return context.measureText(text).width;
 }
 
-export function formatSource(source, labelType) {
-  return SOURCE_DETAILS[source][labelType];
+/**
+ * Format a source (events, people, accounts, etc.) for title/label display
+ * @param {string} source - the source string to be formatted
+ * @param {boolean} article - prepend "a" or "an"
+ * @returns {string} - the formatted source string
+ * @example
+ *   formatSource(`events`) -> `event`
+ *   formatSource(`people`) -> `people`
+ *   formatSource(`contacts`, {article: true}) -> `a contact`
+ */
+export function formatSource(source, {article=false}={}) {
+  if (typeof source !== `string` || !source.length) {
+    throw new Error(`Invalid input: ` + source.length ? source : `empty string`);
+  }
+
+  let str = source;
+
+  // depluralize sources that end in "s"
+  if (source[source.length - 1] === `s`) {
+    str = source.slice(0, -1);
+  }
+  // add "a"/"an" if requested
+  if (article) {
+    str = (`aeiou`.includes(source[0]) ? `an ` : `a `) + str;
+  }
+
+  return str;
 }
 
 export function formatEventName(mpEvent) {

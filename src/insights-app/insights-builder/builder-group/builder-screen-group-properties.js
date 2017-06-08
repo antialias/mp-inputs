@@ -11,7 +11,8 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
       helpers: extend(super.config.helpers, {
         getScreenTitle: () => {
           if (this.getSelectedResourceType() === Clause.RESOURCE_TYPE_PEOPLE) {
-            return `Group by ${formatSource(this.getSelectedSource(), `a property`)}`;
+            const formattedSource = formatSource(this.getSelectedSource(), {article: true});
+            return `Group by ${formattedSource} property`;
           } else {
             return `Group by a property`;
           }

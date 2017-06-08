@@ -1,11 +1,10 @@
-import {extend} from 'mixpanel-common/util';
 import moment from 'moment';
 
 import BaseQuery from './base';
 import {Clause} from '../clause';
-import {SOURCE_DETAILS} from '../constants';
 import Result from '../result';
 import {rollbar} from '../../tracking';
+import {capitalize, extend, formatSource} from '../../util';
 import {transformLeaves} from '../../util/chart';
 
 export default class SegmentationQuery extends BaseQuery {
@@ -30,14 +29,13 @@ export default class SegmentationQuery extends BaseQuery {
     // TODO @evnp - this won't work with filter determiner "any"; we'll have to add it in the read api
     const firstShowClause = query.sections.show[0];
     const profileType = firstShowClause.profileType;
-    const profileTypeTable = profileType && SOURCE_DETAILS[profileType] && SOURCE_DETAILS[profileType].table;
-    if (isPeopleOnly && profileType !== Clause.RESOURCE_TYPE_PEOPLE && profileTypeTable) {
+    if (isPeopleOnly && profileType && profileType !== Clause.RESOURCE_TYPE_PEOPLE) {
       query.sections.filter.push({
         value: `Table`,
         resourceType: Clause.RESOURCE_TYPE_PEOPLE,
         filterType: `string`,
         filterOperator: `equals`,
-        filterValue: profileTypeTable,
+        filterValue: capitalize(formatSource(profileType)),
       });
     }
 

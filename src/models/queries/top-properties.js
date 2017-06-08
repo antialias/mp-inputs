@@ -3,8 +3,9 @@ import {renameProperty} from 'mixpanel-common/report/util';
 
 import BaseQuery from './base';
 import QueryCache from './query-cache';
-import {DATASETS, SOURCE_DETAILS} from '../constants';
+import {DATASETS} from '../constants';
 import {PROPERTY_TYPES} from '../clause.js';
+import {capitalize, formatSource} from '../../util';
 
 const BLACKLISTED_PROPERTIES = [
   `$transactions`, // transactions a special obj property used only for the Revenue report
@@ -149,10 +150,10 @@ export class ProfileTypePropertiesQuery extends BaseQuery {
   }
 
   buildParams() {
-    const table = SOURCE_DETAILS[this.query.profileType].table;
+    const tableValue = capitalize(formatSource(this.query.profileType));
     return {
       limit: 1,
-      where: `properties["Table"] == "${table}"`,
+      where: `properties["Table"] == "${tableValue}"`,
     };
   }
 
