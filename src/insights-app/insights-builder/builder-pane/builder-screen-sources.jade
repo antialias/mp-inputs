@@ -12,6 +12,14 @@ include ../mixins.jade
         draw: $helpers.updateRenderedSizeOnNextFrame,
         clickItem: $helpers.clickedItem,
         clickPropertiesPill: $helpers.clickedEventProperties,
+        focusItem: $helpers.handleItemFocus,
+      }
+    )
+    mp-event-definition-tooltip(
+      attrs={
+        'event-definition': JSON.stringify(eventDefinition),
+        'lexicon-url': lexiconUrl,
+        open: !!eventDefinition,
       }
     )
   else

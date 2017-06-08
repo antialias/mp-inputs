@@ -1,6 +1,6 @@
 import {BuilderScreenBase} from './builder-screen-base';
 import {Clause} from '../../../models/clause';
-import {extend} from '../../../util';
+import {extend, pick} from '../../../util';
 
 import template from './builder-screen-sources.jade';
 
@@ -13,6 +13,9 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
   get config() {
     return {
       template,
+      defaultState: {
+        lexiconUrl: `${window.location.protocol}//${window.location.hostname}${window.location.pathname.replace(`insights`, `lexicon`)}?from=definition`,
+      },
       helpers: extend(super.config.helpers, {
         getSources: () => {
           this.updateRenderedSizeOnNextFrame();
@@ -25,6 +28,23 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
         clickedSource: ev => {
           const resourceType = ev.detail.selected;
           this.updateStageClause({resourceType, value: {}});
+        },
+        handleItemFocus: ev => {
+          const item = ev.detail.item;
+          const definition = item.definition;
+          if (definition && definition.description) {
+            const eventDefinition = pick(definition, [`description`, `verified`, `isMixpanelDefinition`]);
+            eventDefinition.name = item.label;
+            if (definition.verified && !definition.isMixpanelDefinition) {
+              eventDefinition.verifiedBy = definition.lastVerifiedBy.name || definition.lastVerifiedBy.email;
+              eventDefinition.verifiedDate = definition.lastVerified;
+            }
+            this.update({eventDefinition});
+          } else {
+            if (this.state.eventDefinition) {
+              this.update({eventDefinition: null});
+            }
+          }
         },
         getSections: () => this.buildList(),
         updateRenderedSizeOnNextFrame: () => this.updateRenderedSizeOnNextFrame(),

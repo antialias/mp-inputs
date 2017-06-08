@@ -12,6 +12,7 @@ import {
   extend,
   getIconForEvent,
   getIconForPropertyType,
+  getDefinitionForEvent,
   renameEvent,
   renameProperty,
   replaceByIndex,
@@ -60,7 +61,6 @@ export class BuilderScreenBase extends Component {
           }
           this.updateAndCommitStageClause(clauseAttrs);
         },
-
         clickedBackButton: () => this.previousScreen(),
         closePane: () => this.app.stopEditingClause(),
         screenIdx: () => this.screenIdx,
@@ -128,10 +128,15 @@ export class BuilderScreenBase extends Component {
     return [
       ShowClause.TOP_EVENTS,
       ShowClause.ALL_EVENTS,
-      ...sorted(mpEvents.map(event => extend({
-        label: renameEvent(event.name),
-        icon: getIconForEvent(event),
-      }, event)), {transform: event => event.label.toLowerCase()}),
+      ...sorted(mpEvents.map(event => {
+        const definition = getDefinitionForEvent(event, this.state.eventDefinitions);
+        return extend({
+          label: renameEvent(event.name),
+          icon: getIconForEvent(event),
+          verified: definition ? definition.verified : false,
+          definition,
+        }, event);
+      }), {transform: event => event.label.toLowerCase()}),
     ];
   }
 
