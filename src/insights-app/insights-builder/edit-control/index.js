@@ -24,6 +24,7 @@ export class EditControl extends Component {
         },
         handleKeydown: ev => this.app.handleKeydown(ev),
         labelPrefixComponent: () => this.labelPrefixComponent(),
+        menuClosing: () => this.update({eventDefinition: null}),
         menuChange: ev => ev.detail && ev.detail.state === `closed` && this.isPaneOpen() && this.app.stopBuildingQuery(),
         changedSearch: throttle(ev => {
           this.update({contextFilter: ev.target.value});

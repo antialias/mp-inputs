@@ -23,6 +23,6 @@ include ../mixins.jade
       attrs={
         'event-definition': JSON.stringify(eventDefinition),
         'lexicon-url': lexiconUrl,
-        open: !!eventDefinition && $helpers.isPaneOpen(),
+        open: !!eventDefinition,
       }
     )
