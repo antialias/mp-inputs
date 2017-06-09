@@ -115,7 +115,7 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
     else if (this.app.hasDatasets()) {
       // If multiple datasets and a dataset is selected,
       // go to sources view and add back button for dataset selection
-      if (this.app.getDataset() !== null) {
+      if (this.app.getSelectedDataset() !== null) {
         previousScreens = [`builder-screen-datasets`];
       } else {
         startScreen = `builder-screen-datasets`;
