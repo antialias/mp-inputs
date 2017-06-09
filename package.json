@@ -38,7 +38,7 @@
     "framesg": "0.1.2",
     "jsurl": "0.1.5",
     "lodash": "4.15.0",
-    "mixpanel-common": "0.86.0",
+    "mixpanel-common": "0.91.0",
     "moment": "2.13.0",
     "panel": "0.10.0-rc9",
     "pikaday": "git://github.com/dbushell/Pikaday.git#a1704adef06e985a448cd8ab313dee5a5787a228",
