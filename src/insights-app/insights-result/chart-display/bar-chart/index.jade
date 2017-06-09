@@ -73,13 +73,13 @@ mixin chart-bar(options={})
                     style={'min-width': `${$helpers.getHeaderWidth(headerText)}px`}
                   )
                     if !Array.isArray(cell) || isStacked
-                      - cellValue = addTopLevelKey ? $helpers.renameLabel(headers[0]) : cell.value
-                      - const title = $helpers.formatLabel(colHeader, cellValue)
+                      - cellValue = addTopLevelKey ? $helpers.renameSeriesHeader(headers[0]) : cell.value
+                      - const title = $helpers.renameSeriesValue(colHeader, cellValue)
                       .chart-header-text(attrs={title})= title
                     else
                       ul
                         each value, valueIndex in cell
-                          - const title = $helpers.formatLabel(colHeader, value)
+                          - const title = $helpers.renameSeriesValue(colHeader, value)
                           li.cell-label-container(
                             attrs={title}
                             on={
@@ -116,7 +116,7 @@ mixin chart-bar(options={})
                       - const percentValueString = util.formatPercent(percent)
                       - const widthAsPercentage = (isLogarithmic ? Math.log10(value) : value) / segmentMax
                       - const segmentName = row[cellIndex - 1][valueIndex];
-                      - const formattedSegmentName = $helpers.formatLabel(headersToDisplay[cellIndex - 1], segmentName)
+                      - const formattedSegmentName = $helpers.renameSeriesValue(headersToDisplay[cellIndex - 1], segmentName)
                       - const segmentColorClassName = `segment-color-${segmentColorMap[segmentName]}`
                       +chart-bar({
                         outsideLabel: !isStacked,

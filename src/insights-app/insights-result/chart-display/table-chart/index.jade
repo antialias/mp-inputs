@@ -7,7 +7,7 @@
     .fixed-header.chart-header-container
       each header, idx in headers
         .fixed-header-cell(on={click: () => $helpers.clickHeader('left', idx, header)})
-          span= header === '$event' ? 'Event' : util.renameProperty(header)
+          span= $helpers.renameSeriesHeader(header)
           .sort-arrows(class=$helpers.leftSortArrowClasses(idx))
             svg-icon.triangle-up(attrs={icon: 'triangle-up'})
             svg-icon.triangle-down(attrs={icon: 'triangle-down'})
@@ -16,7 +16,7 @@
         thead
           tr.chart-header-container
             each header in headers
-              th= util.renameProperty(header)
+                th= $helpers.renameSeriesHeader(header)
         tbody
           -let firstColIdx = 0
           each row in rows
@@ -24,7 +24,7 @@
               each cell, cellIdx in row
                 - const isFirstCol = cellIdx === 0;
                 if cell
-                  - const value = util.renamePropertyValue(cell.value, headers[cellIdx])
+                  - const value = $helpers.renameSeriesValue(cell.value, headers[cellIdx])
                   td(
                     class={
                       'first-column-cell': isFirstCol,

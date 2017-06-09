@@ -34,7 +34,14 @@ document.registerElement(`bar-chart`, class extends Component {
         util,
       },
       helpers: {
-        formatLabel: (header, value) => util.renamePropertyValue(value, header),
+        renameSeriesHeader: header => this.formatSource({all: header !== `$event`}),
+        renameSeriesValue: (header, value) => {
+          if (value === `$all_people`) {
+            return this.formatSource({all: true});
+          } else {
+            return util.renamePropertyValue(value, header);
+          }
+        },
         getHeaderWidth: text => util.getTextWidth(text, `bold 14px Helvetica`) + SORT_ICON_WIDTH,
         getHeaderStyle: () => {
           const style = {};
@@ -106,9 +113,13 @@ document.registerElement(`bar-chart`, class extends Component {
           });
         },
         sortChange: ev => ev.detail && this.dispatchEvent(new CustomEvent(`change`, {detail: ev.detail})),
-        renameLabel: header => header === `$event` ? `Event` : `All People`,
       },
     };
+  }
+
+  formatSource({all=false}={}) {
+    const source = util.capitalize(this.getJSONAttribute(`source`));
+    return all ? `All ${source}` : source;
   }
 
   attachedCallback() {

@@ -38,6 +38,7 @@ document.registerElement(`chart-display`, class extends Component {
   get config() {
     return {
       helpers: {
+        getSelectedSource: () => this.app.getSelectedSource(),
         getChartLabel: () => {
           let chartLabel = [];
           if (this.state.report.displayOptions.value === `relative`) {

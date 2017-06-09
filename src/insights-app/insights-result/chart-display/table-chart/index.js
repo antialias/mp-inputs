@@ -29,16 +29,20 @@ document.registerElement(`table-chart`, class extends Component {
             headerType, colIdx, colName,
           }}));
         },
-
-        getCellValue: (headerName, cellValue) => {
-          if (headerName === `$event`) {
-            return util.renameEvent(cellValue);
-          } else if (/country_code/.test(headerName)) {
-            return util.renamePropertyValue(cellValue);
+        renameSeriesHeader: header => {
+          if ([`$event`, `$people`].includes(header)) {
+            return this.formatSource();
+          } else {
+            return util.renameProperty(header);
           }
-          return cellValue;
         },
-
+        renameSeriesValue: (value, header) => {
+          if (value === `$all_people`) {
+            return this.formatSource({all: true});
+          } else {
+            return util.renamePropertyValue(value, header);
+          }
+        },
         leftSortArrowClasses: idx => {
           if (this.sortConfig.sortBy === `column`) {
             return {
@@ -49,7 +53,6 @@ document.registerElement(`table-chart`, class extends Component {
             return {};
           }
         },
-
         rightSortArrowClasses: header => {
           if (this.sortConfig.sortBy === `value` && this.sortConfig.sortColumn === header) {
             return {
@@ -73,6 +76,11 @@ document.registerElement(`table-chart`, class extends Component {
 
   attributeChangedCallback() {
     this.updateChartState();
+  }
+
+  formatSource({all=false}={}) {
+    const source = util.capitalize(this.getJSONAttribute(`source`));
+    return all ? `All ${source}` : source;
   }
 
   updateChartState() {

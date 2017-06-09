@@ -1,7 +1,9 @@
 import {Component} from 'panel';
 
 import {
+  capitalize,
   extend,
+  renameProperty,
   renamePropertyValue,
   stringFilterMatches,
   pick,
@@ -115,9 +117,21 @@ document.registerElement(`chart-legend`, class extends Component {
           });
           return seriesData.some(series => series.seriesValues.length) ? seriesData : [];
         },
-        renameSeriesValue: (seriesIdx, name) => (
-          renamePropertyValue(name, this.state.report.legend.data[seriesIdx].seriesName)
-        ),
+        renameSeriesHeader: header => {
+          if ([`$event`, `$people`].includes(header)) {
+            return this.formatSource();
+          } else {
+            return renameProperty(header);
+          }
+        },
+        renameSeriesValue: (seriesIdx, value) => {
+          const header = this.state.report.legend.data[seriesIdx].seriesName;
+          if (value === `$all_people`) {
+            return this.formatSource({all: true});
+          } else {
+            return renamePropertyValue(value, header);
+          }
+        },
         changedSearch: ev => {
           if (ev.target.value) {
             this.state.report.legend.showAllSeries();
@@ -172,6 +186,12 @@ document.registerElement(`chart-legend`, class extends Component {
         ),
       },
     };
+  }
+
+
+  formatSource({all=false}={}) {
+    const source = capitalize(this.app.getSelectedSource());
+    return all ? `All ${source}` : source;
   }
 
   get legendDataType() {

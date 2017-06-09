@@ -37,6 +37,7 @@
               chartData: $helpers.processResult(result),
             }
             attrs=$helpers.stringifyObjValues({
+              'source': $helpers.getSelectedSource(),
               'segment-color-map': report.legend.colorMap,
               'chart-label': $helpers.getChartLabel(),
               'display-options': $helpers.getDisplayOptions(),
@@ -73,6 +74,7 @@
               chartData: util.extend($helpers.processResult(result), {resourceDescription}),
             }
             attrs=$helpers.stringifyObjValues({
+              'source': $helpers.getSelectedSource(),
               'display-options': $helpers.getDisplayOptions(),
               'sorting': report.sorting.table,
             })

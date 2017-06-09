@@ -44,7 +44,7 @@ mixin sort-holder(type, sortByOptions, sortOrderOptions, colAccessor)
         class={'active-sort-panel': activeSortPanel == idx}
         style={width: `${header.width}px`}
       )
-        - const headerLabel = $helpers.renameHeaderLabel(header.name)
+        - const headerLabel = $helpers.renameSeriesHeader(header.name)
         .text.shrinkable-label(
           on={click: () => $helpers.clickedHeader(idx)}
           attrs={title: headerLabel}

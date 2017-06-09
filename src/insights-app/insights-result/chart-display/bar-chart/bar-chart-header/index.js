@@ -1,6 +1,9 @@
 import {Component} from 'panel';
 
-import {abbreviateNumber, renameProperty} from '../../../../../util';
+import {
+  abbreviateNumber,
+  renameProperty,
+} from '../../../../../util';
 
 import template from './index.jade';
 import './index.styl';
@@ -74,7 +77,13 @@ document.registerElement(`insights-bar-chart-header`, class extends Component {
             this.update({activeSortPanel: null});
           }
         },
-        renameHeaderLabel: header => header === `$event` ? `Events` : renameProperty(header),
+        renameSeriesHeader: header => {
+          if ([`$event`, `$people`].includes(header)) {
+            return this.app.formatSource();
+          } else {
+            return renameProperty(header);
+          }
+        },
         selectedHeaderSort: (type, colIdx, sortBy, sortOrder) => {
           this.dispatchEvent(
             new CustomEvent(`change`, {detail: {colIdx, sortBy, sortOrder, type}})

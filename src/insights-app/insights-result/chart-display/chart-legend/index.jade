@@ -39,7 +39,7 @@ include ../../../mixins.jade
             - const seriesDisplayLabel = $helpers.seriesDisplayOption(seriesIdx)
             if !isFlattenedData
               .sticky-title.info(on={click: () => report.legend.toggleShowSeries(seriesIdx)})
-                - const titleName = util.renameProperty(series.seriesName)
+                - const titleName = $helpers.renameSeriesHeader(series.seriesName)
                 .name(
                   class={showing: isSeriesShowing}
                   attrs={title: titleName}
