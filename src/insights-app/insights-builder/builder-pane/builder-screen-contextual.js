@@ -72,16 +72,15 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
     }
 
     let sections = this.app.getSources(Clause.RESOURCE_TYPE_PEOPLE).map(source => {
-      const formattedSource = formatSource(source.profileType, {article: true});
       const properties = this.allProperties(Clause.RESOURCE_TYPE_PEOPLE)
-        .filter(this.app.filterPropertiesBySource(source))
+        .filter(this.app.filterPropertiesBySource(source.profileType))
         .map(item => extend(item, {
           isDisabled: isGroupByDisabled,
           itemType: `property`,
         }));
 
       return {
-        label: `Group by ${formattedSource} property`,
+        label: formatSource(source.profileType, {groupBy: true, article: true, property: true}),
         items: properties,
       };
     });
@@ -89,7 +88,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
     if (this.state.report.sections.show.isEventsOnlyQuery()) {
       sections = [
         {
-          label: `Group by an event property`,
+          label: formatSource(`events`, {groupBy: true, article: true, property: true}),
           items: this.allProperties(Clause.RESOURCE_TYPE_EVENTS).map(item => extend(item, {
             isDisabled: isGroupByDisabled,
             itemType: `property`,
@@ -97,7 +96,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
         },
         ...sections,
         {
-          label: `Compare to an event`,
+          label: formatSource(`events`, {compareTo: true, article: true}),
           items: this.allEvents().map(item => extend(item, {
             isDisabled: isEventsDisabled,
             itemType: `event`,
@@ -148,14 +147,13 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
 
     if (source === Clause.RESOURCE_TYPE_EVENTS) {
       options = [
-        {name: `Group by a property`, clauseType: GroupClause.TYPE},
-        {name: `Compare to an event`, clauseType: ShowClause.TYPE},
+        {name: formatSource(``, {groupBy: true, article: true, property: true}), clauseType: GroupClause.TYPE},
+        {name: formatSource(`events`, {compareTo: true, article: true}), clauseType: ShowClause.TYPE},
       ];
     } else {
-      const formattedSource = formatSource(source, {article: true});
       options = [
-        {name: `Group by ${formattedSource} property`, clauseType: GroupClause.TYPE},
-        {name: `Compare to ${formattedSource} property`, clauseType: ShowClause.TYPE},
+        {name: formatSource(source, {groupBy: true, article: true, property: true}), clauseType: GroupClause.TYPE},
+        {name: formatSource(source, {compareTo: true, article: true, property: true}), clauseType: ShowClause.TYPE},
       ];
     }
 

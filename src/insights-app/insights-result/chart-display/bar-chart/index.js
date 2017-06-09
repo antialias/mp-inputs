@@ -118,8 +118,7 @@ document.registerElement(`bar-chart`, class extends Component {
   }
 
   formatSource({all=false}={}) {
-    const source = util.capitalize(this.getJSONAttribute(`source`));
-    return all ? `All ${source}` : source;
+    return util.formatSource(this.getJSONAttribute(`source`), {all});
   }
 
   attachedCallback() {

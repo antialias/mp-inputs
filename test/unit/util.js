@@ -430,34 +430,102 @@ describe(`hasDefinedValue`, () => {
 
 describe(`formatSource`, () => {
   it(`works with various combinations of input params and sources`, () => {
-    expect(formatSource(`events`)).to.equal(`event`);
-    expect(formatSource(`events`, {})).to.equal(`event`);
-    expect(formatSource(`events`, {article: true})).to.equal(`an event`);
+    let singular, all, article, property; // input flags
+    singular = all = article = property = true;
 
-    expect(formatSource(`people`)).to.equal(`people`);
-    expect(formatSource(`people`, {})).to.equal(`people`);
-    expect(formatSource(`people`, {article: true})).to.equal(`a people`);
+    expect(formatSource(`events`)).to.equal(`Events`);
+    expect(formatSource(`events`, {})).to.equal(`Events`);
+    expect(formatSource(`events`, {singular})).to.equal(`Event`);
+    expect(formatSource(`events`, {all})).to.equal(`All Events`);
+    expect(formatSource(`events`, {article})).to.equal(`An event`);
+    expect(formatSource(`events`, {property})).to.equal(`Event properties`);
+    expect(formatSource(`events`, {singular, all})).to.equal(`All Events`);
+    expect(formatSource(`events`, {singular, article})).to.equal(`An event`);
+    expect(formatSource(`events`, {singular, property})).to.equal(`Event property`);
+    expect(formatSource(`events`, {all, article})).to.equal(`All Events`);
+    expect(formatSource(`events`, {all, property})).to.equal(`All Event Properties`);
+    expect(formatSource(`events`, {article, property})).to.equal(`An event property`);
+    expect(formatSource(`events`, {property})).to.equal(`Event properties`);
+    expect(formatSource(`events`, {singular, article, property})).to.equal(`An event property`);
 
-    expect(formatSource(`accounts`)).to.equal(`account`);
-    expect(formatSource(`accounts`, {})).to.equal(`account`);
-    expect(formatSource(`accounts`, {article: true})).to.equal(`an account`);
+    expect(formatSource(`people`)).to.equal(`People`);
+    expect(formatSource(`people`, {})).to.equal(`People`);
+    expect(formatSource(`people`, {singular})).to.equal(`People`);
+    expect(formatSource(`people`, {all})).to.equal(`All People`);
+    expect(formatSource(`people`, {article})).to.equal(`A people`);
+    expect(formatSource(`people`, {property})).to.equal(`People properties`);
+    expect(formatSource(`people`, {singular, all})).to.equal(`All People`);
+    expect(formatSource(`people`, {singular, article})).to.equal(`A people`);
+    expect(formatSource(`people`, {singular, property})).to.equal(`People property`);
+    expect(formatSource(`people`, {all, article})).to.equal(`All People`);
+    expect(formatSource(`people`, {all, property})).to.equal(`All People Properties`);
+    expect(formatSource(`people`, {article, property})).to.equal(`A people property`);
+    expect(formatSource(`people`, {property})).to.equal(`People properties`);
+    expect(formatSource(`people`, {singular, article, property})).to.equal(`A people property`);
 
-    expect(formatSource(`contacts`)).to.equal(`contact`);
-    expect(formatSource(`contacts`, {})).to.equal(`contact`);
-    expect(formatSource(`contacts`, {article: true})).to.equal(`a contact`);
+    expect(formatSource(`accounts`)).to.equal(`Accounts`);
+    expect(formatSource(`accounts`, {})).to.equal(`Accounts`);
+    expect(formatSource(`accounts`, {singular})).to.equal(`Account`);
+    expect(formatSource(`accounts`, {all})).to.equal(`All Accounts`);
+    expect(formatSource(`accounts`, {article})).to.equal(`An account`);
+    expect(formatSource(`accounts`, {property})).to.equal(`Account properties`);
+    expect(formatSource(`accounts`, {singular, all})).to.equal(`All Accounts`);
+    expect(formatSource(`accounts`, {singular, article})).to.equal(`An account`);
+    expect(formatSource(`accounts`, {singular, property})).to.equal(`Account property`);
+    expect(formatSource(`accounts`, {all, article})).to.equal(`All Accounts`);
+    expect(formatSource(`accounts`, {all, property})).to.equal(`All Account Properties`);
+    expect(formatSource(`accounts`, {article, property})).to.equal(`An account property`);
+    expect(formatSource(`accounts`, {property})).to.equal(`Account properties`);
+    expect(formatSource(`accounts`, {singular, article, property})).to.equal(`An account property`);
 
-    expect(formatSource(`leads`)).to.equal(`lead`);
-    expect(formatSource(`leads`, {})).to.equal(`lead`);
-    expect(formatSource(`leads`, {article: true})).to.equal(`a lead`);
+    expect(formatSource(`contacts`)).to.equal(`Contacts`);
+    expect(formatSource(`contacts`, {})).to.equal(`Contacts`);
+    expect(formatSource(`contacts`, {singular})).to.equal(`Contact`);
+    expect(formatSource(`contacts`, {all})).to.equal(`All Contacts`);
+    expect(formatSource(`contacts`, {article})).to.equal(`A contact`);
+    expect(formatSource(`contacts`, {property})).to.equal(`Contact properties`);
+    expect(formatSource(`contacts`, {singular, all})).to.equal(`All Contacts`);
+    expect(formatSource(`contacts`, {singular, article})).to.equal(`A contact`);
+    expect(formatSource(`contacts`, {singular, property})).to.equal(`Contact property`);
+    expect(formatSource(`contacts`, {all, article})).to.equal(`All Contacts`);
+    expect(formatSource(`contacts`, {all, property})).to.equal(`All Contact Properties`);
+    expect(formatSource(`contacts`, {article, property})).to.equal(`A contact property`);
+    expect(formatSource(`contacts`, {property})).to.equal(`Contact properties`);
+    expect(formatSource(`contacts`, {singular, article, property})).to.equal(`A contact property`);
+
+    expect(formatSource(`leads`)).to.equal(`Leads`);
+    expect(formatSource(`leads`, {})).to.equal(`Leads`);
+    expect(formatSource(`leads`, {singular})).to.equal(`Lead`);
+    expect(formatSource(`leads`, {all})).to.equal(`All Leads`);
+    expect(formatSource(`leads`, {article})).to.equal(`A lead`);
+    expect(formatSource(`leads`, {property})).to.equal(`Lead properties`);
+    expect(formatSource(`leads`, {singular, all})).to.equal(`All Leads`);
+    expect(formatSource(`leads`, {singular, article})).to.equal(`A lead`);
+    expect(formatSource(`leads`, {singular, property})).to.equal(`Lead property`);
+    expect(formatSource(`leads`, {all, article})).to.equal(`All Leads`);
+    expect(formatSource(`leads`, {all, property})).to.equal(`All Lead Properties`);
+    expect(formatSource(`leads`, {article, property})).to.equal(`A lead property`);
+    expect(formatSource(`leads`, {property})).to.equal(`Lead properties`);
+    expect(formatSource(`leads`, {singular, article, property})).to.equal(`A lead property`);
 
     expect(formatSource(`☕`)).to.equal(`☕`);
     expect(formatSource(`☕`, {})).to.equal(`☕`);
-    expect(formatSource(`☕`, {article: true})).to.equal(`a ☕`);
+    expect(formatSource(`☕`, {singular})).to.equal(`☕`);
+    expect(formatSource(`☕`, {all})).to.equal(`All ☕`);
+    expect(formatSource(`☕`, {article})).to.equal(`A ☕`);
+    expect(formatSource(`☕`, {property})).to.equal(`☕ properties`);
+    expect(formatSource(`☕`, {singular, all})).to.equal(`All ☕`);
+    expect(formatSource(`☕`, {singular, article})).to.equal(`A ☕`);
+    expect(formatSource(`☕`, {singular, property})).to.equal(`☕ property`);
+    expect(formatSource(`☕`, {all, article})).to.equal(`All ☕`);
+    expect(formatSource(`☕`, {all, property})).to.equal(`All ☕ Properties`);
+    expect(formatSource(`☕`, {article, property})).to.equal(`A ☕ property`);
+    expect(formatSource(`☕`, {property})).to.equal(`☕ properties`);
+    expect(formatSource(`☕`, {singular, article, property})).to.equal(`A ☕ property`);
   });
 
-  it(`throws with empty strings or non-string input`, () => {
+  it(`throws with non-string input`, () => {
     expect(() => formatSource()).to.throwError(`Invalid input: undefined`);
-    expect(() => formatSource(``)).to.throwError(`Invalid input: empty string`);
     expect(() => formatSource(null)).to.throwError(`Invalid input: null`);
     expect(() => formatSource(0)).to.throwError(`Invalid input: 0`);
     expect(() => formatSource([])).to.throwError(`Invalid input: []`);

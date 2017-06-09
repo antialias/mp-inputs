@@ -1,6 +1,7 @@
 // Insights-specific utils
 import cloneDeep from 'lodash/cloneDeep';
 import {
+  capitalize,
   nestedObjectDepth,
   objectFromPairs,
 } from 'mixpanel-common/util';
@@ -70,31 +71,80 @@ export function getTextWidth(text, font) {
 
 /**
  * Format a source (events, people, accounts, etc.) for title/label display
+ * Uses sentence case
  * @param {string} source - the source string to be formatted
- * @param {boolean} article - prepend "a" or "an"
+ * @param {boolean} singular - de-pluralize the source
+ * @param {boolean} all - prepend "all" (sets singular=false and article=false, uses title case)
+ * @param {boolean} article - prepend "a" or "an" (sets singular=true)
+ * @param {boolean} groupBy - prepend "group by"
+ * @param {boolean} compareTo - prepend "compare to" (sets groupBy=false)
+ * @param {boolean} property - append "property" or "properties" (depending on singular)
  * @returns {string} - the formatted source string
  * @example
- *   formatSource(`events`) -> `event`
- *   formatSource(`people`) -> `people`
- *   formatSource(`contacts`, {article: true}) -> `a contact`
+ *   formatSource(`events`, {singular: true}) -> `Event`
+ *   formatSource(`people`, {singular: true}) -> `People`
+ *   formatSource(`contacts`, {article: true}) -> `A contact`
+ *   formatSource(`leads`, {groupBy: true, article: true, : property: true}) -> `Group by a lead property`
+ *   formatSource(`accounts`, {all: true}) -> `All accounts`
  */
-export function formatSource(source, {article=false}={}) {
-  if (typeof source !== `string` || !source.length) {
-    throw new Error(`Invalid input: ` + source.length ? source : `empty string`);
+export function formatSource(source, {
+  singular=false,
+  all=false,
+  article=false,
+  groupBy=false,
+  compareTo=false,
+  property=false,
+}={}) {
+  if (typeof source !== `string`) {
+    throw new Error(`Invalid input: ${source}`);
   }
 
   let str = source;
 
+  singular = article ? true : singular; // article sets singular=true
+  singular = all ? false : singular; // all sets singular=false
+  article = all ? false : article; // all sets article=false
+  groupBy = compareTo ? false : groupBy; // compareTo sets groupBy=false
+
   // depluralize sources that end in "s"
-  if (source[source.length - 1] === `s`) {
+  if ((singular || property) && source.length && source[source.length - 1] === `s`) {
     str = source.slice(0, -1);
   }
-  // add "a"/"an" if requested
-  if (article) {
-    str = (`aeiou`.includes(source[0]) ? `an ` : `a `) + str;
+
+  // prepend "all" if requested
+  if (all) {
+    str = `all ${str}`;
   }
 
-  return str;
+  // prepend "a"/"an" if requested
+  if (article) {
+    str = (source.length && `aeiou`.includes(source[0]) ? `an ` : `a `) + str;
+  }
+
+  // prepend "group by" if requested
+  if (groupBy) {
+    str = `group by ${str}`;
+  }
+
+  // prepend "compare to" if requested
+  if (compareTo) {
+    str = `compare to ${str}`;
+  }
+
+  // append "property"/"properties" if requested
+  if (property) {
+    str = str + (singular ? ` property` : ` properties`);
+  }
+
+  // remove double spaces that can occur if empty string is passes as source
+  str = str.replace(/\s+/, ` `);
+
+  // "all" uses title case
+  if (all) {
+    str = str.split(` `).map(capitalize).join(` `);
+  }
+
+  return capitalize(str);
 }
 
 export function formatEventName(mpEvent) {

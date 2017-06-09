@@ -242,7 +242,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     const defaultQueryPeople = (eventsBlocked || !eventsIntegrated) && (peopleIntegrated && !peopleBlocked);
 
     const defaultShowClause = defaultQueryPeople ? ShowClause.ALL_PEOPLE : ShowClause.TOP_EVENTS;
-    const resourceType = defaultQueryPeople ? Clause.RESOURCE_TYPE_PEOPLE : Clause.RESOURCE_TYPE_ALL;
+    const resourceType = defaultQueryPeople ? Clause.RESOURCE_TYPE_PEOPLE : Clause.RESOURCE_TYPE_EVENTS;
 
     return new Report({
       displayOptions: {
@@ -1059,11 +1059,11 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     const dataset = DATASETS[this.getDataset()];
     const profileTypes = (dataset && dataset.profileTypes) || [Clause.RESOURCE_TYPE_PEOPLE];
     const allSource = {
-      name: `all`,
+      name: Clause.RESOURCE_TYPE_ALL,
       resourceType: Clause.RESOURCE_TYPE_ALL,
     };
     const eventsSource = {
-      name: `events`,
+      name: Clause.RESOURCE_TYPE_EVENTS,
       resourceType: Clause.RESOURCE_TYPE_EVENTS,
     };
     const peopleSources = profileTypes.map(profileType => ({
@@ -1083,7 +1083,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   getSelectedSource(clause=null) {
     clause = clause || this.state.report.sections.show.clauses[0];
-    return (clause && clause.source) || null;
+    return (clause && clause.source) || Clause.RESOURCE_TYPE_EVENTS;
   }
 
   filterPropertiesBySource(source) {

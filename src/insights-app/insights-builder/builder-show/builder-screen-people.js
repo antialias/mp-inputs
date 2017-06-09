@@ -2,8 +2,8 @@ import {BuilderScreenNumericPropertiesBase} from '../builder-pane/builder-screen
 import BaseQuery from '../../../models/queries/base';
 import {Clause, ShowClause} from '../../../models/clause';
 import {
-  capitalize,
   extend,
+  formatSource,
   getIconForPropertyType,
   renameProperty,
 } from '../../../util';
@@ -21,10 +21,10 @@ document.registerElement(`builder-screen-people`, class extends BuilderScreenNum
           return [{
             label: this.getAttribute(`label`),
             items: this.processItems([extend(ShowClause.ALL_PEOPLE, {
-              label: `All ${capitalize(source)}`,
+              label: formatSource(source, {all: true}),
             })]),
           }, {
-            label: `Properties apply to all ${source}`,
+            label: `Properties apply to all ${formatSource(source)}`,
             items: this.processItems(this.buildList()),
             isLoading: this.app.getTopPeopleProperties() === BaseQuery.LOADING,
           }];

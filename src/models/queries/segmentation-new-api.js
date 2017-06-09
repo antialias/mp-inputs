@@ -4,7 +4,7 @@ import BaseQuery from './base';
 import {Clause} from '../clause';
 import Result from '../result';
 import {rollbar} from '../../tracking';
-import {capitalize, extend, formatSource} from '../../util';
+import {extend, formatSource} from '../../util';
 import {transformLeaves} from '../../util/chart';
 
 export default class SegmentationQuery extends BaseQuery {
@@ -35,7 +35,7 @@ export default class SegmentationQuery extends BaseQuery {
         resourceType: Clause.RESOURCE_TYPE_PEOPLE,
         filterType: `string`,
         filterOperator: `equals`,
-        filterValue: capitalize(formatSource(profileType)),
+        filterValue: formatSource(profileType, {singular: true}),
       });
     }
 

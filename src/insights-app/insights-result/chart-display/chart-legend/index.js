@@ -1,8 +1,8 @@
 import {Component} from 'panel';
 
 import {
-  capitalize,
   extend,
+  formatSource,
   renameProperty,
   renamePropertyValue,
   stringFilterMatches,
@@ -188,10 +188,8 @@ document.registerElement(`chart-legend`, class extends Component {
     };
   }
 
-
   formatSource({all=false}={}) {
-    const source = capitalize(this.app.getSelectedSource());
-    return all ? `All ${source}` : source;
+    return formatSource(this.app.getSelectedSource(), {all});
   }
 
   get legendDataType() {

@@ -128,7 +128,7 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
 
     const getSection = source => ({
       isLoading: this.isLoading(),
-      label: `${formatSource(source)} properties`,
+      label: formatSource(source, {property: true}),
       items: this.getProperties(source),
     });
 

@@ -2,8 +2,8 @@ import isEqual from 'lodash/isEqual';
 import {Component} from 'panel';
 
 import {
-  capitalize,
   extend,
+  formatSource,
   renameEvent,
   renameProperty,
 } from '../../../util';
@@ -74,7 +74,7 @@ document.registerElement(`builder-show-edit-control`, class extends EditControl 
       let propertyName = clause.property ? clause.property.name : clause.value.name;
 
       if (propertyName === ShowClause.ALL_PEOPLE.name && clause.profileType) {
-        propertyName = `All ${capitalize(clause.profileType)}`;
+        propertyName = formatSource(clause.profileType, {all: true});
       }
 
       label = renameProperty(propertyName);
@@ -148,7 +148,7 @@ document.registerElement(`builder-numeric-property-edit-control`, class extends 
       let propertyName = clause.property.name;
 
       if (propertyName === ShowClause.ALL_PEOPLE.name && clause.profileType) {
-        propertyName = `All ${capitalize(clause.profileType)}`;
+        propertyName = formatSource(clause.profileType, {all: true});
       }
 
       return renameProperty(propertyName);

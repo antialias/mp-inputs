@@ -10,12 +10,9 @@ document.registerElement(`builder-screen-group-properties`, class extends Builde
       template,
       helpers: extend(super.config.helpers, {
         getScreenTitle: () => {
-          if (this.getSelectedResourceType() === Clause.RESOURCE_TYPE_PEOPLE) {
-            const formattedSource = formatSource(this.getSelectedSource(), {article: true});
-            return `Group by ${formattedSource} property`;
-          } else {
-            return `Group by a property`;
-          }
+          const isPeople = this.getSelectedResourceType() === Clause.RESOURCE_TYPE_PEOPLE;
+          const source = isPeople ? this.getSelectedSource() : ``;
+          return formatSource(source, {groupBy: true, article: true, property: true});
         },
         getPropertySections: () => this.processSections(this.getPropertySections()),
         clickedProperty: ev => {

@@ -18,7 +18,7 @@ include ../mixins.jade
         if clauseIdx
           button.reorder.reorder-left(on={click: () => $helpers.moveClause(clauseIdx, -1)})
             +small-caret-icon({direction: 'left'})
-        .header-label.group= `${util.formatSource(clause.source)} property`
+        .header-label.group= util.formatSource(clause.source, {property: true})
         if reorderRight
           button.reorder.reorder-right(on={click: () => $helpers.moveClause(clauseIdx, 1)})
             +small-caret-icon({direction: 'right'})

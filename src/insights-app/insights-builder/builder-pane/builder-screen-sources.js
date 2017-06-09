@@ -66,7 +66,7 @@ document.registerElement(`builder-screen-sources`, class extends BuilderScreenBa
         })),
       },
       ...this.app.getSources(Clause.RESOURCE_TYPE_PEOPLE).map(source => ({
-        label: `${formatSource(source.profileType)} properties`,
+        label: formatSource(source.profileType, {properties}),
         items: properties
           .filter(this.app.filterPropertiesBySource(source.profileType))
           .map(item => extend(item, {

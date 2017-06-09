@@ -5,7 +5,7 @@ import BaseQuery from './base';
 import QueryCache from './query-cache';
 import {DATASETS} from '../constants';
 import {PROPERTY_TYPES} from '../clause.js';
-import {capitalize, formatSource} from '../../util';
+import {formatSource} from '../../util';
 
 const BLACKLISTED_PROPERTIES = [
   `$transactions`, // transactions a special obj property used only for the Revenue report
@@ -150,7 +150,7 @@ export class ProfileTypePropertiesQuery extends BaseQuery {
   }
 
   buildParams() {
-    const tableValue = capitalize(formatSource(this.query.profileType));
+    const tableValue = formatSource(this.query.profileType, {singular: true});
     return {
       limit: 1,
       where: `properties["Table"] == "${tableValue}"`,
