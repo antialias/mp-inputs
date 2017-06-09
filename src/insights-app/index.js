@@ -980,16 +980,23 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   // Datasets management
 
-  // dataset that should be used for the insights report
-  // If this is not a multi dataset project or no user selection made, always default to 'mixpanel'
+  /**
+   * dataset that should be used for the insights report
+   * @returns {string}
+   */
   getDataset() {
+    // If this is not a multi dataset project or no user selection made, always default to 'mixpanel'
     return (this.hasDatasets() && this.getSelectedDataset()) || DATASET_MIXPANEL;
   }
 
-  // This is the that the user selected from the datasets dropdown in show clause
+  /**
+   * This is dataset the that the user selected from the datasets dropdown in show clause
+   * null means no selection has been made
+   * @returns {string | null}
+   */
   getSelectedDataset() {
     const clause = this.getClausesForType(ShowClause.TYPE)[0];
-    return (clause && clause.dataset);
+    return (clause && clause.dataset) || null;
   }
 
   getDatasets() {
