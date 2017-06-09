@@ -6,7 +6,6 @@ import {
   getIconForEvent,
   getDefinitionForEvent,
   renameEvent,
-  pick,
 } from '../../../util';
 
 import template from './builder-screen-events.jade';
@@ -15,9 +14,6 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
   get config() {
     return {
       template,
-      defaultState: {
-        lexiconUrl: `${window.location.protocol}//${window.location.hostname}${window.location.pathname.replace(`insights`, `lexicon`)}?from=definition`,
-      },
       helpers: extend(super.config.helpers, {
         getSections: () => {
           let topEvents = [];
@@ -35,23 +31,6 @@ document.registerElement(`builder-screen-events`, class extends BuilderScreenBas
             label: `Events`,
             items: this.processItems(topEvents),
           }];
-        },
-        handleItemFocus: ev => {
-          const item = ev.detail.item;
-          const definition = item.definition;
-          if (definition && definition.description) {
-            const eventDefinition = pick(definition, [`description`, `verified`, `isMixpanelDefinition`]);
-            eventDefinition.name = item.label;
-            if (definition.verified && !definition.isMixpanelDefinition) {
-              eventDefinition.verifiedBy = definition.lastVerifiedBy.name || definition.lastVerifiedBy.email;
-              eventDefinition.verifiedDate = definition.lastVerified;
-            }
-            this.update({eventDefinition});
-          } else {
-            if (this.state.eventDefinition) {
-              this.update({eventDefinition: null});
-            }
-          }
         },
         isEmbedded: () => this.isEmbedded(),
       }),

@@ -22,7 +22,7 @@ include ../mixins.jade
     mp-event-definition-tooltip(
       attrs={
         'event-definition': JSON.stringify(eventDefinition),
-        'lexicon-url': lexiconUrl,
+        'lexicon-url': $helpers.getLexiconUrl(),
         open: !!eventDefinition,
       }
     )

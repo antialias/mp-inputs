@@ -10,9 +10,10 @@ import {Clause, GroupClause, ShowClause} from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
 import {
   extend,
+  getDefinitionForEvent,
   getIconForEvent,
   getIconForPropertyType,
-  getDefinitionForEvent,
+  pick,
   renameEvent,
   renameProperty,
   replaceByIndex,
@@ -68,6 +69,24 @@ export class BuilderScreenBase extends Component {
           const scrollBottom = ev.target.scrollTop + ev.target.offsetHeight;
           if (scrollBottom + PROGRESSIVE_LIST_BUFFER_PX >= ev.target.scrollHeight) {
             this.increaseProgressiveListSize();
+          }
+        },
+        getLexiconUrl: () => `${window.location.protocol}//${window.location.hostname}${window.location.pathname.replace(`insights`, `lexicon`)}?from=definition`,
+        handleItemFocus: ev => {
+          const item = ev.detail.item;
+          const definition = item.definition;
+          if (definition && definition.description) {
+            const eventDefinition = pick(definition, [`description`, `verified`, `isMixpanelDefinition`]);
+            eventDefinition.name = item.label;
+            if (definition.verified && !definition.isMixpanelDefinition) {
+              eventDefinition.verifiedBy = definition.lastVerifiedBy.name || definition.lastVerifiedBy.email;
+              eventDefinition.verifiedDate = definition.lastVerified;
+            }
+            this.update({eventDefinition});
+          } else {
+            if (this.state.eventDefinition) {
+              this.update({eventDefinition: null});
+            }
           }
         },
         getStageClauseAttr: attr =>
