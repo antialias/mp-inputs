@@ -43,6 +43,6 @@
         button.remove(on={click: $helpers.removeClause})
           svg-icon(attrs={icon: 'x'})
     .drop-menu
-      mp-drop-menu(attrs={open} on={change: $helpers.menuChange, closing: $helpers.menuClosing})
+      mp-drop-menu(attrs={open} on={change: $helpers.menuChange})
         .new-pane-content(attrs={'slot-body': true})
           = $component.child(`builder-pane`, {attrs: $helpers.getSelectionAttrs(open)})
