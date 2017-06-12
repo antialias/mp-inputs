@@ -243,7 +243,7 @@ export class BuilderScreenBase extends Component {
         hash: screen => screen.componentName,
       });
 
-      this.app.update({contextFilter: ``});
+      this.app.update({contextFilter: ``, eventDefinition: null});
       this.app.updateBuilder({
         activeIndex: 0,
         inTransition: true,
