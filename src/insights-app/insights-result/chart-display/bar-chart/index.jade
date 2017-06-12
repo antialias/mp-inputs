@@ -73,7 +73,7 @@ mixin chart-bar(options={})
                     style={'min-width': `${$helpers.getHeaderWidth(headerText)}px`}
                   )
                     if !Array.isArray(cell) || isStacked
-                      - cellValue = addTopLevelKey ? $helpers.renameSeriesHeader(headers[0]) : cell.value
+                      - const cellValue = addTopLevelKey ? $helpers.renameSeriesHeader(headers[0]) : cell.value;
                       - const title = $helpers.renameSeriesValue(colHeader, cellValue)
                       .chart-header-text(attrs={title})= title
                     else

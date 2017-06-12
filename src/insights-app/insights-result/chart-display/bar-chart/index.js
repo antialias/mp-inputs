@@ -34,7 +34,7 @@ document.registerElement(`bar-chart`, class extends Component {
         util,
       },
       helpers: {
-        renameSeriesHeader: header => this.formatSource({all: header !== `$event`}),
+        renameSeriesHeader: () => this.formatSource(),
         renameSeriesValue: (header, value) => {
           if (value === `$all_people`) {
             return this.formatSource({all: true});
