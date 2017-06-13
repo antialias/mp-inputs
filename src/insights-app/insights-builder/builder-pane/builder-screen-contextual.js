@@ -145,7 +145,7 @@ document.registerElement(`builder-screen-contextual`, class extends BuilderScree
     const source = this.getSelectedSource();
     let options = [];
 
-    if (source === Clause.RESOURCE_TYPE_EVENTS) {
+    if ([Clause.RESOURCE_TYPE_EVENTS, Clause.RESOURCE_TYPE_ALL].includes(source)) {
       options = [
         {name: formatSource(``, {groupBy: true, article: true, property: true}), clauseType: GroupClause.TYPE},
         {name: formatSource(`events`, {compareTo: true, article: true}), clauseType: ShowClause.TYPE},
