@@ -154,7 +154,8 @@ export class BuilderScreenPropertiesBase extends BuilderScreenBase {
   getSelectedSource() {
     return (
       this.app.getBuilderCurrentScreenAttr(`profileType`) ||
-      this.app.getBuilderCurrentScreenAttr(`resourceType`)
+      this.app.getBuilderCurrentScreenAttr(`resourceType`) ||
+      this.app.getSelectedSource()
     );
   }
 
