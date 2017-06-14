@@ -8,6 +8,11 @@ import {extend, formatSource} from '../../util';
 import {transformLeaves} from '../../util/chart';
 
 export default class SegmentationQuery extends BaseQuery {
+  constructor(apiAttrs, options={}) {
+    super(apiAttrs, options);
+    this.ignoreObsoleteResults = true;
+  }
+
   buildUrl() {
     return `api/2.0/insights`;
   }

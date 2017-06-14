@@ -119,8 +119,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         if (this.state.report.id) {
           stateUpdate = extend(stateUpdate, this.resetQuery());
         } else if (!stateUpdate.report && this.canMakeQueries()) {
-          this._fetchDatasets();
-          this._fetchTopEventsProperties();
+          this._fetchAllDatasetsTopEventsAndProperties();
         }
         return stateUpdate;
       },
@@ -670,8 +669,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     this.update(stateUpdate);
 
     if (this.canMakeQueries()) {
-      this._fetchDatasets();
-      this._fetchTopEventsProperties();
+      this._fetchAllDatasetsTopEventsAndProperties();
     }
 
     if (trackLoading) {
@@ -899,8 +897,12 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return this.originStageClauseValue(`TYPE`);
   }
 
+  originStageClauseResourceType() {
+    return this.originStageClauseValue(`resourceType`);
+  }
+
   originStageClauseIsPeopleProperty() {
-    return this.originStageClauseValue(`resourceType`) === Clause.RESOURCE_TYPE_PEOPLE;
+    return this.originStageClauseResourceType() === Clause.RESOURCE_TYPE_PEOPLE;
   }
 
   isAddingClause(sectionType) {
@@ -992,11 +994,11 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
    */
   getDataset() {
     // If this is not a multi dataset project or no user selection made, always default to 'mixpanel'
-    return (this.hasDatasets() && this.getSelectedDataset()) || DATASET_MIXPANEL;
+    return this.getSelectedDataset() || DATASET_MIXPANEL;
   }
 
   /**
-   * This is dataset the that the user selected from the datasets dropdown in show clause
+   * This is the dataset that the user selected from the datasets dropdown in show clause
    * null means no selection has been made
    * @returns {string | null}
    */
@@ -1005,7 +1007,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return (clause && clause.dataset) || null;
   }
 
-  getDatasets() {
+  getDatasetsInfo() {
     const datasets = this.state.datasets;
     return Object.keys(datasets).map(
       datasetName => extend(datasets[datasetName], {datasetName}));
@@ -1026,11 +1028,19 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     return this.state.datasets && Object.keys(this.state.datasets).length > 1;
   }
 
-  _fetchDatasets() {
+  _fetchAllDatasetsTopEventsAndProperties() {
+    // Fetch top events and properties for current dataset without waiting for datasets list
+    const currDataset = this.getDataset();
+    this._fetchTopEventsAndProperties(currDataset);
+
     if (this.hasProjectFeatureFlag(`sst`)) {
       this.queries.datasets.build(this.state).run().then(datasets => {
         this.update({datasets: extend(this.state.datasets, datasets)});
-        this._fetchTopEventsProperties();
+
+        // Fetch top events and properties for all other datasets
+        Object.keys(this.state.datasets)
+          .filter(dataset => dataset !== currDataset)
+          .forEach(dataset => this._fetchTopEventsAndProperties(dataset));
       });
     }
   }
@@ -1047,17 +1057,14 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     // Reset staging clause so it picks up new dataset
     this.stopEditingClause();
     this.startEditingClause(ShowClause.TYPE, 0);
-
-    if (this.canMakeQueries()) {
-      this._fetchTopEventsProperties();
-    }
   }
 
   // Sources managment (Mixpanel: [events, people], Salesforce: [events, accounts, contacts, leads], etc.)
 
-  getSources(resourceType=null) {
-    const dataset = DATASETS[this.getDataset()];
-    const profileTypes = (dataset && dataset.profileTypes) || [Clause.RESOURCE_TYPE_PEOPLE];
+  getSources(resourceType=null, dataset=null) {
+    dataset = dataset || this.getDataset();
+    const datasetInfo = this.state.datasets[dataset];
+    const profileTypes = (datasetInfo && datasetInfo.profileTypes) || [Clause.RESOURCE_TYPE_PEOPLE];
     const allSource = {
       name: Clause.RESOURCE_TYPE_ALL,
       resourceType: Clause.RESOURCE_TYPE_ALL,
@@ -1110,14 +1117,13 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   // Top events/properties management
 
-  getTopEvents() {
-    return this._constructTopList(TOP_EVENTS, this.getDataset());
+  getTopEvents(dataset=null) {
+    return this._constructTopList(TOP_EVENTS, dataset);
   }
 
-  getTopEventProperties(mpEvent=null) {
-    const dataset = this.getDataset();
-
+  getTopEventProperties(mpEvent=null, dataset=null) {
     if (mpEvent) {
+      dataset = dataset || this.getDataset();
       const properties = this.state[TOP.EVENTS.PROPERTIES_BY_EVENT][dataset];
       return (properties && properties[util.formatEventName(mpEvent)]) || null;
     } else {
@@ -1125,12 +1131,12 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     }
   }
 
-  getTopPeopleProperties() {
-    return this._constructTopList(TOP.PEOPLE.PROPERTIES, this.getDataset());
+  getTopPeopleProperties(dataset=null) {
+    return this._constructTopList(TOP.PEOPLE.PROPERTIES, dataset);
   }
 
-  getTopPropertyValues() {
-    return this._constructTopList(TOP.PROPERTY_VALUES, this.getDataset());
+  getTopPropertyValues(dataset=null) {
+    return this._constructTopList(TOP.PROPERTY_VALUES, dataset);
   }
 
   /**
@@ -1141,6 +1147,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
    */
   _constructTopList(topKey, dataset=null) {
     const topState = this.state[topKey];
+    dataset = dataset || this.getDataset();
 
     if (dataset) {
       return topState[dataset] || null;
@@ -1180,48 +1187,44 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     });
   }
 
-  // query top events/properties for the current dataset and load into state
-  // pre-query top events/properties for all other datasets so results will be cached
-  _fetchTopEventsProperties() {
-    const dataset = this.getDataset();
-
-    // eagerly query top events/properties for other datasets so their results will be cached
-    Object.keys(this.state.datasets).filter(altDataset => altDataset !== dataset).forEach(dataset =>
-      [ TOP_EVENTS,
-        TOP.EVENTS.PROPERTIES,
-        TOP.PEOPLE.PROPERTIES,
-      ].forEach(topKey => this._fetchTopList(topKey, dataset))
-    );
-
-    [ TOP.EVENTS.PROPERTIES,
+  /**
+   * Fetch top events and properties for dataset and load into state
+   * @returns {Promise} - When all top events and properties have been fetched
+   */
+  _fetchTopEventsAndProperties(dataset=null) {
+    dataset = dataset || this.getDataset();
+    const topKeys = [
+      TOP_EVENTS,
+      TOP.EVENTS.PROPERTIES,
       TOP.PEOPLE.PROPERTIES,
-    ].forEach(topKey => {
+    ];
+    const topQueries = topKeys.map(topKey => {
       this._updateTopList(topKey, dataset, BaseQuery.LOADING);
-      this._fetchTopList(topKey, dataset).then(topList =>
-        this._updateTopList(topKey, dataset, topList.map(item => extend(item, {dataset})))
-      );
+      return this._fetchTopList(topKey, dataset).then(topList => {
+        // TODO @evnp: We currently only support custom events in mixpanel dataset; revisit later
+        if (topKey === TOP_EVENTS && dataset === DATASET_MIXPANEL) {
+          topList = topList.concat(this.customEvents);
+        }
+        this._updateTopList(topKey, dataset, topList.map(item => extend(item, {dataset})));
+      });
     });
 
-    this._updateTopList(TOP_EVENTS, dataset, BaseQuery.LOADING);
-    const topEventsQuery = this._fetchTopList(TOP_EVENTS, dataset).then(topEvents => {
-      // TODO @evnp: We currently only support custom events in Mixpanel dataset; revisit later
-      if (dataset === DATASET_MIXPANEL) {
-        topEvents = topEvents.concat(this.customEvents);
+    // check whether we need to wait for Top Events query for current dataset before launching the main query
+    if (dataset === this.getDataset()) {
+      const showClauses = this.getClauseValuesForType(ShowClause.TYPE);
+      const isTopEventsQuery = showClauses.map(clause => clause.name).includes(ShowClause.TOP_EVENTS.name);
+      if (isTopEventsQuery) {
+        topQueries[topKeys.indexOf(TOP_EVENTS)].then(() => this.query());
+      } else {
+        this.query();
       }
-      this._updateTopList(TOP_EVENTS, dataset, topEvents.map(item => extend(item, {dataset})));
-    });
-
-    // check whether we need to wait for Top Events query before launching the main query
-    const showClauses = this.getClauseValuesForType(ShowClause.TYPE);
-    if (showClauses.map(clause => clause.name).includes(ShowClause.TOP_EVENTS.name)) {
-      topEventsQuery.then(() => this.query());
-    } else {
-      this.query();
     }
+
+    return Promise.all(topQueries);
   }
 
-  fetchTopPropertiesForEvent(mpEvent) {
-    const dataset = this.getDataset();
+  fetchTopPropertiesForEvent(mpEvent, dataset=null) {
+    dataset = dataset || this.getDataset();
     const topState = this.state[TOP.EVENTS.PROPERTIES_BY_EVENT][dataset] || {};
     const eventName = util.formatEventName(mpEvent);
 
@@ -1237,8 +1240,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     }
   }
 
-  _fetchTopPropertyValues(resourceType) {
-    const dataset = this.getDataset();
+  _fetchTopPropertyValues(resourceType, dataset=null) {
+    dataset = dataset || this.getDataset();
     const topKey = resourceType === `events` ? TOP.EVENTS.PROPERTY_VALUES : TOP.PEOPLE.PROPERTY_VALUES;
 
     this._updateTopList(TOP.PROPERTY_VALUES, dataset, BaseQuery.LOADING);

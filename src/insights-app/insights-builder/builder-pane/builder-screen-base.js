@@ -6,6 +6,7 @@ import {
   mapArguments,
 } from 'mixpanel-common/util/function';
 
+import {baseComparator} from 'mixpanel-common/util/array';
 import {Clause, GroupClause, ShowClause} from '../../../models/clause';
 import BaseQuery from '../../../models/queries/base';
 import {
@@ -13,6 +14,7 @@ import {
   getDefinitionForEvent,
   getIconForEvent,
   getIconForPropertyType,
+  formatSource,
   pick,
   renameEvent,
   renameProperty,
@@ -65,6 +67,25 @@ export class BuilderScreenBase extends Component {
             profileType: property.profileType,
             dataset: property.dataset,
           });
+        },
+        clickedItem: ev => {
+          const item = ev.detail.item;
+
+          if (item.dataset && item.dataset !== this.app.getSelectedDataset()) {
+            this.app.updateSelectedDataset(item.dataset);
+          }
+
+          switch (item.itemType) {
+            case `event`:
+              this.helpers.clickedEvent(ev);
+              break;
+            case `property`:
+              this.helpers.clickedProperty(ev);
+              break;
+            case `dataset`:
+              this.nextScreen(`builder-screen-sources`);
+              break;
+          }
         },
         clickedBackButton: () => this.previousScreen(),
         closePane: () => this.app.stopEditingClause(),
@@ -146,8 +167,9 @@ export class BuilderScreenBase extends Component {
     return items;
   }
 
-  allEvents() {
-    const mpEvents = this.app.getTopEvents() === BaseQuery.LOADING ? [] : this.app.getTopEvents();
+  allEvents(dataset=null) {
+    const topEvents = this.app.getTopEvents(dataset);
+    const mpEvents = (topEvents && topEvents !== BaseQuery.LOADING) ? topEvents : [];
     return [
       ShowClause.TOP_EVENTS,
       ShowClause.ALL_EVENTS,
@@ -163,10 +185,10 @@ export class BuilderScreenBase extends Component {
     ];
   }
 
-  allProperties(propType) {
+  allProperties(propType, dataset=null) {
     const isPeople = propType === Clause.RESOURCE_TYPE_PEOPLE;
-    let properties = isPeople ? this.app.getTopPeopleProperties() : this.app.getTopEventProperties();
-    properties = properties === BaseQuery.LOADING ? [] : properties;
+    let properties = isPeople ? this.app.getTopPeopleProperties(dataset) : this.app.getTopEventProperties(dataset);
+    properties = (properties && properties !== BaseQuery.LOADING) ? properties : [];
     // TODO: ShowClause.ALL_PEOPLE should  only be show for show clause
     let specialProps = [ShowClause.ALL_PEOPLE];
     if (!isPeople) {
@@ -293,6 +315,70 @@ export class BuilderScreenBase extends Component {
       const progressiveListSize = this.progressiveListSize * 2;
       this.app.updateBuilderCurrentScreen({progressiveListSize});
     }
+  }
+
+  /**
+   * List of all events, event-properties and people-properties for all datasets in sections
+   * Used by contextFilter to populate entries in when user types in search field
+   */
+  buildSections() {
+    const datasetsInfo = this.app.getDatasetsInfo();
+    const hasMultiDatasets = this.app.hasDatasets();
+    const selectedSource = this.app.getSelectedSource(this.app.originStageClause);
+    const selectedDataset = this.app.getSelectedDataset();
+
+    const datasetsSection = {
+      label: `Datasets`,
+      items: datasetsInfo.map(datasetInfo => extend(datasetInfo, {
+        itemType: `dataset`,
+        label: datasetInfo.displayName,
+        icon: `dataset`,
+        dataset: datasetInfo.datasetName,
+      })),
+    };
+
+    const eventsSections = datasetsInfo.map(datasetInfo => ({
+      label: `Events`,
+      source: Clause.RESOURCE_TYPE_EVENTS,
+      dataset: datasetInfo.datasetName,
+      datasetDisplayName: hasMultiDatasets ? datasetInfo.displayName : null,
+      items: this.allEvents(datasetInfo.datasetName).map(event => extend(event, {
+        itemType: `event`,
+        hasPropertiesPill: true,
+        dataset: datasetInfo.datasetName,
+      })),
+    }));
+
+    let peopleSections = [];
+    datasetsInfo.forEach(datasetInfo => {
+      const properties = this.allProperties(Clause.RESOURCE_TYPE_PEOPLE, datasetInfo.datasetName);
+      peopleSections = peopleSections.concat(
+        this.app.getSources(Clause.RESOURCE_TYPE_PEOPLE, datasetInfo.datasetName).map(source => ({
+          label: formatSource(source.profileType, {property: true}),
+          source: source.profileType,
+          dataset: datasetInfo.datasetName,
+          datasetDisplayName: hasMultiDatasets ? datasetInfo.displayName : null,
+          items: properties
+            .filter(this.app.filterPropertiesBySource(source.profileType))
+            .map(property => extend(property, {
+              itemType: `property`,
+              dataset: datasetInfo.datasetName,
+              profileType: source.profileType,
+              isDisabled: this.state.learnActive,
+            })),
+        }))
+      );
+    });
+
+    // Sections for selected dataset appear first, then selected resource type, then alphabetically by label
+    let sections = [...eventsSections, ...peopleSections].sort(lexicalCompose(
+      baseComparator({transform: item => item.dataset === selectedDataset, order: `desc`}),
+      baseComparator({transform: item => item.source === selectedSource, order: `desc`}),
+      baseComparator({transform: item => item.label})
+    ));
+
+    // datasetsSection only makes sense for multi-dataset mode
+    return hasMultiDatasets ? [datasetsSection, ...sections] : sections;
   }
 
   buildProgressiveList() {

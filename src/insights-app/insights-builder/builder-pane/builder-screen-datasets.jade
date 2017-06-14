@@ -6,7 +6,7 @@ include ../mixins.jade
       attrs={
         progressive: true,
         'search-filter': contextFilter,
-        'sections': JSON.stringify($helpers.getFilterSections()),
+        'sections': JSON.stringify($helpers.getSections()),
       }
       on={
         draw: $helpers.updateRenderedSizeOnNextFrame,
@@ -16,7 +16,7 @@ include ../mixins.jade
     )
   else
     ul.screen-options-list.arrow-key-scrollable
-      each dataset in $helpers.getDatasets()
+      each dataset in $helpers.getDatasetsInfo()
         +generic-options-list-item(dataset.displayName, {
           class: `list-item-dataset`,
           index: dataset.index,

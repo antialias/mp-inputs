@@ -8,7 +8,10 @@ export default class BaseQuery {
     this.requestMethod = `POST`;
     this.includeCredentials = false;
 
-    this.query = null; // used to check for obsolete queries
+    // used to check for obsolete queries
+    this.query = null;
+    // if a newer query is made, should old results be ignored ?
+    this.ignoreObsoleteResults = false;
 
     this.apiHost = apiAttrs.apiHost;
     this.apiSecret = apiAttrs.apiSecret;
@@ -48,7 +51,7 @@ export default class BaseQuery {
         } else {
           this.executeQuery()
             .then(rawResults => {
-              if (query === this.query) { // ignore obsolete queries
+              if (!(this.ignoreObsoleteResults && this.query !== query)) {
                 resolve(this.processResults(rawResults));
               }
             })
