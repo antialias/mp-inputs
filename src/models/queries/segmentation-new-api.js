@@ -56,7 +56,7 @@ export default class SegmentationQuery extends BaseQuery {
     };
   }
 
-  processResults(results) {
+  processResults(results, originalQuery) {
     // TEMP - While we support both old jql and new api backends, reconcile results
     //        format differences here. Updates to chart render code will be made
     //        in a separate refactor.
@@ -85,7 +85,7 @@ export default class SegmentationQuery extends BaseQuery {
       }
     });
 
-    results.peopleTimeSeries = this.query.isPeopleTimeSeries ? results.series : null;
+    results.peopleTimeSeries = originalQuery.isPeopleTimeSeries ? results.series : null;
 
     return new Result(results);
   }

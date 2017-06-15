@@ -93,11 +93,11 @@ export class TopPeoplePropertiesQuery extends BaseTopPropertiesQuery {
     return `api/2.0/engage/properties`;
   }
 
-  processResults(response) {
+  processResults(response, originalQuery) {
     const properties = super.processResults(response.results);
 
     // TODO @evnp - remove once we have multiple people tables on backend
-    const dataset = this.query.dataset && DATASETS[this.query.dataset];
+    const dataset = originalQuery.dataset && DATASETS[originalQuery.dataset];
     if (dataset && dataset.profileTypes) {
       return new Promise(resolve => {
         const promises = this.profileTypePropertiesPromises

@@ -396,17 +396,17 @@ export default class SegmentationQuery extends BaseQuery {
     return jqlQuery.property && jqlQuery.property.name && jqlQuery.resourceType === `events`;
   }
 
-  processResults(results) {
-    const querySegments = this.query.segments;
+  processResults(results, originalQuery) {
+    const querySegments = originalQuery.segments;
     let headers = querySegments.map(segment => segment.value);
     let series = {};
     let peopleTimeSeries = null;
-    const isEventsQuery = !this.query.isPeopleOnly;
+    const isEventsQuery = !originalQuery.isPeopleOnly;
 
     if (results) {
       // create base date values for all known dates if anything but non-time people query.
       let baseDateResults = {};
-      if (isEventsQuery || this.query.isPeopleTimeSeries) {
+      if (isEventsQuery || originalQuery.isPeopleTimeSeries) {
 
         // LOCALIZING RESULTS
         // TODO move to util + add tests
@@ -421,7 +421,7 @@ export default class SegmentationQuery extends BaseQuery {
             return null;
           }
 
-          if (this.query.isPeopleTimeSeries) {
+          if (originalQuery.isPeopleTimeSeries) {
             // Datetime properties are returned in seconds.
             // Since people time series queries are just groupBys on a date property we need to convert to MS.
             originalTimestamp = originalTimestamp * 1000;
@@ -435,12 +435,12 @@ export default class SegmentationQuery extends BaseQuery {
           };
         }).filter(Boolean);
 
-        const baseDateParams = {unit: this.query.unit};
+        const baseDateParams = {unit: originalQuery.unit};
         if (isEventsQuery) {
           // from dates always start at the beginning of the day
-          baseDateParams.fromDate = moment(localizeTimestamp(this.query.from)).startOf(`day`).valueOf();
+          baseDateParams.fromDate = moment(localizeTimestamp(originalQuery.from)).startOf(`day`).valueOf();
 
-          let toDate = moment(localizeTimestamp(this.query.to));
+          let toDate = moment(localizeTimestamp(originalQuery.to));
           const projectTimeNow = moment(localizedDate({utcOffset: this.utcOffset}));
           if (toDate.diff(projectTimeNow, `days`) === 0) {
             // if the to date is the same day as the project times current day only go up until the project timezone time
@@ -498,11 +498,11 @@ export default class SegmentationQuery extends BaseQuery {
         };
       };
 
-      series = results.reduce(createSeriesReducerFunc({isTimeSeries: !this.query.isPeopleOnly}), {});
-      peopleTimeSeries = this.query.isPeopleTimeSeries ? results.reduce(createSeriesReducerFunc(), {}) : null;
+      series = results.reduce(createSeriesReducerFunc({isTimeSeries: !originalQuery.isPeopleOnly}), {});
+      peopleTimeSeries = originalQuery.isPeopleTimeSeries ? results.reduce(createSeriesReducerFunc(), {}) : null;
     }
 
-    headers = [this.query.isPeopleOnly ? `$people` : `$event`].concat(headers);
+    headers = [originalQuery.isPeopleOnly ? `$people` : `$event`].concat(headers);
 
     return new Result({series, headers, peopleTimeSeries});
   }

@@ -42,7 +42,7 @@ export default class BaseQuery {
   }
 
   run(cachedResult) {
-    const query = this.query;
+    const originalQuery = this.query;
 
     return new Promise((resolve, reject) => {
       if (this.valid) {
@@ -51,14 +51,14 @@ export default class BaseQuery {
         } else {
           this.executeQuery()
             .then(rawResults => {
-              if (!(this.ignoreObsoleteResults && this.query !== query)) {
-                resolve(this.processResults(rawResults));
+              if (!(this.ignoreObsoleteResults && this.query !== originalQuery)) {
+                resolve(this.processResults(rawResults, originalQuery));
               }
             })
             .catch(reject);
         }
       } else {
-        resolve(this.processResults(null));
+        resolve(this.processResults(null, originalQuery));
       }
     });
   }
@@ -133,7 +133,9 @@ export default class BaseQuery {
     console.error(`Error fetching ${url}`, error);
   }
 
-  // expected args: results, query (optional)
+  // expected args: results, orignalQuery (optional)
+  // WARNING: do not reference this.query in processResults as it may
+  //          have changed since the corresponding request was fired
   processResults(results) {
     return results;
   }
