@@ -46,14 +46,8 @@ export class EditControl extends Component {
         isPaneOpen: () => this.isPaneOpen(),
         isRemovable: () => this.isRemovable(),
         removeClause: () => this.remove(),
-        getDatasetDisplayName: () => {
-          // Only show dataset displayName if in first show clause
-          if (this.section === `show` && this.clauseIndex === 0) {
-            return this.app.getDatasetDisplayName();
-          }
-
-          return null;
-        },
+        // Only show dataset displayName if in show clause
+        getDatasetDisplayName: () => (this.section === `show`) ? this.app.getDatasetDisplayName() : null,
       }),
     };
   }
