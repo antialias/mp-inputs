@@ -21,6 +21,7 @@ query-builder-filter
     margin 0 0 20px
     position relative
     width 100%
+
     &:before
       content ""
       display block
@@ -50,6 +51,7 @@ query-builder-filter
 
   .clause.filter
     display inline-flex
+
     &:nth-last-child(2)
       margin-right 8px
 
@@ -98,6 +100,7 @@ builder-filter-add-control
           background-image linear-gradient(0deg, white 0, white 100%)
           box-shadow 0 1px 2px 0 alpha(black, 0.23)
           color blue-300
+
         &:active
           border-color grey-200
           box-shadow 0 1px 0 0 grey-150, inset 0 2px 3px 0 grey-200
@@ -164,6 +167,7 @@ builder-screen-filter-properties-list
     .caret-icon
       opacity 0
       svg-icon-style(mp-blue)
+
     &:hover
       .caret-icon
         opacity 1
@@ -183,6 +187,7 @@ builder-screen-filter-property
       line-height 30px
       padding 0 10px
       text-transform none
+
       &.filter-menu-item-selected
         color grey-900
         font-weight 900
@@ -228,16 +233,20 @@ builder-screen-filter-property
         border-radius 5px
         padding 5px 8px 7px
         width 100%
+
         &:hover
           border-color mp-blue
+
         .filter-prop-name
           font-size 11px
           margin-right auto
+
         svg-icon[empty]
           display none
 
       .filter-menu
         width 100%
+
         .filter-operators
           padding 10px
           text-transform uppercase
@@ -255,6 +264,7 @@ builder-screen-filter-property
           box-sizing border-box
           padding 10px
           width $type-menu-width
+
           .filter-menu-item
             align-items center
             display flex
@@ -262,8 +272,10 @@ builder-screen-filter-property
             text-transform capitalize
             transition color 0.2s
             svg-icon-style(grey-700, mp-blue)
+
             svg-icon
               margin-right 8px
+
           .filter-menu-item-selected
             svg-icon-style(grey-900)
 
@@ -288,11 +300,14 @@ builder-screen-filter-property
         align-items center
         display flex
         margin 23px 10px 10px
+
         &.filter-boolean
           margin 23px 70px
+
         &.filter-list
           border-bottom 1px solid grey-150
           padding-bottom 23px
+
         .radio-button
           flex-grow 1
           justify-content center
@@ -302,24 +317,29 @@ builder-screen-filter-property
         margin-bottom 10px
         padding 0 15px
         width 100%
+
         .filter-string-input
           box-shadow inset-shadow
           color grey-900
           font 500 13px font-helvetica-neue
           padding 10px 0 10px 12px
           width 100%
+
         &.filter-string-search
           margin-bottom 12px
           margin-top 2px
           position relative
           svg-icon-style(grey-500, pos-left: 7px, pos-top: 7px)
+
           svg-icon
             position absolute
+
           input
             padding-left 32px
 
       .filter-string-contains-choices
         padding 5px
+
         li
           border-radius 3px
           color grey-700
@@ -328,12 +348,14 @@ builder-screen-filter-property
           font-weight 500
           line-height 30px
           padding 0 10px
+
           &:hover
             background-color grey-100
             color mp-blue
 
       .filter-string-contains-choices
         padding 5px
+
         li
           border-radius 3px
           color grey-700
@@ -342,6 +364,7 @@ builder-screen-filter-property
           font-weight 500
           line-height 30px
           padding 0 10px
+
           &:hover
             background-color grey-100
             color mp-blue
@@ -388,9 +411,11 @@ builder-screen-filter-property
         line-height 30px
         padding 6px
         box-sizing border-box
+
         &:hover
           background-color grey-100
           color mp-blue
+
           .checkbox-label
             color mp-blue
 
@@ -399,6 +424,7 @@ builder-screen-filter-property
 
         .checkbox-select-icon
           background-color white
+
           &.colored
             background-color mp-blue
             border-color mp-blue
@@ -413,8 +439,10 @@ builder-screen-filter-property
       font-size 14px
       font-weight 900
       height 48px
+
       &:hover
         background-color blue-100
+
       &:active
         background-color mp-blue
         box-shadow 0 1px 1px 0 rgba(0,0,0,0), inset 0 2px 2px 0 rgba(0,0,0,0.2)
@@ -424,6 +452,7 @@ builder-screen-filter-property
   align-items center
   display flex
   control-font()
+
   &::before
     content ''
     border 1px solid grey-200
@@ -432,6 +461,7 @@ builder-screen-filter-property
     height 15px
     margin-right 8px
     width 15px
+
   &.radio-selected::before
     border 6px solid mp-blue
     height 5px
