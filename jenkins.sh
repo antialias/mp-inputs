@@ -10,8 +10,8 @@ export SAUCE_USERNAME=mixpanel
 export SAUCE_ACCESS_KEY=`cat /etc/secrets/saucelabs/access-key`
 
 # run
-npm install
-npm run lint
-npm run build
-npm test
-npm run benchmark
+yarn install
+yarn run lint
+yarn run build
+yarn test
+yarn run benchmark
