@@ -6,15 +6,21 @@ import '../../widgets/resize-input';
 import template from './index.jade';
 import './index.styl';
 
+const EVENT_DEFINITION_TOOLTIP_TAG_NAME = `MP-EVENT-DEFINITION-TOOLTIP-INTERNAL`;
+
 export class EditControl extends Component {
   attachedCallback() {
     super.attachedCallback(...arguments);
     this.app.onClickOutside(this.tagName, `stopBuildingQuery`);
+    this.app.onClickOutside(EVENT_DEFINITION_TOOLTIP_TAG_NAME, `stopBuildingQuery`);
   }
 
   get config() {
     return {
       template,
+      defaultState: {
+        preventCloseSelectors: [EVENT_DEFINITION_TOOLTIP_TAG_NAME],
+      },
       helpers: extend(super.config.helpers, {
         clickedInput: ev => ev.stopPropagation(), // don't close menu!
         clickedLabel: () => {
