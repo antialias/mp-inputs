@@ -49,6 +49,7 @@ document.registerElement(`bar-chart`, class extends Component {
           if (stickyHeader && stickyHeader.isSticky) {
             style.width = `${stickyHeader.chartWidth}px`;
             style.left = `${stickyHeader.chartOffsetLeft - stickyHeader.windowScrollLeft}px`;
+            style.position = `fixed`;
           }
           return style;
         },

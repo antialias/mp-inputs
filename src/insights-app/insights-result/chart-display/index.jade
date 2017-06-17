@@ -1,12 +1,11 @@
 - const hasLegend = $helpers.showLegend();
-- const projectHasData = projectHasEvents || projectHasPeople
 .chart(class={
-  [`${report.displayOptions.chartType}-chart-type`]: !result.isEmptyResult,
+  [`${report.displayOptions.chartType}-chart-type`]: !$helpers.isEmptyResult(),
   'has-legend': hasLegend,
-  'sticky-chart-headers': stickyHeader.isSticky,
+  'sticky-chart-headers': $helpers.isChartHeaderSticky(),
 })
   .main-chart
-    if resultLoading && projectHasData
+    if $helpers.isLoading()
       .chart-loader
         .chart-header-container
           .header-text-container
@@ -15,7 +14,7 @@
             svg-icon(attrs={icon: 'ellipsis'})
         .chart-graph
           mp-spinner
-    else if !projectHasData
+    else if $helpers.isNoDataProject()
       .chart-loader.error-no-data
         .chart-header-container
           .header-text-container
@@ -23,65 +22,63 @@
         .chart-graph
           .chart-error-data-image
           .chart-error-no-data-text We don't have any data for your project.
-    else if result.isEmptyResult()
+    else if $helpers.isEmptyResult()
       .error-no-data
         .chart-graph
           .chart-error-data-image
           .chart-error-no-data-text We couldn't find any data for your query.
-    else
-      case report.displayOptions.chartType
-        when 'bar'
-          .extras-menu-container.chart-control= $component.child('extras-menu')
-          bar-chart(
-            props={
-              chartData: $helpers.processResult(result),
-            }
-            attrs=$helpers.stringifyObjValues({
-              'source': $helpers.getSelectedSource(),
-              'segment-color-map': report.legend.colorMap,
-              'chart-label': $helpers.getChartLabel(),
-              'display-options': $helpers.getDisplayOptions(),
-              'sorting': report.sorting.bar,
-              'legend-change-id': report.legend.changeID,
-              'sticky-header': util.pick(stickyHeader, [`isSticky`,`chartWidth`, `windowScrollLeft`, `chartOffsetLeft`]),
-            })
-            on={
-              change: $helpers.barChartChange,
-            }
-            hook={
-              insert: $helpers.barChartInserted,
-              destroy: $helpers.barChartDestroyed,
-            }
-          )
-        when 'line'
-          .extras-menu-container.chart-control= $component.child('extras-menu')
-          line-chart(
-            props={
-              chartData: $helpers.processResult(result, {flattenedData: true}),
-              utcOffset: $helpers.getUtcOffset(),
-            }
-            attrs=$helpers.stringifyObjValues({
-              'chart-label': $helpers.getChartLabel(),
-              'display-options': $helpers.getDisplayOptions(),
-              'seg-filters': report.legend.getFlattenedFilters(),
-              'segment-color-map': report.legend.flattenedColorMap,
-            })
-          )
-        when 'table'
-          - const resourceDescription = $helpers.getChartLabel();
-          table-chart(
-            props={
-              chartData: util.extend($helpers.processResult(result), {resourceDescription}),
-            }
-            attrs=$helpers.stringifyObjValues({
-              'source': $helpers.getSelectedSource(),
-              'display-options': $helpers.getDisplayOptions(),
-              'sorting': report.sorting.table,
-            })
-            on={
-              change: $helpers.tableChange,
-            }
-          )
+    else if $helpers.isBarChart()
+      .extras-menu-container.chart-control= $component.child('extras-menu')
+      bar-chart(
+        props={
+          chartData: $helpers.processResult(result),
+        }
+        attrs=$helpers.stringifyObjValues({
+          'source': $helpers.getSelectedSource(),
+          'segment-color-map': report.legend.colorMap,
+          'chart-label': $helpers.getChartLabel(),
+          'display-options': $helpers.getDisplayOptions(),
+          'sorting': report.sorting.bar,
+          'legend-change-id': report.legend.changeID,
+          'sticky-header': util.pick(stickyHeader, [`isSticky`,`chartWidth`, `windowScrollLeft`, `chartOffsetLeft`]),
+        })
+        on={
+          change: $helpers.barChartChange,
+        }
+        hook={
+          insert: $helpers.barChartInserted,
+          destroy: $helpers.barChartDestroyed,
+        }
+      )
+    else if $helpers.isLineChart()
+      .extras-menu-container.chart-control= $component.child('extras-menu')
+      line-chart(
+        props={
+          chartData: $helpers.processResult(result, {flattenedData: true}),
+          utcOffset: $helpers.getUtcOffset(),
+        }
+        attrs=$helpers.stringifyObjValues({
+          'chart-label': $helpers.getChartLabel(),
+          'display-options': $helpers.getDisplayOptions(),
+          'seg-filters': report.legend.getFlattenedFilters(),
+          'segment-color-map': report.legend.flattenedColorMap,
+        })
+      )
+    else if $helpers.isTableChart()
+      - const resourceDescription = $helpers.getChartLabel();
+      table-chart(
+        props={
+          chartData: util.extend($helpers.processResult(result), {resourceDescription}),
+        }
+        attrs=$helpers.stringifyObjValues({
+          'source': $helpers.getSelectedSource(),
+          'display-options': $helpers.getDisplayOptions(),
+          'sorting': report.sorting.table,
+        })
+        on={
+          change: $helpers.tableChange,
+        }
+      )
   if hasLegend
     .legend.insights-learn-manipulate-data-disabled(
       style=$helpers.getLegendStyle()

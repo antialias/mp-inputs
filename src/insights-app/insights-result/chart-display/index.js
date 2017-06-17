@@ -39,6 +39,19 @@ document.registerElement(`chart-display`, class extends Component {
     return {
       helpers: {
         getSelectedSource: () => this.app.getSelectedSource(),
+        isNoDataProject: () => !this.state.projectHasEvents && !this.state.projectHasPeople,
+        isLoading: () => this.state.resultLoading && !this.helpers.isNoDataProject(),
+        isEmptyResult: () => this.state.result.isEmptyResult(),
+        isBarChart: () => this.state.report.displayOptions.chartType === `bar`,
+        isLineChart: () => this.state.report.displayOptions.chartType === `line`,
+        isTableChart: () => this.state.report.displayOptions.chartType === `table`,
+        isChartHeaderSticky: () => (
+          this.state.stickyHeader.isSticky &&
+          this.helpers.isBarChart() &&
+          !this.helpers.isLoading() &&
+          !this.helpers.isNoDataProject() &&
+          !this.helpers.isEmptyResult()
+        ),
         getChartLabel: () => {
           let chartLabel = [];
           if (this.state.report.displayOptions.value === `relative`) {
@@ -78,6 +91,7 @@ document.registerElement(`chart-display`, class extends Component {
           if (stickyHeader.isSticky) {
             style.left = `${stickyHeader.chartWidth + stickyHeader.chartOffsetLeft - stickyHeader.windowScrollLeft}px`;
             style.height = `calc(100vh - ${stickyHeader.chartBottomToPageBottom}px)`;
+            style.position = `fixed`;
           }
           return style;
         },
