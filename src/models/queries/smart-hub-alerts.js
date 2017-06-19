@@ -27,7 +27,7 @@ export default class SmartHubAlertsQuery extends BaseQuery {
 
   buildQuery(state) {
     return {
-      alertContentIds: state.report.alertContentIds,
+      alertContentIds: state.report.smartHub.alertContentIds,
     };
   }
 

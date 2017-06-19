@@ -246,7 +246,6 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     const resourceType = defaultQueryPeople ? Clause.RESOURCE_TYPE_PEOPLE : Clause.RESOURCE_TYPE_EVENTS;
 
     return new Report({
-      alertContentIds: [],
       displayOptions: {
         chartType: `bar`,
         plotStyle: `standard`,
@@ -263,6 +262,9 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       }),
       sorting: this.sortConfigFor(null),
       title: ``,
+      smartHub: {
+        alertContentIds: [],
+      },
     });
   }
 
@@ -1632,7 +1634,8 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   }
 
   _fetchSmartHubAlerts() {
-    const alertContentIds = this.state.report.alertContentIds;
+    const report = this.state.report;
+    const alertContentIds = report.smartHub && report.smartHub.alertContentIds;
     if (!this.hasWhitelist(`smart-hub`) || !alertContentIds || !alertContentIds.length) {
       return Promise.resolve([]);
     } else {

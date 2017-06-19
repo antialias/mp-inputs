@@ -20,11 +20,11 @@ export default class Report {
       `title`,
 
       // visualization params
-      `alertContentIds`,
       `displayOptions`,
       `sections`,
       `legend`,
       `sorting`,
+      `smartHub`,
     ]));
     this.userID = this.user_id;
 
@@ -50,11 +50,11 @@ export default class Report {
     const serialized = extend({
       sections: this.sections.serialize(),
     }, pick(this, [
-      `alertContentIds`,
       `displayOptions`,
       `legend`,
       `sorting`,
       `title`,
+      `smartHub`,
     ]));
     if (this.id) {
       serialized.id = this.id;

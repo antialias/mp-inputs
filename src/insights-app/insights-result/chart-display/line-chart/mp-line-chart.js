@@ -301,7 +301,7 @@ export class MPLineChart extends WebComponent {
         }),
         type: highchartsOptions.chart.type,
         visible: this.isSeriesShowing(series.name),
-        headerPath: this.chartDataPaths[series.name],
+        headerPath: this.headerPaths[series.name],
       }))
       .sort(multiPartSortComparator(this._headers, {transform: series => series.headerPath}))
       .map((series, index) => Object.assign(series, {index})); // add sorted index
@@ -333,12 +333,11 @@ export class MPLineChart extends WebComponent {
 
       // Find the time series corresponding to this anomaly
       const series = chartSeries.find(series => {
-        if (!this._hasSingleSeriesTopLevel) {
-          // We do not currently support showing anomalies if there are multiple show clauses
-          return false;
-        }
-        return isEqual(anomaly.insightsDetails.propertyVals, series.headerPath);
+        return isEqual(anomaly.insightsDetails.propertyVals, this.chartDataPaths[series.name].slice(1));
       });
+      if (!series) {
+        return;
+      }
 
       // Find the data point in the time series corresponding to the anomaly
       const matchingDataPointIndex = series.data.findIndex(dataPoint => {
@@ -457,12 +456,14 @@ export class MPLineChart extends WebComponent {
     this.chartDataPaths = chartData.data.paths;
     this._headers = chartData.headers;
     this._segmentColorMap = chartData.segmentColorMap;
-    this._hasSingleSeriesTopLevel = chartData.hasSingleSeriesTopLevel;
 
-    if (this._hasSingleSeriesTopLevel) {
+    if (chartData.hasSingleSeriesTopLevel) {
+      this.headerPaths = {};
       for (const [key, value] of Object.entries(this.chartDataPaths)) {
-        this.chartDataPaths[key] = value.slice(1);
+        this.headerPaths[key] = value.slice(1);
       }
+    } else {
+      this.headerPaths = this.chartDataPaths;
     }
 
     this.renderChartIfChange();
