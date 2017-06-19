@@ -88,7 +88,7 @@ document.registerElement(`chart-display`, class extends Component {
         getLegendStyle: () => {
           const style = {};
           const stickyHeader = this.state.stickyHeader;
-          if (stickyHeader.isSticky) {
+          if (this.helpers.isChartHeaderSticky()) {
             style.left = `${stickyHeader.chartWidth + stickyHeader.chartOffsetLeft - stickyHeader.windowScrollLeft}px`;
             style.height = `calc(100vh - ${stickyHeader.chartBottomToPageBottom}px)`;
             style.position = `fixed`;
