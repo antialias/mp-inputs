@@ -2,7 +2,7 @@ import {extend} from 'mixpanel-common/util';
 
 import BaseQuery from './base';
 
-class SmartHubQuery extends BaseQuery {
+export default class SmartHubAlertsQuery extends BaseQuery {
   fetch(endpoint, params, queryOptions) {
     const fetchOptions = {
       headers: {
@@ -24,9 +24,7 @@ class SmartHubQuery extends BaseQuery {
       })
       .catch(err => this.handleFetchError(err, url));
   }
-}
 
-export class SmartHubGetAlertsByContentIdsQuery extends SmartHubQuery {
   buildQuery(state) {
     return {
       alertContentIds: state.report.alertContentIds,

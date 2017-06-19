@@ -22,7 +22,7 @@ import {TopEventPropertyValuesQuery, TopPeoplePropertyValuesQuery} from '../mode
 import {EventDefinitionsQuery} from '../models/queries/event-definitions';
 import SegmentationQueryOldApi from '../models/queries/segmentation';
 import SegmentationQueryNewApi from '../models/queries/segmentation-new-api';
-import {SmartHubGetAlertsByContentIdsQuery} from '../models/queries/smart-hub';
+import SmartHubAlertsQuery from '../models/queries/smart-hub-alerts';
 import QueryCache from '../models/queries/query-cache';
 import DatasetsQuery from '../models/queries/datasets';
 import Report from '../models/report';
@@ -56,9 +56,6 @@ const TOP = {
 const RECENT = {
   EVENTS: `_recentEvents`,
   PROPERTIES: `_recentProperties`,
-};
-const SMART_HUB = {
-  GET_ALERTS_BY_CONTENT_IDS: `_getAlertsByContentIds`,
 };
 
 document.registerElement(`insights-app`, class InsightsApp extends MPApp {
@@ -461,7 +458,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
         datasets: new DatasetsQuery(apiAttrs),
         segmentation: new SegmentationQueryNewApi(apiAttrs, {utcOffset: this.getUtcOffset()}),
         eventDefinitions: new EventDefinitionsQuery(appApiAttrs),
-        [SMART_HUB.GET_ALERTS_BY_CONTENT_IDS]: new SmartHubGetAlertsByContentIdsQuery(appApiAttrs),
+        smartHubAlerts: new SmartHubAlertsQuery(appApiAttrs),
         [TOP_EVENTS]: new TopEventsQuery(apiAttrs),
         [TOP.EVENTS.PROPERTIES]: new TopEventPropertiesQuery(apiAttrs),
         [TOP.PEOPLE.PROPERTIES]: new TopPeoplePropertiesQuery(apiAttrs),
@@ -1639,7 +1636,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
     if (!this.hasWhitelist(`smart-hub`) || !alertContentIds || !alertContentIds.length) {
       return Promise.resolve([]);
     } else {
-      return this.queries[SMART_HUB.GET_ALERTS_BY_CONTENT_IDS].build(this.state).run();
+      return this.queries.smartHubAlerts.build(this.state).run();
     }
   }
 

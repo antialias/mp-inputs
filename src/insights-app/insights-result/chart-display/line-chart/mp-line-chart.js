@@ -1,4 +1,5 @@
 /* global Highcharts */
+import isEqual from 'lodash/isEqual';
 import partition from 'lodash/partition';
 import WebComponent from 'webcomponent';
 
@@ -329,57 +330,49 @@ export class MPLineChart extends WebComponent {
     const anomalyAlerts = this._anomalyAlerts || [];
     anomalyAlerts.forEach(anomalyAlert => {
       const anomaly = anomalyAlert.anomaly;
-      chartSeries.find(series => {
-        if (!anomaly.insightsDetails || !anomaly.insightsDetails.propertyVals) {
-          return;
-        }
 
-        // The first entry in headerPath is show clause, which can be ignored because anomalies are only
-        // supported for single show clause.
-        const headerPathOffset = this._hasSingleSeriesTopLevel ? 0 : 1;
-        const propertyVals = anomaly.insightsDetails.propertyVals;
-        if (series.headerPath.length !== propertyVals.length + headerPathOffset) {
-          return;
+      // Find the time series corresponding to this anomaly
+      const series = chartSeries.find(series => {
+        if (!this._hasSingleSeriesTopLevel) {
+          // We do not currently support showing anomalies if there are multiple show clauses
+          return false;
         }
-        const isMatchingSeries = propertyVals.every((propertyVal, index) => {
-          return propertyVal === series.headerPath[index + headerPathOffset];
-        });
-        if (!isMatchingSeries) {
-          return;
-        }
-
-        const matchingDataPointIndex = series.data.findIndex(dataPoint => {
-          return anomaly.anomalyTimestamp === dataPoint[0];
-        });
-        if (matchingDataPointIndex === -1) {
-          return;
-        }
-
-        const anomalyIcon = anomaly.direction === `NEGATIVE` ? anomalyDownIcon : anomalyUpIcon;
-        const dataPoint = series.data[matchingDataPointIndex];
-        series.data[matchingDataPointIndex] = {
-          cursor: `pointer`,
-          marker: {
-            enabled: true,
-            symbol: `url(${anomalyIcon})`,
-          },
-          x: dataPoint[0],
-          y: dataPoint[1],
-          events: {
-            click(ev) {
-              component.dispatchEvent(new CustomEvent(`clickedAnomaly`, {
-                detail: {
-                  offsetEl: ev.target,
-                  anomalyAlert,
-                },
-              }));
-            },
-            mouseOver() {
-              this.graphic.element.style.cursor = `pointer`;
-            },
-          },
-        };
+        return isEqual(anomaly.insightsDetails.propertyVals, series.headerPath);
       });
+
+      // Find the data point in the time series corresponding to the anomaly
+      const matchingDataPointIndex = series.data.findIndex(dataPoint => {
+        return anomaly.anomalyTimestamp === dataPoint[0];
+      });
+      if (matchingDataPointIndex === -1) {
+        return;
+      }
+
+      // Replace the data point with the anomaly
+      const anomalyIcon = anomaly.direction === `NEGATIVE` ? anomalyDownIcon : anomalyUpIcon;
+      const dataPoint = series.data[matchingDataPointIndex];
+      series.data[matchingDataPointIndex] = {
+        cursor: `pointer`,
+        marker: {
+          enabled: true,
+          symbol: `url(${anomalyIcon})`,
+        },
+        x: dataPoint[0],
+        y: dataPoint[1],
+        events: {
+          click(ev) {
+            component.dispatchEvent(new CustomEvent(`clickedAnomaly`, {
+              detail: {
+                offsetEl: ev.target,
+                anomalyAlert,
+              },
+            }));
+          },
+          mouseOver() {
+            this.graphic.element.style.cursor = `pointer`;
+          },
+        },
+      };
     });
   }
 
@@ -409,9 +402,9 @@ export class MPLineChart extends WebComponent {
       return;
     }
 
+    // Before HighCharts 5.0, there's no way to dynamically update options. Create new HighCharts with
+    // modified options based on answer here: https://stackoverflow.com/a/18402973.
     if (this._disableChartInteractions) {
-      // Before HighCharts 5.0, there's no way to dynamically update options. Create new HighCharts with
-      // modified options based on answer here: https://stackoverflow.com/a/18402973.
       const options = this.highchart.options;
       options.plotOptions.line.marker.states.hover.enabled = false;
       options.plotOptions.series.marker.states.hover.enabled = false;
@@ -425,7 +418,7 @@ export class MPLineChart extends WebComponent {
       options.plotOptions.line.marker.states.hover.enabled = defaultOptions.plotOptions.line.marker.states.hover.enabled;
       options.plotOptions.series.marker.states.hover.enabled = defaultOptions.plotOptions.series.marker.states.hover.enabled;
       options.tooltip = defaultOptions.tooltip;
-      options.xAxis[0].crosshair = defaultOptions.xAxis[0].crosshair;
+      options.xAxis[0].crosshair = defaultOptions.xAxis.crosshair;
       this.highchart = new Highcharts.Chart(options);
       // Wait until the highcharts is re-rendered before re-enabling animations. Otherwise, it will
       // animate the re-render.

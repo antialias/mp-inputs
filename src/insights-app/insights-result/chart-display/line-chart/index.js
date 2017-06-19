@@ -20,7 +20,7 @@ document.registerElement(`line-chart`, class extends Component {
             const focusedAnomaly = {anomalyAlert};
 
             const offsetElRect = ev.detail.offsetEl.getBoundingClientRect();
-            focusedAnomaly.offsetLeft = document.body.scrollLeft + offsetElRect.left + offsetElRect.width/2;
+            focusedAnomaly.offsetLeft = document.body.scrollLeft + offsetElRect.left + offsetElRect.width / 2;
             const anomalyDirection = anomalyAlert.anomaly.direction;
             if (anomalyDirection === `NEGATIVE`) {
               focusedAnomaly.placement = `bottom`;

@@ -145,7 +145,10 @@ document.registerElement(`chart-display`, class extends Component {
             ));
           }
 
-          processed.anomalyAlerts = this.state.smartHubAlerts.filter(smartHubAlert => !!smartHubAlert.anomaly);
+          processed.anomalyAlerts = this.state.smartHubAlerts.filter(smartHubAlert => {
+            const anomaly = smartHubAlert.anomaly;
+            return anomaly && anomaly.insightsDetails;
+          });
 
           return processed;
         },
