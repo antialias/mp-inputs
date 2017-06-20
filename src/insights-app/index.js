@@ -1015,7 +1015,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
 
   getDatasetDisplayName() {
     if (this.hasDatasets()) {
-      const dataset = this.getSelectedDataset();
+      const dataset = this.getDataset();
       if (dataset) {
         return this.state.datasets[dataset].displayName;
       }
