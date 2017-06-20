@@ -14,7 +14,7 @@ include ../mixins.jade
         progressive: true,
         'search-filter': contextFilter,
         'sections': JSON.stringify($helpers.getPropertySections()),
-        'empty-message': $component.isShowingNonNumericProperties() ? `No properties available` : `No non-numeric properties available`,
+        'empty-message': $component.isShowingNonNumericProperties() ? `No properties available` : `No numeric properties available`,
       }
       on={
         clickItem: $helpers.clickedProperty,
@@ -22,6 +22,6 @@ include ../mixins.jade
       }
     )
     if !loading
-      +screen-footer-button(($component.isShowingNonNumericProperties() ? `Hide` : `View all`) + ` non-numeric properties`, {
+      +screen-footer-button(($component.isShowingNonNumericProperties() ? `Show numeric properties only` : `Show all properties`), {
         onclick: $helpers.toggleNonNumericProperties,
       })
