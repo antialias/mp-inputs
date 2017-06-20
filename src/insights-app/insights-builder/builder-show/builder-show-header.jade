@@ -1,6 +1,9 @@
 include ../../mixins.jade
 
-- const hasProperty = $helpers.hasNumericProperty()
+- const hasProperty = $helpers.hasProperty()
+- const isEvent = $helpers.isEvent()
+- const hasEventProperty = isEvent && hasProperty
+- const isRemovable = $helpers.isRemovable() || hasEventProperty
 - const open = $helpers.isOpen()
 
 .query-builder-show-header
@@ -13,10 +16,10 @@ include ../../mixins.jade
         .active-math-header(on={click: $helpers.headerClicked})
           .header-word= $helpers.getCurrentMathChoice()
           svg-icon.math-caret(attrs={icon: 'caret-down'})
-    if $helpers.isRemovable() || hasProperty
+    if isRemovable
       button.remove(
         style={left: $helpers.buttonPositionStyle()}
-        on={click: hasProperty ? ev => $helpers.removeProperty(ev) : ev => $helpers.removeClause(ev)}
+        on={click: hasEventProperty ? ev => $helpers.removeProperty(ev) : ev => $helpers.removeClause(ev)}
       )
         svg-icon(attrs={icon: 'x'})
   .drop-menu
