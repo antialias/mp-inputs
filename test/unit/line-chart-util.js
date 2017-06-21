@@ -48,7 +48,7 @@ describe(`dataObjectToSortedSeries`, () => {
 
 describe(`generateChangeId`, () => {
   it(`does not generate ID for no params`, () => {
-    expect(generateChangeId({})).to.be.null;
+    expect(generateChangeId({})).to.eql(null);
   });
 
   it(`does not generate ID for missing params`, () => {
@@ -57,7 +57,7 @@ describe(`generateChangeId`, () => {
       displayOptions: {analysis: 'analysis', plotStyle: 'plotStyle'},
       segmentColorMap: {},
       utcOffset: 38,
-    })).to.be.null;
+    })).to.eql(null);
   });
 
   it(`does not generate ID for a null value`, () => {
@@ -67,7 +67,7 @@ describe(`generateChangeId`, () => {
       headers: ['$events'],
       segmentColorMap: {segment: 'color'},
       utcOffset: 38,
-    })).to.be.null;
+    })).to.eql(null);
   });
 
   it(`generates ID when all params exist`, () => {
@@ -87,7 +87,7 @@ describe(`generateChangeId`, () => {
       headers: [],
       segmentColorMap: {segment: 'color'},
       utcOffset: 38,
-    })).to.eql(`0-38-false-true-true-false--`)
+    })).to.eql(`0-38-false-true-true-false--`);
   });
 
   it(`produces the same IDs for the unchanged objects`, () => {

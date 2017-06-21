@@ -56,6 +56,6 @@ export function generateChangeId(attrs={}) {
     timeUnit,
     value,
   ];
-  const allAttributesExist = changeAttrs.every(attr => typeof attr !== `undefined` || attr !== null);
+  const allAttributesExist = changeAttrs.every(attr => typeof attr !== `undefined` && attr !== null);
   return allAttributesExist ? changeAttrs.join(`-`) : null;
 }
