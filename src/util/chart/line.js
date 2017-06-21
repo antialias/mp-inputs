@@ -45,12 +45,14 @@ export function dataObjectToSortedSeries(chartData) {
 export function generateChangeId(attrs={}) {
   const {analysis, plotStyle, value, timeUnit} = attrs.displayOptions || {};
   const colorMapKey = attrs.segmentColorMap ? !!attrs.segmentColorMap : attrs.segmentColorMap;
+  const disableChartInteractions = attrs.disableChartInteractions;
   const headers = attrs.headers ? !!attrs.headers : attrs.headers;
   const changeAttrs = [
     attrs.dataId,
     attrs.utcOffset,
     analysis,
     colorMapKey,
+    disableChartInteractions,
     headers,
     plotStyle,
     timeUnit,

@@ -262,9 +262,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       }),
       sorting: this.sortConfigFor(null),
       title: ``,
-      smartHub: {
-        alertContentIds: [],
-      },
+      smartHub: null,
     });
   }
 
@@ -1492,6 +1490,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
       }
 
       this.updateReport(reportAttrs);
+      this._removeSmartHubAlerts();
       this.query();
     }
 
@@ -1504,6 +1503,7 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   updateSection(section) {
     const sections = this.state.report.sections.replaceSection(section);
     this.updateReport({sections});
+    this._removeSmartHubAlerts();
     this.query();
   }
 
@@ -1636,11 +1636,16 @@ document.registerElement(`insights-app`, class InsightsApp extends MPApp {
   _fetchSmartHubAlerts() {
     const report = this.state.report;
     const alertContentIds = report.smartHub && report.smartHub.alertContentIds;
-    if (!this.hasWhitelist(`smart-hub`) || !alertContentIds || !alertContentIds.length) {
+    if (!this.hasProjectFeatureFlag(`smart_hub`) || !alertContentIds || !alertContentIds.length) {
       return Promise.resolve([]);
     } else {
       return this.queries.smartHubAlerts.build(this.state).run();
     }
+  }
+
+  _removeSmartHubAlerts() {
+    this.updateReport({smartHub: null});
+    this.update({smartHubAlerts: []});
   }
 
   query({useCache=false, displayOptions={}}={}) {

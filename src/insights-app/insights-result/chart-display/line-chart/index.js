@@ -19,6 +19,9 @@ document.registerElement(`line-chart`, class extends Component {
           } else {
             const focusedAnomaly = {anomalyAlert};
 
+            // TODO(mack): Figure out why the element's client rect doesn't have width/height when click is
+            // manually triggered on Highchart's load event. This is causing the tooltip to be misaligned
+            // relative to the anomaly icon.
             const offsetElRect = ev.detail.offsetEl.getBoundingClientRect();
             focusedAnomaly.offsetLeft = document.body.scrollLeft + offsetElRect.left + offsetElRect.width / 2;
             const anomalyDirection = anomalyAlert.anomaly.direction;

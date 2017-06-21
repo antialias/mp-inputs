@@ -30,6 +30,7 @@ Highcharts.setOptions({
 export class MPLineChart extends WebComponent {
   attachedCallback() {
     this.initialized = true;
+    this._disableChartInteractions = false;
     this.el = document.createElement(`div`);
     this.el.className = `mp-highcharts-container`;
     this.appendChild(this.el);
@@ -39,9 +40,6 @@ export class MPLineChart extends WebComponent {
     if (attrName === `seg-filters`) {
       this._segFilters = JSON.parse(newVal);
       this.updateShowHideSeries();
-    } else if (attrName === `disable-chart-interactions`) {
-      this._disableChartInteractions = this.getJSONAttribute(attrName);
-      this.updateChartInteractions();
     }
   }
 
@@ -106,7 +104,14 @@ export class MPLineChart extends WebComponent {
     };
   }
 
-  defaultHighchartsOptions() {
+  renderChart() {
+    if (!this.chartData || !this.initialized || !this._displayOptions || !this._changeId) {
+      return;
+    }
+
+    var component = this;
+
+    const displayOptions = this._displayOptions || {};
     const axisOptions = {
       endOnTick: false,
       lineWidth: 1,
@@ -115,16 +120,25 @@ export class MPLineChart extends WebComponent {
       maxPadding: 0,
       startOnTick: true,
     };
-    return {
+    const highchartsOptions = {
       chart: {
         backgroundColor: `rgba(255,255,255,0)`,
         borderRadius: 0,
         events: {
+          load() {
+            if (!component._initialLoad && component._firstAnomalyLocation) {
+              // Open the tooltip for the first anomaly when the chart is initially loaded.
+              this.series[component._firstAnomalyLocation.seriesIndex]
+                .data[component._firstAnomalyLocation.dataPointIndex]
+                .firePointEvent(`click`);
+            }
+            component._initialLoad = true;
+          },
           redraw: killLastGridline,
-          click: ev => {
+          click(ev) {
             // This is necessary to bubble the event to ancestors. I think it's because the original click
             // event is triggered within svg element, and stops bubbling at the svg boundary.
-            this.dispatchEvent(new MouseEvent(ev.type, ev));
+            component.dispatchEvent(new MouseEvent(ev.type, ev));
           },
         },
         marginTop: 0,
@@ -166,7 +180,7 @@ export class MPLineChart extends WebComponent {
             enabled: false,
             states: {
               hover: {
-                enabled: true,
+                enabled: !this._disableChartInteractions,
               },
             },
             lineColor: `#fff`,
@@ -184,9 +198,9 @@ export class MPLineChart extends WebComponent {
           turboThreshold: 0,
         },
         series: {
-          animation: {
-            duration: 300,
-          },
+          // TODO(mack): Currently, this results in a "flickering" effect when animations are re-enabled after
+          // being disabled.
+          animation: this._disableChartInteractions ? false : {duration: 300},
           events: {
             mouseOver() {
               // TODO(mack): this.group.toFront() doesn't seem to do anything. Is this necessary?
@@ -200,7 +214,7 @@ export class MPLineChart extends WebComponent {
             enabled: false,
             states: {
               hover: {
-                enabled: true,
+                enabled: !this._disableChartInteractions,
               },
             },
             lineWidth: 1, // TODO: bring marker above line. issue from toFront()
@@ -215,7 +229,7 @@ export class MPLineChart extends WebComponent {
         text: null,
       },
 
-      tooltip: {
+      tooltip: this._disableChartInteractions ? {enabled: false} : {
         backgroundColor: `#fff`,
         borderWidth: 0,
         formatter: this.tooltipFormatter(),
@@ -224,7 +238,7 @@ export class MPLineChart extends WebComponent {
       },
 
       xAxis: util.extend(axisOptions, {
-        crosshair: true,
+        crosshair: !this._disableChartInteractions,
         labels: {
           formatter: this.xAxisFormatter(),
           style: {
@@ -264,15 +278,6 @@ export class MPLineChart extends WebComponent {
         showLastLabel: false,
       }),
     };
-  }
-
-  renderChart() {
-    if (!this.chartData || !this.initialized || !this._displayOptions || !this._changeId) {
-      return;
-    }
-
-    const displayOptions = this._displayOptions || {};
-    const highchartsOptions = this.defaultHighchartsOptions();
 
     if (displayOptions.plotStyle === `stacked`) {
       highchartsOptions.plotOptions.series.stacking = `normal`;
@@ -306,11 +311,11 @@ export class MPLineChart extends WebComponent {
       .sort(multiPartSortComparator(this._headers, {transform: series => series.headerPath}))
       .map((series, index) => Object.assign(series, {index})); // add sorted index
 
-
     const [showingSeries, hiddenSeries] = partition(chartSeries, s => s.visible);
 
     this.updateChartSeriesWithAnomalies(showingSeries);
 
+    // Rendering is EXPENSIVE. Start the Chart with only visible series. updateShowHideSeries adds series to the Chart as needed.
     highchartsOptions.series = showingSeries;
     this.showingSeriesNames = new Set(showingSeries.map(series => series.name));
 
@@ -327,11 +332,15 @@ export class MPLineChart extends WebComponent {
   updateChartSeriesWithAnomalies(chartSeries) {
     const component = this;
 
+    this._firstAnomalyLocation = null;
     const anomalyAlerts = this._anomalyAlerts || [];
     anomalyAlerts.forEach(anomalyAlert => {
       const anomaly = anomalyAlert.anomaly;
 
       // Find the time series corresponding to this anomaly
+      const seriesIndex = chartSeries.findIndex(series => {
+        return isEqual(anomaly.insightsDetails.propertyVals, this.chartDataPaths[series.name].slice(1));
+      });
       const series = chartSeries.find(series => {
         return isEqual(anomaly.insightsDetails.propertyVals, this.chartDataPaths[series.name].slice(1));
       });
@@ -340,17 +349,25 @@ export class MPLineChart extends WebComponent {
       }
 
       // Find the data point in the time series corresponding to the anomaly
-      const matchingDataPointIndex = series.data.findIndex(dataPoint => {
+      const dataPointIndex = series.data.findIndex(dataPoint => {
         return anomaly.anomalyTimestamp === dataPoint[0];
       });
-      if (matchingDataPointIndex === -1) {
+      if (dataPointIndex === -1) {
         return;
       }
 
       // Replace the data point with the anomaly
       const anomalyIcon = anomaly.direction === `NEGATIVE` ? anomalyDownIcon : anomalyUpIcon;
-      const dataPoint = series.data[matchingDataPointIndex];
-      series.data[matchingDataPointIndex] = {
+      const dataPoint = series.data[dataPointIndex];
+
+      if (!this._firstAnomalyLocation) {
+        this._firstAnomalyLocation = {
+          seriesIndex,
+          dataPointIndex,
+        };
+      }
+
+      series.data[dataPointIndex] = {
         cursor: `pointer`,
         marker: {
           enabled: true,
@@ -359,10 +376,10 @@ export class MPLineChart extends WebComponent {
         x: dataPoint[0],
         y: dataPoint[1],
         events: {
-          click(ev) {
+          click() {
             component.dispatchEvent(new CustomEvent(`clickedAnomaly`, {
               detail: {
-                offsetEl: ev.target,
+                offsetEl: this.graphic.element,
                 anomalyAlert,
               },
             }));
@@ -396,35 +413,6 @@ export class MPLineChart extends WebComponent {
     this.highchart.redraw();
   }
 
-  updateChartInteractions() {
-    if (!this.highchart) {
-      return;
-    }
-
-    // Before HighCharts 5.0, there's no way to dynamically update options. Create new HighCharts with
-    // modified options based on answer here: https://stackoverflow.com/a/18402973.
-    if (this._disableChartInteractions) {
-      const options = this.highchart.options;
-      options.plotOptions.line.marker.states.hover.enabled = false;
-      options.plotOptions.series.marker.states.hover.enabled = false;
-      options.plotOptions.series.animation = false;
-      options.tooltip = {enabled: false};
-      options.xAxis[0].crosshair = false;
-      this.highchart = new Highcharts.Chart(options);
-    } else {
-      const options = this.highchart.options;
-      const defaultOptions = this.defaultHighchartsOptions();
-      options.plotOptions.line.marker.states.hover.enabled = defaultOptions.plotOptions.line.marker.states.hover.enabled;
-      options.plotOptions.series.marker.states.hover.enabled = defaultOptions.plotOptions.series.marker.states.hover.enabled;
-      options.tooltip = defaultOptions.tooltip;
-      options.xAxis[0].crosshair = defaultOptions.xAxis.crosshair;
-      this.highchart = new Highcharts.Chart(options);
-      // Wait until the highcharts is re-rendered before re-enabling animations. Otherwise, it will
-      // animate the re-render.
-      this.highchart.options.plotOptions.series.animation = defaultOptions.plotOptions.series.animation;
-    }
-  }
-
   get chartData() {
     return this._chartData;
   }
@@ -436,6 +424,7 @@ export class MPLineChart extends WebComponent {
 
   renderChartIfChange() {
     const changeId = generateChangeId({
+      disableChartInteractions: this._disableChartInteractions,
       dataId: this._dataId,
       displayOptions: this._displayOptions,
       headers: this._headers,
@@ -456,6 +445,7 @@ export class MPLineChart extends WebComponent {
     this.chartDataPaths = chartData.data.paths;
     this._headers = chartData.headers;
     this._segmentColorMap = chartData.segmentColorMap;
+    this._disableChartInteractions = chartData.disableChartInteractions || false;
 
     if (chartData.hasSingleSeriesTopLevel) {
       this.headerPaths = {};

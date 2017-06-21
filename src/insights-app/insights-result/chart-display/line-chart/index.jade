@@ -10,6 +10,7 @@
           data,
           dataId,
           displayOptions,
+          disableChartInteractions: !!focusedAnomaly,
           hasSingleSeriesTopLevel,
           headers,
           segmentColorMap,
@@ -18,7 +19,6 @@
       }
       attrs={
         'seg-filters': JSON.stringify(segFilters),
-        'disable-chart-interactions': !!focusedAnomaly,
       }
       on={
         clickedAnomaly: $helpers.handleClickedAnomaly
