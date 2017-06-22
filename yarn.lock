@@ -3460,7 +3460,7 @@ lodash@3.9.3, lodash@~3.9.3:
   version "3.9.3"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.9.3.tgz#0159e86832feffc6d61d852b12a953b99496bd32"
 
-lodash@4.15.0:
+lodash@4.15.0, lodash@^4.0.0, lodash@^4.2.0, lodash@^4.6.1:
   version "4.15.0"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.15.0.tgz#3162391d8f0140aa22cf8f6b3c34d6b7f63d3aa9"
 
@@ -3468,7 +3468,7 @@ lodash@^3.0.0, lodash@^3.0.1, lodash@^3.10.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.0, lodash@^4.14.0, lodash@^4.16.4, lodash@^4.16.6, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.3.0, lodash@^4.6.1:
+lodash@^4.14.0, lodash@^4.16.4, lodash@^4.16.6, lodash@^4.17.4, lodash@^4.3.0:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -3674,9 +3674,9 @@ mixpanel-browser@2.11.1:
   version "2.11.1"
   resolved "https://registry.yarnpkg.com/mixpanel-browser/-/mixpanel-browser-2.11.1.tgz#1f6eba38edcc124013e4825c3f3c427db6765633"
 
-mixpanel-common@0.94.0:
-  version "0.94.0"
-  resolved "https://registry.yarnpkg.com/mixpanel-common/-/mixpanel-common-0.94.0.tgz#1dcf2b84334965832eb942c2da68d7fa650070cc"
+mixpanel-common@0.96.0:
+  version "0.96.0"
+  resolved "https://registry.yarnpkg.com/mixpanel-common/-/mixpanel-common-0.96.0.tgz#26b15f5af6eeee9909128d13c82803882f263f8e"
   dependencies:
     jsurl "0.1.5"
     lodash "^4.17.4"

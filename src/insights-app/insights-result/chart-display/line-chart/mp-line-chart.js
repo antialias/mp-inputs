@@ -338,16 +338,15 @@ export class MPLineChart extends WebComponent {
       const anomaly = anomalyAlert.anomaly;
 
       // Find the time series corresponding to this anomaly
-      const seriesIndex = chartSeries.findIndex(series => {
-        return isEqual(anomaly.insightsDetails.propertyVals, this.chartDataPaths[series.name].slice(1));
-      });
-      const series = chartSeries.find(series => {
-        return isEqual(anomaly.insightsDetails.propertyVals, this.chartDataPaths[series.name].slice(1));
-      });
-      if (!series) {
+      const seriesIndex = chartSeries.findIndex(series => isEqual(
+        anomaly.insightsDetails.propertyVals,
+        this.chartDataPaths[series.name].slice(1)
+      ));
+      if (seriesIndex === -1) {
         return;
       }
 
+      const series = chartSeries[seriesIndex];
       // Find the data point in the time series corresponding to the anomaly
       const dataPointIndex = series.data.findIndex(dataPoint => {
         return anomaly.anomalyTimestamp === dataPoint[0];
@@ -356,16 +355,16 @@ export class MPLineChart extends WebComponent {
         return;
       }
 
-      // Replace the data point with the anomaly
-      const anomalyIcon = anomaly.direction === `NEGATIVE` ? anomalyDownIcon : anomalyUpIcon;
-      const dataPoint = series.data[dataPointIndex];
-
       if (!this._firstAnomalyLocation) {
         this._firstAnomalyLocation = {
           seriesIndex,
           dataPointIndex,
         };
       }
+
+      // Replace the data point with the anomaly
+      const anomalyIcon = anomaly.direction === `NEGATIVE` ? anomalyDownIcon : anomalyUpIcon;
+      const dataPoint = series.data[dataPointIndex];
 
       series.data[dataPointIndex] = {
         cursor: `pointer`,

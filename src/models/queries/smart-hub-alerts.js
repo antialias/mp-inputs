@@ -32,7 +32,7 @@ export default class SmartHubAlertsQuery extends BaseQuery {
   }
 
   buildUrl() {
-    return `api/app/smart_hub/${this.projectId}/get_alerts_by_content_ids`;
+    return `api/app/projects/${this.projectId}/smart-hub-alerts/get_alerts_by_content_ids`;
   }
 
   buildParams() {
