@@ -1,6 +1,5 @@
 import isEqual from 'lodash/isEqual';
 import {
-  flattenNestedObjectToPath,
   nestedObjectCumulative,
   nestedObjectRolling,
   pick,
@@ -11,9 +10,6 @@ let resultID = 0;
 export default class Result {
   constructor(attrs) {
     Object.assign(this, pick(attrs, [`headers`, `series`, `peopleTimeSeries`]));
-    // TODO: should be able to short-circuit this if we see a non-zero value
-    let flattenedSeries = flattenNestedObjectToPath(this.series, {flattenValues: true});
-    this._isEmptyResult = !Object.keys(flattenedSeries.values).length;
     this.id = resultID++;
   }
 
@@ -26,7 +22,7 @@ export default class Result {
   }
 
   isEmptyResult() {
-    return this._isEmptyResult;
+    return !Object.keys(this.series).length;
   }
 
   transformed(options) {

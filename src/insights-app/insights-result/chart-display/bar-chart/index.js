@@ -179,7 +179,7 @@ document.registerElement(`bar-chart`, class extends Component {
     const chartPercentMax = 100 * Math.max(...rows.map(series => {
       const seriesValues = series[series.length - 1];
       const seriesSum = util.sum(seriesValues);
-      return Math.max(...seriesValues.map(value => value / seriesSum));
+      return Math.max(...seriesValues.map(value => (value / seriesSum) || 0));
     }));
 
     sortConfig = util.extend(sortConfig, {hideFirstSort: displayOptions.plotStyle === `stacked` && rows.length === 1});

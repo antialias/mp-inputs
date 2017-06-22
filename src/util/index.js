@@ -208,7 +208,7 @@ export function combineNestedObjKeys(obj, accum={}) {
 }
 
 /**
- * Sum the leaf values of a nested object, but filter out those whose value is 0.
+ * Sum the leaf values of a nested object,
  * constructing a new object with depth 1 less than the original
  */
 export function nestedObjectSum(obj) {
@@ -218,8 +218,7 @@ export function nestedObjectSum(obj) {
     return sum;
   } else {
     return objectFromPairs(Object.keys(obj)
-      .map(key => [key, nestedObjectSum(obj[key])])
-      .filter(key => key[1] !== 0));
+      .map(key => [key, nestedObjectSum(obj[key])]));
   }
 }
 

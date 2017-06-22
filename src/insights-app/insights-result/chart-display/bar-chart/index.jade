@@ -93,7 +93,7 @@ mixin chart-bar(options={})
                             if hoverTooltip.showTooltip && hoverTooltip.rowIdx === rowIndex && hoverTooltip.cellIdx === title
                               - const segmentColorClassName = `segment-color-${segmentColorMap[value]}`
                               - const count = row[lastCellIdx][valueIndex]
-                              - const percent = count / segmentSum
+                              - const percent = (count / segmentSum) || 0
                               +tooltip(segmentColorClassName, isMultiColor, title, count, percent)
               else
                 td.chart-data
@@ -112,9 +112,9 @@ mixin chart-bar(options={})
                       else
                         - segmentMax = Math.max(...segmentCell)
                     each value, valueIndex in cell
-                      - const percent = value / segmentSum
+                      - const percent = (value / segmentSum) || 0
                       - const percentValueString = util.formatPercent(percent)
-                      - const widthAsPercentage = (isLogarithmic ? Math.log10(value) : value) / segmentMax
+                      - const widthAsPercentage = (isLogarithmic ? Math.log10(value) : value) / segmentMax) || 0
                       - const segmentName = row[cellIndex - 1][valueIndex];
                       - const formattedSegmentName = $helpers.renameSeriesValue(headersToDisplay[cellIndex - 1], segmentName)
                       - const segmentColorClassName = `segment-color-${segmentColorMap[segmentName]}`
