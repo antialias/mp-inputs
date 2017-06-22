@@ -10,6 +10,7 @@ let resultID = 0;
 export default class Result {
   constructor(attrs) {
     Object.assign(this, pick(attrs, [`headers`, `series`, `peopleTimeSeries`]));
+    this._isEmptyResult = !Object.keys(this.series).length;
     this.id = resultID++;
   }
 
@@ -22,7 +23,7 @@ export default class Result {
   }
 
   isEmptyResult() {
-    return !Object.keys(this.series).length;
+    return this._isEmptyResult;
   }
 
   transformed(options) {
