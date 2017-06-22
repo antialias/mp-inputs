@@ -31,6 +31,7 @@ describe('Legend', function() {
         'Windows Firefox': true,
         'Mac OS X Firefox': true,
         'Windows Opera': true,
+        'Mac OS X Opera': true
       });
     });
 
@@ -51,6 +52,7 @@ describe('Legend', function() {
         'Windows Firefox',
         'Mac OS X Firefox',
         'Windows Opera',
+        'Mac OS X Opera',
       ]);
     });
 

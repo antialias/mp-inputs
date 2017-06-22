@@ -152,6 +152,7 @@ describe(`flattenNestedObjectToPath`, () => {
       values:{
         'Mac OS X Chrome': 6147,
         'Mac OS X Firefox': 231,
+        'Mac OS X Opera': 0,
         'Mac OS X Safari': 1367,
         'Windows Chrome': 3674,
         'Windows Firefox': 369,
@@ -245,6 +246,7 @@ describe(`flattenNestedObjectToPath`, () => {
         'Viewed Report Windows Firefox': 369,
         'Viewed Report Windows Opera': 5,
         'Viewed Signup Linux Firefox': 231,
+        'Viewed Signup Linux Safari': 0,
         'Viewed Signup Windows Chrome': 3674,
         'Viewed Signup Windows Firefox': 369,
       },
@@ -270,6 +272,7 @@ describe(`flattenNestedObjectToPath`, () => {
       values: {
         '1) Mac OS X, 2) Chrome': 6147,
         '1) Mac OS X, 2) Firefox': 231,
+        '1) Mac OS X, 2) Opera': 0,
         '1) Mac OS X, 2) Safari': 1367,
         '1) Windows, 2) Chrome': 3674,
         '1) Windows, 2) Firefox': 369,
