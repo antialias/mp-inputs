@@ -114,7 +114,7 @@ mixin chart-bar(options={})
                     each value, valueIndex in cell
                       - const percent = (value / segmentSum) || 0
                       - const percentValueString = util.formatPercent(percent)
-                      - const widthAsPercentage = (isLogarithmic ? Math.log10(value) : value) / segmentMax) || 0
+                      - const widthAsPercentage = ((isLogarithmic ? Math.log10(value) : value) / segmentMax) || 0
                       - const segmentName = row[cellIndex - 1][valueIndex];
                       - const formattedSegmentName = $helpers.renameSeriesValue(headersToDisplay[cellIndex - 1], segmentName)
                       - const segmentColorClassName = `segment-color-${segmentColorMap[segmentName]}`
