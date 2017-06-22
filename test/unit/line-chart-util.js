@@ -54,6 +54,7 @@ describe(`generateChangeId`, () => {
   it(`does not generate ID for missing params`, () => {
     expect(generateChangeId({
       dataId: 17,
+      disableChartInteractions: false,
       displayOptions: {analysis: 'analysis', plotStyle: 'plotStyle'},
       segmentColorMap: {},
       utcOffset: 38,
@@ -63,6 +64,7 @@ describe(`generateChangeId`, () => {
   it(`does not generate ID for a null value`, () => {
     expect(generateChangeId({
       dataId: 17,
+      disableChartInteractions: false,
       displayOptions: {analysis: 'analysis', plotStyle: 'plotStyle', value: null, timeUnit: 'timeUnit'},
       headers: ['$events'],
       segmentColorMap: {segment: 'color'},
@@ -73,26 +75,29 @@ describe(`generateChangeId`, () => {
   it(`generates ID when all params exist`, () => {
     expect(generateChangeId({
       dataId: 17,
+      disableChartInteractions: true,
       displayOptions: {analysis: 'analysis', plotStyle: 'plotStyle', value: 'value', timeUnit: 'timeUnit'},
       headers: ['$events'],
       segmentColorMap: {segment: 'color'},
       utcOffset: 38,
-    })).to.eql(`17-38-analysis-true-true-plotStyle-timeUnit-value`);
+    })).to.eql(`17-38-analysis-true-true-true-plotStyle-timeUnit-value`);
   });
 
   it(`generates ID for falsey values as keys`, () => {
     expect(generateChangeId({
       dataId: 0,
+      disableChartInteractions: false,
       displayOptions: {analysis: false, plotStyle: 'false', value: '', timeUnit: []},
       headers: [],
       segmentColorMap: {segment: 'color'},
       utcOffset: 38,
-    })).to.eql(`0-38-false-true-true-false--`);
+    })).to.eql(`0-38-false-true-false-true-false--`);
   });
 
   it(`produces the same IDs for the unchanged objects`, () => {
     const chartObject = {
       dataId: 12,
+      disableChartInteractions: false,
       displayOptions: {analysis: 'linear', plotStyle: 'standard', value: 'absolute', timeUnit: 'hour'},
       headers: ['$events'],
       segmentColorMap: {segment: 1},
@@ -104,6 +109,7 @@ describe(`generateChangeId`, () => {
   it(`produces the new IDs for changed objects`, () => {
     const chartObject = {
       dataId: 12,
+      disableChartInteractions: false,
       displayOptions: {analysis: 'linear', plotStyle: 'standard', value: 'absolute', timeUnit: 'hour'},
       headers: ['$events'],
       segmentColorMap: {segment: 1},
