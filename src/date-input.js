@@ -1,9 +1,10 @@
+import {registerElement} from 'register-unique-tagname';
 import {Component} from 'panel';
 
 import {
   formatDate,
   parseDate,
-} from '../../util';
+} from 'mixpanel-common/util/date';
 
 import template from './date-input.jade';
 
@@ -58,4 +59,4 @@ export default class DateInput extends Component {
   }
 }
 
-document.registerElement(`date-input`, DateInput);
+registerElement(`date-input`, DateInput, __filename);

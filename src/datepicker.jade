@@ -5,7 +5,7 @@
   if !$helpers.hideTextInputs()
     .inputs
       if isRange
-        date-input(
+        #{DateInput.tagName}(
           props={
             value: from,
           }
@@ -16,7 +16,7 @@
           }
         )
         .preposition= $helpers.getPreposition() || `to`
-        date-input(
+        #{DateInput.tagName}(
           props={
             value: to,
           }
@@ -27,7 +27,7 @@
           }
         )
       else
-        date-input(
+        #{DateInput.tagName}(
           props={
             value: date,
           }
@@ -36,7 +36,7 @@
           }
         )
   .calendar
-    mp-calendar(
+    #{Calendar.tagName}(
       attrs={
         'is-range': isRange,
         'is-double-calendar': isDoubleCalendar,

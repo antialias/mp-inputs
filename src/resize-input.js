@@ -1,3 +1,4 @@
+import {registerElement} from 'register-unique-tagname';
 import {Component} from 'panel';
 
 import template from './resize-input.jade';
@@ -137,4 +138,4 @@ export default class ResizeInput extends Component {
   }
 }
 
-document.registerElement(`resize-input`, ResizeInput);
+registerElement(`resize-input`, ResizeInput, __filename);
