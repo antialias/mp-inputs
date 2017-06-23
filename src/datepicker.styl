@@ -1,6 +1,6 @@
-@import "../../stylesheets/common"
+@import "~mixpanel-common/stylesheets/mixins/colors" // grey-700, grey-150, grey-100
 
-insights-datepicker
+{datepicker}
   width 100%
 
   .inputs
@@ -11,7 +11,7 @@ insights-datepicker
       flex 1
       min-width 0
 
-      .date-input  // container
+      {date-input} // container
         display flex
 
         input

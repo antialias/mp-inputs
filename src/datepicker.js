@@ -1,11 +1,15 @@
-import {Component} from 'panel';
-
-import {formatDate, localizedDate, normalizeDateRange, normalizeDateStrings} from '../../util';
-
-import template from './datepicker.jade';
 import './datepicker.styl';
-
-import './date-input';
+import template from './datepicker.jade';
+import {DateInput} from '.';
+import Calendar from  'mixpanel-common/components/calendar'; // mp-calendar
+import {registerElement} from 'register-unique-tagname';
+import {Component} from 'panel';
+import {
+  formatDate,
+  localizedDate,
+  normalizeDateRange,
+  normalizeDateStrings
+} from 'mixpanel-common/util/date';
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
@@ -14,6 +18,10 @@ class DatePicker extends Component {
     return {
       template,
       defaultState: {
+        // tagnames
+        Calendar: {tagName: 'mp-calendar'},
+        DateInput,
+        // values
         date: null,
         from: null,
         to: null,
@@ -130,4 +138,4 @@ class DatePicker extends Component {
   }
 }
 
-document.registerElement(`insights-datepicker`, DatePicker);
+export default registerElement(`datepicker`, DatePicker, __filename);
