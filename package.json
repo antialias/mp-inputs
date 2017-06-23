@@ -1,0 +1,56 @@
+{
+  "name": "mp-inputs",
+  "version": "2.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "view-cards": "view-cards",
+    "prepublish": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mixpanel-platform/insights.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mixpanel-platform/insights/issues"
+  },
+  "homepage": "https://github.com/mixpanel-platform/insights#readme",
+  "peerDependencies": {
+    "panel": "^0.10.0"
+  },
+  "devDependencies": {
+    "@antialias/view-cards": "^3.0.1",
+    "@antialias/webpack-config-builders": "^1.1.1",
+    "autoprefixer-loader": "^3.2.0",
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.0",
+    "babel-plugin-import-glob": "^2.0.0",
+    "babel-plugin-inline-import": "^2.0.5",
+    "babel-preset-env": "^1.5.2",
+    "babel-preset-es2015": "^6.24.1",
+    "css-loader": "^0.28.4",
+    "devboard": "^0.7.1",
+    "git-rev-sync": "^1.9.1",
+    "glob": "^7.1.2",
+    "js-beautify": "^1.6.14",
+    "local-module-regex": "^1.0.4",
+    "styl": "^0.2.9",
+    "style-loader": "^0.18.2",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
+    "virtual-dom": "^2.1.1",
+    "virtual-jade": "^0.9.0",
+    "virtual-jade-loader": "^0.5.0",
+    "webpack": "^3.0.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "mixpanel-common": "^0.96.0",
+    "panel": "^0.10.0"
+  },
+  "description": ""
+}

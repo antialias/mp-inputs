@@ -3,7 +3,7 @@ import {Component} from 'panel';
 import {
   formatDate,
   parseDate,
-} from '../../util';
+} from 'mixpanel-common/util/date';
 
 import template from './date-input.jade';
 
