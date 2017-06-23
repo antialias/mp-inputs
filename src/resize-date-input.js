@@ -1,8 +1,9 @@
+import {registerElement} from 'register-unique-tagname';
+import extend from 'lodash/fp/extend';
 import {
-  extend,
   formatDate,
   parseDate,
-} from '../../util';
+} from 'mixpanel-common/util/date';
 
 import ResizeInput from './resize-input';
 
@@ -61,4 +62,4 @@ export default class ResizeDateInput extends ResizeInput {
   }
 }
 
-document.registerElement(`resize-date-input`, ResizeDateInput);
+registerElement(`resize-date-input`, ResizeDateInput, __filename);
