@@ -1,8 +1,8 @@
+import extend from 'lodash/fp/extend';
 import {
-  extend,
   formatDate,
   parseDate,
-} from '../../util';
+} from 'mixpanel-common/util/date';
 
 import ResizeInput from './resize-input';
 
